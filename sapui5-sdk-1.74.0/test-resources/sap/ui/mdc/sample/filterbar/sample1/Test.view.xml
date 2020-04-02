@@ -1,0 +1,91 @@
+<core:View height="100%" xmlns:core="sap.ui.core" xmlns="sap.m"
+	 xmlns:f="sap.f"
+	 xmlns:fl="sap.ui.fl.variants"
+	 xmlns:mdcField="sap.ui.mdc.field"
+	 xmlns:mdc="sap.ui.mdc"
+	controllerName="sap.ui.mdc.sample.filterbar.sample1.Test">
+
+	<App id="idMdcFilterBarApp">
+
+		<f:DynamicPage>
+			<f:title>
+				<f:DynamicPageTitle>
+					<f:actions>
+						<Button id="changeProperty1" text="Change Req Property" press="onChangeReqProperty" />
+						<Button id="changeProperty2" text="Change Vis Property" press="onChangeVisProperty" />
+					</f:actions>
+
+					<f:heading>
+					   	<fl:VariantManagement id="testVariantMngmn" for="testFilterBar" showExecuteOnSelection="true"/>
+					</f:heading>
+
+					<f:snappedContent>
+						<Text id="statusText" />
+					</f:snappedContent>
+				</f:DynamicPageTitle>
+			</f:title>
+			<f:header>
+				<f:DynamicPageHeader>
+					<f:content>
+						<mdc:FilterBar id="testFilterBar" filtersChanged="onFiltersChanged"
+							liveMode="false"
+							delegate='\{"name" : "sap/ui/mdc/sample/filterbar/sample1/FilterBarHelperTest", "payload" : \{"modelName": null,  "collectionName": "ProductList"\} \}'
+							filterConditions = '\{"SupplierID" : [\{"operator":"EQ","values":["VENDOR"]}]\}'
+ 							search="onSearch"
+							p13nMode="Item,Value">
+
+							<mdc:dependents>
+									<mdcField:FieldValueHelp id="FVH01"
+										title="Supplier"
+										showConditionPanel="true" />
+
+										<mdcField:FieldValueHelp id="FVH02"
+										title="Product"
+										showConditionPanel="true" />
+							</mdc:dependents>
+
+							<mdc:basicSearchField>
+								<mdc:FilterField id="field0"  placeholder= "{@i18n>SEARCH}" conditions="{$filters>/conditions/$search}" dataType="Edm.String" maxConditions="1"/>
+							</mdc:basicSearchField>
+
+							<mdc:filterItems>
+								<mdc:FilterField id="field1"  label="{@i18n>CATEGORY}" conditions="{$filters>/conditions/Category}" maxConditions="1" dataType="Edm.String"  dataTypeConstraints='\{"maxLength": 40\}' required="true"/>
+								<mdc:FilterField id="field2"  label="Name" conditions="{$filters>/conditions/Name}"  maxConditions="1" dataType="Edm.String" dataTypeConstraints='\{"maxLength": 255\}'/>
+								<mdc:FilterField id="field3"  label="Product" fieldHelp="FVH02" conditions="{$filters>/conditions/ProductID}"  maxConditions="1" dataType="Edm.String" dataTypeConstraints='\{"maxLength": 10\}' operators="SINGLE_RANGE_EQ,SINGLE_RANGE_EEQ,LE,GE"/>
+								<mdc:FilterField id="field4"  label="Currency Code" conditions="{$filters>/conditions/CurrencyCode}" maxConditions="1" dataType="Edm.String" dataTypeConstraints='\{"maxLength": 5\}'/>
+							</mdc:filterItems>
+						</mdc:FilterBar>
+					</f:content>
+				</f:DynamicPageHeader>
+			</f:header>
+			<f:content>
+				<Table id="idTable" items="{path: '/ProductList'}">
+					<columns>
+						<Column>
+							<Text text="ProductID" />
+						</Column>
+						<Column>
+							<Text text="Category" />
+						</Column>
+						<Column>
+							<Text text="Name" />
+						</Column>
+						<Column>
+							<Text text="SupplierID" />
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem>
+							<cells>
+								<Text text="{ProductID}" />
+								<Text text="{Category}" />
+								<Text text="{Name}" />
+								<Text text="{SupplierID}" />
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+			</f:content>
+		</f:DynamicPage>
+	</App>
+</core:View>

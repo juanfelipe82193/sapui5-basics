@@ -1,0 +1,367 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>GanttChartWithTable ODATA</title>
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.gantt, sap.m"
+	data-sap-ui-theme="sap_bluecrystal"
+	src="../../../resources/sap-ui-core.js"
+	data-sap-ui-resourceroots='{ "sap.gantt.test.shape": "./shape" }'>
+</script>
+
+<script src="./test.js"></script>
+
+<script>
+	sap.ui.require([
+		"sap/ui/core/util/MockServer",
+		"sap/gantt/def/cal/CalendarDefs",
+		"sap/gantt/def/cal/Calendar",
+		"sap/gantt/def/cal/TimeInterval",
+		"sap/gantt/test/shape/GanttComboBox",
+		"sap/gantt/test/shape/RectangleGroup",
+		"sap/gantt/shape/Rectangle",
+		"sap/gantt/shape/Text",
+		"sap/gantt/shape/ext/rls/Relationship",
+		"sap/gantt/shape/cal/Calendar"
+
+	],
+	function(MockServer, CalendarDefs, Calendar, TimeInterval, GanttComboBox) {
+		createPage("Test Page for sap.gantt.GanttChartWithTable ODATA");
+		
+		var sServiceUrl = "http://my.test.service.com/";
+		var oMockServer = new sap.ui.core.util.MockServer({
+			rootUri : sServiceUrl
+		});
+		oMockServer.simulate("../../sap/gantt/qunit/data/odata/metadata.xml", {
+			sMockdataBaseUrl : "../../sap/gantt/qunit/data/odata/",
+			bGenerateMissingMockData : true
+		});
+
+		oMockServer.start();
+		// create data model
+		var oDataModel = new sap.ui.model.odata.v2.ODataModel(sServiceUrl);
+
+		var aChartSchemesConfig = [
+			new sap.gantt.config.ChartScheme({
+				key: "ac_main",
+				rowSpan: 1,
+				shapeKeys: ["workingTime", "relationship", "task"]
+			}),
+			new sap.gantt.config.ChartScheme({
+				key: "ac_expand_overlap",
+				name: "Overlaps",
+				icon: "./image/overlap.png",
+				rowSpan: 1,
+				shapeKeys: ["resource_greedy"]
+			})
+		];
+
+		var aObjectTypesConfig = [
+			new sap.gantt.config.ObjectType({
+				key: "TYPE_01",
+				description: "Project elements and resource overlaps",
+				mainChartSchemeKey: "ac_main",
+				expandedChartSchemeKeys: ["ac_expand_overlap"]
+			})
+		];
+
+		var aToolbarSchemesConfig = [
+			new sap.gantt.config.ToolbarScheme({
+				key: "LOCAL_TOOLBAR",
+				customToolbarItems: new sap.gantt.config.ToolbarGroup({
+					position: "L1",
+					overflowPriority: sap.m.OverflowToolbarPriority.High
+				}),
+				expandChart: new sap.gantt.config.ExpandChartGroup({
+					position: "L2",
+					overflowPriority: sap.m.OverflowToolbarPriority.Low,
+					showArrowText: true,
+					expandCharts: [
+						new sap.gantt.config.ExpandChart({
+							isExpand: true,
+							icon: "sap-icon://along-stacked-chart", //"sap-icon://arrow-bottom",
+							tooltip: "Show Overlaps",
+							chartSchemeKeys: ["ac_expand_overlap"]
+						}),
+						new sap.gantt.config.ExpandChart({
+							isExpand: false,
+							icon: "sap-icon://along-stacked-chart", //"sap-icon://arrow-top",
+							tooltip: "Hide Overlaps",
+							chartSchemeKeys: ["ac_expand_overlap"]
+						})
+					],
+				}),
+				expandTree: new sap.gantt.config.ToolbarGroup({
+					position: "L3",
+					overflowPriority: sap.m.OverflowToolbarPriority.Low
+				})
+			})
+		];
+
+		var aHierarchiesConfig = [
+			new sap.gantt.config.Hierarchy({
+				key: "OVERVIEW",
+				text: "Project Overview",
+				toolbarSchemeKey: "LOCAL_TOOLBAR",
+				activeModeKey: "D"
+			})
+		];
+
+		// create configuration model
+		var oDateType = new sap.ui.model.type.Date({pattern: "dd.MM.yyyy"});
+		var aShapeConfig = [
+			new sap.gantt.config.Shape({
+				key: "task",
+				shapeDataName: "Task",
+				modeKeys: ["D"],
+				level: 10,
+				shapeClassName: "sap.gantt.test.shape.RectangleGroup",
+				shapeProperties: {
+					time: "{StartDate}",
+					endTime: "{EndDate}",
+					isDuration: true
+				},
+				groupAggregation: [new sap.gantt.config.Shape({
+					shapeClassName: "sap.gantt.shape.Rectangle",
+					shapeProperties: {
+						time: "{StartDate}",
+						endTime: "{EndDate}",
+						fill: "orange",
+						isDuration: true
+					}
+				}), new sap.gantt.config.Shape({
+					shapeClassName: "sap.gantt.shape.Text",
+					shapeProperties: {
+						time: "{StartDate}",
+						text: "{Explanation}",
+						yBias: 0,
+						xBias: -15,
+						textAnchor: "end",
+						fill:"black",
+						isDuration: false
+					}
+				})]
+			}),
+			new sap.gantt.config.Shape({
+				key: "relationship",
+				level: 30,
+				shapeDataName: "relationship",
+				shapeClassName: "sap.gantt.shape.ext.rls.Relationship",
+				modeKeys: ["D"],
+				shapeProperties: {
+					isDuration: false,
+					lShapeforTypeFS: true,
+					showStart: false,
+					showEnd: true,
+					stroke: "#000000",
+					strokeWidth: 1,
+					type: "{RelationType}",
+					fromObjectPath:"{PredecRowGuid}",
+					toObjectPath:"{SuccRowGuid}",
+					fromDataId:"{PredecTaskGuid}",
+					toDataId:"{SuccTaskGuid}",
+					fromShapeId:"{FromShape}",
+					toShapeId:"{ToShape}",
+					title: "{Tooltip}",
+					id: "{Guid}"
+				}
+			}),
+			new sap.gantt.config.Shape({
+				key: "workingTime",
+				shapeClassName: "sap.gantt.shape.cal.Calendar",
+				shapeDataName: "WorkingTime",
+				level: 30,
+				shapeProperties: {
+					calendarName: "{calendarName}",
+					height: 33,
+					isDuration: false
+				}
+			}),
+			new sap.gantt.config.Shape({
+				key: "resource_greedy",
+				shapeDataName: "ResourceGreedy",
+				level: 20,
+				shapeClassName: "sap.gantt.shape.Rectangle",
+				shapeProperties: {
+					time: "{StartDate}",
+					endTime: "{EndDate}",
+					fill: "green",
+					isDuration: true
+				}
+			})
+		];
+
+		var oComboBox = new GanttComboBox({
+			selectedKey: {
+				path: "Status",
+				model: "data"
+			},
+			selectionChange: function(oEvent) {
+				this.updateState(oEvent.getParameters().selectedItem.getKey());
+			}
+		});
+
+		var oNumberInput = new sap.m.Input({
+			type: "Number",
+			width: "30px",
+			value: "0",
+			tooltip: "Row index"
+		});
+
+		var oStartDateColumn = new sap.ui.table.Column({
+			label: "Start Date",
+			sortProperty: "StartDate",
+			filterProperty: "StartDate",
+			filterType: oDateType,
+			template: new sap.m.Label({
+				text: {
+					path: "StartDate",
+					model: "data",
+					type: oDateType
+				},
+			})
+		});
+
+		var bShowColumn = true;
+
+		var oShowColumnBtn = new sap.m.Button({
+			text: "Hide Start Date column",
+			press: function() {
+				bShowColumn = !bShowColumn;
+				oStartDateColumn.setVisible(bShowColumn);
+				if (bShowColumn) {
+					oShowColumnBtn.setText("Hide Start Date column");
+				} else {
+					oShowColumnBtn.setText("Show Start Date column");
+				}
+			}
+		});
+
+		var oSelectBtn = new sap.m.Button({
+			text: "Select",
+			tooltip: "Select",
+			press: function() {
+				var iSelectedIndex = parseInt(oNumberInput.getValue());
+				oGanttChartWithTable.setSelectedIndex(iSelectedIndex);
+
+				var iFirstVisibleRow = oGanttChartWithTable.getFirstVisibleRow();
+				var iLastVisibleRow = iFirstVisibleRow + oGanttChartWithTable.getVisibleRowCount();
+
+				if (iSelectedIndex < iFirstVisibleRow || iSelectedIndex > iLastVisibleRow) {
+					oGanttChartWithTable.setFirstVisibleRow(iSelectedIndex);
+					oGanttChartWithTable.getRows()[0].getCells()[2].focus();
+				} else {
+					oGanttChartWithTable.getRows()[iSelectedIndex].getCells()[2].focus();
+				}
+			}
+		});
+
+		var oExpandBtn = new sap.m.Button({
+			text: "Expand",
+			tooltip: "Expand",
+			press: function() {
+				oGanttChartWithTable.expand(parseInt(oNumberInput.getValue()));
+			}
+		});
+
+		var oCollapseBtn = new sap.m.Button({
+			text: "Collapse",
+			tooltip: "Collapse",
+			press: function() {
+				oGanttChartWithTable.collapse(parseInt(oNumberInput.getValue()));
+			}
+		});
+
+		// create control
+		var oGanttChartWithTable = new sap.gantt.GanttChartWithTable({
+			columns: [new sap.ui.table.Column({
+				label: "Explanation",
+				sortProperty: "Explanation",
+				filterProperty: "Explanation",
+				template: new sap.m.Label({
+					text: {
+						path: "Explanation",
+						model: "data"
+					}
+				})
+			}), oStartDateColumn
+			, new sap.ui.table.Column({
+				label: "Status",
+				sortProperty: "Status",
+				filterProperty: "Status",
+				template: oComboBox
+			})],
+			timeAxis: new sap.gantt.config.TimeAxis({
+				planHorizon: new sap.gantt.config.TimeHorizon({
+					startTime: "20140628000000",
+					endTime: "20170101000000"
+				}),
+				initHorizon: new sap.gantt.config.TimeHorizon({
+					startTime: "20150101000000",
+					endTime: "20150315000000"
+				})
+			}),
+			hierarchyKey: "OVERVIEW",
+			hierarchies: aHierarchiesConfig,
+			toolbarSchemes: aToolbarSchemesConfig,
+			chartSchemes: aChartSchemesConfig,
+			objectTypes: aObjectTypesConfig,
+			shapes: aShapeConfig,
+			shapeDataNames:["Task", "WorkingTime", "ResourceGreedy"],
+			rows: {
+				path: "data>/ProjectElmSet",
+				parameters: {
+					/*navigation: {
+						"ProjectElmSet": "Children"
+					},*/
+					treeAnnotationProperties: {
+						hierarchyLevelFor: "Level",
+						hierarchyParentNodeFor: "SuperiorGuid",
+						hierarchyNodeFor: "Guid",
+						hierarchyDrillStateFor: "DrillDownState"//this option doesn't work
+					},
+					expand: "Task, WorkingTime, ResourceGreedy"
+				}
+			},
+			calendarDef: new CalendarDefs({
+				defs: {
+					path: "data>/CalendarSet",
+					parameters: {
+						expand: "CalendarInterval"
+					},
+					template: new Calendar({
+						key: "{data>name}",
+						timeIntervals: {
+							path: "data>CalendarInterval",
+							templateShareable: true,
+							template: new TimeInterval({
+								startTime: "{data>StartDate}",
+								endTime: "{data>EndDate}"
+							})
+						}
+					})
+				}
+			}),
+			relationships:{
+				path: "data>/RelationshipSet"
+			}
+		});
+		var aCustomToolbarItems = [oNumberInput, oSelectBtn, oExpandBtn, oCollapseBtn, oShowColumnBtn];
+		for (var i = 0; i < aCustomToolbarItems.length; i++) {
+			oGanttChartWithTable.addCustomToolbarItem(aCustomToolbarItems[i]);
+		}
+		var oModeSegmentedButton = sap.ui.jsfragment("sap.gantt.test.CSSModeButton", oGanttChartWithTable);
+		oGanttChartWithTable.setModel(oDataModel, "data");
+		addFooterContentsToPage(oModeSegmentedButton);
+		window.oPage.addContent(oGanttChartWithTable);
+	});
+</script>
+</head>
+<body id="body" class="sapUiBody sapUiSizeCompact">
+	<div id="content" style="width: 100%; height: 100vh;"></div>
+</body>
+</html>

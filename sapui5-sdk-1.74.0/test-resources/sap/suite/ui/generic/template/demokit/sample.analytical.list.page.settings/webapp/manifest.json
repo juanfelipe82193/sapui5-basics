@@ -1,0 +1,232 @@
+{
+	"_version": "1.2.0",
+	"sap.app": {
+		"_version": "1.2.0",
+		"id": "analytics3",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"applicationVersion": {
+			"version": "1.74.0"
+		},
+		"title": "Analytical List Page With Settings",
+		"description": "Analytical List Page",
+		"tags": {
+			"keywords": []
+		},
+		"ach": "xx",
+		"resources": "resources.json",
+		"dataSources": {
+			"mainService": {
+				"uri": "/sap/opu/odata/sap/SETTINGSZCOSTCENTERCOSTSQUERY0020_CDS/",
+				"type": "OData",
+				"settings": {
+					"annotations": [
+						"localAnnotations1"
+					],
+					"localUri": "localService/SETTINGSZCOSTCENTERCOSTSQUERY0020_CDS.xml"
+				}
+			},
+			"localAnnotations1": {
+				"uri": "localService/annotations1.xml",
+				"type": "ODataAnnotation",
+				"settings": {
+					"localUri": "localService/annotations1.xml"
+				}
+			},
+			"kpiService": {
+				"uri": "/sap/opu/odata/sap/SETTINGSCZ_PROJECTKPIS_CDS/",
+				"type": "OData",
+				"settings": {
+					"annotations": [
+						"localAnnotations2"
+					],
+					"localUri": "localService/SETTINGSCZ_PROJECTKPIS.xml"
+				}
+			},
+			"localAnnotations2": {
+				"uri": "localService/annotations3.xml",
+				"type": "ODataAnnotation",
+				"settings": {
+					"localUri": "localService/annotations3.xml"
+				}
+			}
+		},
+		"offline": false,
+		"sourceTemplate": {
+			"id": "ui5template.smarttemplate",
+			"version": "1.0.0"
+		},
+		"crossNavigation": {
+			"inbounds": {},
+			"outbounds": {
+				"NavigateToCTRItem": {
+					"semanticObject": "alpwp",
+					"action": "display"
+				}
+			}
+		}
+
+	},
+	"sap.ui": {
+		"_version": "1.2.0",
+		"technology": "UI5",
+		"icons": {
+			"icon": "",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		},
+		"supportedThemes": [
+			"sap_hcb",
+			"sap_bluecrystal",
+			"sap_belize"
+		]
+	},
+	"sap.ui5": {
+		"_version": "1.1.0",
+		"resources": {
+			"js": [],
+			"css": []
+		},
+		"dependencies": {
+			"minUI5Version": "${sap.ui5.dist.version}",
+			"libs": {
+				"sap.ui.core": {},
+				"sap.m": {},
+				"sap.ui.comp": {},
+				"sap.uxap": {},
+				"sap.suite.ui.generic.template": {}
+			},
+			"components": {}
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/i18n.properties"
+			},
+			"@i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/i18n.properties"
+			}, 
+			"i18n|sap.suite.ui.generic.template.AnalyticalListPage|ZCOSTCENTERCOSTSQUERY0020": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/AnalyticalListPage/ZCOSTCENTERCOSTSQUERY0020/i18n.properties"
+			},
+			"i18n|sap.suite.ui.generic.template.ObjectPage|ZCOSTCENTERCOSTSQUERY0020": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/ObjectPage/ZCOSTCENTERCOSTSQUERY0020/i18n.properties"
+			},
+			"": {
+				"dataSource": "mainService",
+				"settings": {
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Inline",
+					"refreshAfterChange": false
+				}
+			},
+			"kpi": {
+				"dataSource": "kpiService",
+				"settings": {
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Inline",
+					"refreshAfterChange": false
+				}
+			}
+		},
+		"extends": {
+			"extensions": {
+				"sap.ui.controllerExtensions": {
+					"sap.suite.ui.generic.template.AnalyticalListPage.view.AnalyticalListPage": {
+						"controllerName": "analytics3.ext.controller.ALPExt"
+					}
+				}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": false
+		}
+	},
+	"sap.ui.generic.app": {
+		"_version": "1.3.0",
+		"settings": {
+			"flexibleColumnLayout": {
+				"defaultTwoColumnLayoutType": "TwoColumnBeginExpaned"
+			}
+		},
+		"pages": {
+			"AnalyticalListPage": {
+				"entitySet": "ZCOSTCENTERCOSTSQUERY0020",
+				"component": {
+					"name": "sap.suite.ui.generic.template.AnalyticalListPage",
+					"list": true,
+					"settings": {
+						"tableSettings": {
+							"type": "AnalyticalTable",
+							"multiSelect": true
+						},
+						"qualifier": "MainContent",
+						"defaultContentView": "charttable",
+						"smartVariantManagement": false,
+						"showGoButtonOnFilterBar": true,
+						"multiSelect": true,
+						"hideVisualFilter": true,
+						"showClearButtonOnFilterBar": true,
+						"defaultFilterMode": "visual",
+						"showItemNavigationOnChart": true,
+						"condensedTableLayout": false,
+						"contentTitle": "{{contentAreaTitle}}",
+						"filterDefaultsFromSelectionVariant": true,
+						"keyPerformanceIndicators": {
+							"ActualCosts": {
+								"model": "kpi",
+								"entitySet": "CZ_PROJECTKPIS",
+								"qualifier": "AllActualCosts",
+								"filterable": true
+							},
+							"ActualMarginRelative": {
+								"model": "kpi",
+								"entitySet": "CZ_PROJECTKPIS",
+								"qualifier": "ActualMarginRelative",
+								"filterable": true
+							},
+							"ActualMarginRelative1": {
+								"model": "kpi",
+								"entitySet": "CZ_PROJECTKPIS",
+								"qualifier": "ActualMarginRelative1"
+							},
+							"TargetMargin": {
+								"model": "kpi",
+								"entitySet": "CZ_PROJECTKPIS",
+								"qualifier": "TargetMargin",
+								"filterable": true
+							}
+						}
+					}
+				},
+				"pages": [{
+				"entitySet": "ZCOSTCENTERCOSTSQUERY0020",
+				"component": {
+					"name": "sap.suite.ui.generic.template.ObjectPage"
+				}
+			}]
+			}
+		}
+	},
+	"sap.fiori": {
+		"_version": "1.1.0",
+		"registrationIds": [],
+		"archeType": "analytical"
+	},
+	"sap.platform.hcp": {
+		"_version": "1.2.0",
+		"uri": ""
+	}
+}

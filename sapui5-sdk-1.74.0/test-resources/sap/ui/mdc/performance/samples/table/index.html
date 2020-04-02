@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="UTF-8">
+<title>Performance Sample Component</title>
+<script src="../../../shared-config.js"></script>
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="../../../../../../../resources/sap-ui-core.js"
+	data-sap-ui-bindingSyntax="complex" 
+	data-sap-ui-libs="sap.m,sap.ui.table,sap.ui.mdc" 
+	data-sap-ui-xx-waitfortheme="true"
+	data-sap-ui-resourceroots='{
+		"samples.table": "./"}'>
+
+</script>
+<script>
+	var aParams = document.location.search.substring(1).split("&");
+		oParams = {};
+	window._getUrlParameter = function(sKey) {
+		return oParams[sKey];
+	};
+	aParams.filter(function(s) {
+		var aValues = s.split("=");
+		oParams[aValues[0]] = aValues[1]; 
+	});
+	window._measure = {
+		cols : [],
+		rows : []	
+	};
+	window._addFlow = function(sName, oContent) {
+		window._measure.result["flow"] = window._measure.result["flow"] || {};
+		window._measure.result["flow"][sName] = oContent;
+	}
+	
+	window._measure.result = {};
+	window._measure.parameters = oParams;
+	//create data
+	var iCols = parseInt(window._getUrlParameter("cols"));
+	if (isNaN(iCols)) {
+		iCols = 15;
+	}
+	for (var i = 0; i < iCols; i++) {
+		window._measure.cols.push({
+			label : "Column " + i,
+			key: "column" + i
+		});
+	}
+	
+	var iRows = parseInt(window._getUrlParameter("rows"));
+	if (isNaN(iRows)) {
+		iRows = 20;
+	}
+	for (var i = 0; i < iRows; i++) {
+		var mValues = {};
+		for (var j = 0; j < iCols; j++) {
+			mValues["column" + j] = {
+				value : "Value " + i + "_" + j
+			};
+		}
+		window._measure.rows.push(mValues);
+	};
+	sap.ui.require(["sap/ui/core/mvc/View","sap/ui/core/mvc/XMLView"], function(View, XMLView) {
+		if (window._getUrlParameter("storeflow") === "yes") {
+			XMLView.registerPreprocessor("xml", {process:function(oXML) {
+				window._addFlow("after_initial_templating", (new XMLSerializer()).serializeToString(oXML));
+				return oXML;
+			}});
+			XMLView.registerPreprocessor("viewxml", {process:function(oXML) {
+				window._addFlow("after_viewxml_preprocessing", (new XMLSerializer()).serializeToString(oXML));
+				return oXML;
+			}});
+		}
+		sap.ui.getCore().attachInit(function() {
+			initComponent();
+		});
+	});
+	function initComponent() {
+		window._measure.result["container_start"] = performance.now();
+		new sap.ui.core.ComponentContainer({
+			name: "samples.table",
+			height: "100%"
+		}).placeAt("content");
+		window._measure.result["container_end"] = performance.now();
+	}
+</script>
+</head>
+
+<body class="sapUiBody sapUiSizeCompact" role="application">
+	<div id="content"></div>
+</body>
+
+</html>

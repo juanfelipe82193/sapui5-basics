@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>json TO Crosstab test</title>
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="../../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize"
+	data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet"
+	href="../../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css"
+	media="screen" />
+<script type="text/javascript"
+	src="../../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript"
+	src="/jsunit-testrunner/qunit/qunit-jsunit.js"></script>
+<script type="text/javascript"
+	src="../../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="TESTDATA_PLAINTABLE.js"></script>
+<script type="text/javascript" src="TESTDATA_PLAINTABLE_LINEBREAKS.js"></script>
+<script type="text/javascript" src="../testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">JSON to Crosstab Data Handler Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Basic JSON to crosstab translation",
+				{
+					setup : function() {
+
+						this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+						this.oTableControl.getJsonCellByRowCol = function(iRow, iCol) {
+							// access with iRow directly because array "rows" correspond to 1-based rowidx
+							var aJsonCells = this.rows[iRow].row.cells;
+							var oJsonCell = null;
+							var iColToFind = iCol + 1;
+							for ( var i = 0; i < aJsonCells.length; i++) {
+								if (aJsonCells[i].control.colidx === iColToFind) {
+									oJsonCell = aJsonCells[i];
+									break;
+								}
+							}
+							return oJsonCell;
+						};
+
+						this.oCrosstab = new sap.zen.crosstab.Crosstab();
+						this.oCrosstab.setWidth("1600px");
+						this.oCrosstab.setHeight("1200px");
+						this.oDataArea = this.oCrosstab.getDataArea();
+						this.oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+						this.oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+						this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+
+						this.oCrosstab.applyControlProperties(this.oTableControl);
+
+						sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+						sap.ui.getCore().applyChanges();
+
+						this.checkCell = function(oArea, iAreaRow, iAreaCol, iJsonRow, iJsonCol) {
+							var oDataModelCell = oArea.getCell(iAreaRow, iAreaCol);
+							ok(oDataModelCell, "There must be a model cell at " + oArea.getAreaType() + " coordinate "
+									+ iAreaRow + "/" + iAreaCol);
+							var oJsonCell = this.oTableControl.getJsonCellByRowCol(iJsonRow, iJsonCol);
+							equals(oDataModelCell.getText().toString(), sap.zen.crosstab.utils.Utils.escapeDisplayString(oJsonCell.control._v.toString()), "Model cell "
+									+ iAreaRow + "/" + iAreaCol + " must have the same content as Json cell "
+									+ iJsonRow + "/" + iJsonCol);
+
+							if (oDataModelCell.getRowSpan) {
+								var iJsonSpan = oJsonCell.control.rowspan;
+								if (!iJsonSpan) {
+									iJsonSpan = 1
+								}
+								equals(oDataModelCell.getRowSpan(), iJsonSpan,
+										"Model cell and json cell must have the same rowspan " + iJsonSpan);
+							}
+
+							if (oDataModelCell.getColSpan) {
+								var iJsonSpan = oJsonCell.control.colspan;
+								if (!iJsonSpan) {
+									iJsonSpan = 1
+								}
+								equals(oDataModelCell.getColSpan(), iJsonSpan,
+										"Model cell and json cell must have the same colspan " + iJsonSpan);
+							}
+
+							var iJsonStyle = sap.zen.crosstab.StyleTranslator.getRenderingConstantForJsonStyle(oJsonCell.control.style);
+							if (iJsonStyle) {
+								ok(oDataModelCell.hasStyle(iJsonStyle), "Model cell style and json cell style must be the same");
+							}
+						};
+
+					},
+					teardown : function() {
+						this.oCrosstab = null;
+						this.oDataArea = null;
+						this.oDimensionHeaderArea = null;
+						this.oColumnHeaderArea = null;
+						this.oRowHeaderArea = null;
+					}
+				});
+
+		test("Expect header data", function() {
+
+			equals(this.oDimensionHeaderArea.getRowCnt(), this.oTableControl.fixedcolheaders,
+					"Dimension header row count equals control fixed col headers");
+			equals(this.oDimensionHeaderArea.getColCnt(), this.oTableControl.fixedrowheaders,
+					"Dimension header col count equals control fixed row headers");
+
+			equals(this.oColumnHeaderArea.getRowCnt(), this.oTableControl.fixedcolheaders,
+					"Column header row count equals control fixed col headers");
+			equals(this.oColumnHeaderArea.getColCnt(), this.oTableControl.totaldatacols,
+					"Column header col count equals control total data columns");
+
+			equals(this.oRowHeaderArea.getRowCnt(), this.oTableControl.totaldatarows,
+					"Row header row count equals control total data rows");
+			equals(this.oRowHeaderArea.getColCnt(), this.oTableControl.fixedrowheaders,
+					"Row header col count equals control fixed row headers");
+
+			equals(this.oDataArea.getRowCnt(), this.oTableControl.totaldatarows,
+					"Data row count equals control total data rows");
+			equals(this.oDataArea.getColCnt(), this.oTableControl.totaldatacols,
+					"Data col count equals control total data rows");
+		});
+
+		test("0/0 cells of table areas", function() {
+
+			this.checkCell(this.oDimensionHeaderArea, 0, 0, 0, 0);
+
+			this.checkCell(this.oColumnHeaderArea, 0, 0, 0, this.oTableControl.fixedrowheaders);
+
+			this.checkCell(this.oRowHeaderArea, 0, 0, this.oTableControl.fixedcolheaders, 0);
+
+			this
+					.checkCell(this.oDataArea, 0, 0, this.oTableControl.fixedcolheaders,
+							this.oTableControl.fixedrowheaders);
+
+		});
+
+		test("lower right cells of table areas", function() {
+
+			this.checkCell(this.oDimensionHeaderArea, this.oDimensionHeaderArea.getRowCnt() - 1,
+					this.oDimensionHeaderArea.getColCnt() - 1, this.oTableControl.fixedcolheaders - 1,
+					this.oTableControl.fixedrowheaders - 1);
+			this.checkCell(this.oColumnHeaderArea, this.oColumnHeaderArea.getRowCnt() - 1, this.oColumnHeaderArea
+					.getColCnt() - 1, this.oTableControl.fixedcolheaders - 1, this.oTableControl.fixedrowheaders
+					+ this.oTableControl.totaldatacols - 1);
+			this.checkCell(this.oRowHeaderArea, this.oRowHeaderArea.getRowCnt() - 1,
+					this.oRowHeaderArea.getColCnt() - 1, this.oTableControl.fixedcolheaders
+							+ this.oTableControl.totaldatarows - 1, this.oTableControl.fixedrowheaders - 1);
+			this.checkCell(this.oDataArea, this.oDataArea.getRowCnt() - 1, this.oDataArea.getColCnt() - 1,
+					this.oTableControl.fixedcolheaders + this.oTableControl.totaldatarows - 1,
+					this.oTableControl.fixedrowheaders + this.oTableControl.totaldatacols - 1);
+
+		});
+		test("check header cell properties", function() {
+			var oDimensionHeader = this.oCrosstab.getColumnHeaderArea();
+			var oCell = oDimensionHeader.getCell(1, 3);
+
+			ok(oCell.getMergeKey(), "Cell " + oCell.getText() + " with id " + oCell.getId()
+					+ " needs to have a merge key");
+			ok(oCell.getSort(), "Cell " + oCell.getText() + " with id " + oCell.getId()
+					+ " needs to have a sort icon name");
+			ok(oCell.getSortAlternativeText(), "Cell " + oCell.getText() + " with id " + oCell.getId()
+					+ " needs to have a sort alternative text");
+			ok(oCell.getSortTooltip(), "Cell " + oCell.getText() + " with id " + oCell.getId()
+					+ " needs to have a sort tooltip");
+			ok(oCell.getSortAction(), "Cell " + oCell.getText() + " with id " + oCell.getId()
+					+ " needs to have a sort action");
+
+		});
+		
+		test("check line breaks", function() {
+			this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTableLineBreaks.control;
+			this.oCrosstab.updateControlProperties(this.oTableControl);
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+			
+			var oColHeader = this.oCrosstab.getColumnHeaderArea();
+			var oCell = oColHeader.getCell(0, 0);
+			
+			ok(oCell.getText().indexOf("<br/>") != -1, "Column Header Cell must contain HTML line break");
+			
+			var oDataArea = this.oCrosstab.getDataArea();
+			oCell = oDataArea.getCell(0, 0);
+			
+			ok(oCell.getText().indexOf("<br/>") != -1, "Data Cell must contain HTML line break");
+		});
+	</script>
+
+</body>
+
+</html>

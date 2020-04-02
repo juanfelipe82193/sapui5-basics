@@ -1,0 +1,56 @@
+<core:View
+        xmlns="sap.m"
+        xmlns:core="sap.ui.core"
+        xmlns:mvc="sap.ui.core.mvc"
+        xmlns:uimodel="sap.ui.model"
+        xmlns:form="sap.ui.layout.form"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        xmlns:layout="sap.ui.layout"
+        controllerName="sap.ushell.demo.UserDefaults.view.SimpleEditor">
+    <!-- Copyright (c) 2009-2017 SAP SE, All Rights Reserved -->
+    <Page title="User Default Parameters">
+        <content>
+            <layout:VerticalLayout>
+                <layout:VerticalLayout>
+                  <MessageStrip
+                    class="description"
+                    text="This is a sample editor allowing you to modify your User Default Parameters. Those are used for intent-based navigation."
+                    type="Information"
+                    showIcon="true">
+                  </MessageStrip>
+                  <MessageStrip
+                    class="description"
+                    text="To persist/save the modified parameter value please press enter inside of the input field."
+                    type="Information"
+                    showIcon="true">
+                  </MessageStrip>
+                  <MessageStrip
+                    class="description"
+                    text="Note: Only parameters are displayed which are configured in a Target Mapping assigned to a user."
+                    type="Warning"
+                    showIcon="true">
+                  </MessageStrip>
+                </layout:VerticalLayout>
+                <Button text="Refresh all" class="refreshBtn" press="handleRefreshParameters"/>
+                <List items="{  path: '/aUserDef',
+                                sorter: {
+                                    path: 'editorMetadata/groupId',
+                                    descending: false,
+                                    group: true
+                                }
+                             }">
+                    <InputListItem label="{editorMetadata/displayText}" tooltip="(id: {parameterName}) {editorMetadata/description}">
+                    <HBox alignItems="Center" justifyContent="End">
+                        <Input id="UserDefaultValue" value="{valueObject/value}" type="Text"
+                        change="handleSaveParameters" placeholder="please enter value"/>
+                        <Input id="ExtendedUserDefaultValue" value="{valueObject/extendedValue}" type="Text"
+                        change="handleSaveParameters" placeholder="please enter an extended value"/>
+                        <Button text="Reset" press="handleResetParameters"/></HBox>
+                    </InputListItem>
+                </List>
+
+
+            </layout:VerticalLayout>
+        </content>
+    </Page>
+</core:View>

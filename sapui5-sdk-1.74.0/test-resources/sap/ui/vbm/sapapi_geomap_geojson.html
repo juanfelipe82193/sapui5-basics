@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#btnZoomIn{
+			margin-right: 10px;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 98%;
+			height: 350px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#margin{
+			margin-right: 50px;
+		}
+		
+				#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 98%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+	
+	// have some data
+	var oData = 
+		{
+			Features :
+				[ { "id": "DE-BE", "color": "rgba(184,225,245,0.5)"}
+				]	
+		};
+	
+	// create model and set the data
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+	//sap.ui.getCore().setModel( oModel );
+		
+	// sample event handlers
+	function onClickFeature( evt )
+	{
+		this.openDetailWindow( this.getFeatureId() );
+	};
+
+	function onContextMenuFeature( evt )
+	{
+		var oMenu = evt.mParameters.menu;
+		oMenu.addItem( new sap.ui.unified.MenuItem( { text : this.getFeatureId() } ) );
+		this.openContextMenu( oMenu );
+	};
+	
+	function onClickFC( evt )
+	{
+		alert( "onClickFC " + evt.mParameters.featureId );
+	};
+
+	function onContextMenuFC( evt )
+	{
+		alert( "onContextMenuFC " + evt.mParameters.featureId );
+	};
+	
+	// create map and bind to model
+	var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+	    width : "100%",
+    	height: "100%",
+    	initialZoom: "7",
+    	initialPosition: "11.7;52.9;0.0",
+    	featureCollections: [
+    	  	new sap.ui.vbm.FeatureCollection( {
+    	  		click: onClickFC,
+    	  		contextMenu: onContextMenuFC,
+    	  		srcURL: "media/vbarea/brandenburg.geojson",
+    	  		items: {
+    	  			path: "/Features",
+    	  			template: new sap.ui.vbm.Feature( { color: '{color}', 
+    	  				                                featureId:'{id}',
+    	  				                                click: onClickFeature,
+    	  				                                contextMenu: onContextMenuFeature
+    	  				                             })
+    	  		}
+    	  	}
+    	  	)
+    	]
+	});
+
+	oVBI.setModel( oModel );
+	oVBI.placeAt("content");
+	oVBI.setMapConfiguration(JSON.parse(localStorage.getItem('map')));
+	
+	// modification of the context
+	function onRemoveFeature()
+	{
+      if( oData.Features.length )
+          oData.Features = oData.Features.splice( 0, oData.Features.length - 1 );
+	       
+		oModel.setData( oData );
+	};
+	
+	function onAddFeature(){
+		oData.Features.push({ "id": "DE-BB", "color": "rgba(184,25,45,0.7)"});
+		oModel.setData( oData );
+	}
+	
+	function onRemoveFC()
+	{
+		//When we remove the collection from the map, we save it into
+		//a variable so we can add it back to the map later on.
+		//If we remove it twice, then we don't save a null value, we just keep
+		//what we used to have in the cont variable.
+		cont = oVBI.removeFeatureCollection("NI") || cont;
+	};
+	
+	function onAddFC()
+	{
+       if (typeof(cont) === "undefined")
+    	   cont = new sap.ui.vbm.FeatureCollection("NI", {srcURL: "media/vbarea/DE-NI.geojson"})
+	   oVBI.addFeatureCollection(cont);
+
+	};
+	
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business GeoMap with GeoJSON Sample</h1>
+			<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test GeoMap Control with FeatureCollections</p>
+		<br>
+		<h3> To test: </h3>
+			<ol>
+			
+				<li>Check that you can see a feature collection that includes Brandenburh and Berlin<i> You see a FeatureCollection based on a GeoJSON file including Brandenburh and Berlin </i></li>
+				<li> Check that there is a Feature Overlay for Berlin. <i>changing the color </i></li>
+				<li> Click on "Add a FeatureCollection" and check that you can add a further FeatureCollection for Niedersachsen </li>
+				<li> Click on "Remove a FeatureCollection" and check that you can remove a further FeatureCollection for Niedersachsen </li>
+				<li> Click on "Add a Feature (change model)" and check that you can add a Feature Overlay for Brandenburg changing the default color </li>
+				<li>  Click on "Remove a Feature (change model)" and check that you can remove a Feature Overlay for Brandenburg </li>	
+				<li> click on the feature collection and check that the alert appears. </li>		
+				<li> Right click on the Feature collection and check that the alert appears. </li>	
+			</ol>
+				</div>
+		<div id="description2">
+			<br>
+					 <button id="onAddFC" onClick="onAddFC()">Add a FeatureCollection</button>
+		 <button id="onRemoveFC" onClick="onRemoveFC()">Remove a FeatureCollection</button>	
+		 <button id="onAddFeature" onClick="onAddFeature()">Add a Feature (change model)</button>
+         <button id="onRemoveFeature" onClick="onRemoveFeature()">Remove a Feature (change model)</button> 
+			<br>
+			<br>
+		 <div class="ratio_box">
+		 	<div class="content" id="content"></div>
+		 </div>
+		 <br />
+
+			</div>
+	</body>
+</html>

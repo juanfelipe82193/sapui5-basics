@@ -1,0 +1,356 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Cookbook for Testing Controls with QUnit</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content><meta name="description" content><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"2696ab50faad458f9b4027ec2f9b884d.html","previousTopicHref":"a6b0657d226343da81ad96632cd1bd83.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio0ddcc60b05ee40dea1a3be09e8fee8f7"><h1 class="title topictitle1" hidden>Cookbook for Testing Controls with QUnit</h1><div class="body conbody"><p class="shortdesc" hidden></p>
+<div class="section"><section class="section" type="Test Cases"><h2 class="section_title" style="font-size: 1.15em;">Test Cases</h2>
+
+<p class="p">You can use a factory function. To keep this pointer and have a descriptive message,
+you should use the test inside of the function and pass a test name to it.</p>
+<p class="p">Internally, we prefer to pass an object to the test for retrieving the values - it
+makes the test cases readable.</p>
+<pre class="pre codeblock prettyprint lang-js">// &quot;Bar&quot; required from module &quot;sap/m/Bar&quot;
+// &quot;Core&quot; required from module &quot;sap/ui/core/Core&quot;
+function renderBarInPageTestCase(sTestName, oOptions) {
+    QUnit.test(sTestName, function (assert) { 
+        // System under Test
+        var oBar = new Bar();
+
+        oBar.placeAt(&quot;qunit-fixture&quot;);
+
+        // Act
+        oBar.applyTagAndContextClassFor(oOptions.context);
+
+        Core.applyChanges();
+
+        // Assert
+       assert.strictEqual(oBar.getDomRef().nodeName, oOptions.expectedTag.toUpperCase());
+       assert.ok(oBar.$().hasClass(oOptions.expectedClass), &quot;The bar has the context class: &quot; + oOptions.expectedClass);
+
+        // Cleanup
+        oBar.destroy();
+    });
+};
+
+renderBarInPageTestCase(&quot;Should render the header context&quot;, {
+    context : &quot;header&quot;,
+    expectedTag : &quot;header&quot;,
+    expectedClass : &quot;sapMHeader-CTX&quot;
+});
+
+renderBarInPageTestCase(&quot;Should render the header context&quot;, {
+    context : &quot;subheader&quot;,
+    expectedTag : &quot;header&quot;,
+    expectedClass : &quot;sapMSubHeader-CTX&quot;
+});
+
+renderBarInPageTestCase(&quot;Should render the header context&quot;, {
+    context : &quot;footer&quot;,
+    expectedTag : &quot;footer&quot;,
+    expectedClass : &quot;sapMFooter-CTX&quot;
+});</pre>
+</section></div>
+<div class="section"><section class="section" type="Testing Control Events"><h2 class="section_title" style="font-size: 1.15em;">Testing Control Events</h2>
+
+<p class="p">You cannot test for event parameters in <span class="ph"><span class="ph pname">SAPUI5</span></span> so you have to
+record them. Nevertheless, you can still use Sinon to retain the spy&apos;s call counting
+capabilities. Here is a working example for this:</p>
+<pre class="pre codeblock prettyprint lang-js">// &quot;HashChanger&quot; required from module &quot;sap/ui/core/routing/HashChanger&quot;
+QUnit.test(&quot;Should set the Hash&quot;, function(assert) { 
+    //Arrange
+    var aCalls = [],
+        fnHashChanged = function(oEvt) {
+                 aCalls.push({ newHash : oEvt.getParameter(&quot;newHash&quot;), oldHash : oEvt.getParameter(&quot;oldHash&quot;) });
+        },
+        oSpy = this.spy(fnHashChanged);
+
+    
+    //System under Test
+    var oHashChanger = new HashChanger();
+    oHashChanger.init();
+    oHashChanger.attachEvent(&quot;hashChanged&quot;, oSpy);
+
+    //Act
+    oHashChanger.setHash(&quot;one&quot;, true);
+    oHashChanger.setHash(&quot;two&quot;);
+
+    //Assert
+    assert.strictEqual(oSpy.callCount, 2, &quot;did change the Hash two times&quot;);
+
+    assert.strictEqual(aCalls[0].newHash, &quot;one&quot;, &quot;first event was correct&quot;); 
+    assert.strictEqual(aCalls[1].newHash, &quot;two&quot;, &quot;second event was correct&quot;);
+    
+    //Cleanup
+    oHashChanger.destroy();
+});</pre>
+</section></div>
+<div class="section"><section class="section" type="Testing User Interactions"><h2 class="section_title" style="font-size: 1.15em;">Testing User Interactions</h2>
+
+<p class="p">When testing user interactions, you can use <samp class="ph codeph">sap.ui.test.qunit</samp> to
+trigger events.</p>
+<p class="p">Here is an example for when a user presses <kbd class="key">Esc</kbd> on the select:</p>
+<pre class="pre codeblock prettyprint lang-js">// &quot;Item&quot; required from module &quot;sap/ui/core/Item&quot;
+// &quot;Select&quot; required from module &quot;sap/m/Select&quot;
+// &quot;KeyCodes&quot; required from module &quot;sap/ui/events/KeyCodes&quot;
+// &quot;Core&quot; required from module &quot;sap/ui/core/Core&quot;
+// &quot;QUnitUtils&quot; required from module &quot;sap/ui/qunit/QUnitUtils&quot;
+QUnit.test(&quot;Should close the popup menu if it is open and you press escape&quot;, function(assert) {
+    // Arrange
+    var oContstructor = {
+        items: [
+        new Item({
+            key: &quot;0&quot;,
+            text: &quot;item 0&quot;
+        }),
+
+        new Item({
+            key: &quot;1&quot;,
+            text: &quot;item 1&quot;
+        })
+       ]
+    };
+
+    // System under test
+    var oSelect = new Select(oContstructor);
+
+    oSelect.placeAt(&quot;select-content&quot;);
+    Core.applyChanges();
+
+    // Arrange after rendering
+    oSelect.focus();
+    var fnEscapeSpy = this.spy(oSelect, &quot;onsapescape&quot;);
+    var fnCloseSpy = this.spy(oSelect, &quot;close&quot;);
+
+    // Act
+    QUnitUtils.triggerKeydown(oSelect.getDomRef(), KeyCodes.ESCAPE);
+
+    // Assertion
+    assert.strictEqual(fnEscapeSpy.callCount, 1, &quot;onsapescape() method was called exactly once&quot;);
+    assert.strictEqual(fnCloseSpy.callCount, 0, &quot;close() method is not called&quot;);
+
+    // Cleanup
+    oSelect.destroy();
+});</pre>
+</section></div>
+<div class="section"><section class="section" type="Testing the Re-rendering"><h2 class="section_title" style="font-size: 1.15em;">Testing the Re-rendering</h2>
+
+<p class="p">In this example, you will test to see whether the control fails to rerender. The
+control has overwritten the setter of the tooltip property to avoid triggering a
+re-rendering.</p>
+<p class="p">To test this, we add an <samp class="ph codeph">eventDelegate</samp> to see how often the rendering
+function is called. We need to make sure that we apply the changes after setting the
+property because we want <span class="ph"><span class="ph pname">SAPUI5</span></span> to render
+synchronously:</p>
+<pre class="pre codeblock prettyprint lang-js">// &quot;Label&quot; required from module &quot;sap/m/Label&quot;
+// &quot;Core&quot; required from module &quot;sap/ui/core/Core&quot;
+QUnit.test(&quot;Should supress rerendering when tooltip is set&quot;, function(assert) { 
+    // Arrange
+    var oContructor = {
+        tooltip : &quot;foo&quot;
+        };
+    var oRerenderingSpy = this.spy();
+
+    // System under Test
+    var oLabel = new Label(oContructor);
+    oLabel.placeAt(&quot;qunit-fixture&quot;);
+    Core.applyChanges();
+
+    oLabel.addEventDelegate({
+        onBeforeRendering : oRerenderingSpy
+    });
+
+    // Act
+    oLabel.setTooltip(&quot;bar&quot;);
+    Core.applyChanges();
+
+    // Assert
+    assert.strictEqual(oRerenderingSpy.callCount, 0, &quot;Did not rerender&quot;);
+    assert.strictEqual(oLabel.getTooltip(), &quot;bar&quot;, &quot;Tooltip property got set&quot;);
+    assert.strictEqual(oLabel.$().attr(&quot;title&quot;), &quot;bar&quot;, &quot;Tooltip got updated&quot;);
+
+    // Cleanup
+    oLabel.destroy();
+});</pre>
+</section></div>
+<div class="section"><section class="section" type="Testing with Models"><h2 class="section_title" style="font-size: 1.15em;">Testing with Models</h2>
+
+<p class="p">When testing with models, you need to make sure that you also setup/destroy your
+model inside a test itself. OData tests will always be integration tests, since you
+will require multiple files in order to use the mock server. You may use a factory
+method to do this.</p>
+<p class="p">An example for setting up the mock server is shown below: </p>
+<pre class="pre codeblock prettyprint lang-js">
+// &quot;MockServer&quot; required from module &quot;sap/ui/app/MockServer&quot;
+
+function startMockServer(iRespondAfter) {
+    // configure respond to requests delay
+    MockServer.config({
+        autoRespond : true,
+        autoRespondAfter : iRespondAfter || 10
+    });
+
+    // create mockserver
+    var oMockServer = new MockServer({
+        rootUri : &quot;http://sap.com/service/&quot;
+    });
+
+    // start and return
+    oMockServer.simulate(&quot;data/metadata.xml&quot;, &quot;data&quot;);
+    oMockServer.start();
+    return oMockServer;
+}
+
+//Your test:
+QUnit.test(&quot;Should do something with the model&quot;, function (assert) {
+    //Arrange
+    var oMockServer = startMockServer(0),
+    
+    // System under Test + Act
+
+    //Cleanup
+    oMockServer.stop();
+});</pre>
+<p class="p">When using the mock server, you can use async tests since calling respond each time
+on the mock server does not help the readability of the test.</p>
+<p class="p">After setting up the mock server, we set up the model as follows:</p>
+<pre class="pre codeblock prettyprint lang-js">
+// &quot;ODataModel&quot; required from module &quot;sap/ui/model/v2/ODataModel&quot;
+// &quot;jQuery&quot; required from module &quot;sap/ui/thirdparty/jquery&quot;
+
+function createODataModel(sURL, mSettings) {
+    sURL = sURL || &quot;http://sap.com/service/&quot;;
+    var oModel = new ODataModel(sURL);
+    
+    mSettings = mSettings || {};
+    jQuery.each(mSettings, function(sProperty, vValue) {
+        sProperty = sProperty[0].toUpperCase() + sProperty.substring(1);
+        oModel[&quot;set&quot; + sProperty](vValue);
+    });
+    
+    return oModel;
+}
+
+//Your test:
+QUnit.test(&quot;Should do something with the model&quot;, function(assert) {
+    // Arrange
+    var oModel = createODataModel(),
+    oMockServer = startMockServer(0),
+    done = assert.async();
+
+    // System under Test + Act + call done();
+
+    // Cleanup
+    oModel.destroy();
+    oMockServer.stop();
+});</pre>
+<p class="p">You can now bind your model against your control and test whatever you want.</p>
+<p class="p">We use <samp class="ph codeph">clock.tick</samp> to trigger the server response. If you didn&apos;t do
+this, the text of the label would still be empty:</p>
+<pre class="pre codeblock prettyprint lang-js">// &quot;Label&quot; required from module &quot;sap/m/Label&quot;
+// &quot;Core&quot; required from module &quot;sap/ui/core/Core&quot;
+
+//Your test:
+QUnit.test(&quot;Should do something with the model&quot;, function(assert) {
+    // Arrange
+    var oModel = createODataModel(),
+        oMockServer = startMockServer(50);
+
+    // System under Test
+    var oLabel = new Label({
+        text : &quot;{/myProperty}&quot;
+    });
+
+    oLabel.placeAt(&quot;qunit-fixture&quot;);
+    Core.applyChanges();
+
+    // Act - trigger the request
+    sinon.clock.tick(50);
+
+    // Assert
+    assert.strictEqual(&quot;myExpected&quot;, oLabel.getText(), &quot;The expected text was present&quot;);
+
+    // Cleanup
+    oModel.destroy();
+    oMockServer.stop();
+    sinon.clock.reset() 
+});</pre>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

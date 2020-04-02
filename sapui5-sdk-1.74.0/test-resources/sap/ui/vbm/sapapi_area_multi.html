@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js" id="sap-ui-bootstrap" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+	<!-- add sap.ui.table,sap.ui.ux3 and/or other libraries to 'data-sap-ui-libs' if required -->
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+
+		h4 {
+			margin: 1em 0;
+		}
+
+		i {
+			color: blue
+		}
+
+		table, th, td {
+			border: 1px solid black;
+			padding: 5px;
+			border-collapse: collapse;
+		}
+
+		.col {
+			color: red;
+		}
+
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+		// creation of visual business...........................//
+		sap.ui.localResources("vbitestapp");
+
+		function onSubmit(e) {
+			if (evtoutput.innerText !== undefined)
+				evtoutput.innerText = e.getParameter("data");
+			else
+			if (evtoutput.textContent !== undefined)
+				evtoutput.textContent = e.getParameter("data"); // due to ff
+		};
+
+
+		var oVBI1 = new sap.ui.vbm.VBI('vbiWrap2', {
+			width: 1024,
+			height: 628,
+			submit: onSubmit // set the event handler
+		});
+		oVBI1.placeAt("content");
+
+		// load the json and set the default text area text
+		var dat = $.getJSON("media/vbarea/multiarea.json", function(dat) {
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array) {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(dat);
+		});
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: Sample should show areas with multi polygons.</h1>
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test the Area Visual Object as single and multi part shapes.</p>
+		<br>
+		<h3> To test: </h3>
+		<p style="color:red"> Note: If you are using a touch device you cannot hover to see the tooltips. Please use the image
+		that displays the different zip codes to compare your results. If you are not using a touch device you can hover to check the zip codes</p>
+		<i><p style="color:red;"><b> * Please refresh the page before running each step. </b></i>
+		<ol>
+			<li> Check that the GeoMap contains Areas.</li>
+			<img src="img/areasingle1.jpg" alt="text for Thumbnail" style="width:400px;height:280px;">
+			<li> Hover your mouse over an area on the map, and note down the ZIP code displayed in the tooltip. </li>
+			<img src="img/areasingle2.jpg" alt="text for Thumbnail" style="width:400px;height:280px;">
+			<li> Click on the area, and then look at the text field below the GeoMap to check the value for the "object" property. You should see either the "Area" or "MultiArea" values.</li>
+			<br>
+			<img src="img/areasingle3.jpg" alt="text for Thumbnail" style="width:300px;height:180px;">
+			<br>
+			<img src="img/areasingle4.jpg" alt="text for Thumbnail" style="width:300px;height:180px;">
+			<br>
+			<li>Check that the Area's object property value matches the value in the following image:</li>
+			<br>
+			<img src="img/zipcodemap.jpg" alt="Zip Code Map" style="width:300px;height:400px;">
+			<br>
+			<li>Repeat all the steps for the remaining Areas on the map.</li>
+		</ol>
+	</div>
+	<div id="description2">
+		<br>
+		<br>
+		<table>
+			<tr>
+				<td>
+					<div id="content"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h6>Event:</h6>
+					<br>
+					<textarea style="width:100%;box-sizing:border-box" id="evtoutput" rows="8"></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+</body>
+
+</html>

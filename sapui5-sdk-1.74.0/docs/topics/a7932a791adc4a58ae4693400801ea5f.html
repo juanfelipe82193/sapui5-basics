@@ -1,0 +1,139 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 16: Handle Invalid Hashes by Listening to Bypassed Events</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="So far we have created many useful routes in our app. In the very early steps we have also made sure that a Not Found page is displayed in case the app was called with an invalid hash. Now, we proceed further and track invalid hashes to be able to detect and correct any invalid links or add new URL patterns that are often requested but not found. Therefore, we simply listen to the bypassed events"><meta name="description" content="So far we have created many useful routes in our app. In the very early steps we have also made sure that a Not Found page is displayed in case the app was called with an invalid hash. Now, we proceed further and track invalid hashes to be able to detect and correct any invalid links or add new URL patterns that are often requested but not found. Therefore, we simply listen to the bypassed events"><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"4a063b8250f24d0cbf7c689821df7199.html","previousTopicHref":"877d57e3b5654b19a2d2e5190dc43b0d.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/1b6dcd39a6a74f528b27ddb22f15af0d.html" title="SAPUI5 comes with a powerful routing API that helps you control the state of your application efficiently. This tutorial will illustrate all major features and APIs related to navigation and routing in SAPUI5 apps by creating a simple and easy to understand mobile app. It represents a set of best practices for applying the navigation and routing features of SAPUI5 to your applications." target="_top">Navigation and Routing</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/877d57e3b5654b19a2d2e5190dc43b0d.html" title="The Employees table displays employee data. However, the resumes of the employees are not accessible from this view yet. We could create a new route and a new view to visualize the resume again, but we could also simply reuse an existing route to cross-link the resume of a certain employee. In this step, we will add a feature that allows users to directly navigate to the resume of a certain employee. We will reuse the Resume page that we have created in an earlier step. This example illustrates that there can be multiple navigation paths that direct to the same page." target="_top">Step 15: Reuse an Existing Route</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/4a063b8250f24d0cbf7c689821df7199.html" title="In the previous step, we have listened for bypassed events to detect possible technical issues with our app. In this step, we want to improve the analysis use case even more by listening to any matched event of the route. We could use this information to measure how the app is used and how frequently the pages are called. Many Web analytic tools track page hits this way. The collected information can be used, for example to improve our app and its usability." target="_top">Step 17: Listen to Matched Events of Any Route</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loioa7932a791adc4a58ae4693400801ea5f"><h1 class="title topictitle1" hidden>Step 16: Handle Invalid Hashes by Listening to Bypassed Events </h1><div class="body conbody"><p class="shortdesc" hidden>So far we have created many useful routes in our app. In the very early steps we have
+also made sure that a <span class="ph uicontrol">Not Found</span> page is displayed in case the app was
+called with an invalid hash. Now, we proceed further and track invalid hashes to be able to
+detect and correct any invalid links or add new URL patterns that are often requested but
+not found. Therefore, we simply listen to the bypassed events</p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loioa7932a791adc4a58ae4693400801ea5f__fig_r1j_pst_mr"><div class="figbody">
+
+<img class="inline  " id="loioa7932a791adc4a58ae4693400801ea5f__image_xql_npd_4s" src="loio6f2e76a0c5dc476ba8381865a06748c9_HiRes.png">
+</div><span class="figcap">Console output for invalid hashes when listening to bypassed events</span></div>
+</section></div>
+<div class="section"><section class="section" type="Coding"><h2 class="section_title" style="font-size: 1.15em;">Coding</h2>
+
+<p class="p">You can view and download all files in the <span class="ph uicontrol">Samples</span> in the Demo Kit
+<span class="ph">at <a class="xref" href="../../#/sample/sap.ui.core.tutorial.navigation.16/preview" target="_top" alt="#/sample/sap.ui.core.tutorial.navigation.16/preview" title="#/sample/sap.ui.core.tutorial.navigation.16/preview">Routing and Navigation - Step
+16</a></span>.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/controller/App.controller.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/controller/App.controller.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/demo/nav/controller/BaseController&quot;
+], function (BaseController) {
+	&quot;use strict&quot;;
+
+	return BaseController.extend(&quot;sap.ui.demo.nav.controller.App&quot;, {
+
+		onInit: function () {
+			<span class="ph emphasis emphasis">// This is ONLY for being used within the tutorial.
+			// The default log level of the current running environment may be higher than INFO,
+			// in order to see the debug info in the console, the log level needs to be explicitly
+			// set to INFO here.
+			// But for application development, the log level doesn&apos;t need to be set again in the code.
+			Log.setLevel(Log.Level.INFO);
+
+			var oRouter = this.getRouter();
+
+			oRouter.attachBypassed(function (oEvent) {
+				var sHash = oEvent.getParameter(&quot;hash&quot;);
+				// do something here, i.e. send logging data to the backend for analysis
+				// telling what resource the user tried to access...
+				Log.info(&quot;Sorry, but the hash &apos;&quot; + sHash + &quot;&apos; is invalid.&quot;, &quot;The resource was not found.&quot;);
+			});</span>
+		}
+
+	});
+
+});</pre>
+<div class="p">All we need to do is listen to the bypassed event on the router. If the bypassed event is triggered, we simply get the current hash and log a message. In
+an actual app this is probably the right place to add some application analysis features, i.e. sending analytical logs to the back end for later
+evaluation and processing. This could be used to improve the app, for example, to find out why the user called the app with an invalid hash.<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">We have chosen to place this piece of code into the <samp class="ph codeph">App</samp> controller because this is a global feature of the app. However,
+you could also place it anywhere else, for example in the <samp class="ph codeph">NotFound</samp> controller file or in a helper module related to
+analysis.</p></aside>Now try to access <samp class="ph codeph">webapp/index.html#/thisIsInvalid</samp> while you have your browser console open. As you can see, there is a
+message that issues a faulty hash. Furthermore, our <samp class="ph codeph">NotFound</samp> page is displayed.</div>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/1b6dcd39a6a74f528b27ddb22f15af0d.html" title="SAPUI5 comes with a powerful routing API that helps you control the state of your application efficiently. This tutorial will illustrate all major features and APIs related to navigation and routing in SAPUI5 apps by creating a simple and easy to understand mobile app. It represents a set of best practices for applying the navigation and routing features of SAPUI5 to your applications." target="_top">Navigation and Routing</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/877d57e3b5654b19a2d2e5190dc43b0d.html" title="The Employees table displays employee data. However, the resumes of the employees are not accessible from this view yet. We could create a new route and a new view to visualize the resume again, but we could also simply reuse an existing route to cross-link the resume of a certain employee. In this step, we will add a feature that allows users to directly navigate to the resume of a certain employee. We will reuse the Resume page that we have created in an earlier step. This example illustrates that there can be multiple navigation paths that direct to the same page." target="_top">Step 15: Reuse an Existing Route</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/4a063b8250f24d0cbf7c689821df7199.html" title="In the previous step, we have listened for bypassed events to detect possible technical issues with our app. In this step, we want to improve the analysis use case even more by listening to any matched event of the route. We could use this information to measure how the app is used and how frequently the pages are called. Many Web analytic tools track page hits this way. The collected information can be used, for example to improve our app and its usability." target="_top">Step 17: Listen to Matched Events of Any Route</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/api/sap.m.routing.Router" target="_top" alt="#/api/sap.m.routing.Router" title="#/api/sap.m.routing.Router">API Reference: <samp class="ph codeph">sap.m.routing.Router</samp></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

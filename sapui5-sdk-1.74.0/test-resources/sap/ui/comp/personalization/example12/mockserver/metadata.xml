@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<edmx:Edmx Version="1.0"
+		   xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+		   xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:DataServices
+			xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+			m:DataServiceVersion="2.0">
+		<Schema Namespace="HierarchyTestservice.odata.tree"
+				xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices"
+				xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+				xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="orgHierarchyType">
+				<Key>
+					<PropertyRef Name="HIERARCHY_NODE"/>
+				</Key>
+				<Property Name="HIERARCHY_NODE" Type="Edm.String" Nullable="false" MaxLength="32" sap:label="Hierarchy Node"
+						  sap:hierarchy-node-for="HIERARCHY_NODE"/>
+				<Property Name="DESCRIPTION" Type="Edm.String" MaxLength="100" sap:label="Description" />
+				<Property Name="LEVEL" Type="Edm.Int32" sap:label="Level" sap:hierarchy-level-for="HIERARCHY_NODE"/>
+				<Property Name="PARENT_NODE" Type="Edm.String" MaxLength="32" sap:label="Parent Node"
+						  sap:hierarchy-parent-node-for="HIERARCHY_NODE"/>
+				<Property Name="DRILLDOWN_STATE" Type="Edm.String" MaxLength="16" sap:label="Drilldown State"
+						  sap:hierarchy-drill-state-for="HIERARCHY_NODE"/>
+				<Property Name="MAGNITUDE" Type="Edm.Int32" sap:label="Magnitude" sap:hierarchy-node-descendant-count-for="HIERARCHY_NODE"/>
+				<Property Name="SERVER_INDEX" Type="Edm.Int32" sap:label="Server Index" />
+				<!--<NavigationProperty Name="toChildren"-->
+									<!--Relationship="HierarchyTestservice.odata.tree.orgHierarchyChildrenType"-->
+									<!--FromRole="orgHierarchyPrincipal" ToRole="orgHierarchyDependent"/>-->
+			</EntityType>
+			<EntityContainer Name="tree" m:IsDefaultEntityContainer="true">
+				<EntitySet Name="orgHierarchy" EntityType="HierarchyTestservice.odata.tree.orgHierarchyType"/>
+			</EntityContainer>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

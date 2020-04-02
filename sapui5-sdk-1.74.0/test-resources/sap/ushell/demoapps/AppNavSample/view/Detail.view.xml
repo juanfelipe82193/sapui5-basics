@@ -1,0 +1,72 @@
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout"
+		xmlns="sap.m" controllerName="sap.ushell.demo.AppNavSample.view.Detail"
+		xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+		xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page title="Detail">
+		<subHeader>
+			<Toolbar design="Transparent">
+				<Title text="isInitialNavigation?" class="sapUiTinyMarginEnd"/>
+				<core:Icon id="isInitialNavigationIcon" src="sap-icon://status-error" color="{detailView>/isInitialNavigationColor}"/>
+				<Text id="isInitialNavigation" text="{detailView>/isInitialNavigation}"/>
+				<ToolbarSpacer/>
+				<Title text="Current user:"/>
+				<Text text="{detailView>/userId}"/>
+			</Toolbar>
+		</subHeader>
+		<content>
+			<Panel>
+				<List headerText="Application Startup Parameters" noDataText="No startup parameters passed"
+					  items="{path: 'startupParameters>/parameters'}">
+					<DisplayListItem label="{startupParameters>key}" value="{startupParameters>value}"/>
+				</List>
+				<List headerText="App State Key (if present):">
+					<DisplayListItem label="Key:" value="{AppState>/appstate/appStateKey}"/>
+				</List>
+				<List headerText="App State Parameters" noDataText="No appstate parameters"
+					  items="{path: 'AppState>/appstate/parameters'}">
+					<InputListItem label="{AppState>name}" tooltip="{AppState>name}">
+						<Input id="UserDefaultValue" value="{AppState>value}" type="Text"
+							   enabled="false"/>
+					</InputListItem>
+				</List>
+				<Label text="Received AppState (JSON.stringified)"/>
+				<TextArea cols="90" rows="3" enabled="false" id="fas2"
+						  value="{AppState>/appstate/stringifiedAppstate}"/>
+				<List headerText="Configuration Service Properties:">
+					<CustomListItem>
+						<content>
+							<HBox>
+								<VBox>
+									<Title class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" level="H1" text="Homepage Size Behavior:"/>
+									<Title class="sapUiSmallMarginBegin " level="H1" text="{detailView>/sizeBehavior}"/>
+								</VBox>
+								<Button class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" text="Toggle sizeBehavior" press="toggleSizeBehavior"/>
+								<Button class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" text="DetachSizeBehaviorUpdate" press="detachSizeBehavior"/>
+								<Button class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" text="AttachSizeBehaviorUpdate" press="attachSizeBehavior"/>
+							</HBox>
+						</content>
+					</CustomListItem>
+				</List>
+				<VBox>
+					<Title level="H1" class="sapUiSmallMarginTop" text="Model bound to sap/ushell/Config" />
+					<HBox>
+						<Label class="sapUiSmallMargin" text="/core/navigation/enableInPlaceForClassicUIs/GUI: {configModel>/prop1}" />
+						<Button press="onFlipPropertyClicked" app:config="/core/navigation/enableInPlaceForClassicUIs/GUI" text="Change" />
+					</HBox>
+					<HBox>
+						<Label class="sapUiSmallMargin" text="/core/navigation/enableWebguiLocalResolution: {configModel>/prop2}" />
+						<Button press="onFlipPropertyClicked" app:config="/core/navigation/enableWebguiLocalResolution" text="Change" />
+					</HBox>
+				</VBox>
+				<VBox>
+					<Title level="H1" class="sapUiSmallMarginTop" text="Display mouse coordinates" />
+					<Label class="sapUiSmallMargin" text="Mouse coordinates:" />
+					<Label class="sapUiSmallMargin" text="[{detailView>/coordinates/screenX}, {detailView>/coordinates/screenY}]" />
+					<Button press="onAddClickLister" text="Add Click Listener" />
+					<Button press="onRemoveClickLister" text="Remove Click Listener" />
+					<Button press="onCallTunnelFunction" text="Call Tunnel Function" />
+				</VBox>
+			</Panel>
+		</content>
+	</Page>
+</core:View>

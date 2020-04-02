@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+		   xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+		   xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+		   xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="EPM_DEVELOPER_SCENARIO_SRV"
+				sap:schema-version="0" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+
+			<EntityType Name="Product">
+				<Key>
+					<PropertyRef Name="ProductId"/>
+				</Key>
+				<Property Name="ProductId" Type="Edm.String"/>
+				<Property Name="ContactName" Type="Edm.String"/>
+				<Property Name="HiddenPropertyProduct" Type="Edm.String"/>
+				<Property Name="SupplierId" Type="Edm.String"/>
+				<NavigationProperty Name="to_Supplier"
+									Relationship="EPM_DEVELOPER_SCENARIO_SRV.FK_Products_Suppliers"
+									FromRole="Products" ToRole="Suppliers"/>
+			</EntityType>
+
+			<EntityType Name="Supplier">
+				<Key>
+					<PropertyRef Name="SupplierId"/>
+				</Key>
+				<Property Name="SupplierId" Type="Edm.String"/>
+				<Property Name="HiddenPropertySupplier" Type="Edm.String"/>
+				<Property Name="FormattedName" Type="Edm.String"/>
+				<!--<Property Name="Photo" Type="Edm.String"/>-->
+				<!--<Property Name="Title" Type="Edm.String"/>-->
+				<!--<Property Name="CompanyName" Type="Edm.String"/>-->
+				<!--<Property Name="OrganizationRole" Type="Edm.String"/>-->
+				<Property Name="EmailAddressHome" Type="Edm.String"/>
+				<Property Name="EmailAddress1" Type="Edm.String"/>
+				<Property Name="EmailAddress2" Type="Edm.String"/>
+				<Property Name="PrefEmailAddress" Type="Edm.String"/>
+				<Property Name="FaxNumber" Type="Edm.String"/>
+				<Property Name="PhoneNumber" Type="Edm.String"/>
+				<Property Name="MobileNumber1" Type="Edm.String"/>
+				<Property Name="MobileNumber2" Type="Edm.String"/>
+				<Property Name="PhoneNumberHome" Type="Edm.String"/>
+				<Property Name="AddressId" Type="Edm.String"/>
+				<NavigationProperty Name="to_Address"
+									Relationship="EPM_DEVELOPER_SCENARIO_SRV.FK_Suppliers_Addresses"
+									FromRole="Suppliers" ToRole="Addresses"/>
+			</EntityType>
+
+			<EntityType Name="Address">
+				<Key>
+					<PropertyRef Name="AddressId"/>
+				</Key>
+				<Property Name="AddressId" Type="Edm.String"/>
+				<Property Name="Street" Type="Edm.String"/>
+				<Property Name="PostalCode" Type="Edm.String"/>
+				<Property Name="City" Type="Edm.String"/>
+				<Property Name="State" Type="Edm.String"/>
+				<Property Name="Country" Type="Edm.String"/>
+			</EntityType>
+
+			<Association Name="FK_Products_Suppliers">
+				<End Role="Suppliers" Type="EPM_DEVELOPER_SCENARIO_SRV.Supplier"
+					 Multiplicity="0..1"/>
+				<End Role="Products" Type="EPM_DEVELOPER_SCENARIO_SRV.Product"
+					 Multiplicity="*"/>
+				<ReferentialConstraint>
+					<Principal Role="Suppliers">
+						<PropertyRef Name="SupplierId"/>
+					</Principal>
+					<Dependent Role="Products">
+						<PropertyRef Name="SupplierId"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="FK_Suppliers_Addresses">
+				<End Role="Addresses" Type="EPM_DEVELOPER_SCENARIO_SRV.Address"
+					 Multiplicity="0..1"/>
+				<End Role="Suppliers" Type="EPM_DEVELOPER_SCENARIO_SRV.Supplier"
+					 Multiplicity="*"/>
+				<ReferentialConstraint>
+					<Principal Role="Suppliers">
+						<PropertyRef Name="AddressId"/>
+					</Principal>
+					<Dependent Role="Addresses">
+						<PropertyRef Name="AddressId"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+
+
+			<EntityContainer Name="EPM_DEVELOPER_SCENARIO_SRV" m:IsDefaultEntityContainer="true">
+				<EntitySet Name="ProductCollection" EntityType="EPM_DEVELOPER_SCENARIO_SRV.Product"/>
+				<EntitySet Name="SupplierCollection" EntityType="EPM_DEVELOPER_SCENARIO_SRV.Supplier"/>
+				<EntitySet Name="AddressCollection" EntityType="EPM_DEVELOPER_SCENARIO_SRV.Address"/>
+				<AssociationSet Name="FK_Products_Suppliers"
+								Association="EPM_DEVELOPER_SCENARIO_SRV.FK_Products_Suppliers">
+					<End Role="Suppliers" EntitySet="SupplierCollection"/>
+					<End Role="Products" EntitySet="ProductCollection"/>
+				</AssociationSet>
+				<AssociationSet Name="FK_Suppliers_Addresses"
+								Association="EPM_DEVELOPER_SCENARIO_SRV.FK_Suppliers_Addresses">
+					<End Role="Suppliers" EntitySet="SupplierCollection"/>
+					<End Role="Addresses" EntitySet="AddressCollection"/>
+				</AssociationSet>
+			</EntityContainer>
+
+			<Annotations Target="EPM_DEVELOPER_SCENARIO_SRV.Product" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.Communication.v1.Contact">
+					<Record>
+						<PropertyValue Property="fn" Path="ContactName"/>
+						<!--<PropertyValue Property="role" Path="ProductId"/>-->
+						<!--<PropertyValue Property="photo" Path="ProductPicUrl"/>-->
+					</Record>
+				</Annotation>
+			</Annotations>
+
+			<Annotations Target="EPM_DEVELOPER_SCENARIO_SRV.Supplier" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.Communication.v1.Contact">
+					<Record>
+						<PropertyValue Property="fn" Path="FormattedName"/>
+						<!--<PropertyValue Property="title" Path="Title"/>-->
+						<!--<PropertyValue Property="org" Path="CompanyName"/>-->
+						<!--<PropertyValue Property="role" Path="OrganizationRole"/>-->
+						<!--<PropertyValue Property="photo" Path="Photo"/>-->
+						<!--<PropertyValue Property="tel">-->
+						<!--<Collection>-->
+						<!--<Record>-->
+						<!--<PropertyValue Property="type"-->
+						<!--EnumMember="com.sap.vocabularies.Communication.v1.PhoneType/fax"/>-->
+						<!--<PropertyValue Property="uri" Path="FaxNumber"/>-->
+						<!--</Record>-->
+						<!--<Record>-->
+						<!--<PropertyValue Property="type"-->
+						<!--EnumMember="com.sap.vocabularies.Communication.v1.PhoneType/work com.sap.vocabularies.Communication.v1.PhoneType/pref"/>-->
+						<!--<PropertyValue Property="uri" Path="PhoneNumber"/>-->
+						<!--</Record>-->
+						<!--<Record>-->
+						<!--<PropertyValue Property="type"-->
+						<!--EnumMember="com.sap.vocabularies.Communication.v1.PhoneType/cell"/>-->
+						<!--<PropertyValue Property="uri" Path="MobileNumber"/>-->
+						<!--</Record>-->
+						<!--</Collection>-->
+						<!--</PropertyValue>-->
+						<!--<PropertyValue Property="email">-->
+						<!--<Collection>-->
+						<!--<Record>-->
+						<!--<PropertyValue Property="type"-->
+						<!--EnumMember="com.sap.vocabularies.Communication.v1.ContactInformationType/pref com.sap.vocabularies.Communication.v1.ContactInformationType/work"/>-->
+						<!--<PropertyValue Property="address" Path="EmailAddress"/>-->
+						<!--</Record>-->
+						<!--</Collection>-->
+						<!--</PropertyValue>-->
+					</Record>
+				</Annotation>
+			</Annotations>
+
+			<Annotations Target="EPM_DEVELOPER_SCENARIO_SRV.Product/HiddenPropertyProduct"
+						 xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.UI.v1.Hidden" Bool="true"/>
+			</Annotations>
+			<Annotations Target="EPM_DEVELOPER_SCENARIO_SRV.Supplier/HiddenPropertySupplier"
+						 xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.UI.v1.Hidden"/>
+			</Annotations>
+
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

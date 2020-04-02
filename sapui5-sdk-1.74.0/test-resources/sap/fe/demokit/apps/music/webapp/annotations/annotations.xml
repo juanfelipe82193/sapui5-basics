@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+	<edmx:Reference Uri="/sap/opu/odata4/sap/sadl_gw_appmusic_draft/srvd/sap/sadl_gw_appmusicdr_definition/0001/$metadata">
+		<edmx:Include Alias="musicDB" Namespace="com.sap.gateway.srvd.sadl_gw_appmusicdr_definition.v0001"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Alias="vCard" Namespace="com.sap.vocabularies.Communication.v1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CORE',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Alias="CQP" Namespace="Org.OData.Measures.V1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="music.artists">
+
+			<Annotations Target="musicDB.Container/Artists">
+				<Annotation Term="Capabilities.FilterRestrictions">
+					<Record>
+						<PropertyValue Property="FilterExpressionRestrictions">
+							<Collection>
+								<Record>
+									<PropertyValue Property="Property" PropertyPath="CountryOfOrigin"/>
+									<PropertyValue Property="AllowedExpressions" String="SingleValue"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="musicDB.ArtistsType">
+				<Annotation Term="Common.SemanticKey">
+					<Collection>
+						<PropertyPath>Name</PropertyPath>
+					</Collection>
+				</Annotation>
+				<Annotation Term="Capabilities.DeleteRestrictions">
+					<Record>
+						<PropertyValue Property="Deletable" Bool="false"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.HeaderInfo">
+					<Record>
+						<PropertyValue Property="TypeName" String="Artist"/>
+						<PropertyValue Property="TypeNamePlural" String="Artists"/>
+						<PropertyValue Property="ImageUrl" String="sap-icon://lead"/>
+						<PropertyValue Property="Title">
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="Name"/>
+							</Record>
+						</PropertyValue>
+						<PropertyValue Property="Description">
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="CountryOfOrigin"/>
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.HeaderFacets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Create-Change Information" />
+							<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#CreateChangeInformation" />
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Technical Data" />
+							<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#TechnicalData" />
+							<!--<Annotation Term="UI.Hidden" Path="HasDraftEntity"/>-->
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.CollectionFacet">
+							<PropertyValue Property="ID" String="GeneralInformation"/>
+							<PropertyValue Property="Label" String="General Info Facet Label"/>
+							<PropertyValue Property="Facets">
+								<Collection>
+									<Record Type="UI.CollectionFacet">
+										<PropertyValue Property="ID" String="GeneralInformationForm"/>
+										<PropertyValue Property="Label" String="ProductInfo Facet Label"/>
+										<PropertyValue Property="Facets">
+											<Collection>
+												<Record Type="UI.ReferenceFacet">
+													<PropertyValue Property="Label" String="Technical Data"/>
+													<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#TechnicalData"/>
+												</Record>
+												<Record Type="UI.ReferenceFacet">
+													<PropertyValue Property="Label" String="Create-Change Information"/>
+													<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#CreateChangeInformation"/>
+												</Record>
+												<Record Type="UI.ReferenceFacet">
+													<PropertyValue Property="Label" String="Move Country"/>
+													<PropertyValue Property="Target" AnnotationPath="@UI.StatusInfo#SI"/>
+												</Record>
+												<Record Type="UI.ReferenceFacet">
+													<PropertyValue Property="Label" String="General Information" />
+													<PropertyValue Property="Target" AnnotationPath="@UI.Identification" />
+													<Annotation Term="UI.PartOfPreview" Bool="false"/>
+												</Record>
+											</Collection>
+										</PropertyValue>
+									</Record>
+									<Record Type="UI.CollectionFacet">
+										<PropertyValue Property="ID" String="Publication"/>
+										<PropertyValue Property="Label" String="Publication"/>
+										<PropertyValue Property="Facets">
+											<Collection>
+												<Record Type="UI.ReferenceFacet">
+													<PropertyValue Property="Label" String="Publications" />
+													<PropertyValue Property="Target" AnnotationPath="_Publication/@UI.LineItem" />
+													<!--<Annotation Term="UI.Hidden" Bool="true"/>-->
+												</Record>
+											</Collection>
+										</PropertyValue>
+									</Record>
+									<Record Type="UI.ReferenceFacet">
+										<PropertyValue Property="Label" String="Break-up Identification" />
+										<PropertyValue Property="Target" AnnotationPath="@UI.Identification#ID" />
+										<!--<Annotation Term="UI.Hidden"/>-->
+									</Record>
+								</Collection>
+							</PropertyValue>
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Assigned Persons" />
+							<PropertyValue Property="Target" AnnotationPath="_PersAssign/@UI.LineItem" />
+							<!--<Annotation Term="UI.Hidden"/>-->
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Reunion Info" />
+							<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Reunion" />
+							<!--<Annotation Term="UI.Hidden"/>-->
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.StatusInfo" Qualifier="SI">
+					<Collection>
+						<Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Move Country" />
+							<PropertyValue Property="Action" String="com.sap.gateway.srvd.sadl_gw_appmusicdr_definition.v0001.MOVE_COUNTRY" />
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.Identification" Qualifier="ID">
+					<Collection>
+						<Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Break Up" />
+							<PropertyValue Property="Action" String="com.sap.gateway.srvd.sadl_gw_appmusicdr_definition.v0001.BREAK_UP" />
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="BreakupYear" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="Reunion">
+					<Record>
+						<PropertyValue Property="Label" String="Reunion"/>
+						<PropertyValue Property="Data">
+							<Collection>
+								<Record Type="UI.DataFieldForAction">
+									<PropertyValue Property="Label" String="Reunion" />
+									<PropertyValue Property="Action" String="com.sap.gateway.srvd.sadl_gw_appmusicdr_definition.v0001.REUNION" />
+									<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated" />
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="BreakupYear" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="TechnicalData">
+					<Record>
+						<PropertyValue Property="Label" String="Technical Data"/>
+						<PropertyValue Property="Data">
+							<Collection>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="Name"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="CountryOfOrigin"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+									<Annotation Term="UI.Hidden" Bool="false"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="RegionOfOrigin"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="FoundingYear"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="CreateChangeInformation">
+					<Record>
+						<PropertyValue Property="Label" String="Creation and change information"/>
+						<PropertyValue Property="Data">
+							<Collection>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="Name"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="CreatedAt"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="CreatedBy"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="ChangedAt"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="ChangedBy"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.Identification">
+					<Collection>
+						<Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Break Up" />
+							<PropertyValue Property="Action" String="com.sap.gateway.srvd.sadl_gw_appmusicdr_definition.v0001.BREAK_UP" />
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="CountryOfOrigin" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="RegionOfOrigin" />
+							<Annotation Term="UI.Hidden" Bool="false"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="FoundingYear" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="BreakupYear" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name" />
+						</Record>
+						<!-- <Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Break Up" />
+							<PropertyValue Property="Action" String="com.sap.gateway.srvd.sadl_gw_appmusicdr_definition.v0001.BREAK_UP" />
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated" />
+						</Record> -->
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="My Country" />
+							<PropertyValue Property="Value" Path="CountryOfOrigin" />
+						</Record>
+						<!-- <Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Reunion" />
+							<PropertyValue Property="Action" String="com.sap.gateway.srvd.sadl_gw_appmusicdr_definition.v0001.REUNION" />
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated" />
+						</Record> -->
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="RegionOfOrigin" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="FoundingYear" />
+						</Record>
+						<!-- <Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Change Country" />
+							<PropertyValue Property="Action" String="com.sap.gateway.srvd.sadl_gw_appmusicdr_definition.v0001.MOVE_COUNTRY" />
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated" />
+						</Record> -->
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="BreakupYear" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<!-- <Annotation Term="Common.SideEffects" Qualifier="BreakupYearChanged">
+					<Record>
+						<PropertyValue Property="SourceProperties">
+							<Collection>
+								<PropertyPath>BreakupYear</PropertyPath>
+							</Collection>
+						</PropertyValue>
+					<PropertyValue Property="TargetProperties">
+						<Collection>
+							<PropertyPath>ArtistUUID</PropertyPath>
+							<PropertyPath>Name</PropertyPath>
+							<PropertyPath>ChangedBy</PropertyPath>
+						</Collection>
+					</PropertyValue>
+						<PropertyValue Property="EffectTypes" EnumMember="ValueChange" />
+					</Record>
+				</Annotation> -->
+			</Annotations>
+			<Annotations Target="musicDB.PublicationsType">
+				<Annotation Term="Common.SemanticKey">
+					<Collection>
+						<PropertyPath>Name</PropertyPath>
+					</Collection>
+				</Annotation>
+				<!-- <Annotation Term="Common.SideEffects" Qualifier="BreakupYearChanged">
+					<Record>
+						<PropertyValue Property="SourceProperties">
+							<Collection>
+								<PropertyPath>BreakupYear</PropertyPath>
+							</Collection>
+						</PropertyValue>
+					<PropertyValue Property="TargetProperties">
+						<Collection>
+							<PropertyPath>ArtistUUID</PropertyPath>
+							<PropertyPath>Name</PropertyPath>
+							<PropertyPath>ChangedBy</PropertyPath>
+						</Collection>
+					</PropertyValue>
+						<PropertyValue Property="EffectTypes" EnumMember="ValueChange" />
+					</Record>
+				</Annotation> -->
+			</Annotations>
+			<Annotations Target="musicDB.PublicationsType">
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="General Information"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Titles"/>
+							<PropertyValue Property="Target" AnnotationPath="_Title/@UI.LineItem"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Type"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ReleaseDate"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Price"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.Identification">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Type"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Price"/>
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+
+			<Annotations Target="musicDB.ArtistContributionsType">
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="_Contributor/CountryOfOrigin"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="_Contributor/FoundingYear"/>
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+
+			<Annotations Target="musicDB.TitlesType">
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Genre"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Price"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.Identification">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Genre"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Price"/>
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+
+			<Annotations Target="musicDB.BREAK_UP">
+				<Annotation Term="com.sap.vocabularies.Common.v1.SideEffects">
+					<Record>
+						<PropertyValue Property="EffectTypes" EnumMember="ValueChange"/>
+						<PropertyValue Property="TargetProperties">
+							<Collection>
+								<PropertyPath>BreakupYear</PropertyPath>
+								<!-- <PropertyPath>_it/_Publication/Name</PropertyPath> -->
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+
+			<Annotations Target="musicDB.REUNION">
+				<Annotation Term="com.sap.vocabularies.Common.v1.SideEffects">
+					<Record>
+						<PropertyValue Property="EffectTypes" EnumMember="ValueChange"/>
+						<PropertyValue Property="TargetProperties">
+							<Collection>
+								<PropertyPath>BreakupYear</PropertyPath>
+								<!-- <PropertyPath>_it/_Publication/Name</PropertyPath> -->
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

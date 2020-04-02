@@ -1,0 +1,145 @@
+<mvc:View
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    height="100%"
+    controllerName="sap.ushell.applications.SpaceDesigner.controller.SpaceOverview">
+    <Page id="spaceOverview">
+        <customHeader>
+            <Bar id="titlebar">
+                <contentLeft>
+                    <Title id="title" text="{i18n>SpaceOverview.Title}" class="sapUiMediumMarginBegin">
+                        <customData>
+                            <core:CustomData key="help-id" value="FLPSpace-Designer-SpaceOverview-Header" writeToDom="true" />
+                        </customData>
+                    </Title>
+                </contentLeft>
+            </Bar>
+        </customHeader>
+        <content>
+            <Table
+                class="sapUiMediumMarginBeginEnd sapUiTinyMarginTopBottom sapUiForceWidthAuto"
+                id="table"
+                ariaLabelledBy="title"
+                busy="{/busy}"
+                items="{
+                    path: '/spaces',
+                    key: 'id',
+                    sorter: {
+                        path : 'content/modifiedOn',
+                        descending: 'true'
+                    }
+                }"
+                itemPress=".onItemPress"
+                selectionChange=".onSelectionChange"
+                updateFinished=".onTableUpdate"
+                mode="SingleSelectLeft"
+                sticky="ColumnHeaders"
+                noDataText="{i18n>Message.NoSpaces}">
+                <headerToolbar>
+                    <OverflowToolbar design="Solid" id="overflowToolbar">
+                        <Title text="Spaces (0)" level="H2"/>
+                        <ToolbarSpacer id="toolbarSpacer"/>
+                        <SearchField
+                            id="searchField"
+                            showRefreshButton="false"
+                            tooltip="{i18n>Tooltip.Search}"
+                            search=".onSearch"
+                            width="auto">
+                        </SearchField>
+                        <Button
+                            id="addButton"
+                            text="{i18n>Button.Create}"
+                            type="Transparent"
+                            visible="{SupportedOperationModel>/createSupported}"
+                            press=".onAdd">
+                            <customData>
+                                <core:CustomData key="help-id" value="FLPSpace-Designer-SpaceOverview-Button-Create" writeToDom="true" />
+                            </customData>
+                        </Button>
+                        <Button
+                            id="copyButton"
+                            text="{i18n>Button.Copy}"
+                            type="Transparent"
+                            enabled="{buttonStates>/isDeleteAndCopyEnabled}"
+                            visible="{SupportedOperationModel>/copySupported}"
+                            press=".onCopy">
+                            <customData>
+                                <core:CustomData key="help-id" value="FLPSpace-Designer-SpaceOverview-Button-Copy" writeToDom="true" />
+                            </customData>
+                        </Button>
+                        <Button
+                            id="deleteButton"
+                            text="{i18n>Button.Delete}"
+                            type="Transparent"
+                            enabled="{buttonStates>/isDeleteAndCopyEnabled}"
+                            visible="{SupportedOperationModel>/deleteSupported}"
+                            press=".onDelete">
+                            <customData>
+                                <core:CustomData key="help-id" value="FLPSpace-Designer-SpaceOverview-Button-Delete" writeToDom="true" />
+                            </customData>
+                        </Button>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column id="columnSpaceId">
+                        <ObjectIdentifier title="{i18n>Column.SpaceID}" text="{i18n>Column.SpaceTitle}" />
+                    </Column>
+                    <Column id="columnSpaceDescription">
+                        <Text id="columnTextSpaceDescription" text="{i18n>Column.SpaceDescription}" />
+                    </Column>
+                    <Column id="columnSpaceTransport" width="12%" visible="{/transportSupported}">
+                        <ObjectIdentifier title="{i18n>Column.SpacePackage}" text="{i18n>Column.SpaceWorkbenchRequest}" />
+                    </Column>
+                    <Column id="columnSpaceCreated" width="12%">
+                        <ObjectIdentifier title="{i18n>Column.SpaceCreatedBy}" text="{i18n>Column.SpaceCreatedOn}" />
+                    </Column>
+                    <Column id="columnSpaceChanged" width="12%">
+                        <ObjectIdentifier title="{i18n>Column.SpaceChangedBy}" text="{i18n>Column.SpaceChangedOn}" />
+                    </Column>
+                    <Column id="columnEnd" width="4%" hAlign="End" />
+                </columns>
+                <items>
+                    <ColumnListItem id="columnListItemPage" type="Navigation">
+                        <cells>
+                            <ObjectIdentifier id="objectIdentifierSpaceId" title="{content/id}" text="{content/title}" />
+                        </cells>
+                        <cells>
+                            <Text id="cellTextSpaceDescription" text="{content/description}" />
+                        </cells>
+                        <cells>
+                            <ObjectIdentifier id="cellTextSpaceTransport" title="{metadata/devclass}" text="{metadata/transportId}" />
+                        </cells>
+                        <cells>
+                            <ObjectIdentifier
+                                id="cellTextSpaceCreated"
+                                title="{content/createdByFullname}"
+                                text="{
+                                    path: 'content/createdOn',
+                                    type: 'sap.ui.model.type.Date',
+                                    formatOptions: { style: 'medium' }
+                                }" />
+                        </cells>
+                        <cells>
+                            <ObjectIdentifier
+                                id="cellTextSpaceChanged"
+                                title="{content/modifiedByFullname}"
+                                text="{
+                                    path: 'content/modifiedOn',
+                                    type: 'sap.ui.model.type.Date',
+                                    formatOptions: { style: 'medium' }
+                                }" />
+                        </cells>
+                        <cells>
+                            <Button id="cellButtonSpaceEdit"
+                                    press=".onEdit"
+                                    icon="sap-icon://edit"
+                                    tooltip="{i18n>Button.Edit}"
+                                    type="Transparent" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+    </Page>
+</mvc:View>

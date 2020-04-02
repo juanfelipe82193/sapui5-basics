@@ -1,0 +1,66 @@
+<mvc:View
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:suite="sap.suite.ui.commons"
+	controllerName="sap.suite.ui.commons.demo.tutorial.controller.Reviews">
+	<Page
+		title="{i18n>timelineTitle}"
+		showNavButton="true"
+		navButtonPress="onNavButtonPressed"
+		backgroundDesign="Solid">
+		<Toolbar>
+			<Label text="{i18n>layoutSwitchLabel}" />
+			<Switch change="onHorizontalSwitchChange" />
+		</Toolbar>
+		<suite:Timeline
+			id="timeline"
+			enableDoubleSided="true"
+			growing="false"
+			groupBy="dateTime"
+			lazyLoading="true"
+			content="{reviews>/UserReviews}"
+			textHeight="automatic"
+			showHeaderBar="false">
+			<suite:TimelineItem
+				dateTime="{
+					path: 'reviews>date',
+					formatter: '.formatDateTime'
+				}"
+				userPicture="{=!${reviews>template} ? ${reviews>userPic} : null}"
+				title="{=!${reviews>template} ? ${reviews>user} : null}"
+				text="{=!${reviews>template} ? ${reviews>quote} : null}"
+				filterValue="{=!${reviews>template} ? ${reviews>rating} : null}">
+				<suite:embeddedControl>
+					<VBox renderType="Bare">
+						<Input
+							value="{reviews>user}"
+							visible="{reviews>template}"
+							placeholder="{i18n>newReviewUserNameHint}" />
+						<RatingIndicator
+							enabled="{reviews>template}"
+							value="{reviews>rating}"
+							maxValue="10"
+							iconSize="1rem"
+							class="sapUiTinyMargin" />
+						<Text
+							text="{reviews>quote}"
+							visible="{=!${reviews>template}}"
+							class="sapUiTinyMargin" />
+						<TextArea
+							value="{reviews>quote}"
+							growing="false"
+							height="150px"
+							width="100%"
+							visible="{reviews>template}"
+							placeholder="{i18n>newReviewUserCommentHint}"
+							valueLiveUpdate="true" />
+						<Button
+							visible="{reviews>template}"
+							text="{i18n>newReviewButtonText}"
+							press="addReview" />
+					</VBox>
+				</suite:embeddedControl>
+			</suite:TimelineItem>
+		</suite:Timeline>
+	</Page>
+</mvc:View>

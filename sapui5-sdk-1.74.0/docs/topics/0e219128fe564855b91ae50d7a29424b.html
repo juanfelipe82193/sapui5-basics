@@ -1,0 +1,446 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 1: 3D Viewer With Single File Loading</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In this step, you will be creating a 3D Viewer application that allows a user to load a single 2D image or 3D model that is stored locally or remotely."><meta name="description" content="In this step, you will be creating a 3D Viewer application that allows a user to load a single 2D image or 3D model that is stored locally or remotely."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"80b0b57480e54a50a08daf468453aa33.html","previousTopicHref":"4bd6efb6c96046879224ac9a34880bcc.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio0e219128fe564855b91ae50d7a29424b"><h1 class="title topictitle1" hidden>Step 1: 3D Viewer With Single File Loading</h1><div class="body conbody"><p class="shortdesc" hidden>In this step, you will be creating a 3D Viewer application that allows a user to load
+a single 2D image or 3D model that is stored locally or remotely.</p>
+<aside class="note caution" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Caution</strong></div>
+<p>The controls in the <samp class="ph codeph">sap.ui.vk</samp> library are currently
+flagged as experimental. For more information, see <a class="xref" href="../../#/topic/91f087396f4d1014b6dd926db0e91070.html" title="The following sections describe what SAP can change in major, minor, and patch releases. Always consider these rules when developing apps, features, or controls with or for SAPUI5." target="_top">Compatibility Rules</a>.</p></aside>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<p class="p">By the end of this step, you will have created a Viewer application that allows you
+to load a 2D or 3D resource. The Viewer application will look as follows: </p>
+<div class="fig fignone" id="loio0e219128fe564855b91ae50d7a29424b__fig_o4r_clw_15"><div class="figbody">
+
+<img class="inline  " id="loio0e219128fe564855b91ae50d7a29424b__image_ecf_mg3_tt" src="loiod751e9e17eb0440db218e038e0c4d994_LowRes.png">
+</div><span class="figcap">Viewer application with single file loading functionality</span></div>
+</section></div>
+<div class="section"><section class="section" type="Coding"><h2 class="section_title" style="font-size: 1.15em;">Coding</h2><p class="p">You can view and download all files <span class="ph">at <a class="xref" href="../../#/sample/sap.ui.vk.tutorial.VIT.01/preview" target="_top" alt="#/sample/sap.ui.vk.tutorial.VIT.01/preview" title="#/sample/sap.ui.vk.tutorial.VIT.01/preview">3D Viewer - Step 1 - Single File</a></span>.</p><div class="sectiondiv subsection">
+<p class="p subsectiontitle">index.html</p>
+<div class="p">In the first <samp class="ph codeph">script</samp> element of this <samp class="ph codeph">index.html</samp>
+file, we are referencing:<ul class="ul" id="loio0e219128fe564855b91ae50d7a29424b__ul_mmh_jn5_st">
+<li class="li">
+<p class="p">the <samp class="ph codeph">sap.ui.vk</samp> library, which contains the controls
+for adding 3D visualization functionality (the
+<samp class="ph codeph">sap.ui.vk</samp> value in the
+<samp class="ph codeph">data-sap-ui-libs</samp> property)</p>
+</li>
+<li class="li">
+<p class="p">the component file called <samp class="ph codeph">Component.js</samp> (the
+<samp class="ph codeph">data-sap-ui-resourceroots</samp> property)</p>
+</li>
+</ul></div>
+<p class="p">We specify that resources related to <samp class="ph codeph">singleFile</samp> are located in
+the same folder as this <samp class="ph codeph">index.html</samp> file.</p>
+<p class="p">In the second <samp class="ph codeph">script</samp> element, we create a function that will be
+called as soon as <span class="ph"><span class="ph pname">SAPUI5</span></span> is loaded
+and initialized. We add our application into this function.</p>
+<pre class="pre codeblock prettyprint lang-html">&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+        &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html;charset=UTF-8&quot;/&gt; 
+    &lt;script id=&quot;sap-ui-bootstrap&quot;
+        src=&quot;../../../../../../../../../resources/sap-ui-core.js&quot;
+        data-sap-ui-libs=&quot;sap.ui.vk, sap.m&quot;
+        data-sap-ui-theme=&quot;sap_belize&quot;
+        data-sap-ui-bindingSyntax=&quot;complex&quot;
+        data-sap-ui-resourceroots=&apos;{
+            &quot;singleFile&quot;: &quot;./&quot;
+         }&apos; &gt;
+    &lt;/script&gt;
+    &lt;script&gt;
+    sap.ui.getCore().attachInit(function(){
+        new sap.m.Shell({
+            app: new sap.ui.core.ComponentContainer({
+                name : &quot;singleFile&quot;
+            })
+        }).placeAt(&quot;content&quot;);
+    });
+    &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body id=&quot;content&quot; class=&quot;sapUiBody&quot;&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Component.js</p>
+<p class="p">In the <samp class="ph codeph">Component.js</samp> file, the only item for you to consider is
+to reference is the <samp class="ph codeph">manifest.json</samp> file.</p>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+    &quot;sap/ui/core/UIComponent&quot;
+], function (UIComponent) {
+    &quot;use strict&quot;;
+
+    return UIComponent.extend(&quot;singleFile.Component&quot;, {
+
+        metadata: {
+            manifest: &quot;json&quot;
+        },
+
+        init: function () {
+            // call the init function of the parent
+            UIComponent.prototype.init.apply(this, arguments);
+        }
+    });
+});</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">i18n.properties</p>
+<p class="p">The <samp class="ph codeph">i18n.properties</samp> file contains all the user interface labels
+for the application, which includes the labels for he toolbar, the page title,
+the buttons, the text input fields, and the error message that will be displayed
+when no URL is specified.</p>
+<pre class="pre codeblock prettyprint lang-prefs"># App Descriptor
+appTitle=App title
+appDescription=This is a description coming from the i18n as specified in manifest.json
+
+# Viewer Descriptor
+viewerToolbarTitle=Single file load
+
+# Page Descriptor
+pageTitle=Single File
+
+# Form Descriptor
+formRemoteURL=Remote Model URL
+buttonLoadModel=Load
+buttonLoadImage=Load Image
+formLocalFileName=Local File Name
+
+# Message Toast
+missingUrl=Please specify a URL</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">manifest.json</p>
+<p class="p">The <samp class="ph codeph">manifest.json</samp> file contains information about the files that
+we need to use in our application.</p>
+<p class="p">In this file, we reference the <samp class="ph codeph">i18n.properties</samp> file to specify
+what language the user interface of our application will have. We also specify
+what the root view of the application is; i.e. the page that is loaded first
+when the application is first started. This is set in the
+<samp class="ph codeph">rootView</samp> property. </p>
+<pre class="pre codeblock prettyprint lang-js">{
+  &quot;_version&quot;: &quot;1.8.0&quot;,
+  &quot;sap.app&quot;: {
+    &quot;id&quot;: &quot;singleFile&quot;,
+    &quot;type&quot;: &quot;application&quot;,
+    &quot;i18n&quot;: &quot;i18n/i18n.properties&quot;,
+    &quot;title&quot;: &quot;{{appTitle}}&quot;,
+    &quot;description&quot;: &quot;{{appDescription}}&quot;,
+    &quot;applicationVersion&quot;: {
+      &quot;version&quot;: &quot;1.0.0&quot;
+    },
+  },
+  &quot;sap.ui&quot;: {
+    &quot;technology&quot;: &quot;UI5&quot;,
+    &quot;deviceTypes&quot;: {
+      &quot;desktop&quot;: true,
+      &quot;tablet&quot;: true,
+      &quot;phone&quot;: true
+    }
+  },
+  &quot;sap.ui5&quot;: {
+    &quot;rootView&quot;: &quot;singleFile.view.App&quot;,
+    &quot;dependencies&quot;: {
+      &quot;minUI5Version&quot;: &quot;1.30&quot;,
+      &quot;libs&quot;: {
+        &quot;sap.m&quot;: {}
+      }
+    },
+    &quot;models&quot;: {
+      &quot;i18n&quot;: {
+        &quot;type&quot;: &quot;sap.ui.model.resource.ResourceModel&quot;,
+        &quot;settings&quot;: {
+          &quot;bundleName&quot;: &quot;singleFile.i18n.i18n&quot;
+        }
+      }
+    }
+  }
+}</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">App.view.xml</p>
+<p class="p">The <samp class="ph codeph">App.view.xml</samp> file specifies how the page in the application
+will be laid out. We have one form container containing two form elements
+(<samp class="ph codeph">formElement</samp>). The first <samp class="ph codeph">formElement</samp>
+element contains the fields for loading 2D or 3D resources located remotely. We
+have specifed one input text field, and two buttons: one button for loading 2D
+images, and the other button for loading 3D models.</p>
+<p class="p">In the second <samp class="ph codeph">formElement</samp>, we are using the
+<samp class="ph codeph">FileUploader</samp> control to generate an input text field and a
+button to load 2D or 3D resources stored locally. We have specified the
+following file types as valid file types for loading using this
+<samp class="ph codeph">formElement</samp>.</p>
+<p class="p">The labels for each of the fields are specified in the text attributes.</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+   controllerName=&quot;singleFile.controller.App&quot;
+   xmlns=&quot;sap.m&quot;
+   xmlns:mvc=&quot;sap.ui.core.mvc&quot;
+   xmlns:vk=&quot;sap.ui.vk&quot;
+   xmlns:l=&quot;sap.ui.layout&quot;
+   xmlns:f=&quot;sap.ui.layout.form&quot;
+   xmlns:u=&quot;sap.ui.unified&quot;
+   displayBlock=&quot;true&quot;&gt;
+    &lt;App id=&quot;singleFile&quot;&gt;
+        &lt;Page
+            title=&quot;{i18n&gt;pageTitle}&quot;&gt;
+            &lt;vk:Viewer
+                id=&quot;viewer&quot;
+                toolbarTitle=&quot;{i18n&gt;viewerToolbarTitle}&quot;
+                width=&quot;100%&quot;
+                height=&quot;85%&quot;
+                       /&gt;
+                &lt;f:Form
+                layout=&quot;ResponsiveGridLayout&quot;
+                editable=&quot;true&quot;&gt;
+                    &lt;f:layout&gt;
+                        &lt;f:ResponsiveGridLayout/&gt;
+                    &lt;/f:layout&gt;
+                    &lt;f:formContainers&gt;
+                        &lt;f:FormContainer&gt;
+                            &lt;f:formElements&gt;
+                                &lt;f:FormElement&gt;      
+                                    &lt;f:fields&gt;
+                                        &lt;Input
+                                           value=&quot;{source&gt;/remoteUrl}&quot;
+                                           valueLiveUpdate=&quot;true&quot;
+                                           placeholder=&quot;{i18n&gt;formRemoteURL}&quot;&gt;
+                                            &lt;layoutData&gt;
+                                                &lt;l:GridData hCells=&quot;auto&quot; /&gt;
+                                            &lt;/layoutData&gt;
+                                        &lt;/Input&gt;
+                                        &lt;Button
+                                            text=&quot;{i18n&gt;buttonLoadModel}&quot;
+                                            press=&quot;onPressLoadRemoteModel&quot;&gt;
+                                            &lt;layoutData&gt;
+                                                &lt;l:GridData hCells=&quot;2&quot; /&gt;
+                                            &lt;/layoutData&gt;
+                                        &lt;/Button&gt;
+                                        &lt;Button
+                                            text=&quot;{i18n&gt;buttonLoadImage}&quot;
+                                            press=&quot;onPressLoadRemoteImage&quot;&gt;
+                                            &lt;layoutData&gt;
+                                                &lt;l:GridData hCells=&quot;3&quot; /&gt;
+                                            &lt;/layoutData&gt;
+                                        &lt;/Button&gt;
+                                    &lt;/f:fields&gt;
+                                &lt;/f:FormElement&gt;
+                                &lt;f:FormElement&gt;      
+                                    &lt;f:fields&gt;
+                                        &lt;u:FileUploader
+                                           fileType=&quot;vds,png,jpg,jpeg,gif&quot;
+                                           placeholder=&quot;{i18n&gt;formLocalFileName}&quot;
+                                           width=&quot;100%&quot;
+                                           change=&quot;onChangeFileUploader&quot;&gt;
+                                        &lt;/u:FileUploader&gt;
+                                    &lt;/f:fields&gt;
+                                &lt;/f:FormElement&gt;
+                            &lt;/f:formElements&gt;
+                        &lt;/f:FormContainer&gt;
+                    &lt;/f:formContainers&gt;
+                &lt;/f:Form&gt;
+            &lt;/Page&gt;
+        &lt;/App&gt;
+    &lt;/mvc:View&gt;</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">App.controller.js</p>
+<div class="p">This file contains the logic for loading files into the Viewer application. <ul class="ul" id="loio0e219128fe564855b91ae50d7a29424b__ul_bwd_p45_st">
+<li class="li">The <samp class="ph codeph">handleEmptyUrl</samp> function specifies what should occur
+if a user clicks on any of the buttons for loading, without having
+specified a URL to a resource first.</li>
+<li class="li">The <samp class="ph codeph">loadModelIntoViewer</samp> function specifies how the
+resource will be loaded into the Viewer application for viewing.</li>
+<li class="li">The following event functions specify how the form elements should
+behave during certain events. The following list outlines what each of
+the functions do:<ul class="ul" id="loio0e219128fe564855b91ae50d7a29424b__ul_hd5_r45_st">
+<li class="li"><samp class="ph codeph">onInit</samp> - declares an empty structure when the
+controller is initialized. The empty structure is set as the
+model for the URLs.</li>
+<li class="li"><samp class="ph codeph">onPressLoadRemoteModel</samp> - the logic for the
+button that loads 3D resources stored remotely.</li>
+<li class="li"><samp class="ph codeph">onPressLoadRemoteImage</samp> - the logic for the
+button that loads 2D resources stored remotely.</li>
+<li class="li"><samp class="ph codeph">onChangeFileUploader</samp> - the logic for the fields
+that load 2D or 3D resources stored locally.</li>
+</ul></li>
+</ul></div>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+    &quot;sap/ui/core/mvc/Controller&quot;,
+    &quot;sap/ui/model/json/JSONModel&quot;,
+    &quot;sap/ui/vk/ContentResource&quot;,
+    &quot;sap/m/MessageToast&quot;
+], function(Controller, JSONModel, ContentResource, MessageToast) {
+    &quot;use strict&quot;;
+
+    var handleEmptyUrl = function(view) {
+        var oBundle = view.getModel(&quot;i18n&quot;).getResourceBundle();
+        var msg = oBundle.getText(&quot;missingUrl&quot;);
+        MessageToast.show(msg);
+    };
+
+    var loadModelIntoViewer = function(viewer, remoteUrl, sourceType, localFile) {
+        //what is currently loaded in the view is destroyed
+        viewer.destroyContentResources();
+
+        var source = remoteUrl || localFile;
+
+        if (source) {
+            
+            //content of viewer is replaced with new data
+            var contentResource = new ContentResource({
+                source: remoteUrl,
+                sourceType: sourceType,
+                sourceId: &quot;abc&quot;
+            });
+
+            //content: chosen path. content added to the view
+            viewer.addContentResource(contentResource);
+        } 
+    };
+
+    return Controller.extend(&quot;singleFile.controller.App&quot;, {
+        onInit: function() {
+            var sourceData = {
+                localFile: undefined,
+                remoteUrl: undefined
+            };
+            var model = new JSONModel();
+            model.setData(sourceData);
+            this.getView().setModel(model, &quot;source&quot;);
+        },
+
+        onPressLoadRemoteModel: function(event) {
+            var view = this.getView();
+            var sourceData = view.getModel(&quot;source&quot;).oData;
+            var viewer = view.byId(&quot;viewer&quot;);
+            if (sourceData.remoteUrl) {
+                loadModelIntoViewer(viewer, sourceData.remoteUrl, &quot;vds&quot;);
+            } else {
+                handleEmptyUrl(view);
+            }
+        },
+
+        onPressLoadRemoteImage: function(event) {
+            var view = this.getView();
+            var sourceData = view.getModel(&quot;source&quot;).oData;
+            var viewer = view.byId(&quot;viewer&quot;);
+            if (sourceData.remoteUrl) {
+                loadModelIntoViewer(viewer, sourceData.remoteUrl, &quot;jpg&quot;);
+            } else {
+                handleEmptyUrl(view);
+            }
+        },
+
+        onChangeFileUploader: function(event) {
+            var view = this.getView();
+            var viewer = view.byId(&quot;viewer&quot;);
+            var localFile = event.getParameter(&quot;files&quot;)[0];
+            //if user selects a local file
+            if (localFile) {
+                var fileName = localFile.name;
+                var index = fileName.lastIndexOf(&quot;.&quot;);
+                if (index &gt;= 0 &amp;&amp; index &lt; fileName.length - 1) {
+                    var sourceType = fileName.substr(index + 1);
+                    loadModelIntoViewer(viewer, null, sourceType, localFile);
+                }
+            }
+        }
+    });
+});</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Testing the Application</p>
+<p class="p">To test that the application works, we will load a local 3D resource into the
+Viewer application.</p>
+<p class="p">Download the <samp class="ph codeph">boxTestModel.vds</samp> file from the
+<span class="ph uicontrol">Samples</span>. Click the
+<span class="ph uicontrol">Browse...</span> button, navigate to the folder where the 3D
+resource is located, and load the model. Your screen should look like the
+following screenshot: </p>
+<div class="fig fignone" id="loio0e219128fe564855b91ae50d7a29424b__fig_inm_34w_15"><div class="figbody">
+
+<img class="inline  " id="loio0e219128fe564855b91ae50d7a29424b__image_mwv_vg3_tt" src="loio455ebe61ec3e4072878110cf6d361a57_LowRes.png">
+</div><span class="figcap">Viewer application loaded with a single VDS file</span></div>
+</div></section></div>
+<div class="section"><section class="section" type="API Reference"><h2 class="section_title" style="font-size: 1.15em;">API Reference</h2>
+
+<ul class="ul" id="loio0e219128fe564855b91ae50d7a29424b__ul_dgt_qbc_f5">
+<li class="li"><a class="xref" href="../../#/api/sap.ui.vk.Viewer" target="_top" alt="#/api/sap.ui.vk.Viewer" title="#/api/sap.ui.vk.Viewer">sap.ui.vk.Viewer</a></li>
+<li class="li"><a class="xref" href="../../#/api/sap.ui.vk.ContentResource" target="_top" alt="#/api/sap.ui.vk.ContentResource" title="#/api/sap.ui.vk.ContentResource">sap.ui.vk.ContentResource</a></li>
+</ul>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

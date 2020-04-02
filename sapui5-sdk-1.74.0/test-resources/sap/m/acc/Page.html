@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>sap.m.Page - Accessibility</title>
+
+	<script src="../shared-config.js"></script>
+	<script src="../../../../resources/sap-ui-core.js"
+	       
+	        id="sap-ui-bootstrap"
+	        data-sap-ui-libs="sap.m">
+	</script>
+	<style type="text/css">
+		.customLabel {
+			margin: 0 0.5rem;
+			vertical-align: middle;
+			vertical-align: -webkit-baseline-middle;
+		}
+	</style>
+
+	<script>
+		var oApp = new sap.m.App("myApp", {
+			initialPage: "page"
+		}),
+
+			bCompactMode = new sap.m.CheckBox("compactMode", {
+				text: "Compact Mode",
+				selected : false,
+				select : function() {
+					$("body").toggleClass("sapUiSizeCompact");
+				}
+			}),
+
+			oInput = new sap.m.Input("input0", {
+				width: "300px"
+			}),
+
+			oLabel = new sap.m.Label({
+				text: "Please enter a value",
+				labelFor: oInput
+			}).addStyleClass("customLabel"),
+
+			oPage = new sap.m.Page("page", {
+				landmarkInfo: new sap.m.PageAccessibleLandmarkInfo(),
+				title: "Page Accessibility Test Page",
+				content: [
+					oLabel,
+					oInput
+				],
+				footer: new sap.m.Toolbar({
+						content: [
+							new sap.m.ToolbarSpacer(),
+							bCompactMode
+						]
+					})
+			});
+
+		oApp.addPage(oPage).placeAt("content");
+	</script>
+</head>
+<body class="sapUiBody" role="application">
+	<div id="content"></div>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js" id="Script1" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+		// creation of visual business...........................//
+		sap.ui.localResources("vbitestapp");
+
+		var oVBI1 = new sap.ui.vbm.VBI('vbiWrap2', {
+			width: 600,
+			height: 620
+		});
+		oVBI1.placeAt("content");
+
+		// load the json and set the default text area text
+		var dat = $.getJSON("media/spotpiedetail/main.json", function(dat) {
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array) {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(dat);
+		});
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: Sample should show spots, pies and a detail windows</h1>
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test spots, blocks, pies, detail window and map size. </p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+			<li> Click Set Block" and check that a red block is created on the map.</li>
+			<img src="img/detail1.jpg" alt="text for Thumbnail" style="width:350px;height:300px;">
+			<li> Zoom into the block and check that the size changes according to the zoom. The size should not be constant.</li>
+			<li>Hover over the block and check that it changes colour.</li>
+			<img src="img/detail2.jpg" alt="text for Thumbnail" style="width:350px;height:300px;">
+			<li> Click "Set Pie" and check that 2 pies are created on the map.</li>
+			<img src="img/detail3.jpg" alt="text for Thumbnail" style="width:350px;height:350px;">
+			<li> Zoom into the pies and check that the size changes according to the zoom. The size should not be constant.</li>
+			<li> Hover over the pie pieces and make sure they change colour.</li>
+			<img src="img/detail4.jpg" alt="text for Thumbnail" style="width:350px;height:300px;">
+			<li> Click "Set Flags" and check that two spots are added on the map.</li>
+			<img src="img/detail5.jpg" alt="text for Thumbnail" style="width:350px;height:300px;">
+			<li> Create blocks/pies and spots then click "Clear Map". Check that the objects on the map are removed. </li>
+			<img src="img/detail6.jpg" alt="text for Thumbnail" style="width:350px;height:280px;">
+			<li> Click "Open Detail Window" and check that a detail window appears. Check that you can close the detail window by clicking the cross</li>
+			<img src="img/detail7.jpg" alt="text for Thumbnail" style="width:350px;height:300px;">
+			<li> Click "300x300" and check the text below to see if the map scales to the correct size.</li>
+			<p>Width: </p>
+			<p class="col" id="para1" style="font-size: 30px; color:red;"></p>
+			<p>Height: </p>
+			<p class="col" id="para2" style="font-size: 30px; color:red;"></p>
+			<li> Click "1200x800" and check the text below to see if the map scales to the correct size.</li>
+			<p>Width: </p>
+			<p class="col" id="para3" style="font-size: 30px; color:red;"></p>
+			<p>Height: </p>
+			<p class="col" id="para4" style="font-size: 30px; color:red;"></p>
+		</ol>
+	</div>
+	<div id="description2">
+		<script>
+			//...........................................................//
+			// setting some objects......................................//
+
+			function onSetBlock() {
+				// load the json and set the default text area text
+				var dat = $.getJSON("media/spotpiedetail/new_block.json", function(dat) {
+					oVBI1.load(dat);
+				});
+			};
+
+			function onSetPie() {
+				var dat = $.getJSON("media/spotpiedetail/new_pie.json", function(dat) {
+					oVBI1.load(dat);
+				});
+			};
+
+			function onSetFlags() {
+				var dat = $.getJSON("media/spotpiedetail/new_flags.json", function(dat) {
+					oVBI1.load(dat);
+				});
+			};
+
+			function onClearMap() {
+				var dat = $.getJSON("media/spotpiedetail/clear.json", function(dat) {
+					oVBI1.load(dat);
+				});
+			};
+
+			function onBtnZoom3x3() {
+				document.getElementById('vbiWrap2').style.width = "300px";
+				document.getElementById('vbiWrap2').style.height = "300px";
+				document.getElementById('para1').innerHTML = jQuery("#vbiWrap2").width();
+				document.getElementById('para2').innerHTML = jQuery("#vbiWrap2").height();
+			};
+
+			function onBtnZoom12x8() {
+				document.getElementById('vbiWrap2').style.width = "1200px";
+				document.getElementById('vbiWrap2').style.height = "800px";
+				document.getElementById('para3').innerHTML = jQuery("#vbiWrap2").width();
+				document.getElementById('para4').innerHTML = jQuery("#vbiWrap2").height();
+			};
+
+			function onDetailWindow() {
+				var dat = $.getJSON("media/spotpiedetail/opendetail.json", function(dat) {
+					oVBI1.load(dat);
+				});
+			};
+
+		</script>
+		<br>
+		<br>
+		<button onclick=onSetBlock()>Set Block</button>
+		<button onclick=onSetPie()>Set Pie</button>
+		<button onclick=onSetFlags()>Set Flags</button>
+		<button onclick=onClearMap()>Clear Map</button>
+		<button onclick=onDetailWindow()>Open Detail Window</button>
+		<button id="btn3x3" onClick="onBtnZoom3x3()"> 300x300 </button>
+		<button id="btn12x8" onClick="onBtnZoom12x8()"> 1200x800 </button>
+		<br>
+		<br>
+		<table>
+			<tr>
+				<td>
+					<div id="content"></div>
+				</td>
+			</tr>
+		</table>
+
+	</div>
+</body>
+
+</html>

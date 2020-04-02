@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+<meta http-equiv='Content-Type' content='text/html;charset=UTF-8' />
+<title>Process Flow test suite page</title>
+
+<!-- UI5 Bootstrap -->
+<script src="../../../../../resources/sap-ui-core.js"
+  type="text/javascript" id="sap-ui-bootstrap"
+  data-sap-ui-libs="sap.m, sap.suite.ui.commons"
+  data-sap-ui-theme="sap_belize">
+</script>
+
+<script>
+    jQuery.sap.initMobile();
+    jQuery.sap.require("sap.ui.model.json.JSONModel");
+    jQuery.sap.require("sap.m.MessageToast");
+
+  function onNodePress(event) {
+    var textToDisplay = "Node clicked: " + event.getParameters().getTitle();
+    jQuery.sap.log.info(textToDisplay);
+    sap.m.MessageToast.show(textToDisplay, {
+      duration: 1000, at: "center center"
+    });
+  }
+
+  function onLabelPress(oEvent) {
+    _aConnections = oEvent.getParameter("connections");
+    var oSelectedLabel = oEvent.getParameter("selectedLabel");
+    var oListData = _getListData(_aConnections);
+    var oItemTemplate = new sap.m.StandardListItem({ title: "{title}", info: "{info}" });
+    var oList = _createList(oListData, oItemTemplate);
+
+    var oResponsivePopover = sap.ui.getCore().byId("__popover");
+    oResponsivePopover = oResponsivePopover || new sap.m.ResponsivePopover( "__popover", {
+      placement: sap.m.PlacementType.Auto,
+      title: "Paths[" + this._aConnections.length + "]",
+      modal: false,
+      content: [oList],
+      afterClose: function(){
+        oResponsivePopover.destroy();
+        oProcessFlow.setFocusToLabel(oSelectedLabel);
+      }.bind(this)
+    });
+    oResponsivePopover.openBy(oSelectedLabel);
+    oResponsivePopover.setShowCloseButton(true);
+  }
+
+  function _createLabel(nodeId, labelId) {
+      var oConnectionLabel = {
+          nodeId: nodeId,
+          connectionLabel: new sap.suite.ui.commons.ProcessFlowConnectionLabel({
+            id: "label_" + labelId,
+            text: labelId,
+            state: sap.suite.ui.commons.ProcessFlowConnectionLabelState.Positive
+          })
+        };
+    return oConnectionLabel;
+  }
+
+  function _createList(data, itemTemplate) {
+    var oModel = new sap.ui.model.json.JSONModel();
+    // Sets the data for the model
+    oModel.setData(data);
+    // Sets the model to the list
+    var oTmpList = new sap.m.List({
+      mode: sap.m.ListMode.SingleSelectMaster,
+      selectionChange: this.onListItemPress.bind(this)
+    });
+    oTmpList.setModel(oModel);
+    // Binds aggregation
+    oTmpList.bindAggregation("items", "/navigation", itemTemplate);
+    return oTmpList;
+  }
+
+  function _getListData() {
+    var aNavigation = [];
+    var olistItem;
+    for (var i = 0; i < _aConnections.length; i++) {
+      olistItem = _createListEntryObject(_aConnections[i])
+      if (olistItem) {
+        aNavigation.push(olistItem);
+      }
+    }
+    return {
+      navigation: aNavigation
+    };
+  }
+
+  function _createListEntryObject(oConnection) {
+    var sId = oConnection.sourceNode.getNodeId() + "-" + oConnection.targetNode.getNodeId();
+    if (oConnection.label) {
+      var sTitle= oConnection.label.getText();
+      return {
+        title: sTitle,
+        info: sId,
+        type: "Active",
+      };
+    }
+    else {
+      return null;
+    }
+  }
+
+  function _getItemBySourceAndTargetId(sSourceId, sTargetId) {
+    for (var i = 0; i < _aConnections.length; i++) {
+      if (_aConnections[i].sourceNode.getNodeId() === sSourceId && _aConnections[i].targetNode.getNodeId() === sTargetId) {
+        oProcessFlow.setSelectedPath(sSourceId, sTargetId);
+      }
+    }
+  }
+
+  function onListItemPress(oEvent) {
+    var selectedItem = oEvent.getParameter("listItem");
+    var aSourceTarget = selectedItem.getInfo().split("-");
+    var sSourceId = aSourceTarget[0];
+    var sTargetId = aSourceTarget[1];
+    _getItemBySourceAndTargetId(sSourceId, sTargetId);
+  }
+
+  function onUpdateModel(oEvent) {
+  var oDataProcessFlowLanesAndNodesUpdated = {
+        nodes:
+          [
+           {id: "10",  lane: "0",  title: "10", titleAbbreviation: "10", children: [_createLabel(20, "_10_20"), 130], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "20",  lane: "0",  title: "20", titleAbbreviation: "20", children: [_createLabel(140, "_20_140"), 120, 80], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "130",  lane: "0",  title: "130", titleAbbreviation: "130", children: [_createLabel(150, "_130_150")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "120",  lane: "0",  title: "120", titleAbbreviation: "120", children: [_createLabel(140, "_120_140"), _createLabel(150, "_120_150"), 370], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "140", lane: "0" , title: "140", titleAbbreviation: "140", children: [_createLabel(150, "_140_150")], state: sap.suite.ui.commons.ProcessFlowNodeState.Planned},
+           {id: "80",  lane: "0",  title: "80", titleAbbreviation: "80", children: [], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "150", lane: "0" , title: "150", titleAbbreviation: "150", children: [], state: sap.suite.ui.commons.ProcessFlowNodeState.Planned},
+           {id: "370",  lane: "0",  title: "370", titleAbbreviation: "370", children: [30], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "30",  lane: "0",  title: "30", titleAbbreviation: "30", children: [_createLabel(80, "_30_80")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]}
+      ],
+       lanes:
+         [
+           {id: "0", icon: "sap-icon://order-status", label: "In Order", position: 0}
+         ]
+       };
+
+    var oModelUpdated = new sap.ui.model.json.JSONModel();
+    oModelUpdated.setData(oDataProcessFlowLanesAndNodesUpdated);
+    oProcessFlow.setModel(oModelUpdated);
+    oProcessFlow.setZoomLevel(sap.suite.ui.commons.ProcessFlowZoomLevel.Three);
+    oProcessFlow.updateModel();
+  }
+
+  //--------------------------------------------------------------------------------------------------------------
+  // ProcessFlow Complex Sample including onClick Events and Connection Labels
+  //--------------------------------------------------------------------------------------------------------------
+  var _aConnections = null;
+
+  var oDataProcessFlowComplex = {
+        nodes:
+          [
+           {id: "10",  lane: "0",  title: "10", titleAbbreviation: "10", children: [_createLabel(20, "10_20"), _createLabel(40, "10_40"), _createLabel(130, "10_130")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "20",  lane: "0",  title: "20", titleAbbreviation: "20", children: [_createLabel(140, "20_140"), _createLabel(120, "20_120"), _createLabel(80, "20_80")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "130",  lane: "0",  title: "130", titleAbbreviation: "130", children: [_createLabel(150, "130_150")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "120",  lane: "0",  title: "120", titleAbbreviation: "120", children: [_createLabel(140, "120_140"), _createLabel(150, "120_150"), _createLabel(370, "120_370")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "140", lane: "0" , title: "140", titleAbbreviation: "140", children: [_createLabel(150, "140_150"), _createLabel(160, "140_160"), _createLabel(170, "140_170")], state: sap.suite.ui.commons.ProcessFlowNodeState.Planned},
+           {id: "80",  lane: "0",  title: "80", titleAbbreviation: "80", children: [_createLabel(40, "80_40")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "150", lane: "0" , title: "150", titleAbbreviation: "150", children: [_createLabel(210, "150_210"), _createLabel(160, "150_160"), _createLabel(300, "150_300"), _createLabel(200, "150_200")], state: sap.suite.ui.commons.ProcessFlowNodeState.Planned},
+           {id: "370",  lane: "0",  title: "370", titleAbbreviation: "370", children: [_createLabel(30, "370_30")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "30",  lane: "0",  title: "30", titleAbbreviation: "30", children: [_createLabel(80, "30_80")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "40",  lane: "0",  title: "40", titleAbbreviation: "40", children: [_createLabel(50, "40_50")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "50",  lane: "0",  title: "50", titleAbbreviation: "50", children: [_createLabel(60, "50_60")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "60",  lane: "0",  title: "60", titleAbbreviation: "60", children: [_createLabel(70, "60_70")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "70",  lane: "0",  title: "70", titleAbbreviation: "70", children: [_createLabel(90, "70_90")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "90", lane: "0" , title: "90", titleAbbreviation: "90", children: [_createLabel(130, "90_130")], state: sap.suite.ui.commons.ProcessFlowNodeState.Planned},
+           {id: "210",  lane: "0",  title: "210", titleAbbreviation: "210", children: [], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "160",  lane: "0",  title: "160", titleAbbreviation: "160", children: [_createLabel(220, "160_220"), _createLabel(170, "160_170")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "300",  lane: "0",  title: "300", titleAbbreviation: "300", children: [_createLabel(320, "300_320"), _createLabel(380, "300_380"), _createLabel(360, "300_360")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "200",  lane: "0",  title: "200", titleAbbreviation: "200", children: [_createLabel(300, "200_300")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "220", lane: "0" , title: "220", titleAbbreviation: "220", children: [_createLabel(230, "220_230")], state: sap.suite.ui.commons.ProcessFlowNodeState.Planned},
+           {id: "170",  lane: "0",  title: "170", titleAbbreviation: "170", children: [_createLabel(300, "170_300"), _createLabel(200, "170_200"), _createLabel(240, "170_240"), _createLabel(250, "170_250")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "230",  lane: "0",  title: "230", titleAbbreviation: "230", children: [_createLabel(280, "230_280")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "250", lane: "0" , title: "250", titleAbbreviation: "250", children: [_createLabel(240, "250_240"), _createLabel(270, "250_270")], state: sap.suite.ui.commons.ProcessFlowNodeState.Planned},
+           {id: "240",  lane: "0",  title: "240", titleAbbreviation: "240", children: [_createLabel(260, "240_260")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "380",  lane: "0",  title: "380", titleAbbreviation: "380", children: [], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "360",  lane: "0",  title: "360", titleAbbreviation: "360", children: [_createLabel(380, "360_380")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "280",  lane: "0",  title: "280", titleAbbreviation: "280", children: [_createLabel(350, "280_350"), _createLabel(320, "280_320")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "270",  lane: "0",  title: "270", titleAbbreviation: "270", children: [_createLabel(240, "270_240"), _createLabel(320, "270_320")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "260",  lane: "0",  title: "260", titleAbbreviation: "260", children: [], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "350", lane: "0" , title: "350", titleAbbreviation: "350", children: [_createLabel(320, "350_320")], state: sap.suite.ui.commons.ProcessFlowNodeState.Planned},
+           {id: "330",  lane: "0",  title: "330", titleAbbreviation: "330", children: [], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "320",  lane: "0",  title: "320", titleAbbreviation: "320", children: [_createLabel(330, "320_330"), _createLabel(340, "320_340")], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, stateText: "OK status", focused: true, texts: ["Sales Order Document", "Not cleared"]},
+           {id: "340", lane: "0" , title: "340", titleAbbreviation: "340", children: [], state: sap.suite.ui.commons.ProcessFlowNodeState.Planned}
+      ],
+       lanes:
+         [
+           {id: "0", icon: "sap-icon://order-status", label: "In Order", position: 0}
+         ]
+       };
+
+  var oJModelComplex = new sap.ui.model.json.JSONModel(oDataProcessFlowComplex);
+  var oProcessFlow = new sap.suite.ui.commons.ProcessFlow("processflow1", {
+    nodes: {
+      path: "/nodes",
+      template: new sap.suite.ui.commons.ProcessFlowNode({
+        nodeId: "{id}", laneId: "{lane}", title: "{title}", children: "{children}",
+        state: "{state}", titleAbbreviation: "{titleAbbreviation}", stateText: "{stateText}", texts: "{texts}"
+      })
+    }, // end of node
+    lanes: {
+      path: "/lanes", template: new sap.suite.ui.commons.ProcessFlowLaneHeader({
+        laneId: "{id}", iconSrc: "{icon}", text: "{label}", position: "{position}"
+      })
+    }, // end of lane
+    showLabels:true,
+    scrollable: true,
+    wheelZoomable: true
+  });
+
+  oProcessFlow.setModel(oJModelComplex);
+  oProcessFlow.setZoomLevel(sap.suite.ui.commons.ProcessFlowZoomLevel.Three);
+  oProcessFlow.attachNodePress(function(oEvent) {
+    onNodePress(oEvent);
+  });
+  oProcessFlow.attachLabelPress(function(oEvent) {
+    onLabelPress(oEvent);
+  });
+
+
+  /* =========================================================== */
+  /* Create Page                   */
+  /* =========================================================== */
+  var oPage = new sap.m.Page("page", {
+      title : "Test Page for sap.suite.ui.commons.ProcessFlow",
+      headerContent : [
+          new sap.m.Button({
+              text : "Zoom In",
+              press : function (oEvent) {
+                oProcessFlow.zoomIn();
+              }
+          }),
+          new sap.m.Button({
+              text : "Zoom Out",
+              press : function (oEvent) {
+                  oProcessFlow.zoomOut();
+              }
+          }),
+          new sap.m.Button({
+              text : "Update Model",
+              press : function (oEvent) {
+                onUpdateModel(oEvent);
+              }
+          }),
+          new sap.m.Button({
+              text : "Reset Path Selection",
+              press : function (oEvent) {
+                oProcessFlow.setSelectedPath(null, null);
+              }
+          })
+          ],
+      content : oProcessFlow
+  });
+
+    // create a mobile app embedding the page and place the app into the HTML document
+    var app = new sap.m.App("myApp", {
+        pages : [oPage]
+    }).placeAt("content");
+</script>
+
+</head>
+<body id="body" class="sapUiBody">
+    <div id="content"></div>
+</body>
+</html>

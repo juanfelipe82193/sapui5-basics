@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Paging Partial Rendering Tests</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PLAINTABLE.js"></script>
+<script type="text/javascript" src="../testutils/TestUtils.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_0_0.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_1_0.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_2_0.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_3_0.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_0_1.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_1_1.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_2_1.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_3_1.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Paging Partial Rendering Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Paging Partial Rendering Tests", {
+			setup : function() {
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				// var oTableControl = sapzen.crosstab.test.jsonTestData.PAGING_Q1_FULL.control;
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.PAGING_Q1_PAGED_0_0.control;
+				this.oCrosstab.setWidth("400px");
+				this.oCrosstab.setHeight("350px");
+				this.iRequestCounter = 0;
+				var that = this;
+
+				this.oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+				this.oDataArea = this.oCrosstab.getDataArea();
+				this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+				this.oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+
+				this.oCrosstab.registerPageRequestHandler(function(iRow, iCol) {
+					var sPageString = iRow + "_" + iCol;
+					var oData = sapzen.crosstab.test.jsonTestData["PAGING_Q1_PAGED_" + sPageString].control;
+
+					// setTimeout(sendResponse, 2000);
+					that.iRequestCounter++;
+					sendResponse();
+
+					function sendResponse() {
+						that.oCrosstab.updateControlProperties(oData);
+						sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(that.oCrosstab);
+					}
+				});
+
+				this.checkAllCells = function(oArea) {
+					var iStartCol = oArea.getRenderStartCol();
+					var iEndCol = oArea.getRenderColCnt() + iStartCol - 1;
+
+					var iStartRow = oArea.getRenderStartRow();
+					var iEndRow = oArea.getRenderRowCnt() + iStartRow - 1;
+
+					var iRow = 0, iCol = 0;
+					var oCell = null;
+
+					for (iRow = iStartRow; iRow <= iEndRow; iRow++) {
+						for (iCol = iStartCol; iCol <= iEndCol; iCol++) {
+							oCell = oArea.getCellDirect(iRow, iCol);
+							if (oCell) {
+								ok(!oCell.isLoading(), "Cell: " + iRow + "/" + iCol + " in Area: "
+										+ oArea.getAreaType() + " must not be loading");
+								sap.zen.crosstab.testutils.TestUtils.checkCellbyId(oArea, iRow, iCol);
+							}
+						}
+					}
+				};
+
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+
+				setTimeout(function() {
+					start();
+				}, 2000);
+				stop();
+			},
+
+			teardown : function() {
+				this.oCrosstab = null;
+				this.oTableControl = null;
+			}
+		});
+
+		test("Number of page requests", function() {
+			ok(this.iRequestCounter === 2, "2 page requests are expected for full table");
+		});
+		
+		test("Check all cells loaded in DataArea", function() {
+			this.checkAllCells(this.oDataArea);
+		});
+		
+		test("Check all cells loaded in ColumnHeaderArea", function() {
+			this.checkAllCells(this.oColumnHeaderArea);
+		});
+		
+		test("Check all cells loaded in RowHeaderArea", function() {
+			this.checkAllCells(this.oRowHeaderArea);
+		});
+		
+		test("Check all cells loaded in DimensionHeaderArea", function() {
+			this.checkAllCells(this.oDimensionHeaderArea);
+		});
+		
+		test("Check request stack adaptation", function() {
+			this.iStackSize = this.oCrosstab.getPageManager().getRequestStackSize();
+			this.oCrosstab.setWidth("1200px");
+			this.oCrosstab.setHeight("800px");
+			
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+			
+			setTimeout((function(that) {
+				return function() {
+					var iNewStackSize = that.oCrosstab.getPageManager().getRequestStackSize();
+					ok(iNewStackSize > that.iStackSize, "The stack size needs to grow if the table grows. Old size: "+that.iStackSize+" New size: "+iNewStackSize);
+					start();
+				}
+			})(this), 2000);
+		
+			stop();			
+			
+		});
+	</script>
+
+</body>
+
+</html>

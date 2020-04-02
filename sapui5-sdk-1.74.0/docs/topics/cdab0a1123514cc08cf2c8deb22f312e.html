@@ -1,0 +1,327 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 10: Implement Lazy Loading</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In the previous steps, we have implemented a Resume view that uses tabs to display data. The complete content of the tabs is loaded once, no matter which tab is currently displayed. We can increase the performance of our app by avoiding to load content that is not visible. Therefore, we implement a &#x201C;lazy loading&#x201D; feature that only loads the view and data when requested by the user."><meta name="description" content="In the previous steps, we have implemented a Resume view that uses tabs to display data. The complete content of the tabs is loaded once, no matter which tab is currently displayed. We can increase the performance of our app by avoiding to load content that is not visible. Therefore, we implement a &#x201C;lazy loading&#x201D; feature that only loads the view and data when requested by the user."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"b01840ec42ef48e6bfd2bc12612f501f.html","previousTopicHref":"b8561ff6f4c34c85a91ed06d20814cd3.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/1b6dcd39a6a74f528b27ddb22f15af0d.html" title="SAPUI5 comes with a powerful routing API that helps you control the state of your application efficiently. This tutorial will illustrate all major features and APIs related to navigation and routing in SAPUI5 apps by creating a simple and easy to understand mobile app. It represents a set of best practices for applying the navigation and routing features of SAPUI5 to your applications." target="_top">Navigation and Routing</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/b8561ff6f4c34c85a91ed06d20814cd3.html" title="The resume view contains four tabs as we have seen in the previous steps. However, when the user navigates to the resume page, only the first tab is displayed initially. Navigating directly to a specific tab or bookmarking a tab is not yet supported in our current app." target="_top">Step 9: Allow Bookmarkable Tabs with Optional Query Parameters</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/b01840ec42ef48e6bfd2bc12612f501f.html" title="In this step, we will add a new button to the home page to illustrate the usage of multiple targets for a route. When the button is pressed, a new page opens that contains two parts: a header part at the top and a content part. The content part displays a table of employees that can be sorted and searched. We will use the array notation in the routing configuration to assign multiple targets to a route - a feature that we have not yet introduced." target="_top">Step 11: Assign Multiple Targets</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loiocdab0a1123514cc08cf2c8deb22f312e"><h1 class="title topictitle1" hidden>Step 10: Implement <span class="q">&#x201C;Lazy Loading&#x201D;</span></h1><div class="body conbody"><p class="shortdesc" hidden>In the previous steps, we have implemented a <span class="ph uicontrol">Resume</span> view that
+uses tabs to display data. The complete content of the tabs is loaded once, no matter which
+tab is currently displayed. We can increase the performance of our app by avoiding to load
+content that is not visible. Therefore, we implement a <span class="q">&#x201C;lazy loading&#x201D;</span> feature that only
+loads the view and data when requested by the user. </p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loiocdab0a1123514cc08cf2c8deb22f312e__fig_r1j_pst_mr"><div class="figbody">
+
+<img class="inline  " id="loiocdab0a1123514cc08cf2c8deb22f312e__image_zdy_m1p_ns" src="loiocb0405649d5345f882892e0ee691d4f1_LowRes.png">
+</div><span class="figcap">Tabs with lazy loading</span></div>
+</section></div>
+<div class="section"><section class="section" type="Coding"><h2 class="section_title" style="font-size: 1.15em;">Coding</h2>
+
+<p class="p">You can view and download all files in the <span class="ph uicontrol">Samples</span> in the Demo Kit
+<span class="ph">at <a class="xref" href="../../#/sample/sap.ui.core.tutorial.navigation.10/preview" target="_top" alt="#/sample/sap.ui.core.tutorial.navigation.10/preview" title="#/sample/sap.ui.core.tutorial.navigation.10/preview">Routing and Navigation - Step 10</a></span>
+.</p>
+<div class="fig fignone" id="loiocdab0a1123514cc08cf2c8deb22f312e__fig_vbk_bbp_ns"><div class="figbody">
+
+<img class="inline  " id="loiocdab0a1123514cc08cf2c8deb22f312e__image_acx_2bp_ns" src="loio389058e1605441289efee0267badf7d8_HiRes.png">
+</div><span class="figcap">Folder Structure for this Step</span></div>
+</section></div>
+<div class="section"><section class="section" type="webapp/view/employee/Resume.view.xml"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/employee/Resume.view.xml</h2>
+
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+	controllerName=&quot;sap.ui.demo.nav.controller.employee.Resume&quot;
+	xmlns=&quot;sap.m&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;Page
+		title=&quot;{i18n&gt;ResumeOf} {FirstName} {LastName}&quot;
+		id=&quot;employeeResumePage&quot;
+		showNavButton=&quot;true&quot;
+		navButtonPress=&quot;.onNavBack&quot;&gt;
+		&lt;content&gt;
+			&lt;IconTabBar
+				id=&quot;iconTabBar&quot;
+				headerBackgroundDesign=&quot;Transparent&quot;
+				class=&quot;sapUiResponsiveContentPadding&quot;
+				binding=&quot;{Resume}&quot;
+				select=&quot;.onTabSelect&quot;
+				selectedKey=&quot;{view&gt;/selectedTabKey}&quot;&gt;
+				&lt;items&gt;
+					&lt;IconTabFilter id=&quot;infoTab&quot; text=&quot;{i18n&gt;tabInfo}&quot; key=&quot;Info&quot;&gt;
+						&lt;Text text=&quot;{Information}&quot;/&gt;
+					&lt;/IconTabFilter&gt;
+					&lt;IconTabFilter id=&quot;projectsTab&quot; text=&quot;{i18n&gt;Projects}&quot; key=&quot;Projects&quot;&gt;
+						&lt;mvc:XMLView viewName=&quot;sap.ui.demo.nav.view.employee.ResumeProjects&quot;&gt;&lt;/mvc:XMLView&gt;
+					&lt;/IconTabFilter&gt;
+					&lt;IconTabFilter id=&quot;hobbiesTab&quot; text=&quot;{i18n&gt;Hobbies}&quot; key=&quot;Hobbies&quot;&gt;
+						<span class="ph emphasis emphasis">&lt;!-- place content via lazy loading --&gt;</span>
+					&lt;/IconTabFilter&gt;
+					&lt;IconTabFilter id=&quot;notesTab&quot; text=&quot;{i18n&gt;Notes}&quot; key=&quot;Notes&quot;&gt;
+						<span class="ph emphasis emphasis">&lt;!-- place content via lazy loading --&gt;</span>
+					&lt;/IconTabFilter&gt;
+				&lt;/items&gt;
+			&lt;/IconTabBar&gt;
+		&lt;/content&gt;
+	&lt;/Page&gt;
+&lt;/mvc:View&gt;</pre>
+<p class="p">To illustrate lazy loading, we implement that the content is loaded only when the
+user selects the corresponding tab for two of our tabs from the
+<samp class="ph codeph">IconTabBar</samp>: <span class="ph uicontrol">Hobbies</span> and
+<span class="ph uicontrol">Notes</span>. The <samp class="ph codeph">IconTabFilter</samp> controls each
+have a hard-coded ID so that we can address them later in our routing configuration.
+In real use cases, you would do this for tabs that contain a lot of content or
+trigger expensive service calls to a back-end service.</p>
+<p class="p">In the <samp class="ph codeph">resume</samp> view we remove the content of the
+<span class="ph uicontrol">Hobbies</span> and <span class="ph uicontrol">Notes</span> tabs as we will
+now fill it dynamically with navigation features.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/view/employee/ResumeHobbies.view.xml (New)"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/employee/ResumeHobbies.view.xml (New)</h2>
+
+<pre class="pre codeblock prettyprint lang-xml"><span class="ph emphasis emphasis">&lt;mvc:View xmlns=&quot;sap.m&quot; xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;Text text=&quot;{Hobbies}&quot;/&gt;
+&lt;/mvc:View&gt;
+</span></pre>
+<p class="p">Create the file <samp class="ph codeph">ResumeHobbies.view.xml</samp> in the <samp class="ph codeph">webapp/view/employee</samp> folder. Move the content for the tab that was
+previously in the <samp class="ph codeph">resume</samp> view to that view. We don&#x2019;t need a controller for this view as there is no additional logic involved.
+This view will be lazy-loaded and placed into the content of the <span class="ph uicontrol">Hobbies</span> tab with navigation features.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/view/employee/ResumeNotes.view.xml (New)"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/employee/ResumeNotes.view.xml (New)</h2>
+
+<pre class="pre codeblock prettyprint lang-xml"><span class="ph emphasis emphasis">&lt;mvc:View xmlns=&quot;sap.m&quot; xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;Text text=&quot;{Notes}&quot;/&gt;
+&lt;/mvc:View&gt;</span></pre>
+<p class="p">Create the file <samp class="ph codeph">ResumeNotes.view.xml</samp> in the <samp class="ph codeph">webapp/view/employee</samp> folder similar to the <span class="ph uicontrol">Hobbies</span>
+view to transform this tab to a separate view as well.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/controller/employee/Resume.controller.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/controller/employee/Resume.controller.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/demo/nav/controller/BaseController&quot;,
+	&quot;sap/ui/model/json/JSONModel&quot;
+], function (BaseController, JSONModel) {
+	&quot;use strict&quot;;
+	var _aValidTabKeys = [&quot;Info&quot;, &quot;Projects&quot;, &quot;Hobbies&quot;, &quot;Notes&quot;];
+	return BaseController.extend(&quot;sap.ui.demo.nav.controller.employee.Resume&quot;, {
+		...
+		_onRouteMatched : function (oEvent) {
+			var oArgs, oView, oQuery;
+			oArgs = oEvent.getParameter(&quot;arguments&quot;);
+			oView = this.getView();
+			oView.bindElement({
+				...
+			});
+			oQuery = oArgs[&quot;?query&quot;];
+			if (oQuery &amp;&amp; _aValidTabKeys.indexOf(oQuery.tab) &gt; -1){
+				oView.getModel(&quot;view&quot;).setProperty(&quot;/selectedTabKey&quot;, oQuery.tab);
+				<span class="ph emphasis emphasis">// support lazy loading for the hobbies and notes tab
+				if (oQuery.tab === &quot;Hobbies&quot; || oQuery.tab === &quot;Notes&quot;){
+					// the target is either &quot;resumeTabHobbies&quot; or &quot;resumeTabNotes&quot;
+					this.getRouter().getTargets().display(&quot;resumeTab&quot; + oQuery.tab);
+				}
+</span>
+			} else {
+				// the default query param should be visible at all time
+				this.getRouter().navTo(&quot;employeeResume&quot;, {
+					employeeId : oArgs.employeeId,
+					query: {
+						tab : _aValidTabKeys[0]
+					}
+				},true /*no history*/);
+			}
+		},
+		...
+	});
+});</pre>
+<p class="p">Now we extend the <samp class="ph codeph">resume</samp> controller a little and add additional
+logic to the part of the <samp class="ph codeph">_onRouteMatched</samp> function where a new tab
+has been selected and validated. In case the <samp class="ph codeph">selectedKey</samp> matches
+<samp class="ph codeph">Hobbies</samp> or <samp class="ph codeph">Notes</samp> we call
+<samp class="ph codeph">this.getRouter().getTargets().display(&quot;resumeTab&quot; + oQuery.tab)</samp>
+to display the corresponding target manually. Here the valid targets are
+<samp class="ph codeph">resumeTabHobbies</samp> and <samp class="ph codeph">resumeTabNotes</samp> as we have
+changed the behavior for these two tabs by creating separate views. </p>
+<p class="p">These lines of code make sure that the targets are only loaded when they are needed
+(<span class="q">&#x201C;lazy loading&#x201D;</span>). But the router does not know the new targets yet, so
+let&#x2019;s create them in our routing configuration. </p>
+</section></div>
+<div class="section"><section class="section" type="webapp/manifest.json"><h2 class="section_title" style="font-size: 1.15em;">webapp/manifest.json</h2>
+
+<pre class="pre codeblock prettyprint lang-js">{
+	&quot;_version&quot;: &quot;1.12.0&quot;,
+	&quot;sap.app&quot;: {
+		...
+	},
+	&quot;sap.ui&quot;: {
+		...
+	},
+	&quot;sap.ui5&quot;: {
+		...
+		&quot;routing&quot;: {
+			&quot;config&quot;: {
+				&quot;routerClass&quot;: &quot;sap.m.routing.Router&quot;,
+				&quot;viewType&quot;: &quot;XML&quot;,
+				&quot;viewPath&quot;: &quot;sap.ui.demo.nav.view&quot;,
+				&quot;controlId&quot;: &quot;app&quot;,
+				&quot;controlAggregation&quot;: &quot;pages&quot;,
+				&quot;transition&quot;: &quot;slide&quot;,
+				&quot;bypassed&quot;: {
+					&quot;target&quot;: &quot;notFound&quot;
+				}
+			},
+			&quot;routes&quot;: [{
+				...
+			}, {
+				&quot;pattern&quot;: &quot;employees/{employeeId}/resume:?query:&quot;,
+				&quot;name&quot;: &quot;employeeResume&quot;,
+				&quot;target&quot;: &quot;employeeResume&quot;
+			}],
+			&quot;targets&quot;: {
+				...
+				&quot;employeeResume&quot;: {
+					&quot;viewId&quot;: &quot;resume&quot;,
+					&quot;viewName&quot;: &quot;employee.Resume&quot;,
+					&quot;viewLevel&quot; : 4,
+					&quot;transition&quot;: &quot;flip&quot;
+				}<span class="ph emphasis emphasis">,
+				&quot;resumeTabHobbies&quot;: {
+					&quot;viewId&quot;: &quot;resumeHobbies&quot;,
+					&quot;parent&quot;: &quot;employeeResume&quot;,
+					&quot;viewPath&quot;: &quot;sap.ui.demo.nav.view.employee&quot;,
+					&quot;viewName&quot;: &quot;ResumeHobbies&quot;,
+					&quot;controlId&quot;: &quot;hobbiesTab&quot;,
+					&quot;controlAggregation&quot;: &quot;content&quot;
+				},
+				&quot;resumeTabNotes&quot;: {
+					&quot;viewId&quot;: &quot;resumeNotes&quot;,
+					&quot;parent&quot;: &quot;employeeResume&quot;,
+					&quot;viewPath&quot;: &quot;sap.ui.demo.nav.view.employee&quot;,
+					&quot;viewName&quot;: &quot;ResumeNotes&quot;,
+					&quot;controlId&quot;: &quot;notesTab&quot;,
+					&quot;controlAggregation&quot;: &quot;content&quot;
+				}</span>
+			}
+		}
+	}
+}</pre>
+<p class="p">We add the <samp class="ph codeph">resumeTabHobbies</samp> and <samp class="ph codeph">resumeTabNotes</samp>
+targets to the descriptor file with additional fields that override the default
+configuration as we now want to display the targets locally inside the
+<samp class="ph codeph">IconTabBar</samp> control and not as pages of the app.</p>
+<div class="p">The <samp class="ph codeph">resumeTabHobbies</samp> target sets the parent property to
+<samp class="ph codeph">employeeResume</samp>. The parent property expects the name of another
+target. In our case, this makes sure that the view from the parent target
+<samp class="ph codeph">employeeResume</samp> is loaded before the target
+<samp class="ph codeph">resumeTabHobbies</samp> is displayed. This can be considered as a
+<span class="q">&#x201C;view dependency&#x201D;</span>. By setting the <samp class="ph codeph">controlId</samp> and
+<samp class="ph codeph">controlAggregation</samp> properties the router places the view
+<samp class="ph codeph">ResumeHobbies</samp> into the <samp class="ph codeph">content</samp> aggregation of
+the <samp class="ph codeph">IconTabFilter</samp> control with ID <samp class="ph codeph">hobbiesTab</samp>. We
+also set a parameter <samp class="ph codeph">viewId</samp> to a custom ID to illustrate how you
+could overrule a hard-coded ID inside a view.<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">Each target can define only one parent with its parent property. This is
+similar to the <span class="ph"><span class="ph pname">SAPUI5</span></span> control
+tree where each control can have only one parent control (accessed with the
+method <samp class="ph codeph">getParent()</samp> of
+<samp class="ph codeph">sap.ui.base.ManagedObject</samp>). The
+<samp class="ph codeph">controlId</samp> property always references a control inside
+the parent view that is specified with the <samp class="ph codeph">parent</samp>
+target.</p></aside></div>
+<p class="p">Now we add the <samp class="ph codeph">resumeTabNotes</samp> target similar to the
+<samp class="ph codeph">Hobbies</samp> target. The <samp class="ph codeph">resumeTabNotes</samp> target
+defines the parent target <samp class="ph codeph">employeeResume</samp> as well, because they
+share the same parent view. We place the <samp class="ph codeph">ResumeNotes</samp> view into the
+<samp class="ph codeph">content</samp> aggregation of the <samp class="ph codeph">IconTabFilter</samp>
+control with ID <samp class="ph codeph">notesTab</samp>.</p>
+<p class="p">We have now implemented lazy loading for the tabs <span class="ph uicontrol">Hobbies</span> and
+<span class="ph uicontrol">Notes</span>. These two tabs are now managed by the routing
+configuration and only loaded when we click on them the first time.</p>
+<p class="p">Try it out yourself: Open the <span class="ph uicontrol">Network</span> tab of your browser&apos;s
+developer tools and click on the tabs of your app. In the network traffic you will
+see that <samp class="ph codeph">ResumeHobbies.view.xml</samp> file is only loaded when the
+<span class="ph uicontrol">Hobbies</span> tab is displayed the first time. The same applies
+for the <span class="ph uicontrol">Notes</span> tab. Mission accomplished!</p>
+</section></div>
+<div class="section"><section class="section" type="Conventions"><h2 class="section_title" style="font-size: 1.15em;"> Conventions</h2>
+
+<ul class="ul" id="loiocdab0a1123514cc08cf2c8deb22f312e__ul_nh5_ybb_nr">
+<li class="li">
+<p class="p">Lazy-load content that is not initially displayed to the user</p>
+</li>
+</ul>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/1b6dcd39a6a74f528b27ddb22f15af0d.html" title="SAPUI5 comes with a powerful routing API that helps you control the state of your application efficiently. This tutorial will illustrate all major features and APIs related to navigation and routing in SAPUI5 apps by creating a simple and easy to understand mobile app. It represents a set of best practices for applying the navigation and routing features of SAPUI5 to your applications." target="_top">Navigation and Routing</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/b8561ff6f4c34c85a91ed06d20814cd3.html" title="The resume view contains four tabs as we have seen in the previous steps. However, when the user navigates to the resume page, only the first tab is displayed initially. Navigating directly to a specific tab or bookmarking a tab is not yet supported in our current app." target="_top">Step 9: Allow Bookmarkable Tabs with Optional Query Parameters</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/b01840ec42ef48e6bfd2bc12612f501f.html" title="In this step, we will add a new button to the home page to illustrate the usage of multiple targets for a route. When the button is pressed, a new page opens that contains two parts: a header part at the top and a content part. The content part displays a table of employees that can be sorted and searched. We will use the array notation in the routing configuration to assign multiple targets to a route - a feature that we have not yet introduced." target="_top">Step 11: Assign Multiple Targets</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/api/ap.m.routing.Targets" target="_top" alt="#/api/ap.m.routing.Targets" title="#/api/ap.m.routing.Targets">API Reference: <samp class="ph codeph">ap.m.routing.Targets</samp></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

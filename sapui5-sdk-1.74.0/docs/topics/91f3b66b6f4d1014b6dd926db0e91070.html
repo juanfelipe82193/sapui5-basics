@@ -1,0 +1,199 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Browser Security</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Browser security comprises several topics such as cross-site scripting, clickjacking, and local storage."><meta name="description" content="Browser security comprises several topics such as cross-site scripting, clickjacking, and local storage."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"91f3e6056f4d1014b6dd926db0e91070.html","previousTopicHref":"91f3d8706f4d1014b6dd926db0e91070.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loio91f3b66b6f4d1014b6dd926db0e91070"><h1 class="title topictitle1" hidden>Browser Security</h1><div class="body"><p class="shortdesc" hidden>Browser security comprises several topics such as cross-site scripting, clickjacking,
+and local storage.</p><p class="p">A browser is, by design, an untrusted client: A server cannot rely on any information sent from a
+browser, as a malicious user can use a JavaScript debugger to tamper with the client
+code, or a proxy server like fiddler to modify request data. Input validation on the
+client is just for convenience purposes as the server always has to validate the data
+again that is received from the client.</p><p class="p">Browsers also offer possible attack vectors, such as Cross-Site-Scripting (XSS). The application
+has to take care of these. </p><div class="section" id="loio91f3b66b6f4d1014b6dd926db0e91070__section_6C7CB6E84E7E42DB821D50A02BEFF849"><section class="section" type="Cross-Site Scripting"><h2 class="section_title" style="font-size: 1.15em;">Cross-Site Scripting </h2>
+
+<p class="p">Cross-Site-Scripting has become the most prominent security issue of web applications within
+the last years and also the most dangerous one, as it allows several ways of
+exploitation. Once malicious code is running within your browser, it can be used to
+steal your session cookies, to trigger requests within the current session, or even
+to exploit a known browser vulnerability to do native code execution. </p>
+<p class="p">For <span class="ph"><span class="ph pname">SAPUI5</span></span> applications, XSS vulnerabilities can
+exist on different levels:
+</p>
+<ul class="ul"><li class="li">
+<p class="p">Within the HTML page or custom data transports
+sent to the browser from the server
+</p>
+</li><li class="li">
+<p class="p">Within the JavaScript code of the application, which is processing server responses </p>
+</li><li class="li">
+<p class="p">Within the HTML renderers of <span class="ph"><span class="ph pname">SAPUI5</span></span> controls
+</p>
+</li></ul>
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> can only prevent
+cross-site scripting in the processing and rendering of controls. For that purpose,
+input validation exists for all typed element properties and output encoding is done
+in the renderer class of controls. However, there are exceptions for controls that
+are especially built to include arbitrary HTML, for example,
+<samp class="ph codeph">sap.ui.core.HTML</samp>.</p>
+<div class="p">The application is responsible for the following tasks:<ul class="ul" id="loio91f3b66b6f4d1014b6dd926db0e91070__ul_sks_jyc_qr">
+<li class="li">
+<p class="p">Proper output encoding of all content embedded in the HTML page
+itself</p>
+</li>
+<li class="li">
+<p class="p">Encoding JSON or XML data sent to the client</p>
+</li>
+<li class="li">
+<p class="p">Secure processing of the JSON/XML data</p>
+</li>
+<li class="li">
+<p class="p">Security of custom controls provided by the application</p>
+</li>
+</ul></div>
+<p class="p">For more information, see <a class="xref" href="../../#/topic/91f0bd316f4d1014b6dd926db0e91070.html" title="Cross-site scripting (XSS) is a widely known vulnerability most web sites have. This page does not provide general information about cross-site scripting but focuses on what you as an application developer using SAPUI5 can do to avoid these security issues." target="_top">Cross-Site Scripting</a>.</p>
+</section></div>
+<div class="section"><section class="section" type="Clickjacking"><h2 class="section_title" style="font-size: 1.15em;">Clickjacking</h2>
+
+<p class="p">Clickjacking, or UI redressing, tricks the user into triggering actions within an application
+by redirecting clicks. This is done, for example, by using an invisible iFrame that
+is positioned above a fake UI. When the user clicks on something on the fake UI, the
+content of the invisible iFrame handles the click.</p>
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> provides a way to prevent
+clickjacking since version 1.28.0. This has to be configured, as needed, by the
+application. For more information, see <a class="xref" href="../../#/topic/62d9c4d8f5ad49aa914624af9551beb7.html" title="frameOptions is used to prevent security vulnerabilities like clickjacking. With the frameOptions configuration you define whether SAPUI5 is allowed to run embedded in a frame or only from trusted origins or not at all." target="_top">Frame Options</a>. </p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>As of version 1.28.0, you no longer need to use the Business Add-In
+<samp class="ph codeph">/UI5/BADI_CONFIG_HTTP_HANDLER</samp> to configure the X-Frame-Options
+response header (SAP Note 2075016). The <span class="ph"><span class="ph pname">SAPUI5</span></span> framework now
+handles clickjacking prevention and the add-in solution won&apos;t work on all browsers. </p></aside>
+<p class="p">For more detailed information on clickjacking, refer to the following SAP Note:
+<a href="http://help.sap.com/disclaimer?site=https://launchpad.support.sap.com/#/notes/2319727" target="_blank">2319727 <img src="themes/sap-default/img/sap_link.png" class="link-sap" alt="Information published on SAP site" title="Information published on SAP site" border="0"></a></p>
+</section></div><div class="section" id="loio91f3b66b6f4d1014b6dd926db0e91070__section_94EDDC27FE5D45A29B1B7DC18C4E2F48"><section class="section" type="HTML5"><h2 class="section_title" style="font-size: 1.15em;">HTML5</h2>
+
+<p class="p">HTML5 offers a lot of new functionality, which also brings a lot of potential new
+security issues. This is just an overview of some of the new features and possible
+security issues when they are used. </p>
+<div id="section_28FDB6AF8A8446FA9B40EFC0DEED90D8" class="sectiondiv">
+<p class="p"><span class="ph emphasis emphasis">Local Storage</span></p>
+<p class="p">All browsers are now offering a local storage API.
+This API can be used to store a limited amount of data on the browser. Access
+to this data is limited to JavaScript code running from the same domain as it
+has been stored. <span class="ph"><span class="ph pname">SAPUI5</span></span> offers helper functions to access the local storage on
+different browsers.
+</p>
+<p class="p">The local storage of browsers is not a secure
+storage, so while it can be used for static data, like enumerations,
+applications must not store any user or application data within the local
+storage.
+</p>
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> is using the local storage of the browser
+for the history-capability of dropdown boxes and combo boxes.
+</p>
+</div><div id="section_E81EA53C91814771BF17EDD4352DE716" class="sectiondiv">
+<p class="p"><span class="ph emphasis emphasis">WEBGL</span></p>
+<p class="p">While more and more browsers are supporting WEBGL by default, WEBGL allows accessing the
+graphics API of the computer on a very low level, which may also lead to low
+level exploits. This is the main reason why some browsers have no support for
+WebGL at all.</p>
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> is currently not using WEBGL.
+</p>
+</div><div id="section_30E13FB57F6B404BA1469FFD6802AA3F" class="sectiondiv">
+<p class="p"><span class="ph emphasis emphasis">WebSockets</span></p>
+<p class="p">While WebSockets offer great new possibilities for the client/server communication of web
+applications, there have been many security issues rising while the first
+implementations were done by the browser vendors. Standardization of WebSockets has
+reached a stable state with RFC 6455 and is now implemented beginning with Chrome
+16, Firefox 11 and Internet Explorer 10. Even if the browser implementations
+themselves prove to be secure, using WebSockets may require additional security
+measures on the client. </p>
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> is currently not using WebSockets.
+</p>
+</div><div id="section_73E16A2754484DA1A0D39140EE760419" class="sectiondiv">
+<p class="p"><span class="ph emphasis emphasis">Postmessage/Onmessage</span></p>
+<p class="p">This is another feature in the HTML5 area, which can lead to massive security issues when not
+used correctly. <samp class="ph codeph">postMessage</samp> allows inter-window-communication
+between windows from different domains. This opens a hole in the same origin
+policy currently implemented in the browser. As soon you subscribe to the
+<samp class="ph codeph">onMessage</samp> event, you can receive messages from any other
+browser window. The application is responsible to check the originating domain
+and to process only messages that have been sent by trusted domains. </p>
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> uses postMessage for its
+debugging and tracing functionality. </p>
+</div></section></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

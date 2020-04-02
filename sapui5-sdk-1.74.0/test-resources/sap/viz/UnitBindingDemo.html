@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>UI5 Automation Testing</title>
+
+<script id="sap-ui-bootstrap" src="/uilib-sample/resources/sap-ui-core.js"
+data-sap-ui-libs="sap.ui.commons,sap.ui.ux3, sap.m, sap.chart" data-sap-ui-theme="sap_bluecrystal">
+</script>
+
+<script type="text/javascript">
+var initOptions = {
+    "vizType":'column',
+    "uiConfig": {
+    "applicationSet": "fiori"
+    },
+    "vizProperties": {"plotArea":{"dataLabel":{"visible":true}}}
+};
+var vizframe = new sap.viz.ui5.controls.VizFrame(initOptions);
+var model = new sap.ui.model.json.JSONModel({
+    "businessData": [{
+        "Country": "China",
+        "Product": "Car",
+        "CostLongModeTest": 81,
+        "Profit": 133.42
+    },
+    {
+        "Country": "China",
+        "Product": "Truck",
+        "CostLongModeTest": 451,
+        "Profit": 734.2
+    },
+    {
+        "Country": "Japan",
+        "Product": "Car",
+        "CostLongModeTest": 45,
+        "Profit": 73.2
+    },
+    {
+        "Country": "Japan",
+        "Product": "Truck",
+        "CostLongModeTest": 70,
+        "Profit": 121.2
+    },
+    {
+        "Country": "France",
+        "Product": "Car",
+        "CostLongModeTest": 80,
+        "Profit": 133.23
+    },
+    {
+        "Country": "France",
+        "Product": "Truck",
+        "CostLongModeTest": 45,
+        "Profit": 73.32
+    },
+    {
+        "Country": "UK",
+        "Product": "Car",
+        "CostLongModeTest": 45,
+        "Profit": 73.2
+    },
+    {
+        "Country": "UK",
+        "Product": "Truck",
+        "CostLongModeTest": 670,
+        "Profit": 121.2
+    }]
+});
+vizframe.setModel(model);
+var dataset = new sap.viz.ui5.data.FlattenedDataset(
+{
+    "dimensions": [{
+        "name": "Country",
+        "value": "{Country}"
+    },
+    {
+        "name": "Product",
+        "value": "{Product}"
+    }],
+    "measures": [{
+        "name": "CostLongModeTest",
+        "value": "{CostLongModeTest}",
+        "unit": "w"
+    },{
+        "name": "Profit",
+        "value": "{Profit}"
+    }],
+    "data": {
+        "path": "/businessData"
+    }
+});
+function getMeasureByName(sName) {
+    return dataset.getMeasures().filter(function(d) {return d.getName() === sName;})[0];
+}
+/*var aMeasure = getMeasureByName("CostLongModeTest");
+aMeasure.setUnitBinding("Product");*/
+
+vizframe.setDataset(dataset);
+var feeds =[
+    new sap.viz.ui5.controls.common.feeds.FeedItem({"values":["Country","Product"],"uid":"categoryAxis","type":"Dimension"}),
+    new sap.viz.ui5.controls.common.feeds.FeedItem({"values":["CostLongModeTest","Profit"],"uid":"valueAxis","type":"Measure"})
+];
+feeds.forEach(function(feedItem) {
+    vizframe.addFeed(feedItem);
+})
+var popOver = new sap.viz.ui5.controls.Popover({}),
+    toolTip = new sap.viz.ui5.controls.VizTooltip({});
+popOver.connect(vizframe.getVizUid());
+vizframe.placeAt("content");
+
+var oPopOverText = new sap.m.Label({
+    text: "PopOver:",
+    labelFor: oPopOverSwitch
+});
+var oPopOverSwitch = new sap.m.Switch({
+    state: true,
+    change: function(){
+        if(oPopOverSwitch.getState()){
+            popOver.connect(vizframe.getVizUid());
+        }else{
+            popOver.destroy();
+        }
+    }
+});
+var oPopOverFormat = new sap.m.Label({
+    text: "PopOverFormat",
+    labelFor: oPopOverSwitch
+});
+var oPopOverFormatSwitch = new sap.m.Switch({
+    state: false,
+    change: function(){
+        if (oPopOverSwitch.getState()) {
+            if(oPopOverFormatSwitch.getState()){
+                popOver.setFormatString({'CostLongModeTest':{formatPattern:'StandardFloat',dataUnit:"*^"}});
+            }else{
+                popOver.setFormatString();
+            }
+        }
+    }
+});
+oPopOverText.placeAt("content");
+oPopOverSwitch.placeAt("content");
+oPopOverFormat.placeAt("content");
+oPopOverFormatSwitch.placeAt("content");
+
+var oTooltipText = new sap.m.Label({
+    text: "Tooltip:",
+    labelFor: oTooltipSwitch
+});
+var oTooltipSwitch = new sap.m.Switch({
+    state: false,
+    change: function(){
+        if(oTooltipSwitch.getState()){
+            toolTip.connect(vizframe.getVizUid());
+        }else{
+            toolTip.destroy();
+        }
+    }
+});
+var oTooltipFormat = new sap.m.Label({
+    text: "TooltipFormat",
+    labelFor: oTooltipSwitch
+});
+var oTooltipFormatSwitch = new sap.m.Switch({
+    state: false,
+    change: function(){
+        if (oTooltipSwitch.getState()) {
+            if(oTooltipFormatSwitch.getState()){
+                toolTip.setFormatString({'CostLongModeTest':{formatPattern:'StandardFloat',dataUnit:"*^"}});
+            }else{
+                toolTip.setFormatString();
+            }
+        }
+    }
+});
+oTooltipText.placeAt("content");
+oTooltipSwitch.placeAt("content");
+oTooltipFormat.placeAt("content");
+oTooltipFormatSwitch.placeAt("content");
+
+</script>
+</head>
+<body class="sapUiBody">
+<div id="content"></div>
+</body>
+</html>

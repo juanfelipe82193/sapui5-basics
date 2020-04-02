@@ -1,0 +1,152 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Structuring OPA Tests With Page Objects</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The page object design pattern supports UI-based tests with improved readability, fostering the don&apos;t repeat yourself (DRY) principle of software development that is aimed at reducing repetition of any kind of information."><meta name="description" content="The page object design pattern supports UI-based tests with improved readability, fostering the don&apos;t repeat yourself (DRY) principle of software development that is aimed at reducing repetition of any kind of information."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"fb487ef0f9bf41a3afdbd0cc97368873.html","previousTopicHref":"21aeff6928f84d179a47470123afee59.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loiof2f843d375384d56bbf955a80ee66ab6"><h1 class="title topictitle1" hidden>Structuring OPA Tests With Page Objects</h1><div class="body conbody"><p class="shortdesc" hidden>The page object design pattern supports UI-based tests with improved readability,
+fostering the <span class="keyword">don&apos;t repeat yourself</span> (DRY) principle of software
+development that is aimed at reducing repetition of any kind of information.</p>
+<p class="p">A page object wraps an HTML page or fragment with an application-specific API, which
+makes it easy to find a control and provide reuse across multiple tests. If you have
+multiple pages or UI areas that have several operations, you can place them as reuse
+functionality in page object. The page object groups all OPA arrangements, actions, and
+assertions that logically belong to some part of the screen. Since only the test will
+know if an action is used to set up the test case or to act on the application under
+test, the page object will combine actions and arrangements into actions. In contrast to
+the general guidance of Selenium and Martin Fowler, OPA page objects also provide
+assertions, as the corresponding testing via <samp class="ph codeph">waitFor</samp> statements better
+fit into the page objects. When you define actions or assertions in your page object,
+have in mind how the test would spell them and if that would be similar to the way you
+would explain a scenario to your colleagues.</p>
+<p class="p">Page objects accept parameters, so you can parametrize your tests either by writing
+multiple tests, or by repeating your test being on a set of parameters defined in the
+code. It is also possible to put test fragments into a separate file and refer to this
+file in the test. This enables you to reuse the same test fragments in different test
+pages with different setups.</p>
+<p class="p">You can also share utility functionality between page objects. Simulating clicks, for
+example, is useful for most page objects and should be placed in a base class that you
+can create. As the page objects extend the base class, the functions provided in the
+base class are available for the page objects. If, for example, you want to share tree
+handling functions in all tree-based page objects, create a <samp class="ph codeph">TreeBase</samp>
+class by extending the base class. Tree-based page objects such as repository browser
+and outline then specify <samp class="ph codeph">TreeBase</samp> as <samp class="ph codeph">baseClass</samp> instead
+of the generic base class.</p>
+<p class="p">OPA5 provides a static method to create page objects, see the OPA <a class="xref" href="../../#/entity/sap.ui.test.Opa5" target="_top" alt="#/entity/sap.ui.test.Opa5" title="#/entity/sap.ui.test.Opa5">Samples</a> in the Demo Kit.</p>
+<pre class="pre codeblock prettyprint lang-js">
+Opa5.createPageObjects({
+
+       //give a meaningful name for the test code
+       inThe&lt;Page Object&gt; : {
+            //Optional: a class extending Opa5, with utility functionality
+            baseClass : fnSomeClassExtendingOpa5,
+             
+            actions : {
+               //place all arrangements and actions here
+               &lt;iDoSomething&gt; : function(){
+                   //always return this or a waitFor to allow chaining
+                    return this.waitFor({
+                        //see documentation for possibilities
+                    });
+                }
+           },
+           assertions : {
+               //place all assertions here
+               &lt;iCheckSomething&gt; : function(){
+                   //always return this or a waitFor to allow chaining
+                    return this.waitFor({
+                        //see documentation for possibilities
+                    });
+                }
+           }
+       }
+   });
+</pre>
+<p class="p">The method in your test finds all actions at the <samp class="ph codeph">Given</samp> and
+<samp class="ph codeph">When</samp> object, the assertions will be at the <samp class="ph codeph">Then</samp>
+object. Everything is prefixed with the page object name.</p>
+<pre class="pre codeblock prettyprint lang-js">
+When.inThe&lt;Page Object&gt;.&lt;iDoSomething&gt;();
+
+Then.inThe&lt;Page Object&gt;.&lt;iCheckSomething&gt;();
+</pre>
+<p class="p">Be careful with <samp class="ph codeph">Opa5.extendConfig()</samp> if you give arrangements, actions,
+or assertions, all previously loaded page objects will be overwritten. So if you mix
+them, call <samp class="ph codeph">extendConfig</samp> before loading the page objects. See the <a class="xref" href="../../#/entity/sap.ui.test.Opa5" target="_top" alt="#/entity/sap.ui.test.Opa5" title="#/entity/sap.ui.test.Opa5">samples</a> in the Demo Kit.</p>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

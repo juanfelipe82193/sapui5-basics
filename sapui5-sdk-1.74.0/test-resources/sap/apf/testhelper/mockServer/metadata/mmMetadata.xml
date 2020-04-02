@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+	xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+	xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+	xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="ZAPF_Q002_SRV" xml:lang="en"
+			sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="ZAPF_Q002Result" sap:semantics="aggregate"
+				sap:content-version="1">
+				<Key>
+					<PropertyRef Name="ID" />
+				</Key>
+				<Property Name="ID" Type="Edm.String" Nullable="false"
+					sap:label="ID" sap:updatable="false" />
+				<Property Name="TotaledProperties" Type="Edm.String"
+					sap:aggregation-role="totaled-properties-list" sap:is-annotation="true"
+					sap:label="Totaled Properties" sap:updatable="false" />
+				<Property Name="A0D_FC_CUST__0D_FC_COUN" Type="Edm.String"
+					MaxLength="3" sap:aggregation-role="dimension" sap:creatable="false"
+					sap:label="Country" sap:text="A0D_FC_CUST__0D_FC_COUN_T"
+					sap:updatable="false" />
+				<Property Name="A0D_FC_CUST__0D_FC_COUN_T" Type="Edm.String"
+					MaxLength="20" sap:creatable="false" sap:filterable="false"
+					sap:label="Country" sap:updatable="false" />
+				<Property Name="A0CURRENCY" Type="Edm.String" MaxLength="5"
+					sap:aggregation-role="dimension" sap:creatable="false" sap:label="Currency"
+					sap:semantics="currency-code" sap:text="A0CURRENCY_T"
+					sap:updatable="false" />
+				<Property Name="A0CURRENCY_T" Type="Edm.String" MaxLength="20"
+					sap:creatable="false" sap:filterable="false" sap:label="Currency"
+					sap:semantics="currency-code" sap:updatable="false" />
+				<Property Name="A5I3Y6060H25LU6NRSY5NG4X2N" Type="Edm.Decimal"
+					Precision="34" Scale="2" sap:aggregation-role="measure"
+					sap:creatable="false" sap:filterable="false" sap:label="Net Sales"
+					sap:text="A5I3Y6060H25LU6NRSY5NG4X2N_F" sap:unit="A0CURRENCY"
+					sap:updatable="false" />
+				<Property Name="A5I3Y6060H25LU6NRSY5NG4X2N_F" Type="Edm.String"
+					MaxLength="60" sap:creatable="false" sap:filterable="false"
+					sap:label="Net Sales (Formatted)" sap:updatable="false" />
+			</EntityType>
+			<EntityType Name="ZAPF_Q002Parameters" sap:semantics="parameters"
+				sap:content-version="1">
+				<Key>
+					<PropertyRef Name="D_SUSD_CURR" />
+				</Key>
+				<Property Name="D_SUSD_CURR" Type="Edm.String" Nullable="false"
+					MaxLength="5" sap:label="Currency" sap:parameter="mandatory"
+					sap:text="D_SUSD_CURRText" sap:filterable="false" />
+				<Property Name="D_SUSD_CURRText" Type="Edm.String"
+					MaxLength="60" sap:filterable="false" />
+				<NavigationProperty Name="D_SUSD_CURRDetails"
+					Relationship="ZAPF_Q002_SRV.D_SUSD_CURRToListOfValues" FromRole="ToRole_D_SUSD_CURRToListOfValues"
+					ToRole="FromRole_D_SUSD_CURRToListOfValues" />
+				<NavigationProperty Name="Results"
+					Relationship="ZAPF_Q002_SRV.ZAPF_Q002ParametersToResult" FromRole="FromRole_ZAPF_Q002ParametersToResult"
+					ToRole="ToRole_ZAPF_Q002ParametersToResult" />
+			</EntityType>
+			<EntityType Name="D_SUSD_CURR" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="D_SUSD_CURR_ID" />
+				</Key>
+				<Property Name="D_SUSD_CURR_ID" Type="Edm.String" Nullable="false"
+					MaxLength="5" sap:label="Currency" sap:text="Text" sap:creatable="false"
+					sap:updatable="false" />
+				<Property Name="D_SUSD_CURR_TEXT" Type="Edm.String"
+					sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+			</EntityType>
+			<Association Name="D_SUSD_CURRToListOfValues"
+				sap:content-version="1">
+				<End Type="ZAPF_Q002_SRV.D_SUSD_CURR" Multiplicity="1"
+					Role="FromRole_D_SUSD_CURRToListOfValues" />
+				<End Type="ZAPF_Q002_SRV.ZAPF_Q002Parameters" Multiplicity="*"
+					Role="ToRole_D_SUSD_CURRToListOfValues" />
+				<ReferentialConstraint>
+					<Principal Role="FromRole_D_SUSD_CURRToListOfValues">
+						<PropertyRef Name="D_SUSD_CURR_ID" />
+					</Principal>
+					<Dependent Role="ToRole_D_SUSD_CURRToListOfValues">
+						<PropertyRef Name="D_SUSD_CURR" />
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="ZAPF_Q002ParametersToResult"
+				sap:content-version="1">
+				<End Type="ZAPF_Q002_SRV.ZAPF_Q002Parameters" Multiplicity="1"
+					Role="FromRole_ZAPF_Q002ParametersToResult" />
+				<End Type="ZAPF_Q002_SRV.ZAPF_Q002Result" Multiplicity="*"
+					Role="ToRole_ZAPF_Q002ParametersToResult" />
+			</Association>
+			<EntityContainer Name="ZAPF_Q002_SRV_Entities"
+				m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+				<EntitySet Name="ZAPF_Q002" EntityType="ZAPF_Q002_SRV.ZAPF_Q002Parameters"
+					sap:creatable="false" sap:updatable="false" sap:deletable="false"
+					sap:content-version="1" />
+				<EntitySet Name="D_SUSD_CURR" EntityType="ZAPF_Q002_SRV.D_SUSD_CURR"
+					sap:creatable="false" sap:updatable="false" sap:deletable="false"
+					sap:content-version="1" />
+				<EntitySet Name="ZAPF_Q002Results" EntityType="ZAPF_Q002_SRV.ZAPF_Q002Result"
+					sap:creatable="false" sap:updatable="false" sap:deletable="false"
+					sap:addressable="false" sap:content-version="1" />
+				<AssociationSet Name="D_SUSD_CURRToListOfValues_AssocSet"
+					Association="ZAPF_Q002_SRV.D_SUSD_CURRToListOfValues"
+					sap:creatable="false" sap:updatable="false" sap:deletable="false"
+					sap:content-version="1">
+					<End EntitySet="D_SUSD_CURR" Role="FromRole_D_SUSD_CURRToListOfValues" />
+					<End EntitySet="ZAPF_Q002" Role="ToRole_D_SUSD_CURRToListOfValues" />
+				</AssociationSet>
+				<AssociationSet Name="ZAPF_Q002ParametersToResult_AssocSet"
+					Association="ZAPF_Q002_SRV.ZAPF_Q002ParametersToResult"
+					sap:creatable="false" sap:updatable="false" sap:deletable="false"
+					sap:content-version="1">
+					<End EntitySet="ZAPF_Q002" Role="FromRole_ZAPF_Q002ParametersToResult" />
+					<End EntitySet="ZAPF_Q002Results" Role="ToRole_ZAPF_Q002ParametersToResult" />
+				</AssociationSet>
+			</EntityContainer>
+			<atom:link rel="self"
+				href="https://localhost:8080/sap/mm/ZAPF_Q002_SRV/$metadata"
+				xmlns:atom="http://www.w3.org/2005/Atom" />
+			<atom:link rel="latest-version"
+				href="https://localhost:8080/sap/mm/ZAPF_Q002_SRV/$metadata"
+				xmlns:atom="http://www.w3.org/2005/Atom" />
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

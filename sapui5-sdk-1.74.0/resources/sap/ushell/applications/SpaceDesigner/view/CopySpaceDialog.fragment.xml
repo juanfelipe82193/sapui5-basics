@@ -1,0 +1,62 @@
+<Dialog
+    xmlns="sap.m"
+    id="copyDialog"
+    title="{i18n>CopyDialog.Title}"
+    beforeOpen=".onBeforeOpen"
+    afterClose=".destroy"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    core:require="{
+        formatMessage: 'sap/base/strings/formatMessage',
+        String: 'sap/ui/model/type/String',
+        CustomString: 'sap/ushell/applications/SpaceDesigner/controller/CustomString'
+    }">
+    <content>
+        <f:SimpleForm id="copyForm" editable="true">
+            <Text id="copyMessage" text="{
+                parts: ['i18n>CopyDialog.Message', '/sourceId'],
+                formatter: 'formatMessage'
+            }" />
+            <Label id="copySpaceIdLabel" text="{i18n>Label.SpaceID}" labelFor="copyId" />
+            <Input
+                maxLength="35"
+                required="true"
+                id="copySpaceIdInput"
+                placeholder="{
+                    parts: ['i18n>Placeholder.CopySpaceTitle', '/sourceId'],
+                    formatter: 'formatMessage'
+                }"
+                change=".onSpaceIDChange"
+                liveChange=".onSpaceIDLiveChange"
+                valueLiveUpdate="true"
+                value="{ path: '/targetId',
+                         type: 'CustomString'
+                       }" />
+            <Label id="copyTitleLabel" text="{i18n>Label.Title}" labelFor="copyTitle" />
+            <Input
+                id="copyTitle"
+                required="true"
+                maxLength="100"
+                value="{ path: '/title', type: 'String' }"
+                liveChange=".onTitleLiveChange"
+                valueLiveUpdate="true"
+                valueStateText="{i18n>Message.EmptyTitle}"
+                placeholder="{
+                    parts: ['i18n>Placeholder.CopySpaceTitle', '/sourceTitle'],
+                    formatter: 'formatMessage'
+                }" />
+        </f:SimpleForm>
+        <core:ComponentContainer id="transportContainer" lifecycle="Application"/>
+    </content>
+    <beginButton>
+        <Button
+            id="copySpaceSaveButton"
+            type="Emphasized"
+            text="{i18n>Button.Copy}"
+            press=".onConfirm"
+            enabled="{ path: '/validation', formatter: '.validate' }" />
+    </beginButton>
+    <endButton>
+        <Button id="copySpaceCancelButton" text="{i18n>Button.Cancel}" press=".onCancel" />
+    </endButton>
+</Dialog>

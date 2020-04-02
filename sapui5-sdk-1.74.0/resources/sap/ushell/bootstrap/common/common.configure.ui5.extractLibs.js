@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define(["jquery.sap.global","sap/base/util/isPlainObject"],function(L,i){"use strict";return function readRequiredLibsFromConfig(u){if(!u||!u.ui5||!u.ui5.libs){return[];}if(!i(u.ui5.libs)){jQuery.sap.log.error("Invalid ushell configuration: /ui5/libs must be an object");return[];}return Object.keys(u.ui5.libs).filter(function(k){return this[k];},u.ui5.libs);};});

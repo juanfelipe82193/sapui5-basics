@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sinaDefine(['../../core/core','../../sina/ComplexCondition','../../sina/ComparisonOperator'],function(c,C,a){"use strict";return{serialize:function(d){if(d===d.sina.getAllDataSource()){return{Id:'<All>',Type:'Category'};}var t;switch(d.type){case d.sina.DataSourceType.Category:t='Category';break;case d.sina.DataSourceType.BusinessObject:t='View';break;}return{Id:d.id,Type:t};}};});

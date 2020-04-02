@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!-- <link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" /> -->
+
+	<script src="../../../../resources/sap-ui-core.js"
+		data-sap-ui-libs="sap.m,sap.ui.commons,sap.ui.table,sap.ui.vbm"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+
+		h4 {
+			margin: 1em 0;
+		}
+
+		i {
+			color: blue
+		}
+
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 38.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+		#margin{
+			margin-right: 50px;
+		}
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 56.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+
+	var oVBI = new sap.ui.vbm.GeoMap('vbi', {width: "1024px", height: "400px", initialPosition: "10;0;0", refMapLayerStack: "Default"});
+	oVBI.setMapConfiguration(JSON.parse(localStorage.getItem('map')));
+	oVBI.placeAt("content");
+
+	var useDefaultActions = true;
+	var listenersAttached = false;
+	var keyRepeatEnabled = true;
+
+	function onChangeDefaultActions() {
+		useDefaultActions = !useDefaultActions;
+		btnUseDefaultActions.innerHTML = useDefaultActions ? "Disable Default Actions" : "Enable Default Actions";
+	}
+
+	function onClearEventList() {
+		eventList.value = "";
+	}
+
+	function onAttachKeyboardListeners() {
+		if (listenersAttached) {
+			oVBI.detachKeyDown(onKeyDown);
+			oVBI.detachKeyPress(onKeyPress);
+			oVBI.detachKeyUp(onKeyUp);
+		} else {
+			oVBI.attachKeyDown(onKeyDown);
+			oVBI.attachKeyPress(onKeyPress);
+			oVBI.attachKeyUp(onKeyUp);
+		}
+		listenersAttached = !listenersAttached;
+		btnListenersAttached.innerHTML = listenersAttached ? "Detach Keyboard Listeners" : "Attach Keyboard Listeners";
+	}
+
+	function onChangeKeyRepeat() {
+		keyRepeatEnabled = !keyRepeatEnabled;
+		btnKeyRepeatEnabled.innerHTML = keyRepeatEnabled ? "Disable Keyboard Repeats" : "Enable Keyboard Repeats";
+		oVBI.setAllowKeyEventRepeat(keyRepeatEnabled);
+	}
+
+	function onChangeKeyEventDelay() {
+		var delay = parseInt(btnKeyEventDelay.value);
+		if (!isNaN(delay)) {
+			oVBI.setKeyEventDelay(delay);
+		}
+	}
+
+	function onKeyDown(e)
+	{
+		var key = e.getParameter( "key" );
+		var code = e.getParameter( "code" );
+		var shift = e.getParameter( "shift" );
+		var ctrl = e.getParameter( "ctrl" );
+		var alt = e.getParameter( "alt" );
+		var meta = e.getParameter( "meta" );
+		eventList.value += new Date(Date.now()).toTimeString().slice(0,8) + " Down " + " (key: "+ key +", code: "+ code +", shift: "+ shift +", ctrl: " + ctrl + ", alt: "+ alt + ", meta: "+ meta + ")\n";
+		eventList.scrollTop = eventList.scrollHeight;
+
+		if(!useDefaultActions) {
+			e.preventDefault();
+		}
+	};
+
+	function onKeyUp(e)
+	{
+		var key = e.getParameter( "key" );
+		var code = e.getParameter( "code" );
+		var shift = e.getParameter( "shift" );
+		var ctrl = e.getParameter( "ctrl" );
+		var alt = e.getParameter( "alt" );
+		var meta = e.getParameter( "meta" );
+		eventList.value += new Date(Date.now()).toTimeString().slice(0,8) + " Up " + " (key: "+ key +", code: "+ code +", shift: "+ shift +", ctrl: " + ctrl + ", alt: "+ alt + ", meta: "+ meta + ")\n";
+		eventList.scrollTop = eventList.scrollHeight;
+	};
+
+    function onKeyPress(e)
+	{
+		var key = e.getParameter( "key" );
+		var code = e.getParameter( "code" );
+		var shift = e.getParameter( "shift" );
+		var ctrl = e.getParameter( "ctrl" );
+		var alt = e.getParameter( "alt" );
+		var meta = e.getParameter( "meta" );
+		eventList.value += new Date(Date.now()).toTimeString().slice(0,8) + " Press " + " (key: "+ key +", code: "+ code +", shift: "+ shift +", ctrl: " + ctrl + ", alt: "+ alt + ", meta: "+ meta + ")\n";
+		eventList.scrollTop = eventList.scrollHeight;
+	};
+
+	</script>
+
+	<body class="sapUiBody" >
+		<h1>Visual Business GeoMap Sample</h1>
+		<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test the usage of the GeoMap keyboard events, control over events repeating and frequency.</p>
+		<h3> To test: </h3>
+			<ul>
+				<li><h4>Check that on initial load your Geomap control loaded and no errors raised.</h4></li>
+				<li>
+					<h4>Testing of attaching and detaching keyboard event listeners:</h4>
+					<ol>
+						<li>press various keyboard keys and check there is nothing in events output area</li>
+						<li>click on "attach keyboard listeners" button</li>
+						<li>press various keyboard keys and check that events output area filled with events data</li>
+						<li>click on "detach keyboard listeners" button</li>
+						<li>press various keyboard keys and check there is nothing in events output area</li>
+					</ol>
+				</li>
+				<li>
+					<h4>Testing of disabling and enablind of default keyboard actions:</h4>
+					<ol>
+						<li>check that pressing "h" moves the map to initial position</li>
+						<li>check that pressing "up,down,left,right,+,-" moves and zooms the map</li>
+						<li>make sure keyboard listeners are atached to the map</li>
+						<li>click on "disable default actions" button</li>
+						<li>check that pressing to "h","up,down,left,right,+,-" has no effect</li>
+						<li>click on "enable default actions" button</li>
+						<li>check that pressing to "h","up,down,left,right,+,-" works as usual</li>
+					</ol>
+				</li>
+				<li>
+					<h4>Testing of disabling and enablind of keyboard events repeating:</h4>
+					<ol>
+						<li>make sure keyboard listeners are atached to the map</li>
+						<li>press and hold any button and check that there are repeating events in output area</li>
+						<li>click on "disable keyboard repeats" button</li>
+						<li>press and hold any button and check that there are no repeating events in output area</li>
+					</ol>
+				</li>
+				<li>
+					<h4>Testing of events minimum delay functionality:</h4>
+					<ol>
+						<li>make sure keyboard listeners are atached to the map</li>
+						<li>make sure events repeating is enabled</li>
+						<li>enter 500 in "event delay" input field</li>
+						<li>press and hold any button and check that there are repeating events at a twice per second rate</li>
+						<li>enter 1000 in "event delay" input field</li>
+						<li>press and hold any button and check that there are repeating events at a one per second rate</li>
+					</ol>
+				</li>
+			</ul>
+			<br/>
+			</div>
+		<div id='description2'><br>
+		<div id="content"></div>
+			<br>
+	    	<button id="btnListenersAttached" onClick="onAttachKeyboardListeners()">Attach Keyboard Listeners</button>
+	    	<button id="btnUseDefaultActions" onClick="onChangeDefaultActions()">Disable Default Actions</button>
+	    	<button id="btnKeyRepeatEnabled" onClick="onChangeKeyRepeat()">Disable Keyboard Repeats</button>
+	    	<a>Event Delay:<a/>
+	    	<input id="btnKeyEventDelay" size="2" value="250" pattern="^[0-9]*" onChange="onChangeKeyEventDelay()"/>
+	    	<button id="btnClearEventList" onClick="onClearEventList()">Clear Events List</button>
+			<br>
+			<br>
+			<text>Event List: </text>
+			<br>
+			<br>
+			<textarea style="width:1024px" id="eventList" rows="10" wrap="off"></textarea>
+		</div>
+	</body>
+</html>

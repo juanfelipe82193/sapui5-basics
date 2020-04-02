@@ -1,0 +1,74 @@
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout"
+           xmlns="sap.m" controllerName="sap.ushell.demo.AppNavSample.view.SapTagSample"
+           xmlns:html="http://www.w3.org/1999/xhtml">
+    <Page title="SAP-tag Samples" class="sapUiContentPadding">
+        <MessageStrip
+                text="In this view you can test configured tags per semantic object via the parameter sap-tag added to intents/target mappings. Two cases are covered "
+                showIcon="false"
+                customIcon="sap-icon://tag"
+                showCloseButton="false"
+                class="sapUiMediumMarginBottom">
+        </MessageStrip>
+        <Panel id="link_tag_testing" headerText="Primary Action per semantic object">
+            <l:VerticalLayout>
+                <MessageStrip
+                        text="The primary action is an action either tagged via sap-tag as primary action or via the action naming convention 'displayFactSheet' per Semantic Object. Put a name of an Semantic Object into the input below and see the name of the target displayed that is the primary action"
+                        showIcon="true"
+                        customIcon="sap-icon://tag"
+                        showCloseButton="false"
+                        class="sapUiMediumMarginBottom"/>
+                <Label text="Semantic Object"/>
+                <Input
+                        id="semanticObject"
+                        type="Text"
+                        width="400px"
+                        class="sapUiMediumMarginBottom"
+                        placeholder="Enter semantic object ..."
+                        showSuggestion="true"
+                        suggestionItems="{SOmodel>/suggestions}"
+                        suggestionItemSelected="onSemanticObjectSelected">
+                    <suggestionItems>
+                        <core:Item text="{SOmodel>name}" />
+                    </suggestionItems>
+                </Input>
+                <Label text="Primary Action:" />
+                <Text text="{tagModel>/primaryIntent/text}"/>
+            </l:VerticalLayout>
+
+            <!-- text area to display the primary link-->
+        </Panel>
+        <Panel id="arbitrary_tag_testing" headerText="Tag group testing">
+            <l:VerticalLayout>
+                <MessageStrip
+                        text="Here you can test arbitrary tagged navigation targets in the FLP content. You can determine via the Semantic Object as selected in the first input and in combination with sap-tag values as entered as tokens into the second input.."
+                        showIcon="true"
+                        customIcon="sap-icon://tag"
+                        showCloseButton="false"
+                        class="sapUiMediumMarginBottom"/>
+                <Label text="Semantic Object"/>
+                <Input
+                        value="Tagtesting"
+                        id="semanticObject1"
+                        type="Text"
+                        width="400px"
+                        placeholder="Enter semantic object ..."
+                        showSuggestion="true"
+                        suggestionItems="{SOmodel>/suggestions}"
+                        suggestionItemSelected="onSemanticObjectSelectedForTags">
+                    <suggestionItems>
+                        <core:Item text="{SOmodel>name}" />
+                    </suggestionItems>
+                </Input>
+                <Label text="Type in some tags here to filter"/>
+                <MultiInput placeholder="enter some tags here as tokens" width="400px" showValueHelp="false" tokenUpdate="onTokenUpdated" id="tagTokenizer" class="sapUiMediumMarginBottom"/>
+                <Text text="tagged links are:"/>
+                <List items="{tagModel>/taggedIntents}">
+                    <StandardListItem title="{tagModel>text}"/>
+                </List>
+            </l:VerticalLayout>
+
+
+        </Panel>
+
+    </Page>
+</core:View>

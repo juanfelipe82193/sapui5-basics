@@ -1,0 +1,124 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+   <edmx:DataServices m:DataServiceVersion="2.0">
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="VOCABULARY_SRV" xml:lang="en" sap:schema-version="1">
+         <EntityType Name="Association" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="VocabularyId" />
+               <PropertyRef Name="DataObjectId" />
+               <PropertyRef Name="Name" />
+               <PropertyRef Name="TargetDataObjectId" />
+            </Key>
+            <Property Name="VocabularyId" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="Vocabulary id" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="DataObjectId" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="Data object id" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="association name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="TargetDataObjectId" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="association target" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Cardinality" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="cardinality" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <NavigationProperty Name="TARGETDATAOBJECTID" Relationship="VOCABULARY_SRV.AssociationToTargetDataObject" FromRole="FromRole_AssociationToTargetDataObject" ToRole="ToRole_AssociationToTargetDataObject" />
+         </EntityType>
+         <EntityType Name="Attribute" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="Id" />
+               <PropertyRef Name="VocabularyId" />
+               <PropertyRef Name="DataObjectId" />
+            </Key>
+            <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="DO Attr. ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="VocabularyId" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="Vocabulary id" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="DataObjectId" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="Data object id" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="do. attr. name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="80" sap:label="Data obj. att. descr" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="BusinessDataType" Type="Edm.String" Nullable="false" MaxLength="20" sap:label="Vocabulary bdt" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+         </EntityType>
+         <EntityType Name="DataObject" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="Id" />
+               <PropertyRef Name="VocabularyId" />
+            </Key>
+            <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="Data object id" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="VocabularyId" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="Vocabulary id" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="IsCollection" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="is collection" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Usage" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="do usage" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="Data object name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="80" sap:label="Data object descr." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Data object status" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <NavigationProperty Name="Attributes" Relationship="VOCABULARY_SRV.DataObjectToAttributes" FromRole="FromRole_DataObjectToAttributes" ToRole="ToRole_DataObjectToAttributes" />
+            <NavigationProperty Name="Associations" Relationship="VOCABULARY_SRV.DataObjectToAssociations" FromRole="FromRole_DataObjectToAssociations" ToRole="ToRole_DataObjectToAssociations" />
+         </EntityType>
+         <EntityType Name="Vocabulary" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="Id" />
+            </Key>
+            <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="255" sap:label="Vocabulary ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Type" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Vocabulary Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <NavigationProperty Name="DataObjects" Relationship="VOCABULARY_SRV.VocabularyToDataObjects" FromRole="FromRole_VocabularyToDataObjects" ToRole="ToRole_VocabularyToDataObjects" />
+         </EntityType>
+         <Association Name="VocabularyToDataObjects" sap:content-version="1">
+            <End Type="VOCABULARY_SRV.Vocabulary" Multiplicity="*" Role="FromRole_VocabularyToDataObjects" />
+            <End Type="VOCABULARY_SRV.DataObject" Multiplicity="*" Role="ToRole_VocabularyToDataObjects" />
+            <ReferentialConstraint>
+               <Principal Role="FromRole_VocabularyToDataObjects">
+                  <PropertyRef Name="Id" />
+               </Principal>
+               <Dependent Role="ToRole_VocabularyToDataObjects">
+                  <PropertyRef Name="VocabularyId" />
+               </Dependent>
+            </ReferentialConstraint>
+         </Association>
+         <Association Name="DataObjectToAttributes" sap:content-version="1">
+            <End Type="VOCABULARY_SRV.DataObject" Multiplicity="*" Role="FromRole_DataObjectToAttributes" />
+            <End Type="VOCABULARY_SRV.Attribute" Multiplicity="*" Role="ToRole_DataObjectToAttributes" />
+            <ReferentialConstraint>
+               <Principal Role="FromRole_DataObjectToAttributes">
+                  <PropertyRef Name="Id" />
+                  <PropertyRef Name="VocabularyId" />
+               </Principal>
+               <Dependent Role="ToRole_DataObjectToAttributes">
+                  <PropertyRef Name="DataObjectId" />
+                  <PropertyRef Name="VocabularyId" />
+               </Dependent>
+            </ReferentialConstraint>
+         </Association>
+         <Association Name="DataObjectToAssociations" sap:content-version="1">
+            <End Type="VOCABULARY_SRV.DataObject" Multiplicity="*" Role="FromRole_DataObjectToAssociations" />
+            <End Type="VOCABULARY_SRV.Association" Multiplicity="*" Role="ToRole_DataObjectToAssociations" />
+            <ReferentialConstraint>
+               <Principal Role="FromRole_DataObjectToAssociations">
+                  <PropertyRef Name="Id" />
+                  <PropertyRef Name="VocabularyId" />
+               </Principal>
+               <Dependent Role="ToRole_DataObjectToAssociations">
+                  <PropertyRef Name="DataObjectId" />
+                  <PropertyRef Name="VocabularyId" />
+               </Dependent>
+            </ReferentialConstraint>
+         </Association>
+         <Association Name="AssociationToTargetDataObject" sap:content-version="1">
+            <End Type="VOCABULARY_SRV.Association" Multiplicity="1" Role="FromRole_AssociationToTargetDataObject" />
+            <End Type="VOCABULARY_SRV.DataObject" Multiplicity="1" Role="ToRole_AssociationToTargetDataObject" />
+         </Association>
+         <EntityContainer Name="VOCABULARY_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+            <EntitySet Name="Associations" EntityType="VOCABULARY_SRV.Association" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+            <EntitySet Name="Attributes" EntityType="VOCABULARY_SRV.Attribute" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+            <EntitySet Name="DataObjects" EntityType="VOCABULARY_SRV.DataObject" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+            <EntitySet Name="Vocabularies" EntityType="VOCABULARY_SRV.Vocabulary" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1" />
+            <AssociationSet Name="DataObjectToAttributes_AssocSet" Association="VOCABULARY_SRV.DataObjectToAttributes" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+               <End EntitySet="DataObjects" Role="FromRole_DataObjectToAttributes" />
+               <End EntitySet="Attributes" Role="ToRole_DataObjectToAttributes" />
+            </AssociationSet>
+            <AssociationSet Name="VocabularyToDataObjects_AssocSet" Association="VOCABULARY_SRV.VocabularyToDataObjects" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+               <End EntitySet="Vocabularies" Role="FromRole_VocabularyToDataObjects" />
+               <End EntitySet="DataObjects" Role="ToRole_VocabularyToDataObjects" />
+            </AssociationSet>
+            <AssociationSet Name="DataObjectToAssociations_AssocSet" Association="VOCABULARY_SRV.DataObjectToAssociations" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+               <End EntitySet="DataObjects" Role="FromRole_DataObjectToAssociations" />
+               <End EntitySet="Associations" Role="ToRole_DataObjectToAssociations" />
+            </AssociationSet>
+            <AssociationSet Name="AssociationToTargetDataObjectSet" Association="VOCABULARY_SRV.AssociationToTargetDataObject" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+               <End EntitySet="Associations" Role="FromRole_AssociationToTargetDataObject" />
+               <End EntitySet="DataObjects" Role="ToRole_AssociationToTargetDataObject" />
+            </AssociationSet>
+         </EntityContainer>
+         <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="/sap/opu/odata/SAP/VOCABULARY_SRV/$metadata" />
+         <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="/sap/opu/odata/SAP/VOCABULARY_SRV/$metadata" />
+      </Schema>
+   </edmx:DataServices>
+</edmx:Edmx>

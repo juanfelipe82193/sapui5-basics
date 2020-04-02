@@ -1,0 +1,313 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Using and Nesting Components</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="You can use a ComponentContainer to wrap a UIComponent and reuse it anywhere within the SAPUI5 control tree. With the ComponentContainer you can nest components inside other components."><meta name="description" content="You can use a ComponentContainer to wrap a UIComponent and reuse it anywhere within the SAPUI5 control tree. With the ComponentContainer you can nest components inside other components."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"82a0fcecc3cb427c91469bc537ebdddf.html","previousTopicHref":"b430345887f1419fba50320b57c1bdf9.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio346599f0890d4dfaaa11c6b4ffa96312"><h1 class="title topictitle1" hidden>Using and Nesting Components</h1><div class="body conbody"><p class="shortdesc" hidden>You can use a <samp class="ph codeph">ComponentContainer</samp> to wrap a <samp class="ph codeph">UIComponent</samp> and reuse it anywhere within the <span class="ph"><span class="ph pname">SAPUI5</span></span> control tree. With the <samp class="ph codeph">ComponentContainer</samp> you can nest
+components inside other components.</p>
+<div class="section" id="loio346599f0890d4dfaaa11c6b4ffa96312__section_oqk_jhc_zz"><section class="section" type="Component Containers"><h2 class="section_title" style="font-size: 1.15em;">Component Containers </h2><p class="p">To render UI components, you must wrap them in a
+<samp class="ph codeph">sap/ui/core/ComponentContainer</samp>. You <span class="ph emphasis emphasis">cannot</span> use the <samp class="ph codeph">placeAt</samp> method to place
+UI components directly in a page. A <samp class="ph codeph">ComponentContainer</samp> carries specific settings and also contains the lifecycle
+methods of a regular control, such as the <samp class="ph codeph">onBeforeRendering</samp> and <samp class="ph codeph">onAfterRendering</samp> methods. The
+lifecycle methods of the <samp class="ph codeph">ComponentContainer</samp> are forwarded to the corresponding methods of the nested
+component.</p><p class="p">The <samp class="ph codeph">ComponentContainer</samp> separates the application and the nested component. The control tree and data
+binding of the inner component are decoupled from the outer component. </p><p class="p">If you want to share data with the inner component, you
+can use the <samp class="ph codeph">propagateModel</samp> property on the <samp class="ph codeph">ComponentContainer</samp> to forward models and binding contexts
+to the inner component.</p><div class="p">You load and create a <samp class="ph codeph">UIComponent</samp> in one of the following ways:<ul class="ul" id="loio346599f0890d4dfaaa11c6b4ffa96312__ul_pht_yq1_qk">
+<li class="li">
+<div class="p">Load the component asynchronously in &quot;manifest first&quot; mode by specifying the component
+name:<pre class="pre codeblock prettyprint lang-js">	
+	// &quot;ComponentContainer&quot; required from module &quot;sap/ui/core/ComponentContainer&quot;
+	var oContainer = new sap.ui.core.ComponentContainer({
+		name: &quot;samples.components.sample&quot;,
+		manifest: true,
+		async: true
+	});
+	oContainer.placeAt(&quot;target&quot;);
+	</pre></div>
+</li>
+<li class="li">
+<div class="p">Load the component asynchronously before creating the
+container:<pre class="pre codeblock prettyprint lang-js">	// &quot;Component&quot; required from module &quot;sap/ui/core/Component&quot;
+	// &quot;ComponentContainer&quot; required from module &quot;sap/ui/core/ComponentContainer&quot;
+	Component.load({
+		name: &quot;samples.components.sample&quot;,
+	}).then(function(oComponent) {
+		var oContainer = new ComponentContainer({
+			component: oComponent
+		});
+		oContainer.placeAt(&quot;target&quot;);
+	});</pre></div>
+</li>
+<li class="li">
+<div class="p">Load the component asynchronously with &quot;manifest first&quot; mode by specifying the URL of the descriptor
+(<span class="ph filepath">manifest.json</span>):
+<pre class="pre codeblock prettyprint lang-js">	// &quot;Component&quot; required from module &quot;sap/ui/core/Component&quot;
+	// &quot;ComponentContainer&quot; required from module &quot;sap/ui/core/ComponentContainer&quot;
+	Component.load({
+		manifest: &quot;samples/components/sample/manifest.json&quot;,
+	}).then(function(oComponent) {
+		var oContainer = new ComponentContainer({
+			component: oComponent
+		});
+		oContainer.placeAt(&quot;target&quot;);
+	});</pre></div>
+</li>
+</ul></div><aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">You can use the <samp class="ph codeph">lifecycle</samp> property to determine whether the container or your application code will take care of destroying
+the component. </p><p class="p"><span class="ph">See <a class="xref" href="../../#/api/sap.ui.core.ComponentContainer%23controlProperties" target="_top" alt="#/api/sap.ui.core.ComponentContainer%23controlProperties" title="#/api/sap.ui.core.ComponentContainer%23controlProperties">
+<samp class="ph codeph">ComponentContainer</samp></a> for a detailed explanation of the lifecycle property and its possible values. </span>
+</p></aside><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Using a Component Container to Load Components from a Different Location</p>
+<p class="p">You may want to load components from a location that is different from the location where the <span class="ph"><span class="ph pname">SAPUI5</span></span> libraries are located or a location that is not registered as
+a resource root in the <span class="ph"><span class="ph pname">SAPUI5</span></span> bootstrap.</p>
+<div class="p">You can do so by defining the URL of the additional components as a setting for the component factory or the component
+container.<ul class="ul" id="loio346599f0890d4dfaaa11c6b4ffa96312__ul_lzk_b1n_4bb">
+<li class="li">
+<div class="p">Loading the component asynchronously before creating the
+container:<pre class="pre codeblock prettyprint lang-js">	// &quot;Component&quot; required from module &quot;sap/ui/core/Component&quot;
+	// &quot;ComponentLifecycle&quot; required from module &quot;sap/ui/core/ComponentLifecycle&quot;
+	Component.load({
+		name: &quot;samples.components.sample&quot;,
+		url: &quot;./myComponents&quot;
+	}).then(function(oComponent) {
+		var oContainer = new ComponentContainer({
+			component: oComponent
+		});
+		oContainer.placeAt(&quot;target&quot;);
+	});</pre></div>
+</li>
+<li class="li">
+<div class="p">Loading the component asynchronously when creating the
+container:<pre class="pre codeblock prettyprint lang-js">	// &quot;ComponentContainer&quot; required from module &quot;sap/ui/core/ComponentContainer&quot;
+	// &quot;coreLibrary&quot; required from module &quot;sap/ui/core/library&quot;
+	var oContainer = new ComponentContainer({
+		name: &quot;samples.components.sample&quot;,
+		lifecycle: coreLibrary.ComponentLifecycle.Container,
+		async: true,
+		url: &quot;./myComponents&quot;
+	});
+	oContainer.placeAt(&quot;target&quot;);</pre>Here
+you use the <samp class="ph codeph">lifecycle</samp> property to make sure that the component is destroyed when the container is
+destroyed.</div>
+</li>
+</ul></div>
+</div></section></div>
+<div class="section" id="loio346599f0890d4dfaaa11c6b4ffa96312__section_fph_13c_zz"><section class="section" type="Reuse Components"><h2 class="section_title" style="font-size: 1.15em;">Reuse Components</h2><div class="p">To be able to reuse a component, the component has to be declared in the
+<samp class="ph codeph">componentUsages</samp> section of the <span class="ph filepath">manifest.json</span> descriptor file as
+follows:<pre class="pre codeblock prettyprint lang-json">&quot;sap.ui5&quot;: {
+  &quot;componentUsages&quot;: {
+    &quot;myreuse&quot;: {
+      &quot;name&quot;: &quot;sap.reuse.component&quot;,
+      &quot;settings&quot;: {},
+      &quot;componentData&quot;: {},
+      &quot;lazy&quot;: false
+    }
+  }
+}</pre></div>
+<p class="p">The reuse component is declared via its <samp class="ph codeph">componentUsage</samp> ID as the key and the supported values are
+<samp class="ph codeph">name</samp> (name of the component), <samp class="ph codeph">settings</samp>, <samp class="ph codeph">componentData</samp> and
+<samp class="ph codeph">lazy</samp>. The values defined in the <span class="ph filepath">manifest.json</span> file will be merged with the values specified in
+the instance-specific component factory function An exception to this is the lazy flag which is an indicator for the Component factory
+function how to handle the dependency. Allowed values in the instance-specific factory function are <samp class="ph codeph">settings</samp>,
+<samp class="ph codeph">componentData</samp>, <samp class="ph codeph">async</samp>, and <samp class="ph codeph">id</samp>.</p><p class="p">The <samp class="ph codeph">lazy</samp> flag is used to
+indicate whether the Component should be already preloaded or not. By default, the Components defined in the usage are lazy. A
+Component preloaded with the flag <samp class="ph codeph">lazy: false</samp> has to be explicitly maintained in the
+<span class="ph filepath">manifest.json</span>.</p><p class="p">For more information, see <a class="xref" href="../../#/topic/be0cf40f61184b358b5faedaec98b2da.html" title="The descriptor for applications, components, and libraries is inspired by the Web Application Manifest concept introduced by the W3C. The descriptor provides a central, machine-readable and easy-to-access location for storing metadata associated with an application, an application component, or a library." target="_top">Descriptor for Applications, Components, and Libraries</a>.</p><p class="p">If you want to exchange the reuse component, for example, to extend an app, you simple exchange the reuse component in the
+<span class="ph filepath">manifest.json</span> descriptor file.</p><p class="p">The application index can also access the information in
+the <span class="ph filepath">manifest.json</span> file and optimize the determination of dependencies when loading components.</p><div class="p">Reuse
+components that are embedded by a library must have an explicit entry in the <span class="ph filepath">manifest.json</span> in the
+<samp class="ph codeph">sap.app/embeddedBy</samp> section:<pre class="pre codeblock prettyprint">&quot;sap.app&quot;: {
+  &quot;embeddedBy&quot;: &quot;../&quot;
+}</pre>Under
+<samp class="ph codeph">embeddedBy</samp>, you specify the relative path to the namespace root of the library. This ensures that tools like the
+application index can discover embedded libraries and won&apos;t include them in the transitive scope (otherwise you would get unwanted 404
+requests). Additionally tools should declare a library dependency to the embedding library. This will ensure that the library
+containing the component preload will be loaded automatically instead of the trying to load the component preload by
+itself.</div><div id="section_mht_1jh_yz" class="sectiondiv subsection">
+<p class="p subsectiontitle">Instantiation</p>
+<p class="p">To instantiate the reuse component in the current component, you use an instance-specific factory function. The factory function
+requires at least the <samp class="ph codeph">componentUsage ID</samp> as a parameter (simplified usage) or a configuration object that contains
+the <samp class="ph codeph">usage</samp> and optionally <samp class="ph codeph">settings</samp> and <samp class="ph codeph">componentData</samp> (extended usage).</p>
+<ul class="ul" id="loio346599f0890d4dfaaa11c6b4ffa96312__ul_hsl_mlh_yz">
+<li class="li">
+<div class="p">Example for simplified usage
+(Async):<pre class="pre codeblock prettyprint lang-js">this.createComponent(&quot;myreuse&quot;).then(function(oComponent) {
+  // ...
+});</pre></div>
+</li>
+<li class="li">
+<div class="p">Example for extended usage
+(Async):<pre class="pre codeblock prettyprint lang-js">var oComponentPromise = this.createComponent({
+  usage: &quot;myreuse&quot;
+  settings: {},
+  componentData: {},
+  async: true
+});</pre></div>
+</li>
+</ul>
+</div><div id="section_gm3_5lh_yz" class="sectiondiv subsection">
+<p class="p subsectiontitle">Declarative Usage</p>
+<div class="p">You can also declare a reuse component directly, for example, in your JavaScript or XML code. In an XML view, the local service
+factory can only be used via the <samp class="ph codeph">ComponentContainer</samp> that has a superordinate
+component.<pre class="pre codeblock prettyprint lang-xml">&lt;View ...&gt;
+  &lt;ComponentContainer usage=&quot;myreuse&quot; async=&quot;true&quot;&gt;&lt;/ComponentContainer&gt;
+&lt;/View&gt;</pre></div>
+</div>
+<div id="section_bcp_zmh_yz" class="sectiondiv subsection">
+<p class="p subsectiontitle">Migration</p>
+<p class="p">If you have been reusing components before we introduced the reuse feature described above, we recommend that you refactor your
+code and implement the new logic.</p>
+<div class="p">If you use a component that is embedded in a library, and the application declares a dependency to that library, remove the
+dependency to the library from the embedding application. Make sure that the application code does not contain any direct
+references to the component or the embedding application.<div class="table-wrapper tablenoborder"><table summary id="loio346599f0890d4dfaaa11c6b4ffa96312__table_iwt_tnh_yz" class="table" frame="border" border="1" rules="all"><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d161487e331">
+<p class="p">Old Code</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d161487e337">
+<p class="p">Recommended Code</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d161487e331 ">
+<div class="p"><span class="ph filepath">manifest.json</span> with dependency declaration
+only:<pre class="pre codeblock prettyprint lang-json">{
+  &quot;sap.ui5&quot;: {
+    &quot;dependencies&quot;: {
+      &quot;components&quot;: {
+        &quot;sap.reuse.component&quot;: {}
+      }
+    }
+  }
+}</pre></div>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d161487e337 ">
+<div class="p"><span class="ph filepath">manifest.json</span> with declaration of reuse
+components:<pre class="pre codeblock prettyprint lang-json">{
+  &quot;sap.ui5&quot;: {
+    &quot;dependencies&quot;: {
+      &quot;components&quot;: {
+        &quot;sap.reuse.component&quot;: {}
+      }
+    },
+    <span class="ph emphasis emphasis">&quot;componentUsages&quot;: {
+      &quot;reuse&quot;: {
+        &quot;name&quot;: &quot;sap.reuse.component&quot;,
+        &quot;lazy&quot;: false
+      }
+    }
+</span>
+  }
+}</pre></div>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">As of version 1.56 it is sufficient to declare the component usage and to indicate whether the
+component should be lazy loaded or not. The declaration of the component dependencies can and should
+be avoided in this case.</p></aside>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d161487e331 ">
+<div class="p"><span class="ph filepath">Component.js</span> with nested reuse
+component:<pre class="pre codeblock prettyprint lang-js">createContent: function() {
+   
+  var oReuseComponent = sap.ui.component({
+    &quot;name&quot;: &quot;sap.reuse.component&quot;
+  });
+ 
+}</pre></div>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d161487e337 ">
+<div class="p"><span class="ph filepath">Component.js</span> that loads the reuse
+component<pre class="pre codeblock prettyprint lang-js">createContent: function() {
+   
+<span class="ph emphasis emphasis">  var oReuseComponentPromise = this.createComponent({ /* this = Component instance */
+    &quot;usage&quot;: &quot;reuse&quot;
+  });</span>
+ 
+}</pre></div>
+</td>
+</tr>
+</tbody></table></div></div>
+</div>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/fb19f501b16e4e4991eb6a017770945b.html" title="Every SAPUI5 component can define routing configuration in its manifest and a UI5 router instance will be created automatically after the component is instantiated." target="_top">Enabling Routing in Nested Components</a></div><div><a class="link" href="../../#/api/sap.ui.core.ComponentContainer" target="_top" alt="#/api/sap.ui.core.ComponentContainer" title="#/api/sap.ui.core.ComponentContainer">API Reference: <samp class="ph codeph">sap.ui.core.ComponentContainer</samp></a></div><div><a class="link" href="../../#/api/sap.ui.core.ComponentContainer/methods/setLifecycle" target="_top" alt="#/api/sap.ui.core.ComponentContainer/methods/setLifecycle" title="#/api/sap.ui.core.ComponentContainer/methods/setLifecycle">API Reference:
+<samp class="ph codeph">sap.ui.core.ComponentContainer.setLifecycle</samp></a></div><div><a class="link" href="../../#/topic/be0cf40f61184b358b5faedaec98b2da.html" title="The descriptor for applications, components, and libraries is inspired by the Web Application Manifest concept introduced by the W3C. The descriptor provides a central, machine-readable and easy-to-access location for storing metadata associated with an application, an application component, or a library." target="_top">Descriptor for Applications, Components, and Libraries</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

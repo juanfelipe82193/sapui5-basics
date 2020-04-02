@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" 
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" 
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" 
+    xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="http://example.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_TIMELINE',Version='0001',SAP__Origin='SOCIALMEDIA')/$value" 
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Timeline.v1" Alias="Timeline"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="Z_TIMELINE_SRV" xml:lang="en" sap:schema-version="0000" 
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="TestBusinessObject" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TestID"/>
+                </Key>
+                <Property Name="TestID" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TestTitle" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="TestTimelineNavigationPath" Relationship="Z_TIMELINE_SRV.BusinessObject_TimelineEntry" FromRole="FromRole_BusinessObject_TimelineEntry" ToRole="ToRole_BusinessObject_TimelineEntry"/>
+            </EntityType>
+            <EntityType Name="TestTimelineDetailPropertyValueChange" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TestPropertyLabel"/>
+                </Key>
+                <Property Name="TestPropertyLabel" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TestChangeType" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TestBeforeValue" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TestAfterValue" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="TestTimelineEntry" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TestID"/>
+                </Key>
+                <Property Name="TestID" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TestIcon" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TestActorName" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TestActorID" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TestActorExtID" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TestActionText" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TestSummaryText" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TestTimeStamp" Type="Edm.DateTimeOffset" Nullable="false" Precision="0" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="TestTimelineDetailNavigationPath" Relationship="Z_TIMELINE_SRV.TimelineEntry_PropertyValueChange" FromRole="FromRole_TimelineEntry_PropertyValueChange" ToRole="ToRole_TimelineEntry_PropertyValueChange"/>
+            </EntityType>
+            <Association Name="BusinessObject_TimelineEntry" sap:content-version="1">
+                <End Type="Z_TIMELINE_SRV.TestBusinessObject" Multiplicity="1" Role="FromRole_BusinessObject_TimelineEntry"/>
+                <End Type="Z_TIMELINE_SRV.TestTimelineEntry" Multiplicity="*" Role="ToRole_BusinessObject_TimelineEntry"/>
+            </Association>
+            <Association Name="TimelineEntry_PropertyValueChange" sap:content-version="1">
+                <End Type="Z_TIMELINE_SRV.TestTimelineEntry" Multiplicity="1" Role="FromRole_TimelineEntry_PropertyValueChange"/>
+                <End Type="Z_TIMELINE_SRV.TestTimelineDetailPropertyValueChange" Multiplicity="*" Role="ToRole_TimelineEntry_PropertyValueChange"/>
+            </Association>
+            <EntityContainer Name="Z_TIMELINE_SRV_Entities" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="TestBusinessObjects" EntityType="Z_TIMELINE_SRV.TestBusinessObject" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="TestTimelineDetailPropertyValueChanges" EntityType="Z_TIMELINE_SRV.TestTimelineDetailPropertyValueChange" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="TestTimelineEntries" EntityType="Z_TIMELINE_SRV.TestTimelineEntry" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <AssociationSet Name="TimelineEntry_PropertyValueChange_AssocS" Association="Z_TIMELINE_SRV.TimelineEntry_PropertyValueChange" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="TestTimelineEntries" Role="FromRole_TimelineEntry_PropertyValueChange"/>
+                    <End EntitySet="TestTimelineDetailPropertyValueChanges" Role="ToRole_TimelineEntry_PropertyValueChange"/>
+                </AssociationSet>
+                <AssociationSet Name="BusinessObject_TimelineEntry_AssocSet" Association="Z_TIMELINE_SRV.BusinessObject_TimelineEntry" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="TestBusinessObjects" Role="FromRole_BusinessObject_TimelineEntry"/>
+                    <End EntitySet="TestTimelineEntries" Role="ToRole_BusinessObject_TimelineEntry"/>
+                </AssociationSet>
+            </EntityContainer>
+            <Annotations Target="Z_TIMELINE_SRV.TestBusinessObject" 
+                xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Timeline.TimelineNavigationPath" NavigationPropertyPath="TestTimelineNavigationPath"/>
+            </Annotations>
+            <Annotations Target="Z_TIMELINE_SRV.TestTimelineEntry" 
+                xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Timeline.TimelineEntry">
+                    <Record>
+                        <PropertyValue Property="ID" Path="TestID"/>
+                        <PropertyValue Property="Icon" Path="TestIcon"/>
+                        <PropertyValue Property="ActorName" Path="TestActorName"/>
+                        <PropertyValue Property="ActorID" Path="TestActorID"/>
+                        <PropertyValue Property="ActorExtID" Path="TestActorExtID"/>
+                        <PropertyValue Property="ActionText" Path="TestActionText"/>
+                        <PropertyValue Property="SummaryText" Path="TestSummaryText"/>
+                        <PropertyValue Property="TimeStamp" Path="TestTimeStamp"/>
+                        <PropertyValue Property="TimelineDetailNavigationPath" NavigationPropertyPath="TestTimelineDetailNavigationPath"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="Z_TIMELINE_SRV.TestTimelineDetailPropertyValueChange" 
+                xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Timeline.TimelineDetailPropertyValueChange">
+                    <Record>
+                        <PropertyValue Property="PropertyLabel" Path="TestPropertyLabel"/>
+                        <PropertyValue Property="ChangeType" Path="TestChangeType"/>
+                        <PropertyValue Property="BeforeValue" Path="TestBeforeValue"/>
+                        <PropertyValue Property="AfterValue" Path="TestAfterValue"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <atom:link rel="self" href="http://example.com/sap/opu/odata/sap/Z_TIMELINE_SRV/$metadata" 
+                xmlns:atom="http://www.w3.org/2005/Atom"/>
+                <atom:link rel="latest-version" href="http://example.com/sap/opu/odata/sap/Z_TIMELINE_SRV/$metadata" 
+                    xmlns:atom="http://www.w3.org/2005/Atom"/>
+                </Schema>
+            </edmx:DataServices>
+        </edmx:Edmx>

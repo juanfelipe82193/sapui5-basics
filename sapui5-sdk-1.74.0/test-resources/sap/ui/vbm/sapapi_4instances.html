@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js" id="sap-ui-bootstrap" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+
+
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+
+		h4 {
+			margin: 1em 0;
+		}
+
+		i {
+			color: blue
+		}
+
+		.col {
+			color: red;
+		}
+
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+		sap.ui.localResources("vbitestapp");
+
+		// create the controls and position them.............................//
+		var oVBI1 = new sap.ui.vbm.VBI('vbiWrap2', {
+			width: 600,
+			height: 620
+		});
+		oVBI1.placeAt("content_left");
+
+		var oVBI2 = new sap.ui.vbm.VBI('vbiWrap3', {
+			width: 600,
+			height: 620
+		});
+		oVBI2.placeAt("content_right");
+
+		// load the projects into the controls...............................//
+		var dat = $.getJSON("media/vbroute/main.json", function(dat) {
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array){
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(dat);
+		});
+
+		var dat1 = $.getJSON("media/vbcircle/main.json", function(dat1) {
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat1.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat1.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array){
+				dat1.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat1.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI2.load(dat1);
+		});
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: Sample should show different working instances.</h1>
+
+
+	<div id="description1">
+		<br>
+
+		<h3> The aim: </h3>
+		<p> To see if we can load multiple instances of Visual Business controls on one page. </p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+			<li> Check that there are 2 instances of the GeoMap control loaded. <i> The map should have a
+					fixed width of 600px and height of 620px. </i></li>
+			<li> Check that the first map has routes.</li>
+			<li> Check that the second map has circles.<i>
+		</ol>
+				        <figure style="float: left;">
+            <figcaption>This is the expected result for the first GeoMap instance &#8595</figcaption>
+            <img src="img/sapapi_4instances.jpg"/>
+							<br>
+			<figcaption>This is the expected result for the second GeoMap instance &#8595</figcaption>
+            <img src="img/sapapi_4instances2.jpg"/>
+        </figure>
+
+	</div>
+
+				<div id="description2">
+        <figure style="float: left;">
+            <div id="content_left"></div></td>
+				<br>
+            <div  id="content_right"></div></td>
+        </figure>
+        </div>
+
+
+    </body>
+</html>

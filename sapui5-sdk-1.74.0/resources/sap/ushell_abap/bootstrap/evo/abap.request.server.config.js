@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define(["./abap.get.server.config.Urls","sap/ui2/srvc/utils"],function(g){"use strict";return r;function r(a){var c,R=[];a=a||g;c=a();if(c.length===0){return Promise.resolve([]);}R=c.map(function(u,i){return new Promise(function(b,d){sap.ui2.srvc.get(u,false,function(s){var p;try{p=JSON.parse(s);}catch(e){d(["parse error in server config file","'"+u+"'","with content:","'"+s+"'"].join(" "));}b(p);},d);});});return Promise.all(R);}});

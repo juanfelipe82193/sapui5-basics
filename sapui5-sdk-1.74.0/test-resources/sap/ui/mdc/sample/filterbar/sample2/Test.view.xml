@@ -1,0 +1,85 @@
+<core:View height="100%" xmlns:core="sap.ui.core" xmlns="sap.m"
+	 xmlns:f="sap.f"
+	 xmlns:fl="sap.ui.fl.variants"
+	 xmlns:mdcField="sap.ui.mdc.field"
+	 xmlns:mdc="sap.ui.mdc"
+	 xmlns:l="sap.ui.layout"
+	 xmlns:ce="sap.ui.codeeditor"	 
+	controllerName="sap.ui.mdc.sample.filterbar.sample2.Test">
+
+	<App id="idMdcFilterBarApp">
+
+		<f:DynamicPage>
+			<f:title>
+				<f:DynamicPageTitle>
+					<f:actions>
+						<Button id="changeProperty1" text="Change Req Property" press="onChangeReqProperty" />
+						<Button id="changeProperty2" text="Change Vis Property" press="onChangeVisProperty" />
+					</f:actions>
+
+					<f:heading>
+					   	<fl:VariantManagement id="testVariantMngmn" for="testFilterBar" showExecuteOnSelection="true"/>
+					</f:heading>
+
+					<f:snappedContent>
+						<Text id="statusText" />
+					</f:snappedContent>
+				</f:DynamicPageTitle>
+			</f:title>
+			<f:header>
+				<f:DynamicPageHeader>
+					<f:content>
+						<mdc:FilterBar id="testFilterBar" filtersChanged="onFiltersChanged"
+							liveMode="false"
+							delegate='\{"name" : "sap/ui/mdc/sample/filterbar/sample2/FilterBarHelperTest", "payload" : \{"modelName": null,  "collectionName": "ProductList"\} \}'
+							filterConditions = '\{"SupplierID" : [\{"operator":"EQ","values":["VENDOR"]}]\}'
+ 							search="onSearch"
+							p13nMode="Item,Value">
+
+							<mdc:dependents>
+									<mdcField:FieldValueHelp id="FVH_Multi"
+										title="Multiple"
+										showConditionPanel="true" />
+							</mdc:dependents>
+
+							<mdc:basicSearchField>
+								<mdc:FilterField id="field0"  placeholder= "{@i18n>SEARCH}" conditions="{$filters>/conditions/$search}" dataType="sap.ui.model.odata.type.String" maxConditions="1"/>
+							</mdc:basicSearchField>
+
+							<mdc:filterItems>
+
+								<mdc:FilterField id="field1"  label="String" conditions="{$filters>/conditions/String}" maxConditions="1" dataType="Edm.String" required="true"/>
+								<mdc:FilterField id="field2"  label="Boolean" conditions="{$filters>/conditions/Boolean}"  maxConditions="1" dataType="Edm.Boolean"/>
+
+							</mdc:filterItems>
+						</mdc:FilterBar>
+					</f:content>
+				</f:DynamicPageHeader>
+			</f:header>
+			<f:content>
+					<VBox>
+						<Panel expandable="true" expanded="false" width="auto" class="sapUiResponsiveMargin" headerText="Externalized Conditions">
+							<l:Grid containerQuery="true" defaultSpan="XL6 L6 M12">
+								<l:VerticalLayout width="100%">
+									<HBox fitContainer="true">
+										<Title text="retrieve X-Conditions:" />
+										<Button text="Get" press="onGetExternalizedConditions" />
+									</HBox>
+									<ce:CodeEditor id="getExternalizedConditionsId" width="100%" height="300px" type="jsoniq" lineNumbers="false" value=""/>
+								</l:VerticalLayout>
+								<l:VerticalLayout width="100%">
+									<HBox fitContainer="true">
+										<Title text="assign X-Conditions:" />
+										<Button text="Set" press="onSetExternalizedConditions" tooltip="Apply conditions, without deleteting existing coditions"/>
+										<Button text="ClearSet" press="onSetExternalizedConditionsClear" tooltip="Clear the condition model before applying the new conditions" />										
+									</HBox>
+
+									<ce:CodeEditor id="setExternalizedConditionsId" width="100%" height="300px" type="jsoniq" lineNumbers="false" value=""/>
+								</l:VerticalLayout>
+							</l:Grid>
+						</Panel>
+					</VBox>
+			</f:content>
+		</f:DynamicPage>
+	</App>
+</core:View>

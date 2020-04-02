@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js" id="Script1" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		.col {
+			color: red;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 30.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 65.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+		// creation of visual business...............................//
+		sap.ui.localResources("vbitestapp");
+
+		function onSubmit(e) {
+			if (evtoutput.innerText !== undefined)
+				evtoutput.innerText = e.getParameter("data");
+			else
+			if (evtoutput.textContent !== undefined)
+				evtoutput.textContent = e.getParameter("data"); // due to ff
+		};
+
+		var oVBI1 = new sap.ui.vbm.VBI('vbiWrap2', {
+			width: 600,
+			height: 620,
+			submit: onSubmit,
+		});
+		oVBI1.placeAt("content");
+
+		// load the json and set the default text area text
+		var dat = $.getJSON("media/vbtm/main.json", function(dat) {
+			var txt = JSON.stringify(dat, null, '  ');
+
+			if (srcinput.innerText !== undefined)
+				srcinput.innerText = txt;
+			else
+			if (srcinput.textContent !== undefined)
+				srcinput.textContent = txt;
+		});
+
+		function onBtnTest() {
+			var dat = JSON.parse(srcinput.value);
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array) {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(dat);
+		};
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: VBI Snippix</h1>
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test snippix.</p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+			<li> Click on the arrow on the left side of the textarea and check that a map control is created with 3 spots.
+				<br><i>You may need to zoom to see the third spot</i></li>
+			<img src="img/snippix.jpg" alt="snippix" style="width:450px;height:400px;">
+
+			<li> Change the data in the textarea and click the same button. Check that the output is as expected. An example is shown bellow:
+			</li>
+		</ol><img src="img/snippix2.jpg" alt="snippix" style="width:540px;height:400px;">
+		<p> To view more information about the visual objects you can click on the VO and refer to the textarea below the map control.</p>
+		<br>
+	</div>
+	<div id="description2">
+		<table>
+			<tr>
+				<td>
+					<div id="content"></div>
+				</td>
+				<td>
+					<button id="btnTest" onClick="onBtnTest()">&lt;&lt;</button>
+				</td>
+				<td>
+					<textarea id="srcinput" rows="40" cols="100"></textarea>
+				</td>
+			</tr>
+			<tr>
+
+				<td colspan="3">
+					<h6>Event:</h6>
+					<br>
+					<textarea style="width:100%;box-sizing:border-box" id="evtoutput" rows="8"></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+</body>
+
+</html>

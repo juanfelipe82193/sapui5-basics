@@ -1,0 +1,753 @@
+<core:FragmentDefinition xmlns:f="sap.ui.layout.form"
+                         xmlns:core="sap.ui.core"
+                         xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1" xmlns="sap.m">
+        <f:Form editable="true">
+            <f:layout>
+                <f:ResponsiveGridLayout
+                        labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false"
+                        emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0"
+                        singleContainerFullSize="false" />
+            </f:layout>
+            <f:formContainers>
+                <template:if test="{= !${ovpCardProperties>/addNewCard}}">
+                    <template:then>
+                        <f:FormContainer id="sapOvpSettingsFormContainer">
+                            <f:formElements>
+                                <!-- Title -->
+                                <template:if test="{= !(${ovpCardProperties>/layer} ==='VENDOR' || ${ovpCardProperties>/layer} ==='CUSTOMER_BASE')}">
+                                	<template:then>
+		                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_TITLE}" visible="{visibility>/title}">
+		                                    <f:fields>
+		                                        <Input id="sapOvpSettingsTitle" value="{/title}" change="validateInputField"
+		                                            editable="true" required="true" 
+		                                            valueState="{= ${/title} === '' ? 'Error' : 'None'}"
+		                                            valueStateText="{= ${/title} === '' ? ${ovpResourceModel>OVP_KEYUSER_INPUT_ERROR_VALUE_STATE} : ''}" />
+		                                    </f:fields>
+		                                </f:FormElement>
+		                             </template:then>
+	                                <template:else>
+	                                	<f:FormElement label="{ovpResourceModel>OVP_KEYUSER_TITLE}" visible="{visibility>/title}">
+		                                    <f:fields>
+                                                <Input id="sapOvpSettingsTitle" value="{/title}" change="updateCard"
+                                                    editable="true" 
+                                                    showSuggestion="true"
+                                                    required="true"
+                                                    suggestionItems="{path: '/ai18nPropertiesAndTitle'}">
+                                                    <core:Item key="{value}" text="{value}"/>
+                                                </Input>
+                                        	</f:fields>
+		                                </f:FormElement>
+	                                </template:else>
+	                            </template:if>
+                                <!-- Dynamic Subtitle Switch -->
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_DYNAMIC_SUBTITLE_SWITCH}" visible="{visibility>/dynamicSwitchSubTitle}">
+                                    <f:fields>
+                                        <Switch id="sapOvpSettingsSwitchSubTitle"
+                                                state="{visibility>/dynamicSwitchStateSubTitle}"
+                                                type="Default"  change="updateCard" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <template:if test="{= ${ovpCardProperties>/template} !== 'sap.ovp.cards.linklist'}">
+                                    <!-- Dynamic Sub Title -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_SUBTITLE}" visible="{visibility>/dynamicSubTitle}">
+                                        <f:fields>
+                                            <ComboBox id="sapOvpSettingsDynamicSubTitle" width="100%"
+                                                    items="{
+                                                                        path: '/dynamicSubTitle'
+                                                                    }"
+                                                    selectedKey= "{/dynamicSubtitleAnnotationPath}"
+                                                    forceSelection="false"
+                                                    change="updateCard" >
+                                                <core:Item key="{value}" text="{name}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- View Name -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_VIEW_NAME}" visible="{visibility>/showViewName}">
+                                        <f:fields>
+                                            <Input id="sapOvpSettingsViewName" value="{/viewName}" change="validateInputField"
+                                                required="true"
+                                                valueState="{= ${/viewName} === '' ? 'Error' : 'None'}"
+                                                valueStateText="{= ${/viewName} === '' ? ${ovpResourceModel>OVP_KEYUSER_INPUT_ERROR_VIEW_NAME} : ''}" />
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- set Default -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_SET_DEFAULT}" visible="{visibility>/showDefaultView}">
+                                        <f:fields>
+                                            <Switch id="sapOvpDefaultViewSwitch" state="{/isDefaultView}" change="updateCard"
+                                                    type="Default"  />
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Entity Set -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_ENTITYSET}" visible="{visibility>/showEntitySet}">
+                                        <f:fields>
+                                            <ComboBox id="sapOvpSettingsEntitySet" width="100%"
+                                                    items="{
+                                                                        path: '/allEntitySet'
+                                                                    }"
+                                                    selectedKey= "{/entitySet}"
+                                                    forceSelection="false"
+                                                    change="updateCard" >
+                                                <core:Item key="{value}" text="{name}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                </template:if>
+                                <!-- Sub Title -->
+                                <template:if test="{= !(${ovpCardProperties>/layer} ==='VENDOR' || ${ovpCardProperties>/layer} ==='CUSTOMER_BASE')}">
+                                	<template:then>
+		                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_SUBTITLE}" visible="{visibility>/subTitle}">
+		                                    <f:fields>
+		                                        <Input id="sapOvpSettingsSubTitle" value="{/subTitle}" change="updateCard"
+		                                            editable="true" 
+		                                                />
+		                                    </f:fields>
+		                                </f:FormElement>
+		                              </template:then>
+	                                <template:else>
+	                                	<f:FormElement label="{ovpResourceModel>OVP_KEYUSER_SUBTITLE}" visible="{visibility>/subTitle}">
+		                                    <f:fields>
+                                                <Input id="sapOvpSettingsSubTitle" value="{/subTitle}" change="updateCard"
+                                                    editable="true" 
+                                                    showSuggestion="true"
+                                                    suggestionItems="{path: '/ai18nPropertiesAndSubTitle'}">
+                                                    <core:Item key="{value}" text="{value}"/>
+                                                </Input>
+                                        	</f:fields>
+		                                </f:FormElement>
+	                                </template:else>
+	                            </template:if>
+                                <template:if test="{= ${ovpCardProperties>/template} !== 'sap.ovp.cards.linklist'}" >
+                                    <!-- KPIHeader Switch -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_KPI_HEADER}" visible="{visibility>/kpiHeader}">
+                                        <f:fields>
+                                            <Switch id="sapOvpSettingsKPIHeaderSwitch"
+                                                    state="{/hasKPIHeader}"
+                                                    type="Default"  change="updateCard" />
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- DataPoint -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_KPI_Value}" visible="{visibility>/dataPoint}">
+                                        <f:fields>
+                                            <ComboBox id="sapOvpSettingsDataPoint" width="100%"
+                                                    items="{
+                                                                        path: '/dataPoint'
+                                                                    }"
+                                                    selectedKey="{/dataPointAnnotationPath}"
+                                                    forceSelection="false"
+                                                    change="updateCard" >
+                                                <core:Item key="{value}" text="{name}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Value Selection Info -->
+                                    <template:if test="{= !(${ovpCardProperties>/layer} ==='VENDOR' || ${ovpCardProperties>/layer} ==='CUSTOMER_BASE')}">
+	                                	<template:then>
+			                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_KPI_DESCRIPTION}" visible="{visibility>/valueSelectionInfo}">
+		                                        <f:fields>
+		                                            <Input id="sapOvpSettingsValueSelectionInfo" value="{/valueSelectionInfo}" change="updateCard"
+		                                                editable="true" 
+		                                                    />
+		                                        </f:fields>
+		                                    </f:FormElement>
+			                              </template:then>
+		                                <template:else>
+											<f:FormElement label="{ovpResourceModel>OVP_KEYUSER_KPI_DESCRIPTION}" visible="{visibility>/valueSelectionInfo}">
+			                                    <f:fields>
+                                                    <Input id="sapOvpSettingsValueSelectionInfo" value="{/valueSelectionInfo}" change="updateCard"
+                                                        editable="true"
+                                                        showSuggestion="true"
+                                                        suggestionItems="{path: '/ai18nPropertiesAndValSelInfo'}">
+                                                        <core:Item key="{value}" text="{value}"/>
+                                                    </Input>
+	                                        	</f:fields>
+			                                </f:FormElement>
+		                                </template:else>
+		                            </template:if>  
+                                    <!-- List Type -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_LIST_TYPE}" visible="{visibility>/listType}">
+                                        <f:fields>
+                                            <Switch id="sapOvpSettingsListType" state="{/isExtendedList}" change="updateCard"
+                                                    type="Default"  />
+                                        </f:fields>
+                                    </f:FormElement>
+                                </template:if>
+                                    <!-- List Flavor -->
+                                    <f:FormElement label="{ovpCardProperties>/listFlavorName}" visible="{visibility>/listFlavor}">
+                                        <f:fields>
+                                            <Switch id="sapOvpSettingsListFlavorForList" state="{/isBarList}" type="Default"
+                                                    change="updateCard" />
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <f:FormElement label="{ovpCardProperties>/listFlavorName}" visible="{visibility>/listFlavorForLinkList}">
+                                        <f:fields>
+                                            <SegmentedButton id="sapOvpSettingsListFlavorForLinkList" select="updateCard"
+                                                            selectedKey="{/listFlavor}" 
+                                                    >
+                                                <items>
+                                                    <SegmentedButtonItem id="sapOvpSettingsListFlavorList" key="standard"
+                                                                        text="{ovpResourceModel>OVP_KEYUSER_LIST_TEXT_SEG_BUTTON}" />
+                                                    <SegmentedButtonItem id="sapOvpSettingsListFlavorCarousel" key="carousel"
+                                                                        text="{ovpResourceModel>OVP_KEYUSER_CAROUSEL_TEXT_SEG_BUTTON}" />
+                                                </items>
+                                            </SegmentedButton>
+                                        </f:fields>
+                                    </f:FormElement>
+                                <template:if test="{= ${ovpCardProperties>/template} !== 'sap.ovp.cards.linklist'}" >
+                                    <!-- Selection Presentation Variant - Filter and Presented By -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_SELECTION_PRESENTATION_VAR}" visible="{visibility>/selectionPresentationVariant}">
+                                        <f:fields>
+                                            <ComboBox id="sapOvpSettingsFilterAndPresentedBy" width="100%"
+                                                    items="{
+                                                                        path: '/selectionPresentationVariant'
+                                                                    }"
+                                                    selectedKey= "{/selectionPresentationAnnotationPath}"
+                                                    change="updateCard" >
+                                                <core:Item key="{value}" text="{name}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- KPI Annotation -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_KPI_ANNO}" visible="{visibility>/KPI}">
+                                        <f:fields>
+                                            <ComboBox id="sapOvpSettingsKPIAnnotation" width="100%"
+                                                    items="{
+                                                                        path: '/KPI'
+                                                                    }"
+                                                    selectedKey="{/kpiAnnotationPath}"
+                                                    change="updateCard">
+                                                <core:Item key="{value}" text="{name}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Selection Variant - Filter By for KPI and SPV-->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_SELECTION_VAR}"
+                                                visible="{visibility>/selectionVariantSPVorKPI}">
+                                        <f:fields>
+                                            <Text id="sapOvpSettingsFilterByAnalytical" width="100%"
+                                                text="{parts:[{path:'/selectionVariant'}, {path:'/selectionAnnotationPath'}], formatter: 'sap.ovp.cards.AnnotationHelper.getAnnotationLabel'}">
+                                            </Text>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Presentation Variant - Sort By for KPI and SPV-->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_PRESENTATION_VAR}"
+                                                visible="{visibility>/presentationVariantSPVorKPI}">
+                                        <f:fields>
+                                            <Text id="sapOvpSettingsPresentedByAnalytical" width="100%"
+                                                text="{parts:[{path:'/presentationVariant'}, {path:'/presentationAnnotationPath'}], formatter: 'sap.ovp.cards.AnnotationHelper.getAnnotationLabel'}">
+                                            </Text>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Navigation - Navigate To for SPV-->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_IDENTIFICATION_ANNO}" visible="{visibility>/KPI}">
+                                        <f:fields>
+                                            <Text id="sapOvpSettingsIdentificationForKPI" width="100%"
+                                                text="{parts:[{path:'staticCardProperties>/links'}, {path:'/KPINav'}], formatter: 'sap.ovp.cards.AnnotationHelper.getApplicationName'}">
+                                            </Text>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Chart - for KPI and SPV -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_TYPE_OF_CHART}"
+                                                visible="{visibility>/chartSPVorKPI}">
+                                        <f:fields>
+                                            <Text id="sapOvpSettingsChartAnalytical" width="100%"
+                                                text="{parts:[{path:'/chart'}, {path:'/chartAnnotationPath'}], formatter: 'sap.ovp.cards.AnnotationHelper.getAnnotationLabel'}">
+                                            </Text>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Selection Variant - Filter By -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_SELECTION_VAR}" visible="{visibility>/selectionVariant}">
+                                        <f:fields>
+                                            <ComboBox id="sapOvpSettingsFilterBy" width="100%"
+                                                    items="{
+                                                                        path: '/selectionVariant'
+                                                                    }"
+                                                    selectedKey= "{/selectionAnnotationPath}"
+                                                    change="updateCard" >
+                                                <core:Item key="{value}" text="{name}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Presentation Variant - Presented By -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_PRESENTATION_VAR}" visible="{visibility>/presentationVariant}">
+                                        <f:fields>
+                                            <ComboBox id="sapOvpSettingsPresentedBy" width="100%"
+                                                    items="{
+                                                                        path: '/presentationVariant'
+                                                                    }"
+                                                    selectedKey= "{/presentationAnnotationPath}"
+                                                    change="updateCard" >
+                                                <core:Item key="{value}" text="{name}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Line Item -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_LINEITEM_ANNO}" visible="{visibility>/lineItem}">
+                                        <f:fields>
+                                            <Input id="sapOvpSettingsLineItem"
+                                                value="{
+                                                                        path: '/lineItemQualifier'
+                                                                    }"
+                                                showValueHelp="true" editable="true" enabled="true" valueHelpOnly="true"
+                                                valueHelpRequest="openLineItemValueHelpDialog" />
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Identification -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_IDENTIFICATION_ANNO}" visible="{visibility>/identification}">
+                                        <f:fields>
+                                            <ComboBox id="sapOvpSettingsIdentification" width="100%"
+                                                    items="{
+                                                                        path: '/identification'
+                                                                    }"
+                                                    selectedKey= "{/identificationAnnotationPath}"
+                                                    change="updateCard" >
+                                                <core:Item key="{value}" text="{name}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Chart -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_TYPE_OF_CHART}" visible="{visibility>/chart}">
+                                        <f:fields>
+                                            <ComboBox id="sapOvpSettingsChart" width="100%"
+                                                    items="{
+                                                                        path: '/chart'
+                                                                    }"
+                                                    forceSelection="false"
+                                                    selectedKey= "{/chartAnnotationPath}"
+                                                    change="updateCard" >
+                                                <core:Item key="{value}" text="{name}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                </template:if>
+                                <template:if test="{= ${ovpCardProperties>/template} === 'sap.ovp.cards.linklist' &amp;&amp; ${ovpCardProperties>/staticContent}}" >
+                                    <f:FormElement>
+                                        <f:fields>
+                                            <Toolbar>
+                                                <content>
+                                                    <ToolbarSpacer />
+                                                    <Button id="moveToTheTop" tooltip="{ovpResourceModel>OVP_KEYUSER_TOOLTIP_FOR_TOP}" icon="sap-icon://collapse-group" press="onPressMoveToTheTop" enabled="{visibility>/moveToTheTop}" type="Transparent"/>
+                                                    <Button id="moveUp" tooltip="{ovpResourceModel>OVP_KEYUSER_TOOLTIP_FOR_UP}" icon="sap-icon://navigation-up-arrow" press="onPressMoveUp" enabled="{visibility>/moveUp}" type="Transparent"/>
+                                                    <Button id="moveDown" tooltip="{ovpResourceModel>OVP_KEYUSER_TOOLTIP_FOR_DOWN}" icon="sap-icon://navigation-down-arrow" press="onPressMoveDown" enabled="{visibility>/moveDown}" type="Transparent"/>
+                                                    <Button id="moveToTheBottom" tooltip="{ovpResourceModel>OVP_KEYUSER_TOOLTIP_FOR_BOTTOM}" icon="sap-icon://expand-group" press="onPressMoveToTheBottom" enabled="{visibility>/moveToTheBottom}" type="Transparent"/>
+                                                    <Button id="delete" tooltip="{ovpResourceModel>OVP_KEYUSER_TOOLTIP_FOR_DELETE}" icon="sap-icon://delete" press="onPressDelete" enabled="{visibility>/delete}" type="Transparent"/>
+                                                    <Button id="add" tooltip="{ovpResourceModel>OVP_KEYUSER_TOOLTIP_FOR_ADD}" icon="sap-icon://add" press="onPressAdd" type="Transparent"/>
+                                                </content>
+                                            </Toolbar>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <f:FormElement>
+                                        <f:fields>
+                                            <core:Fragment fragmentName="sap.ovp.cards.rta.StaticLinkListCardLineItemsPanel" type="XML"/>
+                                        </f:fields>
+                                    </f:FormElement>
+                                </template:if>
+                                <template:if test="{= (${ovpCardProperties>/template} === 'sap.ovp.cards.charts.analytical' ||
+                                                ${ovpCardProperties>/template} === 'sap.ovp.cards.charts.smart.chart') &amp;&amp; ${ovpCardProperties>/NewKPICard}}" >
+                                    <f:FormElement>
+                                        <f:fields>
+                                            <core:Fragment fragmentName="sap.ovp.cards.rta.KPICardTable" type="XML"/>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <f:FormElement>
+                                        <f:fields>
+                                            <FlexBox justifyContent="End">
+                                                <Link text="{ovpResourceModel>OVP_KEYUSER_KPI_LINK}({/NoKPI})"
+                                                    press="onSeePress"/>
+                                            </FlexBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                </template:if>
+                                <template:if test="{= ${ovpCardProperties>/layoutDetail} === 'resizable'}">
+                                    <!-- Stop Resize -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_STOP_RESIZE}" visible="{visibility>/stopResizing}">
+                                        <f:fields>
+                                            <Switch id="sapOvpSettingsStopResize"
+                                                    state="{= !${/stopResizing}}"
+                                                    type="Default" change="onResizingChange"/>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Width -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_DEFAULT_NUMBER_OF_COLUMNS}" visible="{visibility>/noOfColumns}">
+                                        <f:fields>
+                                            <ComboBox id="sapOvpSettingsNumberOfColumns" width="100%"
+                                                    items="{
+                                                                        path: '/NoOfColumns'
+                                                                    }"
+                                                    forceSelection="false"
+                                                    selectedKey= "{/defaultSpan/cols}"
+                                                    change="onNumberOfColumnsChanged" >
+                                                <core:Item key="{value}" text="{value}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Height -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_DEFAULT_NUMBER_OF_ROWS}" visible="{visibility>/noOfRows}">
+                                        <f:fields>
+                                            <template:if test="{= ${ovpCardProperties>/template} === 'sap.ovp.cards.charts.analytical' ||
+                                                ${ovpCardProperties>/template} === 'sap.ovp.cards.charts.smart.chart' ||
+                                                ${ovpCardProperties>/template} === 'sap.ovp.cards.charts.bubble' ||
+                                                ${ovpCardProperties>/template} === 'sap.ovp.cards.charts.donut' ||
+                                                ${ovpCardProperties>/template} === 'sap.ovp.cards.charts.line' ||
+                                                ${ovpCardProperties>/template} === 'sap.ovp.cards.linklist'}" >
+                                                <template:then>
+                                                    <ComboBox id="sapOvpSettingsNumberOfRows" width="100%"
+                                                            items="{
+                                                                        path: '/NoOfRows'
+                                                                    }"
+                                                            forceSelection="false"
+                                                            selectedKey= "{/defaultSpan/rows}"
+                                                            change="onNumberOfRowsChanged" >
+                                                        <core:Item key="{value}" text="{name}"/>
+                                                    </ComboBox>
+                                                </template:then>
+                                                <template:else>
+                                                    <StepInput
+                                                            id="sapOvpSettingsNumberOfRows"
+                                                            value="{/defaultSpan/rows}"
+                                                            min="0"
+                                                            max="99"
+                                                            valueStateText="Number of Rows should be between 0 and 99"
+                                                            change="onNumberOfRowsChanged"/>
+                                                </template:else>
+                                            </template:if>
+                                        </f:fields>
+                                    </f:FormElement> 
+                                </template:if>
+                                <template:if test="{= (${ovpCardProperties>/layer} ==='VENDOR' || ${ovpCardProperties>/layer} ==='CUSTOMER_BASE')}">
+                                <!-- Add Authorisation -->
+	                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_AUTHORIZATION}">
+	                                    <f:fields>
+	                                        <Input id="sapOvpCardProperiesAuthorization" value="{/requireAppAuthorization}" change="updateProperty" width="100%"
+	                                            editable="true"/>
+	                                    </f:fields>
+	                                </f:FormElement>
+                                <!-- Add OData Select -->
+	                                 <f:FormElement>
+										<f:fields>
+											<CheckBox id="sapOVPAddODataSelect" width="100%" visible="{visibility>/addODataSelect}"
+												text="{ovpResourceModel>OVP_KEYUSER_ADDODATASELECT}"
+												tooltip="{ovpResourceModel>OVP_KEYUSER_ADDODATASELECT}"
+												selected="{/addODataSelectCheckBox}"
+												select="updateProperty">
+											</CheckBox>
+										</f:fields>
+									</f:FormElement>
+                                <!-- Add custom parameters checkbox-->
+                                    <f:FormElement>
+                                        <f:fields>
+                                            <CheckBox id="sapOVPEnableCustomParameter" width="100%"
+                                                text="{ovpResourceModel>OVP_DTA_CUSTOM_PARAMS}"
+                                                selected="{/addCustomParameters}"
+                                                select="updateProperty"
+                                                >
+                                            </CheckBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                <!-- Input field to enter custom parameter-->
+                                   <f:FormElement label="Custom Parameters" visible="{/addCustomParameters}">
+                                        <f:fields>
+                                            <Input id="sapOVPCustomParams" value="{/customParams}" change="validateInputField"
+                                                editable="true"/>
+                                        </f:fields>
+                                    </f:FormElement>
+                                <!--Input field to enter static parameters -->
+                                    <f:FormElement label="Static Parameters" visible="{/addCustomParameters}">
+                                        <f:fields>
+                                            <core:Fragment fragmentName="sap.ovp.cards.rta.AddStaticParameters" type="XML"/>
+                                        </f:fields>
+                                    </f:FormElement>
+                                <!--Add custom Actions for static cards -->
+                                    <f:FormElement visible="{visibility>/addCustomActions}">
+                                        <f:fields>
+                                            <CheckBox id="sapOVPEnableCustomActions" width="100%"
+                                                text="{ovpResourceModel>OVP_DTA_CUSTOM_Actions}"
+                                                selected="{/addCustomActions}"
+                                                select="updateProperty" >
+                                            </CheckBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <f:FormElement visible="{/addCustomActions}">
+                                        <f:fields>
+                                            <core:Fragment fragmentName="sap.ovp.cards.rta.AddCustomActions" type="XML"/>
+                                        </f:fields>
+                                    </f:FormElement>
+                                </template:if>
+                            </f:formElements>
+                        </f:FormContainer>
+                    </template:then>
+
+                    <template:else>
+                        <!-- FormContainer - General Card properties -->
+                        <f:FormContainer>
+                            <f:formElements>
+                                <!-- Select model from existing data source -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_DATASOURCE}" visible="{visibility>/dataSource}">
+                                        <f:fields>
+                                            <RadioButtonGroup id="useDatasource_RadioButtonGroup" columns="2" width="100%" class="sapUiMediumMarginBottom">
+                                                <buttons>
+                                                    <RadioButton id="sapOVPExistingDataSource" text="{ovpResourceModel>OVP_KEYUSER_EXISTING_DS}" selected="true" select="updateProperty"/>
+                                                    <RadioButton id="sapOVPNewDataSource" text="{ovpResourceModel>OVP_KEYUSER_NEW_DS}" selected="false" select="updateProperty"/>
+                                                
+                                                </buttons>
+                                            </RadioButtonGroup>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <f:FormElement visible="{visibility>/dataSourceExisting}">
+                                        <f:fields>
+                                        	<ComboBox id="sapOVPDataSourceExistingComboBox" width="100%"
+                                                    items="{path: '/datasources'}"
+                                                    change="onDatasourceComboboxChanged" 
+                                                    selectedKey= "{/datasSourceExisting}"
+                                                    visible="{visibility>/dataSourceExisting}">
+                                                <core:Item key="{Title}" text="{Title}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                     <f:FormElement visible="{visibility>/dataSourceNew}">
+                                        <f:fields>    
+                                            <Input id="sapOVPDataSourceNewInput" value="{/datasSourceNew}" change="onDatasourceComboboxChanged"
+                                                editable="true" 
+                                                showSuggestion="true"
+                                                required="true"
+                                                suggestionItems="{path: '/datasources'}"
+                                                width="100%"
+                                                visible="{visibility>/dataSourceNew}">
+                                                <core:Item key="{Title}" text="{Title}"/>
+                                            </Input>
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Enable Card type -->
+                                    <f:FormElement label="{ovpResourceModel>SELECTCARDTYPEWIZARDSTEP_TITLE_LABEL}" visible="{visibility>/selectCardType}">
+                                        <f:fields>
+                                            <ComboBox id="sapOVPCardType" width="100%"
+                                                    items="{path: '/cardType'}"
+                                                    selectedKey="{/template}"
+                                                    selectionChange="onCardTypeSelected" >
+                                                <core:Item key="{template}" text="{text}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>                                    
+                                
+                                    <f:FormElement visible="{visibility>/addKPIHeader}">
+                                        <f:fields>
+                                            <CheckBox id="sapOVPAddKpiCheckBoxID" width="100%" 
+                                                    text="{ovpResourceModel>CARD_CUSTOMIZATION_ADD_KPI_HEADER_LABEL}"
+                                                    tooltip="{ovpResourceModel>CARD_CUSTOMIZATION_ADD_KPI_HEADER_TOOLTIP}"
+                                                    selected="{/addKPIHeaderCheckBox}"
+                                                    select="updateProperty"
+                                                >
+                                                </CheckBox>
+                                            
+                                        </f:fields>
+                                    </f:FormElement>
+                                    <!-- Enable Entity Set -->
+                                    <f:FormElement label="{ovpResourceModel>CARD_ENTITYSET}" visible="{visibility>/setEntitySet}">
+                                        <f:fields>
+                                            <ComboBox id="sapOVPEntitySetList" width="100%" required="true"
+                                                items="{path: '/allEntitySet'}"
+                                                change="updateProperty" 
+                                                forceSelection="false"
+                                                selectedKey= "{/entitySet}">
+                                                <core:Item key="{entityType}" text="{value}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                            </f:formElements>
+                        </f:FormContainer>
+
+                        <!-- FormContainer - General Card properties -->
+                        <f:FormContainer title="{ovpResourceModel>OVP_KEYUSER_GENERAL}" visible="{visibility>/setGeneralCardProperties}">
+                            <f:formElements>
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_TITLE}">
+                                    <f:fields>
+                                        <Input id="sapOvpCardTitle" value="{/title}" change="updateProperty"
+                                            editable="true" required="true"
+                                            showSuggestion="true"
+                                            suggestionItems="{path: '/ai18nProperties'}">
+                                            <core:Item key="{key}" text="{value}"/>
+                                        </Input>
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_SUBTITLE}">
+                                    <f:fields>
+                                        <Input id="sapOvpCardSubTitle" value="{/subTitle}" change="updateProperty"
+                                            required="{visibility>/requiredSubTitle}"
+                                            editable="true" 
+                                            showSuggestion="true"
+                                            suggestionItems="{path: '/ai18nProperties'}">
+                                            <core:Item key="{value}" text="{value}"/>
+                                        </Input>
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_AUTHORIZATION}">
+                                    <f:fields>
+                                        <Input id="sapOvpCardProperiesAuthorization" value="{/requireAppAuthorization}" change="updateProperty" width="100%"
+                                            editable="true"/>
+                                    </f:fields>
+                                </f:FormElement>
+                            </f:formElements>
+                        </f:FormContainer>
+
+                        <!-- FormContainer - Card annotations -->
+                        <f:FormContainer title="{ovpResourceModel>OVP_KEYUSER_ANNOTATIONS}" visible="{visibility>/setAnnotationCardProperties}">
+                            <f:formElements>
+                                <!-- KPI Annotation -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_KPI_ANNO_PATH}" visible="{visibility>/KPI}">
+                                        <f:fields>
+                                            <ComboBox id="sapOvpKpiAnnotationPath" width="100%"
+                                                    items="{path: '/KPI'}"
+                                                    selectedKey="{/kpiAnnotationPath}"
+                                                    change="updateProperty">
+                                                <core:Item key="{value}" text="{value}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                <!-- Identification Annotation -->
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_IDENTIFICATION}" visible="{visibility>/identification}">
+                                    <f:fields>
+                                        <ComboBox id="sapOVPIdentification" width="100%"
+                                                items="{path: '/identification'}"
+                                                selectedKey="{/identificationAnnotationPath}"
+                                                change="updateProperty"> 
+                                                <core:Item key="{value}" text="{value}"/>
+                                            </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <!-- Selection Presentation Variant-->
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_SELECTIONPRESENTATIONVARIANT}" visible="{visibility>/selectionPresentationVariant}">
+                                    <f:fields>
+                                        <ComboBox id="sapOVPSelectionPresentationVariant" width="100%"
+                                                items="{path: '/selectionPresentationVariant'}"
+                                                selectedKey="{/selectionPresentationAnnotationPath}"
+                                                change="updateProperty" >
+                                                <core:Item key="{value}" text="{value}"/>
+                                        </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <!-- Selection Variant -->
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_SELECTIONVARIANT}" visible="{visibility>/selectionVariant}">
+                                    <f:fields>
+                                        <ComboBox id="sapOVPSelectionVariant" width="100%"
+                                                items="{path: '/selectionVariant'}"
+                                                selectedKey="{/selectionAnnotationPath}"
+                                                change="updateProperty" >
+                                                <core:Item key="{value}" text="{value}"/>
+                                            </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <!-- PresentationVariant -->
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_PRESENTATIONVARIANT}" visible="{visibility>/presentationVariant}">
+                                    <f:fields>
+                                        <ComboBox id="sapOVPPresentationVariant" width="100%"
+                                                items="{path: '/presentationVariant'}"
+                                                selectedKey="{/presentationAnnotationPath}"
+                                                change="updateProperty" >
+                                                <core:Item key="{value}" text="{value}"/>
+                                            </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <!-- AnnotationPath -->
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_ANNOTATIONPATH}" visible="{visibility>/lineItem}">
+                                    <f:fields>
+                                        <ComboBox id="sapOVPAnnotationPath" width="100%"
+                                            items="{path: '/lineItem'}"
+                                            selectedKey="{/annotationPath}"
+                                            change="updateProperty" >
+                                            <core:Item key="{value}" text="{value}"/>
+                                        </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <!-- DataPoint -->
+                                    <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_DATAPOINT}" visible="{visibility>/dataPoint}">
+                                        <f:fields>
+                                            <ComboBox id="sapOvpDataPoint" width="100%" required="true"
+                                                    items="{path: '/dataPoint'}"
+                                                    selectedKey="{/dataPointAnnotationPath}"
+                                                    change="updateProperty" >
+                                                <core:Item key="{value}" text="{value}"/>
+                                            </ComboBox>
+                                        </f:fields>
+                                    </f:FormElement>
+                                <!-- Navigation -->
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_DATA_POINT_SELMODE}" visible="{visibility>/dataPointSelectionMode}">
+                                    <f:fields>
+                                        <ComboBox id="sapOVPDataPointSelectionMode" width="100%"
+                                                items="{path: '/navigation'}"
+                                                selectedKey="{/navigationPath}"
+                                                change="updateProperty" >
+                                                <core:Item key="{key}" text="{name}"/>
+                                            </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+                            </f:formElements>
+                        </f:FormContainer>
+
+                        <!-- FormContainer - Card setting properties -->
+                        <f:FormContainer title="{ovpResourceModel>OVP_KEYUSER_CARDPROPERTIES}" visible="{visibility>/setCardProperties}">
+                            <f:formElements>
+                                <f:FormElement>
+                                    <f:fields>
+                                    <CheckBox id="sapOVPAddODataSelect" width="100%" visible="{visibility>/addODataSelect}"
+                                            text="{ovpResourceModel>OVP_KEYUSER_ADDODATASELECT}"
+                                            tooltip="{ovpResourceModel>OVP_KEYUSER_ADDODATASELECT}"
+                                            selected="{/addODataSelectCheckBox}"
+                                            select="updateProperty">
+                                        </CheckBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <!-- Link list flavor   -->
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_LISTTYPE}" visible="{visibility>/listFlavorForLinkList}">
+                                    <f:fields>
+                                        <ComboBox id="sapOVPLinkListFlavor" width="100%"
+                                            items="{path: '/aLinkListFlavour'}"
+                                            selectedKey="{/listFlavor}"
+                                            change="updateProperty"
+                                            required="true">
+                                            <core:Item key="{key}" text="{name}"/>
+                                        </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+
+                                <!--List Type -->
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_LISTTYPE}" visible="{visibility>/listType}">
+                                    <f:fields>
+                                        <ComboBox id="sapOVPListType" width="100%"
+                                            items="{path: '/aListType'}"
+                                            selectedKey="{/listType}"
+                                            change="updateProperty" >
+                                            <core:Item key="{key}" text="{name}"/>
+                                        </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <!-- List Flavor-->
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_LISTFLAVOR}" visible="{visibility>/listFlavor}">
+                                    <f:fields>
+                                        <ComboBox id="sapOVPListFlavor" width="100%"
+                                                items="{path: '/aListFlavour'}"
+                                                selectedKey="{/listFlavor}"
+                                                change="updateProperty" >
+                                                <core:Item key="{key}" text="{name}"/>
+                                            </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+                    
+                                <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_VALUESELECTIONINFO}" visible="{visibility>/valueSelectionInfo}">
+                                        <f:fields>
+                                            <Input id="sapOvpValueSelectionInfo" value="{/valueSelectionInfo}" change="updateProperty"
+                                                required="true"
+                                                editable="true"
+                                                showSuggestion="true"
+                                                suggestionItems="{path: '/ai18nProperties'}">
+                                                <core:Item key="{key}" text="{value}"/>
+                                            </Input>
+                                        </f:fields>
+                                    </f:FormElement>
+                            </f:formElements>
+                        </f:FormContainer>
+                    </template:else>
+		        </template:if>
+
+            </f:formContainers>
+        </f:Form>
+</core:FragmentDefinition>

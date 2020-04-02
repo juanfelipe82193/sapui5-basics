@@ -1,0 +1,343 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.suite.ui.microchart.RadialMicroChart</title>
+
+<base href="../../../../../">
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout, sap.m, sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize"
+	src="resources/sap-ui-core.js">
+</script>
+
+<script type="text/javascript">
+	jQuery.sap.initMobile();
+
+	/*---------- Initialization -----------*/
+
+	var aRMCs = []; //Array holds the RadialMicroChart instances e.g. for event attach/detach
+	var fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The Radial micro chart was pressed.");
+	};
+
+	//Initial chart data
+	var oConfRMCData = {
+		total: 100,
+		fraction: 25,
+		percentage: null,
+		valueColor: sap.m.ValueColor.Neutral
+	};
+	var oConfModel = new sap.ui.model.json.JSONModel();
+	oConfModel.setData(oConfRMCData);
+	sap.ui.getCore().setModel(oConfModel);
+
+	/*---------- Generate Charts/Containers -----------*/
+
+	var buildRMC = function(sSize, sText) {
+		var oRMCTmpl = new sap.suite.ui.microchart.RadialMicroChart("rmc-" + sText, {
+			total: "{/total}",
+			fraction: "{/fraction}",
+			percentage: "{/percentage}",
+			valueColor: "{/valueColor}",
+			size: sSize,
+			tooltip: "{/tooltip}",
+			press: fnPress
+		});
+		aRMCs.push(oRMCTmpl);
+		return oRMCTmpl;
+	};
+
+	var buildRMCFlexBox = function(sSize, sText) {
+		var iSize = 100;
+		switch (sText) {
+			case "small_no_text":
+				iSize = 25;
+				break;
+			case "small_accessible_text":
+				iSize = 60;
+				break;
+			case "regular":
+				iSize = 200;
+				break;
+		}
+		var oRMC = buildRMC(sSize, sText);
+
+		return new sap.m.FlexBox("rmc-fb" + sText, {
+			items: [oRMC],
+			height: iSize+"px",
+			width: iSize+"px",
+			alignItems: "Center",
+			renderType: "Bare"
+		});
+	};
+
+	/*---------- Generate Configuration -----------*/
+
+	var buildRMCConfig = function() {
+
+		//Percentage Mode
+		var oPercentageModeSwtchLbl = new sap.m.Label({
+			text: "Percentage Mode",
+			labelFor: "percentage-mode-switch"
+		});
+		var oPercentageModeSwtch = new sap.m.Switch({
+			id: "percentage-mode-switch",
+			state: false,
+			change: function(oE) {
+				var bIsPercentageMode = oE.getParameter("state");
+
+				if (bIsPercentageMode) {
+					oTotalInput.setEnabled(false);
+					oFractionInput.setEnabled(false);
+					oPercentageInput.setEnabled(true);
+				} else {
+					oTotalInput.setEnabled(true);
+					oFractionInput.setEnabled(true);
+
+					oPercentageInput.setEnabled(false);
+					oConfRMCData.percentage = null;
+				}
+
+				oConfModel.checkUpdate();
+			}
+		});
+
+		//Total
+		var oTotalLbl = new sap.m.Label({
+			text: "Total",
+			labelFor: "total"
+		});
+		var oTotalInput = new sap.m.Input("total", {
+			placeholder: 'Enter total ...',
+			value: {
+				path: "/total",
+				type: new sap.ui.model.type.Float({groupingEnabled: false})
+			},
+			change: function(oControlEvent) {
+				var fValue = _fnParseFloat(oControlEvent.getParameter("newValue"));
+				if (typeof fValue == "undefined" || !isNaN(fValue)) {
+					oConfRMCData.total = fValue;
+					oConfModel.checkUpdate();
+				} else {
+					sap.m.MessageToast.show("Total value not valid.");
+				}
+			}
+		});
+
+		//Fraction
+		var oFractionLbl = new sap.m.Label({
+			text: "Fraction",
+			labelFor: "fraction"
+		});
+		var oFractionInput = new sap.m.Input("fraction", {
+			placeholder: 'Enter fraction ...',
+			value: {
+				path: "/fraction",
+				type: new sap.ui.model.type.Float({groupingEnabled: false})
+			},
+			change: function(oControlEvent) {
+				var fValue = _fnParseFloat(oControlEvent.getParameter("newValue"));
+				if (typeof fValue == "undefined" || !isNaN(fValue)) {
+					oConfRMCData.fraction = fValue;
+					oConfModel.checkUpdate();
+				} else {
+					sap.m.MessageToast.show("Fraction value not valid.");
+				}
+			}
+		});
+
+		//Percentage
+		var oPercentageLbl = new sap.m.Label({
+			text: "Percentage",
+			labelFor: "percentage"
+		});
+		var oPercentageInput = new sap.m.Input("percentage", {
+			placeholder: 'Enter percentage ...',
+			enabled: false,
+			value: {
+				path: "/percentage",
+				type: new sap.ui.model.type.Float({groupingEnabled: false})
+			},
+			change: function(oControlEvent) {
+				var fValue = _fnParseFloat(oControlEvent.getParameter("newValue"));
+				if (typeof fValue == "undefined" || !isNaN(fValue)) {
+					oConfRMCData.percentage = fValue;
+					oConfModel.checkUpdate();
+				} else {
+					sap.m.MessageToast.show("Percentage value not valid.");
+				}
+			}
+		});
+
+		//Tooltip
+		var oTooltipLbl = new sap.m.Label({
+			text : "Tooltip",
+			labelFor : "tooltip"
+		});
+		var oTooltipInput = new sap.m.TextArea("tooltip", {
+			rows: 3,
+			placeholder: 'Enter tooltip (use whitespace to set tooltip empty) ...',
+			value: "{/tooltip}"
+		});
+
+		//ColorPallete Mode
+		var oCPSwtchLbl = new sap.m.Label({ text: "Color Palette", labelFor: "cp-switch" });
+		var oCPSwtch = new sap.m.Switch({
+			id: "cp-switch",
+			state: false,
+			change: function(oE) {
+				var bState = oE.getParameter("state");
+				oCPInput.setEnabled(bState);
+				oSColorSelect.setEnabled(!bState);
+				if (bState) {
+					oConfRMCData.valueColor = oCPInput.getValue();
+				} else {
+					oConfRMCData.valueColor = oSColorSelect.getSelectedKey();
+				}
+				oConfModel.checkUpdate();
+			}
+		});
+
+		//Color Palette
+		var oCPLbl = new sap.m.Label({
+			text: "Palette Color",
+			labelFor: "cp-value"
+		});
+		var oCPInput = new sap.m.Input("cp-value", {
+			width: "100%",
+			enabled: false,
+			placeholder: 'Enter color ...',
+			value: "",
+			change : function(e) {
+				oConfRMCData.valueColor = e.getParameter("value");
+				oConfModel.checkUpdate();
+			}
+		});
+
+		//Color Selection
+		var oSColorLabel = new sap.m.Label("color-label", { text: "Color", labelFor: "color-select"  });
+		var oSColorSelect = new sap.m.Select("color-select", {
+			width: "10rem",
+			items: [
+				new sap.ui.core.Item("color-select-neutral", { key: sap.m.ValueColor.Neutral, text: sap.m.ValueColor.Neutral }),
+				new sap.ui.core.Item("color-select-good", { key: sap.m.ValueColor.Good, text: sap.m.ValueColor.Good }),
+				new sap.ui.core.Item("color-select-error", { key: sap.m.ValueColor.Error, text: sap.m.ValueColor.Error }),
+				new sap.ui.core.Item("color-select-critical", { key: sap.m.ValueColor.Critical, text: sap.m.ValueColor.Critical })
+			],
+			change: function(oEvent) {
+				var oSelectedItem = oEvent.getParameter("selectedItem");
+				oConfRMCData.valueColor = oSelectedItem.getKey();
+				oConfModel.checkUpdate();
+			}
+		});
+
+		//Press Action
+		var oPressLbl = new sap.m.Label({ text: "Press Action", labelFor: "press-action" });
+		var oPressSwtch = new sap.m.Switch({
+			id: "press-action",
+			state: true,
+			change: function(oE) {
+				var bState = oE.getParameter("state");
+				for (var i = 0; i < aRMCs.length; i++) {
+					if(bState) {
+						aRMCs[i].attachPress(fnPress);
+					} else {
+						aRMCs[i].detachPress(fnPress);
+					}
+				}
+			}
+		});
+
+		return [
+			oPercentageModeSwtchLbl, oPercentageModeSwtch,
+			oTotalLbl, oTotalInput,
+			oFractionLbl, oFractionInput,
+			oPercentageLbl, oPercentageInput,
+			oTooltipLbl, oTooltipInput,
+			oCPSwtchLbl, oCPSwtch,
+			oCPLbl, oCPInput,
+			oSColorLabel, oSColorSelect,
+			oPressLbl, oPressSwtch
+		];
+	};
+
+	/*---------- Forms -----------*/
+
+	//Elements in Form and Flex containers.
+	var oRMCResponsiveForm = new sap.ui.layout.form.SimpleForm("rmc-responsive-form", {
+		maxContainerCols: 3,
+		editable: true,
+		layout: sap.ui.layout.form.SimpleFormLayout.ResponsiveGridLayout,
+		breakpointM: 625,
+		content: [
+			buildRMCFlexBox("Responsive", "small_no_text"),
+			buildRMCFlexBox("Responsive", "small_accessible_text"),
+			buildRMCFlexBox("Responsive", "regular")
+		]
+	});
+
+	var oResponsiveFormLabel = new sap.m.Label({
+		text: "Responsive controls in FlexBox:",
+		labelFor: "rmc-responsive-form"
+	});
+
+	//Elements in responsive Form and Flex containers.
+	var oRMCForm = new sap.ui.layout.form.SimpleForm("rmc-form", {
+		maxContainerCols: 3,
+		editable: true,
+		layout: sap.ui.layout.form.SimpleFormLayout.ResponsiveGridLayout,
+		breakpointM: 625,
+		content: [
+			buildRMCFlexBox(sap.m.Size.S, "small"),
+			buildRMCFlexBox(sap.m.Size.M, "medium"),
+			buildRMCFlexBox(sap.m.Size.L, "large")
+		]
+	});
+
+	var oFixedSizeFormLabel = new sap.m.Label({
+		text: "fixed-sizes:",
+		labelFor: "rmc-form"
+	});
+
+	var oRMCConfigForm = new sap.ui.layout.form.SimpleForm("controls-pmc", {
+		maxContainerCols: 2,
+		editable: true,
+		content: buildRMCConfig()
+	});
+
+	var oPage = new sap.m.Page("initial-page", {
+		showHeader: false,
+		content: [oFixedSizeFormLabel, oRMCForm, oResponsiveFormLabel, oRMCResponsiveForm, oRMCConfigForm]
+	});
+
+	var oApp = new sap.m.App({
+		pages: oPage
+	}).placeAt("content");
+
+	/*---------- Helpers -----------*/
+
+	function _fnParseFloat(fValue) {
+		if (!fValue || 0 === fValue.length || "-" === fValue) {
+			return undefined;
+		}
+		if (/[.,]$/.test(fValue)) {
+			return sap.ui.core.format.NumberFormat.getFloatInstance().parse(fValue.slice(0, -1));
+		} else {
+			return sap.ui.core.format.NumberFormat.getFloatInstance().parse(fValue);
+		}
+	};
+
+	//set the contrast class for belize plus
+	if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+		oApp.addStyleClass("sapContrastPlus");
+	}
+</script>
+</head>
+<body class="sapUiBody" role="application">
+	<div id="content"></div>
+</body>
+</html>

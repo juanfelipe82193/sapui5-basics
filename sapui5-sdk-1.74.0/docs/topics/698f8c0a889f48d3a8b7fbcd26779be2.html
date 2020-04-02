@@ -1,0 +1,251 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pitfalls and Troubleshooting</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Tips and tricks if OPA isn&apos;t behaving or reacting the way you expect it to."><meta name="description" content="Tips and tricks if OPA isn&apos;t behaving or reacting the way you expect it to."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"69d3cbd4150c4ffb884e788f7f60fd93.html","previousTopicHref":"952e2c7458e14d6581cdfc510fbb272a.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio698f8c0a889f48d3a8b7fbcd26779be2"><h1 class="title topictitle1" hidden>Pitfalls and Troubleshooting</h1><div class="body conbody"><p class="shortdesc" hidden>Tips and tricks if OPA isn&apos;t behaving or reacting the way you expect it to.</p>
+<div class="section"><section class="section" type="Why Can&apos;t OPA Find the Control I&apos;m Looking For?"><h2 class="section_title" style="font-size: 1.15em;">Why Can&apos;t OPA Find the Control I&apos;m Looking For?</h2><p class="p">OPA checks many
+conditions before it passes a control to your matchers/actions/success functions. If
+your control doesn&apos;t match these conditions, you&apos;re not able to set a breakpoint.
+For such instances, OPA logs lots of information into the browser&apos;s console if you
+turn on the <span class="ph"><span class="ph pname">SAPUI5</span></span>
+debug mode. You can either use the <samp class="ph codeph">sap-ui-debug=true</samp> URL parameter
+or the <span class="ph"><span class="ph pname">SAPUI5</span></span>
+<a class="xref" href="../../#/topic/6ec18e80b0ce47f290bc2645b0cc86e6.html#loio6ec18e80b0ce47f290bc2645b0cc86e6" title="The Diagnostics window available in SAPUI5 is a support tool that runs within an existing SAPUI5 app." target="_top">Diagnostics</a>. The diagnostics can also be
+helpful to see the state of your UI.</p><p class="p">After turning on the debug mode, you can
+have a look at the log and also filter it by looking for <kbd class="ph userinput">opa</kbd>
+or <kbd class="ph userinput">matchers</kbd>.</p><div class="fig fignone" id="loio698f8c0a889f48d3a8b7fbcd26779be2__fig_rfj_ts1_55"><div class="figbody">
+<img class="inline  " id="loio698f8c0a889f48d3a8b7fbcd26779be2__image_bwr_zs1_55" src="loio340d18e41c28469fbd14b6fe128ff89b_LowRes.jpg">
+</div></div><p class="p">A frequent cause of error is typos in the view name or control IDs. These are
+easily found by looking through the logs.</p><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Multiple Views with the Same
+<samp class="ph codeph">viewName</samp></p>
+<p class="p">If there are multiple views with the same <samp class="ph codeph">viewName</samp>, OPA5 may not
+find the exact control you&apos;re looking for.</p>
+<p class="p">As of version 1.62, there are a couple of ways to ensure a correct match:</p>
+<ul class="ul" id="loio698f8c0a889f48d3a8b7fbcd26779be2__ul_tn3_gmr_kgb">
+<li class="li">
+<p class="p"><samp class="ph codeph">viewId</samp> parameter is introduced. You can set it in
+<samp class="ph codeph">Opa5.extendConfig()</samp>,
+<samp class="ph codeph">Opa5.waitFor()</samp> and in page object definitions.
+<samp class="ph codeph">viewId</samp> can be used standalone or in combination
+with <samp class="ph codeph">viewName</samp>. If OPA5 finds multiple views with the
+same name, it prompts you to add a view ID with the test failure message
+&quot;Please provide <samp class="ph codeph">viewId</samp> to locate the exact view.&quot;.</p>
+</li>
+<li class="li">
+<p class="p">Only views that are rendered are used in OPA5 control search.</p>
+</li>
+</ul>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Control Isn&apos;t Found When Running the Test on a Different Machine or
+in a Suite</p>
+<p class="p">The size of the iFrame in which the app is loaded is as large as the browser
+window. It&apos;s scaled down to leave space for the QUnit info but the content is
+preserved the same as when run in full size. This means that regardless of the
+small iFrame, you shouldn&apos;t see any responsive change in the app&apos;s
+appearance.</p>
+<p class="p">If the test runs fine locally but control isn&#x2019;t found on another machine, there&#x2019;s
+a chance that the other machine&apos;s screen is too small and triggers the
+responsive behaviour of some controls. For example, CI executors with smaller
+screens or when the test is part of a suite and the iFrame is placed inside a
+suite wrapper much smaller than the screen.</p>
+<p class="p">One way is to test for the responsive behavior and add conditional
+<samp class="ph codeph">waitFors</samp> and test cases. Tests for different screens, such
+as phone and desktop, are better separated in different test files.</p>
+<p class="p">If you want to work around the sizing issue and don&apos;t want to test responsive
+behavior, you can set a fixed size for the iFrame. The idea is to write the test
+for the small size which most probably results in the central environment. You
+can use the <samp class="ph codeph">width</samp> and <samp class="ph codeph">height</samp> parameters of
+<samp class="ph codeph">iStartMyAppInAFrame</samp> or the <samp class="ph codeph">opaFrameWidth</samp>
+and <samp class="ph codeph">opaFrameHeight</samp> URL parameters.</p>
+<p class="p">If either width or height isn&#x2019;t defined, a default value is assigned. The default
+screen size is 1280x1024 px. The iFrame takes 60% of the screen size, which
+makes the default iFrame size to be 768x614.4 px.</p>
+</div></section></div>
+<div class="section"><section class="section" type="Sometimes My Test Fails, Sometimes It Doesn&apos;t"><h2 class="section_title" style="font-size: 1.15em;">Sometimes My Test Fails, Sometimes It Doesn&apos;t</h2><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Is It the Startup That&apos;s Failing?</p>
+<p class="p">Maybe the app is loading too slowly for the OPA tests. If there&apos;s a local index
+file that doesn&apos;t contain the library dependencies your app needs, the <span class="ph"><span class="ph pname">SAPUI5</span></span> bootstrap is
+very slow. To fix this, add the dependencies you need in your application
+descriptor&apos;s <samp class="ph codeph">sap.ui.dependencies</samp> namespace. If you don&apos;t have a
+descriptor, use the bootstrap option libs. For more information, see <a class="xref" href="../../#/topic/be0cf40f61184b358b5faedaec98b2da.html" title="The descriptor for applications, components, and libraries is inspired by the Web Application Manifest concept introduced by the W3C. The descriptor provides a central, machine-readable and easy-to-access location for storing metadata associated with an application, an application component, or a library." target="_top">Descriptor for Applications, Components, and Libraries</a> and <a class="xref" href="../../#/topic/91f2d03b6f4d1014b6dd926db0e91070.html" title="The complete list of configuration options available in SAPUI5 can be found in the API Reference under sap.ui.core.Configuration. The following table shows a subset of the available configuration options." target="_top">Configuration Options and URL Parameters</a>.</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">It&apos;s Failing During the Execution</p>
+<p class="p">If this happens, your test is probably executing actions faster than it should.
+If you encounter a failure, look at the current state of the UI - in almost all
+cases an action couldn&apos;t be triggered or a JavaScript error occurred. This error
+should be included in the console logs. If an action couldn&apos;t be executed, make
+sure that you use the action parameter of OPA5&apos;s <samp class="ph codeph">waitFor</samp>
+function. When using the success function for triggering actions, OPA5 doesn&apos;t
+check many things.</p>
+<p class="p">Here are some examples that have occurred in known apps:</p>
+<ul class="ul" id="loio698f8c0a889f48d3a8b7fbcd26779be2__ul_lkh_fw1_55">
+<li class="li">
+<p class="p">An app was using the <samp class="ph codeph">bindingContext</samp> of a control in a
+press handler. OPA5 was way faster than a human user, so the
+HTTP-Request that was sometimes finished by the time OPA5 was executing
+the check, was sometimes still pending and so an exception was thrown.
+The test failed because OPA was trying to reach a page that couldn&apos;t be
+shown because of this error. This had to be fixed in the app.</p>
+</li>
+<li class="li">
+<p class="p">When there was no action parameter available, a <samp class="ph codeph">ListItem</samp>
+got rerendered while a press action was executed on it. Due to the
+rerendering, the <samp class="ph codeph">List</samp> wasn&apos;t able to perform the click,
+meaning it wasn&apos;t executed and the test failed. This only happened on
+certain occasions, depending on the execution speed of the machine
+executing the test. This is now detected automatically when using
+actions.</p>
+</li>
+</ul>
+</div></section></div>
+<div class="section"><section class="section" type="OPA5 Is Failing on a Specific Browser: What Should I Do?"><h2 class="section_title" style="font-size: 1.15em;">OPA5 Is Failing on a Specific Browser: What Should I Do?</h2><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Am I Comparing Language-Dependent Texts and the Browser Has a
+Different Language?</p>
+<p class="p">Check the logs to see if your matcher is failing because it&apos;s checking a text
+against a different language. If you want to always execute your tests with the
+same language, use the <samp class="ph codeph">sap-ui-language=</samp> URL or bootstrap
+parameter.</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Is It Only Internet Explorer That&apos;s Affected?</p>
+<p class="p">If you&apos;re using an IFrame to launch your app, Internet Explorer is more strict
+when it comes to objects from removed IFrames. If you&apos;re using the OPA context
+to remember objects, destroy your frame, and then execute a function on the
+object, you get a JavaScript exception. How do you avoid it? By only remembering
+values like strings or integers when destroying the frame, or by using the
+component startup in OPA5.</p>
+</div></section></div>
+<div class="section"><section class="section" type="OPA Isn&apos;t Even Starting and There&apos;s No Logging Either"><h2 class="section_title" style="font-size: 1.15em;">OPA Isn&apos;t Even Starting and There&apos;s No Logging Either</h2>
+
+<p class="p">If you require <span class="ph filepath">sinon-qunit.js</span>, it overwrites the browser functions
+<samp class="ph codeph">setTimeout</samp> and <samp class="ph codeph">setInterval</samp>. OPA needs these
+functions and without them the tests don&apos;t start. You can either set the
+<samp class="ph codeph">fakeTimers</samp> to <samp class="ph codeph">false</samp> in your test setup, or
+maybe consider not using <span class="ph filepath">sinon-qunit.js</span> together with OPA.</p>
+<pre class="pre codeblock prettyprint lang-js">module(&quot;Opatests&quot;, {
+    beforeEach : function () {
+        sinon.config.useFakeTimers = false;
+    },
+    afterEach : function () {
+        sinon.config.useFakeTimers = true;
+    }
+});</pre>
+</section></div>
+<div class="section" id="loio698f8c0a889f48d3a8b7fbcd26779be2__section_c3r_j2q_43b"><section class="section" type="OPA Tests Aren&apos;t Stable"><h2 class="section_title" style="font-size: 1.15em;">OPA Tests Aren&apos;t Stable</h2>
+
+<p class="p">For example, the tests run fine most of the time, but they fail:</p>
+<ul class="ul" id="loio698f8c0a889f48d3a8b7fbcd26779be2__ul_lfb_l2q_43b">
+<li class="li">
+<p class="p">in automated test runs</p>
+</li>
+<li class="li">
+<p class="p">when run with different OPA speeds</p>
+</li>
+<li class="li">
+<p class="p">sporadically on various steps</p>
+</li>
+</ul>
+<p class="p">One way to stabilize your tests is to use OPA <samp class="ph codeph">autoWait</samp> and
+<samp class="ph codeph">actions</samp>.</p>
+</section></div>
+<div class="section" id="loio698f8c0a889f48d3a8b7fbcd26779be2__section_alm_s2q_43b"><section class="section" type="Working with Controls Which Set Timeouts"><h2 class="section_title" style="font-size: 1.15em;">Working with Controls Which Set Timeouts</h2>
+
+<p class="p">Examples of such controls are busy indicators, notification popups, and message toasts. These
+controls set a timeout after which the control is supposed to disappear. In some
+apps, it can be important to ensure that such a control is displayed. Note that if
+you enable <samp class="ph codeph">autoWait</samp> in your tests globally, then you have to
+disable <samp class="ph codeph">autoWait</samp> specifically in the <samp class="ph codeph">waitFor</samp>
+statements related to these special controls. For example, if you want to test that
+a busy indicator is displayed during the sending of a request, you don&apos;t want to
+wait for controls to be interactable:</p>
+<pre class="pre codeblock prettyprint lang-js">oOpa.waitFor({
+	autoWait: false,
+	id: &quot;myBusyList&quot;, // a control that is expected be covered by a busy indicator
+	matchers: new PropertyStrictEquals({
+		name: &quot;busy&quot;,
+		value: true
+	}),
+	success: function (oList) {
+		Opa5.assert.ok(true, &quot;My list is busy&quot;);
+	}
+});</pre>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/ce4b180d97064ad088a901b53ed48b21.html" title="Advanced topics and best practices for OPA tests." target="_top">Cookbook for OPA5</a></div><div><a class="link" href="../../#/topic/6ec18e80b0ce47f290bc2645b0cc86e6.html#loio6ec18e80b0ce47f290bc2645b0cc86e6" title="The Diagnostics window available in SAPUI5 is a support tool that runs within an existing SAPUI5 app." target="_top">Diagnostics</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

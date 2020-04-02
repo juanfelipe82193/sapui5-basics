@@ -1,0 +1,60 @@
+<core:FragmentDefinition 
+		xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+		xmlns="sap.m" xmlns:layout="sap.ui.layout" xmlns:build="sap.build" xmlns:core="sap.ui.core"
+		template:require="{AH: 'sap/suite/ui/generic/template/js/AnnotationHelper'}">
+			<!-- @classdesc @name: Name: sap.suite.ui.generic.template.ObjectPage.view.fragments.Facet.fragment.xml
+				@param {UI.Facet} [facet] @param {edm.EntitySet} [entitySet] @param {edm.EntityType}
+				[entityType] -->
+
+	<template:with path="parameter>/variables" helper="AH.getNewVariable" var="objectPageTableSettings">
+		<!--  use tableSettings at component level as default-->
+		<template:if test="{:= ${objectPageTableSettings>}.set(${parameter>/settings/tableSettings})}"/>
+		<!--  if tableSettings are defined for the section, they win. However, possibly the section is mentioned in manifest, but without defining tableSettings - then again, we use the ones defined at component level -->
+		<template:if test="{:= ${objectPageTableSettings>}.set(${parameter>/settings/sections/}[AH.replaceSpecialCharsInId(${facet>Target/AnnotationPath})]['tableSettings'] || ${parameter>/settings/tableSettings})}"/>
+		<!-- 
+			${objectPageTableSettings>value/type} is now set to what is defined in the manifest (including defaulting by settings for whole OP and by old manifest 
+			settings), and can be used to determine, whether section should be rendered at (not for treetable on phones)
+			Device (stronger than manifest settings) and fallback according to service (only, if nothing specified in manifest) to finally get the table type will be
+			evaluated in SmartTable fragment 
+		 -->	
+		<template:if test="{= ${objectPageTableSettings>value/type} !== 'TreeTable' || !${device>/system/phone}}">
+			<layout:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="0" vSpacing="0" class="sapSmartTemplatesObjectPageSubSectionGrid">
+				<!--
+					isMultiple will return false if there is no navigation property. As we want to create a FacetForm
+					in case of no navigation property in annotation path and if navigation property and isMultiple false
+					we only check for isMultiple
+				-->
+				<template:if test="{path: 'facet>Target', formatter: 'sap.ui.model.odata.AnnotationHelper.isMultiple'}">
+					<template:then>
+						<template:if test="{=${facet>Target/AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.LineItem') > -1}">
+							<template:then>
+								<core:Fragment fragmentName="sap.suite.ui.generic.template.ObjectPage.view.fragments.SmartTable" type="XML"/>
+							</template:then>
+							<template:elseif test="{=${facet>Target/AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Contact') > -1}">
+								<core:Fragment fragmentName="sap.suite.ui.generic.template.fragments.Contacts" type="XML"/>
+							</template:elseif>
+			                <template:elseif test="{=${facet>Target/AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.Chart') > -1}">
+			                            <core:Fragment fragmentName="sap.suite.ui.generic.template.fragments.SmartChart" type="XML"/>
+			                </template:elseif>          			
+			            </template:if>
+					</template:then>
+					<template:elseif test="{= ${facet>RecordType}.indexOf('com.sap.vocabularies.UI.v1.CollectionFacet') > -1 ||
+												(${facet>Target/AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.FieldGroup') > -1
+											     || ${facet>Target/AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.Identification') > -1) }">
+						<core:Fragment fragmentName="sap.suite.ui.generic.template.fragments.SmartForm" type="XML"/>
+					</template:elseif>
+					<template:elseif test="{= ${facet>Target/AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.DataPoint') > -1 }">
+						<template:with path="facet>Target" helper="sap.ui.model.odata.AnnotationHelper.resolvePath" var="dataPoint">
+							<template:if test="{= ${dataPoint>Visualization/EnumMember}.indexOf('com.sap.vocabularies.UI.v1.VisualizationType/Rating') = -1 }">
+								<template:then>
+			                        <core:Fragment fragmentName="sap.suite.ui.generic.template.fragments.SmartForm" type="XML"/>
+								</template:then>
+							</template:if>
+						</template:with>
+					</template:elseif>
+				</template:if>
+		
+			</layout:Grid>
+		</template:if>
+	</template:with>
+</core:FragmentDefinition>

@@ -1,0 +1,177 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Grouping in a Table</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="When you have repeated values in your table, you can use mergeDuplicate of the sap.m.Column control to sort your data based on the column to be merged."><meta name="description" content="When you have repeated values in your table, you can use mergeDuplicate of the sap.m.Column control to sort your data based on the column to be merged."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"1c60212834c049ed9f65d743dfeb3d9a.html","previousTopicHref":"9164ba7047b74a25a19baf9c5bb986ae.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio4c98cf1b07754d22bed8b6fba68f2031"><h1 class="title topictitle1" hidden>Grouping in a Table</h1><div class="body conbody"><p class="shortdesc" hidden>When you have repeated values in your table, you can use <samp class="ph codeph">mergeDuplicate</samp>
+of the <samp class="ph codeph">sap.m.Column</samp> control to sort your data based on the column to be
+merged.</p>
+<p class="p"> There are two properties related to merging duplicate values:</p>
+<ul class="ul" id="loio4c98cf1b07754d22bed8b6fba68f2031__ul_rcp_qvj_ln">
+<li class="li"><samp class="ph codeph">mergeDuplicates</samp>: set this to true if you want duplicate values for the given
+column to be merged</li>
+<li class="li"><samp class="ph codeph">mergeFunctionName</samp>: use this to specify the name of the getter function of
+the control in the column</li>
+</ul>
+<p class="p">Duplicate values will only be merged if they are contiguous. That means that you probably
+want to sort your data first before binding it.</p>
+<p class="p">Here&apos;s a simple example of using <samp class="ph codeph">mergeDuplicates</samp>. We&apos;ll set up a table of
+sales data, and display the data in a table, merging any duplicate regions. When the
+<span class="ph uicontrol">Mix Up</span> button is pressed to lightly shuffle the salesFigures
+array of objects, you will see that only adjacent duplicates are merged. Press the
+<span class="ph uicontrol">Sort</span> button again to see the ideal merging.</p>
+<pre class="pre codeblock prettyprint lang-js">// Sales Areas
+var oAreas = {
+    &quot;North West&quot;: [&quot;Manchester&quot;, &quot;Liverpool&quot;, &quot;Lancaster&quot;],
+    &quot;South East&quot;: [&quot;London&quot;, &quot;Brighton&quot;],
+    &quot;North East&quot;: [&quot;Middlesbrough&quot;, &quot;Newcastle&quot;, &quot;Hull&quot;]
+};
+    
+// Generate some sales figures into a flat array of region/town/amount objects
+var oSalesFigures = [];
+oSalesFigures = oSalesFigures.concat.apply(oSalesFigures, Object.keys(oAreas).map(function(region) {
+    return oAreas[region].map(function(town) { 
+        return { &quot;region&quot;: region, &quot;town&quot;: town, &quot;amount&quot;: (Math.random()*1000000+1).toFixed(2) };
+    });
+}));
+
+var oModel = new sap.ui.model.json.JSONModel({ &quot;sales&quot;: oSalesFigures });
+sap.ui.getCore().setModel(oModel);
+    
+var oTable = new sap.m.Table(&quot;salesdata&quot;, {
+     inset: true,
+     headerText: &quot;Sales by Area&quot;,
+     headerContent: [
+        new sap.m.Button({
+            text: &quot;Sort&quot;,
+            press: function() {
+                var oData = oModel.getData();
+                oData.sales.sort(function(a, b) {
+                    if (a.region === b.region) return 0;
+                    return a.region &gt; b.region ? 1 : -1;
+                });
+                oModel.setData(oData);
+            }
+        }),
+        new sap.m.Button({
+            text: &quot;Mix Up&quot;,
+            press: function() {
+                var oData = oModel.getData();
+                oData.sales.sort(function() { return Math.random()-0.5; });
+                oModel.setData(oData);
+            }
+        })
+    ],
+    columns: [
+        new sap.m.Column({
+            header: new sap.m.Label({ text: &quot;Region&quot; }),
+            mergeDuplicates: true
+        }),
+        new sap.m.Column({ header: new sap.m.Label({ text: &quot;Town/City&quot; }) }),
+        new sap.m.Column({
+           header: new sap.m.Label({ text: &quot;Sales (GBP)&quot; }),
+            hAlign: &quot;End&quot;,
+            minScreenWidth: sap.m.ScreenSize.Tablet,
+            demandPopin: true,
+            popinDisplay: &quot;Block&quot;
+        }),
+    ],
+});
+
+oTable.bindAggregation(&quot;items&quot;, {
+    path: &quot;/sales&quot;,
+    template: new sap.m.ColumnListItem({
+        cells: [
+                new sap.m.Label({ text: &quot;{region}&quot; }),
+                new sap.m.Label({ text: &quot;{town}&quot; }),
+                new sap.m.Label({
+                    text: {
+                        path: &quot;amount&quot;,
+                        type: new sap.ui.model.type.Float({ minFractionDigits: 2, maxFractionDigits: 2 })
+                    }
+                })
+        ]
+    })
+});
+    
+oTable.placeAt(&quot;content&quot;);
+</pre>
+<p class="p"><img class="inline  " id="loio4c98cf1b07754d22bed8b6fba68f2031__image_pxx_j5g_nn" src="loiob8e8a14765f7482b893f079569d136a9_LowRes.png"></p>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

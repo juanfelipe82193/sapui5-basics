@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2009-2017 SAP SE, All Rights Reserved -->
+<html class="sapUShellFullHeight">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <script>
+        function getUrlParams() {
+            var vars = {};
+            var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+                vars[key] = value;
+            });
+            return vars;
+        }
+
+        var configFileUrl = decodeURIComponent(getUrlParams()["configFileUrl"]),
+                sapUshellConfig = {
+                    services: {
+                        NavTargetResolution: {
+                            config: {
+                                // enable to inject the NavTarget for #Test-url etc. directly via url parameters
+                                // .../FioriLaunchpad.html?sap-ushell-test-url-url=%2Fushell%2Ftest-resources%2Fsap%2Fushell%2Fdemoapps%2FAppNavSample&sap-ushell-test-url-additionalInformation=SAPUI5.Component%3Dsap.ushell.demo.AppNavSample#Test-url
+                                allowTestUrlComponentConfig : true
+                            }
+                        },
+                        SupportTicket: {
+                            // service has to be enabled explicitly for the demo platform
+                            config: {
+                                enabled: true
+                            }
+                        },
+                        EndUserFeedback: {
+                            adapter: {
+                                config: {
+                                    enabled: true
+                                }
+                            }
+                        },
+                        UserInfo: {
+                            adapter: {
+                                config: {
+                                    themes: [
+                                        { id: "theme1_id",       name: "theme1_name" },
+                                        { id: "theme2_id",       name: "theme2_name" },
+                                        { id: "theme3_id",       name: "theme3_name" },
+                                        { id: "theme4_id",       name: "theme4_name" },
+                                        { id: "base",            name: "base"        },
+                                        { id: "sap_bluecrystal", name: "sap_bluecrystal" },
+                                        { id: "sap_hcb",         name: "sap_hcb"     }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    renderers: {
+                        fiori2 : {
+                            componentData: {
+                                config: {
+                                    enableSetTheme: true,
+                                    enableHelp: true,
+                                    preloadLibrariesForRootIntent: false,
+                                    applications: {
+                                        "Shell-home" : {
+                                            enableActionModeMenuButton: true,
+                                            enableActionModeFloatingButton: true,
+                                            enableTileActionsIcon: false,
+                                            enableHideGroups: true,
+                                            enableTilesOpacity: false
+                                        }
+                                    },
+                                    rootIntent: "Action-toappnavsample"
+                                }
+                            }
+                        }
+                    }
+                };
+
+        var oXHR = new XMLHttpRequest();
+        if (configFileUrl !== "undefined") {
+            oXHR.open("GET", configFileUrl, false);
+            oXHR.onreadystatechange = function () {
+
+                if (this.status === 200 && this.readyState === 4) {
+                    eval(oXHR.responseText);
+                }
+            };
+            oXHR.send();
+        }
+
+        window["sap-ushell-config"] = sapUshellConfig;
+    </script>
+    <script src="../../bootstrap/demo.js"></script>
+    <link id="icon-fonts-Fiori2" rel="stylesheet" type="text/css" href="../../../../../resources/sap/ushell/themes/base/IconFonts.css"/>
+    <link id="Fiori2-loading" rel="stylesheet" type="text/css" href="../../../../../resources/sap/ushell/themes/base/flower-standalone.css"/>
+    <script id="sap-ui-bootstrap"
+            src="../../../../../resources/sap-ui-core.js"
+            data-sap-ui-evt-oninit="main();"
+            data-sap-ui-libs="sap.ui.core, sap.m"
+            data-sap-ui-theme="sap_bluecrystal"
+            data-sap-ui-compatVersion="1.16"
+            data-sap-ui-xx-bindingSyntax="complex">
+    </script>
+    <script>
+        // The viewport meta tag must be inserted to the DOM before the “DOMContentLoaded” event is published.
+        // The initMobile function is responsible to insert the correct viewport according to the current device.
+        // For iPhone running ios 7.1 and above a "minimal-ui" property is added to the viewport meta tag which allows minimizing the top and bottom bars of the browser.
+        jQuery.sap.initMobile({preventScroll: false});
+    </script>
+    <script type="text/javascript">
+        /**
+         * Main method to be executed once SAPUI5 has been initialized.
+         */
+        function main() {
+            "use strict";
+            // load and register Fiori2 icon font
+            if(sap.ui.Device.os.ios) {
+                jQuery.sap.setIcons({
+                    'phone': '../../../../../resources/sap/ushell/themes/base/img/launchicons/57_iPhone_Desktop_Launch.png',
+                    'phone@2': '../../../../../resources/sap/ushell/themes/base/img/launchicons/114_iPhone-Retina_Web_Clip.png',
+                    'tablet': '../../../../../resources/sap/ushell/themes/base/img/launchicons/72_iPad_Desktop_Launch.png',
+                    'tablet@2': '../../../../../resources/sap/ushell/themes/base/img/launchicons/144_iPad_Retina_Web_Clip.png',
+                    'favicon': '../../../../../resources/sap/ushell/themes/base/img/launchpad_favicon.ico',
+                    'precomposed': true
+                });
+            } else {
+                jQuery.sap.setIcons({
+                    'phone': '',
+                    'phone@2': '',
+                    'tablet': '',
+                    'tablet@2': '',
+                    'favicon': '../../../../../resources/sap/ushell/themes/base/img/launchpad_favicon.ico',
+                    'precomposed': true
+                });
+            }
+            jQuery.sap.require("sap.ushell.iconfonts");
+            sap.ushell.iconfonts.registerFiori2IconFont();
+
+            /*global sap, document */
+
+            // clean fiori loading screen markup before placing main content
+            var oContent = sap.ushell.Container.createRenderer("fiori2");
+            jQuery("#canvas").empty();
+            setTimeout(function (){
+                oContent.placeAt("canvas");
+            },1);
+            jQuery(document).keydown(function (e) {
+                //CTRL + ALT +  G keydown combo
+                if (e.ctrlKey && e.altKey && e.keyCode === 71) {
+                    jQuery("#dbg_grid_overlay").toggle();
+                }
+            });
+        }
+    </script>
+</head>
+
+<body class="sapUiBody sapUShellFullHeight" role="application">
+<div id="canvas" class="sapUShellFullHeight">
+    <!--  the Fiori2 loading screen for different browsers (as SAPUI5 is not loaded yet, will be replaced by Launchpad):
+        * in pure HTML with CSS animation for modern browsers
+        * animated gif image for <=IE9 (IE10+ doesn't support conditional comments)
+    -->
+    <!--[if IE]>
+    <div id="fiori2-startup-flower" class="demo">
+        <img src="../../../../../resources/sap/ushell/themes/base/img/flower_anim.gif" />
+    </div>
+    <![endif]-->
+    <!--[if !IE]> -->
+    <div id="fiori2-startup-flower" class="demo">
+        <div class="fiori2-blossom">
+            <div class="fiori2-leafContainer fiori2-leafContainer1">
+                <div class="fiori2-leaf fiori2-leaf1"></div>
+            </div>
+            <div class="fiori2-leafContainer fiori2-leafContainer2">
+                <div class="fiori2-leaf fiori2-leaf2"></div>
+            </div>
+            <div class="fiori2-leafContainer fiori2-leafContainer3">
+                <div class="fiori2-leaf fiori2-leaf3"></div>
+            </div>
+            <div class="fiori2-leafContainer fiori2-leafContainer4">
+                <div class="fiori2-leaf fiori2-leaf4"></div>
+            </div>
+            <div class="fiori2-leafContainer fiori2-leafContainer5">
+                <div class="fiori2-leaf fiori2-leaf5"></div>
+            </div>
+        </div>
+    </div>
+    <!-- <![endif] -->
+</div>
+<div id="dbg_grid_overlay" style="position: absolute;z-index: 1000;background-image: url('/ushell/resources/sap/ushell/themes/sap_bluecrystal/img/grid.png');
+            width: 100%;height: 100%;opacity: 0.1;top: 0;left: 0;display:none;">
+
+</div>
+</body>
+</html>

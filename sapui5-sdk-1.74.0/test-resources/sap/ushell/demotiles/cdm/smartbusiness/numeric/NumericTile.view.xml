@@ -1,0 +1,62 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core"
+	xmlns:suite="sap.suite.ui.commons" xmlns:ssb="ssuite.smartbusiness.tiles.lib"
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	controllerName="sap.ushell.demotiles.cdm.smartbusiness.numeric.NumericTile">
+	<template:with path="dataPoint>"
+		helper="ssuite.smartbusiness.tiles.lib.Util.prototype.resolveMetaModelRoot"
+		var="meta">
+		<template:with path="dataPoint>"
+			helper="ssuite.smartbusiness.tiles.lib.Util.prototype.resolveEntityType"
+			var="entityType">
+			<ssb:Singleton
+				singleton="{ parts: [ { path: 'meta>' }, { path: 'entityType>' }, { path: 'selectionVariant>' }, { path: 'meta>.' }, { path: 'meta>.' }, { path: 'dataPoint>' }, { path: 'meta>.' }, { path: 'tileConfig>personalizedFilters'}, {path: 'tileConfig>loadFromCache'} ], formatter: 'ssuite.smartbusiness.tiles.lib.Util.prototype.formatDataBinding' }">
+				<ssb:singleton>
+					<core:Element />
+				</ssb:singleton>
+				<ssb:customData>
+					<core:CustomData key="evaluationData"
+						value="{ parts:[ {path:'entityType>'}, {path: 'selectionVariant>'}, { path: 'tileConfig>Title'} ], formatter: 'ssuite.smartbusiness.tiles.lib.Util.prototype.formatEvaluationData' }" />
+				</ssb:customData>
+				<ssb:content>
+					<suite:GenericTile state="Loading" press=".onPress"
+						header="{tileConfig>Title}" subheader="{tileConfig>SubTitle}">
+						<suite:tileContent>
+							<template:with path="dataPoint>Value" var="val"
+								helper="sap.ui.model.odata.AnnotationHelper.resolvePath">
+								<template:if test="{tileConfig>cacheEnabled}">
+									<template:then>
+										<ssb:TimeStampControl timestamp="{tileConfig>displayCachedTime}"
+											tooltip="{ parts: [{path: 'dataPoint>'}, {path: 'val>Org.OData.Measures.V1.ISOCurrency'}, {path: 'val>Org.OData.Measures.V1.Unit'}, {path: 'tileConfig>personalizedThresholds'}, { path: 'tileConfig>personalizedFilters'}], formatter: 'ssuite.smartbusiness.tiles.lib.Util.prototype.setTooltipForNumericTile' }"
+											refreshOption="{tileConfig>cacheEnabled}" refresh="timeStampRefresh"
+											unit="{parts : [{path : 'val>Org.OData.Measures.V1.ISOCurrency'}, {path: 'dataPoint>Value'}, {path : 'val>Org.OData.Measures.V1.Unit'}], formatter: 'ssuite.smartbusiness.tiles.lib.Util.prototype.decideUnitBindingPath'}">
+											<ssb:content>
+												<suite:NumericContent truncateValueTo="5"
+													formatterValue="true"
+													indicator="{ parts: [ {path:'dataPoint>Value'}, {path:'dataPoint>TrendCalculation'}, {path: 'dataPoint>ValueFormat'}, {path:'dataPoint>CriticalityCalculation'}, { path: 'tileConfig>personalizedFilters'} ], formatter: 'ssuite.smartbusiness.tiles.lib.Util.prototype.formatTrendIndicator' }"
+													value="{ parts: [ {path: 'dataPoint>Value'}, {path: 'dataPoint>ValueFormat'}, {path: 'val>Org.OData.Measures.V1.ISOCurrency'}, {path: 'val>Org.OData.Measures.V1.Unit'} , {path: 'dataPoint>'} ], formatter: 'ssuite.smartbusiness.tiles.lib.Util.prototype.decideEvaluationMeasureBindPath' }"
+													valueColor="{ parts:[ {path:'dataPoint>'}, {path: 'tileConfig>personalizedThresholds'}, { path: 'tileConfig>personalizedFilters'} ], formatter: 'ssuite.smartbusiness.tiles.lib.Util.prototype.formatCriticality' }" />
+											</ssb:content>
+										</ssb:TimeStampControl>
+									</template:then>
+									<template:else>
+										<suite:TileContent
+											tooltip="{ parts: [{path: 'dataPoint>'}, {path: 'val>Org.OData.Measures.V1.ISOCurrency'}, {path: 'val>Org.OData.Measures.V1.Unit'}, {path: 'tileConfig>personalizedThresholds'}, { path: 'tileConfig>personalizedFilters'}], formatter: 'ssuite.smartbusiness.tiles.lib.Util.prototype.setTooltipForNumericTile' }"
+											unit="{parts : [{path : 'val>Org.OData.Measures.V1.ISOCurrency'}, {path: 'dataPoint>Value'}, {path : 'val>Org.OData.Measures.V1.Unit'}], formatter: 'ssuite.smartbusiness.tiles.lib.Util.prototype.decideUnitBindingPath'}">
+											<suite:content>
+												<suite:NumericContent truncateValueTo="5"
+													formatterValue="true"
+													indicator="{ parts: [ {path:'dataPoint>Value'}, {path:'dataPoint>TrendCalculation'}, {path: 'dataPoint>ValueFormat'}, {path:'dataPoint>CriticalityCalculation'}, { path: 'tileConfig>personalizedFilters'} ], formatter: 'ssuite.smartbusiness.tiles.lib.Util.prototype.formatTrendIndicator' }"
+													value="{ parts: [ {path: 'dataPoint>Value'}, {path: 'dataPoint>ValueFormat'}, {path: 'val>Org.OData.Measures.V1.ISOCurrency'}, {path: 'val>Org.OData.Measures.V1.Unit'} , {path: 'dataPoint>'} ], formatter: 'ssuite.smartbusiness.tiles.lib.Util.prototype.decideEvaluationMeasureBindPath' }"
+													valueColor="{ parts:[ {path:'dataPoint>'}, {path: 'tileConfig>personalizedThresholds'}, { path: 'tileConfig>personalizedFilters'} ], formatter: 'ssuite.smartbusiness.tiles.lib.Util.prototype.formatCriticality' }" />
+											</suite:content>
+										</suite:TileContent>
+									</template:else>
+								</template:if>
+							</template:with>
+						</suite:tileContent>
+					</suite:GenericTile>
+				</ssb:content>
+			</ssb:Singleton>
+		</template:with>
+	</template:with>
+</mvc:View>

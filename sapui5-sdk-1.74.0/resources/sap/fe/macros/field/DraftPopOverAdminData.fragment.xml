@@ -1,0 +1,37 @@
+<core:FragmentDefinition
+	xmlns:core="sap.ui.core"
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns="sap.m"
+	template:require="{ FIELD: 'sap/fe/macros/field/FieldHelper' }"
+	core:require="{ formatMessage: 'sap/base/strings/formatMessage' }">
+
+	<Popover
+		title="{= !%{IsActiveEntity} ? ${i18n>draft.DRAFT_OBJECT} : (%{HasDraftEntity} ? (%{DraftAdministrativeData/InProcessByUser} ? ${i18n>draft.LOCKED_OBJECT} : ${i18n>draft.UNSAVED_OBJECT}) : '') }"
+		showHeader="true"
+		contentWidth="15.625rem"
+		verticalScrolling="false"
+		class="sapUiContentPadding">
+
+		<endButton>
+			<Button icon="sap-icon://decline" press=".closeDraftAdminPopover"/>
+		</endButton>
+
+		<VBox class="sapUiContentPadding">
+			<!-- Draft with no changes yet -->
+			<VBox visible="{= !%{IsActiveEntity} &amp;&amp; !%{DraftAdministrativeData/LastChangeDateTime}}">
+				<Text text="{= ${i18n>draft.GENERIC_LOCKED_OBJECT_POPOVER_TEXT} }"/>
+			</VBox>
+			<!-- Draft with changes -->
+			<VBox visible="{= !%{IsActiveEntity} &amp;&amp; %{DraftAdministrativeData/LastChangeDateTime}}">
+				<Text
+					text="{parts:[ {path: 'i18n>draft.LAST_CHANGE_TEXT'}, {path: 'DraftAdministrativeData/LastChangeDateTime'}], formatter: 'formatMessage' }"/>
+			</VBox>
+			<!-- Active instance -->
+			<VBox visible="{= %{IsActiveEntity} &amp;&amp; %{DraftAdministrativeData/LastChangeDateTime} }">
+				<Text text="{path: 'entitySet>$Type', formatter: 'FIELD.getBindingForDraftAdminBlockInPopover'}"/>
+				<Text class="sapUiSmallMarginTop"
+					  text="{parts:[ {path: 'i18n>draft.LAST_CHANGE_TEXT'}, {path: 'DraftAdministrativeData/LastChangeDateTime'}], formatter: 'formatMessage' }"/>
+			</VBox>
+		</VBox>
+	</Popover>
+</core:FragmentDefinition>

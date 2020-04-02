@@ -1,0 +1,1 @@
+sap.ui.define([],function(){"use strict";return{actions:"not-adaptable",aggregations:{rootControl:{actions:"not-adaptable",propagateMetadata:function(e){var w={"sap.uxap.ObjectPageLayout":true,"sap.ui.mdc.Table":true};if(w[e.getMetadata().getName()]){return{};}else{return{actions:"not-adaptable"};}}}}};},false);

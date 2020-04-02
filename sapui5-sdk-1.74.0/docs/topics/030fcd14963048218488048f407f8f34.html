@@ -1,0 +1,449 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>JavaScript Code Issues</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="This section lists some of the most important issues that should be avoided when writing JavaScript code in SAPUI5."><meta name="description" content="This section lists some of the most important issues that should be avoided when writing JavaScript code in SAPUI5."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"9d87f925dfbb4e99b9e2963693aa00ef.html","previousTopicHref":"387787232c214b42954f18c93a28560a.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+$('.collapsible').collapsify({"expandText":"Display Content","collapseText":"Hide Content","codeblockText":"Code Sample","codeblockCopyText":"Copy code to clipboard","codeblockSelectText":"Select code for copying to clipboard"});
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio030fcd14963048218488048f407f8f34"><h1 class="title topictitle1" hidden>JavaScript Code Issues</h1><div class="body conbody"><p class="shortdesc" hidden>This section lists some of the most important issues that should be avoided when writing JavaScript code in <span class="ph"><span class="ph pname">SAPUI5</span></span>.</p>
+<div class="section collapsible" id="loio030fcd14963048218488048f407f8f34__1"><section class="section collapsible" type="Don&apos;t use methods or properties that are not public"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t use methods or properties that are not public</h2>
+
+<p class="p">Don&apos;t use or override &quot;private&quot; methods or properties. Private functions are typically (but not always) prefixed with
+&quot;<samp class="ph codeph">_</samp>&quot;.</p>
+<p class="p">Use &quot;protected&quot; methods or properties only if you access it from the object itself or an object that extends that object. (For example
+as we do in <a class="xref" href="../../#/topic/19453962b8074b7399372c65cbe05370.html" title="In this step, we expand our reuse concept and invoke the dialog at component level." target="_top">Step 19: Reuse Dialogs</a> of the <span class="ph uicontrol">Walkthrough</span> tutorial.) In the API
+Reference, protected functions are indicated by a label <span class="ph uicontrol">Visibility: protected</span> below the description of the
+function.</p>
+<p class="p">Always double check in the API Reference. If <span class="ph"><span class="ph pname">SAPUI5</span></span> changes the
+implementation in a future release, your code will break if you fail to follow this guideline.</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio030fcd14963048218488048f407f8f34__table_ybz_cpd_jq" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Examples</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d312123e69">Bad Examples</th>
+<th class="entry" style="vertical-align:top;" id="d312123e72">Good Example</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d312123e69 "><samp class="ph codeph">var sText = oControl.mProperties[&quot;text&quot;];</samp></td>
+<td class="entry" style="vertical-align:top;" headers="d312123e72 "><samp class="ph codeph">var sText = oControl.getText();</samp></td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d312123e69 "><samp class="ph codeph">oSelectDialog._oList.setGrowing(false);</samp></td>
+<td class="entry" style="vertical-align:top;" headers="d312123e72 ">&#xA0;</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d312123e69 "><samp class="ph codeph">var sPart = oEvent.oSource.oBindingContexts.description.sPath.split(&apos;/&apos;)[3];</samp></td>
+<td class="entry" style="vertical-align:top;" headers="d312123e72 ">&#xA0;</td>
+</tr>
+</tbody></table></div>
+<p class="p">For more information, see <a class="xref" href="../../#/topic/91f087396f4d1014b6dd926db0e91070.html" title="The following sections describe what SAP can change in major, minor, and patch releases. Always consider these rules when developing apps, features, or controls with or for SAPUI5." target="_top">Compatibility Rules</a> and the <span class="ph"><a class="xref" href="../../#/api/sap.ui" target="_top" alt="#/api/sap.ui" title="#/api/sap.ui">API
+Reference</a>.</span>
+</p>
+</section></div>
+<div class="section collapsible" id="loio030fcd14963048218488048f407f8f34__1a"><section class="section collapsible" type="Don&apos;t use references to global names"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t use references to global names</h2><p class="p">Use only local variables inside the AMD
+factory function, do not access the content of other modules via their global names, not even for such fundamental stuff like
+<samp class="ph codeph">jQuery</samp> or <samp class="ph codeph">sap.ui.Device</samp>. You can&apos;t be sure that the modules are already loaded and the namespace
+is available.</p><div class="table-wrapper tablenoborder"><table summary id="loio030fcd14963048218488048f407f8f34__table_bvd_cjh_yy" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d312123e156">
+<p class="p">Bad Example</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d312123e162">
+<p class="p">Good Example</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d312123e156 ">
+<div class="p">Access the modules
+directly:<pre class="pre codeblock prettyprint lang-js">sap.ui.define([&apos;sap/m/Button&apos;], function(Button) {
+    var fnCreateContent = function() {
+        // global reference on sap.m.Input, which might not be loaded yet
+        return new sap.m.Input({
+            color: ...,
+        });
+    };
+});</pre></div>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d312123e162 ">
+<div class="p">Declare a dependency to <samp class="ph codeph">sap.m.Input</samp> within
+<samp class="ph codeph">sap.ui.define</samp>:<pre class="pre codeblock prettyprint lang-js">sap.ui.define([&apos;sap/m/Input&apos;], function(Input) {
+ 
+    var fnCreateContent = function() {
+        // reference sap.m.Input via a dependency
+        return new Input({
+            color: ...,
+        });
+    };
+});</pre></div>
+</td>
+</tr>
+</tbody></table></div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Exceptions</p>
+</div><div class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> provides a couple of static modules and (factory)
+functions that can be referred to via their global name:<ul class="ul" id="loio030fcd14963048218488048f407f8f34__ul_ytt_qc2_2z">
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.define</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.require</samp></p>
+</li>
+<li class="li">
+<div class="p">Factory functions and core references:<ul class="ul" id="loio030fcd14963048218488048f407f8f34__ul_hhv_ssz_zy">
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.getCore</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.component</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.fragment</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.htmlfragment</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.jsfragment</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.jsview</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.template</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.view</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.xmlfragment</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.xmlview</samp></p>
+</li>
+</ul></div>
+</li>
+<li class="li">
+<p class="p">Commonly used names (However they can also be used as AMD references via <samp class="ph codeph">sap/ui/Global</samp>): </p>
+<ul class="ul" id="loio030fcd14963048218488048f407f8f34__ul_skn_xsz_zy">
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.getVersionInfo (Global.getVersionInfo())</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.lazyRequire</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.resource</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.version</samp></p>
+</li>
+</ul>
+</li>
+</ul></div></section></div>
+<div class="section collapsible" id="loio030fcd14963048218488048f407f8f34__2"><section class="section collapsible" type="Don&apos;t use deprecated APIs"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t use deprecated APIs</h2>
+
+<p class="p">Entities marked as &#x201C;deprecated&#x201D; in the API Reference documentation (this includes properties, methods, events, and their parameters as
+well as entire controls and other APIs) are no longer intended to be used. They will not get feature updates in the future.
+Alternatives, if available, are described in the API Reference documentation.</p>
+<p class="p">One prominent example is the old <samp class="ph codeph">jQuery.sap.device</samp> API that has been replaced with <samp class="ph codeph">sap.ui.Device</samp>.</p>
+<p class="p">For more information, see the <a class="xref" href="../../#/api/deprecated" target="_top" alt="#/api/deprecated" title="#/api/deprecated">Deprecated APIs</a>.</p>
+</section></div>
+<div class="section collapsible" id="loio030fcd14963048218488048f407f8f34__3"><section class="section collapsible" type="Don&apos;t override or add control methods"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t override or add control methods</h2>
+
+<p class="p">If you override methods like <samp class="ph codeph">onBeforeRendering</samp>, <samp class="ph codeph">onAfterRendering</samp>, or getters and setters, the
+original methods will no longer be called. You have to make sure that you call them in your method explicitly. Even if they are not
+implemented right now, they could be added in the future. This applies to control inheritance in particular.</p>
+<p class="p">Instead, you should consider using delegates.</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio030fcd14963048218488048f407f8f34__table_qzr_5rd_jq" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Examples</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d312123e402">Bad Examples</th>
+<th class="entry" style="vertical-align:top;" id="d312123e405">Good Example</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d312123e402 ">
+<pre class="pre codeblock prettyprint lang-js">
+oControl.onAfterRendering = function() {
+       // do something
+};</pre>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d312123e405 ">
+<pre class="pre codeblock prettyprint lang-js">
+oControl.addEventDelegate({
+    onAfterRendering:function() {
+        // do something
+    }
+});</pre>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d312123e402 "><samp class="ph codeph">oControl.prototype.setText = function(){ ... };</samp></td>
+<td class="entry" style="vertical-align:top;" headers="d312123e405 ">&#xA0;</td>
+</tr>
+</tbody></table></div>
+<p class="p">See also: <a class="xref" href="../../#/api/sap.ui.core.Element/methods/addEventDelegate" target="_top" alt="#/api/sap.ui.core.Element/methods/addEventDelegate" title="#/api/sap.ui.core.Element/methods/addEventDelegate">sap.ui.core.Element - addEventDelegate</a>.</p>
+</section></div>
+<div class="section collapsible" id="loio030fcd14963048218488048f407f8f34__4"><section class="section collapsible" type="Don&apos;t manipulate the DOM structure within controls"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t manipulate the DOM structure within controls</h2>
+
+<p class="p">Manipulating the DOM structure of controls rendered by <span class="ph"><span class="ph pname">SAPUI5</span></span> can result
+in undesired behavior and only has a temporary effect. Changes will be overridden after the next rerendering or the DOM might change
+in a future version of <span class="ph"><span class="ph pname">SAPUI5</span></span>, which can break your code. In addition,
+your DOM changes could break the code of the <span class="ph"><span class="ph pname">SAPUI5</span></span> control if it relies
+on a certain structure.</p>
+<p class="p">If you need to manipulate the DOM of an <span class="ph"><span class="ph pname">SAPUI5</span></span> control, attach a delegate
+to the <samp class="ph codeph">afterRendering</samp> hook of the control, safeguard your code against DOM changes, but still be prepared to have to
+rework your code at any time when the DOM structure (which is in no way guaranteed to remain stable!) changes. The adaptation should
+be covered by your automated tests.</p>
+<p class="p">Even <samp class="ph codeph">onAfterRendering</samp> may not be called when a control handles certain property changes without complete
+rerendering.</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio030fcd14963048218488048f407f8f34__table_ejg_hdj_jq" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Examples</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d312123e498">Bad Examples</th>
+<th class="entry" style="vertical-align:top;" id="d312123e501">Good Example</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d312123e498 "><samp class="ph codeph">oControl.$().find(&quot;.sapMLabel&quot;)[0].innerHTML = &quot;reallybad&quot;;</samp></td>
+<td class="entry" style="vertical-align:top;" headers="d312123e501 ">
+<pre class="pre codeblock prettyprint lang-js">
+oControl.addEventDelegate({
+	&quot;onAfterRendering&quot;: function() {
+		var $label = oControl.$().find(&quot;.sapMLabel&quot;);
+		if (/* sanity check whether the change still makes sense */) { 
+		      // TODO: re-test after UI5 updates, create automated test
+			$label.text(&quot;Better&quot;);
+		}
+	}
+});</pre>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d312123e498 "><samp class="ph codeph">oControl.$().find(&quot;.sapMLabel&quot;).remove();</samp></td>
+<td class="entry" style="vertical-align:top;" headers="d312123e501 ">&#xA0;</td>
+</tr>
+</tbody></table></div>
+</section></div>
+<div class="section collapsible" id="loio030fcd14963048218488048f407f8f34__5"><section class="section collapsible" type="Don&apos;t attach DOM event handlers"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t attach DOM event handlers</h2>
+
+<p class="p">Use <samp class="ph codeph">attachBrowserEvent()</samp> if you need to listen to any DOM event on <span class="ph"><span class="ph pname">SAPUI5</span></span> controls. An even better approach is to use
+<samp class="ph codeph">addEventDelegate()</samp> for the most important event types instead, as it avoids additional event registrations and
+listens to the regular <span class="ph"><span class="ph pname">SAPUI5</span></span> event dispatching.</p>
+<p class="p">If you are creating event handlers in custom controls, you can use listen to DOM events directly, but make sure that the listeners are
+properly deregistered in <samp class="ph codeph">onBeforeRendering()</samp> and in <samp class="ph codeph">exit()</samp>, and registered in
+<samp class="ph codeph">onAfterRendering()</samp>.</p>
+<p class="p">Good example for arbitrary events:</p>
+<pre class="pre codeblock prettyprint lang-js">
+oControl.attachBrowserEvent(&quot;mousemove&quot;, function() {
+	// do something
+});</pre>
+<p class="p">Good example for wide but limited selection of browser events:</p>
+<pre class="pre codeblock prettyprint lang-js">
+oControl.addEventDelegate({
+        onmouseover:function() {
+            // do something
+        }
+    });</pre>
+<p class="p">See also: <a class="xref" href="../../#/api/sap.ui.core.Control/methods/attachBrowserEvent" target="_top" alt="#/api/sap.ui.core.Control/methods/attachBrowserEvent" title="#/api/sap.ui.core.Control/methods/attachBrowserEvent">sap.ui.core.Control - attachBrowserEvent</a> and <a class="xref" href="../../#/api/sap.ui.core.Element/methods/addEventDelegate" target="_top" alt="#/api/sap.ui.core.Element/methods/addEventDelegate" title="#/api/sap.ui.core.Element/methods/addEventDelegate">sap.ui.core.Element - addEventDelegate</a>.</p>
+</section></div>
+<div class="section collapsible" id="loio030fcd14963048218488048f407f8f34__6"><section class="section collapsible" type="Don&apos;t create global IDs (when running with other views or apps)"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t create global IDs (when running with other views or apps)</h2>
+
+<p class="p">When you create JSViews or applications that will be running together with views or applications from other sources (that are not owned
+by you), or JSViews that will be instantiated several times in parallel, you must not create stable IDs for your controls, fragments,
+or views in <span class="ph"><span class="ph pname">SAPUI5</span></span>. Doing so might result in duplicate ID errors that
+will break your app. Especially when running together with other apps, there could be name clashes or other errors.</p>
+<p class="p">Use the <samp class="ph codeph">createId()</samp> function of a view or controller instead. This is done automatically in XMLViews and JSONViews. The
+<samp class="ph codeph">createId()</samp> function adds the View ID as a prefix, thus recursively ensuring uniqueness of the ID (for example:
+<samp class="ph codeph">__page0--__dialog0</samp>).</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio030fcd14963048218488048f407f8f34__table_lvp_52j_jq" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Examples</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d312123e633">Bad Example (Inside a JSView)</th>
+<th class="entry" style="vertical-align:top;" id="d312123e636">Good Example (Inside a JSView)</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d312123e633 ">
+<pre class="pre codeblock prettyprint lang-js">
+createContent: function(oController) {
+	var btn = new sap.m.Button(&quot;myBtn&quot;, {text: &quot;Hello&quot;});
+	return btn;
+}</pre>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d312123e636 ">
+<pre class="pre codeblock prettyprint lang-js">
+createContent: function(oController) {
+	var btn = new sap.m.Button(this.createId(&quot;myBtn&quot;), {text: &quot;Hello&quot;});
+	return btn;
+}</pre>
+</td>
+</tr>
+</tbody></table></div>
+<p class="p">See also: <a class="xref" href="../../#/api/sap.ui.core.mvc.View/methods/createId" target="_top" alt="#/api/sap.ui.core.mvc.View/methods/createId" title="#/api/sap.ui.core.mvc.View/methods/createId">sap.ui.core.mvc.View - createId</a>.</p>
+</section></div>
+<div class="section collapsible" id="loio030fcd14963048218488048f407f8f34__7"><section class="section collapsible" type="Don&apos;t forget about control lifecycle management"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t forget about control lifecycle management</h2>
+
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> controls are kept alive until they are destroyed, so lifecycle
+management of controls is important since multiple apps can be opened and closed in the same user session. Controls that are not
+destroyed cause memory leaks and may slow down the browser after prolonged use.</p>
+<p class="p">Also clean up internal structures in controllers, views and your custom controls.</p>
+<p class="p">See also: <a class="xref" href="../../#/api/sap.ui.core.Element/methods/destroy" target="_top" alt="#/api/sap.ui.core.Element/methods/destroy" title="#/api/sap.ui.core.Element/methods/destroy">sap.ui.core.Element - destroy</a> (for applications) and <a class="xref" href="../../#/api/sap.ui.core.Element/methods/exit" target="_top" alt="#/api/sap.ui.core.Element/methods/exit" title="#/api/sap.ui.core.Element/methods/exit">sap.ui.core.Element
+- exit</a> (for custom control implementation).</p>
+</section></div>
+<div class="section collapsible" id="loio030fcd14963048218488048f407f8f34__8"><section class="section collapsible" type="Don&apos;t hard code or concatenate strings that need to be translatable"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t hard code or concatenate strings that need to be translatable</h2>
+
+<p class="p">Hard coding UI strings will exclude them from translation. In addition, concatenating translatable strings in applications might lead
+to errors in internationalization: the texts in question might have a different translation order in other languages and will then be
+syntactically wrong.</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio030fcd14963048218488048f407f8f34__table_yyd_ggj_jq" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Examples</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d312123e718">Bad Example</th>
+<th class="entry" style="vertical-align:top;" id="d312123e721">Good Example</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d312123e718 ">
+<p class="p">Using separate texts like &quot; you selected &quot; and &quot; items &quot; in the translation file to construct sentences like: &quot; you
+selected &quot; + 10 + &quot;items &quot;. This would lead to a wrong word order in languages where the verb needs to be at the
+end of the sentence, for example.</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d312123e721 ">
+<p class="p">Using a complete sentence including a placeholder in the translation file: &quot; you selected {0} items &quot;. This allows
+translators to change the word order and the position of the inserted placeholder value.</p>
+</td>
+</tr>
+</tbody></table></div>
+</section></div>
+<div class="section collapsible" id="loio030fcd14963048218488048f407f8f34__9"><section class="section collapsible" type="Don&apos;t forget about proper &quot;this&quot; handling"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t forget about proper &quot;this&quot; handling</h2>
+
+<p class="p">For developers new to JavaScript, it is often confusing to understand how the &quot;this&quot; keyword behaves. In event handlers in particular,
+but also for other callback functions, the &quot;this&quot;-pointer must be used correctly, so make sure you check what it actually refers to.
+Without proper usage of the execution context, unexpected results can occur (this-pointer might be the global window object or a
+different control).</p>
+</section></div>
+<div class="section collapsible" id="loio030fcd14963048218488048f407f8f34__10"><section class="section collapsible" type="Don&apos;t use console.log()"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t use <samp class="ph codeph">console.log()</samp></h2>
+
+<p class="p">There is a native browser API available for logging errors and warnings in the developer console of your browser
+(<samp class="ph codeph">console</samp>). Calling it directly is not recommended as it doesn&apos;t allow control over the amount of log entries that
+are created and it provides no criteria to associate a log entry with a specific topic or software component. Instead, add a
+dependency to the <samp class="ph codeph">sap/base/Log</samp> module and use its methods to write log entries, for example
+<samp class="ph codeph">Log.error</samp> or <samp class="ph codeph">Log.warning</samp>. Create a dedicated logger for a topic or use the
+<samp class="ph codeph">sComponent</samp> parameter of the log calls to assign the log entry to a topic. Use <samp class="ph codeph">Log.setLevel()</samp> to
+define the minimum severity to be logged.</p>
+<p class="p">Note that most errors and warnings in the developer console thrown by the <span class="ph"><span class="ph pname">SAPUI5</span></span> framework are potential bugs in your application and must be
+analyzed thoroughly!</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio030fcd14963048218488048f407f8f34__table_qyj_kjj_jq" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Examples</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d312123e807">Bad Example</th>
+<th class="entry" style="vertical-align:top;" id="d312123e810">Good Example</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d312123e807 "><samp class="ph codeph">console.error(&quot;Logon failed&quot;);</samp></td>
+<td class="entry" style="vertical-align:top;" headers="d312123e810 "><samp class="ph codeph">Log.error(&quot;Logon failed&quot;, &quot;&quot;, &quot;connectivity&quot;;)</samp></td>
+</tr>
+</tbody></table></div>
+<p class="p">See also: <a class="xref" href="../../#/api/module%3Asap%2Fbase%2FLog" target="_top" alt="#/api/module%3Asap%2Fbase%2FLog" title="#/api/module%3Asap%2Fbase%2FLog">Namespace
+sap/base/Log</a>.</p>
+</section></div>
+<div class="section collapsible" id="loio030fcd14963048218488048f407f8f34__11"><section class="section collapsible" type="Don&apos;t use timeouts"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t use timeouts</h2>
+
+<p class="p">Executing logic with timeouts is often a workaround for faulty behavior and does not fix the root cause. The timing that works for you
+may not work under different circumstances (other geographical locations with greater network latency, or other devices that have
+slower processors) or when the code is changed. Use callbacks or events instead, if available.</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio030fcd14963048218488048f407f8f34__table_skm_fkj_jq" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Examples</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d312123e863">Bad Example</th>
+<th class="entry" style="vertical-align:top;" id="d312123e866">Good Example</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d312123e863 ">
+<pre class="pre codeblock prettyprint lang-js">jQuery.ajax(&quot;someData.json&quot;);
+setTimeout(fnProcessResults, 300);</pre>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d312123e866 ">
+<pre class="pre codeblock prettyprint lang-js">jQuery.ajax(&quot;someData.json&quot;).done(fnProcessResults);</pre>
+</td>
+</tr>
+</tbody></table></div>
+</section></div>
+<div class="section collapsible" id="loio030fcd14963048218488048f407f8f34__12"><section class="section collapsible" type="Don&apos;t build apps without reasonable automated tests"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t build apps without reasonable automated tests</h2>
+
+<p class="p">This should not come as surprise, but it is very difficult to refactor or modify apps that do not have any (or have bad) automated test
+cases. There are substantial risks when QUnit and OPA tests are missing in applications.</p>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

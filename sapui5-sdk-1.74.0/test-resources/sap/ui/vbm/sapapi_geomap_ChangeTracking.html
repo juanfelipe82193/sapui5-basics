@@ -1,0 +1,346 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+	   	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 41%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 55%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+
+	var currentModel = 0;
+	
+	function onRemoveSpotVOs() {
+		var aVO = oVBI.getVos();
+		oVBI.removeVo(aVO[0]);
+		oVBI.removeVo(aVO[1]);
+	};	
+	
+	function onRemoveSpots() {
+		var aVO = oVBI.getVos();
+		var oData = oVBI.getModel().getData();
+		oData.Spots.splice(0, oData.Spots.length);
+		oVBI.getModel().setData(oData);
+		
+		aVO[1].removeAllItems();
+		
+	};	
+	
+	function onReplaceModel(){
+		if (!currentModel){
+			oOtherModel.setData(oOtherData);
+			oVBI.setModel( oOtherModel );
+		}else{
+			oModel.setData(oOrigData);
+			oVBI.setModel( oModel );
+		}
+		currentModel = !currentModel;
+	};
+	
+	function onRemoveSpot() {
+		if (!currentModel) {
+				var oData = oVBI.getModel().getData();
+				oData.Spots.splice(0, 2);
+				oVBI.getModel().setData(oData);
+			}
+		else{
+			alert("Change Model first!!");
+		}
+	};
+
+		function onClickOtherSpot(evt) {
+			alert("onClickOtherSpot");
+			evt.getSource().setType(sap.ui.vbm.SemanticType.Error);
+
+		};
+		function onRemoveOtherSpot(evt){
+			var a=oVBI.getVos();
+			a[1].removeAllItems();
+		};
+
+		function onAddSpot(){
+			var moscow = {
+				"key": "5",   
+				"labeltext": "Moscow",
+				"pos": "37.617370;55.751792;0",
+				"type": sap.ui.vbm.SemanticType.Success
+			};
+			var wien = {
+							"key": "6",   
+							"labeltext": "Vienna",
+							"pos": "16.371812;48.211449;0",
+							"type": sap.ui.vbm.SemanticType.Success
+						};
+			
+			var myOData = oVBI.getModel().getData();
+			myOData.Spots.push( moscow );
+			myOData.Spots.push( wien );
+			oVBI.getModel().setData(myOData);
+			
+		};
+		
+		function onAddOtherSpot(){
+			var a = oVBI.getVos();
+			a[1].addItem(
+			new sap.ui.vbm.Spot(/*"singleSpot2", */{
+				position: '31.235461;30.048340;0',
+				labelText: 'Cairo',
+				type: sap.ui.vbm.SemanticType.Default,
+				click: onClickOtherSpot
+			}));
+			 
+		};
+		
+		function onContextMenu(evt){
+			var k = evt.getSource().getBindingContext().getProperty('key');
+			var oData = oVBI.getModel().getData();
+			for (var nI = 0; nI < oData.Spots.length; ++nI) {
+				if (oData.Spots[nI].key === k) {
+					oData.Spots.splice(nI, 1);
+					break;
+				}
+			}
+			oVBI.getModel().setData(oData);
+		};
+		
+		function onClickSpot(evt) {
+			var k = evt.getSource().getBindingContext().getProperty('key');
+			var oData = oVBI.getModel().getData();
+			for (var nI = 0; nI < oData.Spots.length; ++nI) {
+				if (oData.Spots[nI].key === k) {
+					oData.Spots[nI].type = sap.ui.vbm.SemanticType.Error;
+				}
+			}
+			oVBI.getModel().setData(oData);
+
+
+		};
+		function onClickRoute(evt) {
+			// click on Area
+			alert("Route");
+		};
+		
+		function onChangeSuccessToWarning(){
+			var myOData = oVBI.getModel().getData();
+			for (var nI = 0; nI < myOData.Spots.length; ++nI) {
+				myOData.Spots[nI].type = sap.ui.vbm.SemanticType.Warning;
+			}
+			oVBI.getModel().setData(myOData);
+			
+			var a = oVBI.getVos();
+			var otherSpots = a[1].getItems();
+			for(var nJ = 0; nJ < otherSpots.length; ++nJ){
+				otherSpots[nJ].setType(sap.ui.vbm.SemanticType.Warning);
+			}
+			
+			
+			
+		};
+		
+
+		// have some data
+		var oOrigData = {
+			Spots: [
+				{
+					"key": "1",
+					"labeltext": "Berlin",
+					"pos": "13.407965;52.517906;0",
+					"type": sap.ui.vbm.SemanticType.Success
+				}, {
+					"key": "2",
+					"labeltext": "Madrid",
+					"pos": "-3.704257;40.418071;0",
+					"type": sap.ui.vbm.SemanticType.Success
+				}, {
+					"key": "3",
+					"labeltext": "Paris",
+					"pos": "2.347899;48.855675;0",
+					"type": sap.ui.vbm.SemanticType.Success
+				},{
+					"key": "4",
+					"labeltext": "Munich",
+					"pos": "11.546641;48.133355;0",
+					"type": sap.ui.vbm.SemanticType.Success
+				}
+			],
+			Routes: [
+				{
+					"key": "1",
+					"end": "1",
+					"pos": "-108.521059;49.506408;0;-95.815190;55.967717;0",
+					"color": "RGB(255,0,0)"
+				}, {
+					"key": "2",
+					"end": "1",
+					"pos": "-106.713626;40.036118;0;-95.639409;42.285526;0",
+					"color": "RGB(0,0,255)"
+				}
+			]
+
+		};
+
+		var oOtherData = {
+			Spots: [
+				{
+					"key": "1",
+					"labeltext": "New Data Model:Berlin",
+					"pos": "13.407965;52.517906;0",
+					"type": sap.ui.vbm.SemanticType.Success
+				}, {
+					"key": "2",
+					"labeltext": "New Data Model:Madrid",
+					"pos": "-3.704257;40.418071;0",
+					"type": sap.ui.vbm.SemanticType.Success
+				}
+			],
+			Routes: [
+				{
+					"key": "1",
+					"end": "1",
+					"pos": "-108.521059;49.506408;0;-95.815190;55.967717;0",
+					"color": "RGB(255,0,0)"
+				}
+			]
+
+		};
+
+		// create model and set the data
+		var oModel = new sap.ui.model.json.JSONModel();
+		oModel.setData(oOrigData);
+
+		var oOtherModel = new sap.ui.model.json.JSONModel();
+		oOtherModel.setData(oOtherData);
+
+		// create geomap and bind to model
+		var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+			width: "1024px",
+			height: "600px",
+			initialZoom: "3",
+			initialPosition: "-41.225735;35.659006;0.0",
+			vos: [
+				new sap.ui.vbm.Spots("Spots", {
+					minSel: "0",
+					maxSel: "0",
+					items: {
+						path: "/Spots",
+						template: new sap.ui.vbm.Spot({
+							key: '{key}',
+							position: '{pos}',
+							labelText: '{labeltext}',
+							type: '{type}',
+							click: onClickSpot,
+							contextMenu: onContextMenu
+						})
+					}
+				}),
+
+				new sap.ui.vbm.Spots("otherSpots", {
+					minSel: "0",
+					maxSel: "0",
+					items: [
+						new sap.ui.vbm.Spot("otherSpot", {
+							position: '-0.127697;51.509331;0',
+							labelText: 'London',
+							type: sap.ui.vbm.SemanticType.Default,
+							click: onClickOtherSpot
+						})
+					]
+				}),
+
+				new sap.ui.vbm.Routes("routes", {
+					items: {
+						path: "/Routes",
+						template: new sap.ui.vbm.Route({
+							position: '{pos}',
+							end: '{end}',
+							color: '{color}',
+							click: onClickRoute
+						})
+					}
+				})
+			]
+		});
+
+		oVBI.setModel(oModel);
+		oVBI.placeAt("content");
+		oVBI.setMapConfiguration(JSON.parse(localStorage.getItem('map')));
+	</script>
+
+	<body class="sapUiBody" >
+		<h1>Visual Business GeoMap Sample for Change Tracking </h1>
+			<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test GeoMap tracking of VO changes.</p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+			<li>Check that the GeoMap control loads with multiple types of Visual Objects.</li>
+			<li> Click "Remove the Spots Berlin/Madrid" and check that both of these spots are removed from the GeoMap.</li>
+			<li> Click "Remove All Spots" and check that all of the spots are removed from the GeoMap.</li>
+			<li> Remove both Spot type VOs. This mean the map should show <b>no</b> spots. We have two types: default and success. When we click this button we remove all spots with these 2 types.</li>
+			<li> Click "Replace model" and check that there is a change in VO position. <i>Since the model data changes the positions of the VOs such as Spots will also change.</i></li>
+		<li> Click on "set Warning State" and check that all spot types change to warning.</li>
+			<li>Click "Add Moscow/Vienna" and check that two new spots are added in these two locations on the GeoMap.</li>
+			<li>Click Remove Default Spot(s)" and check that all spots with spot type <b> default</b> are removed. You should only see spot types success.</li>
+			<li>Click Add Default Spot(s)" and check that a new spot is added in location Cairo. Check that the spot type is default.</li>
+				</ol>
+		</div>
+		<div id="description2">
+			<br>
+					 <button id="RemoveSpotMadrid" onClick="onRemoveSpot()">Remove the Spots Berlin/Madrid</button>
+		 <button id="RemoveSpots" onClick="onRemoveSpots()">Remove all Spots</button>
+		 <button id="RemoveSpotVOs" onClick="onRemoveSpotVOs()">Remove both Spot VOs</button>
+		 <button id="ReplaceModel" onClick="onReplaceModel()">Replace Model</button>
+		 <button id="changeSuccessToWarning" onClick="onChangeSuccessToWarning()">Set Warning State</button>
+		 <button id="addSpot" onClick="onAddSpot()">Add Moscow/Vienna</button>
+		 <button id="removeOtherSpot" onClick="onRemoveOtherSpot()">Remove Default Spot(s)</button>
+		 <button id="addSingleSpot" onClick="onAddOtherSpot()">Add Default Spot</button>
+		<div id="content"></div>
+		<br />
+
+			</div>
+	</body>
+</html>

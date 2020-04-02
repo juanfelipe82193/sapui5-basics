@@ -1,0 +1,143 @@
+<mvc:View
+    controllerName="sap.ushell.applications.PageComposer.controller.PageDetailEdit"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.f"
+    xmlns:mvc="sap.ui.core.mvc"
+    core:require="{ formatMessage: 'sap/base/strings/formatMessage' }">
+    <f:DynamicPage
+        id="pageDetailEdit"
+        fitContent="true"
+        headerExpanded="{/headerExpanded}"
+        class="sapUshellPageLayout sapUiNoContentPadding">
+        <f:title>
+            <f:DynamicPageTitle id="dynamicPageTitle">
+                <f:heading>
+                    <Title id="pageId" text="{/page/content/id}" />
+                </f:heading>
+                <f:expandedContent>
+                    <HBox displayInline="true" id="hboxExpanded">
+                        <ObjectAttribute id="objectAttributeDescriptionExpanded" text="{/page/content/description}" />
+                        <!-- TBD: make visible when the role ID is available -->
+                        <ObjectAttribute
+                            id="objectAttributeRoleExpanded"
+                            visible="false"
+                            title="{i18n>Label.AssignedRole}"
+                            text=""
+                            class="sapUiLargeMarginBegin" />
+                    </HBox>
+                </f:expandedContent>
+                <f:snappedContent>
+                    <!-- Maximize working area when the header is snapped -->
+                </f:snappedContent>
+                <f:actions>
+                    <Button
+                        id="buttonEditHeader"
+                        text="{i18n>Button.EditHeader}"
+                        type="Transparent"
+                        press=".openEditPageHeaderDialog">
+                        <customData>
+                            <core:CustomData key="help-id" value="FLPPage-manage-PageDetailEdit-Button-EditHeader" writeToDom="true"/>
+                        </customData>
+                    </Button>
+                </f:actions>
+                <f:navigationActions>
+                    <Button
+                        id="buttonPreview"
+                        text="{i18n>Button.PagePreview}"
+                        type="Transparent"
+                        visible="{SupportedOperationModel>/previewSupported}"
+                        press=".preview">
+                        <customData>
+                            <core:CustomData key="help-id" value="FLPPage-manage-PageDetailEdit-Button-PagePreview" writeToDom="true"/>
+                        </customData>
+                    </Button>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader id="dynamicPageHeader" pinnable="false">
+                <core:Fragment fragmentName="sap.ushell.applications.PageComposer.view.PageInfo" type="XML"/>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <l:DynamicSideContent
+                id="layoutContent"
+                sideContentFallDown="BelowM"
+                sideContentPosition="End"
+                containerQuery="true"
+                showSideContent="{/catalogsExpanded}">
+                <l:mainContent>
+                    <Panel
+                        id="panel"
+                        height="100%"
+                        accessibleRole="Region"
+                        backgroundDesign="Transparent"
+                        class="sapUiNoContentPadding">
+                        <headerToolbar>
+                            <OverflowToolbar id="layoutHeader" design="Transparent" height="3rem" class="sapUshellPageLayoutHeader">
+                                <Title text="{i18n>Title.Layout}" id="layoutTitle" />
+                                <Button
+                                    id="layoutButtonMessage"
+                                    icon="sap-icon://message-popup"
+                                    visible="{= !!(${/messages}.length) }"
+                                    tooltip="{
+                                        parts: ['i18n>Button.Issues', { path: '/messages', formatter: '._formatLength' } ],
+                                        formatter: 'formatMessage'
+                                    }"
+                                    text="{= ${/messages}.length }"
+                                    type="Emphasized"
+                                    press=".handleMessagePopoverPress">
+                                    <customData>
+                                        <core:CustomData key="help-id" value="FLPPage-manage-PageDetailEdit-Button-ErrorMessage" writeToDom="true"/>
+                                    </customData>
+                                </Button>
+                                <ToolbarSpacer id="layoutHeaderSpacer" />
+                                <Button id="layoutButtonSave" text="{i18n>Button.Save}" type="Emphasized" press=".onSave" enabled="{/dirtyPage}">
+                                    <customData>
+                                        <core:CustomData key="help-id" value="FLPPage-manage-PageDetailEdit-Button-Save" writeToDom="true"/>
+                                    </customData>
+                                </Button>
+                                <Button id="layoutButtonCancel" text="{i18n>Button.Cancel}" type="Transparent" press=".onCancel">
+                                    <customData>
+                                        <core:CustomData key="help-id" value="FLPPage-manage-PageDetailEdit-Button-Cancel" writeToDom="true"/>
+                                    </customData>
+                                </Button>
+                                <Button
+                                        id="contextSelectorButton"
+                                        text="{
+                                            parts:['i18n>Button.ContextSelector', 'roles>/activeRoleContextInfo'],
+                                            formatter: 'formatMessage'}"
+                                        type="Transparent"
+                                        press=".onOpenContextSelector">
+                                    <customData>
+                                        <core:CustomData
+                                                key="help-id"
+                                                value="FLPPage-manage-PageDetailEdit-Button-OpenContextSelector"
+                                                writeToDom="true"/>
+                                    </customData>
+                                </Button>
+                                <Button
+                                    id="toggleCatalogsButton"
+                                    press=".onUpdateSideContentVisibility"
+                                    text = "{= ${/catalogsExpanded} ? ${i18n>Button.HideCatalogs} : ${i18n>Button.ShowCatalogs}}"
+                                    type="Transparent">
+                                    <customData>
+                                        <core:CustomData key="help-id" value="FLPPage-manage-PageDetailEdit-Button-ShowCatalog" writeToDom="true"/>
+                                    </customData>
+                                </Button>
+                            </OverflowToolbar>
+                        </headerToolbar>
+                        <content>
+                            <core:Fragment fragmentName="sap.ushell.applications.PageComposer.view.Page" type="XML" />
+                        </content>
+                    </Panel>
+                </l:mainContent>
+                <l:sideContent>
+                    <core:Fragment fragmentName="sap.ushell.applications.PageComposer.view.TileSelector" type="XML" />
+                </l:sideContent>
+            </l:DynamicSideContent>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>

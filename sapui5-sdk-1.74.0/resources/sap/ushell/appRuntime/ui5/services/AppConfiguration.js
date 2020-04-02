@@ -1,0 +1,1 @@
+sap.ui.define(["sap/ushell/services/AppConfiguration","sap/ushell/appRuntime/ui5/AppRuntimeService"],function(A,a){"use strict";function b(){sap.ushell.services.AppConfiguration=this;A.constructor.call(this);this.setApplicationFullWidth=function(v){a.sendMessageToOuterShell("sap.ushell.services.AppConfiguration.setApplicationFullWidth",{"bValue":v});};}return new b();},true);

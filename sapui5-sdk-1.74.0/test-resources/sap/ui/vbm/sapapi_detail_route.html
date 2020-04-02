@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- <link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" /> -->
+
+	<script src="../../../../resources/sap-ui-core.js" id="Script1" data-sap-ui-libs="sap.ui.commons,sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		.col {
+			color: red;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+		var oPanel = null;
+
+		function onOpenWindow(oEvent) {
+			if (oEvent.getParameter("id") != "Detail1")
+				return;
+
+			// create a panel instance
+			if (!oPanel) {
+				oPanel = new sap.ui.commons.Panel({
+					width: "350px",
+					showCollapseIcon: false
+				});
+				oPanel.setAreaDesign(sap.ui.commons.enums.AreaDesign.Plain);
+				oPanel.setBorderDesign(sap.ui.commons.enums.BorderDesign.None);
+
+				//Set the title of the panel
+				oPanel.setTitle(new sap.ui.core.Title({
+					text: "Location Data"
+				}));
+				//As alternative if no icon is desired also the following shortcut might be possible:
+				//oPanel.setText("Contact Data");
+
+				//Create a matrix layout with 2 columns
+				var oMatrix = new sap.ui.commons.layout.MatrixLayout({
+					layoutFixed: true,
+					width: '300px',
+					columns: 2
+				});
+				oMatrix.setWidths('100px', '200px');
+
+				//Create a simple form within the layout
+				var oLabel = new sap.ui.commons.Label({
+					text: 'Name'
+				});
+				var oInput = new sap.ui.commons.TextField({
+					value: 'Mustermann',
+					width: '100%'
+				});
+				oLabel.setLabelFor(oInput);
+				oMatrix.createRow(oLabel, oInput);
+
+				oLabel = new sap.ui.commons.Label({
+					text: 'First Name'
+				});
+				oInput = new sap.ui.commons.TextField({
+					value: 'Max',
+					width: '100%'
+				});
+				oLabel.setLabelFor(oInput);
+				oMatrix.createRow(oLabel, oInput);
+
+				//Add the form to the panels content area
+				oPanel.addContent(oMatrix);
+
+				//Add some buttons to the panel header
+				oPanel.addButton(new sap.ui.commons.Button({
+					text: 'Save'
+				}));
+				oPanel.addButton(new sap.ui.commons.Button({
+					text: 'Cancel'
+				}));
+			}
+
+			//Attach the panel to the page
+			oPanel.placeAt(oEvent.getParameter("contentarea").id);
+		};
+
+		function onCloseWindow(oEvent) {
+			// when the panel should be destroyed it can be done.............//
+			// if( oPanel )
+			//   oPanel.destroy();
+			// oPanel = null;
+		};
+
+		// creation of visual business...........................//
+		sap.ui.localResources("vbitestapp");
+
+		function onSubmit(e) {
+			if (evtoutput.innerText !== undefined)
+				evtoutput.innerText = e.getParameter("data");
+			else
+			if (evtoutput.textContent !== undefined)
+				evtoutput.textContent = e.getParameter("data"); // due to ff
+		};
+
+		var oVBI1 = new sap.ui.vbm.VBI('ds', {
+			width: 1024,
+			height: 620,
+			openWindow: onOpenWindow,
+			submit: onSubmit // set the event handler
+		});
+		oVBI1.placeAt("content");
+
+		// load the json and set the default text area text
+		var dat = $.getJSON("media/vbdetailroute/main.json", function(dat) {
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array) {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(dat);
+		});
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: Sample should show the detail window capabilities</h1>
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test route detail window capabilities.</p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+			<!--<li> The detail window content is filled with UI5 controls.</li>-->
+			<li> Check that the map loads with a Route and labelText.</li>
+			<img src="img/RouteWin1.jpg" alt="text for Thumbnail" style="width:450px;height:280px;">
+			<li> Check that when you hover over the route it changes colour.</li>
+			<img src="img/RouteWin2.jpg" alt="text for Thumbnail" style="width:450px;height:280px;">
+			<li> Click "Custom Content" and check that a detail window appears with a form (Name and First Name) similar to the image below.</li>
+			<img src="img/RouteWin3.jpg" alt="text for Thumbnail" style="width:450px;height:200px;">
+			<li> Click "Scene Content" and check that a detail window appears with content similar to the image below.</li>
+			<img src="img/RouteWin4.jpg" alt="text for Thumbnail" style="width:400px;height:300px;">
+			<li> Click "No Content" and check that a detail window appears with no content. It should only have a title.</li>
+			<img src="img/RouteWin5.jpg" alt="text for Thumbnail" style="width:300px;height:100px;">
+			<li> Click on all the 3 above buttons again, one by one, and remove the detail window by selecting the button "Clear Map".</li>
+		</ol>
+
+	</div>
+	<div id="description2">
+		<script>
+			//...........................................................//
+			// setting some objects......................................//
+
+			function onClearMap() {
+				var dat = $.getJSON("media/vbdetailroute/clear.json", function(dat) {
+					oVBI1.load(dat);
+				});
+			};
+
+			function onDetailWindow1() {
+				var dat = $.getJSON("media/vbdetailroute/opendetail1.json", function(dat) {
+					oVBI1.load(dat);
+				});
+			};
+
+			function onDetailWindow2() {
+				var dat = $.getJSON("media/vbdetailroute/opendetail2.json", function(dat) {
+					oVBI1.load(dat);
+				});
+			};
+
+			function onDetailWindow3() {
+				var dat = $.getJSON("media/vbdetailroute/opendetail3.json", function(dat) {
+					oVBI1.load(dat);
+				});
+			};
+
+		</script>
+		<br>
+		<button onclick=onClearMap()>Clear Map</button>
+		<button onclick=onDetailWindow1()>Custom Content</button>
+		<button onclick=onDetailWindow2()>Scene Content</button>
+		<button onclick=onDetailWindow3()>No Content</button>
+		<table>
+			<br>
+			<tr>
+				<br>
+				<td>
+					<div id="content"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h6>Event:</h6>
+					<br>
+					<textarea style="width:100%;box-sizing:border-box" id="evtoutput" rows="8"></textarea>
+				</td>
+			</tr>
+		</table>
+
+	</div>
+</body>
+
+</html>

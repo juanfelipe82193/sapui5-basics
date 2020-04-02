@@ -1,0 +1,36 @@
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+						 xmlns:core="sap.ui.core"
+						 xmlns="sap.m"
+						 xmlns:mdc="sap.ui.mdc"
+						 xmlns:log="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+						 xmlns:unittest="http://schemas.sap.com/sapui5/preprocessorextension/sap.fe.unittesting/1"
+						 template:require="{
+							MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+							COMMON: 'sap/fe/macros/CommonHelper',
+							FIELD: 'sap/fe/macros/field/FieldHelper',
+							ID: 'sap/fe/macros/StableIdHelper'
+						 }">
+	<template:with path="entitySet>@sapui.name" var="esName">
+		<template:if test="{property>@@COMMON.isPropertyFilterable}">
+		<template:with path="property>" helper="FIELD.valueHelpProperty" var="valueHelpProperty">
+			<mdc:FilterField
+				unittest:id="UnitTest::FilterField"
+				log:sourcePath="/{esName>}{this>navigationPrefix}/{property>@@FIELD.propertyName}"
+				id="{= ID.generate([${this>idPrefix},${property>@@FIELD.propertyName}]) }"
+				label="{property>@com.sap.vocabularies.Common.v1.Label}"
+				dataType="{property>$Type}"
+				display="{= (${property>@com.sap.vocabularies.Common.v1.ValueListReferences} ||
+						${property>@com.sap.vocabularies.Common.v1.ValueListMapping} ||
+						${property>@com.sap.vocabularies.Common.v1.ValueList}) ? FIELD.displayMode(${property>@}, ${entitySet>./@}) : 'Value'}"
+				maxConditions="{property>@@FIELD.maxConditions}"
+				fieldHelp="{= ${property>$Type} !== 'Edm.Boolean' ? ID.generate([${this>vhIdPrefix} || 'FFVH', ((${property>@@FIELD.propertyName} !== ${valueHelpProperty>@@FIELD.propertyName}) ? (${property>@@FIELD.propertyName} + '::' + ${valueHelpProperty>@@FIELD.propertyName}) : ${valueHelpProperty>@@FIELD.propertyName})]) : undefined}"
+				conditions="{parts : [{path: 'property>'}, {path: 'esName>'}, {path: 'this>propertyPath'}], formatter: 'FIELD.getConditionsBinding'}"
+				dataTypeConstraints="{property>@@FIELD.constraints}"
+				dataTypeFormatOptions="{property>@@FIELD.formatOptions}"
+				required="{property>@@FIELD.isRequiredInFilter}"
+				editMode="{= ${_valueList>Parameters} ? FIELD.getFieldEditModeInValueHelp(${_valueList>}, ${property>@@FIELD.propertyName}) : undefined}"
+			/>
+		</template:with>
+		</template:if>
+	</template:with>
+</core:FragmentDefinition>

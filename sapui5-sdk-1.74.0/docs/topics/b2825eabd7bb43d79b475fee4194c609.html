@@ -1,0 +1,380 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Interaction Tracking for Performance Measurement</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="You can identify performance issues in your application by tracking the interaction that is performed on the UI."><meta name="description" content="You can identify performance issues in your application by tracking the interaction that is performed on the UI."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"dfe4f79843c44c40b3fb95ebffb65646.html","previousTopicHref":"78880c09a1954a02b49c21357d45c91f.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loiob2825eabd7bb43d79b475fee4194c609"><h1 class="title topictitle1" hidden>Interaction Tracking for Performance Measurement</h1><div class="body conbody"><p class="shortdesc" hidden>You can identify performance issues in your application by tracking the interaction that is performed on the UI.</p>
+<p class="p"><dfn class="term">Interaction</dfn> in this context means a closed step in a sequence of actions that a user performs on the UI, for example, everything that happens
+between two clicks on two different buttons.</p>
+<p class="p">To <span class="ph emphasis emphasis">start</span> interaction tracking, use
+<samp class="ph codeph">Interaction.setActive(true)</samp> from module
+<span class="keyword apiname">sap/ui/performance/trace/Interaction</span>. To map the interaction data
+to the data of <span class="keyword apiname">sap/ui/performance/Measurement</span>, you have to explicitly
+set <samp class="ph codeph">sap-ui-measure=true</samp>.</p>
+<p class="p">To <span class="ph emphasis emphasis">retrieve</span> the result of the interaction measurement, use
+<samp class="ph codeph">Interaction.getAll()</samp> from module
+<span class="keyword apiname">sap/ui/performance/trace/Interaction</span>. This returns an array of
+all interactions that occurred and their measurement.</p>
+<p class="p">You can use <samp class="ph codeph">Interaction.filter</samp> from module
+<span class="keyword apiname">sap/ui/performance/trace/Interaction</span> to filter the interaction
+measurements according to a filter function (<samp class="ph codeph">fnFilter</samp>).</p>
+<div class="section"><section class="section" type="Example of an Interaction Measurement"><h2 class="section_title" style="font-size: 1.15em;">Example of an Interaction Measurement</h2>
+
+<pre class="pre codeblock prettyprint lang-js">InteractionMeasurement = {
+    event: &quot;click&quot;,             // event which triggered interaction
+    trigger: &quot;Button1&quot;,         // control which triggered interaction
+    component: &quot;my.Component&quot;,  // component or app identifier
+    start : 0,                  // interaction start
+    end: 0,                     // interaction end
+    navigation: 0,              // sum over all navigation times on the critical path
+    roundtrip: 0,               // time from first request sent to last received response end
+    processing: 0,              // client processing time
+    duration: 0,                // interaction duration
+    requests: [],               // Performance API requests during interaction
+    measurements: [],           // sap/ui/performance/Measurement measurements
+    sapStatistics: [],          // SAP Statistics for OData
+    requestTime: 0,             // sum over all requests in the interaction
+    networkTime: 0,             // request time minus server time from the header
+    bytesSent: 0,               // sum over all requests bytes
+    bytesReceived: 0,           // sum over all response bytes
+    requestCompression: false,  // true if all responses have been sent gzipped
+    busyIndication: 0           // summed GlobalBusyIndicator duration during this interaction
+}</pre>
+</section></div>
+<div class="section"><section class="section" type="Properties of Interaction Measurements"><h2 class="section_title" style="font-size: 1.15em;">Properties of Interaction Measurements</h2>
+
+<div class="table-wrapper tablenoborder"><table summary id="loiob2825eabd7bb43d79b475fee4194c609__table_wx1_pdf_mv" class="table" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Properties of Interaction Measurements</span></span></caption><colgroup><col width="18.33910034602076%"><col width="11.534025374855824%"><col width="70.12687427912341%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d297152e95">
+<p class="p">Property</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d297152e101">
+<p class="p">Type</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d297152e107">
+<p class="p">Description</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">event</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">String</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<div class="p">Event type which triggered the interaction. Allowed types are: <ul class="ul" id="loiob2825eabd7bb43d79b475fee4194c609__ul_kpc_mhg_mv">
+<li class="li">
+<p class="p"><samp class="ph codeph">mousedown</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">mouseup</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">click</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">keydown</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">keyup</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">keypress</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">touchstart</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">touchend</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">tap</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">mousewheel</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">scroll</samp></p>
+</li>
+</ul></div>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">trigger</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">String</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">ID of the element that triggered the action</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">component</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">String</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">ID of the app or name of the Component that contains the triggering element</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">start</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Number</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">Time stamp when interaction was started (in ms)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">end</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Number</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<div class="p">Time stamp when interaction has been finalized (in ms)<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">This is not always the start time plus the duration. The duration is determined depending on the heuristic
+determination of the processing time.</p></aside></div>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">navigation</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Number</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">Navigation time for all requests, calculated as difference from <samp class="ph codeph">startTime</samp> to <samp class="ph codeph">connectEnd</samp> of a
+<samp class="ph codeph">PerformanceTiming</samp> (in ms) </p>
+<p class="p">Requests that are started while another request is already in progress are ignored (see figure below).</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">roundtrip</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Number</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">Roundtrip time for a request, calculated as difference from <samp class="ph codeph">requestStart</samp> to <samp class="ph codeph">responseEnd</samp> of a
+<samp class="ph codeph">PerformanceTiming</samp> (in ms) </p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">processing</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Number</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">JavaScript processing time of an interaction. This is the time consumed when no requests are active. Although we also have JavaScript being processed
+while asynchronous requests are active, we only consider those to be relevant (in ms)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">duration</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Number</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">If a processing time could be determined duration is navigation plus roundtrip plus processing time. Otherwise it is navigation time plus roundtrip
+time, or end time minutes start time if network requests last longer than the actual interaction (in ms)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">requests</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">PerformanceTiming[]</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">All requests that occurred during the interaction, taken from the <span class="keyword apiname">NavigationTiming</span> API</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">measurements</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Measurement[]</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">Performance measurements (see <a class="xref" href="../../#/topic/78880c09a1954a02b49c21357d45c91f.html" title="You can use sap/ui/performance/Measurement to measure the performance of your JavaScript code." target="_top">Performance Measurement Using sap/ui/performance/Measurement Module</a>)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">sapStatistics</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Object[]</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">Map of request URL to corresponding <samp class="ph codeph">sap-statistics</samp> header as String ( format: <samp class="ph codeph">{ url: &quot;https://somehost.com/sap/data...&quot;,
+statistics: &quot;total=167,fw=167,app=0,gwtotal=167,gwhub=160,gwrfcoh=0,gwbe=7,gwapp=0,gwnongw=0&quot; }</samp>)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">requestTime</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Number</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">Sum over all request durations of this interaction, from <samp class="ph codeph">startTime</samp> to <samp class="ph codeph">responseEnd</samp> (in ms)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">networkTime</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Number</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">Average latency of the requests that occurred during the interaction, calculated using the <samp class="ph codeph">sap-perf-fesrec</samp> header that is sent (if
+available) by the back end with each response (in ms)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">bytesSent</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Number</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">Sum over all bytes sent with requests (content plus headers)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">bytesReceived</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Number</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">Sum over all bytes received with responses (content plus headers)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">requestCompression</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Boolean</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">Indicates if all requests during an interaction have been received in GNU zip format (&quot;gzipped&quot;)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d297152e95 ">
+<p class="p"><samp class="ph codeph">busyDuration</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e101 ">
+<p class="p"><samp class="ph codeph">Number</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d297152e107 ">
+<p class="p">Time how long a <samp class="ph codeph">GlobalBusyIndicator</samp> was rendered and hence blocking the UI during an interaction</p>
+</td>
+</tr>
+</tbody></table></div>
+</section></div>
+<div class="section"><section class="section" type="Calculation of Times"><h2 class="section_title" style="font-size: 1.15em;">Calculation of Times</h2><img class="inline  " id="loiob2825eabd7bb43d79b475fee4194c609__image_iz5_qhn_mv" src="loio9678404bdf5a4065ac270e76191984d0_LowRes.png"></section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/api/jQuery.sap.measure" target="_top" alt="#/api/jQuery.sap.measure" title="#/api/jQuery.sap.measure">API Reference: <samp class="ph codeph">jQuery.sap.measure</samp></a></div><div><a class="link" href="../../#/topic/78880c09a1954a02b49c21357d45c91f.html" title="You can use sap/ui/performance/Measurement to measure the performance of your JavaScript code." target="_top">Performance Measurement Using sap/ui/performance/Measurement Module</a></div><div><a class="extlink" href="http://help.sap.com/disclaimer?site=https://developer.mozilla.org/en/docs/Web/API/Navigation_timing_API" target="_blank" alt="https://developer.mozilla.org/en/docs/Web/API/Navigation_timing_API" title="https://developer.mozilla.org/en/docs/Web/API/Navigation_timing_API"><span class="keyword apiname">NavigationTiming</span> API on <span class="ph filepath">https://developer.mozilla.org</span><img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></div><div><a class="extlink" href="http://help.sap.com/disclaimer?site=https://www.w3.org/TR/2012/REC-navigation-timing-20121217" target="_blank" alt="https://www.w3.org/TR/2012/REC-navigation-timing-20121217" title="https://www.w3.org/TR/2012/REC-navigation-timing-20121217">Navigation Timing on <span class="ph filepath">https://www.w3.org/</span><img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

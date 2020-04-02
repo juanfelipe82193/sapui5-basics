@@ -1,0 +1,139 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Creating Control and Class Modules</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Modules do not only require and use functionality from other modules, they also expose their own functionality to the outside. In asynchronous module definition (AMD) syntax, there are several ways to expose such functionality."><meta name="description" content="Modules do not only require and use functionality from other modules, they also expose their own functionality to the outside. In asynchronous module definition (AMD) syntax, there are several ways to expose such functionality."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"7b52540d9d8c4e00b9723151622bbb64.html","previousTopicHref":"bd039ed5f99e4d3f8d020b0da62f9d85.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loioc78c07c094e04ccfaab659378a1707c7"><h1 class="title topictitle1" hidden>Creating Control and Class Modules</h1><div class="body conbody"><p class="shortdesc" hidden>Modules do not only require and use functionality from other modules, they also expose
+their own functionality to the outside. In asynchronous module definition (AMD) syntax,
+there are several ways to expose such functionality.</p>
+<p class="p"> However, <span class="ph"><span class="ph pname">SAPUI5</span></span> only
+supports the &quot;module return value&quot;.</p>
+<div class="p">If you want to export the &quot;module value&quot; of an AMD module under a global name, you have
+two options:<ul class="ul" id="loioc78c07c094e04ccfaab659378a1707c7__ul_sqy_w32_2z">
+<li class="li">You rely on the <span class="ph"><span class="ph pname">SAPUI5</span></span> methods that
+already do the exposure as a side effect, such as:<ul class="ul" id="loioc78c07c094e04ccfaab659378a1707c7__ul_esf_z32_2z">
+<li class="li">
+<p class="p">Classes created by the <samp class="ph codeph">extend</samp> method</p>
+</li>
+<li class="li">
+<p class="p">Libraries that call <samp class="ph codeph">initLibrary()</samp> in their
+<samp class="ph codeph">library.js</samp> module</p>
+</li>
+<li class="li">
+<p class="p">Renderers that are created with
+<samp class="ph codeph">sap.ui.core.Renderer.extend(&#x201C;&#x2026;.&#x201D;)</samp></p>
+</li>
+</ul></li>
+<li class="li">
+<p class="p">You set the fourth parameter <samp class="ph codeph">bExport of sap.ui.define(sModuleName, aDependencies, vFactory, bExport)</samp> to <samp class="ph codeph">true</samp>.
+This will expose the module value under the global name that is derived from
+the module name.</p>
+<p class="p">The global JavaScript namespace is based on a &quot;slash to dot replacement&quot;.</p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">The resulting namespace might not have the expected result if the AMD
+module name contains dots!</p></aside>
+</li>
+</ul></div>
+<p class="p">In control and class modules, you should not use global variables at all. When you derive
+a custom control from an existing superclass via the the <samp class="ph codeph">extend</samp> method,
+the resulting subclass is returned.</p>
+<p class="p">You can store the return value of the extend function in a local variable, make changes
+to the prototype and then return this variable as the modules return value.</p>
+<p class="p">JSDoc for the class should use the <samp class="ph codeph">@alias</samp> tag to make sure that the
+variable is known under the global name in the generated JSDoc.</p>
+<p class="p">The <samp class="ph codeph">extend</samp> function makes sure that the respective namespace is
+created:</p>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([&quot;sap/ui/base/Object&quot;, &quot;sap/ui/model/json/JSONModel&quot;], function (BaseObject, JSONModel) {
+  
+    var Foo = BaseObject.extend(&quot;foo.bar.MyClass&quot;, /** @lends foo.bar.MyClass */ {
+  
+      constructor: function(sId, mProperties) {
+        this.mId = sId;
+      }
+    });
+ 
+    Foo.prototype.ownMethod = function (a) {
+        return a * 2;
+    };
+  
+    // return the module value, in this example a class
+    return Foo;
+});</pre>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/f6fba4c6e1cb49c7b355319ac9c8d1cd.html" title="Full example of a class definition, including JSDoc" target="_top">Example for Defining a Class</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

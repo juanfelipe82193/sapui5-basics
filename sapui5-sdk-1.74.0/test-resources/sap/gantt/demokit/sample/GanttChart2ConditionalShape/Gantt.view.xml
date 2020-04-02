@@ -1,0 +1,60 @@
+<mvc:View
+		controllerName="sap.gantt.sample.GanttChart2ConditionalShape.Gantt"
+		height="100%"
+		xmlns="sap.gantt.simple"
+		xmlns:axistime="sap.gantt.axistime"
+		xmlns:config="sap.gantt.config"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:table="sap.ui.table">
+	<GanttChartWithTable id="gantt">
+		<axisTimeStrategy>
+			<axistime:FullScreenStrategy>
+				<axistime:totalHorizon>
+					<config:TimeHorizon
+							startTime="20181029000000"
+							endTime="20181129000000"/>
+				</axistime:totalHorizon>
+				<axistime:visibleHorizon>
+					<config:TimeHorizon
+							startTime="20181029000000"
+							endTime="20181129000000"/>
+				</axistime:visibleHorizon>
+			</axistime:FullScreenStrategy>
+		</axisTimeStrategy>
+		<table>
+			<table:TreeTable
+					selectionMode="Single"
+					visibleRowCountMode="Auto"
+					minAutoRowCount="12"
+					selectionBehavior="RowSelector"
+					enableColumnReordering="true"
+					rows="{
+						path: '/root',
+						parameters: {
+							arrayNames: ['children'],
+							numberOfExpandedLevels: 1
+						}
+					}">
+				<table:columns>
+					<table:Column label="Type" template="text" />
+				</table:columns>
+				<table:rowSettingsTemplate>
+					<GanttRowSettings rowId="{id}">
+						<shapes1>
+							<BaseConditionalShape activeShape="{= ${type} === 'chevron' ? 1 : 0}">
+								<shapes>
+									<BaseRectangle time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+												   endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+												   fill="@sapUiChartPaletteQualitativeHue6"/>
+									<BaseChevron time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+												   endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+												   fill="@sapUiChartPaletteQualitativeHue6"/>
+								</shapes>
+							</BaseConditionalShape>
+						</shapes1>
+					</GanttRowSettings>
+				</table:rowSettingsTemplate>
+			</table:TreeTable>
+		</table>
+	</GanttChartWithTable>
+</mvc:View>

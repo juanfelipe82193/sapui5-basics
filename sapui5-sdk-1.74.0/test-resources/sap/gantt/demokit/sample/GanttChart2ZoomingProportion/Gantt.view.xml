@@ -1,0 +1,62 @@
+<mvc:View
+		controllerName="sap.gantt.sample.GanttChart2ZoomingProportion.Gantt"
+		height="100%"
+		xmlns="sap.gantt.simple"
+		xmlns:axistime="sap.gantt.axistime"
+		xmlns:config="sap.gantt.config"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:m="sap.m"
+		xmlns:shapes="sap.gantt.simple.shapes"
+		xmlns:table="sap.ui.table">
+	<GanttChartContainer>
+		<toolbar>
+			<ContainerToolbar>
+				<m:Label text="Use Ctrl + Shift + MouseWheel to zoom" />
+			</ContainerToolbar>
+		</toolbar>
+		<GanttChartWithTable id="gantt" shapeSelectionMode="Single">
+			<axisTimeStrategy>
+				<axistime:ProportionZoomStrategy>
+					<axistime:totalHorizon>
+						<config:TimeHorizon
+								startTime="20181001000000"
+								endTime="20181129000000"/>
+					</axistime:totalHorizon>
+					<axistime:visibleHorizon>
+						<config:TimeHorizon
+								startTime="20181001000000"
+								endTime="20181129000000"/>
+					</axistime:visibleHorizon>
+				</axistime:ProportionZoomStrategy>
+			</axisTimeStrategy>
+			<table>
+				<table:TreeTable
+						selectionMode="Single"
+						visibleRowCountMode="Auto"
+						minAutoRowCount="12"
+						selectionBehavior="RowSelector"
+						enableColumnReordering="true"
+						rows="{
+						path: '/root',
+						parameters: {
+							arrayNames: ['children'],
+							numberOfExpandedLevels: 1
+						}
+					}">
+					<table:columns>
+						<table:Column label="" template="text" />
+					</table:columns>
+					<table:rowSettingsTemplate>
+						<GanttRowSettings rowId="{id}" shapes1="{path: 'tasks', templateShareable:false}">
+							<shapes1>
+								<shapes:Task time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+											 endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+											 type="{type}"/>
+							</shapes1>
+						</GanttRowSettings>
+					</table:rowSettingsTemplate>
+				</table:TreeTable>
+			</table>
+		</GanttChartWithTable>
+	</GanttChartContainer>
+</mvc:View>

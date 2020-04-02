@@ -1,0 +1,223 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Using the autoWait Parameter</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Configuring OPA to use autoWait parameter for all statements improves test stability and reduces the number of waitFor statements."><meta name="description" content="Configuring OPA to use autoWait parameter for all statements improves test stability and reduces the number of waitFor statements."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"9c22d2ada0414d97837b845e1e85ab86.html","previousTopicHref":"f2f843d375384d56bbf955a80ee66ab6.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loiofb487ef0f9bf41a3afdbd0cc97368873"><h1 class="title topictitle1" hidden>Using the <samp class="ph codeph">autoWait</samp> Parameter</h1><div class="body conbody"><p class="shortdesc" hidden>Configuring OPA to use <samp class="ph codeph">autoWait</samp> parameter for all statements improves
+test stability and reduces the number of <samp class="ph codeph">waitFor</samp> statements.</p>
+<div class="section" id="loiofb487ef0f9bf41a3afdbd0cc97368873__section_vnr_vln_2cb"><section class="section" type="Overview"><h2 class="section_title" style="font-size: 1.15em;">Overview</h2>
+
+<p class="p">OPA <samp class="ph codeph">autoWait</samp> parameter is available as of version 1.48. It is a good
+practice to enable it in your tests. By default, it is not enabled in order to keep
+old tests running.</p>
+<p class="p"><samp class="ph codeph">autoWait</samp> synchronizes test execution with the app. No interactions are
+attempted while the app is performing asynchronous work. This increases the
+probability that OPA statements succeed as they are only executed when the app is
+ready to respond.</p>
+<p class="p"><samp class="ph codeph">autoWait</samp> is used:</p>
+<ul class="ul" id="loiofb487ef0f9bf41a3afdbd0cc97368873__ul_rlg_rxj_wbb">
+<li class="li">
+<p class="p">When you retrieve a control with the intent to perform an action on it</p>
+</li>
+<li class="li">
+<p class="p">For every control search, when you explicitly set <samp class="ph codeph">autoWait</samp>
+to <samp class="ph codeph">true</samp></p>
+</li>
+</ul>
+<p class="p"><samp class="ph codeph">autoWait</samp> is applied before searching for a control, which means before OPA
+check functions and matchers. If there is no work to await, the controls are
+retrieved, then actions are executed on them and lastly the success function is
+called. If there is still pending work, matchers, actions, and success function are
+skipped and OPA retries the check until it succeeds or a timeout is reached.</p>
+<p class="p">Success functions are only called when controls are found, their state is valid and the app is
+responsive. We recommend that you use actions rather than the success function when
+interacting with a control. This ensures that the interaction is performed properly
+and the app is in a state that allows the interaction to be executed.</p>
+<p class="p"><samp class="ph codeph">autoWait</samp> covers several types of asynchronous work:</p>
+<ul class="ul" id="loiofb487ef0f9bf41a3afdbd0cc97368873__ul_qnb_5yj_wbb">
+<li class="li">Delayed work set with timeout and immediate</li>
+<li class="li">XHR requests created using XMLHttpRequests and sinon.FakeXMLHttpRequests</li>
+<li class="li">Native promises created with <samp class="ph codeph">resolve</samp>, <samp class="ph codeph">all</samp>,
+<samp class="ph codeph">race</samp>, and <samp class="ph codeph">reject</samp> functions</li>
+<li class="li">UI navigation of parent containers</li>
+<li class="li">UIArea rerendering</li>
+</ul>
+<p class="p">Enabling <samp class="ph codeph">autoWait</samp> ensures that the controls and their parents are
+visible, enabled and not busy and also that the controls are not hidden behind
+static elements, such as dialogs.</p>
+<p class="p">If your app has ongoing asynchronous work when the OPA timeout is reached, the test fails. The
+test failure message includes details of the last detected work before the timeout.
+This type of OPA timeouts is usually caused by test instability. When writing a huge
+set of tests and executing them frequently, you might notice some tests that fail
+sporadically. Setting <samp class="ph codeph">autoWait</samp> to <samp class="ph codeph">true</samp> should
+stabilize most of these tests.</p>
+<p class="p">If you decide to follow the best practices and to enable <samp class="ph codeph">autoWait</samp>, we
+recommend that you do it only once in your code, near the starting point of your
+tests. You can then disable it per <samp class="ph codeph">waitFor</samp> statement where needed.
+This will help you to avoid confusion when debugging test failures.</p>
+<p class="p">Example:</p>
+<pre class="pre codeblock prettyprint lang-js">// in QUnit start page, before all OPA tests
+Opa5.extendConfig({
+    autoWait: true
+});
+// in an OPA test
+oOpa.waitFor({
+    id: &quot;myControlID&quot;,
+    success: function (oControl) {
+        Opa5.assert.ok(!oControl.getBusy(), &quot;My control was not busy&quot;);
+    }
+});
+// and then in a special waitFor case which requires a control to be non-interactable
+oOpa.waitFor({
+    autoWait: false,
+    id: &quot;myControlID&quot;,
+    success: function (oControl) {
+        // now you can explicitly check for some blocking condition
+        Opa5.assert.ok(oControl.getBusy(), &quot;My control was busy&quot;);
+    }
+})</pre>
+<p class="p">If you decide to start using <samp class="ph codeph">autoWait</samp> in your existing tests, the easiest way
+to migrate is to extend OPA config by enabling <samp class="ph codeph">autoWait</samp>, run the
+tests to see if any <samp class="ph codeph">waitFor</samp> statements timeout and then disable
+<samp class="ph codeph">autoWait</samp> specifically for them.</p>
+</section></div>
+<div class="section" id="loiofb487ef0f9bf41a3afdbd0cc97368873__section_efn_nnn_2cb"><section class="section" type="autoWait and App Startup"><h2 class="section_title" style="font-size: 1.15em;"><samp class="ph codeph">autoWait</samp> and App Startup</h2>
+
+<p class="p">Usually, there is a lot of time-consuming work done on app startup which can make the
+entire app noninteractive for a long time.</p>
+<p class="p">To ensure that OPA doesn&apos;t timeout before the app is fully loaded, the timeout for
+<samp class="ph codeph">iStartMyAppInAFrame</samp> and <samp class="ph codeph">iStartMyUIComponent</samp> is
+increased to the default of 80 seconds.</p>
+<p class="p">Despite the increase, there are still some tests that timeout. The timeout usually
+occurs during the first test step, which can be misleading regarding the actual
+cause of failure. <samp class="ph codeph">autoWait</samp> is recommended in such cases but it is
+disabled during startup to prevent issues with module loading during app launcher
+initialization.</p>
+<p class="p">As of version 1.54, the optional use of <samp class="ph codeph">autoWait</samp> after launcher
+initialization is allowed to make sure that the app is loaded before the first test
+step. It is disabled by default for backward compatibility as some tests check for
+busy indicators on app start. You can use the option with both app launchers, for
+example:</p>
+<pre class="pre codeblock prettyprint lang-js">Given.iStartMyAppInAFrame({
+    source: &quot;applicationUnderTest/index.html&quot;,
+    autoWait: true
+});</pre>
+</section></div>
+<div class="section" id="loiofb487ef0f9bf41a3afdbd0cc97368873__section_ozc_m43_1gb"><section class="section" type="AutoWait and Overflow Toolbars"><h2 class="section_title" style="font-size: 1.15em;"><samp class="ph codeph">AutoWait</samp> and Overflow Toolbars</h2>
+
+<p class="p">Under some specific circumstances, the <samp class="ph codeph">autoWait</samp> is not waiting
+enough time and the next interaction happens before the awaited controls are fully
+rendered. This problem is particularly visible with overflow toolbars as the
+interaction with buttons in the toolbar happens before it is completely open and the
+included buttons are not yet ready, meaning that the interactions are lost.</p>
+<p class="p">The root cause is a specific behavior in OPA polling when a control is found on first
+check. In this case, the next check() is synchronous, for example, it is executed
+immediately and not on the next poll interval. The problem with this implementation
+is that the synchronous check prevents the detection of subsequent flows started by
+the previous interaction. As a result, the synchronization is premature as it
+happens before the interaction is fully processed and before the UI is completely
+rendered.</p>
+<p class="p">As of version 1.54, there is an <samp class="ph codeph">asyncPolling</samp> parameter that
+overcomes this problem. It causes a postponement of the check() in the next polling
+and gives a chance for the execution flows caused by the interaction to complete.
+Unfortunately, it is not possible to make this behavior as default as there are many
+tests that are coded against the old behavior.</p>
+<p class="p">The suggested approach is to set <samp class="ph codeph">asyncPolling</samp> as default for all
+<samp class="ph codeph">waitFor</samp> statements:</p>
+<pre class="pre codeblock prettyprint lang-js">// in QUnit start page, before all OPA tests
+Opa5.extendConfig({
+    autoWait: true,
+    asyncPolling: true
+});</pre>
+<p class="p">Setting <samp class="ph codeph">asyncPolling</samp> on existing tests may cause a failure because
+of the more strict synchronization. The most common uncovered problem is a test that
+is dependent on premature synchronization, such as an assertion for table rows that
+is executed before the table is fully loaded.</p>
+<p class="p">Same parameter can be set for individual <samp class="ph codeph">waitFor</samp> statements:</p>
+<pre class="pre codeblock prettyprint lang-js">// in an OPA test
+oOpa.waitFor({
+    id: &quot;controlId&quot;,
+    asyncPolling: true,
+    success: function (oControl) {
+        // TODO assert status
+    }
+});</pre>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/698f8c0a889f48d3a8b7fbcd26779be2.html" title="Tips and tricks if OPA isn&apos;t behaving or reacting the way you expect it to." target="_top">Pitfalls and Troubleshooting</a></div><div><a class="link" href="../../#/api/sap.ui.test.Opa5" target="_top" alt="#/api/sap.ui.test.Opa5" title="#/api/sap.ui.test.Opa5">API Reference: <samp class="ph codeph">sap.ui.test.Opa5</samp></a></div><div><a class="link" href="../../#/entity/sap.ui.test.Opa5" target="_top" alt="#/entity/sap.ui.test.Opa5" title="#/entity/sap.ui.test.Opa5">Samples: <samp class="ph codeph">sap.ui.test.Opa5</samp></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

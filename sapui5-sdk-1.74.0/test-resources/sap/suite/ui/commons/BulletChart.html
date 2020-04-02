@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>BulletChart - sap.suite.ui.commons</title>
+
+<!-- UI5 Bootstrap -->
+<script src="../../../../../resources/sap-ui-core.js"
+        type="text/javascript"
+        id="sap-ui-bootstrap"
+        data-sap-ui-libs="sap.ui.commons,sap.suite.ui.commons,sap.m,sap.ui.ux3"
+        data-sap-ui-theme="sap_bluecrystal"></script>
+
+<style type="text/css">
+	.sapMFlexItem {
+		margin: 10px 1px 0 1px;
+	}
+</style>
+<script src="locationColor.js" ></script>
+<script type="text/javascript">
+    jQuery.sap.initMobile();
+
+    function _fnParseFloat(fValue) {
+    	if (!fValue || 0==fValue.length || "-"==fValue) {
+    		return undefined;
+    	} if (/[.,]$/.test(fValue)) {
+    		return sap.ui.core.format.NumberFormat.getFloatInstance().parse(fValue.slice(0, -1));
+    	} else {
+	    	return sap.ui.core.format.NumberFormat.getFloatInstance().parse(fValue);
+    	}
+    };
+    
+    var oConfBCData = {
+            sizes: {
+                L: sap.suite.ui.commons.InfoTileSize.L,
+                M: sap.suite.ui.commons.InfoTileSize.M,
+                S: sap.suite.ui.commons.InfoTileSize.S,
+                XS: sap.suite.ui.commons.InfoTileSize.XS,
+                Auto: sap.suite.ui.commons.InfoTileSize.Auto
+            },
+            scale: "M",
+            actual: { value: 120, color: sap.suite.ui.commons.InfoTileValueColor.Good},
+            forecastValue: 110,
+            targetValue: 100,
+            thresholds: [
+            	{ value: 0, color: sap.suite.ui.commons.InfoTileValueColor.Error },
+    			{ value: 50, color: sap.suite.ui.commons.InfoTileValueColor.Critical },
+    			{ value: 150, color: sap.suite.ui.commons.InfoTileValueColor.Critical },
+    			{ value: 200, color: sap.suite.ui.commons.InfoTileValueColor.Error }
+    		],
+    		showActualValue: true,
+    		showTargetValue: true,
+    		showDeltaValue: true,
+    		showValueMarker: false,
+    		mode: sap.suite.ui.commons.BulletChartMode.Actual,
+    		tooltip: "Cumulative Totals\n{AltText}\ncalculated in EURO"
+    };
+
+    var oConfModel = new sap.ui.model.json.JSONModel();
+    oConfModel.setData(oConfBCData);
+    sap.ui.getCore().setModel(oConfModel);
+
+    var aBCs = [];
+    var fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The bullet chart is pressed.");
+	};
+    
+    var buildBC = function(sSize, sText) {
+        
+	    var oBCDataTmpl = new sap.suite.ui.commons.BulletChartData({
+	        value: "{value}",
+	        color: "{color}"
+	    });
+	    
+	    var oBCTmpl = new sap.suite.ui.commons.BulletChart("bullet-chart-"+sSize, {
+	        size: "{/sizes/"+ sSize +"}",
+	        scale: "{/scale}",
+	        width: "{/width}",
+	        actual: {
+	            value: "{/actual/value}",
+	            color: "{/actual/color}"
+	        },
+	        targetValue: "{/targetValue}",
+	        forecastValue: "{/forecastValue}",
+			thresholds: {
+	        	template: oBCDataTmpl,
+	        	path: "/thresholds"
+	        },
+	        minValue: "{/minValue}",
+	        maxValue: "{/maxValue}",
+	        showActualValue: "{/showActualValue}",
+	        showTargetValue: "{/showTargetValue}",
+    		showDeltaValue: "{/showDeltaValue}",
+    		showValueMarker: "{/showValueMarker}",
+    		mode: "{/mode}",
+	        actualValueLabel: "{/actualValueLabel}",
+	        deltaValueLabel: "{/deltaValueLabel}",
+	        targetValueLabel: "{/targetValueLabel}",
+	        press: fnPress,
+	        tooltip: "{/tooltip}",
+	        scaleColor: "{/scaleColor}"
+	   	});
+	    
+	    aBCs.push(oBCTmpl);
+
+	    return new sap.m.FlexBox("cc-fb"+sSize, {
+	    	items: [oBCTmpl],
+       		layoutData: new sap.ui.commons.layout.ResponsiveFlowLayoutData({ minWidth: 200 }),
+       		height: "110px"
+	    });
+	};
+	
+	var oBCForm = new sap.ui.layout.form.SimpleForm("bc-form", {
+				content: [
+	            	buildBC(sap.suite.ui.commons.InfoTileSize.L, "large"), 
+	            	buildBC(sap.suite.ui.commons.InfoTileSize.M, "medium"), 
+	            	buildBC(sap.suite.ui.commons.InfoTileSize.S, "small"), 
+	            	buildBC(sap.suite.ui.commons.InfoTileSize.XS, "extra small"), 
+	            	buildBC(sap.suite.ui.commons.InfoTileSize.Auto, "auto")
+            	]
+	});
+    
+    var oModeLbl = new sap.m.Label({
+		text : "Mode",
+		labelFor : "mode"
+	});
+
+	var oModeSelect = new sap.m.Select("mode", {
+		change : function(oE) {
+			var oSelectedItem = oE.getParameter("selectedItem");
+            oConfBCData.mode = oSelectedItem.getKey();
+            oConfModel.checkUpdate();            
+		},
+		items: [ 
+			new sap.ui.core.Item("mode-not-specified", { 
+				key: undefined, 
+			    text: "Not Specified" 
+			}),
+		    new sap.ui.core.Item("mode-"+sap.suite.ui.commons.BulletChartMode.Actual, { 
+		    	key: sap.suite.ui.commons.BulletChartMode.Actual, 
+		    	text: sap.suite.ui.commons.BulletChartMode.Actual 
+		   	}), 
+		    new sap.ui.core.Item("mode-"+sap.suite.ui.commons.BulletChartMode.Delta, { 
+		    	key: sap.suite.ui.commons.BulletChartMode.Delta, 
+		    	text: sap.suite.ui.commons.BulletChartMode.Delta 
+		   	})
+		],
+		selectedItem: "mode-not-specified"
+	});
+
+    var oShowValueMarkerChangeLbl = new sap.m.Label({
+		text: "Show Value Marker",
+		labelFor: "show-value-marker-cb"
+	});
+
+	var oShowValueMarkerCheckBox = new sap.m.CheckBox("show-value-marker-cb");
+	oShowValueMarkerCheckBox.bindProperty("selected", "/showValueMarker");
+    
+    var oShowActualValueChangeLbl = new sap.m.Label({
+		text: "Show Actual Value",
+		labelFor: "show-actual-value-cb"
+	});
+
+	var oShowActualValueCheckBox = new sap.m.CheckBox("show-actual-value-cb");
+	oShowActualValueCheckBox.bindProperty("selected", "/showActualValue");
+	
+	var oShowDeltaValueChangeLbl = new sap.m.Label({
+		text: "Show Delta Value",
+		labelFor: "show-delta-value-cb"
+	});
+
+	var oShowDeltaValueCheckBox = new sap.m.CheckBox("show-delta-value-cb");
+	oShowDeltaValueCheckBox.bindProperty("selected", "/showDeltaValue");
+	
+	var oShowTargetValueChangeLbl = new sap.m.Label({
+		text: "Show Target Value",
+		labelFor: "show-target-value-cb"
+	});
+
+	var oShowTargetValueCheckBox = new sap.m.CheckBox("show-target-value-cb");
+	oShowTargetValueCheckBox.bindProperty("selected", "/showTargetValue");
+
+    var oTooltipLbl = new sap.m.Label({
+		text : "Tooltip",
+		labelFor : "tooltip"
+	});
+
+    var oTooltipInput = new sap.m.TextArea("tooltip", {
+    	rows: 3,
+        placeholder: 'Enter tooltip (use {AltText} for inserting the default text) ...',
+        value: "{/tooltip}"
+    });
+	
+    var oTooltipSwtchLbl = new sap.m.Label({
+		text : "QuickView Tooltip",
+		labelFor : "tooltip-swtch"
+	});
+
+    var oTooltipSwtch = new sap.m.Switch({ 
+		id: "tooltip-swtch", 
+		state: false,
+		name: "QuickView tooltip",
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			for (var i = 0; i < aBCs.length; i++) {
+				aBCs[i].setTooltip(bState ? 
+						new sap.ui.ux3.QuickView({	content: new sap.m.Text({ text: oTooltipInput.getValue().split("{AltText}").join(aBCs[i].getAltText()) })})
+						: oTooltipInput.getValue());
+			}
+		}
+	});
+
+	var oMinValueLbl = new sap.m.Label({
+        text: "Min Value",
+        labelFor: "min-value"
+    });
+
+    var oMinValueInput = new sap.m.Input("min-value", {
+        placeholder: 'Enter min value ...',
+        value: {
+            path: "/minValue",
+            type: new sap.ui.model.type.Float({groupingEnabled: false})
+        },
+        liveChange: function(oControlEvent) {
+        	var fValue = _fnParseFloat(oControlEvent.getParameter("newValue"));
+        	if (typeof fValue == "undefined" || !isNaN(fValue)) {
+       			oConfBCData.minValue = fValue; 
+       			oConfModel.checkUpdate(); 
+        	}
+        }
+    });
+    
+    var oMaxValueLbl = new sap.m.Label({
+        text: "Max Value",
+        labelFor: "max-value"
+    });
+
+    var oMaxValueInput = new sap.m.Input("max-value", {
+        placeholder: 'Enter max value ...',
+        value: {
+            path: "/maxValue",
+            type: new sap.ui.model.type.Float({groupingEnabled: false})
+        },
+        liveChange: function(oControlEvent) {
+        	var fValue = _fnParseFloat(oControlEvent.getParameter("newValue"));
+        	if (typeof fValue == "undefined" || !isNaN(fValue)) {
+           		oConfBCData.maxValue = fValue; 
+           		oConfModel.checkUpdate(); 
+        	}
+        }
+    });
+    
+    var oActualValueLbl = new sap.m.Label({
+        text: "Actual Value",
+        labelFor: "actual-value"
+    });
+
+    var oActualValueInput = new sap.m.Input("actual-value", {
+        placeholder: 'Enter actual value ...',
+        value: {
+            path: "/actual/value",
+            type: new sap.ui.model.type.Float({groupingEnabled: false})
+        },
+        liveChange: function(oControlEvent) {
+        	var fValue = _fnParseFloat(oControlEvent.getParameter("newValue"));
+        	if (typeof fValue == "undefined" || !isNaN(fValue)) {
+           		oConfBCData.actual.value = fValue; 
+           		oConfModel.checkUpdate(); 
+        	}
+        }
+    });
+    
+    var oActualValueLabelLbl = new sap.m.Label({
+		text : "Actual Value Label",
+		labelFor : "actual-value-label"
+	});
+
+    var oActualValueLabelInput = new sap.m.Input("actual-value-label", {
+        placeholder: 'Enter actual value label...',
+        value: "{/actualValueLabel}"
+    });
+    
+    var oScaleColorLbl = new sap.m.Label({
+		text : "Scale Color",
+		labelFor : "scale-color"
+	});
+
+    var buildColorItem = function(sId, sColor) {
+		return new sap.ui.core.Item(sId+"-"+sColor, { key: sColor, text: sColor });    	
+    };
+    
+    var oScaleColorSelect = new sap.m.Select("scale-color", {
+		change: function(oE) {
+			var oSelectedItem = oE.getParameter("selectedItem");
+            oConfBCData.scaleColor = oSelectedItem.getKey();
+            oConfModel.checkUpdate();            
+		},
+		items: [ 
+			buildColorItem("scale-color", sap.suite.ui.commons.CommonBackground.Lightest),
+			buildColorItem("scale-color", sap.suite.ui.commons.CommonBackground.ExtraLight),
+			buildColorItem("scale-color", sap.suite.ui.commons.CommonBackground.Light),
+			buildColorItem("scale-color", sap.suite.ui.commons.CommonBackground.MediumLight),
+			buildColorItem("scale-color", sap.suite.ui.commons.CommonBackground.Medium),
+			buildColorItem("scale-color", sap.suite.ui.commons.CommonBackground.Dark),
+			buildColorItem("scale-color", sap.suite.ui.commons.CommonBackground.ExtraDark),
+			buildColorItem("scale-color", sap.suite.ui.commons.CommonBackground.Darkest)
+		],
+		selectedItem: "scale-color-"+sap.suite.ui.commons.CommonBackground.MediumLight
+    });
+    
+    var oDeltaValueLabelLbl = new sap.m.Label({
+		text : "Delta Value Label",
+		labelFor : "delta-value-label"
+	});
+
+    var oDeltaValueLabelInput = new sap.m.Input("delta-value-label", {
+        placeholder: 'Enter delta value label...',
+        value: "{/deltaValueLabel}"
+    });
+
+    var oTargetValueLabelLbl = new sap.m.Label({
+		text : "Target Value Label",
+		labelFor : "target-value-label"
+	});
+
+    var oTargetValueLabelInput = new sap.m.Input("target-value-label", {
+        placeholder: 'Enter target value label...',
+        value: "{/targetValueLabel}"
+    });
+
+    var oActualValueColorLbl = new sap.m.Label({
+		text : "Actual Value Color",
+		labelFor : "actual-value-color"
+	});
+
+	var oActualValueColorSelect = new sap.m.Select("actual-value-color", {
+		change : function(oE) {
+			var oSelectedItem = oE.getParameter("selectedItem");
+            oConfBCData.actual.color = oSelectedItem.getKey();
+            oConfModel.checkUpdate();            
+		},
+		items: [ 
+				buildColorItem("actual-value-color", sap.suite.ui.commons.InfoTileValueColor.Neutral),
+				buildColorItem("actual-value-color", sap.suite.ui.commons.InfoTileValueColor.Good),
+				buildColorItem("actual-value-color", sap.suite.ui.commons.InfoTileValueColor.Critical),
+				buildColorItem("actual-value-color", sap.suite.ui.commons.InfoTileValueColor.Error)
+		],
+		selectedItem: "actual-value-color-"+sap.suite.ui.commons.InfoTileValueColor.Good
+	});
+
+    var oTargetValueLbl = new sap.m.Label({
+        text: "Target Value",
+        labelFor: "target-value"
+    });
+
+    var oTargetValueInput = new sap.m.Input("target-value", {
+        placeholder: 'Enter target value ...',
+        value: {
+            path: "/targetValue",
+            type: new sap.ui.model.type.Float({groupingEnabled: false})
+        },
+        liveChange: function(oControlEvent) {
+        	var fValue = _fnParseFloat(oControlEvent.getParameter("newValue"));
+        	if (typeof fValue == "undefined" || !isNaN(fValue)) {
+           		oConfBCData.targetValue = fValue; 
+           		oConfModel.checkUpdate(); 
+        	}
+        }
+    });
+
+    var oForecastValueLbl = new sap.m.Label({
+        text: "Forecast Value",
+        labelFor: "forecast-value"
+    });
+
+    var oForecastValueInput = new sap.m.Input("forecast-value", {
+        placeholder: 'Enter forecast value ...',
+        value: {
+            path: "/forecastValue",
+            type: new sap.ui.model.type.Float({groupingEnabled: false})
+        },
+        liveChange: function(oControlEvent) {
+        	var fValue = _fnParseFloat(oControlEvent.getParameter("newValue"));
+        	if (typeof fValue == "undefined" || !isNaN(fValue)) {
+           		oConfBCData.forecastValue = fValue; 
+           		oConfModel.checkUpdate(); 
+        	}
+        }
+    });
+    
+    var oScaleLbl = new sap.m.Label({
+        text: "Scale",
+        labelFor: "scale-value"
+    });
+    
+    var oScaleInput = new sap.m.Input("scale-value", {
+        placeholder: 'Enter scale ...',
+        value: "{/scale}"
+    });
+    
+    var iTIndex = 0;
+    
+    var oTAddButton = new sap.m.Button("add-button-t", {
+        width: "10rem",
+        enabled: false,
+		text: "Add Threshold",
+		press: function(oEvent) {
+		    if (oConfBCData.thresholds.length >= 3) {
+		    	oTAddButton.setEnabled(false);
+		    }
+		    iTIndex = 0; 
+		    oConfBCData.thresholds.push({ value: 0, color: sap.suite.ui.commons.InfoTileValueColor.Neutral });
+            oConfModel.checkUpdate();            
+		}
+	});
+    
+    var fnFormFactoryBC = function(sId, oContext) {
+        var sColor = oContext.getProperty("color");
+        var sValue = oContext.getProperty("value");
+
+        var oTRemoveButton = new sap.m.Button(sId+"-bc-remove-button", {
+            width: "10rem",
+			text: "Remove Threshold",
+			press: function(oEvent) {
+   				oConfBCData.thresholds.splice(this._index, 1)
+   				iTIndex = 0;
+  		        oConfModel.checkUpdate();            
+				oTAddButton.setEnabled(true);
+			}
+		});
+        oTRemoveButton._index = iTIndex;
+        
+        var oTValueLabel = new sap.m.Label(sId+"-value-label", { text: "Value", labelFor: sId+"-value-input" });
+        
+		var oTValueInput = new sap.m.Input(sId+"-value-input", {
+            width: "10rem",
+    		placeholder: "Enter value ...",
+    		value: { path: "value",	type: new sap.ui.model.type.Float({groupingEnabled: false})	},
+            liveChange: function(oControlEvent) {
+            	var fValue = _fnParseFloat(oControlEvent.getParameter("newValue"));
+            	if (typeof fValue == "undefined" || !isNaN(fValue)) {
+               		oConfBCData.thresholds[this._index].value = fValue; 
+               		oConfModel.checkUpdate(); 
+            	}
+            }
+		});
+		oTValueInput._index = iTIndex;
+		
+		var oTColorLabel = new sap.m.Label(sId+"-color-label", { text: "Color", labelFor: sId+"-color-select"  }); 
+	
+		var oTColorSelect = new sap.m.Select(sId+"-color-select", {
+            width: "10rem",
+	        items: [
+				buildColorItem(sId, sap.suite.ui.commons.InfoTileValueColor.Neutral),
+				buildColorItem(sId, sap.suite.ui.commons.InfoTileValueColor.Good),
+				buildColorItem(sId, sap.suite.ui.commons.InfoTileValueColor.Error),
+				buildColorItem(sId, sap.suite.ui.commons.InfoTileValueColor.Critical)
+	        ],
+	        selectedItemId: sId + "-" + sColor,
+	        change: function(oEvent) {
+	            var oSelectedItem = oEvent.getParameter("selectedItem");
+	            oConfBCData.thresholds[this._index].color = oSelectedItem.getKey();
+	            oConfModel.checkUpdate();            
+	        }
+	    });
+		oTColorSelect._index = iTIndex;
+		
+        var oTFormTempl = new sap.m.VBox(sId, {
+        	height: "220px",
+        	alignItems: sap.m.FlexAlignItems.Inherit, 
+            items: [ oTRemoveButton, oTValueLabel, oTValueInput, oTColorLabel, oTColorSelect ],
+       		layoutData: new sap.ui.commons.layout.ResponsiveFlowLayoutData({ minWidth: 170 })
+        });
+        
+        iTIndex++;
+        
+        return oTFormTempl;
+    };
+
+	var oPressLbl = new sap.m.Label({ text: "Press Action", labelFor: "press-action" });
+
+	var oPressSwtch = new sap.m.Switch({ 
+		id: "press-action", 
+		state: true,
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			for (var i = 0; i < aBCs.length; i++) {
+				if(bState) {
+					aBCs[i].attachPress(fnPress);
+				} else {
+					aBCs[i].detachPress(fnPress);
+				}
+			}
+		}
+	});
+
+    var oWidthLbl = new sap.m.Label({
+        text: "Width",
+        labelFor: "scale-width"
+    });
+    
+    var patt = new RegExp("^\\d+(px|rem|%|in|cm|mm|em|ex|pt|pc)$");
+    var oWidthInput = new sap.m.Input("scale-width", {
+        placeholder: 'Enter width ...',
+        liveChange : function(e) {
+            var sEnteredText = e.getParameter("newValue");
+            
+            var oItem = jQuery.sap.byId("scale-width-inner");
+            if (patt.test(sEnteredText)) {
+            	oConfBCData.width = sEnteredText;
+            	oItem.css("color", "black");
+            } else {
+            	oConfBCData.width = "";
+            	if (sEnteredText) {
+            		oItem.css("color", "red");
+            	} else {
+            		oItem.css("color", "black");
+            	}
+            	
+            }
+            oConfModel.checkUpdate();
+        }
+    });
+    
+    var oBCSimpleForm = new sap.ui.layout.form.SimpleForm("controls-bc", {
+        maxContainerCols: 2,
+        editable: true,
+   	    content: [
+			oModeLbl, oModeSelect,
+			oShowValueMarkerChangeLbl, oShowValueMarkerCheckBox,
+			oShowActualValueChangeLbl, oShowActualValueCheckBox, 
+			oActualValueLabelLbl, oActualValueLabelInput,     
+			oShowDeltaValueChangeLbl, oShowDeltaValueCheckBox,
+			oTooltipLbl, oTooltipInput, oTooltipSwtchLbl, oTooltipSwtch,
+			oScaleColorLbl, oScaleColorSelect,     
+			oDeltaValueLabelLbl, oDeltaValueLabelInput,
+			oShowTargetValueChangeLbl, oShowTargetValueCheckBox, 
+			oTargetValueLabelLbl, oTargetValueLabelInput,
+			oMinValueLbl, oMinValueInput, oMaxValueLbl, oMaxValueInput,
+           	oActualValueLbl, oActualValueInput, oActualValueColorLbl, oActualValueColorSelect,
+       	    oTargetValueLbl, oTargetValueInput, oForecastValueLbl, oForecastValueInput, oScaleLbl, 
+       	    oScaleInput, oWidthLbl, oWidthInput, oPressLbl, oPressSwtch, new sap.m.Label({ text: "" }), oTAddButton 
+   	    ]
+    });
+    
+   	var oTBoxContForm = new sap.ui.layout.form.SimpleForm("threshold-form", {
+		content: {
+			path: "/thresholds",
+			factory: fnFormFactoryBC
+		}
+	});
+   	
+   	var oBCVBox = new sap.m.VBox("vbox-bc", { items: [oBCSimpleForm, oTBoxContForm] });
+
+   	new sap.m.Page("initial-page", {
+        showHeader: false,
+        content: [oBCForm, oBCVBox]
+    }).placeAt("content");
+   	
+   	setBackgroundColor(oBCForm);
+   	
+  
+   	
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+<div id="content" style="height:100%"></div>
+</body>
+</html>

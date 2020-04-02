@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+<edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+ <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" Namespace="sap.apf.test">
+<EntityType Name="EVALUATIONSType">
+<Key>
+<PropertyRef Name="ID"/>
+</Key>
+<Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="512"/>
+<Property Name="INDICATOR" Type="Edm.String" MaxLength="512"/>
+<Property Name="TITLE" Type="Edm.String" MaxLength="128"/>
+<Property Name="SCALING" Type="Edm.Int32"/>
+<Property Name="ODATA_URL" Type="Edm.String" MaxLength="4096"/>
+<Property Name="ODATA_ENTITYSET" Type="Edm.String" MaxLength="512"/>
+<Property Name="VIEW_NAME" Type="Edm.String" MaxLength="1026"/>
+<Property Name="COLUMN_NAME" Type="Edm.String" MaxLength="512"/>
+<Property Name="OWNER_NAME" Type="Edm.String" MaxLength="256"/>
+<Property Name="OWNER_E_MAIL" Type="Edm.String" MaxLength="512"/>
+<Property Name="OWNER_ID" Type="Edm.String" MaxLength="32"/>
+<Property Name="INDICATOR_TYPE" Type="Edm.String" MaxLength="3"/>
+<Property Name="GOAL_TYPE" Type="Edm.String" MaxLength="2"/>
+<Property Name="INDICATOR_TITLE" Type="Edm.String" MaxLength="128"/>
+<Property Name="ODATA_PROPERTY" Type="Edm.String" MaxLength="512"/>
+<Property Name="SEMANTIC_OBJECT" Type="Edm.String" MaxLength="256"/>
+<Property Name="ACTION" Type="Edm.String" MaxLength="256"/>
+<Property Name="VALUES_SOURCE" Type="Edm.String" MaxLength="16"/>
+<Property Name="DESCRIPTION" Type="Edm.String" MaxLength="4096"/>
+<NavigationProperty Name="FILTERS" Relationship="sap.hba.r.sb.core.odata.runtime.SMART_BUSINESS.HAS_FILTERSType" FromRole="EVALUATIONSPrincipal" ToRole="EVALUATION_FILTERSDependent"/>
+</EntityType>
+<EntityType Name="EVALUATION_FILTERSType">
+<Key>
+<PropertyRef Name="ID"/>
+</Key>
+<Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="512"/>
+<Property Name="TYPE" Type="Edm.String" Nullable="false" MaxLength="2"/>
+<Property Name="NAME" Type="Edm.String" Nullable="false" MaxLength="512"/>
+<Property Name="VALUE_1" Type="Edm.String" Nullable="false" MaxLength="512"/>
+<Property Name="OPERATOR" Type="Edm.String" Nullable="false" MaxLength="2"/>
+<Property Name="VALUE_2" Type="Edm.String" MaxLength="512"/>
+</EntityType>
+
+<Association Name="HAS_FILTERSType">
+<End Type="sap.hba.r.sb.core.odata.runtime.SMART_BUSINESS.EVALUATIONSType" Role="EVALUATIONSPrincipal" Multiplicity="1"/>
+<End Type="sap.hba.r.sb.core.odata.runtime.SMART_BUSINESS.EVALUATION_FILTERSType" Role="EVALUATION_FILTERSDependent" Multiplicity="*"/>
+<ReferentialConstraint>
+<Principal Role="EVALUATIONSPrincipal">
+<PropertyRef Name="ID"/>
+</Principal>
+<Dependent Role="EVALUATION_FILTERSDependent">
+<PropertyRef Name="ID"/>
+</Dependent>
+</ReferentialConstraint>
+</Association>
+
+<EntityContainer Name="SMART_BUSINESS" m:IsDefaultEntityContainer="true">
+<EntitySet Name="EVALUATIONS" EntityType="sap.hba.r.sb.core.odata.runtime.SMART_BUSINESS.EVALUATIONSType"/>
+<EntitySet Name="EVALUATION_FILTERS" EntityType="sap.hba.r.sb.core.odata.runtime.SMART_BUSINESS.EVALUATION_FILTERSType"/>
+<AssociationSet Name="HAS_FILTERS" Association="sap.hba.r.sb.core.odata.runtime.SMART_BUSINESS.HAS_FILTERSType">
+<End Role="EVALUATIONSPrincipal" EntitySet="EVALUATIONS"/>
+<End Role="EVALUATION_FILTERSDependent" EntitySet="EVALUATION_FILTERS"/>
+</AssociationSet>
+</EntityContainer>
+
+</Schema>
+</edmx:DataServices>
+</edmx:Edmx>
+

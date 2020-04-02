@@ -1,0 +1,392 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Troubleshooting for Loading Modules</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The following sections give examples that you must avoid because they cause problems when loading your module."><meta name="description" content="The following sections give examples that you must avoid because they cause problems when loading your module."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"b8fdf0c903424c9191f142842323ae22.html","previousTopicHref":"00737d6c1b864dc3ab72ef56611491c4.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio4363b3fe3561414ca1b030afc8cd30ce"><h1 class="title topictitle1" hidden>Troubleshooting for Loading Modules</h1><div class="body conbody"><p class="shortdesc" hidden>The following sections give examples that you must avoid because they cause problems
+when loading your module.</p>
+<div class="section" id="loio4363b3fe3561414ca1b030afc8cd30ce__section_moduleloading"><section class="section" type="Why was my Module Not Loaded Correctly?"><h2 class="section_title" style="font-size: 1.15em;">Why was my Module Not Loaded Correctly?</h2><p class="p">The
+following list contains possible reasons why your module does not load. To see how
+it is done correctly, see <a class="xref" href="../../#/topic/00737d6c1b864dc3ab72ef56611491c4.html#loio00737d6c1b864dc3ab72ef56611491c4__section_DefineModules" target="_top">Best
+Practices for Loading Modules - How to Define Modules</a>.</p><div class="sectiondiv subsection">
+<p class="p subsectiontitle">The module name is given in
+<samp class="ph codeph">sap.ui.define</samp></p>
+<p class="p">If you explicitly give the module name in <samp class="ph codeph">sap.ui.define</samp>, you
+introduce additional complexity to the project structure which may cause
+inconcistencies and clashing module names. This problem is difficult to detect
+and can easily and proactively be avoided by omitting the module name in
+<samp class="ph codeph">sap.ui.define</samp>.</p>
+<p class="p">The following example shows how it must <em class="ph i">not</em> be done: The library file
+structure of <samp class="ph codeph">myLib</samp> does not fit the module name. If there is
+another module named <samp class="ph codeph">MyModule</samp> in the <samp class="ph codeph">myLib</samp>
+library, the module would be hard to address. If you use an unnamed module
+instead, the module names would reflect the library file structure. By this, you
+reduce the probability of module name conflicts. In general, when addressing UI5
+modules, make sure you separate all parts of the module&apos;s name with slashes
+instead of dots, for example <samp class="ph codeph">myLib/MyModule</samp> instead of
+<samp class="ph codeph">myLib.MyModule</samp>.</p>
+<p class="p"><samp class="ph codeph">myLib/myAdditionalPathSegment/MyModule.js</samp></p>
+<pre class="pre codeblock prettyprint lang-js">// CAUTION: BAD EXAMPLE - DON&apos;T DO THIS
+sap.ui.define(&quot;myLib.MyModule&quot;, [], function(){
+    ...
+});</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Using multiple <samp class="ph codeph">sap.ui.define</samp> calls with unnamed
+modules</p>
+<p class="p">If you have more than one <samp class="ph codeph">sap.ui.define</samp> call in a JavaScript file, the
+module loader does not know which definition actually represents the module. As
+there is no scenario that requires multiple module definitions in one file and
+in order to comply with the AMD specification (see <a class="extlink" href="http://help.sap.com/disclaimer?site=https://github.com/amdjs/amdjs-api/wiki/AMD" target="_blank" alt="https://github.com/amdjs/amdjs-api/wiki/AMD" title="https://github.com/amdjs/amdjs-api/wiki/AMD">https://github.com/amdjs/amdjs-api/wiki/AMD<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a>), the
+async variant of the <span class="ph"><span class="ph pname">SAPUI5</span></span> module
+loader does <em class="ph i">not</em> tolerate multiple definitions anymore and throws an
+error.</p>
+<p class="p"><span class="ph emphasis emphasis">Example</span>: The <samp class="ph codeph">myModule</samp> module is defined
+twice. This was most probably done by accident. To resolve this, the two module
+definitions have to be split into two separate modules.</p>
+<p class="p"><samp class="ph codeph">myModule.js</samp></p>
+<pre class="pre codeblock prettyprint lang-js">// BAD EXAMPLE - DON&apos;T DO THIS
+sap.ui.define([], function(){
+    ...
+});
+sap.ui.define([], function(){
+    ...
+});</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Combining conditional modules with
+<samp class="ph codeph">sap.ui.define</samp></p>
+<p class="p">Conditional module definitions should <em class="ph i">not</em> be used because of the following
+reasons:</p>
+<ul class="ul" id="loio4363b3fe3561414ca1b030afc8cd30ce__ul_emn_jtx_mfb">
+<li class="li">
+<p class="p">The modules cannot be required with parameters because the check
+conditions are related to globals.</p>
+</li>
+<li class="li">
+<p class="p">The export value is not consistent. This makes it difficult to consume
+the module.</p>
+</li>
+<li class="li">
+<p class="p">The module dependencies are unclear. This prevents an efficient module
+bundling.</p>
+</li>
+</ul>
+<p class="p"><span class="ph emphasis emphasis">Example</span>: The export value of <samp class="ph codeph">myModule</samp>
+depends on the global <samp class="ph codeph">myProperty</samp> property. In this case, it
+makes sense to split the two definitions into separate files for example into
+the two variants <samp class="ph codeph">myModuleA</samp> and <samp class="ph codeph">myModuleB</samp>.
+Another module can then make the required <samp class="ph codeph">myProperty</samp> check and
+require the variant of <samp class="ph codeph">myModule</samp> via
+<samp class="ph codeph">sap.ui.require</samp>.</p>
+<p class="p"><samp class="ph codeph">myModule.js</samp></p>
+<pre class="pre codeblock prettyprint lang-js">// BAD EXAMPLE - DON&apos;T DO THIS
+if (myProperty){
+    sap.ui.define([], function(){
+        ... 
+    });
+else {
+    sap.ui.define([], function(){
+        ... 
+    });
+}</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Mixing old and new loader APIs</p>
+<p class="p">Using deprecated APIs is not recommended and mixing old and new loader APIs is
+even worse: If the synchronicity has changed between older and newer APIs,
+mixing them will cause timing-related issues as well as general
+inconsistencies.</p>
+<p class="p"><span class="ph emphasis emphasis">Example</span>: The namespace <samp class="ph codeph">myLib.myModule</samp> is
+registered through the <samp class="ph codeph">jQuery.sap.declare</samp> call. Besides
+actually defining the module export value, the subsequent
+<samp class="ph codeph">sap.ui.define</samp> call does the same registration. So, the
+<samp class="ph codeph">jQuery.sap.declare</samp> in this example is unnecessary and must
+be omitted in this example.</p>
+<p class="p"><samp class="ph codeph">myLib/MyModule.js</samp></p>
+<pre class="pre codeblock prettyprint lang-js">// BAD EXAMPLE - DON&apos;T DO THIS
+jQuery.sap.declare(&quot;myLib.myModule&quot;);
+sap.ui.define([], function(){
+    ...
+});</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Using <samp class="ph codeph">sap.ui.require</samp> instead of
+<samp class="ph codeph">sap.ui.define</samp> on the top level</p>
+<p class="p">Although the API signature for <samp class="ph codeph">sap.ui.define</samp> and
+<samp class="ph codeph">sap.ui.require</samp> looks similar, you must use the
+<samp class="ph codeph">sap.ui.define</samp> API to define a reusable JavaScript object
+(that is, a module). Note the following differences between
+<samp class="ph codeph">sap.ui.require</samp> and <samp class="ph codeph">sap.ui.define</samp>:</p>
+<div class="table-wrapper"><table summary id="loio4363b3fe3561414ca1b030afc8cd30ce__simpletable_hw1_5zq_mfb" border="1" class="simpletable"><thead><tr class="sthead">
+<th style="vertical-align:bottom;text-align:left;" id="d235483e244" class="stentry">
+<p class="p">Action</p>
+</th>
+<th style="vertical-align:bottom;text-align:left;" id="d235483e250" class="stentry">
+<p class="p">sap.ui.require</p>
+</th>
+<th style="vertical-align:bottom;text-align:left;" id="d235483e256" class="stentry">
+<p class="p">sap.ui.define</p>
+</th>
+</tr></thead><tbody><tr class="strow">
+<td style="vertical-align:top;" headers="d235483e244" class="stentry">
+<p class="p">Value export</p>
+</td>
+<td style="vertical-align:top;" headers="d235483e250" class="stentry">
+<p class="p">Not possible</p>
+</td>
+<td style="vertical-align:top;" headers="d235483e256" class="stentry">
+<p class="p">The callback function defines an export to provide functionality to
+other modules.</p>
+</td>
+</tr><tr class="strow">
+<td style="vertical-align:top;" headers="d235483e244" class="stentry">
+<p class="p">Module name registration</p>
+</td>
+<td style="vertical-align:top;" headers="d235483e250" class="stentry">
+<p class="p">Not possible</p>
+</td>
+<td style="vertical-align:top;" headers="d235483e256" class="stentry">
+<p class="p">The module name is registered at the loader registry and can be used
+to address the module.</p>
+</td>
+</tr><tr class="strow">
+<td style="vertical-align:top;" headers="d235483e244" class="stentry">
+<p class="p">Relative dependencies</p>
+</td>
+<td style="vertical-align:top;" headers="d235483e250" class="stentry">
+<p class="p">This is not possible, because no module name is registered and a
+reference point is missing.</p>
+</td>
+<td style="vertical-align:top;" headers="d235483e256" class="stentry">
+<p class="p">Can be used.</p>
+</td>
+</tr><tr class="strow">
+<td style="vertical-align:top;" headers="d235483e244" class="stentry">
+<p class="p">Execution order</p>
+</td>
+<td style="vertical-align:top;" headers="d235483e250" class="stentry">
+<p class="p">Dependent modules can be executed before the
+<samp class="ph codeph">sap.ui.require</samp> callback has been executed.
+Therefore, using <samp class="ph codeph">sap.ui.require</samp> instead of
+<samp class="ph codeph">sap.ui.define</samp> can break the intended dependency
+graph and module execution order.</p>
+</td>
+<td style="vertical-align:top;" headers="d235483e256" class="stentry">
+<p class="p">The dependent modules are waiting for the module callback execution
+to be finished.</p>
+</td>
+</tr></tbody></table></div>
+<p class="p"><span class="ph emphasis emphasis">Example</span>: The file for module C has one top-level
+<samp class="ph codeph">sap.ui.require</samp> instead of a top-level
+<samp class="ph codeph">sap.ui.define</samp> call. The module callback evaluation order
+starts with module B, because it has no dependencies. Afterwards, the framework
+can execute module A or module C, because the intended module C is not a module
+from the module loader perspective. Furthermore, the undefined export value of
+module C will most probably lead to errors in module A. If module C is defined
+correctly via a top-level <samp class="ph codeph">sap.ui.define</samp> call, the module
+callback execution order is clear: B - C - A.</p>
+<img class="inline  " id="loio4363b3fe3561414ca1b030afc8cd30ce__image_cxn_g2r_mfb" src="loio87c101d607a94ae689013c3478799879_LowRes.png">
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Defining (unnamed) modules via inline scripts</p>
+<p class="p">It is unclear how modules that are defined via inline scripts can by addresses by
+other modules. Therefore, the inline scripts must be omitted.</p>
+<p class="p"><span class="ph emphasis emphasis">Example</span>: Module A is defined after bootstrapping UI5 and
+before the actual app is started. As the module is not addressable, the module
+definition must be moved to a separate file.</p>
+<div class="p"><samp class="ph codeph">startMyApp.html</samp><pre class="pre codeblock prettyprint lang-html">&lt;!-- BAD EXAMPLE - DON&apos;T DO THIS --&gt;
+&lt;html&gt;
+...  
+    &lt;script&gt;  
+        //Boot UI5  
+    &lt;/script&gt;  
+    &lt;script&gt;  
+        //Definition for Module A  
+        sap.ui.define(function(){  
+            ...  
+        });  
+    &lt;/script&gt;  
+    &lt;script&gt;  
+        // Start UI5 Application  
+    &lt;/script&gt;  
+...  
+&lt;/html&gt;</pre></div>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Avoiding synchronous access to a module definition
+export</p>
+<p class="p">Never do a synchronous access to the export of a module definition because the
+module definition could be done asynchronously. Never rely on the synchronicity
+of a module definition, even if a module has no dependencies.</p>
+<p class="p"><span class="ph emphasis emphasis">Example</span>: The <samp class="ph codeph">sap.ui.define</samp> call for the
+<samp class="ph codeph">myModule</samp> module is made and the export value is
+synchronously used by creating a new object of that export. Although this may
+work in some scenarios, never do it this way, because it is unclear whether the
+module definition is already done. Instead, use the export of
+<samp class="ph codeph">myModule</samp> in a separate module with a correctly maintained
+dependency to the <samp class="ph codeph">myModule</samp> module.</p>
+<p class="p"><samp class="ph codeph">myLib/MyModule.js</samp></p>
+<pre class="pre codeblock prettyprint lang-js">// BAD EXAMPLE - DON&apos;T DO THIS
+sap.ui.define([], function(){
+    ...
+});  
+...  
+var oMyModule = new myLib.MyModule();  
+...</pre>
+<p class="p"><span class="ph">For more information,
+see the API Reference for <a class="xref" href="../../#/api/sap.ui/methods/sap.ui.define" target="_top" alt="#/api/sap.ui/methods/sap.ui.define" title="#/api/sap.ui/methods/sap.ui.define">sap.ui.define - Asynchronuous
+Contract</a></span>.</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Avoid synchronous probing after module definition</p>
+<p class="p">Similar to the synchronous access of a module&apos;s export value, you also must omit
+the synchronous probing for modules defined in the same browser task.</p>
+<p class="p"><span class="ph emphasis emphasis">Example</span>: The <samp class="ph codeph">sap.ui.define</samp> call for the
+<samp class="ph codeph">myModule</samp> module is made and is synchronously checked by
+probing through calling <samp class="ph codeph">sap.ui.require</samp>. Instead, the probing
+for <samp class="ph codeph">myModule</samp> must be done in a separate module with a correctly
+maintained dependency to <samp class="ph codeph">myModule</samp>.</p>
+<p class="p"><samp class="ph codeph">myLib/MyModule.js</samp></p>
+<pre class="pre codeblock prettyprint lang-js">// BAD EXAMPLE - DON&apos;T DO THIS
+sap.ui.define([], function(){
+    ...
+});
+var MyModule = sap.ui.require(&apos;myLib/MyModule&apos;);</pre>
+</div></section></div>
+<div class="section" id="loio4363b3fe3561414ca1b030afc8cd30ce__section_moduleaddressing"><section class="section" type="What is wrong with the way I am addressing the modules?"><h2 class="section_title" style="font-size: 1.15em;">What is wrong with the way I am addressing the modules?</h2><p class="p">The following examples show how you should <em class="ph i">not</em> address a
+module. To see how it is done correctly, see <a class="xref" href="../../#/topic/00737d6c1b864dc3ab72ef56611491c4.html#loio00737d6c1b864dc3ab72ef56611491c4__section_AddressModules" target="_top">Best
+Practices for Loading Modules - How to Address Modules</a>.</p><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Case insensitivity when addressing modules</p>
+<p class="p">Addressing a module inconsistently can cause various side-effects. If the server
+is not case sensitive, for example, the same resource can be addressed with URLs
+that differ only in case sensitivity. Besides that, it is bad from a performance
+perspective if the same resource is loaded twice and the same module is defined
+twice. This is similar to the example for multiple definitions above: multiple
+definitions of the same module can cause several issues, such as failing checks
+of <samp class="ph codeph">instanceof</samp>.</p>
+<p class="p"><span class="ph emphasis emphasis">Example</span>: If we assume a server that is <em class="ph i">not</em>
+case-sensitive, the <samp class="ph codeph">sap.m</samp> library&apos;s <samp class="ph codeph">Button</samp>
+control is loaded and evaluated twice.</p>
+<p class="p"><samp class="ph codeph">myView.xml</samp></p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;!-- BAD EXAMPLE - DON&apos;T DO THIS --&gt;
+&lt;mvc:View xmlns:mvc=&quot;sap.ui.core.mvc&quot; xmlns:m=&quot;sap.m&quot;&gt;
+    ...
+    &lt;m:Button&gt;&lt;/m:Button&gt;
+    &lt;m:button&gt;&lt;/m:button&gt;
+    ...
+&lt;/mvc:View&gt;</pre>
+<p class="p"><samp class="ph codeph">myModule.js</samp></p>
+<pre class="pre codeblock prettyprint lang-js">...
+    // BAD EXAMPLE - DON&apos;T DO THIS
+    sap.ui.require([&apos;sap/m/button&apos;], function(){
+        ...
+    });
+    sap.ui.require([&apos;sap/m/Button&apos;], function(){
+        ...
+    });
+...</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Manual loading of UI5 modules via script tags</p>
+<p class="p">When you load modules manually, the module loader cannot know how the module
+shall be named. Therefore, UI5 modules must always be loaded and evaluated via
+the UI5 module loader APIs.</p>
+<p class="p">Example: The <samp class="ph codeph">myModule</samp> module is loaded via a script tag.
+Instead, use a <samp class="ph codeph">sap.ui.require</samp> call to loading the module.</p>
+<p class="p"><samp class="ph codeph">startMyApp.js</samp></p>
+<pre class="pre codeblock prettyprint lang-html">&lt;html&gt;
+...
+    &lt;script src=&quot;https://myhost/mypath/myModule.js&quot;&gt;&lt;/script&gt;
+...
+&lt;/html&gt;</pre>
+</div></section></div>
+<div class="section" id="loio4363b3fe3561414ca1b030afc8cd30ce__section_cyclicdependencies"><section class="section" type="How can I remove project structures with cyclic dependencies?"><h2 class="section_title" style="font-size: 1.15em;">How can I remove project structures with cyclic dependencies?</h2><p class="p">When you use cyclic dependencies in the project structure,
+the module dependencies cannot be resolved. The UI5 module loade detects the cycle
+and returns an undefined value instead of the correct module export.</p><p class="p">As an
+exception, in specific scenarios, you may make the involved modules robust enough to
+handle undefined module exports at module callback execution time and use the export
+value via probing later. However, if you use the async variant of the loader, all
+modules that belong to a cycle must be able to handle undefined exports.</p><p class="p">To
+see how to set up a correct project structure, see <a class="xref" href="../../#/topic/00737d6c1b864dc3ab72ef56611491c4.html#loio00737d6c1b864dc3ab72ef56611491c4__section_StructureProject" target="_top">Best
+Practices for Loading Modules - How to Structure a
+Project</a>.</p><p class="p"><span class="ph emphasis emphasis">Example</span>: All modules have exactly one
+dependency, which cannot be resolved correctly.</p><img class="inline  " id="loio4363b3fe3561414ca1b030afc8cd30ce__image_ftf_cbq_mfb" src="loio01905ac71cff4f7db3cb4d76142b887b_LowRes.png"><p class="p"><em class="ph i">Solution 1 &#x2013; Resolved
+cycle</em>: The following figure shows how the cycle can be resolved by moving the
+functionality of module A, which is used by module B, to a separate module (module
+A2). In general, resolving cyclic dependencies can require a larger refactoring of
+all involved modules, especially when multiple cycles have to be resolved.</p><img class="inline  " id="loio4363b3fe3561414ca1b030afc8cd30ce__image_g1g_fbq_mfb" src="loio544e019da7f6421394bf838f218e814f_LowRes.png"><p class="p"><em class="ph i">Solution
+2 &#x2013; Probing modules</em>: In the example given in the following figure, the cycle
+is not resolved, but the involved modules do not access the dependent modules
+directly when the module callback is executed. They access them later via
+probing.</p><img class="inline  " id="loio4363b3fe3561414ca1b030afc8cd30ce__image_lxl_cjd_nfb" src="loioe598bbc91b504be4bf3ad08191260b47_LowRes.png"></section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

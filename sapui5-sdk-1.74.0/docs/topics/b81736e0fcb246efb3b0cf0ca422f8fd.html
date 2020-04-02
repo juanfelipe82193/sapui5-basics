@@ -1,0 +1,330 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 2: A First Unit Test</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In this step we will analyze the unit testing infrastructure and write a first unit test."><meta name="description" content="In this step we will analyze the unit testing infrastructure and write a first unit test."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"2bf4892527174264808076be32c1e1b0.html","previousTopicHref":"ab134ef3932c4b42898c79c10341e8b5.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/291c9121e6044ab381e0b51716f97f52.html" title="In this tutorial we will test application functionality with the testing tools that are delivered with SAPUI5. At different steps of this tutorial you will write tests using QUnit, OPA5, and the mock server. Additionally, you will learn about testing strategies, Test Driven Development (TDD), and much more." target="_top">Testing</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/ab134ef3932c4b42898c79c10341e8b5.html" title="In this step, we will take a look at the prototype and define the test strategy for our app. The prototype already contains the infrastructure for unit and integration testing and a minimum set of tests and features." target="_top">Step 1: Overview and Testing Strategy</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/2bf4892527174264808076be32c1e1b0.html" title="We will now take care of the implementation of the price formatter and make sure that the tests we wrote in the previous step run successfully." target="_top">Step 3: Adding the Price Formatter</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loiob81736e0fcb246efb3b0cf0ca422f8fd"><h1 class="title topictitle1" hidden>Step 2: A First Unit Test</h1><div class="body conbody"><p class="shortdesc" hidden>In this step we will analyze the unit testing infrastructure and write a first unit
+test. </p>
+<p class="p">The product team requested a feature to highlight the price with colors
+depending on the amount. This can be done using the standard
+semantic colors that are defined for states like
+<span class="ph uicontrol">Success</span>, <span class="ph uicontrol">Warning</span>,
+or <span class="ph uicontrol">Error</span>.</p>
+<div class="p">The price values can be mapped to semantic states as follows:<ul class="ul" id="loiob81736e0fcb246efb3b0cf0ca422f8fd__ul_gyj_gt5_yt">
+<li class="li">
+<p class="p">price &lt; 50: Status is green (<span class="ph uicontrol">Success</span>)</p>
+</li>
+<li class="li">
+<p class="p">price &gt;= 50 and price &lt; 250: Status is normal
+(<span class="ph uicontrol">None</span>)</p>
+</li>
+<li class="li">
+<p class="p">price &gt;= 250 and price &lt; 2000: Status is orange
+(<span class="ph uicontrol">Warning</span>)</p>
+</li>
+<li class="li">
+<p class="p">price &gt;= 2000: Status is red (<span class="ph uicontrol">Error</span>) </p>
+</li>
+</ul></div>
+<div class="p">As we use Test Driven Development (TDD) we define the test case first, before we actually
+implement the feature. So we will now start by implementing a test for the
+<span class="ph uicontrol">Price State</span> feature. Naturally the test will fail until the
+feature is implemented in the next step.<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">Test Driven Development (TDD) is a software development model that relies on a very short
+development cycle. When using TDD a developer first writes a failing automatic
+test case to describe the behavior of a new feature or functionality. As soon as
+the test fails (due to the still missing implementation) the role of the
+developer switches to the implementation. The code is added to make the test run
+successful and then the cycle starts over again.</p><p class="p">There might also be iterations where just the implementation or testing code is
+refactored to make it more elegant. TDD reduces complexity while maintaining
+high test coverage of the application coding at the same time.</p></aside></div>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loiob81736e0fcb246efb3b0cf0ca422f8fd__fig_r1j_pst_mr"><div class="figbody">
+
+<img class="inline  " id="loiob81736e0fcb246efb3b0cf0ca422f8fd__image_yzh_xxd_ft" src="loio4e2924722bd64b51a96d198b760ac780_LowRes.png">
+</div><span class="figcap">The unit test will initially fail as the implementation is not provided
+yet</span></div>
+</section></div>
+<div class="section"><section class="section" type="Unit Test Setup"><h2 class="section_title" style="font-size: 1.15em;">Unit Test Setup</h2>
+
+<div class="p">All unit tests are located in the <span class="ph filepath">webapp/test/unit</span> folder and can be
+started manually by calling the <span class="ph filepath">unitTests.qunit.html</span> file in
+the same folder or the entry page. This HTML page is a QUnit runner that calls all
+unit tests of the app and displays the test results in a readable format.<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">Some testrunners like Karma do not require an HTML page to invoke the tests but work with configuration files instead. They can directly
+invoke the <span class="ph filepath">AllTests.js</span> file and log the test results in their own format. Therefore we make sure that the
+<span class="ph filepath">AllTests.js</span> file does not contain any UI output and just calls the various test cases of the app.</p></aside></div>
+<div class="fig fignone" id="loiob81736e0fcb246efb3b0cf0ca422f8fd__fig_fd3_kyd_ft"><div class="figbody">
+
+<img class="inline  " id="loiob81736e0fcb246efb3b0cf0ca422f8fd__image_vzp_lyd_ft" src="loiof25ffee0c48947bca16249c229654d69_LowRes.png">
+</div><span class="figcap">Unit test infrastructure in the application</span></div>
+<div class="p">Let&#x2019;s take a closer look at the <span class="ph filepath">unitTests.qunit.html</span> file. The
+application root is stored in the <span class="ph filepath">webapp</span> folder two levels
+above. In the <samp class="ph codeph">bootstrap</samp> tag of the HTML page we define two
+namespaces to refer to the app and the unit tests. The namespace of the unit tests
+points to the current folder as all test artifacts are located below the current
+folder:<ul class="ul" id="loiob81736e0fcb246efb3b0cf0ca422f8fd__ul_hkp_vyd_ft">
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.demo.bulletinboard: &quot;../../&quot;</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">test.unit: &quot;./&quot; </samp></p>
+</li>
+</ul></div>
+<p class="p">The namespace abstraction allows us to refer to all application and testing parts
+without having to use the full path. Furthermore, all unit tests are put in a
+similar folder structure and get the same name as the artifact that is tested. For
+example, the tests for the file <span class="ph filepath">webapp/model/formatter.js</span> are
+located in the <span class="ph filepath">webapp/test/unit/model/formatters.js</span> folder. For
+more details on the unit test setup please have a look at the coding of the
+prototype.</p>
+</section></div>
+<div class="section" id="loiob81736e0fcb246efb3b0cf0ca422f8fd__section_uw3_pzh_p1b"><section class="section" type="Coding"><h2 class="section_title" style="font-size: 1.15em;">Coding</h2>
+
+<p class="p">You can view and download all files in the <span class="ph uicontrol">Samples</span> in the Demo
+Kit
+<span class="ph">at <a class="xref" href="../../#/sample/sap.m.tutorial.testing.02/preview" target="_top" alt="#/sample/sap.m.tutorial.testing.02/preview" title="#/sample/sap.m.tutorial.testing.02/preview">Testing Apps - Step 2</a></span>. </p>
+</section></div>
+<div class="section"><section class="section" type="webapp/model/formatter.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/model/formatter.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/m/Text&quot;
+], function (Text) {
+	&quot;use strict&quot;;
+	return {
+		numberUnit: function (sValue) {
+			&#x2026;
+		}<span class="ph emphasis emphasis">,
+		priceState: function () {
+		}
+</span>
+	};
+});</pre>
+<p class="p">First we think about the feature that we want to implement. We want to introduce a
+new state for the price, and its value should depend on certain price ranges. <span class="ph"><span class="ph pname">SAPUI5</span></span> controls
+typically have semantic states like <span class="ph uicontrol">Success</span>,
+<span class="ph uicontrol">Warning</span>, or <span class="ph uicontrol">Error</span>. We will need
+this formatter function to convert the numeric price value from the model to a state
+value for the control. But without caring too much about the actual implementation
+of this formatter we just add an empty function <samp class="ph codeph">priceState</samp> to the
+formatter file for now and focus on the unit tests first.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/test/unit/model/formatter.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/test/unit/model/formatter.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;./model/formatter&quot;
+], function (formatter) {
+	&quot;use strict&quot;;
+
+	QUnit.module(&quot;Number unit&quot;);
+		&#x2026;
+	<span class="ph emphasis emphasis">QUnit.module(&quot;Price State&quot;);
+
+	function priceStateTestCase(oOptions) {
+		// Act
+		var sState = formatter.priceState(oOptions.price);
+
+		// Assert
+		oOptions.assert.strictEqual(sState, oOptions.expected, &quot;The price state was correct&quot;);
+	}
+
+	QUnit.test(&quot;Should format the products with a price lower than 50 to Success&quot;, function (assert) {
+		priceStateTestCase.call(this, {
+			assert: assert,
+			price: 42,
+			expected: &quot;Success&quot;
+		});
+	});
+
+	QUnit.test(&quot;Should format the products with a price of 50 to Normal&quot;, function (assert) {
+		priceStateTestCase.call(this, {
+			assert: assert,
+			price: 50,
+			expected: &quot;None&quot;
+		});
+	});
+
+	QUnit.test(&quot;Should format the products with a price between 50 and 250 to Normal&quot;, function (assert) {
+		priceStateTestCase.call(this, {
+			assert: assert,
+			price: 112,
+			expected: &quot;None&quot;
+		});
+	});
+
+	QUnit.test(&quot;Should format the products with a price between 250 and 2000 to Warning&quot;, function (assert) {
+		priceStateTestCase.call(this, {
+			assert: assert,
+			price: 798,
+			expected: &quot;Warning&quot;
+		});
+	});
+
+	QUnit.test(&quot;Should format the products with a price higher than 2000 to Error&quot;, function (assert) {
+		priceStateTestCase.call(this, {
+			assert: assert,
+			price: 2001,
+			expected: &quot;Error&quot;
+		});
+	});</span>
+});
+</pre>
+<p class="p">Now we write tests that call the function we have just defined and check for the
+correct result when passing in various arguments. </p>
+<div class="p">By writing these tests, we actually implement the following specification in our
+tests that was defined by the product team.<ul class="ul" id="loiob81736e0fcb246efb3b0cf0ca422f8fd__ul_nkv_cc2_ft">
+<li class="li">
+<p class="p">price &lt; 50: Status is green (<span class="ph uicontrol">Success</span>)</p>
+</li>
+<li class="li">
+<p class="p">price &gt;= 50 and price &lt; 250: Status is normal
+(<span class="ph uicontrol">None</span>)</p>
+</li>
+<li class="li">
+<p class="p">price &gt;= 250 and price &lt; 2000: Status is orange
+(<span class="ph uicontrol">Warning</span>)</p>
+</li>
+<li class="li">
+<p class="p">price &gt;= 2000: Status is red (<span class="ph uicontrol">Error</span>) </p>
+</li>
+</ul></div>
+<p class="p">Whenever we run the tests, we will implicitly check that the feature is
+still working as it was designed. To keep it simple, we should
+only write a minimum set of tests that cover the most important
+cases, but also including edge cases like the value 50 or
+unexpected values. </p>
+<p class="p">Let&#x2019;s have a look at the implementation of the unit tests now: We add our
+unit tests to the
+<span class="ph filepath">webapp/test/unit/model/formatter.js</span>
+file. The path below the app and the test folder is similar so
+it can easily associate the test with the tested functionality.
+There are already formatter functions for the number unit
+conversion defined in the code - you can have a quick look
+before we add our own tests.</p>
+<div class="p">We add a new QUnit module for our price state tests after the number unit conversion
+tests. We could write a test checking the result of the formatter for each of these
+cases but we do not want to repeat ourselves (<span class="q">&#x201C;DRY&#x201D;</span>) &#x2013; neither in the tests nor
+in the application coding &#x2013; so we create a reuse function called
+<samp class="ph codeph">priceStateTestCase</samp>. In this function, we call the formatter
+with the arguments provided as <samp class="ph codeph">oOptions</samp> and make a
+<samp class="ph codeph">strictEqual</samp> assertion for the expected parameter.<aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p class="p">There must be at least one assertion per QUnit test. If the actual value
+matches the expected value then the test is successful. However, if there
+are more assertions in a test case and a subsequent assertion fails, the
+whole test fails with the error message of the failed assertion.</p><p class="p">There are also other types of assertions, for example the <samp class="ph codeph">ok</samp>
+assertion that does not check the type. For more details, have a look at the
+official QUnit documentation. </p></aside></div>
+<div class="p">The assert object &#x2013; a special object injected by QUnit &#x2013; is passed on as a reference
+to the function. QUnit is loaded once for the whole unit testing part of the app. <aside class="note" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Note</strong></div>
+<p class="p">The main page for calling the unit tests is <span class="ph filepath">webapp/test/unit/unitTests.qunit.html</span>. In this file we load the QUnit runtime
+and an <samp class="ph codeph">AllTests.js</samp> file that loads and directly executes all files with unit tests. The other content of this
+file is just HTML for displaying the QUnit test result page.</p></aside></div>
+<p class="p"> And now for the actual test cases: Whenever we want to start a new test we call
+<span class="ph filepath">QUnit.test</span> with a test description and a callback function
+containing the test logic as an argument. The callback is invoked with a special
+assert object that is maintained by QUnit. We can simply call assertions as we saw
+above. </p>
+<p class="p">Inside each test we simply call our reuse function with different parameters for the
+price and the expected state that reflect our specification above. With five tests
+we can check the most important cases for our price state converter. There are four
+tests for the four different states and one edge case test with the value
+<samp class="ph codeph">50</samp>, that makes sure that the correct state is chosen.</p>
+<p class="p">That&#x2019;s it, you just wrote your first unit test. When you call the
+<span class="ph filepath">webapp/test/unit/unitTests.qunit.html</span> file in your browser,
+you can see that the first module for the number unit formatter is still green but
+our price state tests are red and failing. The error message tells us that the
+result of the empty formatter function is not as expected.</p>
+<p class="p">TDD methodology tells us to do the implementation as soon as the test fails and to
+come back to testing as soon as the tests are successful again. You run the unit
+tests after each code change, and you&apos;re done when the test does not fail anymore.
+We now switch to the implementation part and define the details of the formatter
+function in the next step.</p>
+</section></div>
+<div class="section"><section class="section" type="Conventions"><h2 class="section_title" style="font-size: 1.15em;"> Conventions</h2>
+
+<ul class="ul" id="loiob81736e0fcb246efb3b0cf0ca422f8fd__ul_nh5_ybb_nr">
+<li class="li">
+<p class="p">Write unit tests for testing the logical correctness of your
+features</p>
+</li>
+</ul>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/291c9121e6044ab381e0b51716f97f52.html" title="In this tutorial we will test application functionality with the testing tools that are delivered with SAPUI5. At different steps of this tutorial you will write tests using QUnit, OPA5, and the mock server. Additionally, you will learn about testing strategies, Test Driven Development (TDD), and much more." target="_top">Testing</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/ab134ef3932c4b42898c79c10341e8b5.html" title="In this step, we will take a look at the prototype and define the test strategy for our app. The prototype already contains the infrastructure for unit and integration testing and a minimum set of tests and features." target="_top">Step 1: Overview and Testing Strategy</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/2bf4892527174264808076be32c1e1b0.html" title="We will now take care of the implementation of the price formatter and make sure that the tests we wrote in the previous step run successfully." target="_top">Step 3: Adding the Price Formatter</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/09d145cd86ee4f8e9d08715f1b364c51.html" title="QUnit is a powerful, easy-to-use JavaScript unit testing framework. It is used by the jQuery, jQuery UI and jQuery Mobile projects and is capable of testing any generic JavaScript code. It supports asynchronous tests out-of-the-box." target="_top">Unit Testing with QUnit</a></div><div><a class="extlink" href="http://help.sap.com/disclaimer?site=https://qunitjs.com/" target="_blank" alt="https://qunitjs.com/" title="https://qunitjs.com/">QUnit Home Page<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

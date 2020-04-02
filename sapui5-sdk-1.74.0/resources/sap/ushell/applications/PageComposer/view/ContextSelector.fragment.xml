@@ -1,0 +1,50 @@
+<Dialog
+        xmlns="sap.m"
+        id="contextSelector"
+        title="{i18n>ContextSelector.Title}"
+        beforeOpen=".onBeforeOpen"
+        afterClose=".destroy"
+        contentWidth="30rem">
+    <content>
+        <Toolbar
+                id="contextSelectorToolbar"
+                visible="{/rolesAvailable}">
+            <SearchField
+                    id="contextSelectorSearchField"
+                    liveChange=".onSearch"
+                    search=".onSearch"
+                    tooltip="{i18n>Tooltip.SearchForRoles}"
+                    placeholder="{i18n>Placeholder.SearchForRoles}"
+                    width="100%"/>
+        </Toolbar>
+        <List
+                id="contextSelectorList"
+                mode="MultiSelect"
+                includeItemInSelection="true"
+                selectionChange=".onSelectionChange"
+                items="{/availableRoles}"
+                noDataText="{i18n>Message.NoRoles}">
+            <infoToolbar>
+                <OverflowToolbar
+                        visible="{= !${/validRoleSelection} &amp;&amp; ${/rolesAvailable}}"
+                        id="contextSelectorInfoToolbar">
+                    <Label id="contextSelectorInfoToolbarLabel" text="{i18n>Message.NoRoleSelected}"/>
+                </OverflowToolbar>
+            </infoToolbar>
+            <items>
+                <StandardListItem title="{name}" description="{title}"/>
+            </items>
+        </List>
+    </content>
+    <beginButton>
+        <Button
+                id="contextSelectorSelectButton"
+                type="Emphasized"
+                text="{i18n>Button.Select}"
+                press=".onConfirm"
+                enabled="{= ${/validRoleSelection}}"/>
+    </beginButton>
+    <endButton>
+        <Button id="contextSelectorCancelButton" text="{i18n>Button.Cancel}" press=".onCancel"/>
+    </endButton>
+</Dialog>

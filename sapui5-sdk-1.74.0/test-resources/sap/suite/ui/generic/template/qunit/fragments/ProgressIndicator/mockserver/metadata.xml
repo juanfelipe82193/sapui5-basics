@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"/>
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="TEST_SERVICE" sap:schema-version="1" xml:lang="en" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="Customer" sap:content-version="1" sap:label="Customer">
+				<Key>
+					<PropertyRef Name="Id"/>
+				</Key>
+				<Property MaxLength="6" Name="Id" Nullable="false" Type="Edm.String" sap:label="Customer Id" sap:updatable="false"/>
+				<Property MaxLength="50" Name="Name" Nullable="false" Type="Edm.String" sap:creatable="false" sap:label="Customer Name" sap:updatable="false"/>
+				<NavigationProperty Name="Projects" Relationship="Customer_has_Projects" FromRole="From_Customers" ToRole="To_Projects" sap:filterable="false"/>
+			</EntityType>
+			<EntityType Name="Project" sap:content-version="1" sap:label="Project">
+				<Key>
+					<PropertyRef Name="ProjectId"/>
+				</Key>
+				<Property MaxLength="6" Name="ProjectId" Nullable="false" Type="Edm.String" sap:label="Project Id" sap:updatable="false"/>
+				<Property Name="Progress" Type="Edm.Decimal" Precision="4" Scale="2"/>
+				<Property MaxLength="10" Name="State" Type="Edm.String" sap:creatable="false" sap:label="State" sap:updatable="false"/>
+				<Property MaxLength="1" Name="NumericState" Type="Edm.Byte" sap:creatable="false" sap:label="State" sap:updatable="false"/>
+			</EntityType>
+			<EntityContainer Name="Collections" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+				<EntitySet EntityType="TEST_SERVICE.Customer" Name="Customers" sap:content-version="1" sap:creatable="false" sap:deletable="false" sap:searchable="true" sap:updatable="false"/>
+				<EntitySet EntityType="TEST_SERVICE.Project" Name="Projects" sap:content-version="1" sap:creatable="false" sap:deletable="false" sap:searchable="true" sap:updatable="false"/>
+				<AssociationSet Name="Customer_has_Projects" Association="TEST_SERVICE.Customer_has_Projects" sap:creatable="false" sap:deletable="false" sap:updatable="false">
+					<End EntitySet="Customers" Role="From_Customers"/>
+					<End EntitySet="Projects" Role="To_Projects"/>
+				</AssociationSet>
+			</EntityContainer>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

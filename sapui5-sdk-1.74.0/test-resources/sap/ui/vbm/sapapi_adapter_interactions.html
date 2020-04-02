@@ -1,0 +1,168 @@
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<script src="../../../../resources/sap-ui-core.js"
+			id="Script1"
+			data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm"
+			data-sap-ui-theme="sap_bluecrystal"
+			data-sap-ui-xx-bindingSyntax="complex">
+		</script>
+	<style type="text/css">
+
+		#leftPanel {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0% 0% 0% 1%;
+			float: left;
+			width: 48.5%;
+			height: 100%;
+			overflow-y: auto;
+		}
+
+		#rightPanel {
+			margin: 0% 0% 0% 1%;
+			float: left;
+			width: 48.5%;
+			height: 100%;
+			overflow-y: auto;
+		}
+		i {
+				color: blue
+		}
+	</style>
+
+	<script>
+		var initialLoad = false;
+		var oAdapter = new sap.ui.vbm.Adapter('adapter');
+
+		function onReset() {
+			$("#input").css("color", "black");
+		}
+
+		function loadData(url)
+		{
+			$.ajax({
+				url: url,
+				dataType: "json",
+				success: function(data, status, xhr) {
+					try
+					{
+						$("#input").css("color", "black");
+						$("#input").val(JSON.stringify(data, null, '  '));
+					}
+					catch(ex)
+					{
+						$("#input").css("color", "red");
+						alert(ex);
+					}
+				}
+			});
+		}
+
+		function onMapConfiguration() {
+			loadData("media/adapter/map_configuration.json");
+		}
+
+		function onResourceHandling() {
+			loadData("media/adapter/resources.json");
+		}
+
+		function onInitialLoad() {
+			initialLoad = true;
+			loadData("media/adapter/initial_load.json");
+		}
+
+		function onCreateSpots() {
+			loadData("media/adapter/create_spots.json");
+		}
+
+        function onMapContextMenu() {
+            loadData("media/adapter/map_context_menu.json");
+        }
+		
+		function onLoadContextMenu() {
+			loadData("media/adapter/context_menu.json");
+		}
+
+		function onLoad() {
+			var input = $("#input").val();
+			if(input != null) {
+				try {
+					if (initialLoad) {
+						var map = new sap.ui.vbm.GeoMap('vbi', {
+							width : "100%",
+							height: "100%",
+							scaleVisible: true,
+							resources: [ new sap.ui.vbm.Resource({ name: "smiley", src: "demokit/media/images/smiley.png"})],
+						});
+
+						oAdapter.setMap(map.getId());
+
+						oAdapter.attachEvent("submit", function(payload) {
+								//alert(JSON.stringify(payload.data));
+								$("#output").val(JSON.stringify(JSON.parse(payload.mParameters.data), null, 2));
+							});
+
+						oAdapter.load(input).then(function() { map.placeAt("content"); });
+
+						initialLoad = false;
+					} else {
+						oAdapter.load(input);
+					}
+
+					$("#input").css("color", "green");
+				}
+				catch(ex) {
+					$("#input").css("color", "red");
+					alert(ex);
+				}
+			}
+		}
+
+	</script>
+	<body class="sapUiBody" style="height:90%">
+	  <h1 style="margin-left:1%;margin-top:1%">VBI to GeoMap Adapter Sample</h1>
+		<h3 style="margin-left:1%;margin-top:1%"> The aim: </h3>
+			<p style="margin-left:1%"> To test loading of VBI JSON into Geomap and delta handling of various sections of VBI JSON</p>
+		<h3 style="margin-left:1%;margin-top:1%"> To test: </h3>
+				<ol>
+					<li> Click on "Initial Load" button. <i>JSON is populated in method payload area.</i> <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Now click on "Load into Adapter".<i>There will be no visual change but initial VBI JSON containing data types, VOs, actions etc. are loaded.</i></li><br>
+                    <li> Right-Click on the map. <i>JSON is populated the event payload area with Action.object="Map"</i> <br>                        
+					<li> Click on "Context Menu (Map)" button. <i>JSON is populated in method payload area.</i> <br>
+					&nbsp;&nbsp;&nbsp;&nbsp;Now click on "Load into Adapter". <i>This should show a context menu<br>
+					<li> Choose a context menu item (say: Personalise -> Set Initial Map Section) <i>JSON is populated the event payload area</i> <br>
+					&nbsp;&nbsp;&nbsp;&nbsp;<i>Check Action.object="Map" Action.instance=""</i>><br>
+					<li> Click on "Create Spots" button. <i>JSON is populated in method payload area.</i><br>
+					&nbsp;&nbsp;&nbsp;&nbsp;Now click on "Load into Adapter". <i>Spots created.</i></li><br>
+					<li> Right click on the spot.<i>VBI Submit event (with name 'contextMenu') is raised and the event data is shown.</i></li><br>
+                    <li> <i>The payload should not contain any "vbi-x" [ex: vbi-Spots] </i><br>
+                    <li> Click on "Context Menu (Spots)" button. <i>JSON is populated in method payload area.</i><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Now click on "Load into Adapter". <i>Context Menu is shown.</i></li><br>    
+                    <li> Select an option from Context Menu. <i>VBI submit event is raised with name as specified in the VBI JSON in step 6 (FCODE_SELECT)</i></li><br>
+                    <li> <i>The payload should not contain any "vbi-x" [ex: vbi-Spots] </i><br>
+                    <li> Click on one of the spots. <i>VBI submit event is raised </i></li><br>
+                    <li> <i>The payload should not contain any "vbi-x" [ex: vbi-Spots] </i><br>
+                    <li> Click on "Context Menu (Spots)" button. <i>JSON is populated in method payload area.</i><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Now click on "Load into Adapter". <i>Context Menu is shown.</i></li><br>
+                    <li> Select an option from Context Menu. <i>VBI submit event is raised with name as specified in the VBI JSON in step 6 (FCODE_SELECT)</i></li><br>
+                    <li> <i>The payload should not contain any "vbi-x" [ex: vbi-Spots] </i><br>
+				</ol>
+		<div id="leftPanel">
+			<div id="content"></div>
+		</div>
+		<div id="rightPanel">
+			<!--<button style="width:150px;margin-bottom:5px" onClick="onMapConfiguration()">Map Configuration</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onResourceHandling()">Resources Handling</button>-->
+            <button style="width:150px;margin-bottom:5px" onClick="onInitialLoad()">Initial Load</button>
+            <button style="width:150px;margin-bottom:5px" onClick="onMapContextMenu()">Context Menu (Map)</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onCreateSpots()">Create Spots</button>			
+			<button style="width:150px;margin-bottom:5px" onClick="onLoadContextMenu()">Context Menu</button>
+			<textarea id="input" onkeyup="onReset()" style="width:100%;height:40%;padding:1%" placeholder="Input VBI JSON"></textarea>
+			<br/><br/>
+			<button onClick="onLoad()">Load into Adapter</button>
+			<br/><br/>
+			<textarea id="output" style="width:100%;height:40%;padding:1%" placeholder="Output VBI JSON"></textarea>
+			</div>
+		</body>
+		</html>

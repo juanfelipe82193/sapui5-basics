@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+	<meta http-equiv='Content-Type' content='text/html;charset=UTF-8' />
+
+	<title>Visual Business GeoMap with XmlView</title>
+
+	<!-- Load UI5, select blue crystal theme,  and the "commons" control library -->
+
+	<script id='sap-ui-bootstrap' type='text/javascript' src='../../../../resources/sap-ui-core.js' data-sap-ui-theme='sap_bluecrystal' data-sap-ui-libs='sap.ui.commons,sap.ui.table,sap.ui.vbm'></script>
+
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		.col {
+			color: red;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+		// have some data
+		var oData = {
+			Spots: [{
+				"key": "DE",
+				"pos": "0;0;0",
+				"tooltip": "Spot1",
+				"type": sap.ui.vbm.SemanticType.Default
+			}, {
+				"key": "FR",
+				"pos": "0;30;0",
+				"tooltip": "Spot2",
+				"type": sap.ui.vbm.SemanticType.Default
+			}, {
+				"key": "IT",
+				"pos": "0;60;0",
+				"tooltip": "Spot3",
+				"type": sap.ui.vbm.SemanticType.Default
+			}],
+
+			OtherSpots: [{
+				"key": "DE",
+				"pos": "20;0;0",
+				"tooltip": "Spot4"
+			}, {
+				"key": "FR",
+				"pos": "20;30;0",
+				"tooltip": "Spot5"
+			}, {
+				"key": "IT",
+				"pos": "20;60;0",
+				"tooltip": "Spot6"
+			}]
+		};
+
+		// create model and set the data
+		var oModel = new sap.ui.model.json.JSONModel();
+		oModel.setData(oData);
+
+	</script>
+
+
+	<script id="view1" type="sapui5/xmlview">
+		<mvc:View height="100%" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.ui.commons" xmlns:vbm="sap.ui.vbm" controllerName="geomap.controller" xmlns:html="http://www.w3.org/1999/xhtml">
+			<Panel>
+				<title>
+					<core:Title text="First Visual Business GeoMap with UI5 Model Binding Interface"></core:Title>
+				</title>
+				<content>
+					<vbm:GeoMap id="vbi">
+						<vbm:Spots items="{/Spots}">
+							<vbm:Spot position="{pos}" tooltip="{tooltip}" type="{type}" />
+						</vbm:Spots>
+						<vbm:Spots items="{/OtherSpots}">
+							<vbm:Spot position="{pos}" tooltip="{tooltip}" />
+						</vbm:Spots>
+					</vbm:GeoMap>
+				</content>
+			</Panel>
+		</mvc:View>
+	</script>
+
+
+	<script>
+		// define a new (simple) Controller type
+		sap.ui.controller("geomap.controller", {});
+
+
+		function typeCheck() {
+			var type = jQuery("#view1")[0].type;
+			document.getElementById('type').innerHTML = type;
+		};
+
+		// instantiate the View
+		var myView = sap.ui.xmlview({
+			viewContent: jQuery('#view1').html()
+		}); // accessing the HTML inside the script tag above
+
+		myView.setModel(oModel);
+
+		var oGeomap = myView.byId("vbi");
+		var oMapConfig = JSON.parse(localStorage.getItem('map'));
+		oGeomap.setMapConfiguration(oMapConfig);
+
+		// put the View onto the screen
+		myView.placeAt('content');
+
+	</script>
+
+
+</head>
+
+<body class='sapUiBody'>
+	<h1> SAP UI5 Visual Business: zoomToGeoPosition Test </h1>
+
+
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To display GeoMap with spots using xml view.</p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+			<li> Click on the button "Check type" and make sure you see " type="sapui5/xmlview" " (in red below)</li>
+			<br>
+			<br>
+			<p id="type" style="color:red; font-size:30px"></p>
+		</ol>
+	</div>
+	<div id="description2">
+		<br>
+		<button id="typexml" onClick="typeCheck()">Check type</button>
+		<br>
+		<br>
+		<div id='content'></div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Worklist App</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In this tutorial we will build an app using SAPUI5 that, for example, a shop owner can use to manage his product stock levels."><meta name="description" content="In this tutorial we will build an app using SAPUI5 that, for example, a shop owner can use to manage his product stock levels."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"0c5dc937271f4f56b5e7d54676199860.html","previousTopicHref":"95e5b87804ef4059bb68dd511666d4e3.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio6a6a621c978145ad9eef2b221d2cf21d"><h1 class="title topictitle1" hidden>Worklist App</h1><div class="body conbody"><p class="shortdesc" hidden>In this tutorial we will build an app using <span class="ph"><span class="ph pname">SAPUI5</span></span> that, for example, a shop
+owner can use to manage his product stock levels.</p>
+<div class="p">The app provides the following features:<ul class="ul" id="loio6a6a621c978145ad9eef2b221d2cf21d__ul_w4t_r1p_zt">
+<li class="li">
+<p class="p">Overview of all products</p>
+</li>
+<li class="li">
+<p class="p">Track products with shortages or products that are completely out of
+stock</p>
+</li>
+<li class="li">
+<p class="p">Reorder products that are low in stock</p>
+</li>
+<li class="li">
+<p class="p">View product details and add comments</p>
+</li>
+</ul></div>
+<p class="p">We will use the worklist template as a starting point for this tutorial and add
+additional features to the app as we go through the steps. The template implements a
+typical &quot;Worklist&quot; floorplan, one of the patterns that are specified by the <span class="ph pname">SAP Fiori design guidelines</span>, but you can also use it as a starting point for easily creating any
+kind of list-based apps. For more information about worklist floorplans, see the
+<cite class="cite">Related Information</cite> section at the bottom of this topic.</p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loio6a6a621c978145ad9eef2b221d2cf21d__fig_swx_sgp_zt"><div class="figbody">
+
+<img class="inline  " id="loio6a6a621c978145ad9eef2b221d2cf21d__image_l1h_nzn_tdb" src="loio016d473029e04ec9be5ed43fa897e69b_LowRes.jpg">
+</div><span class="figcap">Start page of the app with list of products and actions</span></div>
+<div class="fig fignone" id="loio6a6a621c978145ad9eef2b221d2cf21d__fig_wnz_wgp_zt"><div class="figbody">
+
+<img class="inline  " id="loio6a6a621c978145ad9eef2b221d2cf21d__image_zy1_rzn_tdb" src="loioa517fe596aa04b4d8d080fbf6168cf40_LowRes.jpg">
+</div><span class="figcap">Product detail page of the app</span></div>
+</section></div>
+<div class="section"><section class="section" type="Choose your development environment"><h2 class="section_title" style="font-size: 1.15em;">Choose your development environment</h2>
+
+<div class="p">You can do this tutorial either with <span class="ph pname">SAP Web IDE</span> or choose your own
+development environment:<ul class="ul" id="loio6a6a621c978145ad9eef2b221d2cf21d__ul_ykf_mlp_zt">
+<li class="li">
+<p class="p">If you use <span class="ph pname">SAP Web IDE</span>, you don&apos;t need to set up a development environment, a server and so
+on. All you need is a browser and an account for the <span class="ph pname">SAP Cloud Platform</span>.
+If you don&apos;t have an account yet, you can easily get a trial account. We
+recommend to continue with the <span class="ph pname">SAP Web IDE</span> as it has
+out-of-the-box support for <span class="ph pname">SAPUI5</span> and
+because there is no setup overhead at all.</p>
+<p class="p">In this case, you start with the template that is available in SAP Web
+IDE as described in option 1 for step 1 of this tutorial (see <a class="xref" href="../../#/topic/0c5dc937271f4f56b5e7d54676199860.html" title="This first step is only relevant if you decided to use the SAP Web IDE. In this step, we will set up the worklist app using a template and configure the service to display products in the app. The template includes generic app functionality and tests that can be easily extended with custom functionality for our use case." target="_top">Step 1 (Option 1): Creating the Initial App with an App Template in SAP Web IDE</a>).</p>
+</li>
+<li class="li">
+<p class="p">If you want to use your local development environment and deploy to any
+Web server of your choice, you download the code for step 1 from the
+Demo Kit <span class="ph">at <a class="xref" href="../../#/entity/sap.m.tutorial.worklist" target="_top" alt="#/entity/sap.m.tutorial.worklist" title="#/entity/sap.m.tutorial.worklist">Worklist App</a></span>. In this case, start
+with option 2 for step 1 of this tutorial (see <a class="xref" href="../../#/topic/9d646de79e3a46ee8143a4b21b332e5e.html" title="In this step, we set up the initial app without SAP Web IDE." target="_top">Step 1 (Option 2): Downloading the Code</a>).</p>
+</li>
+</ul></div>
+<p class="p">There might be some small differences between the worklist app code generated by the SAP Web
+IDE template and the code downloaded from the Demo Kit. However, the differences are
+small and not relevant for the purpose of this tutorial</p>
+<aside class="note tip" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Tip</strong></div>
+<p class="p">You don&apos;t have to do all tutorial steps sequentially, you can also jump directly to any step you want. Just download the code from the previous
+step, copy it to your workspace and make sure that the application runs by calling the <samp class="ph codeph">webapp/test.html</samp> file.</p><div class="p">For more information check the following sections of the tutorials overview page (see <a class="xref" href="../../#/topic/8b49fc198bf04b2d9800fc37fecbb218.html" title="Set up your development environment and go through our tutorials. They introduce you to all major development paradigms of SAPUI5 using practical examples in an interactive format." target="_top">Get Started: Setup and Tutorials</a>):<ul class="ul" id="loio6a6a621c978145ad9eef2b221d2cf21d__ul_uxg_vmr_xs">
+<li class="li">
+<p class="p"><a class="xref" href="../../#/topic/8b49fc198bf04b2d9800fc37fecbb218.html#loio8b49fc198bf04b2d9800fc37fecbb218__tutorials_download" target="_top">Downloading Code for a Tutorial Step</a></p>
+</li>
+<li class="li">
+<p class="p"><a class="xref" href="../../#/topic/8b49fc198bf04b2d9800fc37fecbb218.html#loio8b49fc198bf04b2d9800fc37fecbb218__tutorials_adaptation" target="_top">Adapting Code to Your Development Environment</a></p>
+</li>
+</ul></div></aside>
+</section></div>
+</div><div class="related-links"> <ol><li><strong><a class="link" href="../../#/topic/0c5dc937271f4f56b5e7d54676199860.html" title="This first step is only relevant if you decided to use the SAP Web IDE. In this step, we will set up the worklist app using a template and configure the service to display products in the app. The template includes generic app functionality and tests that can be easily extended with custom functionality for our use case." target="_top">Step 1 (Option 1): Creating the Initial App with an App Template in SAP Web IDE</a></strong><br></li><li><strong><a class="link" href="../../#/topic/9d646de79e3a46ee8143a4b21b332e5e.html" title="In this step, we set up the initial app without SAP Web IDE." target="_top">Step 1 (Option 2): Downloading the Code</a></strong><br></li><li><strong><a class="link" href="../../#/topic/fc2c35880ccf4282a6baf8ab861bc10e.html" title="With the generated code (SAP Web IDE) or the downloaded code from the Demo Kit, you have an initial app structure with the following content inside the webapp folder." target="_top">Step 1 (Result): The Initial App</a></strong><br></li><li><strong><a class="link" href="../../#/topic/311890311f7148adbfbf248a6980df1c.html" title="In this step, we want to change the mock data of the initial app. The service metadata only contains a description of the service entities. The mock server that is part of the app will auto-generate random mock data based on the data types defined in the metadata file. To have a more realistic development environment we will now add additional sample data." target="_top">Step 2: Custom Mock Data</a></strong><br></li><li><strong><a class="link" href="../../#/topic/84100bcfd5b34f62858bdd6f67976b4a.html" title="In this step, we will edit the worklist table to include additional columns for our manage product stocks scenario. We display the supplier, the product price, and the number of units on order for each product and format the values accordingly." target="_top">Step 3: Extending the Worklist Table</a></strong><br></li><li><strong><a class="link" href="../../#/topic/85ec3a9454ac4eb1a901745e773844d3.html" title="For easily detecting and managing product shortages in our app, we will add a quick filter for the worklist table. Users can press the filter tabs to display the products according to whether they are in stock, have low stock or no stock. The table will update accordingly and show only the products matching the criteria." target="_top">Step 4: Quick Filter for the Worklist</a></strong><br></li><li><strong><a class="link" href="../../#/topic/2da220ff496c4b0f9ce29208cbd089f3.html" title="Now we can easily spot shortages on our stock, but we would also like to take action and resolve it. Either we can decide to remove the product until the shortage is resolved or order new items of the product. In this step, we will add these actions to the footer of the worklist table." target="_top">Step 5: Adding Actions to the Worklist</a></strong><br></li><li><strong><a class="link" href="../../#/topic/b561d146f9114b029bd60fa26df09c6b.html" title="In this step, we will extend the detail page of our app to show more information of a given product with various UI controls. We will enrich the header area and display further attributes in an info panel for information about the supplier." target="_top">Step 6: Extending the Detail Page</a></strong><br></li><li><strong><a class="link" href="../../#/topic/c73dfe312f104664954749c5c36faf27.html" title="In this step, we extend the product detail view by adding a feature allowing to add comments to the product." target="_top">Step 7: Adding a Comments Section</a></strong><br></li></ol><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="https://experience.sap.com/fiori-design/floorplans/work-list/" target="_blank" alt="https://experience.sap.com/fiori-design/floorplans/work-list/" title="https://experience.sap.com/fiori-design/floorplans/work-list/"><span class="ph pname">SAP Fiori design guidelines</span>: Worklist Floorplans</a></div><div><a class="link" href="../../#/topic/a77f2d29299247f8a3e30226507b1765.html" title="The SAP Fiori Worklist Application template implements a typical worklist floorplan, one of the patterns that is specified by the SAP Fiori design guidelines." target="_top">Worklist Template</a></div><div><a class="link" href="https://account.hanatrial.ondemand.com/" target="_blank" alt="https://account.hanatrial.ondemand.com/" title="https://account.hanatrial.ondemand.com/">Get a <span class="ph pname">SAP Cloud Platform</span> trial account</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

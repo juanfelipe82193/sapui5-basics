@@ -1,0 +1,359 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <title>ASTBuilder  - sap.rules.ui</title>
+    <script id="sap-ui-bootstrap" type="text/javascript" data-sap-ui-theme="sap_fiori_3"
+            src="../../../../resources/sap-ui-core.js "
+            data-sap-ui-libs="sap.m, sap.rules.ui"
+            data-sap-ui-resourceroots='{
+               "test.sap.rules.ui": "./",
+               "sap.rules.ui": "/src/sap/rules/ui"
+            }'
+            />
+    </script>
+
+    <script type="text/javascript">
+
+	    sap.ui.define(
+        [
+			"jquery.sap.global",
+            "test/sap/rules/ui/TestUtils"
+        ],
+        function (jQuery, Utils, MockServer, MockRecorderHandler)
+        {
+        	var that = this;
+        	that._astUtils = sap.rules.ui.ast.lib.AstYamlConverter;
+
+			var oModel = new sap.ui.model.odata.v2.ODataModel({
+				serviceUrl: "/rules-service/rule_srv/",
+				defaultBindingMode: sap.ui.model.BindingMode.TwoWay
+		    });
+		    oModel.setDefaultCountMode(sap.ui.model.odata.CountMode.None);
+		    var vocabularyModel = new sap.ui.model.odata.v2.ODataModel("/rules-service/vocabulary_srv/");
+
+			oModel.attachRequestCompleted(function(oControlEvent){
+				var sErrorMessage = "";
+				var aMessage = [];
+				var oMessages = oControlEvent.getSource().mMessages;
+				for (var prop in oMessages) {
+					oMessages[prop].forEach(function(oMessage) {
+							if (oMessage.type === "Error") {
+							aMessage.push({
+							type: oMessage.type,
+							code: oMessage.code,
+							message: oMessage.message
+							});
+							sErrorMessage =
+               + oMessage.code + "  " + oMessage.message + "\n";
+						}
+					});
+				}
+				if (sErrorMessage) {
+					console.log(sErrorMessage);
+				}
+			});
+			var oExpressionLanguage;
+
+	    	//Some handlers
+			var readErrorHandler = function(oError) {
+				alert("read error" + JSON.stringify(oError));
+			};
+
+			var sRulePath = "";
+
+			var setBindingContext = function(sRuleId){
+
+				var  callback = function (valueHelpInfo){
+					var i;
+					var serviceInfo;
+					for(i=0 ; i< valueHelpInfo.length ; i++){
+						serviceInfo = valueHelpInfo[i].metadata;
+						valueHelpInfo[i].model = new sap.ui.model.odata.v2.ODataModel({
+							serviceUrl: serviceInfo.serviceURL,
+            				defaultBindingMode: sap.ui.model.BindingMode.OneWay
+						});
+						// Uncomment the next line to test valuehelp error handling - V2 oData model isn't returned;
+						//valueHelpInfo[i].model = new sap.m.Input();
+					}
+				}
+				// Uncomment the next line to test valuehelp error handling - callback is not a function
+				//callback = {"stam":false};
+				oExpressionLanguage.setValueHelpCallback(callback);
+
+			    oExpressionLanguage.setModel(vocabularyModel);
+
+				//Set model name on the decison table
+
+                var oProjectId;
+                oModel.read("/Rules", {
+					filters: [
+						new sap.ui.model.Filter("Id", "EQ", sRuleId),
+						new sap.ui.model.Filter("ValidTo", "EQ", null)
+					],
+				    urlParameters: {
+				    	"$select": "Id,Version,ProjectId"
+				    },
+					success: function(data) {
+
+						for(var entryCount = 0; entryCount < data.results.length; entryCount++ ) {
+							if(data.results[entryCount].Id === sRuleId){
+
+								var sRulePath = "/Rules(Id=\'" + sRuleId + "\',Version=\'"+ data.results[entryCount].Version +"\')";
+								oProjectId = data.results[entryCount].ProjectId;
+								this.oRuleBuilder.setBindingContextPath(sRulePath);
+								oExpressionLanguage.setBindingContextPath("/Vocabularies(\'" + oProjectId + "\')");
+
+								break;
+							}
+						}
+
+					},
+					error: readErrorHandler
+				});
+
+			};
+
+
+	        //Create App
+	        var oApp = new sap.m.App("myApp", {initialPage:"myPage1"});
+
+	        //Create Page
+	        var oPage = new sap.m.Page("myPage1", { title: "AST Builder (Expression Advanced) Control"});
+
+
+            //indicator for on which device we running
+            if (!sap.ui.Device.support.touch) {
+                oPage.addStyleClass("sapUiSizeCompact");
+            } else {
+                oPage.addStyleClass("sapUiSizeCozy");
+            }
+
+			this.oRuleBuilder = null;
+			var oAdvancedExpressionEditor = null;
+			var oAstTextArea = null;
+			var oDTConfig = null;
+
+
+	        var _handleRuleBuilderCreation = function(sRuleId){
+	        	if(!sRuleId){
+						ruleIdTextControl= $("#RuleIdText").control(0);
+						sRuleId = ruleIdTextControl.getValue();
+					}
+				if (sRuleId){
+					if (!this.oRuleBuilder){
+						//create dt configuration
+						oDTConfig = new sap.rules.ui.DecisionTableConfiguration();
+
+						//Create Decision Table
+						this.oRuleBuilder = new sap.rules.ui.RuleBuilder({
+							types: [sap.rules.ui.RuleType.DecisionTable],
+							decisionTableConfiguration: oDTConfig
+						});
+						this.oRuleBuilder.setModel(oModel);
+
+		        	}
+
+		        	if (!oExpressionLanguage){
+						oExpressionLanguage = new sap.rules.ui.services.ExpressionLanguage();
+						this.oRuleBuilder.setExpressionLanguage(oExpressionLanguage);
+                    }
+
+					setBindingContext(sRuleId);
+				}
+	        };
+
+	        var _handleExpressionAdvancedCreation = function(sRuleId){
+	        	//TODO: get the version and pass
+	        	sVersion = "00001"
+	        	oExpressionLanguage = new sap.rules.ui.services.ExpressionLanguage();
+	        	var oExpressionModel = new sap.ui.model.odata.v2.ODataModel("/rules-service/vocabulary_srv/");
+	        	oExpressionLanguage.setBindingContextPath("/Vocabularies(Id=\'" + sRuleId + "\')");
+			    oExpressionLanguage.setModel(oExpressionModel);
+	        	var oAdvancedExpressionEditor= new sap.rules.ui.ExpressionAdvanced({
+				expressionLanguage: oExpressionLanguage,
+	        	placeholder: "Please enter an expression",
+	        	type: sap.rules.ui.ExpressionType.NonComparison,
+				editable:true,
+				change: function(oEvent) {
+					var oSource = oEvent.getSource();
+					var oExpressionStr = oSource.getValue();
+					var oResult = _getConvertedExpression(oExpressionStr, true, sRuleId, sVersion);
+                    // Transform to DT model and use
+                    var expressionConverted = _getExpressionFromParseResults(oSource.getValue(), oResult);
+                    var parserResults = oResult.output.decisionTableData.DecisionTable.DecisionTableColumns.results["0"].Condition.parserResults;
+                    if(parserResults.status != "Error"){
+                        var astOutput = parserResults.converted.ASTOutput;
+
+                    that._astUtils.Id = 0;
+
+                    var astResponse = JSON.stringify(that._astUtils.parseConditionStatement(astOutput), null, 4);
+					generateASTForExpression(astResponse);
+					}
+				}
+			   }).setModel(oModel);
+
+			   oPage.addContent(oAdvancedExpressionEditor);
+
+	         };
+
+	        var _getConvertedExpression = function (expression, isCodeText, sRuleId, sRuleVersion) {
+            var oRuleData = _formRuleData(sRuleId,sRuleVersion, expression);
+            var oResult;
+            if (isCodeText) {
+                // Convert to code Text
+                oResult = oExpressionLanguage.convertRuleToCodeValues(oRuleData);
+            } else {
+                // Convert to display Text
+                oResult = oExpressionLanguage.convertRuleToDisplayValues(oRuleData);
+            }
+            return oResult;
+        };
+
+        // Add Decision table specific data for converting the data to code to display and viceVersa.
+        var _formRuleData = function (sRuleId,sRuleVersion, expression) {
+
+            var rulePath = sRulePath;
+            var oRuleId = sRuleId;
+            var oVersion = sRuleVersion;
+
+            var oRuleData = jQuery.extend({}, this.oRuleBuilder._getModel().oData);
+
+            oRuleData = oRuleData[rulePath];
+
+            if (!oRuleData){
+                   oRuleData = {};
+            }
+            // Add dummy tags
+            if (!oRuleData.DecisionTable) {
+                oRuleData.DecisionTable = {};
+            }
+
+            oRuleData.Type = "DT";
+
+            oRuleData.DecisionTable.metadata = {};
+            // HardCoding values to DT because rule body validator and tags expects these tags
+            oRuleData.DecisionTable.RuleID = oRuleId;
+            oRuleData.DecisionTable.version = oVersion;
+            oRuleData.DecisionTable.HitPolicy = "FM";
+
+            // Add dummy tags
+            oRuleData.DecisionTable.DecisionTableColumns = {};
+            oRuleData.DecisionTable.DecisionTableColumns.results = [];
+            oRuleData.DecisionTable.DecisionTableColumns.results.push({
+                "metadata": {},
+                "RuleId": oRuleId,
+                "Id": 1,
+                "Version": oVersion,
+                "Sequence": 1,
+                "Type": "CONDITION",
+                "Condition": {
+                    "metadata": {},
+                    "RuleId": oRuleId,
+                    "Id": 1,
+                    "Version": oVersion,
+                    "Expression": expression,
+                    "Description": null,
+                    "ValueOnly": false,
+                    "FixedOperator": null
+                },
+                "Result": null
+            });
+
+            oRuleData.DecisionTable.DecisionTableRows = {};
+            oRuleData.DecisionTable.DecisionTableRows.results = [];
+
+
+            oRuleData.DecisionTable.DecisionTableColumnsCondition = {};
+            oRuleData.DecisionTable.DecisionTableColumnsCondition.results = [];
+
+            oRuleData.DecisionTable.DecisionTableColumnsResult = {};
+            oRuleData.DecisionTable.DecisionTableColumnsResult.results = [];
+
+            return oRuleData;
+        };
+
+        var _getExpressionFromParseResults = function (expression, oResult) {
+            if (oResult.output.decisionTableData.DecisionTable.DecisionTableColumns.results[0].Condition.parserResults.converted) {
+                return oResult.output.decisionTableData.DecisionTable.DecisionTableColumns.results[0].Condition.parserResults.converted.Expression;
+            } else {
+                return expression;
+            }
+        };
+
+
+
+			//Create empty rule checkbox
+
+			var oRuleInput =  new sap.m.Input({
+				id: "RuleIdText",
+				placeholder: "Enter Rule ID",
+				width: "300px",
+				change: function(oControlEvent) {
+					var that = this;
+					var sRuleId = oControlEvent.getParameter("value");
+					_handleRuleBuilderCreation(sRuleId);
+					_handleExpressionAdvancedCreation(sRuleId);
+				}
+			});
+
+		var generateASTForExpression = function(oExpressionStr){
+			var oSpaceFlexBox = new sap.m.FlexBox({
+				height:"4px"
+			});
+			sap.m.MessageToast.show("AST updated");
+			oAstTextArea.setValue(oExpressionStr);
+			oAstTextArea.setHeight("100%")
+			oAstTextArea.setWidth("100%")
+			if(oExpressionStr!=null || oExpressionStr!=""){
+				oPage.addContent(oSpaceFlexBox);
+				oPage.addContent(oAstTextArea);
+			}
+
+		}
+
+		var showAST = function(oEvent){
+			oAstTextArea.setVisible(true);
+		}
+
+
+		var generateASTBtn = new sap.m.Button({
+			text: "Generate AST",
+			press: showAST,
+			enabled : true
+		})
+
+		var oAstTextArea = new sap.m.TextArea({
+			text: "",
+			editable: true,
+			visible: false
+		})
+
+			///////////////////////////////////////////////////////////////////////////////
+
+			var toolBarSpacer1 =	new sap.m.ToolbarSpacer({width: "1em"});
+			var toolBarSpacer2 =	new sap.m.ToolbarSpacer({width: "1em"});
+
+	        var ruleFlexBox = new sap.m.FlexBox({
+	        	items: [toolBarSpacer1, oRuleInput, toolBarSpacer1, generateASTBtn]
+	        })
+
+	        var expressionFlexBox = new sap.m.FlexBox({
+	        	items: [oAdvancedExpressionEditor]
+	        })
+
+			 oPage.addContent(new sap.ui.core.HTML({content: "<h2 class='TableSpace'></h1>"}))
+			     .addContent(ruleFlexBox)
+
+			oApp.addPage(oPage);
+			oApp.placeAt("content");
+        });
+    </script>
+</head>
+<body class="sapUiBody" role="application">
+<h1 id="header">Test Page for AST</h1>
+<div id="content"></div>
+<button type="button" class ="mockBtn mockInvisible mockBtnActive" onclick="button_click(this)">stop</button>
+</body>
+</html>

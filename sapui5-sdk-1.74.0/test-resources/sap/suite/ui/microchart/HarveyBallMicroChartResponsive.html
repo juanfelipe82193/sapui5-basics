@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.suite.ui.microchart.ColumnMicroChart</title>
+
+<base href="../../../../../">
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout, sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize"
+	src="resources/sap-ui-core.js">
+</script>
+
+<script type="text/javascript">
+	jQuery.sap.initMobile();
+
+	function _fnParseFloat(value) {
+		if (!value || 0 === value.length || "-" === value) {
+			return undefined;
+		}
+		if (/[.,]$/.test(value)) {
+			return sap.ui.core.format.NumberFormat.getFloatInstance().parse(value.slice(0, -1));
+		} else {
+			return sap.ui.core.format.NumberFormat.getFloatInstance().parse(value);
+		}
+	};
+
+	fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The Harvey ball microchart is pressed.");
+	};
+
+	var oData = {
+		sizes: {
+			L: sap.m.Size.L,
+			M: sap.m.Size.M,
+			S: sap.m.Size.S,
+			XS: sap.m.Size.XS,
+			Auto: sap.m.Size.Auto
+		},
+		total: 360,
+		totalLabel: "360",
+		totalScale: "Mrd",
+		formattedLabel: false,
+		showTotal: true,
+		showFractions: true,
+		items: [{
+			fraction: 130,
+			color: sap.m.ValueColor.Good,
+			fractionLabel: "130",
+			fractionScale: "Mln",
+			formattedLabel: false
+		}],
+		tooltip: "Cumulative Totals\n((AltText))\ncalculated in EURO"
+	};
+
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData(oData);
+	sap.ui.getCore().setModel(oModel);
+
+	var buildChart = function(sSize) {
+		var oRMCItemTemplate = new sap.suite.ui.microchart.HarveyBallMicroChartItem({
+			fraction: "{fraction}",
+			color: "{color}",
+			fractionLabel: "{fractionLabel}",
+			fractionScale: "{fractionScale}",
+			formattedLabel: "{formattedLabel}"
+		});
+
+		var oRMCTemplate = new sap.suite.ui.microchart.HarveyBallMicroChart({
+			totalScale: "Mrd",
+			formattedLabel: "{/formattedLabel}",
+			showTotal: "{/showTotal}",
+			showFractions: "{/showFractions}",
+			colorPalette: "{/colorPalette}",
+			size: sSize ? "{/sizes/"+ sSize +"}" : null,
+			total: "{/total}",
+			totalLabel: "{/totalLabel}",
+			totalScale: "{/totalScale}",
+			width: "{/width}",
+			items: {
+				template: oRMCItemTemplate,
+				path: "/items"
+			},
+			isResponsive: !sSize,
+			tooltip: "{/tooltip}",
+			press: fnPress
+		});
+		return oRMCTemplate;
+	};
+
+	var oCCM = buildChart(sap.m.Size.M);
+	var oCCS = buildChart(sap.m.Size.S);
+	var oResponsiveCMC = buildChart();
+	oResponsiveCMC.placeAt("content");
+	oCCS.placeAt("oldExampleS");
+	oCCM.placeAt("oldExampleM");
+
+	var oHeightSlider = new sap.m.Slider({
+		value : 72,
+		step : 0.0001,
+		min : 20,
+		max : 400,
+		liveChange : function(oControlEvent) {
+			var height = oControlEvent.getParameter("value");
+			jQuery("#content").css("height", height + "px");
+			oResponsiveCMC.invalidate();
+		}
+	});
+
+	var oWidthSlider = new sap.m.Slider({
+		value : 168,
+		step : 0.0001,
+		min : 10,
+		max : 400,
+		liveChange : function(oControlEvent) {
+			var width = oControlEvent.getParameter("value");
+			jQuery("#content").css("width", width + "px");
+			oResponsiveCMC.invalidate();
+		}
+	});
+
+	var oSimpleForm = new sap.ui.layout.form.SimpleForm("controls-cc", {
+		maxContainerCols : 4,
+		editable : true,
+		content : [ oHeightSlider, oWidthSlider ]
+	});
+
+	oSimpleForm.placeAt("modifiers");
+
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+	<script>
+		//set the contrast class for belize plus
+		if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+			jQuery("body").addClass("sapContrastPlus");
+		}
+	</script>
+	<div id="modifiers"></div>
+	<div id="content" style="height: 72px; width: 168px; border-color : black; border: 1px;border-style:solid;"></div>
+	<div id="oldExampleS"></div>
+	<div id="oldExampleM"></div>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+	<edmx:Reference
+		Uri="/sap/bc/ui5_ui5/ui2/ushell/resources/sap/ushell/components/factsheet/vocabularies/UI.xml">
+		<edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1" />
+	</edmx:Reference>
+	<edmx:Reference
+		Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Alias="Communication"
+			Namespace="com.sap.vocabularies.Communication.v1" />
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/sap/SEPMRA_PROD_MAN/$metadata">
+		<edmx:Include Alias="SEPMRA_PROD_MAN" Namespace="SEPMRA_PROD_MAN" />
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm">
+			<!--=============================================================================== 
+				Entity Type from chosen collection ================================================================================ -->
+			<Annotations Target="SEPMRA_PROD_MAN.SEPMRA_C_PD_ProductType">
+				<!-- >>> TEMPORARY - until supported via CDS annotations. Default sort 
+					order: by product name -->
+				<Annotation Term="UI.PresentationVariant">
+					<Record>
+						<PropertyValue Property="SortOrder">
+							<Collection>
+								<Record>
+									<PropertyValue Property="Property"
+										PropertyPath="to_ProductTextInOriginalLang/Name" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<!-- <<< TEMPORARY - until supported via CDS annotations. Default sort 
+					order: by product name -->
+
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.CollectionFacet">
+							<PropertyValue Property="ID" String="ProductCollectionFacetID" />
+							<PropertyValue Property="Label"
+								String="{@i18n>@ProductInformation}" />
+							<PropertyValue Property="Facets">
+								<Collection>
+									<Record Type="UI.ReferenceFacet">
+										<PropertyValue Property="Label"
+											String="{@i18n>@ProductInformation}" />
+										<PropertyValue AnnotationPath="@UI.FieldGroup#GeneralInformation"
+											Property="Target" />
+									</Record>
+									<Record Type="UI.ReferenceFacet">
+										<PropertyValue Property="Label" String="{@i18n>@TechnicalData}" />
+										<PropertyValue AnnotationPath="@UI.FieldGroup#TechnicalData"
+											Property="Target" />
+									</Record>
+								</Collection>
+							</PropertyValue>
+						</Record>
+						<!--workaround for being able to place 2 breakouts after each other 
+							via ReplaceFacet -->
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="{@i18n>xtit.salesData}" />
+							<PropertyValue Property="ID" String="ProductChartFacetID" />
+							<PropertyValue AnnotationPath="to_Supplier/@UI.Identification"
+								Property="Target" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.HeaderFacets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue AnnotationPath="@UI.FieldGroup#HeaderInformation"
+								Property="Target" />
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue
+								AnnotationPath="to_ProductTextInOriginalLang/@UI.FieldGroup#ProductDescription"
+								Property="Target" />
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue AnnotationPath="to_ProductStock/@UI.DataPoint#StockAvailability"
+								Property="Target" />
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue AnnotationPath="@UI.DataPoint#Price"
+								Property="Target" />
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+			<Annotations
+				Target="SEPMRA_PROD_MAN.SEPMRA_C_PD_ProductType/ProductPictureURL">
+				<Annotation Term="UI.IsImageUrl" />
+			</Annotations>
+
+			<Annotations Target="SEPMRA_PROD_MAN.SEPMRA_C_PD_ProductStockType">
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.CollectionFacet">
+							<PropertyValue Property="ID" String="GeneralInformation" />
+							<PropertyValue Property="Label"
+								String="{@i18n&gt;@GeneralInfoFacetLabel}" />
+							<PropertyValue Property="Facets">
+								<Collection>
+									<Record Type="UI.ReferenceFacet">
+										<PropertyValue Property="Label"
+											String="{@i18n&gt;@GeneralInfoFacetLabel}" />
+										<PropertyValue Property="Target" AnnotationPath="@UI.Identification" />
+									</Record>
+								</Collection>
+							</PropertyValue>
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label"
+								String="{@i18n&gt;@SecondFacetLabel}" />
+							<PropertyValue Property="Target" AnnotationPath="to_Product/@UI.LineItem" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="{@i18n&gt;@PRODUCT}" />
+							<PropertyValue Property="Value" Path="Product" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="{@i18n&gt;@QUANTITY}" />
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+							<PropertyValue Property="Criticality" Path="StockAvailability" />
+							<PropertyValue Property="Value" Path="Quantity" />
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductType">
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Copy with new Supplier" />
+							<PropertyValue Property="Action"
+								String="STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductCopywithparams" />
+							<PropertyValue Property="InvocationGrouping"
+								EnumMember="UI.OperationGroupingType/Isolated" />
+						</Record>
+						<Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Activate" />
+							<PropertyValue Property="Action"
+								String="STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductActivation" />
+							<PropertyValue Property="InvocationGrouping"
+								EnumMember="UI.OperationGroupingType/ChangeSet" />
+						</Record>
+						<Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Copy" />
+							<PropertyValue Property="Action"
+								String="STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductCopy" />
+							<PropertyValue Property="InvocationGrouping"
+								EnumMember="UI.OperationGroupingType/Isolated" />
+						</Record>
+						<Record Type="UI.DataFieldForIntentBasedNavigation">
+							<PropertyValue Property="Label" String="Manage Products (ST)" />
+							<PropertyValue Property="SemanticObject" String="EPMProduct" />
+							<PropertyValue Property="Action" String="manage_st" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Product" />
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ProductCategory" />
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+						</Record>
+						<Record Type="UI.DataFieldWithUrl">
+							<PropertyValue Property="Value" Path="to_Supplier/CompanyName" />
+							<PropertyValue Property="Url">
+								<Apply Function="odata.fillUriTemplate">
+									<String>https://www.google.com/#q={company}+{product}</String>
+									<LabeledElement Name="company">
+										<Path>to_Supplier/CompanyName</Path>
+									</LabeledElement>
+									<LabeledElement Name="product">
+										<Path>Product</Path>
+									</LabeledElement>
+								</Apply>
+							</PropertyValue>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Criticality"
+								Path="to_StockAvailability/StockAvailability" />
+							<PropertyValue Property="CriticalityRepresentation"
+								EnumMember="com.sap.vocabularies.UI.v1.CriticalityRepresentationType/WithoutIcon" />
+							<PropertyValue Property="Value"
+								Path="to_StockAvailability/StockAvailability" />
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Price" />
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductType/Product"
+				xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.Common.v1.SemanticObject"
+					String="SemanticObjectProduct" />
+			</Annotations>
+
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

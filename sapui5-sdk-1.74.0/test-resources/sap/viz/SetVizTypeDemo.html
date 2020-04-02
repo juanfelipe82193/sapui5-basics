@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta http-equiv='Content-Type' content='text/html;charset=UTF-8' />
+    <title>test</title>
+    <script id='sap-ui-bootstrap' type='text/javascript' src='../../../resources/sap-ui-core.js' data-sap-ui-theme='sap_bluecrystal' data-sap-ui-libs='sap.m,sap.viz'></script>
+    <!-- add 'sap.ui.table' and/or other libraries if required -->
+    <script>
+        //create a Popover
+        var popoverProps = {};
+        var chartPopover = new sap.viz.ui5.controls.Popover(popoverProps);
+        // create a VizFrame
+        var oVizFrame = new sap.viz.ui5.controls.VizFrame("FFFF", {
+            'width': '1000px',
+            'height': '600px',
+            'vizType': 'dual_stacked_bar',
+            'uiConfig': {
+                'applicationSet': 'fiori'
+            }
+        });
+        var amModel = new sap.ui.model.json.JSONModel({
+            'businessData': [{
+                "Purchase Order Date": "P_9",
+                "Material": "M_9",
+                "Material Group": "M_9",
+                "Average Delivery Time": 50,
+                "Goods Receipt Amount": 60,
+                "Average Weighted Delivery Time": 200
+            }, {
+                "Purchase Order Date": "P_8",
+                "Material": "M_8",
+                "Material Group": "M_8",
+                "Average Delivery Time": 30,
+                "Goods Receipt Amount": 130,
+                "Average Weighted Delivery Time": 150
+            }, {
+                "Purchase Order Date": "P_7",
+                "Material": "M_7",
+                "Material Group": "M_7",
+                "Average Delivery Time": 120,
+                "Goods Receipt Amount": 160,
+                "Average Weighted Delivery Time": 190
+            }, {
+                "Purchase Order Date": "P_6",
+                "Material": "M_6",
+                "Material Group": "M_6",
+                "Average Delivery Time": 100,
+                "Goods Receipt Amount": 60,
+                "Average Weighted Delivery Time": 80
+            }, {
+                "Purchase Order Date": "P_5",
+                "Material": "M_5",
+                "Material Group": "M_5",
+                "Average Delivery Time": 180,
+                "Goods Receipt Amount": 20,
+                "Average Weighted Delivery Time": 80
+            }, {
+                "Purchase Order Date": "P_4",
+                "Material": "M_4",
+                "Material Group": "M_4",
+                "Average Delivery Time": 70,
+                "Goods Receipt Amount": 80,
+                "Average Weighted Delivery Time": 120
+            }, {
+                "Purchase Order Date": "P_3",
+                "Material": "M_3",
+                "Material Group": "M_3",
+                "Average Delivery Time": 90,
+                "Goods Receipt Amount": 160,
+                "Average Weighted Delivery Time": 90
+            }, {
+                "Purchase Order Date": "P_2",
+                "Material": "M_2",
+                "Material Group": "M_2",
+                "Average Delivery Time": 80,
+                "Goods Receipt Amount": 50,
+                "Average Weighted Delivery Time": 150
+            }, {
+                "Purchase Order Date": "P_1",
+                "Material": "M_1",
+                "Material Group": "M_1",
+                "Average Delivery Time": 90,
+                "Goods Receipt Amount": 70,
+                "Average Weighted Delivery Time": 90
+            }, {
+                "Purchase Order Date": "P_0",
+                "Material": "M_0",
+                "Material Group": "M_0",
+                "Average Delivery Time": 20,
+                "Goods Receipt Amount": 160,
+                "Average Weighted Delivery Time": 20
+            }]
+        });
+        //A Dataset defines how the model data is mapped to the chart
+        var oDataset = new sap.viz.ui5.data.FlattenedDataset({
+            // a Bar Chart requires exactly one dimension (x-axis)
+            'dimensions': [{
+                'name': 'Purchase Order Date',
+                'value': "{Purchase Order Date}"
+            }, {
+                'name': 'Material',
+                'value': "{Material}"
+            }, {
+                'name': 'Material Group',
+                'value': "{Material Group}"
+            }],
+            // it can show multiple measures, each results in a new set of bars in a new color
+            'measures': [
+                // measure 1
+                {
+                    'name': 'Average Delivery Time', // 'name' is used as label in the Legend
+                    'value': "{Average Delivery Time}" // 'value' defines the binding for the displayed value
+                }, {
+                    'name': 'Goods Receipt Amount', // 'name' is used as label in the Legend
+                    'value': "{Goods Receipt Amount}" // 'value' defines the binding for the displayed value
+                }, {
+                    'name': 'Average Weighted Delivery Time', // 'name' is used as label in the Legend
+                    'value': "{Average Weighted Delivery Time}" // 'value' defines the binding for the displayed value
+                }
+            ],
+            // 'data' is used to bind the whole data collection that is to be displayed in the chart
+            'data': {
+                'path': "/businessData"
+            }
+        });
+        // oVizFrame.
+        // attach the model to the chart and display it
+        oVizFrame.setDataset(oDataset);
+        oVizFrame.setModel(amModel);
+        //set feeds
+        var feedPrimaryValues = new sap.viz.ui5.controls.common.feeds.FeedItem({
+                'uid': "valueAxis",
+                'type': "Measure",
+                'values': ["Average Weighted Delivery Time"]
+            }),
+            feedSecondaryValues = new sap.viz.ui5.controls.common.feeds.FeedItem({
+                'uid': "valueAxis2",
+                'type': "Measure",
+                'values': ["Average Delivery Time", "Goods Receipt Amount"]
+            }),
+            feedAxisLabels = new sap.viz.ui5.controls.common.feeds.FeedItem({
+                'uid': "categoryAxis",
+                'type': "Dimension",
+                'values': ["Purchase Order Date", "Material", "Material Group"]
+            });
+        oVizFrame.addFeed(feedPrimaryValues);
+        oVizFrame.addFeed(feedSecondaryValues);
+        oVizFrame.addFeed(feedAxisLabels);
+        oVizFrame.placeAt("content");
+        chartPopover.connect(oVizFrame.getVizUid());
+
+        var oButton1 = new sap.m.Button({
+            text: "change to column",
+            press: function() {
+                oVizFrame.setVizType("info/column");
+            }
+        }).placeAt("content");
+
+        var oButton2 = new sap.m.Button({
+            text: "change to line",
+            press: function() {
+                oVizFrame.setVizType("info/line");
+                oVizFrame.setVizProperties({
+
+                });
+            }
+        }).placeAt("content");
+
+        var oButton3 = new sap.m.Button({
+            text: "change to dual bar",
+            press: function() {
+                oVizFrame.setVizType("info/dual_bar");
+            }
+        }).placeAt("content");
+
+        var oButton4 = new sap.m.Button({
+            text: "high contrast",
+            press: function() {
+                var core = sap.ui.getCore();
+                core.applyTheme("sap_hcb");
+
+            }
+        }).placeAt("content");
+
+        var oButton5 = new sap.m.Button({
+            text: "blue crystal",
+            press: function() {
+                var core = sap.ui.getCore();
+                core.applyTheme("sap_bluecrystal");
+            }
+        }).placeAt("content");
+    </script>
+</head>
+<body class='sapUiBody'>
+    <div id='content'></div>
+</body>
+</html>
+<!-- user:Achim Weimert -->
+<!-- description:VizFrame Column Chart in XMLView -->
+<!-- user: -->

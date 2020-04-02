@@ -1,0 +1,67 @@
+<mvc:View
+    controllerName="sap.ushell.components.shell.UserSettings"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core">
+
+    <Dialog id="userSettingsDialog"
+        class="sapUshellUserSetting"
+        showHeader="false"
+        contentHeight="42rem"
+        contentWidth="58rem"
+        afterClose="._afterClose"
+        stretch="{device>/system/phone}">
+        <buttons>
+            <Button id="userSettingSaveButton"
+                text="{i18n>saveBtn}"
+                type="Emphasized"
+                press="._handleSettingsSave"/>
+            <Button id="userSettingCancelButton"
+                text="{i18n>cancelBtn}"
+                press="._dialogCancelButtonHandler"/>
+        </buttons>
+        <content>
+            <Page
+                class="sapUshellSettingsPage"
+                showHeader="true">
+                <customHeader>
+                    <Bar id="settingsBar">
+                        <contentLeft>
+                            <ToggleButton id="userSettingsNavBackButton"
+                                icon="{= ${device>/system/phone} ? 'sap-icon://nav-back' : 'sap-icon://menu2'}"
+                                press="._navBackButtonPressHandler"
+                                tooltip="{i18n>ToggleButtonShow}"
+                                visible="false"/>
+                        </contentLeft>
+                        <contentMiddle>
+                            <Text
+                                text="{i18n>userSettings}"/>
+                        </contentMiddle>
+                    </Bar>
+                </customHeader>
+                <content>
+                    <SplitApp id="settingsApp"
+                        defaultTransitionNameDetail="show"
+                        afterMasterClose="._handleNavButton"
+                        afterMasterOpen="._handleNavButton">
+                        <masterPages>
+                            <Page id="userSettingMaster"
+                                class="sapUshellUserSettingMaster"
+                                showHeader="false">
+                                <content>
+                                    <List id="userSettingEntryList"
+                                        items="{
+                                            path: 'entries>/entries',
+                                            factory: '._createListEntry'
+                                        }"
+                                        mode="SingleSelectMaster"
+                                        select="._itemPress"/>
+                                </content>
+                            </Page>
+                        </masterPages>
+                    </SplitApp>
+                </content>
+            </Page>
+        </content>
+    </Dialog>
+</mvc:View>

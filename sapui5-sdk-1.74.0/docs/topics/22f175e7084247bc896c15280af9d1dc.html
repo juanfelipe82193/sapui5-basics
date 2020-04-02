@@ -1,0 +1,333 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Getting Started with OPA5</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The following section explains step-by-step how to easily write tests for SAPUI5 apps."><meta name="description" content="The following section explains step-by-step how to easily write tests for SAPUI5 apps."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"ce4b180d97064ad088a901b53ed48b21.html","previousTopicHref":"2696ab50faad458f9b4027ec2f9b884d.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio22f175e7084247bc896c15280af9d1dc"><h1 class="title topictitle1" hidden>Getting Started with OPA5</h1><div class="body conbody"><p class="shortdesc" hidden>The following section explains step-by-step how to easily write tests for <span class="ph"><span class="ph pname">SAPUI5</span></span> apps.</p>
+<p class="p">We assume a simple app that displays a button on the page after a random time between 0 and 10
+seconds. After pressing the button, the text on the button changes. Again, this may take
+0 to 10 seconds.</p>
+<p class="p">This simulates the behaviour of many <span class="ph"><span class="ph pname">SAPUI5</span></span> apps: Depending on user actions and model changes,
+controls change after some time. How can we easily test these <span class="ph"><span class="ph pname">SAPUI5</span></span> apps without having
+to write complicated tests that know a lot about the implementation of the app?</p>
+<div class="section"><section class="section" type="Creating an Asynchronous App"><h2 class="section_title" style="font-size: 1.15em;">Creating an Asynchronous App</h2>
+
+<p class="p">First, we create a very simple view with an invisible button with <span class="ph uicontrol">Press
+me</span> as the button text:</p>
+<pre class="pre codeblock prettyprint lang-xml">
+&lt;mvc:View controllerName=&quot;view.Main&quot;
+  xmlns=&quot;sap.m&quot;
+  xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+  &lt;App&gt;
+    &lt;Page&gt;
+      &lt;headerContent&gt;
+        &lt;Button id=&quot;pressMeButton&quot; text=&quot;Press me&quot; press=&quot;onPress&quot; visible=&quot;false&quot;/&gt;
+      &lt;/headerContent&gt;
+    &lt;/Page&gt;
+  &lt;/App&gt;
+&lt;/mvc:View&gt;
+</pre>
+<p class="p">We display the button in the controller after 0 to 10 seconds. On press, we change the
+text.</p>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([&quot;sap/ui/core/mvc/Controller&quot;], function(Controller) {
+    &quot;use strict&quot;;
+    return Controller.extend(&quot;view.Main&quot;, {
+        onInit: function() {
+          
+            var that = this;
+            window.setTimeout(function() {
+                that.byId(&quot;pressMeButton&quot;).setVisible(true);
+            }, Math.random() * 10000);
+        },
+
+
+      onPress: function() {
+            this.byId(&quot;pressMeButton&quot;).setText(&quot;I got pressed&quot;);
+      }
+
+    });
+   }, true);
+
+    // &quot;Controller&quot; required from module &quot;sap/ui/core/mvc/Controller&quot;
+   Controller.create({
+    name: &quot;view.Main&quot;
+});</pre>
+<p class="p">Now how can we test this app without having to do a lot of mocking or writing of cryptic
+code?</p>
+</section></div>
+<div class="section"><section class="section" type="Creating an OPA Test"><h2 class="section_title" style="font-size: 1.15em;">Creating an OPA Test</h2>
+
+<p class="p">When we write tests, we try to write it in a way that everyone can immediately understand what
+is done and tested with this test: </p>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.require([
+  &quot;sap/ui/test/Opa5&quot;,
+    &quot;sap/ui/test/opaQUnit&quot;,
+    &quot;sap/ui/test/actions/Press&quot;,
+    &quot;sap/ui/test/matchers/PropertyStrictEquals&quot;
+], function (Opa5, opaQUnit, Press, PropertyStrictEquals) {
+
+  opaQUnit(&quot;Should press a Button&quot;, function (Given, When, Then) {
+        // Arrangements
+        Given.iStartMyApp();
+
+        //Actions
+        When.iPressOnTheButton();
+
+        // Assertions
+        Then.theButtonShouldHaveADifferentText();
+    });
+});</pre>
+<p class="p">If you use <samp class="ph codeph">opaQunit</samp>, OPA gives you the following three objects in your
+QUnit:</p>
+<ul class="ul" id="loio22f175e7084247bc896c15280af9d1dc__ul_fbp_3mf_y4">
+<li class="li">Given = arrangements</li>
+<li class="li">When = actions</li>
+<li class="li">Then = assertions</li>
+</ul>
+</section></div>
+<div class="section"><section class="section" type="Given: Defining Arrangements"><h2 class="section_title" style="font-size: 1.15em;">Given: Defining Arrangements</h2>
+
+<p class="p">Let&apos;s start by defining arrangements. In the following example, we assume that the app runs in
+a page called <samp class="ph codeph">index.html</samp>. Our OPA test is located in the
+<samp class="ph codeph">test/opa5.html</samp> folder.</p>
+<p class="p">We define a relative path pointing to the <samp class="ph codeph">index.html</samp> of our application under
+<samp class="ph codeph">test ../index.html - ../</samp>. This means that you go up one
+directory relative to the current directory:</p>
+<pre class="pre codeblock prettyprint lang-js">// &quot;Opa5&quot; required from &quot;sap/ui/test/Opa5&quot;
+var arrangements = new Opa5({
+    iStartMyApp : function () {
+        return this.iStartMyAppInAFrame(&quot;../index.html&quot;);
+    }
+});</pre>
+<p class="p">This is simple because we already programmed our app and just need to start it. The
+<samp class="ph codeph">return this</samp> is needed for chaining the statements. </p>
+</section></div>
+<div class="section"><section class="section" type="When: Defining Actions"><h2 class="section_title" style="font-size: 1.15em;">When: Defining Actions</h2>
+
+<p class="p">We now give OPA the ID and the <samp class="ph codeph">viewName</samp> of the control we are looking for.
+OPA waits until the element is present in the respective view. OPA checks whether it
+is visible. After OPA has found the button, it invokes the <samp class="ph codeph">Press</samp>
+action. If no button is found, we specify an error message so we know which
+<samp class="ph codeph">waitFor</samp> went wrong.</p>
+<pre class="pre codeblock prettyprint lang-js">var actions = new Opa5({
+    iPressOnTheButton : function () {
+        return this.waitFor({
+            viewName : &quot;Main&quot;,
+            id : &quot;pressMeButton&quot;,
+            actions : new Press(),
+            errorMessage : &quot;did not find the Button&quot;
+        });
+    }
+});
+</pre>
+</section></div>
+<div class="section"><section class="section" type="Then: Defining Assertions"><h2 class="section_title" style="font-size: 1.15em;">Then: Defining Assertions</h2>
+
+<p class="p">After clicking the button, we want to check if the text has changed. For this, we can use
+matchers to check if the button we are searching for matches our conditions. We want
+to be sure that the text property of the button is equal to &quot;I got pressed&quot;.</p>
+<pre class="pre codeblock prettyprint lang-js">var assertions = new Opa5({
+    theButtonShouldHaveADifferentText : function () {
+        return this.waitFor({
+            viewName : &quot;Main&quot;,
+            id : &quot;pressMeButton&quot;,
+            matchers : new PropertyStrictEquals({
+                name : &quot;text&quot;,
+                value : &quot;I got pressed&quot;
+            }),
+            success : function (oButton) {
+                Opa5.assert.ok(true, &quot;The button&apos;s text changed to: &quot; + oButton.getText());
+            },
+            errorMessage : &quot;did not change the Button&apos;s text&quot;
+        });
+    }
+});</pre>
+</section></div>
+<div class="section"><section class="section" type="Running the Test"><h2 class="section_title" style="font-size: 1.15em;">Running the Test</h2><p class="p">We have now defined all statements and must now add
+them to the <samp class="ph codeph">OpaConfig</samp> as
+follows:</p><pre class="pre codeblock prettyprint lang-js">// &quot;Opa5&quot; required from &quot;sap/ui/test/Opa5&quot;
+Opa5.extendConfig({
+    arrangements : arrangements,
+    actions : actions,
+    assertions : assertions,
+    viewNamespace : &quot;view.&quot;
+});
+</pre><p class="p">The
+<samp class="ph codeph">viewNamespace</samp> is very important for finding the correct view.
+As you probably do not want to set this in every single <samp class="ph codeph">waitFor</samp>, a
+default is provided. You can now launch the test page and the OPA test should run.
+If everything worked, you get the following result:</p><img class="inline  " id="loio22f175e7084247bc896c15280af9d1dc__image_bfj_jlf_pp" src="loiob7d6ee389a984eada89d1e21cc1a27f6_LowRes.jpg">
+<p class="p"><span class="ph">For more
+information, see the <a class="xref" href="../../#/api/sap.ui.test" target="_top" alt="#/api/sap.ui.test" title="#/api/sap.ui.test">API Reference</a> and the <a class="xref" href="../../#/entity/sap.ui.test.Opa5" target="_top" alt="#/entity/sap.ui.test.Opa5" title="#/entity/sap.ui.test.Opa5">Samples</a>.</span>
+</p></section></div>
+<div class="section"><section class="section" type="OPA Startup"><h2 class="section_title" style="font-size: 1.15em;">OPA Startup</h2><div class="sectiondiv subsection">
+<p class="p subsectiontitle"><span class="ph emphasis emphasis">Starting a UIComponent</span></p>
+<p class="p">You can use a UIComponent to run your OPA5 tests. To do this, you have to call the
+<samp class="ph codeph">iStartMyUIComponent</samp> function on the OPA5 instance with an
+object that contains at least the name of your UIComponent (see API
+documentation about <span class="keyword apiname">sap/ui/component</span> for all possible
+parameters), for example:</p>
+<pre class="pre codeblock prettyprint lang-js">// &quot;Opa5&quot; required from &quot;sap/ui/test/Opa5&quot;
+new Opa5().iStartMyUIComponent({
+    componentConfig: {
+        name: &quot;samples.components.button&quot;
+    }
+});
+</pre>
+<p class="p">Your UIComponent will now run in the same window as your OPA5 Tests. In addition,
+you can append a new hash value to the browser URL, for example:</p>
+<pre class="pre codeblock prettyprint lang-js">// &quot;Opa5&quot; required from &quot;sap/ui/test/Opa5&quot;
+new Opa5().iStartMyUIComponent({
+    componentConfig: {
+        name: &quot;samples.components.button&quot;
+    } ,
+    hash: &quot;newHashValue&quot;
+});</pre>
+<div class="p">This is very helpful if you want to start your tests with a specific target. <aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">Use the <samp class="ph codeph">iStartMyUIComponent</samp> approach instead of an
+iFrame if you want your tests to run faster (thanks to all resources
+being loaded at once), make debugging easier (by not having to switch
+between different frames), and if you want to have full control over the
+mock server (e.g. Start and Stop time).</p></aside><aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">Please note that OPA5 tests can only run for a single UIComponent. You
+first have to tear down the current UIComponent before starting an OPA5
+test for another UIComponent, for example:</p><pre class="pre codeblock prettyprint lang-js">// &quot;Opa5&quot; required from &quot;sap/ui/test/Opa5&quot;
+new Opa5().iTeardownMyApp();
+// or
+new Opa5().iTeardownMyUIComponent();</pre></aside></div>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle"><span class="ph emphasis emphasis">Starting an App in an iFrame</span></p>
+<p class="p">You can run the app being tested in an iFrame. You can start only one iFrame at a
+time. An error will be thrown if you try to start an iFrame when one is already
+launched or if you try to teardown the iFrame before it is started. If an iFrame
+element is already present on the page, it will be used. The iFrame and test
+window must be in the same domain. For example, if you have the
+<samp class="ph codeph">test.html</samp> file next to the <samp class="ph codeph">index.html</samp>
+file, you can start your app with the following code:</p>
+<pre class="pre codeblock prettyprint lang-js">// &quot;Opa5&quot; required from &quot;sap/ui/test/Opa5&quot;
+Opa5().iStartMyAppInAFrame(&quot;index.html?responderOn=true&quot;);</pre>
+<p class="p">The OPA iFrame launcher overwrites the iFrame&apos;s history API so we can later
+change the iFrame&apos;s hash, and pass parameters to the app. In Internet Explorer,
+the history behaves differently if an iFrame was added with JavaScript, this is
+why you should add the frame directly to the HTML of your test page:</p>
+<pre class="pre codeblock prettyprint lang-js">&lt;iframe id=&quot;OpaFrame&quot; src=&quot;index.html?responderOn=true&quot; style=&quot;width:100%; height:100%&quot;&gt;&lt;/iframe&gt;</pre>
+<p class="p">You can remove the iFrame using one of the following methods:</p>
+<pre class="pre codeblock prettyprint lang-js">// &quot;Opa5&quot; required from &quot;sap/ui/test/Opa5&quot;
+new Opa5().iTeardownMyApp();
+// or
+new Opa5().iTeardownMyAppFrame();</pre>
+<span class="ph">For more
+information, see the <a class="xref" href="../../#/api/sap.ui.test.Opa5" target="_top" alt="#/api/sap.ui.test.Opa5" title="#/api/sap.ui.test.Opa5">API Reference:
+<samp class="ph codeph">Opa5</samp></a>.</span>
+<p class="p">Starting the app can be a slow operation so it is not recommended to do this for
+every test. However, it is good practice to group tests in modules and restart
+the app in every module to enable faster debugging of larger suites.</p>
+<p class="p">Loading an iFrame is significantly slower than loading a component. It requires a
+separate page, in which the mocked app is started in an <span class="ph pname">SAP Fiori
+Launchpad</span> sandbox. This is useful as it allows debugging of unmocked
+data requests and mock app issues in isolation from the OPA test. It is easy to
+migrate to the component launcher once the test suite grows and the app is
+proven to be correctly mocked.</p>
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> and OPA code
+(for example, autoWaiter, UI5 plugin, QUnitUtils) is injected asynchronously in
+the iFrame on launch. The iFrame will be considered launched when all of the
+scripts are loaded. These scripts will communicate the app state to the test
+code. Errors in the iFrame will also be logged in the test. If OPA code is
+already loaded by the app, the newly injected code will be used instead to
+ensure version compatibility.</p>
+<p class="p">OPA provides several getters that give access to certain properties of the
+context in which the app is loaded. By default, the getters return the test
+window&apos;s objects but if an iFrame is used, they will return the iFrame&apos;s
+objects. You need to keep the context in mind if you want to manipulate app data
+in your test:</p>
+<pre class="pre codeblock prettyprint lang-js">// &quot;Opa5&quot; required from &quot;sap/ui/test/Opa5&quot;
+
+// returns the body of the app window wrapped in a jQuery object
+Opa5.getJQuery()(&quot;body&quot;);
+// returns the <span class="ph"><span class="ph pname">SAPUI5</span></span> OPA plugin object of the app window
+Opa5.getPlugin();
+// returns the <span class="ph"><span class="ph pname">SAPUI5</span></span> core interface of the app window
+Opa5.getWindow().sap.ui.getCore();
+// returns the Date in the app context
+Opa5.getWindow().Date();
+// the following test code will return false if the app is started in an iFrame
+new Opa5.getWindow().Date() instanceof Date</pre>
+</div></section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

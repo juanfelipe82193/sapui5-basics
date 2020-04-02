@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js" id="sap-ui-bootstrap" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#margin {
+			margin-right: 50px;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+
+
+	<script>
+		// creation of the visual business control...........................//
+
+		sap.ui.localResources("vbitestapp");
+		var bArrow = true;
+		var oVBI1 = new sap.ui.vbm.VBI('vbiWrap2', {
+			width: 1200,
+			height: 620
+		});
+		oVBI1.placeAt("content");
+
+		// load the json into the vbi control................................//
+		var main = $.getJSON("media/vblabeltext/mainNewDesignBase.json", function(main) {
+						var userStoredData = JSON.parse(localStorage.getItem("map"));
+			main.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			main.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array) {
+				main.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				main.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(main);
+			onToggleArrow();
+		});
+
+		function onToggleArrow() {
+			var file = bArrow ? "media/vblabeltext/mainNewDesignDataArrow.json" : "media/vblabeltext/mainNewDesignDataRounded.json";
+			var datToggled = $.getJSON(file, function(datToggled) {
+				oVBI1.load(datToggled);
+			});
+			bArrow = !bArrow;
+		};
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: Labels for Spots</h1>
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test labels on Spots with different label design capabilities.</p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+			<li>Check that a map loads with multiple spots.</li>
+			<img src="img/labelSpot1.jpg" alt="text for Thumbnail" style="width:600px;height:480px;">
+			<li> Check that the spots have label text</li>
+			<img src="img/labelSpot2.jpg" alt="text for Thumbnail" style="width:600px;height:480px;">
+			<li> Check the position of the labels next to the spots. Top/Bottom/Left/Right aligned labels have an arrow.</li>
+			<li> Check the position of the labels next to the spots. Check that some label text dont have arrows.</li>
+			<li>Click the "Toggle" button and switch to the rounded design. Check that the design for label texts have chnaged. 
+			Note: In the rounded design arrows are only supported for Top or Bottom aligned labels.</li>
+			<img src="img/labelSpot3.jpg" alt="text for Thumbnail" style="width:600px;height:480px;">
+		</ol>
+	</div>
+	<div id="description2">
+				<br>
+		<button id="btnToggleArrow" onClick="onToggleArrow()"> Toggle </button><br>
+		<br>
+		<div id="content"></div>
+<br>
+		
+		</div>
+</body>
+
+</html>

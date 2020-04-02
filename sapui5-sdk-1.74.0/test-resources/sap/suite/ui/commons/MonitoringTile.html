@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MonitoringTile - sap.suite.ui.commons</title>
+
+    <!-- UI5 Bootstrap -->
+    <script src="../../../../../resources/sap-ui-core.js"
+            type="text/javascript"
+            id="sap-ui-bootstrap"
+            data-sap-ui-libs="sap.ui.layout,sap.suite.ui.commons,sap.m"
+            data-sap-ui-theme="sap_bluecrystal"></script>
+
+<style type="text/css">
+	.sapSuiteInfoTile {
+		margin-left:1rem;
+	}
+	
+	#controls {
+		margin-top:1rem;
+	}
+</style>
+<script type="text/javascript">
+    jQuery.sap.initMobile();
+
+	var oConfData = {
+		sizes:{
+				L:sap.suite.ui.commons.InfoTileSize.L,
+				M:sap.suite.ui.commons.InfoTileSize.M,
+				S:sap.suite.ui.commons.InfoTileSize.S,
+				Auto:sap.suite.ui.commons.InfoTileSize.Auto
+		},
+        value: "125",
+        title : "Approve Travel Requests",
+        footer : "3 overdue requests",
+        state: sap.suite.ui.commons.LoadState.Loaded,
+        iconSrc: "sap-icon://travel-expense",
+        footerColor: sap.suite.ui.commons.InfoTileTextColor.Critical,
+	}
+
+	var oConfModel = new sap.ui.model.json.JSONModel();
+	oConfModel.setData(oConfData);
+	sap.ui.getCore().setModel(oConfModel);
+	
+	var oMTConfL = new sap.suite.ui.commons.MonitoringTile("configurable-tile-L", {
+		value : "{/value}",
+		size : "{/sizes/L}",
+		title : "{/title}",
+		footer : "{/footer}",
+		state: "{/state}",
+		footerColor: "{/footerColor}",
+		description : "{/description}",
+		iconSrc : "{/iconSrc}",
+		press : function(oEvent) {
+			sap.m.MessageToast.show("The large tile is pressed");
+		}
+	});
+
+	var oMTConfM = new sap.suite.ui.commons.MonitoringTile("configurable-tile-M", {
+		value : "{/value}",
+		size : "{/sizes/M}",
+		title : "{/title}",
+		footer : "{/footer}",
+		state: "{/state}",
+		footerColor: "{/footerColor}",
+		description : "{/description}",
+		iconSrc : "{/iconSrc}",
+		press : function(oEvent) {
+			sap.m.MessageToast.show("The medium tile is pressed");
+		}
+	});
+
+	var oMTConfS = new sap.suite.ui.commons.MonitoringTile("configurable-tile-S", {
+		value : "{/value}",
+		size : "{/sizes/S}",
+		title : "{/title}",
+		footer : "{/footer}",
+		state: "{/state}",
+		footerColor: "{/footerColor}",
+		description : "{/description}",
+		iconSrc : "{/iconSrc}",
+		press : function(oEvent) {
+			sap.m.MessageToast.show("The small tile is pressed");
+		}
+	});
+
+	var oMTConfAuto = new sap.suite.ui.commons.MonitoringTile("configurable-tile-auto", {
+		value : "{/value}",
+		size : "{/sizes/Auto}",
+		title : "{/title}",
+		footer : "{/footer}",
+		state: "{/state}",
+		footerColor: "{/footerColor}",
+		description : "{/description}",
+		iconSrc : "{/iconSrc}",
+		press : function(oEvent) {
+			sap.m.MessageToast.show("The auto tile is pressed");
+			
+		}
+	});
+
+	var oPage = new sap.m.Page("initial-page", {
+		showHeader : false,
+		content : [ new sap.m.HBox({
+			alignItems : "End",
+			items : [ oMTConfL, oMTConfM, oMTConfS, oMTConfAuto ]
+		}) ]
+	});
+
+	var oTitleLbl = new sap.m.Label({
+		text : "Title",
+		labelFor : "title-value"
+	});
+
+	var oTitleInput = new sap.m.Input("title-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter title ...'
+	});
+	
+	oTitleInput.bindValue("/title");
+
+	var oDescLbl = new sap.m.Label({
+		text : "Description",
+		labelFor : "desc-value"
+	});
+
+	var oDescInput = new sap.m.Input("desc-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter description ...'
+	});
+	oDescInput.bindValue("/description");
+
+	var oValueLbl = new sap.m.Label({
+		text : "Value",
+		labelFor : "value-value"
+	});
+
+	var oValueInput = new sap.m.Input("value-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter value ...'
+	});
+	oValueInput.bindValue("/value");
+
+	var oFooterLbl = new sap.m.Label({
+		text : "Footer",
+		labelFor : "footer-value"
+	});
+
+	var oFooterInput = new sap.m.Input("footer-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter footer ...'
+	});
+	oFooterInput.bindValue("/footer");
+
+	var oTriggerLoadLbl = new sap.m.Label({
+		text : "State",
+		labelFor : "loading-state"
+	});
+
+	var oTriggerLoadSlct = new sap.m.Select("loading-state", {
+		change : function(oE) {
+			var selectedItem = oE.getParameter("selectedItem");
+			oMTConfL.setState(selectedItem.getKey());
+			oMTConfM.setState(selectedItem.getKey());
+			oMTConfS.setState(selectedItem.getKey());
+			oMTConfAuto.setState(selectedItem.getKey());
+		},
+		items : [new sap.ui.core.Item({
+			key : "Loaded",
+			text : "Loaded"
+		}), new sap.ui.core.Item({
+			key : "Loading",
+			text : "Loading"
+		}),  new sap.ui.core.Item({
+			key : "Failed",
+			text : "Failed"
+		}) ]
+	});
+
+	var oFooterColorChangeLbl = new sap.m.Label({
+		text : "Footer Color",
+		labelFor : "footer-color-change"
+	});
+
+	var oFooterColorChangeSlct = new sap.m.Select("footer-color-change", {
+		change : function(oE) {
+			var selectedItem = oE.getParameter("selectedItem");
+			if ("NotSet" === selectedItem.getKey()) {
+				return;
+			}
+			oMTConfL.setFooterColor(selectedItem.getKey());
+			oMTConfM.setFooterColor(selectedItem.getKey());
+			oMTConfS.setFooterColor(selectedItem.getKey());
+			oMTConfAuto.setFooterColor(selectedItem.getKey());
+		},
+		items : [ new sap.ui.core.Item({
+			key : "NotSet",
+			text : "Not Set"
+		}), new sap.ui.core.Item({
+			key : "Positive",
+			text : "Positive"
+		}), new sap.ui.core.Item({
+			key : "Critical",
+			text : "Critical"
+		}), new sap.ui.core.Item({
+			key : "Negative",
+			text : "Negative"
+		})
+
+		]
+	});
+	
+	
+	var oIconLbl = new sap.m.Label({
+		text : "Icon",
+		labelFor : "icon-change"
+	});
+	var oIconSlct = new sap.m.Select("icon-change", {
+		change : function(oE) {
+			var selectedItem = oE.getParameter("selectedItem");
+			oMTConfL.setIconSrc(selectedItem.getKey());
+			oMTConfM.setIconSrc(selectedItem.getKey());
+			oMTConfS.setIconSrc(selectedItem.getKey());
+			oMTConfAuto.setIconSrc(selectedItem.getKey());
+		},
+		items : [ 
+		          new sap.ui.core.Item("icon-item-1", {
+						key : "",
+						text : ""
+				   }), 
+				   new sap.ui.core.Item("icon-item-2", {
+						key : "sap-icon://travel-expense",
+						text : "sap-icon://travel-expense"
+				   }),
+				   new sap.ui.core.Item("icon-item-3", {
+						key : "sap-icon://globe",
+						text : "sap-icon://globe"
+				})
+		],
+		selectedItem: "icon-item-2"
+	});
+
+
+	var editableSimpleForm = new sap.ui.layout.form.SimpleForm("controls", {
+		maxContainerCols : 2,
+		editable : true,
+		content : [ new sap.ui.core.Title({ // this starts a new group
+			text : "Modify Tiles"
+		}), oTitleLbl, oTitleInput, oDescLbl, oDescInput, oValueLbl, oValueInput, oFooterLbl, 
+			oFooterInput, oTriggerLoadLbl, oTriggerLoadSlct, oFooterColorChangeLbl, oFooterColorChangeSlct,
+			oIconLbl, oIconSlct
+		]
+	});
+	oPage.addContent(editableSimpleForm);
+
+	oPage.placeAt("content");
+</script>
+</head>
+
+<body class="sapUiBody">
+    <div id="content" style="height:100%"></div>
+</body>
+</html>

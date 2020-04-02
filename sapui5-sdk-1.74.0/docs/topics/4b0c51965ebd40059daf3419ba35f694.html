@@ -1,0 +1,331 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Basic Example How to Use Gherkin</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Like test-driven development (TDD), behavior-driven development (BDD) with Gherkin encourages us to write more tests because you do it right from the beginning. Having more tests makes it cheaper and easier to maintain the code over time. Let&apos;s dive into the specifics using following an example."><meta name="description" content="Like test-driven development (TDD), behavior-driven development (BDD) with Gherkin encourages us to write more tests because you do it right from the beginning. Having more tests makes it cheaper and easier to maintain the code over time. Let&apos;s dive into the specifics using following an example."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"c689cd83e2524251a75d694b09263d07.html","previousTopicHref":"a509db45afbe42678f33f5b07f4cc35b.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+$('.collapsible').collapsify({"expandText":"Display Content","collapseText":"Hide Content","codeblockText":"Code Sample","codeblockCopyText":"Copy code to clipboard","codeblockSelectText":"Select code for copying to clipboard"});
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio4b0c51965ebd40059daf3419ba35f694"><h1 class="title topictitle1" hidden>Basic Example How to Use Gherkin</h1><div class="body conbody"><p class="shortdesc" hidden>Like test-driven development (TDD), behavior-driven development (BDD) with Gherkin encourages us to write more tests because you do it right from
+the beginning. Having more tests makes it cheaper and easier to maintain the code over time. Let&apos;s dive into the specifics using following an
+example.</p>
+<p class="p"> </p>
+<div class="p">The ideal pattern for a BDD iteration goes like this: <ol class="ol" id="loio4b0c51965ebd40059daf3419ba35f694__ol_c5g_xyn_kx">
+<li class="li">
+<p class="p">Write a scenario in the feature file.</p>
+</li>
+<li class="li">
+<p class="p">Execute the test to verify that the step definition is not found.</p>
+<p class="p">This might seem strange since we haven&apos;t actually written a test yet, but this way we can check to see that our feature file works.</p>
+</li>
+<li class="li">
+<p class="p">Write the step definition in the steps file.</p>
+</li>
+<li class="li">
+<p class="p">Execute the test, see the test fail.</p>
+</li>
+<li class="li">
+<p class="p">Develop the missing code in the app.</p>
+</li>
+<li class="li">
+<p class="p">Execute the test and watch it pass.</p>
+</li>
+<li class="li">
+<p class="p">Return to step 1. </p>
+</li>
+</ol></div>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>You can find the code for this example in the <span class="ph uicontrol">Samples</span> in the Demo Kit <span class="ph">at <a class="xref" href="../../#/sample/sap.ui.core.sample.gherkin.GherkinWithOPA5/preview" target="_top" alt="#/sample/sap.ui.core.sample.gherkin.GherkinWithOPA5/preview" title="#/sample/sap.ui.core.sample.gherkin.GherkinWithOPA5/preview">Using Gherkin with OPA5</a></span>.</p></aside>
+<div class="section collapsible expanded"><section class="section collapsible expanded" type="Write the first feature file"><h2 class="section_title" style="font-size: 1.15em;">Write the first feature file</h2><p class="p">Do you like lemmings? According to legend, they occasionally throw
+themselves into the sea in a mass suicide attempt. Imagine that you are writing an app that allows you to save lemmings&apos; lives by clicking a
+button. In the BDD style, the first thing you do is write a feature file to document what your app is supposed to do.</p><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Requirements1.feature</p>
+<div class="p">Create the following feature file (make sure that you use file extension
+<samp class="ph codeph">.feature</samp>):<pre class="pre codeblock prettyprint nocode">Feature: Clicking Buttons is a Life Saving Activity
+
+    Let&apos;s save some lemmings&apos; lives
+
+  Scenario: Click a button, save a life!
+    Given I have started the app
+      And I can see the life saving button
+      And I check how many lemmings have been saved already
+     When I click on the life saving button
+     Then I save a lemming&apos;s life</pre></div>
+</div></section></div>
+<div class="section collapsible expanded"><section class="section collapsible expanded" type="Execute a test"><h2 class="section_title" style="font-size: 1.15em;">Execute a test</h2><p class="p">Next we should execute the test. This might seem strange since we haven&apos;t actually
+written a test yet, but this way we can check to see that our feature file works. Also, if you are working in a large project, some of the tests
+might have already been written by a colleague. Gherkin notifies us of all of the missing tests, and then we can proceed to write them one by
+one.</p><p class="p">To actually execute the test, we need to create an HTML bootstrap test runner file, and a <span class="ph filepath">Steps.js</span> stub file. </p><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Steps.js</p>
+<p class="p">Here is a stub <span class="ph filepath">Steps.js</span> file, without any step definitions, to get you started. You need to adjust the path and file
+name in the call to <samp class="ph codeph">extend</samp> to match your scenario: </p>
+<div class="p">
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+  &quot;jquery.sap.global&quot;,
+  &quot;sap/ui/test/gherkin/StepDefinitions&quot;,
+  &quot;sap/ui/test/Opa5&quot;,
+  &quot;sap/ui/test/gherkin/dataTableUtils&quot;
+], function($, StepDefinitions, Opa5, dataTableUtils) {
+  &quot;use strict&quot;;
+
+  return StepDefinitions.extend(&quot;GherkinWithOPA5.Steps&quot;, {
+    init: function() {
+    }
+  });
+
+});
+</pre>
+</div>
+</div><div class="p">To execute Gherkin tests, you need to find a version of <span class="ph pname">SAPUI5</span> or <span class="ph pname">OpenUI5</span> that works for you. Here are some possibilities, sorted in order from most stable
+to least stable:<ul class="ul" id="loio4b0c51965ebd40059daf3419ba35f694__ul_i21_vzn_kx">
+<li class="li">
+<p class="p">Stable: <span class="ph filepath">https://sapui5.hana.ondemand.com/resources/sap-ui-core.js</span> or
+<span class="ph filepath">https://openui5.hana.ondemand.com/resources/sap-ui-core.js</span></p>
+</li>
+<li class="li">
+<p class="p">Beta: <span class="ph filepath">https://openui5beta.hana.ondemand.com/resources/sap-ui-core.js</span></p>
+</li>
+<li class="li">
+<p class="p">Nightly: <span class="ph filepath">https://openui5nightly.hana.ondemand.com/resources/sap-ui-core.js</span></p>
+</li>
+</ul></div><p class="p">Our examples all use the nightly <span class="ph pname">OpenUI5</span> build.</p><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Website.html</p>
+<div class="p">Here is a sample HTML bootstrap file for Gherkin. In this example, the feature file is named <span class="ph filepath">Requirements.feature</span> and
+the steps file is named <span class="ph filepath">Steps.js</span>. Both are located in the same directory as your HTML bootstrap. You will need to
+adjust the <span class="ph"><span class="ph pname">SAPUI5</span></span>
+<samp class="ph codeph">src</samp> (if you don&apos;t want to use the suggested build), <span class="ph"><span class="ph pname">SAPUI5</span></span>
+resourceroots, and the feature and steps file names to match your scenario and your
+app:<pre class="pre codeblock prettyprint lang-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;Using Gherkin with OPA5&lt;/title&gt;
+
+    &lt;script
+      id=&quot;sap-ui-bootstrap&quot;
+      src=&quot;https://openui5nightly.hana.ondemand.com/resources/sap-ui-core.js&quot;
+      data-sap-ui-resourceroots=&apos;{&quot;GherkinWithOPA5&quot;: &quot;./&quot;}&apos;
+      data-sap-ui-loglevel=&quot;INFO&quot;
+    &gt;&lt;/script&gt;
+
+    &lt;script&gt;
+      sap.ui.require([
+        &quot;jquery.sap.global&quot;,
+        &quot;sap/ui/test/gherkin/opa5TestHarness&quot;,
+        &quot;GherkinWithOPA5/Steps&quot;
+      ], function($, opa5TestHarness, Steps) {
+        &quot;use strict&quot;;
+
+        opa5TestHarness.test({
+          featurePath: &quot;GherkinWithOPA5/Requirements&quot;,
+          steps: Steps
+        });
+
+      });
+    &lt;/script&gt;
+
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id=&quot;qunit&quot;&gt;&lt;/div&gt;
+    &lt;div id=&quot;qunit-fixture&quot;&gt;&lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre></div>
+</div><p class="p">When you load the HTML file in your browser, the Gherkin tests are executed automatically . If you are using Google Chrome, you may
+need to start it with the command line flags<samp class="ph codeph"> --allow-file-access-from-files --disable-web-security</samp>. When everything is working
+correctly, you should see something like the following in your browser:</p><div class="fig fignone" id="loio4b0c51965ebd40059daf3419ba35f694__fig_ekf_jc4_kx"><div class="figbody">
+<img class="inline  " id="loio4b0c51965ebd40059daf3419ba35f694__image_gyy_tc4_kx" src="loiobb0e61f8e0004349bdfb37f0a4f39618_LowRes.png">
+</div></div><p class="p">We expect the test to fail because we haven&apos;t written any tests yet. You&apos;ll notice that Gherkin has explained that it was not able to find
+a matching step definition for the first test step, &quot;I have started the app&quot;, in the steps file. Scrolling down, you can see that none of the
+test steps have been found. We will need to write these step definitions.</p><p class="p">Looking back at the feature file that we wrote, &quot;I have started
+the app&quot; is the first test step in the test scenario. Hence, it makes sense that we would see this test step first in the test results. You can
+also see the exact wording of the <samp class="ph codeph">Feature</samp> and <samp class="ph codeph">Scenario</samp> text that you entered: <samp class="ph codeph">Feature: Clicking
+Buttons Is a Life Saving Activity: Scenario: Click a button, save a life!</samp>. This should make it easier for you to find your way
+around in the test results. </p></section></div>
+<div class="section collapsible expanded"><section class="section collapsible expanded" type="Write the first failing test"><h2 class="section_title" style="font-size: 1.15em;">Write the first failing test</h2>
+
+<p class="p">To verify the feature file, we will implement a steps file, which to recap is both the translation that allows the computer to understand the
+human-readable feature file, and also the verification steps (tests) to be run. Once you have a working feature file and can execute the test
+suite, then you are ready to write your first test. We will start by writing a simple test that we expect to fail.</p>
+<div class="p">In the <span class="ph filepath">Steps</span> file, inside the <samp class="ph codeph">init</samp> method, add the following
+code:<pre class="pre codeblock prettyprint lang-js">this.register(/^I have started the app$/i, function() {
+  Opa5.assert.ok(false, &apos;This test will fail!&apos;);
+});
+</pre>The
+<samp class="ph codeph">register</samp> method defines a new step definition and takes two arguments:<ul class="ul" id="loio4b0c51965ebd40059daf3419ba35f694__ul_nqd_vd4_kx">
+<li class="li">
+<p class="p">a regular expression to match against the test steps in the feature file</p>
+</li>
+<li class="li">
+<p class="p">a function to execute when there is a match </p>
+</li>
+</ul>At test execution time, the Gherkin test harness tries to find a step definition with a matching regular expression, and execute the step
+definition&apos;s test function.</div>
+<p class="p">Try executing the test now. You should see something like this:</p>
+<div class="fig fignone" id="loio4b0c51965ebd40059daf3419ba35f694__fig_n4v_f24_kx"><div class="figbody">
+<img class="inline  " id="loio4b0c51965ebd40059daf3419ba35f694__image_ekp_g24_kx" src="loiocad81d3d87ab4c4688313ecdd70ee824_LowRes.png">
+</div></div>
+<p class="p">Step 1 is green because a matching step definition was found in the steps file. In Gherkin, the test harness always checks for the existence of
+the step definition first before executing the step definition&apos;s function. After Gherkin finds a step definition, it executes the step
+definition&apos;s function, and thus executes any QUnit assertions inside the function.</p>
+<p class="p">In step 2, notice how the text &quot;This test will fail!&quot; is copied from the steps file. You can use this functionality to make it easier to debug
+your test. We recommend that you start any QUnit assertion comment with the word <span class="q">&#x201C;Verified&#x201D;</span> to make it easier to read your test executions.
+</p>
+</section></div>
+<div class="section collapsible expanded"><section class="section collapsible expanded" type="Write the second failing test"><h2 class="section_title" style="font-size: 1.15em;">Write the second failing test</h2>
+
+<div class="p">Let&apos;s write a bit more test code. To make a test useful, it will need to load your app and verify its properties. We will use OPA5 for this
+purpose. Replace the code inside your steps file&apos;s <samp class="ph codeph">init</samp> method with the following
+code:<pre class="pre codeblock prettyprint lang-js">var oOpa5 = new Opa5();
+
+this.register(/^I have started the app$/i, function() {
+  oOpa5.iStartMyAppInAFrame(&quot;Website.html&quot;);
+});
+
+this.register(/^I can see the life saving button$/i, function() {
+  oOpa5.waitFor({
+    id: &quot;life-saving-button&quot;,
+    success: function(oButton) {
+      Opa5.assert.strictEqual(oButton.getText(), &quot;Save a Lemming&quot;,
+      &quot;Verified that we can see the life saving button&quot;);
+    }
+  });
+});</pre></div>
+<p class="p">You may need to adapt the above code to fit your situation. When you execute this code, you should see something like this:</p>
+<div class="fig fignone" id="loio4b0c51965ebd40059daf3419ba35f694__fig_ijk_524_kx"><div class="figbody">
+<img class="inline  " id="loio4b0c51965ebd40059daf3419ba35f694__image_nvd_1f4_kx" src="loio99af4d460e284411b91e89a17ae28815_LowRes.png">
+</div></div>
+<p class="p">There are several important things to note here:</p>
+<p class="p">For one, now that you are actually testing the app, you will see a popup overlay of the
+application under test appear in the bottom right corner of the window. This overlay
+is interactive, although you should wait until the test is complete before trying to
+interact with it. The overlay is extremely helpful for debugging your tests since at
+any given point in time you can see what state the app is in, particularly when the
+debugger is running and execution is paused. If the overlay is getting in the way,
+then after the tests have finished executing you can get rid of it by selecting the
+<span class="ph uicontrol">Close Frame</span> checkbox at the top left.</p>
+<p class="p">In the above screenshot, steps 1 and 2 are passing because Gherkin was able to match the feature file test step to a step definition in the steps
+file. The test step &quot;I have started the app&quot; does not actually execute any verifications (that is, it does not call any QUnit assertion
+functions) and hence there is no verification occurring between &quot;I have started the app&quot; and &quot;I can see the life saving button&quot;. Step 3 is the
+actual verification of the app executed inside the step definition &quot;I can see the life saving button&quot; function, and since in this example the
+app is an empty Web page, the test is failing. The error message <samp class="ph codeph">Failed to wait for check</samp> is an OPA5 error that happens when
+the <samp class="ph codeph">waitFor</samp> function fails to find the <span class="ph"><span class="ph pname">SAPUI5</span></span> control that&apos;s being
+searched for.</p>
+</section></div>
+<div class="section collapsible expanded"><section class="section collapsible expanded" type="Write the first passing test"><h2 class="section_title" style="font-size: 1.15em;">Write the first passing test</h2><p class="p">To make the &quot;I can see the life saving button&quot; test pass, you need to
+implement the app that is under test. </p><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Website.html</p>
+</div><div class="p">Here is a simple stub for a test Web site (you may need to update the bootstrap
+source):<pre class="pre codeblock prettyprint lang-html">&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Using Gherkin with OPA5 Website&lt;/title&gt;
+    &lt;script
+      id=&quot;sap-ui-bootstrap&quot;
+      src=&quot;https://openui5nightly.hana.ondemand.com/resources/sap-ui-core.js&quot;
+      data-sap-ui-libs=&quot;sap.m,sap.ui.layout&quot;
+    &gt;&lt;/script&gt;
+    &lt;script src=&quot;WebsiteCode.js&quot;&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body class=&quot;sapUiBody&quot;&gt;
+    &lt;div id=&quot;uiArea&quot;&gt;&lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre></div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">WebsiteCode.js</p>
+<p class="p">Here&apos;s some simple code for an app:</p>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.getCore().attachInit(function() {
+  &quot;use strict&quot;;
+
+  var oLayout = new sap.ui.layout.VerticalLayout({id: &quot;layout&quot;});
+
+  var oButton = new sap.m.Button({
+    id: &quot;life-saving-button&quot;,
+    text: &quot;Save a Lemming&quot;,
+    press: function() {}
+  });
+
+  oLayout.addContent(oButton);
+  oLayout.placeAt(&quot;uiArea&quot;);
+
+});</pre>
+</div><p class="p">Now when you execute the test, you should see a passed verification step:</p><div class="fig fignone" id="loio4b0c51965ebd40059daf3419ba35f694__fig_q5c_pl4_kx"><div class="figbody">
+<img class="inline  " id="loio4b0c51965ebd40059daf3419ba35f694__image_ttx_pl4_kx" src="loioe99954a6d823413d8bd4f69d1e980e8b_LowRes.png">
+</div></div><p class="p">Steps 1 and 2 passed because the corresponding step definitions were found in the steps file. Here Gherkin is confirming that it was able
+to find the step definitions.</p><p class="p">Step 3 was an actual verification step that executed a QUnit assertion to verify a property of the Web page.
+</p><p class="p">Step 4 is failing because you haven&apos;t written that step definition yet.</p><p class="p">Your next activity would be to write a step definition for
+step 4, execute the test and see it fail, then write the new code in the app, execute the test and see it pass, and so on. </p></section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

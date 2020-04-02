@@ -1,0 +1,182 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Browser Debugging for ABAP Developers</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="To debug in SAPUI5, use your browser&apos;s debugging tool."><meta name="description" content="To debug in SAPUI5, use your browser&apos;s debugging tool."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"03265b0408e2432c9571d6b3feb6b1fd.html","previousTopicHref":"a773d42cede148379c577e2da3156711.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loio1e52fde5444649748809a78fd8a645da"><h1 class="title topictitle1" hidden>Browser Debugging for ABAP Developers</h1><div class="body"><p class="shortdesc" hidden>To debug in <span class="ph"><span class="ph pname">SAPUI5</span></span>, use your browser&apos;s debugging tool.</p>
+<p class="p">When you debug code in <span class="ph"><span class="ph pname">SAPUI5</span></span>, keep in mind that you can <strong class="ph b">not</strong> debug <span class="ph"><span class="ph pname">SAPUI5</span></span> in your IDE. If you use SAP Web IDE, for example, a breakpoint set in
+SAP Web IDE does <strong class="ph b">not</strong> stop your script when it is executed in your browser, unless you use the <samp class="ph codeph">debugger;</samp> statement
+explicitly in your code. The browser does not know about your IDE and does not communicate directly with it.</p>
+<div class="section"><section class="section" type="ABAP Debugger vs. Browser Debugger"><h2 class="section_title" style="font-size: 1.15em;">ABAP Debugger vs. Browser Debugger</h2><p class="p">This section explains how you use the
+debugging tool of a Chrome browser. Keep in mind that you have to test your
+application on all browsers that are officially supported by SAP, because the
+implementation differs depending on the browser used, see<a class="xref" href="../../#/topic/74b59efa0eef48988d3b716bd0ecc933.html" title="Browser and platform support for the SAPUI5 libraries on iOS, Android, macOS, and Windows platforms." target="_top">Choose your Browser</a>. To
+start the debugger, use the browser menu or choose <kbd class="ph userinput">F12</kbd> (valid
+for most browsers).</p><p class="p">The following explanations assume that your application is
+up and running on your web server, either a local Tomcat, or a remote
+server.</p><p class="p">In a first step, locate the lines of code you would like to inspect
+and set breakpoints. The following figure shows an application that is opened in the
+Chrome debugger. The default tab <span class="ph uicontrol">Elements</span> is opened, and a
+small bell icon with a number located at the right border of the footer indicates
+the number of messages from the console.</p><img class="inline  " id="loio1e52fde5444649748809a78fd8a645da__image_ccn_21s_tl" src="loio1b9ea07a3ea7448aade495df4add5fd1_LowRes.jpg" alt="SAPUI5 Troubleshooting JS Debugger 1" title="SAPUI5 Troubleshooting JS Debugger 1"><p class="p">On the <span class="ph uicontrol">Elements</span> tab, the HTML elements of the DOM are
+displayed in a tree structure. To see the JavaScript code within the application and
+to set a breakpoint there, open the <span class="ph uicontrol">Sources</span> tab. From there,
+you can open any source files that is included. When you open the tools the first
+time, you ususally have to click the arrow icon on the left hand side of the
+<span class="ph uicontrol">Sources</span> tab (as indicated in the following figure) to
+open the sources tree.</p><img class="inline  " id="loio1e52fde5444649748809a78fd8a645da__image_pln_g1s_tl" src="loio2eec3c2d87394dfeb04b1ac0dcbc1016_LowRes.jpg" alt="SAPUI5 Troubleshooting Open Navigator" title="SAPUI5 Troubleshooting Open Navigator"><p class="p">To see the actual content of the HTML page and to set a breakpoint, open the
+HTML page from the sources tree. This is similar to the ABAP debugger when you
+execute and debug an application from the workbench. The following figures show the
+ABAP workbench debugger and the Chrome debugger.</p><p class="p">The following figure shows
+the ABAP workbench debugger. The bubbles indicate the opened application and its
+location (1), the call stack (2), and the tab where you enter the variables you want
+to watch (3).</p><img class="inline  " id="loio1e52fde5444649748809a78fd8a645da__image_sdl_31s_tl" src="loio44b5f9fdc2ab43d6a6f162304a65b54d_LowRes.jpg" alt="SAPUI5 Troubleshooting ABAP Debugger" title="SAPUI5 Troubleshooting ABAP Debugger"><p class="p">The next figure shows the Chrome debugger. Here, the bubbles indicate the
+script you are looking at (1), the watch expressions where you can add the variables
+you want to watch (3), the call stack that indicates if the code execution stops on
+a breakpoint (2), and the breakpoint (4). The call stack is only visible when the
+code execution is on hold.</p><img class="inline  " id="loio1e52fde5444649748809a78fd8a645da__image_ipz_j1s_tl" src="loioc9721fb27743420fab54764291db1b04_LowRes.jpg" alt="SAPUI5 Troubleshooting JS Debugger 2" title="SAPUI5 Troubleshooting JS Debugger 2"><aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">JavaScript does not support a forward navigation, meaning that you can not jump
+to a method by double clicking. Instead, you either have to jump to the method
+during execution, or you open the file containing the method. </p></aside><p class="p">If you are not sure in which file exactly a piece of code is located, Firefox
+offers you an option to search through several files included in your page. Chrome,
+however, does <strong class="ph b">not</strong> support this option. </p></section></div>
+<div class="section"><section class="section" type="Setting Breakpoints"><h2 class="section_title" style="font-size: 1.15em;">Setting Breakpoints</h2>
+
+<p class="p">The browser debugger supports several options for setting breakpoints. You can, for example,
+click once on the line number where you would like to break. To remove the
+breakpoint, click the respective line again. To temporarily disable or edit the
+breakpoint, right click on an existing breakpoint. To set a conditional breakpoint,
+right click on a line without breakpoint. You can also set breakpoints on a certain
+event or event listeners, see the option in the lower right screen area of the
+figure above. For more information, see the tutorials for your respective browser
+that are available in the internet. </p>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">In most cases after setting a breakpoint, you have to reload the page to execute the code
+again and to make it stop at the respective line. If you use Internet Explorer,
+choose <span class="ph uicontrol">Start Debugging</span> in the developer tools to activate
+your breakpoint.</p></aside>
+</section></div>
+<div class="section"><section class="section" type="Adding Variables to Watch"><h2 class="section_title" style="font-size: 1.15em;">Adding Variables to Watch</h2>
+
+<p class="p">To add a variable to the list of watched variables, open the context menu for the variable in
+the code line and choose <span class="ph uicontrol">Add to watch</span>. Another option is to
+choose the <span class="ph uicontrol">+</span> button at the top of the watch list to add a new
+line, in which you can then enter the name of the variable you want to watch.</p>
+</section></div>
+<div class="section"><section class="section" type="Modifying Variables"><h2 class="section_title" style="font-size: 1.15em;">Modifying Variables</h2>
+
+<p class="p">If you want to modify a variable to find out if the code works correctly with a different
+value, open the console, for example by choosing <kbd class="ph userinput">ESC</kbd> in the
+debugging tool and enter the new value manually directly in the JavaScript code. To
+confirm the change, choose <kbd class="ph userinput">ENTER</kbd> in Chrome and
+<span class="ph uicontrol">Execute</span> in Firefox. </p>
+</section></div>
+<div class="section"><section class="section" type="Stepping Through Executed Code"><h2 class="section_title" style="font-size: 1.15em;">Stepping Through Executed Code</h2>
+
+<p class="p">In ABAP, a yellow arrow indicates the line of code that is currently being executed. In
+Chrome, the arrow is red and the code line is highlighted. The following table gives
+an overview of the function keys for the ABAP workbench and Java Script: </p>
+<div class="table-wrapper"><table summary id="loio1e52fde5444649748809a78fd8a645da__simpletable_db3_bbs_tl" border="1" class="simpletable"><thead><tr class="sthead">
+<th style="vertical-align:bottom;text-align:left;" id="d331481e179" class="stentry">Function</th>
+<th style="vertical-align:bottom;text-align:left;" id="d331481e182" class="stentry">ABAP</th>
+<th style="vertical-align:bottom;text-align:left;" id="d331481e185" class="stentry">JavaScript</th>
+</tr></thead><tbody><tr class="strow">
+<td style="vertical-align:top;" headers="d331481e179" class="stentry">Step-by-step execution, also stepping into functions and loops</td>
+<td style="vertical-align:top;" headers="d331481e182" class="stentry"><kbd class="ph userinput">F5</kbd></td>
+<td style="vertical-align:top;" headers="d331481e185" class="stentry"><kbd class="ph userinput">F11</kbd></td>
+</tr><tr class="strow">
+<td style="vertical-align:top;" headers="d331481e179" class="stentry">Step-by-step execution, stepping over functions</td>
+<td style="vertical-align:top;" headers="d331481e182" class="stentry"><kbd class="ph userinput">F6</kbd></td>
+<td style="vertical-align:top;" headers="d331481e185" class="stentry"><kbd class="ph userinput">F10</kbd></td>
+</tr><tr class="strow">
+<td style="vertical-align:top;" headers="d331481e179" class="stentry">Skipping the rest of the current function and stepping out to the last cursor
+position</td>
+<td style="vertical-align:top;" headers="d331481e182" class="stentry"><kbd class="ph userinput">F7</kbd></td>
+<td style="vertical-align:top;" headers="d331481e185" class="stentry"><kbd class="ph userinput">SHIFT+F11</kbd></td>
+</tr><tr class="strow">
+<td style="vertical-align:top;" headers="d331481e179" class="stentry">Resume execution</td>
+<td style="vertical-align:top;" headers="d331481e182" class="stentry"><kbd class="ph userinput">F8</kbd></td>
+<td style="vertical-align:top;" headers="d331481e185" class="stentry">
+<p class="p"><kbd class="ph userinput">F8</kbd></p>
+<p class="p">(Internet Explorer: <kbd class="ph userinput">F5</kbd>)</p>
+</td>
+</tr></tbody></table></div>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

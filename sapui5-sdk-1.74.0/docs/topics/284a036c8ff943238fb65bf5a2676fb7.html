@@ -1,0 +1,276 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 15: Aggregation Binding Using a Factory Function</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Instead of hard-coding a single template control, we use a factory function to generate different controls based on the data received at runtime. This approach is much more flexible and allows complex or heterogeneous data to be displayed."><meta name="description" content="Instead of hard-coding a single template control, we use a factory function to generate different controls based on the data received at runtime. This approach is much more flexible and allows complex or heterogeneous data to be displayed."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"bcdbde6911bd4fc68fd435cf8e306ed0.html","previousTopicHref":"5cff8d1c3fb84c5db7a00f2daca125af.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/e5310932a71f42daa41f3a6143efca9c.html" title="In this tutorial, we will explain the concepts of data binding in SAPUI5." target="_top">Data Binding</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/5cff8d1c3fb84c5db7a00f2daca125af.html" title="Expression binding allows you to display a value on the screen that has been calculated from values found in some model object. This way simple formatting or calculations can be inserted directly into the data binding string. In this example, we will change the color of the price depending on whether it is above or below some arbitrary threshold. The threshold value is also stored in the JSON model." target="_top">Step 14: Expression Binding</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loio284a036c8ff943238fb65bf5a2676fb7"><h1 class="title topictitle1" hidden>Step 15: Aggregation Binding Using a Factory Function</h1><div class="body conbody"><p class="shortdesc" hidden>Instead of hard-coding a single template control, we use a factory function to generate
+different controls based on the data received at runtime. This approach is much more
+flexible and allows complex or heterogeneous data to be displayed.</p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loio284a036c8ff943238fb65bf5a2676fb7__fig_r1j_pst_mr"><div class="figbody">
+
+<img class="inline  " id="loio284a036c8ff943238fb65bf5a2676fb7__image_bkf_ybs_vs" src="loiodb27ba88d80c4778809bdb9b971531f9_HiRes.png">
+</div><span class="figcap">Controls generated based on data</span></div>
+</section></div>
+<div class="section"><section class="section" type="Coding"><h2 class="section_title" style="font-size: 1.15em;">Coding</h2>
+
+<p class="p">You can view and download all files in the Demo Kit <span class="ph">at <a class="xref" href="../../#/sample/sap.ui.core.tutorial.databinding.15/preview" target="_top" alt="#/sample/sap.ui.core.tutorial.databinding.15/preview" title="#/sample/sap.ui.core.tutorial.databinding.15/preview">Data Binding - Step 15</a></span>.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/view/App.view.xml"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/App.view.xml</h2>
+
+<pre class="pre codeblock prettyprint lang-xml">... 
+	&lt;Panel headerText=&quot;{i18n&gt;panel3HeaderText}&quot; class=&quot;sapUiResponsiveMargin&quot; width=&quot;auto&quot;&gt;
+		&lt;content&gt;
+<span class="ph emphasis emphasis">			&lt;List
+				id=&quot;ProductList&quot;
+				headerText=&quot;{i18n&gt;productListTitle}&quot;
+				items=&quot;{
+					path: &apos;products&gt;/Products&apos;,
+					factory: &apos;.productListFactory&apos;
+				}&quot;&gt;
+				&lt;dependents&gt;
+					&lt;core:Fragment fragmentName=&quot;sap.ui.demo.db.view.ProductSimple&quot; type=&quot;XML&quot;/&gt;
+					&lt;core:Fragment fragmentName=&quot;sap.ui.demo.db.view.ProductExtended&quot; type=&quot;XML&quot;/&gt;
+				&lt;/dependents&gt;
+			&lt;/List&gt;
+</span>
+		&lt;/content&gt;
+	&lt;/Panel&gt;
+...</pre>
+
+<p class="p">The <samp class="ph codeph">List</samp> XML element that previously held the product list is now reduced simply to a named, but otherwise empty
+placeholder. Without a factory function to populate it, this <samp class="ph codeph">List</samp> would always remain empty.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/controller/App.controller.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/controller/App.controller.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/core/mvc/Controller&quot;,
+	&quot;sap/m/library&quot;,
+	&quot;sap/ui/core/Locale&quot;,
+	&quot;sap/ui/core/LocaleData&quot;,
+	&quot;sap/ui/model/type/Currency&quot;,
+<span class="ph emphasis emphasis">	&quot;sap/m/ObjectAttribute&quot;</span>
+], function (Controller, mobileLibrary, Locale, LocaleData, Currency<span class="ph emphasis emphasis">, ObjectAttribute</span>) {
+	&quot;use strict&quot;;
+
+	return Controller.extend(&quot;sap.ui.demo.db.controller.App&quot;, {
+		formatMail: function(sFirstName, sLastName) {
+			var oBundle = this.getView().getModel(&quot;i18n&quot;).getResourceBundle();
+			return mobileLibrary.URLHelper.normalizeEmail(
+				sFirstName + &quot;.&quot; + sLastName + &quot;@example.com&quot;,
+				oBundle.getText(&quot;mailSubject&quot;, [sFirstName]),
+				oBundle.getText(&quot;mailBody&quot;));
+		},
+
+		formatStockValue : function(fUnitPrice, iStockLevel, sCurrCode) {
+			var sBrowserLocale = sap.ui.getCore().getConfiguration().getLanguage();
+			var oLocale = new Locale(sBrowserLocale);
+			var oLocaleData = new LocaleData(oLocale);
+			var oCurrency = new Currency(oLocaleData.mData.currencyFormat);
+			return oCurrency.formatValue([fUnitPrice * iStockLevel, sCurrCode], &quot;string&quot;);
+		},
+
+		onItemSelected : function(oEvent) {
+			var oSelectedItem = oEvent.getSource();
+			var oContext = oSelectedItem.getBindingContext(&quot;products&quot;);
+			var sPath = oContext.getPath();
+			var oProductDetailPanel = this.byId(&quot;productDetailsPanel&quot;);
+			oProductDetailPanel.bindElement({ path: sPath, model: &quot;products&quot; });
+		},
+
+<span class="ph emphasis emphasis">		productListFactory : function(sId, oContext) {
+			var oUIControl;
+
+			// Decide based on the data which dependant to clone
+			if (oContext.getProperty(&quot;UnitsInStock&quot;) === 0 &amp;&amp; oContext.getProperty(&quot;Discontinued&quot;)) {
+				// The item is discontinued, so use a StandardListItem
+				oUIControl = this.byId(&quot;productSimple&quot;).clone(sId);
+			} else {
+				// The item is available, so we will create an ObjectListItem
+				oUIControl = this.byId(&quot;productExtended&quot;).clone(sId);
+
+				// The item is temporarily out of stock, so we will add a status
+				if (oContext.getProperty(&quot;UnitsInStock&quot;) &lt; 1) {
+					oUIControl.addAttribute(new ObjectAttribute({
+						text : {
+							path: &quot;i18n&gt;outOfStock&quot;
+						}
+					}));
+				}
+			}
+
+			return oUIControl;
+		}
+</span>
+	});
+});
+</pre>
+<p class="p">In the <samp class="ph codeph">App</samp> controller, we create a new function called <samp class="ph codeph">productListFactory</samp>. A factory function returns
+a control for the associated binding context, similar to the XML templates we have defined in the previous steps. The types of
+controls returned by this factory function must suit the items aggregation of the <samp class="ph codeph">sap.m.List</samp> object. In this case, we
+return either a <samp class="ph codeph">StandardListItem</samp> or an <samp class="ph codeph">ObjectListItem</samp> based on the data stored in the context of the
+item to be created. </p>
+<p class="p">We decide which type of control to return by checking the current stock level and whether or not the product has been discontinued. For
+both options, we prepare and load an XML fragment so that we can define the view logic declaratively and assign the current
+controller. If the stock level is zero and the product has also been discontinued, then we use the <samp class="ph codeph">ProductSimple</samp> XML
+fragment, otherwise the <samp class="ph codeph">ProductExtended</samp> XML fragment.</p>
+<p class="p">The XML fragments need to be loaded only once for each case, so we create a Singleton by storing a helper variable on the controller and only
+loading it once. For each item of the list, we clone the corresponding control stored on the controller. This protected method creates
+a fresh copy of a control that we can bind to the context of the list item. Please note: In a factory function, you are responsible
+for the life cycle of the control you create.</p>
+<p class="p">If the product is not discontinued but the stock level is zero, we are temporarily out of stock. In this case, we add a single
+<samp class="ph codeph">ObjectAttribute</samp> that adds the <span class="ph uicontrol">Out of Stock</span> message to the control using JavaScript.
+Similar to declarative definitions in the XML view or fragments, we can bind properties using data binding syntax. In this case, we
+bind the text to a property in the resource bundle. Since the <samp class="ph codeph">Attribute</samp> is a child of the list item, it has access to
+all assigned models and the current binding context.</p>
+<p class="p">Finally, we return the control that is displayed inside the list.</p>
+</section></div>
+
+<div class="section" id="loio284a036c8ff943238fb65bf5a2676fb7__section_wws_xj1_fcb"><section class="section" type="webapp/view/ProductSimple.fragment.xml (new)"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/ProductSimple.fragment.xml (new)</h2>
+
+<pre class="pre codeblock prettyprint lang-xml"><span class="ph emphasis emphasis">&lt;core:FragmentDefinition
+	xmlns=&quot;sap.m&quot;
+	xmlns:core=&quot;sap.ui.core&quot;&gt;
+	&lt;StandardListItem
+		id=&quot;productSimple&quot;
+
+		icon=&quot;sap-icon://warning&quot;
+		title=&quot;{products&gt;ProductName} ({products&gt;QuantityPerUnit})&quot;
+		info=&quot;{i18n&gt;Discontinued}&quot;
+		type=&quot;Active&quot;
+		infoState=&quot;Error&quot;
+		press=&quot;.onItemSelected&quot;&gt;
+	&lt;/StandardListItem&gt;
+&lt;/core:FragmentDefinition&gt;
+</span></pre>
+<p class="p">The XML fragment defines a <samp class="ph codeph">StandardListItem</samp> that is used if the stock level is zero and the product has also been
+discontinued. This is our simple use case where we just define a warning icon and a <span class="ph uicontrol">Product Discontinued</span>
+message in the <samp class="ph codeph">info</samp> property.</p>
+</section></div>
+<div class="section" id="loio284a036c8ff943238fb65bf5a2676fb7__section_ghp_ck1_fcb"><section class="section" type="webapp/view/ProductExtended.fragment.xml (new)"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/ProductExtended.fragment.xml (new)</h2>
+
+<pre class="pre codeblock prettyprint lang-xml">&lt;core:FragmentDefinition
+	xmlns=&quot;sap.m&quot;
+	xmlns:core=&quot;sap.ui.core&quot;&gt;
+	&lt;ObjectListItem
+		id=&quot;productExtended&quot;
+
+		title=&quot;{products&gt;ProductName} ({products&gt;QuantityPerUnit})&quot;
+		number=&quot;{
+			parts: [
+				{path: &apos;products&gt;UnitPrice&apos;},
+				{path: &apos;/currencyCode&apos;}
+			],
+			type: &apos;sap.ui.model.type.Currency&apos;,
+			formatOptions : {
+				showMeasure : false
+			}
+		}&quot;
+		type=&quot;Active&quot;
+		numberUnit=&quot;{/currencyCode}&quot;
+		press=&quot;.onItemSelected&quot;&gt;
+	&lt;/ObjectListItem&gt;
+&lt;/core:FragmentDefinition&gt;
+</pre>
+<p class="p">In our extended use case, we create an <samp class="ph codeph">ObjectListItem</samp> to display more details of the product. The properties are bound
+to the fields of the current data binding context and therefore can use types, formatters, and all handlers that are defined in the
+assigned controller.</p>
+<p class="p">However, more complex logic can&#x2019;t be defined declaratively in XML. Therefore, when the stock level is zero, we add a single
+<samp class="ph codeph">ObjectAttribute</samp> that displays the <span class="ph uicontrol">Out of Stock</span> message in the controller using
+JavaScript.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/i18n/i18n.properties"><h2 class="section_title" style="font-size: 1.15em;">webapp/i18n/i18n.properties</h2>
+
+<pre class="pre codeblock prettyprint lang-prefs">...
+# Product Details
+...
+<span class="ph emphasis emphasis">outOfStock=Out of Stock</span></pre>
+</section></div>
+<div class="section"><section class="section" type="webapp/i18n/i18n_de.properties"><h2 class="section_title" style="font-size: 1.15em;">webapp/i18n/i18n_de.properties</h2>
+
+<pre class="pre codeblock prettyprint lang-prefs">...
+# Product Details
+...
+<span class="ph emphasis emphasis">outOfStock=Nicht vorr\u00e4tig</span></pre>
+<p class="p">We add the missing texts to the <samp class="ph codeph">properties</samp> files.</p>
+<p class="p">That&apos;s all - you completed the Data Binding tutorial!</p>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/e5310932a71f42daa41f3a6143efca9c.html" title="In this tutorial, we will explain the concepts of data binding in SAPUI5." target="_top">Data Binding</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/5cff8d1c3fb84c5db7a00f2daca125af.html" title="Expression binding allows you to display a value on the screen that has been calculated from values found in some model object. This way simple formatting or calculations can be inserted directly into the data binding string. In this example, we will change the color of the price depending on whether it is above or below some arbitrary threshold. The threshold value is also stored in the JSON model." target="_top">Step 14: Expression Binding</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/91f057786f4d1014b6dd926db0e91070.html" title="List binding (or aggregation binding) is used to automatically create child controls according to model data." target="_top">List Binding (Aggregation Binding)</a></div><div><a class="link" href="../../#/topic/2c677b574ea2486a8d5f5414d15e21c5.html" title="XML fragments are similar to XML view, but have no &lt;View&gt; tag as root element. Instead, there is an SAPUI5 control." target="_top">XML Fragments</a></div><div><a class="link" href="../../#/topic/335848ac1174435c901baaa55f6d7819.html" target="_top">Using Factory Functions</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

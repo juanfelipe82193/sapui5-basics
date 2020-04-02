@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head> 
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Measured Rendering Tests</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="json/TESTDATA_PLAINTABLE.js"></script>
+<script type="text/javascript" src="testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Measured Rendering Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Rendering tests", {
+			setup : function() {
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				this.oCrosstab.setWidth("1600px");
+				this.oCrosstab.setHeight("1200px");
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+
+				this.checkNumberOfCols = function(oDomRow, iExpectedColCnt) {
+					oDomCells = oDomRow.children("td");
+					equal(oDomCells.length, iExpectedColCnt,
+							"The actual number of cols must match the expected number of cols");
+				};
+
+				this.checkCols = function(iExpectedColCnt) {
+
+					var oDomColHeaderArea = jQuery.sap.byId(this.oColHeaderArea.getId());
+					var oDomDataArea = jQuery.sap.byId(this.oDataArea.getId());
+
+					var oLastRow = oDomColHeaderArea.children("tbody").children("tr:last-child");
+					this.checkNumberOfCols(oLastRow, iExpectedColCnt);
+
+					oLastRow = oDomDataArea.children("tbody").children("tr:last-child");
+					this.checkNumberOfCols(oLastRow, iExpectedColCnt);
+				}
+
+				this.checkRows = function(iExpectedRowCnt) {
+					var oDomDataArea = jQuery.sap.byId(this.oDataArea.getId());
+					var oDomRowHeaderArea = jQuery.sap.byId(this.oRowHeaderArea.getId());
+
+					var oRows = oDomRowHeaderArea.children("tbody").children("tr");
+					equal(oRows.length, iExpectedRowCnt,
+							"The actual number of rows must match the expected number of rows");
+
+					oRows = oDomDataArea.find("tr");
+					equal(oRows.length, iExpectedRowCnt,
+							"The actual number of rows must match the expected number of rows");
+				}
+
+				this.oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+				this.oDataArea = this.oCrosstab.getDataArea();
+				this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+				this.oColHeaderArea = this.oCrosstab.getColumnHeaderArea();
+
+			},
+			teardown : function() {
+				this.oCrosstab = null;
+			}
+		});
+
+		test("Check column measuring if available space is smaller than the required space", function() {
+			this.oCrosstab.setHeight("800px");
+			this.oCrosstab.setWidth("600px");
+			sap.ui.getCore().applyChanges();
+
+			this.checkCols(2);
+
+			this.oCrosstab.setWidth("550px");
+			sap.ui.getCore().applyChanges();
+
+			this.checkCols(2);
+
+			this.oCrosstab.setWidth("1200px");
+			sap.ui.getCore().applyChanges();
+
+			this.checkCols(4);
+		});
+
+		test("Check row measuring if available space is smaller than the required space", function() {
+			this.oCrosstab.setHeight("290px");
+			this.oCrosstab.setWidth("1200px");
+			sap.ui.getCore().applyChanges();
+
+			var iCheckRow = 10;
+			this.checkRows(iCheckRow);
+
+			this.oCrosstab.setHeight("185px");
+			sap.ui.getCore().applyChanges();
+
+			iCheckRow = 7;
+			this.checkRows(iCheckRow);
+
+			this.oCrosstab.setHeight("800px");
+			sap.ui.getCore().applyChanges();
+
+			this.checkRows(12);
+		});
+
+		test(
+				"Check rendering if available space is smaller than the space required by the dimension header",
+				function() {
+					this.oCrosstab.setHeight("50px");
+					this.oCrosstab.setWidth("50px");
+					sap.ui.getCore().applyChanges();
+
+					var oDomDataArea = jQuery.sap.byId(this.oDataArea.getId());
+					var oDomRowHeaderArea = jQuery.sap.byId(this.oRowHeaderArea.getId());
+					var oDomColHeaderArea = jQuery.sap.byId(this.oColHeaderArea.getId());
+					var oDomDimensionHeaderArea = jQuery.sap.byId(this.oDimensionHeaderArea.getId());
+
+					equal(oDomDataArea.children().length, 0, "The data area should not contain any data");
+					equal(oDomRowHeaderArea.children().length, 0, "The row header area should not contain any data");
+					equal(oDomColHeaderArea.children().length, 0, "The column header area must not be rendered due to auto header size behavior");
+					ok(oDomDimensionHeaderArea.find("tr").length == 5, "The dimension header area should be rendered");
+				});
+	</script>
+
+</body>
+
+</html>

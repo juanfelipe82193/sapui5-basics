@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>RichTextEditor - sap.ui.richtexteditor</title>
+
+	<script src="../../../../resources/sap-ui-core.js"
+	        type="text/javascript"
+	        charset="UTF-8"
+	        id="sap-ui-bootstrap"
+	        data-sap-ui-libs="sap.ui.richtexteditor, sap.m"
+			data-sap-ui-theme="sap_belize"
+	        data-sap-ui-preload="async">
+	</script>
+
+	<script>
+		sap.ui.getCore().attachInit(function () {
+			sap.ui.require(["sap/ui/richtexteditor/RichTextEditor","sap/ui/richtexteditor/RTESplitButton", "sap/m/App", "sap/m/Page", "sap/m/Button"],
+				function (RTE, RTESplitButton, App, Page, Button) {
+
+					var oApp = new App("myApp", {
+						initialPage: "myPage"
+					});
+
+					var oRichTextEditor = new RTE("myRTE", {
+						editorType: sap.ui.richtexteditor.EditorType.TinyMCE4,
+						width: "100%",
+						height: "300px",
+						showGroupFont: true,
+						showGroupUndo: true,
+						showGroupLink: true,
+						showGroupInsert: true,
+						customToolbar: true,
+						customButtons: [new Button({
+							text: "Custom Button",
+							icon: "sap-icon://crm-sales",
+							type: "Transparent",
+							tooltip: "Custom button",
+							press: function () {
+								oRichTextEditor.setValue("Hello world!");
+							}
+						})]
+					});
+					//This timeout is needed because the custom toolbar must be rendered before adding new groups in it.
+					setTimeout(function() {
+						oRichTextEditor.addButtonGroup("styleselect");
+						oRichTextEditor.addButtonGroup("table");
+					},500);
+
+					var oPage = new Page("myPage", {
+						title: "Fully featured RichTextEditor with a custom toolbar",
+						showNavButton: true,
+						contentOnlyBusy: true,
+						content: [oRichTextEditor]
+					});
+
+					oApp.addPage(oPage).placeAt("content");
+				});
+		});
+	</script>
+</head>
+<body class="sapUiBody">
+<div id="content"></div>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Consuming APF</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content><meta name="description" content><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"47be85530a5df37ae10000000a44176d.html","previousTopicHref":"f7da7d53b5c19456e10000000a423f68.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio0109e67712bc4966bfa8922909e92a87"><h1 class="title topictitle1" hidden>Consuming APF</h1><div class="body conbody"><p class="shortdesc" hidden></p>
+<p class="p">The following code snippet is an example of how to consume APF in an SAPUI5-based
+application:</p>
+<pre class="pre codeblock prettyprint">
+sap.ui.define(&quot;myApp.Component&quot;, [
+	&quot;sap/apf/base/Component&quot;
+], function(ApfComponent){
+	&apos;use strict&apos;;
+	return ApfComponent.extend(&quot;myApp.Component&quot;, 
+	{
+		metadata : {
+			&quot;name&quot; : &lt;name&gt;,
+			&quot;manifest&quot; : &quot;json&quot;,
+			&quot;version&quot; : &lt;version&gt;
+		},
+		/**
+		* Initialize the application
+		*
+		* @returns 
+		*/
+		init : function() {
+			// Initialize application here. No APF specific operation done here, since APF API is not yet available.
+			// Call APF Component init
+			ApfComponent.prototype.init.apply(this, arguments);
+		},
+		/**
+		* Creates the application layout and returns the outer layout of APF 
+		*
+		* @returns {sap.ui.core.Control} the content
+		*/ 
+		createContent : function() {
+			// Attach APF start-up callbacks
+			this.getApi().setCallbackBeforeApfStartup(this.onBeforeApfStartup);
+			this.getApi().setCallbackAfterApfStartup(this.onAfterApfStartup);
+ 
+			// Return whatever is returned by parent (APF Component) createContent method
+			return ApfComponent.prototype.createContent.apply(this, arguments);
+		},
+		onBeforeApfStartup: function() {       //optional
+			// Code executed before APF startup
+		},
+ 
+		onAfterApfStartup: function() {        //optional
+			// Code executed after APF startup
+		},
+		destroy : function() {
+			// Destroy application instances
+ 
+			// Call destroy on APF Component
+			ApfComponent.prototype.destroy.apply(this, arguments);
+		}
+	});
+}); 
+        </pre>
+<p class="p">Replace <span class="ph uicontrol">myApp</span> with the application-specific namespace.</p>
+<p class="p">Method <span class="ph sap-technical-name sap-technical-name">this.getApi()</span> provides a reference to the
+APF instance.</p>
+<p class="p">The function registered through <span class="ph sap-technical-name sap-technical-name">onBeforeApfStartup</span> is
+executed after the execution of method <span class="ph sap-technical-name sap-technical-name">init()</span>,
+at the beginning of method <span class="ph sap-technical-name sap-technical-name">createContent()</span> of
+<span class="ph sap-technical-name sap-technical-name">sap.apf.base.Component</span>. This registered
+function is useful, for example, for defining application-specific filters.</p>
+<p class="p">The function registered through <span class="ph sap-technical-name sap-technical-name">onAfterApfStartup</span> is
+executed after all asynchronous startup operations have been terminated, that is, at the
+end of method <span class="ph sap-technical-name sap-technical-name">createContent()</span> of
+<span class="ph sap-technical-name sap-technical-name">sap.apf.base.Component</span>. This registered
+function is useful, for example, for adding footer content to the APF UI.</p>
+<div class="section"><section class="section" type="Footer Content"><h2 class="section_title" style="font-size: 1.15em;">Footer Content</h2><p class="p">You can add footer content to your APF-based
+application, for example, to allow users to make settings such as defining a
+reporting currency or adjusting the exchange rate settings.</p><p class="p"> To add footer
+content, attach the following APF start-up callbacks at APF API level in the
+<samp class="ph codeph">Component.js</samp> file inside the <samp class="ph codeph">createContent()</samp>
+method:</p><ol class="ol" id="loio0109e67712bc4966bfa8922909e92a87__ol_xxk_lkr_4r">
+<li class="li">
+<p class="p"><samp class="ph codeph">setCallbackBeforeApfStartup</samp>, where you can build footer
+controls.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">setCallbackAfterApfStartup</samp>, where you can insert the footer
+content into the UI layout using the <samp class="ph codeph">addMasterFooterContent</samp>
+API.</p>
+</li>
+</ol><p class="p">Footer controls need to register a listener to the
+<samp class="ph codeph">contextChanged</samp> event of APF to listen to context changes at
+startup or when a saved path is opened. The event listener for the
+<samp class="ph codeph">contextChanged</samp> event is defined as follows:
+<samp class="ph codeph">oApi.setEventCallback(oApi.constants.eventTypes.contextChanged,fnCallbackForContextChange);</samp></p><p class="p">Apart
+from the <samp class="ph codeph">contextChanged</samp> event, you can also register the following
+events for <samp class="ph codeph">setEventCallback</samp>:</p><ul class="ul" id="loio0109e67712bc4966bfa8922909e92a87__ul_yyy_5tg_f5">
+<li class="li">
+<p class="p"><samp class="ph codeph">printTrigerred</samp> (to implement a specific formatting for a
+print page)</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">format</samp> (to implement a specific formatting for an entire
+application)</p>
+</li>
+</ul><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Creating Filters for the Footer Content</p>
+<p class="p">To ensure that the filters you create as footer content are recognized by APF,
+create them in the following format:</p>
+<pre class="pre codeblock prettyprint">var oFilter = this.oApi.createFilter();
+var orExpression = oFilter.getTopAnd().addOr();
+orExpression.addExpression({
+    name : &quot;&lt;name&gt;&quot;,
+    operator : &quot;&lt;operator&gt;&quot;,
+    value : &quot;&lt;value&gt;&quot;,
+  });</pre>
+<p class="p">For example, if you want to configure a filter for the exchange rate type, the
+filter expression looks as follows:</p>
+<pre class="pre codeblock prettyprint">orExpression.addExpression({
+    name : &quot;P_ExchangeRateType&quot;,
+    operator : &quot;EQ&quot;,
+    value : &quot;USD&quot;, 
+  });</pre>
+<p class="p">Use the API <samp class="ph codeph">addPathFilter()</samp> to ensure that the created filter is
+applied to the analysis path. When the API <samp class="ph codeph">addPathFilter()</samp> is
+called with the filter created above as a parameter, it returns an ID. The
+filter can be updated using the API <samp class="ph codeph">updatePathFilter()</samp> by
+passing the filter ID and the filter as parameters:</p>
+<pre class="pre codeblock prettyprint">var sFilterId = this.oApi.addPathFilter(oFilter);
+this.oApi.updatePathFilter(sFilterId, oFilter);
+</pre>
+<p class="p">To retrieve the filter that was applied to the analysis path, use the API
+getPathFilter() and pass the filter ID as a parameter:</p>
+<pre class="pre codeblock prettyprint">var oFilter = this.oApi.getPathFilter(sFilterId);
+var sValue = oFilter.getInternalFilter().getFilterTerms()[0].getValue();
+</pre>
+</div></section></div>
+<div class="section"><section class="section" type="Security Considerations"><h2 class="section_title" style="font-size: 1.15em;">Security Considerations</h2>
+
+<p class="p">For any application extension, ensure that both the extension and its libraries are
+trustworthy.</p>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/958ead51e2e94ab8bcdc90fb7e9d53d0.html" title="Components are independent and reusable parts used in SAPUI5 applications." target="_top">Components</a></div><div><a class="link" href="../../#/topic/74038a52dcd7404e82b38be6d5fb1458.html" target="_top">Descriptor (manifest.json)</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

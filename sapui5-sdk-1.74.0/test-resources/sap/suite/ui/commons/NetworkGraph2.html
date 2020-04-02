@@ -1,0 +1,393 @@
+<!DOCTYPE HTML>
+<html style="height: 100%;">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="utf-8">
+
+	<title>NetworkGraph</title>
+
+	<script id="sap-ui-bootstrap"
+			src="../../../../../resources/sap-ui-core.js"
+			data-sap-ui-libs="sap.m, sap.ui.commons, sap.suite.ui.commons"
+			data-sap-ui-theme="sap_belize" data-sap-ui-xx-bindingSyntax='complex'>
+	</script>
+
+
+	<script id="myXml" type="text/xmldata">
+		<mvc:View xmlns:mvc="sap.ui.core.mvc" controllerName="myController" xmlns="sap.suite.ui.commons.networkgraph"
+				  xmlns:core="sap.ui.core" xmlns:m="sap.m" displayBlock="true" height="100%">
+
+			<m:FlexBox renderType="Bare" width="100%" height="70%">
+				<Graph id="graph"
+					backgroundColor="{/backgroundColor}" backgroundImage="{/backgroundImage}" enableWheelZoom="{/enableWheelZoom}" enableZoom="{/enableZoom}"
+					noData="{/noData}" noDataText="{/noDataText}" orientation="{/orientation}"
+					renderType="{/renderType}" nodes="{/nodes}" groups="{/groups}" lines="{/lines}" statuses="{/statuses}">
+					<nodes>
+						<Node key="{key}" titleLineSize="{titleLineSize}" headerCheckBoxState="{headerCheckBoxState}" descriptionLineSize="{descriptionLineSize}" showActionLinksButton="{showActionLinksButton}" showDetailButton="{showDetailButton}" showExpandButton="{showExpandButton}" group="{group}" status="{status}" icon="{icon}" title="{title}" shape="{shape}" statusIcon="{statusIcon}" description="{description}" attributes="{path:'attributes', templateShareable:false}" actionButtons="{path:'actionButtons', templateShareable:false}">
+							<attributes>
+								<ElementAttribute icon="{icon}" label="{label}" labelStatus="{labelStatus}" value="{value}" valueStatus="{valueStatus}" />
+							</attributes>
+							<actionButtons>
+								<ActionButton icon="{icon}" title="{title}" position="{position}" enabled="{enabled}" press="openNodeControls"/>
+							</actionButtons>
+						</Node>
+					</nodes>
+					<lines>
+						<Line from="{from}" to="{to}" arrowPosition="{arrowPosition}" arrowOrientation="{arrowOrientation}" title="{title}" description="{description}" lineType="{lineType}" stretchToCenter="{stretchToCenter}" status="{status}" attributes="{attributes}" actionButtons="{actionButtons}" coordinates="{coordiantes}">
+							<attributes>
+								<ElementAttribute icon="{icon}" label="{label}" labelStatus="{labelStatus}" value="{value}" valueStatus="{valueStatus}" />
+							</attributes>
+							<actionButtons>
+								<ActionButton icon="{icon}" title="{title}" position="{position}" enabled="{enabled}" press="openLineControls"/>
+							</actionButtons>
+							<coordinates>
+								<Coordinate x="{x}" y="{y}"/>
+							</coordinates>
+						</Line>
+					</lines>
+					<groups>
+						<Group key="{key}" status="{status}" title="{title}" description="{description}" icon="{icon}"/>
+					</groups>
+					<statuses>
+						<Status key="{key}" title="{title}" legendColor="{legendColor}" borderStyle="{borderStyle}" borderWidth="{borderWidth}"
+								backgroundColor="{backgroundColor}" borderColor="{borderColor}" contentColor="{contentColor}" headerContentColor="{headerContentColor}"
+								hoverBackgroundColor="{hoverBackgroundColor}" hoverBorderColor="{hoverBorderColor}" hoverContentColor="{hoverContentColor}"
+								selectedBackgroundColor="{selectedBackgroundColor}" selectedBorderColor="{selectedBorderColor}" selectedContentColor="{selectedContentColor}"/>
+					</statuses>
+				</Graph>
+					<GraphMap id="map" graph="graph" directRenderNodeLimit="1">
+						<layoutData>
+							<m:FlexItemData minWidth="150px" maxWidth="20%"/>
+						</layoutData>
+					</GraphMap>
+			</m:FlexBox>
+
+			<m:Toolbar>
+				<m:Label text="Status" />
+				<m:Select id="statusSelect">
+					<core:Item key="custom" text="custom" />
+					<core:Item key="blue" text="blue" />
+					<core:Item key="Standard" text="Standard" />
+					<core:Item key="Error" text="Error" />
+					<core:Item key="Warning" text="Warning" />
+					<core:Item key="Success" text="Success" />
+					<core:Item key="Information" text="Information" />
+				</m:Select>
+				<m:Button text="Apply on selected" press="applyStatusOnSelected"/>
+				<m:Button text="Apply on all" press="applyStatusonAll"/>
+
+				<m:Label text="Render type" />
+				<m:Select selectedKey="{/renderType}">
+					<core:Item key="Html" text="Html" />
+					<core:Item key="Svg" text="Svg" />
+				</m:Select>
+				<m:Label text="orientation" />
+					<m:Select selectedKey="{/orientation}">
+						<core:Item key="BottomTop" text="BottomTop" />
+						<core:Item key="TopBottom" text="TopBottom" />
+						<core:Item key="RightLeft" text="RightLeft" />
+						<core:Item key="LeftRight" text="LeftRight" />
+					</m:Select>
+					<m:Label text="Background color" />
+					<m:Select selectedKey="{/backgroundColor}">
+						<core:Item key="Default" text="Default" />
+						<core:Item key="White" text="White" />
+					</m:Select>
+			</m:Toolbar>
+			<m:Toolbar>
+					<m:Label text="background image" /> <m:Input width="200px" value="{/backgroundImage}"/>
+					<m:CheckBox text="enableWheelZoom" selected="{/enableWheelZoom}"/>
+					<m:CheckBox text="enableZoom" selected="{/enableZoom}"/>
+					<m:CheckBox text="noData" selected="{/noData}"/>
+					<m:Label text="noDataText" /> <m:Input width="200px" value="{/noDataText}"/>
+			</m:Toolbar>
+		</mvc:View>
+
+	</script>
+
+	<script id="nodeControls" type="text/xmldata">
+		<core:FragmentDefinition xmlns:mvc="sap.ui.core.mvc" controllerName="nodeController" xmlns="sap.suite.ui.commons.networkgraph"
+				  xmlns:core="sap.ui.core" xmlns:m="sap.m" displayBlock="true" height="100%">
+			<m:Label text="title" /> <m:Input value="{title}"/>
+			<m:Label text="titleLineSize" /> <m:Input value="{titleLineSize}" type="Number"/>
+			<m:Label text="description" /> <m:Input value="{description}"/>
+			<m:Label text="descriptionLineSize" /> <m:Input value="{descriptionLineSize}" type="Number"/>
+			<m:Label text="icon" /> <m:Input value="{icon}"/>
+			<m:Label text="group" /> <m:Input value="{group}"/>
+			<m:Label text="status" /> <m:Input value="{status}"/>
+			<m:Label text="statusIcon" /> <m:Input value="{statusIcon}"/>
+			<m:Label text="shape" /> <m:Select selectedKey="{shape}"><core:Item key="Circle" text="Circle" /><core:Item key="Box" text="Box" /></m:Select>
+			<m:Label text="headerCheckBoxState" /> <m:Select selectedKey="{headerCheckBoxState}"><core:Item key="Hidden" text="Hidden" /><core:Item key="Checked" text="Checked" /><core:Item key="Unchecked" text="Unchecked" /></m:Select>
+			<m:CheckBox text="showActionLinksButton" selected="{showActionLinksButton}"/>
+			<m:CheckBox text="showDetailButton" selected="{showDetailButton}"/>
+			<m:CheckBox text="showExpandButton" selected="{showExpandButton}"/>
+		</core:FragmentDefinition>
+	</script>
+
+	<script id="lineControls" type="text/xmldata">
+		<core:FragmentDefinition xmlns:mvc="sap.ui.core.mvc" controllerName="nodeController" xmlns="sap.suite.ui.commons.networkgraph"
+				  xmlns:core="sap.ui.core" xmlns:m="sap.m" displayBlock="true" height="100%">
+			<m:Label text="title" /> <m:Input value="{title}"/>
+			<m:Label text="description" /> <m:Input value="{description}"/>
+			<m:Label text="arrowPosition" /> <m:Select selectedKey="{arrowPosition}"><core:Item key="End" text="End" /><core:Item key="Middle" text="Middle" /><core:Item key="Start" text="Start" /></m:Select>
+			<m:Label text="arrowOrientation" /> <m:Select selectedKey="{arrowOrientation}"><core:Item key="ParentOf" text="ParentOf" /><core:Item key="Both" text="Both" /><core:Item key="ChildOf" text="ChildOf" /><core:Item key="None" text="None" /></m:Select>
+			<m:Label text="lineType" /> <m:Select selectedKey="{lineType}"><core:Item key="Dashed" text="Dashed" /><core:Item key="Dotted" text="Dotted" /><core:Item key="Solid" text="Solid" /></m:Select>
+			<m:Label text="status" /> <m:Input value="{status}"/>
+			<m:CheckBox text="stretchToCenter" selected="{stretchToCenter}"/>
+		</core:FragmentDefinition>
+	</script>
+
+	<script type="text/javascript">
+		sap.ui.getCore().attachInit(function() {
+			"use strict";
+
+			var mMyGraphData = {
+				renderType: "Html",
+				orientation: "LeftRight",
+				backgroundColor: "White",
+				backgroundimage: "",
+				enableWheelZoom: true,
+				enableZoom: true,
+				noData: false,
+				noDataText: "",
+				nodes: [
+					{
+						key: "0",
+						group: "0",
+						status: "custom",
+						icon: "sap-icon://bubble-chart",
+						title: "some title",
+						statusIcon: "sap-icon://bubble-chart",
+						description: "asdas asd asd asd asd asd asd asd asd asd asdasda das das das dasd asda",
+						attributes: [{label: "label", value: "value"}]
+					},
+					{
+						key: "1",
+						group: "1",
+						status: "custom",
+						shape: "Box",
+						title: "some title",
+						icon: "sap-icon://bubble-chart",
+						description: "asdas asd asd asd asd asd asd asd asd asd asdasda das das das dasd asda",
+						imageSrc: "../../../../../resources../test-resources/sap/m/images/demo/nature/ALotOfElephants.jpg",
+						attributes: [{
+							label: "label",
+							value: "value",
+							icon: "sap-icon://bubble-chart",
+							labelStatus: "custom",
+							valueStatus: "blue"
+						}, {label: "", value: "value", valueStatus: "custom"}, {
+							label: "label",
+							value: "",
+							valueStatus: "blue"
+						}, {icon: "sap-icon://bubble-chart", labelStatus: "blue"}]
+					},
+					{key: "2", group: "2", status: "custom", statusIcon: "sap-icon://bubble-chart"},
+					{key: "3", group: "0", status: "custom", icon: "sap-icon://bubble-chart"},
+					{key: "4", group: "1", status: "custom"},
+					{key: "5", group: "1", status: "custom"},
+					{
+						key: "6",
+						status: "custom",
+						title: "some title",
+						description: "asdas asd asd asd asd asd asd asd asd asd asdasda das das das dasd asda"
+					},
+					{key: "7", status: "custom"},
+					{key: "8", status: "custom", group: "2", shape: "Box", title: "some title 2"},
+					{key: "9", status: "custom"},
+					{key: "10", status: "custom"}
+				],
+				lines: [
+					{from: "0", to: "1", arrowPosition: "Middle", status: "custom"},
+					{from: "2", to: "3", arrowPosition: "Middle", status: "custom"},
+					{from: "4", to: "5", arrowPosition: "Middle", status: "custom"},
+					{from: "6", to: "7", status: "custom"},
+					{from: "7", to: "6", status: "custom"},
+					{from: "9", to: "3", status: "custom"}
+				],
+				groups: [
+					{
+						key: "0",
+						status: "custom",
+						title: "group title",
+						description: "group descr",
+						icon: "sap-icon://bubble-chart"
+					},
+					{key: "1"},
+					{key: "2"}
+				],
+				statuses: [
+					{
+						key: "custom",
+						title: "happy status",
+						legendColor: "lime",
+						borderStyle: "10 2",
+						borderWidth: "2px",
+						backgroundColor: "#B0D0D3",
+						borderColor: "#C08497",
+						contentColor: "#F7AF9D",
+						headerContentColor: "#F7E3AF",
+						hoverBackgroundColor: "#000022",
+						hoverBorderColor: "#001242",
+						hoverContentColor: "#0094C6",
+						selectedBackgroundColor: "#FFF275",
+						selectedBorderColor: "#6699CC",
+						selectedContentColor: "#FF3C38"
+					},
+					{
+						key: "blue",
+						title: "blue status",
+						legendColor: "#6699CC",
+						borderStyle: "10 9",
+						borderWidth: "3px",
+						backgroundColor: "#9DBEDE",
+						borderColor: "#4B7095",
+						contentColor: "#385470",
+						headerContentColor: "#385470",
+						hoverBackgroundColor: "blue",
+						hoverBorderColor: "blue",
+						hoverContentColor: "blue",
+						selectedBackgroundColor: "blue",
+						selectedBorderColor: "blue",
+						selectedContentColor: "blue"
+					}
+				]
+			};
+
+			sap.ui.require([
+				"sap/ui/model/json/JSONModel",
+				"sap/m/Popover",
+				"sap/m/OverflowToolbarButton",
+				"sap/suite/ui/commons/networkgraph/GraphMap"
+			], function(JSONModel, Popover, OverflowToolbarButton, GraphMap) {
+				sap.ui.controller("myController", {
+					onInit: function() {
+						this.oModel = new JSONModel(mMyGraphData);
+						this.getView().setModel(this.oModel);
+						this.aSelectedItems = [];
+
+						var oNodeControls = sap.ui.xmlview({viewContent: jQuery("#nodeControls").html()}),
+							oLineControls = sap.ui.xmlview({viewContent: jQuery("#lineControls").html()});
+
+						oNodeControls.setModel(this.oModel);
+						this.oNodeControlsPopover = new Popover({
+							content: [oNodeControls]
+						});
+						oLineControls.setModel(this.oModel);
+						this.oLineControlsPopover = new Popover({
+							content: [oLineControls]
+						});
+
+					},
+
+					onAfterRendering: function() {
+						this.oStatusSelect = this.getView().byId("statusSelect");
+						this.oGraph = this.getView().byId("graph");
+
+						var oMap = new GraphMap({
+
+							}),
+							oMapPopover = new Popover({
+								content: [
+									oMap
+								]
+							}),
+							oButton = new OverflowToolbarButton({
+								icon: "sap-icon://alert",
+								press: function() {
+									oMapPopover.openBy(oButton)
+									oMap.setGraph(this.oGraph);
+								}
+							});
+
+						this.oGraph.getToolbar().addContent(oButton);
+
+						mMyGraphData.nodes.forEach(function(oNode) {
+							oNode.actionButtons = [{icon: "sap-icon://legend", title:"controls", position: "Left"}];
+						});
+						mMyGraphData.lines.forEach(function(oLine) {
+							oLine.actionButtons = [{icon: "sap-icon://legend", title:"controls", position: "Left"}];
+						});
+
+						this.oModel.refresh();
+					},
+
+					openNodeControls: function(oEvent) {
+						var oSource = oEvent.getSource();
+
+						this.oNodeControlsPopover.setBindingContext(oSource.getParent().getBindingContext());
+						this.oNodeControlsPopover.openBy(oSource);
+					},
+
+					openLineControls: function(oEvent) {
+						var oSource = oEvent.getSource();
+
+						this.oLineControlsPopover.setBindingContext(oSource.getParent().getBindingContext());
+						this.oLineControlsPopover.openBy(oSource);
+					},
+
+					onRenderTypeChange: function(oEvent) {
+						this.oGraph.setRenderType(oEvent.getParameter("selectedItem").getKey());
+					},
+
+					applyStatusOnSelected: function() {
+						var sStatus = this.oStatusSelect.getSelectedKey(),
+							aSelectedItems = [];
+
+						this.oGraph.getNodes().forEach(function(oNode) {
+							if (oNode.getSelected()) {
+								aSelectedItems.push(oNode);
+								oNode.getAttributes().forEach(function(oAttribute) {
+									oAttribute.setLabelStatus(sStatus);
+									oAttribute.setValueStatus(sStatus);
+								});
+							}
+						});
+
+						this.oGraph.getLines().forEach(function(oLine) {
+							if (oLine.getSelected()) {
+								aSelectedItems.push(oLine);
+							}
+						});
+
+						aSelectedItems.forEach(function(oItem) {
+							oItem.setStatus(sStatus);
+						});
+					},
+
+					applyStatusonAll: function() {
+						var sStatus = this.oStatusSelect.getSelectedKey();
+
+						this.oGraph.getNodes().forEach(function(oNode) {
+							oNode.setStatus(sStatus);
+							oNode.getAttributes().forEach(function(oAttribute) {
+								oAttribute.setLabelStatus(sStatus);
+								oAttribute.setValueStatus(sStatus);
+							});
+						});
+
+						this.oGraph.getLines().forEach(function(oLine) {
+							oLine.setStatus(sStatus);
+						});
+
+						this.oGraph.getGroups().forEach(function(oGroup) {
+							oGroup.setStatus(sStatus);
+						});
+					}
+				});
+
+				sap.ui.controller("nodeController", {
+					descriptionChange: function(oEvent) {
+						this.getParent().setDescription("test");
+					}
+				});
+				sap.ui.xmlview({viewContent: jQuery("#myXml").html()}).placeAt("content");
+			});
+		});
+	</script>
+
+</head>
+<body class="sapUiBody" role="application" style="height: 100%">
+<div id="content" style="height:100%"></div>
+</body>
+</html>

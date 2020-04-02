@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js" id="Script1" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+
+		h4 {
+			margin: 1em 0;
+		}
+
+		i {
+			color: blue
+		}
+
+		.col {
+			color: red;
+		}
+
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+			var oVBI = new sap.ui.vbm.GeoMap({
+				vos : [
+					new sap.ui.vbm.Areas("myAreasId",{
+						items : [
+							new sap.ui.vbm.Area("AreaOne",{
+								position: '-65;10;0;-55;-30;0;-40;-10;0',
+								color: 'rgba(217, 152, 203, 0.7)',
+								tooltip: 'This is an Area',
+							}),
+							new sap.ui.vbm.Area("AreaTwo",{
+								position: '-10;40;0;-10;20;0;20;20;0',
+								color: 'rgba(217, 152, 203, 0.7)',
+								tooltip: 'This is an Area',
+							}),
+							new sap.ui.vbm.Area("AreaThree",{
+								position: '20;-10;0;20;-30;0;-10;-30;0;-10;-10;0',
+								color: 'rgba(217, 152, 203, 0.7)',
+								tooltip: 'This is an Area',
+							})
+					]})
+			   	]
+			});
+
+			function onClick(e){
+				oVBI.zoomToAreasById(['AreaOne'], 0.91);
+			}
+
+			function onClickTwo(e){
+				oVBI.zoomToAreasById(['AreaTwo'], 0.91);
+			}
+
+			function onClickThree(e){
+				oVBI.zoomToAreasById(['AreaOne', 'AreaTwo', 'AreaThree'], 0.91);
+			}
+		
+			function onClickFour(e){
+				oVBI.zoomToAreasById(['AreaThree'], 0.91);
+			}
+			oVBI.placeAt("content");
+			if (localStorage.getItem('map') !== "") {
+				oVBI.setMapConfiguration(JSON.parse(localStorage.getItem('map')));
+			}
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>ZoomToAreasById</h1>
+		<h1> SAP UI5 Visual Business: zoomToAreasById Test </h1>
+		<div id="description1">
+		   <h3> The aim: </h3>
+		<p> To test if we can zoom to one or more areas by id </p>
+		<br>
+		<h3> To test: </h3>
+			<ol>
+			<li>Click 'Area One' to zoom to area with id 'AreaOne'</li>
+			<li>Click 'Area Two' to zoom to area with id 'AreaTwo'</li>
+			<li>Click 'Area Three' to zoom to area with id 'AreaThree'</li>
+			<li>Click 'Multiple Areas' to zoom to areas with id 'AreaOne' and 'AreaTwo' and 'AreaThree'</li>
+			</ol>
+		</div>
+	<div id="description2">
+		<br>
+		<button id="btnArea1"  onClick="onClick()"> Area One </button>
+		<button id="btnArea2"  onClick="onClickTwo()"> Area Two </button>
+		<button id="btnArea3"  onClick="onClickFour()"> Area Three </button>
+		<button id="btnAreaMultiple"  onClick="onClickThree()"> Multiple Areas </button>
+		<div id="content"></div>
+	</div>
+</body>
+
+</html>

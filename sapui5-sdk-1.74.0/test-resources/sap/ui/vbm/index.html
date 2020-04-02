@@ -1,0 +1,93 @@
+<!DOCTYPE HTML >
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+	<title>Visual Business UI5 Tests Index</title>
+</head>
+
+<script src="../../../../resources/sap-ui-core.js" id="sap-ui-bootstrap"></script>
+
+<style>
+	.dashed {border-style: dashed;}
+</style>
+
+<script>
+// delegate selector parameters to links.................................//
+function modifylinks()
+{
+	if( document.location.search )
+	{
+		var refs = document.querySelectorAll("a");
+		for( var nJ = 0; nJ < refs.length; ++nJ )
+			refs[nJ].href += document.location.search;
+	}
+}
+</script>
+
+<body onload="modifylinks()">
+	<h1> Visual Business Index </h1>
+	<br/>
+	<b>
+		<h4 style="font-size: 30px; color: red;" >  Checklist </h4>
+		<ul style="font-size: 15px">
+			<li> Check that you are using the correct OS: <span id="sap-os" style="color:#f00">nothing detected</span></li>
+			<li> Check that you are using the correct browser: <span id="sap-browser" style="color:#f00">nothing detected</span></li>
+		</ul>
+		<button type="button" onClick="toggleMapConfig()">Set/Update Map Configuration</button>
+	</b>
+	<br>
+	<div id="mapConfigDiv">
+		<textarea style="margin-top:5px;width:100%" id="mapConfig" rows="14" cols="50" placeholder="Copy Paste Map Configuration Here"></textarea>
+		<br>
+		<button type="button" onClick="saveMapConfig()">Save</button>
+		<button type="button" onClick="removeMapConfig()">Remove</button>
+	</div>
+	<script>
+		jQuery('#mapConfigDiv').toggle(0);
+
+		var config = localStorage.getItem('map');
+		if(config) {
+			document.getElementById("mapConfig").value = config;
+		}
+
+		function saveMapConfig() {
+			localStorage.setItem('map', document.getElementById('mapConfig').value);
+		}
+
+		function removeMapConfig() {
+			localStorage.removeItem('map');
+			document.getElementById("mapConfig").value = '';
+		}
+
+		function toggleMapConfig(key) {
+			jQuery('#mapConfigDiv' ).toggle(100);
+		}
+		sap.ui.getCore().attachInit(function () {
+			sap.ui.require([
+				"sap/ui/Device"
+			], function ( Device ) {
+				document.getElementById("sap-os").textContent =  Device.os.name + Device.os.versionStr;
+				document.getElementById("sap-browser").textContent = Device.browser.name + Device.browser.versionStr;
+			});
+		});
+	</script>
+
+	</br><h2> Visual Business Fiori Style Tests</h2>
+	<ul>
+		<li><h5><a href="./resources/index.html">Link to regression tests</a></h5></li>
+		<li><h5>Run tests locally</a></h5>Please refer to the steps mentioned in the wiki named <b>VB Automated Testing Infrastructure</b></li>
+	</ul>
+	<h2>Developer Guidance</h2>
+	<ul>
+		<li><a href="bestpractices.html">Best Practices</a> This link refers to the Best Practices page with easy to consume code examples and samples for typical application use cases.</li>
+		<li><a href="demosamples/appsamples.html#selection">Application Samples</a> This link refers to a collection of samples for typical application use cases.</li>
+	</ul>
+
+	<h2>Internal Tests (not accessible on distributed systems)</h2>
+	<ul>
+		<li><h5><a href="./internal/index.html">Visual Business Internal Index</a></h5></li>
+	</ul>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<core:View xmlns:core="sap.ui.core" xmlns:smartField="sap.ui.comp.smartfield"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	controllerName="test.sap.ui.comp.smartfield.SmartField"
+	xmlns:form="sap.ui.comp.smartform"
+	xmlns="sap.m"
+	xmlns:semantic="sap.m.semantic"
+	height="100%">
+	<SplitApp id="app">
+		<masterPages>
+			<semantic:MasterPage>
+				<List id="masterList" mode="SingleSelectMaster" selectionChange="onProductSelect" headerText="Products"
+					includeItemInSelection="true"
+					noDataText="No products"
+					items="{
+						path: '/Products',
+							sorter: {
+								path: 'Description',
+								descending: false
+							}
+						}">
+					<items>
+						<StandardListItem title="{ID}" description="{Description}"/>
+					</items>
+				</List>
+			</semantic:MasterPage>
+		</masterPages>
+		<detailPages>
+			<semantic:DetailPage id="detail">
+				<form:SmartForm id="form" editable="{view>/editMode}" title="{Description}" editToggled="onEditToggled">
+					<form:Group>
+						<form:GroupElement>
+							<smartField:SmartField id="categoryID" value="{CategoryID}" textInEditModeSource="NavigationProperty" contextEditable="true" width="12rem"/>
+						</form:GroupElement>
+					</form:Group>
+				</form:SmartForm>
+
+				<semantic:editAction>
+					<semantic:EditAction press="onEditPressed" visible="{= !${view>/editMode}}"/>
+				</semantic:editAction>
+				<semantic:saveAction>
+					<semantic:SaveAction press="onSavePressed" visible="{view>/editMode}"/>
+				</semantic:saveAction>
+				<semantic:cancelAction>
+					<semantic:CancelAction press="onCancelPressed" visible="{view>/editMode}"/>
+				</semantic:cancelAction>
+			</semantic:DetailPage>
+		</detailPages>
+	</SplitApp>
+</core:View>

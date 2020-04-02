@@ -1,0 +1,290 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Custom Actions</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="You can assign custom actions to quick view cards that open in the object stream of the stack card. These custom actions are displayed as buttons in the card footer."><meta name="description" content="You can assign custom actions to quick view cards that open in the object stream of the stack card. These custom actions are displayed as buttons in the card footer."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"6d260f7708ca4c4a9ff45e846402aebb.html","previousTopicHref":"b240f612227547d99e7fe76dd03da375.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page reference  - topic-topic       reference-reference " id="loio02fb273ee1024fec914b11befe2b1887"><h1 class="title topictitle1" hidden>Custom Actions</h1><div class="body refbody"><p class="shortdesc" hidden>You
+can assign custom actions to quick view cards that open in the object stream of the stack
+card. These custom actions are displayed as buttons in the card footer.</p>
+<div class="section"><section class="section" type="Procedure"><h2 class="section_title" style="font-size: 1.15em;">Procedure</h2>
+
+<div class="p">To define custom action in quick view cards:<ol class="ol" id="loio02fb273ee1024fec914b11befe2b1887__ol_g2q_f3s_j1b">
+<li class="li">
+<p class="p">Create a JavaScript file in your project folder for defining custom controls. For example,
+<span class="ph filepath">customConfiguration.controller.js</span>.</p>
+</li>
+<li class="li">
+<div class="p">Open the JavaScript file you created and define the custom
+actions.<pre class="pre codeblock prettyprint">sap.ui.define([], function () {
+    &quot;use strict&quot;;
+    return sap.ui.controller(&quot;sap.ovp.demo.ext.customConfiguration&quot;, {
+
+        /*
+	The following Hook function &#x201C;onCustomActionPress&#x201D; accepts only one argument name of the press handler as a string and returns the press handler function defined in the custom controller.       
+         */
+
+        onCustomActionPress: function(sCustomAction) {
+            if (sCustomAction === &quot;press1&quot;) {
+                return this.press1;
+            } else if (sCustomAction === &quot;press2&quot;) {
+                return this.press2;
+            }
+        },
+
+        /*
+	The following Press Handler contains the custom actions to be performed on the click of the button in quickview action footer.
+         */
+
+        press1: function(oEvent) {
+            window.open(&quot;https://www.google.co.in&quot;);
+        },
+
+        press2: function(oEvent) {
+            window.open(&quot;http://www.sap.com/index.html&quot;);
+        },
+    });
+});</pre></div>
+</li>
+<li class="li">Configure the application descriptor file.<ol class="ol" type="a" id="loio02fb273ee1024fec914b11befe2b1887__ol_erc_s3t_j1b">
+<li class="li">
+<div class="p">Add your JavaScript filepath in the <samp class="ph codeph">extends</samp> section of the
+descriptor.<pre class="pre codeblock prettyprint">&quot;extends&quot;: {
+	&quot;extensions&quot;: {
+		&quot;sap.ui.controllerExtensions&quot;: {
+			&quot;sap.ovp.app.Main&quot;: {
+					&quot;controllerName&quot;: &quot;sap.ovp.demo.ext.customConfiguration&quot;
+			}
+		}
+	}
+},</pre></div>
+</li>
+<li class="li">
+<div class="p">Add the <samp class="ph codeph">customActions</samp> property under the stack
+card settings <samp class="ph codeph">objectStreamCardsSettings</samp>
+property and define the following mandatory properties:<ul class="ul" id="loio02fb273ee1024fec914b11befe2b1887__ul_m3s_dkt_j1b">
+<li class="li">
+<p class="p"><samp class="ph codeph">text</samp>: Enter the string to view in
+the quick view action footer</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">press</samp>: Enter the name of a press
+handler defined in the JavaScript file</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">position</samp>: Enter a numeric value to
+position the order of actions in the quick view
+action footer</p>
+</li>
+</ul><pre class="pre codeblock prettyprint">&quot;card007_ProductsOutOfStock&quot;: {
+&#xA0;&#xA0;&quot;model&quot;:&#xA0;&quot;salesOrder&quot;,
+&#xA0;&#xA0;&quot;template&quot;:&#xA0;&quot;sap.ovp.cards.stack&quot;,
+&#xA0;&#xA0;&quot;settings&quot;: {
+&#xA0;&#xA0;&#xA0;&#xA0;&quot;itemText&quot;:&#xA0;&quot;{{stackCard_itemText}}&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&quot;title&quot;:&#xA0;&quot;Products Out of Stock&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&quot;subTitle&quot;:&#xA0;&quot;SalesOrderSet Stack Card&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&quot;requireAppAuthorization&quot;:&#xA0;&quot;#Action-toappnavsample&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&quot;entitySet&quot;:&#xA0;&quot;SalesOrderSet&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&quot;identificationAnnotationPath&quot;:&#xA0;&quot;com.sap.vocabularies.UI.v1.Identification,com.sap.vocabularies.UI.v1.Identification#item2&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&quot;objectStreamCardsSettings&quot;: {
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;showFirstActionInFooter&quot;:&#xA0;false,
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;customActions&quot;: [
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;{
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;text&quot;:&#xA0;&quot;text1&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;press&quot;:&#xA0;&quot;press1&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;position&quot;:&#xA0;1
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;},
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;{
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;text&quot;:&#xA0;&quot;text2&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;press&quot;:&#xA0;&quot;press2&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;position&quot;:&#xA0;10
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;},
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;{
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;text&quot;:&#xA0;&quot;text3&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;press&quot;:&#xA0;&quot;press1&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;position&quot;:&#xA0;3
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;},
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;{
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;text&quot;:&#xA0;&quot;text4&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;press&quot;:&#xA0;&quot;press2&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;position&quot;:&#xA0;8
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;},
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;{
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;text&quot;:&#xA0;&quot;text5&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;press&quot;:&#xA0;&quot;press1&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;position&quot;:&#xA0;5
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;},
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;{
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;text&quot;:&#xA0;&quot;text6&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;press&quot;:&#xA0;&quot;press2&quot;,
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&quot;position&quot;:&#xA0;6
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;}
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;]
+&#xA0;&#xA0;&#xA0;&#xA0;}
+&#xA0;&#xA0;}
+}, </pre></div>
+</li>
+</ol></li>
+</ol></div>
+</section></div>
+<div class="section" id="loio02fb273ee1024fec914b11befe2b1887__section_zfy_m3p_k2b"><section class="section" type="Global Actions on the Filter Bar"><h2 class="section_title" style="font-size: 1.15em;">Global Actions on the Filter Bar</h2>
+
+<p class="p">To add custom global actions on the smart filter bar, you need to configure the descriptor
+file, define a fragment in the view extension, and create
+<samp class="ph codeph">controller.js</samp> file to handle the events. For example:</p>
+<div class="p">
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Sample Code</strong></div>
+<p>Descriptor
+Setting</p><pre class="pre codeblock prettyprint">&quot;sap.ui5&quot;: {
+   &quot;_version&quot;: &quot;1.1.0&quot;,
+       &quot;dependencies&quot;: {
+         &quot;libs&quot;: {
+           &quot;sap.ovp&quot;: {}
+         }
+       },
+   &quot;models&quot;: {
+      &quot;i18n&quot;: {
+         &quot;type&quot;: &quot;sap.ui.model.resource.ResourceModel&quot;,
+         &quot;uri&quot;: &quot;i18n/i18n.properties&quot;
+      },
+      &quot;salesOrder&quot;: {
+         &quot;dataSource&quot;: &quot;salesOrder&quot;,
+         &quot;settings&quot;: {}
+      }
+       },
+       &quot;extends&quot;: {
+         &quot;extensions&quot;: {
+           &quot;sap.ui.controllerExtensions&quot;: {
+             &quot;sap.ovp.app.Main&quot;: {
+               &quot;controllerName&quot;: &quot;sap.ovp.demo.ext.customFilter&quot;
+             }
+           },
+           &quot;sap.ui.viewExtensions&quot;: {
+             &quot;sap.ovp.app.Main&quot;: {
+               &quot;SmartFilterBarControlConfigurationExtension|GlobalFilters&quot;: {
+                 &quot;className&quot;: &quot;sap.ui.core.Fragment&quot;,
+                 &quot;fragmentName&quot;: &quot;sap.ovp.demo.ext.customFilter&quot;,
+                 &quot;type&quot;: &quot;XML&quot;
+               },
+               &quot;SmartFilterBarGlobalActionExtension&quot;: {
+                 &quot;className&quot;: &quot;sap.ui.core.Fragment&quot;,
+                 &quot;fragmentName&quot;: &quot;sap.ovp.demo.ext.customAction&quot;,
+                 &quot;type&quot;: &quot;XML&quot;
+               }
+             }
+ 
+           }
+         }
+       }
+   },</pre></aside>
+</div>
+<p class="p">Add controller and view extensions with a path to the custom controller name and fragment
+name.</p>
+<div class="p">
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Sample Code</strong></div>
+<p>Sample fragment for view extension:
+<span class="ph filepath">customAction.fragment.xml</span></p><pre class="pre codeblock prettyprint">&lt;core:FragmentDefinition xmlns=&quot;sap.m&quot; xmlns:smartfilterbar=&quot;sap.ui.comp.smartfilterbar&quot; xmlns:core=&quot;sap.ui.core&quot;&gt;
+ 
+    &lt;Button text=&quot;Action&quot; press=&quot;handleCustomAction&quot; type=&quot;Transparent&quot;&gt;&lt;/Button&gt;
+ 
+&lt;/core:FragmentDefinition&gt;</pre></aside>
+</div>
+<div class="p">
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Sample Code</strong></div>
+<p>Sample <span class="ph filepath">customFilter.controller.xml</span>
+file</p><pre class="pre codeblock prettyprint">sap.ui.define([
+    &quot;sap/ui/model/Filter&quot;,
+    &quot;sap/m/MessageToast&quot;
+], function (Filter, MessageToast) {
+    &quot;use strict&quot;;
+ 
+    //Extension controller for ovp demo app
+    return sap.ui.controller(&quot;sap.ovp.demo.ext.customFilter&quot;, {
+         *  /*
+            This is for Custom Global Action
+         */
+        handleCustomAction : function(){
+             var msg = &apos;Custom Global Action clicked&apos;;
+             MessageToast.show(msg);
+        }
+    });
+});</pre></aside>
+</div>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.0">
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI" />
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CORE',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+		<edmx:Include Namespace="Org.OData.Core.V1" Alias="SAP__core" />
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication" />
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="SAP__common" />
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures" />
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema Namespace="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001" Alias="SAP__self">
+			<EntityType Name="TitlesType">
+				<Key>
+					<PropertyRef Name="TitleUUID" />
+				</Key>
+				<Property Name="TitleUUID" Type="Edm.Guid" Nullable="false" />
+				<Property Name="PublicationUUID" Type="Edm.Guid" />
+				<Property Name="ArtistUUID" Type="Edm.Guid" />
+				<Property Name="Name" Type="Edm.String" MaxLength="255" />
+				<Property Name="Genre" Type="Edm.String" MaxLength="3" />
+				<Property Name="Length" Type="Edm.Decimal" Precision="13" Scale="2" />
+				<Property Name="LengthUnit" Type="Edm.String" MaxLength="3" />
+				<Property Name="Price" Type="Edm.Decimal" Precision="14" Scale="variable" />
+				<Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" />
+				<Property Name="FullArtistName" Type="Edm.String" MaxLength="255" />
+				<NavigationProperty Name="_Album" Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.AlbumsType" Nullable="false" />
+				<NavigationProperty Name="_Artist" Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistsType" Nullable="false" />
+				<NavigationProperty Name="_Contribution" Type="Collection(com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistContributionsType)" />
+				<NavigationProperty Name="_Publication" Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.PublicationsType" Nullable="false" />
+			</EntityType>
+			<EntityType Name="PublicationsType">
+				<Key>
+					<PropertyRef Name="PublicationUUID" />
+				</Key>
+				<Property Name="PublicationUUID" Type="Edm.Guid" Nullable="false" />
+				<Property Name="ArtistUUID" Type="Edm.Guid" />
+				<Property Name="Type" Type="Edm.String" MaxLength="3" />
+				<Property Name="Name" Type="Edm.String" MaxLength="255" />
+				<Property Name="ReleaseDate" Type="Edm.Date" />
+				<Property Name="Price" Type="Edm.Decimal" Precision="14" Scale="variable" />
+				<Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" />
+				<NavigationProperty Name="_Artist" Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistsType" Nullable="false" />
+				<NavigationProperty Name="_Title" Type="Collection(com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.TitlesType)" />
+			</EntityType>
+			<EntityType Name="AssigendPersonsType">
+				<Key>
+					<PropertyRef Name="AssignmentUUID" />
+				</Key>
+				<Property Name="AssignmentUUID" Type="Edm.Guid" Nullable="false" />
+				<Property Name="ArtistUUID" Type="Edm.Guid" />
+				<Property Name="PersonUUID" Type="Edm.Guid" />
+				<Property Name="FromYear" Type="Edm.String" MaxLength="4" />
+				<Property Name="ActiveTo" Type="Edm.String" MaxLength="255" />
+				<Property Name="ActiveToCriticality" Type="Edm.Byte" />
+				<NavigationProperty Name="_Artist" Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistsType" Nullable="false" />
+				<NavigationProperty Name="_ArtistAssignment" Type="Collection(com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.AssigendPersonsType)" />
+			</EntityType>
+			<EntityType Name="ArtistsType">
+				<Key>
+					<PropertyRef Name="ArtistUUID" />
+				</Key>
+				<Property Name="ArtistUUID" Type="Edm.Guid" Nullable="false" />
+				<Property Name="Name" Type="Edm.String" MaxLength="255" />
+				<Property Name="CountryOfOrigin" Type="Edm.String" MaxLength="3" />
+				<Property Name="CountryOfOrigin_Text" Type="Edm.String" MaxLength="50" />
+				<Property Name="RegionOfOrigin" Type="Edm.String" MaxLength="3" />
+				<Property Name="RegionOfOrigin_Text" Type="Edm.String" MaxLength="20" />
+				<Property Name="FoundingYear" Type="Edm.String" MaxLength="4" />
+				<Property Name="BreakupYear" Type="Edm.String" MaxLength="4" />
+				<Property Name="ChangedAt" Type="Edm.DateTimeOffset" Precision="7" />
+				<NavigationProperty Name="_Album" Type="Collection(com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.AlbumsType)" />
+				<NavigationProperty Name="_Contribution" Type="Collection(com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistContributionsType)" />
+				<NavigationProperty Name="_NonAlbum" Type="Collection(com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.PublicationsType)" />
+				<NavigationProperty Name="_PersAssign" Type="Collection(com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.AssigendPersonsType)" />
+			</EntityType>
+			<EntityType Name="AlbumsType">
+				<Key>
+					<PropertyRef Name="PublicationUUID" />
+				</Key>
+				<Property Name="PublicationUUID" Type="Edm.Guid" Nullable="false" />
+				<Property Name="ArtistUUID" Type="Edm.Guid" />
+				<Property Name="Name" Type="Edm.String" MaxLength="255" />
+				<Property Name="ReleaseDate" Type="Edm.Date" />
+				<Property Name="Price" Type="Edm.Decimal" Precision="14" Scale="variable" />
+				<Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" />
+				<NavigationProperty Name="_Artist" Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistsType" Nullable="false" />
+				<NavigationProperty Name="_Title" Type="Collection(com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.TitlesType)" />
+			</EntityType>
+			<EntityType Name="ArtistContributionsType">
+				<Key>
+					<PropertyRef Name="ContributionUUID" />
+				</Key>
+				<Property Name="ContributionUUID" Type="Edm.Guid" Nullable="false" />
+				<Property Name="TitleUUID" Type="Edm.Guid" />
+				<Property Name="ArtistUUID" Type="Edm.Guid" />
+				<Property Name="ContributorUUID" Type="Edm.Guid" />
+				<NavigationProperty Name="_Artist" Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistsType" Nullable="false" />
+				<NavigationProperty Name="_Contributor" Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistsType" />
+				<NavigationProperty Name="_Title" Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.TitlesType" Nullable="false" />
+			</EntityType>
+			<Action Name="BreakUp" IsBound="true">
+				<Parameter Name="_it" Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistsType" Nullable="false" />
+				<ReturnType Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistsType" Nullable="false" />
+			</Action>
+			<Action Name="AssignPerson" IsBound="true">
+				<Parameter Name="_it" Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistsType" Nullable="false" />
+				<Parameter Name="FromYear" Type="Edm.String" Nullable="false" MaxLength="4" />
+				<Parameter Name="PersonUuid" Type="Edm.Guid" Nullable="false" />
+				<Parameter Name="ToYear" Type="Edm.String" Nullable="false" MaxLength="4" />
+				<ReturnType Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistsType" Nullable="false" />
+			</Action>
+			<Action Name="AddContributor" IsBound="true">
+				<Parameter Name="_it" Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.TitlesType" Nullable="false" />
+				<Parameter Name="ContributorUuid" Type="Edm.Guid" Nullable="false" />
+				<ReturnType Type="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.TitlesType" Nullable="false" />
+			</Action>
+			<EntityContainer Name="Container">
+				<EntitySet Name="Titles" EntityType="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.TitlesType">
+					<NavigationPropertyBinding Path="_Album" Target="Albums" />
+					<NavigationPropertyBinding Path="_Artist" Target="Artists" />
+					<NavigationPropertyBinding Path="_Contribution" Target="ArtistContributions" />
+					<NavigationPropertyBinding Path="_Publication" Target="Publications" />
+				</EntitySet>
+				<EntitySet Name="Publications" EntityType="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.PublicationsType">
+					<NavigationPropertyBinding Path="_Artist" Target="Artists" />
+					<NavigationPropertyBinding Path="_Title" Target="Titles" />
+				</EntitySet>
+				<EntitySet Name="AssigendPersons" EntityType="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.AssigendPersonsType">
+					<NavigationPropertyBinding Path="_Artist" Target="Artists" />
+					<NavigationPropertyBinding Path="_ArtistAssignment" Target="AssigendPersons" />
+				</EntitySet>
+				<EntitySet Name="Artists" EntityType="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistsType">
+					<NavigationPropertyBinding Path="_Album" Target="Albums" />
+					<NavigationPropertyBinding Path="_Contribution" Target="ArtistContributions" />
+					<NavigationPropertyBinding Path="_NonAlbum" Target="Publications" />
+					<NavigationPropertyBinding Path="_PersAssign" Target="AssigendPersons" />
+				</EntitySet>
+				<EntitySet Name="Albums" EntityType="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.AlbumsType">
+					<NavigationPropertyBinding Path="_Artist" Target="Artists" />
+					<NavigationPropertyBinding Path="_Title" Target="Titles" />
+				</EntitySet>
+				<EntitySet Name="ArtistContributions" EntityType="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.ArtistContributionsType">
+					<NavigationPropertyBinding Path="_Artist" Target="Artists" />
+					<NavigationPropertyBinding Path="_Contributor" Target="Artists" />
+					<NavigationPropertyBinding Path="_Title" Target="Titles" />
+				</EntitySet>
+			</EntityContainer>
+			<Annotations Target="SAP__self.TitlesType/TitleUUID">
+				<Annotation Term="SAP__common.Text" Path="Name" />
+				<Annotation Term="UI.Hidden" />
+				<Annotation Term="SAP__common.Label" String="UUID" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.TitlesType/Name">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.Label" String="Title Name" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Title Name" />
+			</Annotations>
+			<Annotations Target="SAP__self.TitlesType/Genre">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.Label" String="Genre Code" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Genre Code" />
+			</Annotations>
+			<Annotations Target="SAP__self.TitlesType/Length">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.Label" String="Title Length" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Title Length" />
+				<Annotation Term="Measures.Unit" Path="LengthUnit" />
+			</Annotations>
+			<Annotations Target="SAP__self.TitlesType/LengthUnit">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/ReadOnly" />
+				<Annotation Term="SAP__common.Label" String="Length Unit" />
+				<Annotation Term="SAP__common.Heading" String="Title Length Unit" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Title Length Unit" />
+			</Annotations>
+			<Annotations Target="SAP__self.TitlesType/CurrencyCode">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/ReadOnly" />
+				<Annotation Term="SAP__common.Label" String="Currency Code" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Currency Code" />
+			</Annotations>
+			<Annotations Target="SAP__self.TitlesType/FullArtistName">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/ReadOnly" />
+				<Annotation Term="SAP__common.Label" String="Artist Name" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Artist Name" />
+			</Annotations>
+			<Annotations Target="SAP__self.TitlesType/OriginalArtist">
+				<Annotation Term="SAP__common.ValueListReferences">
+					<Collection>
+						<String>../../../../sadlf4/sap/i_mdbu_v4_artistname/0001;ps='sadl_srvd-sadl_gw_appmusicro_definition-0001';va='com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.et-c_mdbu_v4_title.originalartist'/$metadata</String>
+						<String>../../../../sadlf4/sap/i_mdbu_v4_artistperson/0001;ps='sadl_srvd-sadl_gw_appmusicro_definition-0001';va='com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.et-c_mdbu_v4_title.originalartist'/$metadata</String>
+					</Collection>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.TitlesType">
+				<Annotation Term="SAP__common.Label" String="Title" />
+				<Annotation Term="SAP__common.SemanticKey">
+					<Collection>
+						<PropertyPath>Name</PropertyPath>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="General Information" />
+							<PropertyValue Property="Target" AnnotationPath="@UI.Identification" />
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Contributors" />
+							<PropertyValue Property="Target" AnnotationPath="_Contribution/@UI.LineItem" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.HeaderInfo">
+					<Record>
+						<PropertyValue Property="TypeName" String="Title" />
+						<PropertyValue Property="TypeNamePlural" String="Title" />
+						<PropertyValue Property="Title">
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="Name" />
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.Identification">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="FullArtistName" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="OriginalArtist" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Genre" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Length" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Price" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="FullArtistName" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="OriginalArtist" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Genre" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Length" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Price" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.SelectionFields">
+					<Collection>
+						<PropertyPath>OriginalArtist</PropertyPath>
+					</Collection>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.Container/Titles">
+				<Annotation Term="Capabilities.SearchRestrictions">
+					<Record>
+						<PropertyValue Property="Searchable" Bool="true" />
+						<PropertyValue Property="UnsupportedExpressions" EnumMember="Capabilities.SearchExpressions/AND Capabilities.SearchExpressions/OR Capabilities.SearchExpressions/NOT Capabilities.SearchExpressions/group Capabilities.SearchExpressions/phrase" />
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.PublicationsType/PublicationUUID">
+				<Annotation Term="SAP__common.Text" Path="Name" />
+				<Annotation Term="UI.Hidden" />
+				<Annotation Term="SAP__common.Label" String="UUID" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.PublicationsType/Type">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.Label" String="Publication Type" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Publication Type" />
+			</Annotations>
+			<Annotations Target="SAP__self.PublicationsType/Name">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.Label" String="Publication" />
+				<Annotation Term="SAP__common.Heading" String="Publication Name" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Publication Name" />
+			</Annotations>
+			<Annotations Target="SAP__self.PublicationsType/Price">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.Label" String="Price" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Price" />
+				<Annotation Term="Measures.ISOCurrency" Path="CurrencyCode" />
+			</Annotations>
+			<Annotations Target="SAP__self.PublicationsType/CurrencyCode">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.Label" String="Currency Code" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Currency Code" />
+			</Annotations>
+			<Annotations Target="SAP__self.PublicationsType">
+				<Annotation Term="SAP__common.Label" String="Publication" />
+				<Annotation Term="SAP__common.SemanticKey">
+					<Collection>
+						<PropertyPath>Name</PropertyPath>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="General Information" />
+							<PropertyValue Property="Target" AnnotationPath="@UI.Identification" />
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Titles" />
+							<PropertyValue Property="Target" AnnotationPath="_Title/@UI.LineItem" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.HeaderInfo">
+					<Record>
+						<PropertyValue Property="TypeName" String="Publication" />
+						<PropertyValue Property="TypeNamePlural" String="Publications" />
+						<PropertyValue Property="Title">
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="Name" />
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.Identification">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Type" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ReleaseDate" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Price" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Target" AnnotationPath="@Communication.Contact" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Type" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ReleaseDate" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Price" />
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.Container/Publications">
+				<Annotation Term="Capabilities.SearchRestrictions">
+					<Record>
+						<PropertyValue Property="Searchable" Bool="false" />
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.AssigendPersonsType/PersonUUID">
+				<Annotation Term="SAP__common.Label" String="Full Name" />
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.AssigendPersonsType/FromYear">
+				<Annotation Term="SAP__common.Label" String="From Year" />
+				<Annotation Term="SAP__common.Heading" String="Year" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Year" />
+			</Annotations>
+			<Annotations Target="SAP__self.AssigendPersonsType/ActiveTo">
+				<Annotation Term="SAP__common.Label" String="To Year" />
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/ReadOnly" />
+				<Annotation Term="SAP__common.Heading" String="Text" />
+				<Annotation Term="SAP__common.QuickInfo" String="Text, 255 Characters" />
+			</Annotations>
+			<Annotations Target="SAP__self.AssigendPersonsType/ActiveToCriticality">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/ReadOnly" />
+				<Annotation Term="UI.Hidden" />
+			</Annotations>
+			<Annotations Target="SAP__self.AssigendPersonsType">
+				<Annotation Term="SAP__common.Label" String="Person Assignment" />
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="General Information" />
+							<PropertyValue Property="Target" AnnotationPath="@UI.Identification" />
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Artists" />
+							<PropertyValue Property="Target" AnnotationPath="_ArtistAssignment/@UI.LineItem#Person" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.HeaderInfo">
+					<Record>
+						<PropertyValue Property="TypeName" String="Person Assignment" />
+						<PropertyValue Property="TypeNamePlural" String="Person Assignments" />
+						<PropertyValue Property="Title">
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" String="">
+									<Annotation Term="Core.Messages">
+										<Collection>
+											<Record>
+												<PropertyValue Property="code" String="SADL_GW_EXP_VOCAN-001" />
+												<PropertyValue Property="message" String="Property '_Person' of annotation 'UI.HEADERINFO.TITLE' in proj./view 'C_MDBU_V4_PersAssign' not found" />
+												<PropertyValue Property="severity" String="error" />
+											</Record>
+										</Collection>
+									</Annotation>
+								</PropertyValue>
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.Identification">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="FromYear" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Criticality" Path="ActiveToCriticality" />
+							<PropertyValue Property="Value" Path="ActiveTo" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ToYear" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="PersonUUID" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="FromYear" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Criticality" Path="ActiveToCriticality" />
+							<PropertyValue Property="Value" Path="ActiveTo" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ToYear" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.LineItem" Qualifier="Person">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="_Artist/Name" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="FromYear" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Criticality" Path="ActiveToCriticality" />
+							<PropertyValue Property="Value" Path="ActiveTo" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ToYear" />
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.Container/AssigendPersons">
+				<Annotation Term="Capabilities.SearchRestrictions">
+					<Record>
+						<PropertyValue Property="Searchable" Bool="false" />
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistsType/ArtistUUID">
+				<Annotation Term="SAP__common.Text" Path="Name" />
+				<Annotation Term="UI.Hidden" />
+				<Annotation Term="SAP__common.Label" String="UUID" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistsType/Name">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.ValueListReferences">
+					<Collection>
+						<String>../../../../sadlf4/sap/i_mdbu_v4_artistname/0001;ps='sadl_srvd-sadl_gw_appmusicro_definition-0001';va='com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.et-c_mdbu_v4_artist.name'/$metadata</String>
+						<String>../../../../sadlf4/sap/i_mdbu_v4_artistperson/0001;ps='sadl_srvd-sadl_gw_appmusicro_definition-0001';va='com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.et-c_mdbu_v4_artist.name'/$metadata</String>
+					</Collection>
+				</Annotation>
+				<Annotation Term="SAP__common.Label" String="Artist Name" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Artist Name" />
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistsType/CountryOfOrigin">
+				<Annotation Term="SAP__common.Label" String="Country of Origin" />
+				<Annotation Term="SAP__common.Text" Path="CountryOfOrigin_Text">
+					<Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst" />
+				</Annotation>
+				<Annotation Term="SAP__common.ValueListReferences">
+					<Collection>
+						<String>../../../../sadlf4/sap/i_aivs_countrycode/0001;ps='sadl_srvd-sadl_gw_appmusicro_definition-0001';va='com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.et-c_mdbu_v4_artist.countryoforigin'/$metadata</String>
+					</Collection>
+				</Annotation>
+				<Annotation Term="SAP__common.Heading" String="Country Code" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Country Code" />
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistsType/CountryOfOrigin_Text">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/ReadOnly" />
+				<Annotation Term="SAP__common.Label" String="Long name" />
+				<Annotation Term="SAP__common.QuickInfo" String="Country Name (Max. 50 Characters)" />
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistsType/RegionOfOrigin">
+				<Annotation Term="SAP__common.Text" Path="RegionOfOrigin_Text">
+					<Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst" />
+				</Annotation>
+				<Annotation Term="SAP__common.ValueListReferences">
+					<Collection>
+						<String>../../../../sadlf4/sap/i_aivs_region/0001;ps='sadl_srvd-sadl_gw_appmusicro_definition-0001';va='com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.et-c_mdbu_v4_artist.regionoforigin'/$metadata</String>
+					</Collection>
+				</Annotation>
+				<Annotation Term="SAP__common.Label" String="Region Code" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Country Code" />
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistsType/RegionOfOrigin_Text">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/ReadOnly" />
+				<Annotation Term="SAP__common.Label" String="Description" />
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistsType/FoundingYear">
+				<Annotation Term="SAP__common.Label" String="Year of Founding" />
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.IsFiscalYear" />
+				<Annotation Term="SAP__common.Heading" String="Year" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Year" />
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistsType/BreakupYear">
+				<Annotation Term="SAP__common.Label" String="Year of Break-up" />
+				<Annotation Term="SAP__common.Heading" String="Year" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Year" />
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistsType/ChangedAt">
+				<Annotation Term="SAP__common.Label" String="Changed At" />
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/ReadOnly" />
+				<Annotation Term="SAP__common.Heading" String="Time Stamp" />
+				<Annotation Term="SAP__common.QuickInfo" String="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)" />
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistsType">
+				<Annotation Term="SAP__common.Label" String="V4 Artist" />
+				<Annotation Term="SAP__common.SemanticKey">
+					<Collection>
+						<PropertyPath>Name</PropertyPath>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="General Information" />
+							<PropertyValue Property="Target" AnnotationPath="@UI.Identification" />
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Publications" />
+							<PropertyValue Property="Target" AnnotationPath="_NonAlbum/@UI.LineItem" />
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Assigned Persons" />
+							<PropertyValue Property="Target" AnnotationPath="_PersAssign/@UI.LineItem" />
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Contributions" />
+							<PropertyValue Property="Target" AnnotationPath="_Contribution/@UI.LineItem#Contributor" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.HeaderInfo">
+					<Record>
+						<PropertyValue Property="TypeName" String="Artist" />
+						<PropertyValue Property="TypeNamePlural" String="Artists" />
+						<PropertyValue Property="Title">
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="Name" />
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.Identification">
+					<Collection>
+						<Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Break Up" />
+							<PropertyValue Property="Action" String="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.BreakUp" />
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="CountryOfOrigin" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="RegionOfOrigin" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="FoundingYear" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="BreakupYear" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Break Up" />
+							<PropertyValue Property="Action" String="com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.BreakUp" />
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="My Country" />
+							<PropertyValue Property="Value" Path="CountryOfOrigin" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="RegionOfOrigin" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="FoundingYear" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="BreakupYear" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.SelectionFields">
+					<Collection>
+						<PropertyPath>Name</PropertyPath>
+						<PropertyPath>ArtistUUID</PropertyPath>
+						<PropertyPath>CountryOfOrigin</PropertyPath>
+						<PropertyPath>RegionOfOrigin</PropertyPath>
+						<PropertyPath>FoundingYear</PropertyPath>
+						<PropertyPath>BreakupYear</PropertyPath>
+					</Collection>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.Container/Artists">
+				<Annotation Term="Capabilities.SearchRestrictions">
+					<Record>
+						<PropertyValue Property="Searchable" Bool="true" />
+						<PropertyValue Property="UnsupportedExpressions" EnumMember="Capabilities.SearchExpressions/AND Capabilities.SearchExpressions/OR Capabilities.SearchExpressions/NOT Capabilities.SearchExpressions/group Capabilities.SearchExpressions/phrase" />
+					</Record>
+				</Annotation>
+				<Annotation Term="Capabilities.FilterRestrictions">
+					<Record>
+						<PropertyValue Property="Filterable" Bool="true" />
+						<PropertyValue Property="FilterExpressionRestrictions">
+							<Collection>
+								<Record>
+									<PropertyValue Property="Property" PropertyPath="CountryOfOrigin" />
+									<PropertyValue Property="AllowedExpressions" String="SingleValue" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="Capabilities.UpdateRestrictions">
+					<Record>
+						<PropertyValue Property="Updatable" Bool="false"/>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.AlbumsType/PublicationUUID">
+				<Annotation Term="SAP__common.Text" Path="Name" />
+				<Annotation Term="UI.Hidden" />
+				<Annotation Term="SAP__common.Label" String="UUID" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.AlbumsType/Name">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.Label" String="Publication" />
+				<Annotation Term="SAP__common.Heading" String="Publication Name" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Publication Name" />
+			</Annotations>
+			<Annotations Target="SAP__self.AlbumsType/Price">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.Label" String="Price" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Price" />
+				<Annotation Term="Measures.ISOCurrency" Path="CurrencyCode" />
+			</Annotations>
+			<Annotations Target="SAP__self.AlbumsType/CurrencyCode">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.Label" String="Currency Code" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Currency Code" />
+			</Annotations>
+			<Annotations Target="SAP__self.AlbumsType">
+				<Annotation Term="SAP__common.Label" String="Publication" />
+				<Annotation Term="SAP__common.SemanticKey">
+					<Collection>
+						<PropertyPath>Name</PropertyPath>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.HeaderInfo">
+					<Record>
+						<PropertyValue Property="TypeName" String="Publication" />
+						<PropertyValue Property="TypeNamePlural" String="Publications" />
+						<PropertyValue Property="Title">
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="Name" />
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.Identification">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ReleaseDate" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Price" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Name" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ReleaseDate" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Price" />
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.Container/Albums">
+				<Annotation Term="Capabilities.SearchRestrictions">
+					<Record>
+						<PropertyValue Property="Searchable" Bool="false" />
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistContributionsType/TitleUUID">
+				<Annotation Term="SAP__common.Label" String="Test UUID Label" />
+				<Annotation Term="UI.Hidden" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistContributionsType/ContributorUUID">
+				<Annotation Term="SAP__common.Label" String="Artist Name" />
+				<Annotation Term="SAP__common.Text" Path="_Contributor/Name">
+					<Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly" />
+				</Annotation>
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/Mandatory" />
+				<Annotation Term="SAP__common.ValueListReferences">
+					<Collection>
+						<String>../../../../sadlf4/sap/c_mdbu_v4_artist/0001;ps='sadl_srvd-sadl_gw_appmusicro_definition-0001';va='com.sap.gateway.sadl_srvd.sadl_gw_appmusicro_definition.v0001.et-c_mdbu_v4_contribution.contributoruuid'/$metadata</String>
+					</Collection>
+				</Annotation>
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistContributionsType">
+				<Annotation Term="SAP__common.Label" String="Contribution" />
+				<Annotation Term="UI.HeaderInfo">
+					<Record>
+						<PropertyValue Property="TypeName" String="Contribution" />
+						<PropertyValue Property="TypeNamePlural" String="Contributions" />
+						<PropertyValue Property="Title">
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="_Contributor/Name" />
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ContributorUUID" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="_Contributor/CountryOfOrigin" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="_Contributor/FoundingYear" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" String="">
+								<Annotation Term="Core.Messages">
+									<Collection>
+										<Record>
+											<PropertyValue Property="code" String="SADL_GW_EXP_VOCAN-001" />
+											<PropertyValue Property="message" String="Property 'ActiveTo' of annotation 'UI.LINEITEM$3$' in proj./view 'C_MDBU_V4_Artist' not found" />
+											<PropertyValue Property="severity" String="error" />
+										</Record>
+									</Collection>
+								</Annotation>
+							</PropertyValue>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.LineItem" Qualifier="Contributor">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Artist" />
+							<PropertyValue Property="Value" Path="_Title/FullArtistName" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="_Title/Name" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="_Title/Genre" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="_Title/Length" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="_Title/Price" />
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.Container/ArtistContributions">
+				<Annotation Term="Capabilities.SearchRestrictions">
+					<Record>
+						<PropertyValue Property="Searchable" Bool="false" />
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.AlbumsType/ArtistUUID">
+				<Annotation Term="UI.Hidden" />
+				<Annotation Term="SAP__common.Label" String="UUID" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistContributionsType/ContributionUUID">
+				<Annotation Term="UI.Hidden" />
+				<Annotation Term="SAP__common.Label" String="UUID" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.ArtistContributionsType/ArtistUUID">
+				<Annotation Term="UI.Hidden" />
+				<Annotation Term="SAP__common.Label" String="UUID" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.AssigendPersonsType/AssignmentUUID">
+				<Annotation Term="UI.Hidden" />
+				<Annotation Term="SAP__common.Label" String="UUID" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.AssigendPersonsType/ArtistUUID">
+				<Annotation Term="UI.Hidden" />
+				<Annotation Term="SAP__common.Label" String="UUID" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.PublicationsType/ArtistUUID">
+				<Annotation Term="UI.Hidden" />
+				<Annotation Term="SAP__common.Label" String="UUID" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.TitlesType/PublicationUUID">
+				<Annotation Term="UI.Hidden" />
+				<Annotation Term="SAP__common.Label" String="UUID" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.TitlesType/ArtistUUID">
+				<Annotation Term="UI.Hidden" />
+				<Annotation Term="SAP__common.Label" String="UUID" />
+				<Annotation Term="SAP__common.QuickInfo" String="UUID in X form (binary)" />
+			</Annotations>
+			<Annotations Target="SAP__self.TitlesType/Price">
+				<Annotation Term="SAP__common.Label" String="Price" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Price" />
+				<Annotation Term="Measures.ISOCurrency" Path="CurrencyCode" />
+			</Annotations>
+			<Annotations Target="SAP__self.PublicationsType/ReleaseDate">
+				<Annotation Term="SAP__common.Label" String="Date" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Date" />
+			</Annotations>
+			<Annotations Target="SAP__self.Container/Artists">
+				<Annotation Term="SAP__core.OptimisticConcurrency" PropertyPath="ChangedAt" />
+			</Annotations>
+			<Annotations Target="SAP__self.AlbumsType/ReleaseDate">
+				<Annotation Term="SAP__common.Label" String="Date" />
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Date" />
+			</Annotations>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

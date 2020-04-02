@@ -1,0 +1,119 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 1: Initial App Without Data</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="We start with a simple app scenario with a list of items bound to an OData service. Since the OData service is not available yet on a real server, we will use the mock server to simulate both data and data calls."><meta name="description" content="We start with a simple app scenario with a list of items bound to an OData service. Since the OData service is not available yet on a real server, we will use the mock server to simulate both data and data calls."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"50897decc9504b2a875fb41d89fd254a.html","previousTopicHref":"3a9728ec31f94ca18a7d543ce419d85d.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3a9728ec31f94ca18a7d543ce419d85d.html" title="In this tutorial, we will explore some advanced features of the mock server." target="_top">Mock Server</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/50897decc9504b2a875fb41d89fd254a.html" title="In this step, we use the mock server to add data to our app without dependency to any remote server or system." target="_top">Step 2: Creating a Mock Server to Simulate Data</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loio7a78f1b707c248fd9ec53dcb5f10814c"><h1 class="title topictitle1" hidden>Step 1: Initial App Without Data</h1><div class="body conbody"><p class="shortdesc" hidden>We start with a simple app scenario with a list of items bound to an OData service.
+Since the OData service is not available yet on a real server, we will use the mock server
+to simulate both data and data calls. </p>
+<p class="p">For this very simple tutorial app we will use an OData service called
+<samp class="ph codeph">NerdMeetups</samp> that lists meet-up groups according to location, date,
+topic, etc. The app will display a simple list populated by a function import call to
+display only upcoming meet-ups (meet-ups with an event date greater to the current
+date).</p>
+<p class="p">Additionally, a button will fetch the first three meet-ups (using a custom URL parameter
+called <samp class="ph codeph">first</samp>). This exercise simply shows an app with no data retrieved
+from the back end. This can happen when the back end is down, or when the service is not
+implemented yet.</p>
+<p class="p">Usually you start the development of an app with local mock data first. This way you can
+continue implementing the application logic without depending on the back end readiness
+and connectivity.</p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loio7a78f1b707c248fd9ec53dcb5f10814c__fig_wg3_bdq_st"><div class="figbody">
+
+<img class="inline  " id="loio7a78f1b707c248fd9ec53dcb5f10814c__image_i5y_2dq_st" src="loio3a29b22e092e4bf8a549fa2931758673_HiRes.png">
+</div><span class="figcap">The initial app</span></div>
+</section></div>
+<div class="section"><section class="section" type="Coding"><h2 class="section_title" style="font-size: 1.15em;">Coding</h2>
+
+<p class="p">To set up your project for this tutorial, download the files for <span class="ph uicontrol">Step 1</span> in
+the Demo Kit <span class="ph">at <a class="xref" href="../../#/sample/sap.ui.core.tutorial.mockserver.01/preview" target="_top" alt="#/sample/sap.ui.core.tutorial.mockserver.01/preview" title="#/sample/sap.ui.core.tutorial.mockserver.01/preview">Mock Server - Step 1</a></span>. Copy the code to your workspace and make sure that the application runs by
+calling the <samp class="ph codeph">webapp/test/mockServer.html</samp> file.</p>
+<p class="p">Depending on your development environment you might have to adjust resource paths and
+configuration entries. The project structure and the files coming with this tutorial
+are explained in detail in the <a class="xref" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a> tutorial.</p>
+<p class="p">You should have the same files as displayed in the following figure:</p>
+<div class="fig fignone" id="loio7a78f1b707c248fd9ec53dcb5f10814c__fig_gsc_mld_tt"><div class="figbody">
+
+<img class="inline  " id="loio7a78f1b707c248fd9ec53dcb5f10814c__image_kw5_tld_tt" src="loio026a90809d1a4dc5a28e147bc77eb830_HiRes.png">
+</div><span class="figcap">Folder structure with downloaded files</span></div>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3a9728ec31f94ca18a7d543ce419d85d.html" title="In this tutorial, we will explore some advanced features of the mock server." target="_top">Mock Server</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/50897decc9504b2a875fb41d89fd254a.html" title="In this step, we use the mock server to add data to our app without dependency to any remote server or system." target="_top">Step 2: Creating a Mock Server to Simulate Data</a><br></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

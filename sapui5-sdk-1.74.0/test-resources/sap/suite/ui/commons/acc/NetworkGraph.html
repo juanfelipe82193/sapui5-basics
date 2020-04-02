@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>ACC NetworkGraph - sap.suite.ui.commons.networkgraph</title>
+
+	<!-- UI5 Bootstrap -->
+	<script src="../../../../../../resources/sap-ui-core.js"
+	        type="text/javascript" id="sap-ui-bootstrap"
+	        data-sap-ui-libs="sap.suite.ui.commons,sap.m,sap.ui.commons"
+	        data-sap-ui-theme="sap_belize"></script>
+
+	<style type="text/css">
+	</style>
+	<script type="text/javascript">
+		sap.ui.getCore().attachInit(function () {
+			"use strict";
+			sap.ui.require([
+				"sap/ui/model/json/JSONModel",
+				"sap/m/FlexBox",
+				"sap/m/FlexItemData",
+				"sap/suite/ui/commons/networkgraph/Graph",
+				"sap/suite/ui/commons/networkgraph/Node",
+				"sap/suite/ui/commons/networkgraph/Line",
+				"sap/suite/ui/commons/networkgraph/Group",
+				"sap/suite/ui/commons/networkgraph/GraphMap"
+			], function (JSONModel, FlexBox, FlexItemData, Graph, Node, Line, Group, GraphMap) {
+
+				var oModel = new JSONModel({
+					nodes: [
+						{
+							key: 1,
+							title: "Node 1",
+							group: 1,
+							icon: "sap-icon://activate"
+						},
+						{
+							key: 2,
+							title: "Node 2",
+							group: 1,
+							icon: "sap-icon://activate"
+						},
+						{
+							key: 3,
+							title: "Node 3",
+							group: 1,
+							icon: "sap-icon://activate"
+						},
+						{
+							key: 4,
+							title: "Node 4",
+							icon: "sap-icon://activate"
+						},
+						{
+							key: 5,
+							title: "Node 5",
+							icon: "sap-icon://activate"
+						},
+						{
+							key: 6,
+							title: "Node 6",
+							icon: "sap-icon://activate"
+						},
+						{
+							key: 7,
+							title: "Node 7",
+							icon: "sap-icon://activate"
+						},
+						{
+							key: 8,
+							title: "Node 8",
+							icon: "sap-icon://activate"
+						}
+					],
+					lines: [
+						{
+							from: 1,
+							to: 2
+						},
+						{
+							from: 1,
+							to: 3
+						},
+						{
+							from: 2,
+							to: 4
+						},
+						{
+							from: 4,
+							to: 5
+						},
+						{
+							from: 6,
+							to: 5
+						},
+						{
+							from: 6,
+							to: 7
+						},
+						{
+							from: 7,
+							to: 4
+						}
+					],
+					groups: [
+						{
+							key: 1,
+							title: "Group 1"
+						}
+					]
+				});
+
+				var oGraph = new Graph({
+					id: "graph",
+					layoutData: new FlexItemData({
+						growFactor: 1,
+						shrinkFactor: 1,
+						baseSize: "0%",
+						minWidth: "300px"
+					})
+				});
+				oGraph.bindAggregation("nodes", {
+					path: "/nodes",
+					template: new Node({
+						key: "{key}",
+						title: "{title}",
+						icon: "{icon}",
+						group: "{group}"
+					})
+				});
+				oGraph.bindAggregation("lines", {
+					path: "/lines",
+					template: new Line({
+						from: "{from}",
+						to: "{to}"
+					})
+				});
+				oGraph.bindAggregation("groups", {
+					path: "/groups",
+					template: new Group({
+						key: "{key}",
+						title: "{title}"
+					})
+				});
+
+				var oGraphMap = new GraphMap({
+					id: "map",
+					graph: "graph",
+					layoutData: new FlexItemData({
+						minWidth: "200px",
+						maxWidth: "25%"
+					})
+				});
+
+				var oFlexBox = new FlexBox({
+					renderType: "Bare",
+					fitContainer: true,
+					wrap: "Wrap",
+					items: [
+						oGraph,
+						oGraphMap
+					]
+				});
+				oFlexBox.setModel(oModel);
+
+				oFlexBox.placeAt("content");
+			});
+		});
+	</script>
+</head>
+
+<body class="sapUiBody">
+<div id="content"></div>
+</body>
+</html>

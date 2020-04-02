@@ -1,0 +1,60 @@
+<mvc:View controllerName="sap.ui.vbm.sample.GeoMapCircles.C"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns="sap.m"
+	xmlns:vbm="sap.ui.vbm" xmlns:l="sap.ui.layout" height="100%"
+	displayBlock="true">
+	<l:FixFlex class="fixFlexFixedSize">
+		<l:fixContent>
+			<Panel expandable="true" expanded="{= !${device>/system/phone} }"
+				headerText="Description">
+				<headerToolbar>
+					<Toolbar>
+						<Title text="Description" />
+						<ToolbarSpacer />
+						<Button id="btnLegend" icon="sap-icon://legend" press="onPressLegend"
+							tooltip="Hide legend" />
+						<Button id="btnResize" icon="sap-icon://resize" press="onPressResize"
+							tooltip="Minimize" />
+					</Toolbar>
+				</headerToolbar>
+				<content>
+					<VBox class="sapUiTinyMargin">
+						<Text
+							text="You can use circles (Radius given in pixels – constant screen size) to visualize specific, quantitative parameters and geocircles (Radius given in meters – constant size in reality) to visualize specific sizes or measures. A use case for circles on a map might be showing the size of the biggest towns in a region or the revenue of a company per production location." />
+						<Text class="sapUiTinyMarginTop" text="See also: " />
+						<Link class="sapUiLargeMarginLeft" text="Visual business best practices"
+							target="_blank" href="test-resources/sap/ui/vbm/bestpractices.html" />
+					</VBox>
+				</content>
+			</Panel>
+		</l:fixContent>
+		<l:flexContent>
+			<vbm:GeoMap id="vbi" width="100%" xmlns:l="sap.ui.layout"
+				height="100%" initialPosition="9.933573;51.898695;0" initialZoom="5"
+				openWindow="onOpenDetail" closeWindow="onCloseDetail">
+				<vbm:vos>
+					<vbm:Circles items="{/Circles}" click="onClickItem"
+						contextMenu="onContextMenuItem">
+						<vbm:Circle position="{A}" tooltip="{D}" radius="{E}"
+							color="rgba(92,186,230,0.6)" colorBorder="rgb(255,255,255)"
+							hotDeltaColor="rgba(92,186,230,0.8)" click="onClickCircle"
+							contextMenu="onContextMenuCircle" />
+					</vbm:Circles>
+					<vbm:GeoCircles items="{/CirclesGeoDist}" click="onClickItem"
+						contextMenu="onContextMenuItem">
+						<vbm:GeoCircle position="{A}" tooltip="{D}" radius="{E}"
+							color="rgba(182,217,87,0.6)" colorBorder="rgb(255,255,255)"
+							hotDeltaColor="rgba(182,217,87,0.8)" click="onClickGeoCircle"
+							contextMenu="onContextMenuCircle" />
+					</vbm:GeoCircles>
+				</vbm:vos>
+				<vbm:legend>
+					<vbm:Legend id="legend" caption="Legend">
+						<vbm:LegendItem text="Circle – radius in px" color="rgba(92,186,230,0.6)" />
+						<vbm:LegendItem text="Geocircle – radius in meters"
+							color="rgba(182,217,87,0.6)" />
+					</vbm:Legend>
+				</vbm:legend>
+			</vbm:GeoMap>
+		</l:flexContent>
+	</l:FixFlex>
+</mvc:View>

@@ -1,0 +1,77 @@
+<mvc:View height="100%"
+    controllerName="sap.ushell.components.pages.controller.PageRuntime"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:dnd="sap.ui.core.dnd"
+    xmlns:data="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    xmlns:lp="sap.ushell.ui.launchpad">
+    <NavContainer id="pagesRuntimeNavContainer">
+        <NavContainer id="pagesNavContainer" pages="{/pages}">
+            <Page data:pageId="{id}" showHeader="false" backgroundDesign="Transparent" floatingFooter="true">
+                <content>
+                    <lp:Page edit="{viewSettings>/actionModeActive}"
+                        showTitle="true"
+                        title="{title}"
+                        sections="{
+                            path: 'sections',
+                            templateShareable: false
+                        }"
+                        addSectionButtonPressed=".handleEditModeAction('sectionAdd', $event, ${$source>/}, ${$parameters>/})"
+                        enableSectionReordering="{viewSettings>/actionModeActive}"
+                        sectionDrop=".handleEditModeAction('sectionMove', $event, ${$source>/}, ${$parameters>/})">
+                        <lp:sections>
+                            <lp:Section title="{title}"
+                                class="sapContrastPlus"
+                                sizeBehavior="{viewSettings>/sizeBehavior}"
+                                visible="{
+                                    path: 'visualizations',
+                                    formatter: '.formatter._sectionVisibility'
+                                }"
+                                visualizations="{
+                                    path: 'visualizations',
+                                    factory: '._visualizationFactory'
+                                }"
+                                enableGridBreakpoints="true"
+                                editable="{viewSettings>/actionModeActive}"
+                                add=".handleEditModeAction('visualizationAdd', $event, ${$source>/}, ${$parameters>/})"
+                                delete=".handleEditModeAction('sectionDelete', $event, ${$source>/}, ${$parameters>/})"
+                                reset=".handleEditModeAction('sectionReset', $event, ${$source>/}, ${$parameters>/})"
+                                sectionVisibilityChange=".handleEditModeAction('sectionVisibilityChange', $event, ${$source>/}, ${$parameters>/})"
+                                titleChange=".handleEditModeAction('sectionTitleChange', $event, ${$source>/}, ${$parameters>/})"
+                                enableVisualizationReordering="true"
+                                visualizationDrop=".visualizationMove($event, ${$source>/}, ${$parameters>/})" />
+                        </lp:sections>
+                        <lp:dragDropConfig>
+                            <dnd:DropInfo
+                                groupName="Section"
+                                targetAggregation="sections"
+                                drop=".visualizationMove($event, ${$source>/}, ${$parameters>/})" />
+                        </lp:dragDropConfig>
+                    </lp:Page>
+                </content>
+                <footer>
+                    <Bar class="sapUshellDashboardFooter" visible="{viewSettings>/actionModeActive}">
+                        <contentRight>
+                            <Button text="{i18n>PageRuntime.EditMode.Save}" type="Emphasized" press=".handleEditModeAction('save', $event, ${$source>/}, ${$parameters>/})"/>
+                            <Button text="{i18n>PageRuntime.EditMode.Cancel}" press=".handleEditModeAction('cancel', $event, ${$source>/}, ${$parameters>/})"/>
+                        </contentRight>
+                    </Bar>
+                </footer>
+            </Page>
+        </NavContainer>
+        <MessagePage id="errorPage"
+            showHeader="false"
+            icon="{errorPage>/icon}"
+            text="{errorPage>/text}"
+            description="{errorPage>/description}">
+            <buttons>
+                <Button text="{i18n>PageRuntime.CannotLoadPage.DetailsButton}"
+                    visible="{= !!${errorPage>/details} &amp;&amp; !${errorPage>/description}}"
+                    press="._pressViewDetailsButton"/>
+                <Button text="{i18n>PageRuntime.CannotLoadPage.CopyButton}"
+                    visible="{= !!${errorPage>/details} }"
+                    press="._copyToClipboard"/>
+            </buttons>
+        </MessagePage>
+    </NavContainer>
+</mvc:View>

@@ -1,0 +1,26 @@
+<core:FragmentDefinition
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns="sap.m"
+	xmlns:uxap="sap.uxap"
+	xmlns:macro="sap.fe.macros"
+	xmlns:core="sap.ui.core"
+	template:require="{
+		COMMON: 'sap/fe/macros/CommonHelper'
+	}">
+
+	<!--
+	For form container labels there are two scenarios, when:
+	1. parentFacet has Facets : then labels for the form containers should be shown.
+	2. parentFacet does not have Facets : then labels for the form containers should not be shown.
+	 -->
+	<macro:Form
+		id="{= COMMON.getStableId(['fe', 'form', ${metaPath>/currentPath}.get() + '/',  { Facet: ${facet>} }]) }"
+		metadataContexts="{ model: 'facet', path:'', name: 'facet'},{ model:'entitySet',path:'',name:'entitySet'}"
+		editMode="{ui>/editable}"
+		createMode="{ui>/createMode}"
+		useFormContainerLabels="{= ${parentFacet>Facets}.length > 0 }"
+		idPrefix="{= COMMON.getStableId([${metaPath>/currentPath}.get() + '/']) }"
+		onChange=".handlers.onFieldValueChange"
+	/>
+
+</core:FragmentDefinition>

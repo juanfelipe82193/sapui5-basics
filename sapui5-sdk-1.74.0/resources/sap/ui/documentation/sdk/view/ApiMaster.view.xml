@@ -1,0 +1,50 @@
+<mvc:View
+		controllerName="sap.ui.documentation.sdk.controller.ApiMaster"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns="sap.m"
+		xmlns:custom="sap.ui.documentation.sdk.controls"
+		class="sapContrast sapContrastPlus">
+
+	<Page
+			id="page"
+			enableScrolling="true"
+			showFooter="false"
+			navButtonPress="onNavBack"
+			showNavButton="false"
+			class="sapUiDocumentationMasterPage">
+
+		<customHeader>
+			<Toolbar width="100%">
+				<SearchField id="searchField" placeholder="Filter" liveChange="onTreeFilter" class="sapUiDocumentationFilterField"/>
+				<Button id="expandAllButton" icon="sap-icon://expand-all" press="onTreeExpandAll" tooltip="Expand All"/>
+				<Button id="collapseAllButton" icon="sap-icon://collapse-all" press="onTreeCollapseAll" tooltip="Collapse All"/>
+			</Toolbar>
+		</customHeader>
+		<subHeader>
+			<Toolbar>
+				<CheckBox id="includeDeprecated" text="Include deprecated" class="sapUiNoMarginBegin" select="onIncludeDeprecatedItemsChange"/>
+			</Toolbar>
+		</subHeader>
+
+		<content>
+
+			<Tree
+				id="tree"
+				mode="SingleSelectMaster"
+				noDataText="No data, please try with the global search"
+				selectionChange="onNodeSelect"
+				items="{treeData>/}">
+				<custom:DemokitTreeItem
+						title="{treeData>displayName}"
+						target="{treeData>name}"
+                        entityType="{treeData>kind}"
+						section="api"
+						class="sapDemokitTreeItem"
+						deprecated="{treeData>deprecated}"/>
+			</Tree>
+
+		</content>
+
+	</Page>
+
+</mvc:View>

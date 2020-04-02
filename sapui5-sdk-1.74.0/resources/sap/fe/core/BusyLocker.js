@@ -1,0 +1,6 @@
+/*!
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+        (c) Copyright 2009-2017 SAP SE. All rights reserved
+    
+ */
+sap.ui.define(["sap/base/Log"],function(L){"use strict";var _=50,a={},b={getId:function(){return"BusyLocker.ReferenceDummy";},setBusy:function(B){L.info("setBusy("+B+") triggered on dummy reference");}};function g(r,p){if(!r||!r.getId){L.warning("No reference for BusyLocker, using dummy reference");r=b;}var p=p||"/busy",i=r.getId()+p;if(!(i in a)){a[i]={id:i,path:p,reference:r,count:0};}return a[i];}function d(l){delete a[l.id];}function c(l){var i=l.reference.isA&&l.reference.isA("sap.ui.model.Model"),B=l.count!==0;if(i){l.reference.setProperty(l.path,B);}else{l.reference.setBusy(B);}clearTimeout(l.timeout);if(B){l.timeout=setTimeout(function(){L.error("busy lock for "+l.id+" with value "+l.count+" timed out after "+_+" seconds!");},_*1000);}else{d(l);}return B;}function e(l,D){if(D===0){l.count=0;L.info("busy lock count '"+l.id+"' was reset to 0");}else{l.count+=D;L.info("busy lock count '"+l.id+"' is "+l.count);}}return{lock:function(m,p){return this._updateLock(m,p,1);},unlock:function(m,p){return this._updateLock(m,p,-1);},_updateLock:function(r,p,D){var l=g(r,p);e(l,D);return c(l);}};});

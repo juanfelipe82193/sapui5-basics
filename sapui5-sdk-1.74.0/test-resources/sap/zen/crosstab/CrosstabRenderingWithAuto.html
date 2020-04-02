@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Rendering test</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.commons,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="json/TESTDATA_PLAINTABLE.js"></script>
+<script type="text/javascript" src="testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab AUTO Rendering Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab AUTO Rendering tests", {
+			setup : function() {
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+				this.oAbsoluteLayout = new sap.zen.commons.layout.AbsoluteLayout();
+				this.oAbsoluteLayout.setWidth("1600px");
+				this.oAbsoluteLayout.setHeight("1200px");
+				this.oPosition = {
+					"top" : "0px",
+					"bottom" : "0px",
+					"left" : "0px",
+					"right" : "0px"
+				};
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				this.oCrosstab.setWidth("auto");
+				this.oCrosstab.setHeight("auto");
+				this.oAbsoluteLayout.addContent(this.oCrosstab, this.oPosition);
+
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+
+				sap.ui.setRoot("uiCrosstabArea", this.oAbsoluteLayout);
+				sap.ui.getCore().applyChanges();
+
+				this.checkCellWidth = function(oCell1, oCell2) {
+					var oDomCell1 = jQuery.sap.byId(oCell1.getId());
+					var oDomCell2 = jQuery.sap.byId(oCell2.getId());
+
+					ok(oDomCell1.outerWidth() === oDomCell2.outerWidth(), "Both cells must have the same width!");
+				};
+
+				this.checkCellHeight = function(oCell1, oCell2) {
+					var oDomCell1 = jQuery.sap.byId(oCell1.getId());
+					var oDomCell2 = jQuery.sap.byId(oCell2.getId());
+
+					ok(oDomCell1.outerHeight() === oDomCell2.outerHeight(), "Both cells must have the same height!");
+				};
+
+				this.checkCellStyle = function(oCell, sStateToCheck, sClassToCheck) {
+					var oDomCell = null;
+					if (oCell) {
+						oDomCell = jQuery.sap.byId(oCell.getId());
+						ok(oDomCell.attr("class").indexOf(sClassToCheck) !== -1, "Cell: " + oCell.getId()
+								+ " with total style in model must have corresponding CSS style: " + sClassToCheck);
+					}
+				};
+
+			},
+			teardown : function() {
+				this.oCrosstab = null;
+				this.oAbsoluteLayout = null;
+				this.oPosition = null;
+			}
+		});
+
+		test("Spotcheck the rendering of the areas", function() {
+			var oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+			var oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+
+			sap.zen.crosstab.testutils.TestUtils.checkCell(oDimensionHeaderArea, 2, 1);
+			sap.zen.crosstab.testutils.TestUtils.checkCell(oDataArea, 0, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkCell(oRowHeaderArea, 0, 1);
+			sap.zen.crosstab.testutils.TestUtils.checkCell(oColumnHeaderArea, 2, 0);
+
+		});
+
+		test("Check the width alignment of the columns", function() {
+			var oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+			var oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+
+			this.checkCellWidth(oDimensionHeaderArea.getCell(2, 1), oRowHeaderArea.getCell(0, 1));
+			this.checkCellWidth(oColumnHeaderArea.getCell(2, 0), oDataArea.getCell(0, 0));
+
+		});
+
+		test("Check the height alignment of the rows", function() {
+			var oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+			var oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+
+			this.checkCellHeight(oDimensionHeaderArea.getCell(2, 1), oColumnHeaderArea.getCell(2, 0));
+			this.checkCellHeight(oRowHeaderArea.getCell(0, 1), oDataArea.getCell(0, 0));
+
+		});
+
+		test("Spotcheck: TOTAL state", function() {
+			var oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+			var iMaxRows = oColumnHeaderArea.getRowCnt();
+			var iMaxCols = oColumnHeaderArea.getColCnt();
+			var oCell = oColumnHeaderArea.getCell(iMaxRows - 1, iMaxCols - 1);
+			this.checkCellStyle(oCell, sap.zen.crosstab.rendering.RenderingConstants.STYLE_TOTAL,
+					"sapzencrosstab-HeaderCellTotal");
+
+			var oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+			iMaxRows = oRowHeaderArea.getRowCnt();
+			iMaxCols = oRowHeaderArea.getColCnt();
+			oCell = oRowHeaderArea.getCell(iMaxRows - 1, iMaxCols - 1);
+			this.checkCellStyle(oCell, sap.zen.crosstab.rendering.RenderingConstants.STYLE_TOTAL,
+					"sapzencrosstab-HeaderCellTotal");
+
+			var oDataArea = this.oCrosstab.getDataArea();
+			iMaxRows = oDataArea.getRowCnt();
+			iMaxCols = oDataArea.getColCnt();
+			oCell = oDataArea.getCell(iMaxRows - 1, iMaxCols - 1);
+			this.checkCellStyle(oCell, sap.zen.crosstab.rendering.RenderingConstants.STYLE_TOTAL,
+					"sapzencrosstab-DataCellTotal")
+		});
+
+		test("Set margins to shrink the crosstab", function() {
+			this.oAbsoluteLayout.setPositionOfChild(this.oCrosstab, {
+				"top" : "0px",
+				"bottom" : "0px",
+				"left" : "250px",
+				"right" : "850px"
+			});
+			this.oAbsoluteLayout.invalidate();
+			sap.ui.getCore().applyChanges();
+
+			var oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+			var iMaxRows = oColumnHeaderArea.getRowCnt();
+			var iMaxCols = oColumnHeaderArea.getColCnt();
+			var oCell = oColumnHeaderArea.getCell(iMaxRows - 1, iMaxCols - 1);
+			var oDomCell = jQuery.sap.byId(oCell.getId());
+
+			ok(oDomCell.length === 0, "The last column of the column header area should not be rendered");
+		});
+	</script>
+
+</body>
+
+</html>

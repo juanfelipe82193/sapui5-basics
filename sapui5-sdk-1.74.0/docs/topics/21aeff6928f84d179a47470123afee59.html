@@ -1,0 +1,583 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Retrieving Controls</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Common use cases for retrieving controls"><meta name="description" content="Common use cases for retrieving controls"><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"f2f843d375384d56bbf955a80ee66ab6.html","previousTopicHref":"ce4b180d97064ad088a901b53ed48b21.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio21aeff6928f84d179a47470123afee59"><h1 class="title topictitle1" hidden>Retrieving Controls</h1><div class="body conbody"><p class="shortdesc" hidden>Common use cases for retrieving controls</p>
+<div class="section" id="loio21aeff6928f84d179a47470123afee59__section_nyd_prc_wbb"><section class="section" type="Retrieving a Control by Its ID"><h2 class="section_title" style="font-size: 1.15em;">Retrieving a Control by Its ID</h2>
+
+<pre class="pre codeblock prettyprint lang-js">new sap.ui.test.Opa5().waitFor({
+    id : &quot;page-title&quot;,
+    viewName : &quot;Category&quot;,
+    viewNamespace : &quot;my.Application.&quot;,
+    success : function (oTitle) {
+        Opa5.assert.ok(oTitle.getVisible(), &quot;the title was visible&quot;);
+    }
+});</pre>
+<p class="p">In this example, we search for a control with the ID <samp class="ph codeph">page-title</samp>. The
+control is located in the <samp class="ph codeph">my.Application.Category</samp> view.</p>
+<p class="p">By default, OPA5 tries to find the element until the default timeout of 15 seconds is
+reached. You can override this behavior by passing it as a parameter to the
+<samp class="ph codeph">waitFor</samp> function. Zero means infinite timeout.</p>
+<pre class="pre codeblock prettyprint lang-js">new sap.ui.test.Opa5().waitFor({
+    id : &quot;productList&quot;,
+    viewName : &quot;Category&quot;,
+    success : function (oList) {
+        Opa5.assert.ok(oList.getItems().length, &quot;The list did contain products&quot;);
+    },
+    timeout: 10
+});</pre>
+<p class="p">In this example, the <samp class="ph codeph">check</samp> function is omitted. In this case, OPA5
+creates its own <samp class="ph codeph">check</samp> function that waits until the control is
+found or the specified timeout is reached.</p>
+</section></div>
+<div class="section" id="loio21aeff6928f84d179a47470123afee59__section_zkc_qrc_wbb"><section class="section" type="Retrieving a Control That Doesn&#x2019;t Have an ID"><h2 class="section_title" style="font-size: 1.15em;">Retrieving a Control That Doesn&#x2019;t Have an ID</h2>
+
+<p class="p">Sometimes you need to test for a control that has no explicit ID set and maybe you
+can&#x2019;t or don&#x2019;t want to provide one for your test. To get around this issue, use a
+custom check function to filter for this control. Let&apos;s assume we have a view called
+<samp class="ph codeph">Detail</samp> and there are multiple
+<samp class="ph codeph">sap.m.ObjectHeaders</samp> on this page. We want to wait until there&#x2019;s
+an object header with the title <samp class="ph codeph">myTitle</samp>.</p>
+<p class="p">To do this, use the following code:</p>
+<pre class="pre codeblock prettyprint lang-js">return new Opa5().waitFor({
+    controlType : &quot;sap.m.ObjectHeader&quot;,
+    viewName : &quot;Detail&quot;,
+    matchers : new sap.ui.test.matchers.PropertyStrictEquals({
+                                 name : &quot;title&quot;,
+                                 value: &quot;myTitle&quot;
+                           }),
+    success : function (aObjectHeaders) {
+        Opa5.assert.strictEqual(aObjectHeaders.length, 1, &quot;was there was only one Object header with this title on the page&quot;);
+        Opa5.assert.strictEqual(aObjectHeaders[0].getTitle(), &quot;myTitle&quot;, &quot;was on the correct Title&quot;);
+    }
+});
+</pre>
+<p class="p">Since no ID is specified, OPA passes an array of controls to the
+<samp class="ph codeph">check</samp> function. The array contains all visible object header
+instances in the <samp class="ph codeph">Detail</samp> view. However, a built-in support for
+comparing properties doesn&apos;t exist, so we implement a custom check.</p>
+</section></div>
+<div class="section" id="loio21aeff6928f84d179a47470123afee59__section_n1n_rrc_wbb"><section class="section" type="More About Matchers"><h2 class="section_title" style="font-size: 1.15em;">More About Matchers</h2><span class="ph">For more
+information about all matchers, see the <a class="xref" href="../../#/api/sap.ui.test.matchers" target="_top" alt="#/api/sap.ui.test.matchers" title="#/api/sap.ui.test.matchers">API Reference</a> and the <a class="xref" href="../../#/entity/sap.ui.test.matchers" target="_top" alt="#/entity/sap.ui.test.matchers" title="#/entity/sap.ui.test.matchers">Samples</a>.</span>
+<p class="p"><samp class="ph codeph">sap.ui.test.matchers.Properties</samp>: This matcher
+checks if the controls have properties with given values. The values can also be
+defined as regular expressions (<samp class="ph codeph">RegExp</samp>) for the string type
+properties.</p><pre class="pre codeblock prettyprint lang-js">return new Opa5().waitFor({
+            controlType : &quot;sap.ui.commons.TreeNode&quot;,
+            matchers : new sap.ui.test.matchers.Properties({
+                text: new RegExp(&quot;root&quot;, &quot;i&quot;),
+                isSelected: true
+            }),
+            success : function (aNodes) {
+                Opa5.assert.ok(aNodes[0], &quot;Root node is selected&quot;)
+            },
+            errorMessage: &quot;No selected root node found&quot;
+});</pre><aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p><samp class="ph codeph">sap.ui.test.matchers.Properties</samp> and
+<samp class="ph codeph">sap.ui.test.matchers.PropertyStrictEquals</samp> serve the same
+purpose but it&apos;s easier to pass parameters to
+<samp class="ph codeph">sap.ui.test.matchers.Properties</samp>.</p></aside><p class="p"><samp class="ph codeph">sap.ui.test.matchers.Ancestor</samp>:
+This matcher checks if the control has the specified ancestor (ancestor is of a
+control
+type).</p><pre class="pre codeblock prettyprint lang-js">var oRootNode = getRootNode();
+return new Opa5().waitFor({
+            controlType : &quot;sap.ui.commons.TreeNode&quot;,
+            matchers : new sap.ui.test.matchers.Ancestor(oRootNode),
+            success : function (aNodes) {
+                Opa5.assert.notStrictEqual(aNodes.length, 0, &quot;Found nodes in a root node&quot;)
+            },
+            errorMessage: &quot;No nodes in a root node found&quot;
+});</pre><p class="p"><samp class="ph codeph">sap.ui.test.matchers.Descendant</samp>:
+This matcher checks if the control has the specified descendant. In this example, we
+search for a table row, which has a text control with a certain
+value.</p><pre class="pre codeblock prettyprint lang-js">this.waitFor({
+    controlType: &quot;sap.m.Text&quot;,
+    matchers: new Properties({
+        text: &quot;special text&quot;
+    }),
+    success: function (aText) {
+        return this.waitFor({
+            controlType: &quot;sap.m.ColumnListItem&quot;,
+            matchers: new Descendant(aText[0]),
+            success: function (aRows) {
+                Opa5.assert.strictEqual(aRows.length, 1, &quot;Found row with special text&quot;);
+            },
+            errorMessage: &quot;Did not find row or special text is not inside table row&quot;
+        });
+    },
+    errorMessage: &quot;Did not find special text&quot;
+});</pre><p class="p"><samp class="ph codeph">sap.ui.test.matchers.BindingPath</samp>:
+This matcher checks if the controls have specified data binding paths. The
+<samp class="ph codeph">path</samp> property matches controls by their binding context.
+Controls with a binding context are usually inside an aggregation or have a parent
+control with data binding. The <samp class="ph codeph">propertyPath</samp> property matches
+controls by the data binding paths of their own properties. Binding property paths
+can be part of an expression binding. You can set the <samp class="ph codeph">path</samp> and
+<samp class="ph codeph">propertyPath</samp> properties separately or in combination.<span class="ph"> For a
+practical example of the various types of data binding, see the <a class="xref" href="../../#/entity/sap.ui.core.tutorial.databinding" target="_top" alt="#/entity/sap.ui.core.tutorial.databinding" title="#/entity/sap.ui.core.tutorial.databinding">Tutorial Samples</a>.</span></p><pre class="pre codeblock prettyprint lang-js">// Match a CheckBox located inside a ListItem:
+// the CheckBox has a property binding with relative path &quot;Selected&quot;
+// the ListItem has a binding context path &quot;/products/0&quot;
+return new Opa5().waitFor({
+    controlType : &quot;sap.m.CheckBox&quot;,
+    matchers : new sap.ui.test.matchers.BindingPath({
+        path: &quot;/products/0&quot;,
+        propertyPath: &quot;Selected&quot;
+    }),
+    success : function (aResult) {
+        Opa5.assert.ok(aResult[0], &quot;CheckBox is matched&quot;)
+    }
+});</pre><p class="p">You
+can also define a matcher as an inline function: The first parameter of the function
+is a control to match. If the control matches, return <samp class="ph codeph">true</samp> to pass
+the control on to the next matcher and/or to check and success
+functions.</p><pre class="pre codeblock prettyprint lang-js">return new Opa5().waitFor({
+            controlType : &quot;sap.ui.commons.TreeNode&quot;,
+            matchers : function(oNode) {
+                return oNode.$().hasClass(&quot;specialNode&quot;);
+            },
+            success : function (aNodes) {
+                Opa5.assert.notStrictEqual(aNodes.length, 0, &quot;Found special nodes&quot;)
+            },
+            errorMessage: &quot;No special nodes found&quot;
+});
+</pre><p class="p">If
+you return a &apos;truthy&apos; value from the matcher, but not a Boolean, it will be used as
+an input parameter for the next matchers and/or check and success. This allows you
+to build a matchers
+pipeline.</p><pre class="pre codeblock prettyprint lang-js">return new Opa5().waitFor({
+    controlType : &quot;sap.ui.commons.TreeNode&quot;,
+    matchers : [
+        function(oNode) {
+            // returns truthy value - jQuery instance of control
+            return oNode.$();
+        },
+        function($node) {
+            // $node is a previously returned value
+            return $node.hasClass(&quot;specialNode&quot;);
+        }
+    ],
+    actions : function (oNode) {
+        // oNode is a matching control&apos;s jQuery instance
+        oNode.trigger(&quot;click&quot;);
+    },
+    errorMessage: &quot;No special nodes found&quot;
+});
+</pre><p class="p"><samp class="ph codeph">sap.ui.test.matchers.LabelFor</samp>:
+This matcher checks if a given control is associated with an
+<samp class="ph codeph">sap.m.Label</samp> control. This means that there should be a label on
+the page with a <samp class="ph codeph">labelFor</samp> association to the control. The label can
+be filtered by text value or by the <samp class="ph codeph">i18n</samp> key of a given property
+value. Note that some controls, such as
+<samp class="ph codeph">sap.ui.comp.navpopover.SmartLink</samp>, <samp class="ph codeph">sap.m.Link</samp>,
+<samp class="ph codeph">sap.m.Label</samp>, and <samp class="ph codeph">sap.m.Text</samp> can&#x2019;t be matched
+by <samp class="ph codeph">sap.ui.test.matchers.LabelFor</samp> as they can&#x2019;t have an associated
+label.</p><div class="p">Using the <samp class="ph codeph">i18n</samp>
+key:<pre class="pre codeblock prettyprint lang-js">return new Opa5().waitFor({
+    controlType: &quot;sap.m.Input&quot;,
+    // Get sap.m.Input which is associated with Label which have i18n text with key &quot;CART_ORDER_NAME_LABEL&quot;
+    matchers: new sap.ui.test.matchers.LabelFor({ key: &quot;CART_ORDER_NAME_LABEL&quot;, modelName: &quot;i18n&quot; }),
+    // It will enter the given text in the matched sap.m.Input
+    actions: new sap.ui.test.actions.EnterText({ text: &quot;MyName&quot; })
+});</pre></div><div class="p">Using
+the <samp class="ph codeph">text</samp>
+property:<pre class="pre codeblock prettyprint lang-js">return new Opa5().waitFor({
+    controlType: &quot;sap.m.Input&quot;,
+    // Get sap.m.Input which is associated with Label which have i18n text with text &quot;Name&quot;
+    matchers: new sap.ui.test.matchers.LabelFor({ text: &quot;Name&quot; }),
+    // It will enter the given text in the matched sap.m.Input
+    actions: new sap.ui.test.actions.EnterText({ text: &quot;MyName&quot; }),
+    success: function (oInput) {
+        Opa5.assert.ok(oInput.getValue() === &quot;MyName&quot;, &quot;Input value is correct&quot;);
+    }
+});</pre></div><span class="ph">For more
+information, see the <a class="xref" href="../../#/api/sap.ui.test.Opa5" target="_top" alt="#/api/sap.ui.test.Opa5" title="#/api/sap.ui.test.Opa5">API Reference</a> and the <a class="xref" href="../../#/sample/sap.ui.core.sample.OpaMatchers/preview" target="_top" alt="#/sample/sap.ui.core.sample.OpaMatchers/preview" title="#/sample/sap.ui.core.sample.OpaMatchers/preview">Sample</a>.</span>
+</section></div>
+<div class="section" id="loio21aeff6928f84d179a47470123afee59__section_ys1_trc_wbb"><section class="section" type="Searching for Controls Inside a Dialog"><h2 class="section_title" style="font-size: 1.15em;">Searching for Controls Inside a Dialog</h2>
+
+<p class="p">Use the option <samp class="ph codeph">searchOpenDialogs</samp> to restrict control search to open
+dialogs only. You can combine <samp class="ph codeph">searchOpenDialogs</samp> with
+<samp class="ph codeph">controlType</samp> or any predefined or custom matcher. As of version
+1.62, the ID option is also effective in combination with
+<samp class="ph codeph">searchOpenDialogs</samp>. If the dialog is inside a view, the
+<samp class="ph codeph">viewName</samp> option ensures that the given ID is relative to the
+view. Otherwise, the search is done by global ID.</p>
+<p class="p">This is an example of matching a control with ID
+<samp class="ph codeph">mainView--testButton</samp> located inside a dialog. The dialog itself
+is part of a view with name <span class="ph filepath">main.view</span> and ID
+<samp class="ph codeph">mainView</samp>:</p>
+<pre class="pre codeblock prettyprint lang-js">this.waitFor({
+    searchOpenDialogs: true,
+    id: &quot;testButton&quot;,
+    viewName: &quot;main.view&quot;
+    actions: new sap.ui.test.actions.Press(),
+    errorMessage : &quot;Did not find the dialog button&quot;
+});</pre>
+<p class="p">The next example shows the use case where we want to press a button with &apos;Order Now&apos;
+text on it inside a dialog.</p>
+<p class="p">To do this, we set the <samp class="ph codeph">searchOpenDialogs</samp> option to true and then
+restrict the <samp class="ph codeph">controlType</samp> we want to search for to
+<samp class="ph codeph">sap.m.Button</samp>. We use the check function to search for a button
+with the text &apos;Order Now&apos; and save it to the outer scope. After we find it, we
+trigger a <samp class="ph codeph">tap</samp> event:</p>
+<pre class="pre codeblock prettyprint lang-js">iPressOrderNow : function () {
+    var oOrderNowButton = null;
+    this.waitFor({
+        searchOpenDialogs : true,
+        controlType : &quot;sap.m.Button&quot;,
+        check : function (aButtons) {
+            return aButtons.filter(function (oButton) {
+                if(oButton.getText() !== &quot;Order Now&quot;) {
+                    return false;
+                }
+
+                oOrderNowButton = oButton;
+                return true;
+            });
+        },
+        actions: new sap.ui.test.actions.Press(),
+        errorMessage : &quot;Did not find the Order Now button&quot;
+    });
+    return this;
+}</pre>
+</section></div>
+<div class="section" id="loio21aeff6928f84d179a47470123afee59__section_n4y_vsy_pgb"><section class="section" type="Searching for Controls Inside a Fragment"><h2 class="section_title" style="font-size: 1.15em;">Searching for Controls Inside a Fragment</h2>
+
+<p class="p">As of version 1.63, you can limit control search to a fragment with the option
+<samp class="ph codeph">fragmentId</samp>.</p>
+<p class="p"><samp class="ph codeph">fragmentId</samp> is effective only when searching by control ID inside a
+view. Whether a control belongs to a fragment is only relevant when the fragment has
+a user-assigned ID, which is different from the ID of its parent view. In this case,
+the fragment ID takes part in the formation of control ID and you have to use the
+<samp class="ph codeph">fragmentId</samp> option to simplify test maintenance.</p>
+<p class="p">The next example shows the use case where we want to press a button with ID
+<samp class="ph codeph">theMainView--greeting--helloWorld</samp>, located inside a fragment
+with ID <samp class="ph codeph">greeting</samp> and view with ID <samp class="ph codeph">theMainView</samp>:</p>
+<pre class="pre codeblock prettyprint lang-js">this.waitFor({
+    viewId: &quot;theMainView&quot;,
+    fragmentId: &quot;greeting&quot;,
+    id: &quot;hello&quot;,
+    actions: new Press(),
+    errorMessage : &quot;Did not find the Hello button&quot;
+});</pre>
+</section></div>
+<div class="section" id="loio21aeff6928f84d179a47470123afee59__section_q2d_b5d_nhb"><section class="section" type="Searching for Missing Controls"><h2 class="section_title" style="font-size: 1.15em;">Searching for Missing Controls</h2>
+
+<p class="p">In OPA5, you can look for controls that are invisible, disabled, or noninteractable
+by using the respective <samp class="ph codeph">waitFor</samp> boolean properties:
+<samp class="ph codeph">visible</samp>, <samp class="ph codeph">enabled</samp>, and
+<samp class="ph codeph">interactable</samp>.</p>
+<p class="p">You need a more creative approach to verify that no controls on the page match a
+certain criteria. One idea is to verify that a parent doesn&apos;t have a given child.
+Locate the parent using OPA5 standard matchers and then use a custom
+<samp class="ph codeph">check</samp> function to iterate over the children of the parent. The
+result of <samp class="ph codeph">check</samp> should be truthy if no children match a given
+condition.</p>
+<p class="p">The following example shows a custom <samp class="ph codeph">check</samp> function that returns
+<samp class="ph codeph">true</samp> if a popover doesn&apos;t contain a button with a certain
+text.</p>
+<pre class="pre codeblock prettyprint lang-js">this.waitFor({
+   controlType: &quot;sap.m.Popover&quot;,
+    success: function (aPopovers) {
+        return this.waitFor({
+            check: function () {
+                var aPopoverContent = aPopovers[0].getContent();
+                var aButtons = aPopoverContent.forEach(function (oChild) {
+                    return oChild.getMetadata().getName() === &quot;sap.m.Button&quot; &amp;&amp;
+                        oChild.getText() === &quot;Another text&quot;;
+                });
+                return !aButtons || !aButtons.length;
+            },
+            success: function () {
+                Opa5.assert.ok(true, &quot;The popover button is missing&quot;);
+            },
+            errorMessage: &quot;The popover button is present&quot;
+        });
+    }
+});</pre>
+</section></div>
+<div class="section" id="loio21aeff6928f84d179a47470123afee59__section_wyv_hxv_hhb"><section class="section" type="Searching for Disabled Controls"><h2 class="section_title" style="font-size: 1.15em;">Searching for Disabled Controls</h2>
+
+<p class="p">As of version 1.65, you can search for controls by their enabled state using the
+<samp class="ph codeph">enabled</samp> property. When <samp class="ph codeph">enabled</samp> is set to
+<samp class="ph codeph">true</samp>, only enabled controls will match. When
+<samp class="ph codeph">enabled</samp> is set to <samp class="ph codeph">false</samp>, both enabled and
+disabled controls will match.</p>
+<p class="p">By default, only enabled controls are matched when:</p>
+<ul class="ul" id="loio21aeff6928f84d179a47470123afee59__ul_stv_nxv_hhb">
+<li class="li">
+<p class="p"><samp class="ph codeph">autoWait</samp> is set to <samp class="ph codeph">true</samp>, or</p>
+</li>
+<li class="li">
+<p class="p">there are actions defined in the <samp class="ph codeph">waitFor</samp></p>
+</li>
+</ul>
+<p class="p">If <samp class="ph codeph">autoWait</samp> is disabled and there are no actions, the search matches
+disabled controls as well.</p>
+<p class="p">The next example shows that the <samp class="ph codeph">enabled</samp> property has priority over
+<samp class="ph codeph">autoWait</samp>:</p>
+<pre class="pre codeblock prettyprint lang-js">this.waitFor({
+    controlType: &quot;sap.m.Button&quot;,
+    enabled: false,
+    autoWait: true,
+    success: function () {...}
+})</pre>
+</section></div>
+<div class="section" id="loio21aeff6928f84d179a47470123afee59__section_p4z_5rc_wbb"><section class="section" type="Writing Nested Arrangements and Actions"><h2 class="section_title" style="font-size: 1.15em;">Writing Nested Arrangements and Actions</h2>
+
+<p class="p">UI elements can be recursive, for example in a tree. Instead of triggering the action
+for each known element, you can also define it recursively (see the code snippet
+below). OPA ensures that the <samp class="ph codeph">waitFor</samp> statements triggered in a
+success handler are executed before the next arrangement, action, or assertion. That
+also allows you to work with an unknown number of entries, for example in a list.
+First, you wait for the list, and then trigger actions on each list item.</p>
+<pre class="pre codeblock prettyprint lang-js">iExpandRecursively : function() {
+    return this.waitFor({
+        controlType : &quot;sap.ui.commons.TreeNode&quot;,
+        matchers : new sap.ui.test.matchers.PropertyStrictEquals({
+            name : &quot;expanded&quot;, 
+            value : false
+        }),
+        actions : function (oTreeNode) {
+            if (oTreeNode.getNodes().length){
+                oTreeNode.expand();
+                that.iExpandRecursively()
+            }
+        },
+        errorMessage : &quot;Didn&apos;t find collapsed tree nodes&quot;
+    });
+}
+</pre>
+</section></div>
+<div class="section" id="loio21aeff6928f84d179a47470123afee59__section_tkk_cbs_kjb"><section class="section" type="Declarative Syntax"><h2 class="section_title" style="font-size: 1.15em;">Declarative Syntax</h2><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Overview</p>
+<p class="p">As of version 1.72, OPA5 supports the declarative matcher syntax that allows you
+to declare built-in matchers in a literal object. The syntax is inspired by
+control locators in <span class="ph pname">UIVeri5</span> and promotes reuse between the two
+testing tools. A matcher declaration is a JSON object. The OPA5
+<samp class="ph codeph">waitFor</samp> statement is simplified by using a single JSON
+object, instead of the more verbose matcher instances. Only built-in matchers
+are allowed. Inline matcher functions and custom matcher instances are only
+allowed in the matchers <samp class="ph codeph">waitFor</samp> parameter:</p>
+<pre class="pre codeblock prettyprint lang-js">return this.waitFor({
+    controlType : &quot;sap.m.Text&quot;,
+    matchers : function () {
+        // ...
+    }
+});</pre>
+<p class="p">There are two places you can add a matcher declaration in a
+<samp class="ph codeph">waitFor</samp> object:</p>
+<ul class="ul" id="loio21aeff6928f84d179a47470123afee59__ul_pwm_ybs_kjb">
+<li class="li">
+<p class="p">On the top level</p>
+<p class="p">In this case, if you use an unknown matcher, an exception is thrown,
+stating that the parameter isn&#x2019;t defined in OPA5 API.</p>
+<pre class="pre codeblock prettyprint lang-js">this.waitFor({
+    controlType : &quot;sap.m.Text&quot;,
+    propertyStrictEquals: {
+        name : &quot;text&quot;,
+        value : &quot;foo&quot;
+    }
+});</pre>
+</li>
+<li class="li">
+<p class="p">In the <samp class="ph codeph">matchers</samp> parameter</p>
+<p class="p">In this case, if you use an unknown matcher, an exception is thrown,
+stating that the matcher isn&#x2019;t supported.</p>
+<pre class="pre codeblock prettyprint lang-js">this.waitFor({
+    controlType : &quot;sap.m.Text&quot;,
+    matchers: {
+        propertyStrictEquals: {
+            name : &quot;text&quot;,
+            value : &quot;foo&quot;
+        }
+    }
+});</pre>
+</li>
+</ul>
+<p class="p">If there are matchers declared in both places, they&#x2019;re combined.</p>
+<p class="p">For more information, see <a class="extlink" href="http://help.sap.com/disclaimer?site=https://github.com/SAP/ui5-uiveri5" target="_blank" alt="https://github.com/SAP/ui5-uiveri5" title="https://github.com/SAP/ui5-uiveri5">https://github.com/SAP/ui5-uiveri5<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a>.</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Matcher Properties</p>
+<p class="p">A matcher is declared by its name and properties. The name is a key in the
+matchers object literal and has to start with a lower-case letter. For example,
+to declare an <samp class="ph codeph">sap.ui.test.matchers.Properties</samp> matcher, use the
+name <samp class="ph codeph">properties</samp>. Every matcher accepts a specific set of
+properties, which has to be declared as a value in the matchers object. This
+value has to be an object literal. Behind the scenes, every matcher declaration
+is transformed into a matcher instance. Every value in the declaration
+represents the properties that are fed to one matcher instance. There&#x2019;s an
+example for every built-in matcher in the API documentation.</p>
+<p class="p">The following two <samp class="ph codeph">waitFor</samp> statements produce the same set of
+matchers:</p>
+<pre class="pre codeblock prettyprint lang-js">// declaration
+this.waitFor({
+    controlType : &quot;sap.m.Text&quot;,
+    matchers: {
+        propertyStrictEquals: {
+            name : &quot;text&quot;,
+            value : &quot;foo&quot;
+        }
+    }
+});
+
+// instantiation
+this.waitFor({
+    controlType : &quot;sap.m.Text&quot;,
+    matchers: new PropertyStrictEquals({
+        name : &quot;text&quot;,
+        value : &quot;foo&quot;
+    })
+});</pre>
+<p class="p">If you have to use one matcher twice, the value for the matcher must be an array.
+Each element of the array has to be an object literal that is used by one
+matcher instance. This is useful when you have to match a control by two or more
+of its properties.</p>
+<p class="p">The following two <samp class="ph codeph">waitFor</samp> statements produce the same set of
+matchers:</p>
+<pre class="pre codeblock prettyprint lang-js">// declaration
+this.waitFor({
+    matchers: {
+        properties: [{
+            text: &quot;hello&quot;
+        }, {
+            number: 0
+        }]
+    }
+});
+
+// instantiation
+this.waitFor({
+    matchers: [
+        new PropertyStrictEquals({
+            name : &quot;text&quot;,
+            value : &quot;foo&quot;
+        }),
+        new PropertyStrictEquals({
+            name : &quot;number&quot;,
+            value : 0
+        })
+    ]
+});</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Ancestors and Descendants</p>
+<p class="p">When declaring an <samp class="ph codeph">sap.ui.test.matchers.Ancestor</samp> or
+<samp class="ph codeph">sap.ui.test.matchers.Descendant</samp>, you have to declare which
+control is ancestor or descendant. With matcher instances, you simply pass the
+control instance that you have already located in a previous
+<samp class="ph codeph">waitFor</samp> statement. Keep in mind that with matcher
+declarations you can&#x2019;t use object instances or functions as values. The solution
+is to use a nested declarative matcher for the ancestor or descendant. It&#x2019;s
+assumed that it will match exactly one control and if it doesn&apos;t, any one of the
+matches is used. This is a special matcher, which supports a superset of
+matchers, such as, <samp class="ph codeph">controlType</samp>, <samp class="ph codeph">ID</samp>, and any
+other JSON-compatible properties available in a typical <samp class="ph codeph">waitFor</samp>
+statement.</p>
+<p class="p">The following two <samp class="ph codeph">waitFor</samp> statements produce the same
+result:</p>
+<pre class="pre codeblock prettyprint lang-js">// declaration
+this.waitFor({
+    controlType: &quot;sap.m.Text&quot;,
+    matchers: {
+        ancestor: {
+            controlType : &quot;sap.m.Bar&quot;,
+            properties: {
+                text: &quot;hello&quot;
+            }
+        }
+    }
+});
+
+// instantiation
+this.waitFor({
+    controlType : &quot;sap.m.Bar&quot;,
+    matchers: new Properties({
+        text: &quot;hello&quot;
+    }),
+    success: function (aAncestors) {
+        var oAncestor = aAncestors[0]; // order not guaranteed
+        return this.waitFor({
+            controlType: &quot;sap.m.Text&quot;,
+            matchers: new Ancestor(oAncestor)
+        });
+    }
+});</pre>
+</div></section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

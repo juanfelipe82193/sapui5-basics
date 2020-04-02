@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Process Flow test suite page</title>
+
+  <!-- UI5 Bootstrap -->
+  <script src="../../../../../resources/sap-ui-core.js"
+            type="text/javascript"
+            id="sap-ui-bootstrap"
+            data-sap-ui-libs="sap.ui.commons, sap.suite.ui.commons"
+            data-sap-ui-theme="sap_belize">
+  </script>
+
+  <script>
+    function nodeClickEvent( event ) {
+
+      var textToDisplay = "";
+      if( event.getParameters().getTitle ) {
+        textToDisplay = "Node clicked: " + event.getParameters().getTitle();
+      } else if( event.getParameters().getId) {
+        textToDisplay = "Node clicked: " + event.getParameters().getId();
+      }
+      jQuery.sap.log.info(textToDisplay);
+      sap.m.MessageToast.show(textToDisplay, {
+        duration: 1000,
+        at: "center center"
+      });
+    }
+
+    function nodeClickHeaderPress(event) {
+        var textToDisplay = "Header clicked: " + event.getParameters().getId();
+        jQuery.sap.log.info(textToDisplay);
+        sap.m.MessageToast.show(textToDisplay, {
+          duration: 1000, at: "center center"
+        });
+      }
+
+    var buttonToogleHighlight = new sap.ui.commons.Button({
+      text : "Toggle highlight path",
+      tooltip : "Switch on/off the highlight",
+      press : function() {highlightPath();}
+    });
+
+    var bHighlighted = true;
+    function highlightPath() {
+      if( this.oProcessFlowMRN2 ) {
+        var nodes = this.oProcessFlowMRN2.getNodes();
+        if( bHighlighted ) {
+          for( var i = 0; i < nodes.length; i++) {
+            nodes[i].setHighlighted(false);
+          }
+        } else {
+          nodes[0].setHighlighted(true);
+          nodes[1].setHighlighted(true);
+          nodes[4].setHighlighted(true);
+          nodes[2].setHighlighted(true);
+          nodes[5].setHighlighted(true);
+          nodes[6].setHighlighted(true);
+        }
+        this.bHighlighted = !this.bHighlighted;
+        this.oProcessFlowMRN2.updateModel();
+    }
+  }
+
+      // multiple root nodes
+      var oDataMRN2 = {nodes:
+        [
+          {id: "1",  lane: "id0",  title: "0Sales Order 120 [0,1]",  children: [10, 11], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, focused: true},
+          {id: "10", lane: "id1" , title: "1Outbound Delivery 80017028 [0,3]", children: [20, 21], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "11", lane: "id1" , title: "2Outbound Delivery 80017558 [2,3]", children: [22], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "20", lane: "id2" , title: "3Customer Invoice 9004562 [0, 5]", children: [33], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "21", lane: "id2" , title: "4Planned Customer Invoice [1,5]", children: null, state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "22", lane: "id2",  title: "5Customer Invoice 7004573 [2,5]", children: [31, 32], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive},
+          {id: "31", lane: "id3" , title: "6Accounting Document 78998790 [2,7]", children: [41, 42], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "32", lane: "id3" , title: "7Accounting Document 78547895 [4,7]", children: [43], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "33", lane: "id3" , title: "8Accounting Document 9004562 [0,7]", children: [44], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "41", lane: "id4" , title: "9Planned Payment Document [3,9]", children: null, state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "42", lane: "id4" , title: "10Payment Document 75978544 [2,9]", children: [51], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "43", lane: "id4" , title: "11Payment Document 65945539 [4,9]", children: [52, 53, 54, 56, 57, 58], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "44", lane: "id4" , title: "12Payment Document 9004562 [0,9]", children: [55], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "51", lane: "id5" , title: "13Acceptance Letter 45784561 [2, 11]", children: null, state: sap.suite.ui.commons.ProcessFlowNodeState.Planned },
+          {id: "52", lane: "id5" , title: "14Acceptance Letter 85745544 [4,11]", children: null, state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "53", lane: "id5" , title: "15Planned Acceptance Letter [5,11]", children: null, state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "54", lane: "id5" , title: "16Acceptance Letter [6,11]", children: null, state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "55", lane: "id5" , title: "17Delivered 9004562 [0,11]", children: [61], state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "56", lane: "id5" , title: "18Acceptance letter  [7,11]", children: null, state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "57", lane: "id5" , title: "19Acceptance letter  [7,11]", children: null, state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "58", lane: "id5" , title: "20Acceptance letter  [7,11]", children: null, state: sap.suite.ui.commons.ProcessFlowNodeState.Positive },
+          {id: "61", lane: "id6" , title: "19Artificial 9004562 [0,13]", children: null, state: sap.suite.ui.commons.ProcessFlowNodeState.Positive }
+        ],
+        // this should be lane as the name to be consistent
+        // laned id is better than position
+        // no big different between parent and/or children. make decision in our team what is more suitable for us
+        lanes:
+          [
+           { id: "id0",
+             iconSrc: "sap-icon://order-status",
+             text: "In Order",
+             position: 0
+           }, // first header element
+           { id: "id1",
+             iconSrc: "sap-icon://order-status",
+             text: "In Delivery",
+             position: 1
+           }, // second header element
+           { id: "id2",
+             iconSrc: "sap-icon://order-status",
+             text: "In Invoice",
+             position: 2
+           },
+           { id: "id3",
+               iconSrc: "sap-icon://order-status",
+               text: "In Accounting",
+               position: 3
+           },
+           { id: "id4",
+             iconSrc: "sap-icon://order-status",
+             text: "In Payment",
+             position: 4
+         },
+         { id: "id5",
+           iconSrc: "sap-icon://order-status",
+           text: "Delivered",
+           position: 5
+         },
+         { id: "id6",
+           iconSrc: "sap-icon://order-status",
+           text: "Artificial",
+           position: 6
+         }
+        ] // end of lane array
+      };
+
+     var oJModelMRN2 = new sap.ui.model.json.JSONModel(oDataMRN2);
+     var oProcessFlowMRN2 = new sap.suite.ui.commons.ProcessFlow("pMRN2", {
+       foldedCorners: true,
+          nodes: {
+              path: "/nodes",
+              template: new sap.suite.ui.commons.ProcessFlowNode({
+                nodeId: "{id}",
+                laneId: "{lane}",
+                title: "{title}",
+                children: "{children}",
+                //iconSrc: "sap-icon://warning2",
+                state: "{state}",
+                titleAbbreviation: "abbr",
+                highlighted: "{highlighted}",
+                focused: "{focused}",
+                stateText: "{state}",
+                tag: {tagCheck: "tagCheck"},
+                texts: ["text number 1 runs over two lines","text number 2 runs over two lines, but no more than two"]
+                   })
+          }, // end of node
+        lanes : {
+           path: "/lanes",
+           template: new sap.suite.ui.commons.ProcessFlowLaneHeader({
+           laneId : "{id}",
+           iconSrc: "{iconSrc}",
+           text: "{text}",
+           state: "{state}",
+           position: "{position}"
+       })
+      }, // end of lane
+      scrollable: true,
+      wheelZoomable: false
+      });
+
+      oProcessFlowMRN2.setModel(oJModelMRN2);
+      buttonToogleHighlight.placeAt("togglepathbutton");
+
+      oProcessFlowMRN2.attachNodePress( function(oEvent) {
+        nodeClickEvent(oEvent);
+      });
+
+
+      oProcessFlowMRN2.placeAt("processFlowDivMultipleRootNodes2");
+      sap.ui.getCore().applyChanges();
+
+
+//the second example for testing of keyboard support for lanes-only mode
+  var oDataLanesWithClick = {
+    lanes: [{
+      id: "id1", iconSrc: "sap-icon://order-status", text: "In Delivery", state: [{
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, value: 70
+      }, {
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Negative, value: 30
+      }, {
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Neutral, value: 0
+      }, {
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Planned, value: 0
+      }], position: 1
+    }, // first lane element
+    {
+      id: "id0", iconSrc: "sap-icon://order-status", text: "In Order", state: [{
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, value: 20
+      }, {
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Negative, value: 30
+      }, {
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Neutral, value: 30
+      }, {
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Planned, value: 20
+      }], position: 0
+    }, // second lane element
+    {
+      id: "id3", iconSrc: "sap-icon://order-status", text: "In Payment", state: [{
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, value: 20
+      }, {
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Negative, value: 30
+      }, {
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Neutral, value: 30
+      }, {
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Planned, value: 20
+      }], position: 3
+    }, // fourth lane element
+    {
+      id: "id2", iconSrc: "sap-icon://order-status", text: "In Invoice", state: [{
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Positive, value: 40
+      }, {
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Negative, value: 30
+      }, {
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Neutral, value: 30
+      }, {
+        state: sap.suite.ui.commons.ProcessFlowNodeState.Planned, value: 10
+      }], position: 2
+    } // third lane element
+    ]
+  // end of lane array
+  }; // end of data for control
+
+  var oJModelLanesWithClick = new sap.ui.model.json.JSONModel(oDataLanesWithClick);
+  var oProcessFlowLanesWithClick = new sap.suite.ui.commons.ProcessFlow("pLanesWithClick", {
+    foldedCorners: true,
+    nodes: {
+      path: "/nodes",
+      template: new sap.suite.ui.commons.ProcessFlowNode({
+        nodeId: "{id}", laneId: "{laneId}", title: "{title}", children: "{children}",
+        /*iconSrc: "sap-icon://warning2",*/ state: "{state}", titleAbbreviation: "{titleabbr}", stateText: "{state}", tag: {
+          tagCheck: "tagCheck"
+        }, texts: "{texts}"
+      })
+    }, // end of node
+    lanes: {
+      path: "/lanes", template: new sap.suite.ui.commons.ProcessFlowLaneHeader({
+        laneId: "{id}", iconSrc: "{iconSrc}", text: "{text}", state: "{state}", position: "{position}", press: onDonutClicked
+      })
+    }, // end of lane
+    scrollable: false,
+    wheelZoomable: true
+  });
+
+  oProcessFlowLanesWithClick.setModel(oJModelLanesWithClick);
+ 
+  //to test how PF reacts to click events from PFLaneHeader
+  function onDonutClicked(event) {
+    var sClickedLane = event.getSource().getLaneId();
+  }
+  
+
+  
+  oProcessFlowLanesWithClick.attachHeaderPress(function(oEvent) {
+    nodeClickHeaderPress(oEvent);
+    oDataLanesWithClick = {
+      nodes: [
+          {
+            id: "1", laneId: "id0", title: "Sales Order 150", children: [10, 11, 12],
+            state: sap.suite.ui.commons.ProcessFlowNodeState.Positive,
+            texts: ["text 1 runs over two rows but no  more than two", ""]
+          },
+          {
+            id: "10", laneId: "id3", title: "Accounting Document 78998790 with BBBB and AAAA and CCC and DDDD and EEEE",
+            children: null, state: sap.suite.ui.commons.ProcessFlowNodeState.Negative,
+            texts: ["text 2 runs over two rows but only two and no more", ""]
+          },
+          {
+            id: "11", laneId: "id2", title: "Customer Invoice 9004562", children: null,
+            state: sap.suite.ui.commons.ProcessFlowNodeState.Neutral,
+            texts: ["text 1 runs over two rows", "text 2 runs over two rows"]
+          },
+          {
+            id: "12", laneId: "id1", title: "Outbound Delivery 80017028", children: [5],
+            state: sap.suite.ui.commons.ProcessFlowNodeState.Planned,
+            texts: ["text 1 runs over two rows ", "text 2 runs over two rows"]
+          },
+          {
+            id: "5", laneId: "id2", title: "Customer Invoice 2004562", children: null,
+            state: sap.suite.ui.commons.ProcessFlowNodeState.Positive,
+            texts: ["text 1 runs over two rows", "text 2 runs over two rows"]
+          }, ],
+      lanes: [{
+        id: "id0", iconSrc: "sap-icon://order-status", text: "In Delivery", position: 0
+      }, // first lane element
+      {
+        id: "id1", iconSrc: "sap-icon://order-status", text: "In Order", position: 1
+      }, // first lane element
+      {
+        id: "id2", iconSrc: "sap-icon://order-status", text: "In Payment", position: 2
+      }, // fourth lane element
+      {
+        id: "id3", iconSrc: "sap-icon://order-status", text: "In Invoice", position: 3
+      } // third lane element
+      ]
+    // end of lane array
+    }; // end of data for control
+    oJModelLanesWithClick = new sap.ui.model.json.JSONModel(oDataLanesWithClick);
+    oProcessFlowLanesWithClick.setModel(oJModelLanesWithClick);
+    oProcessFlowLanesWithClick.rerender();
+  });
+
+  oProcessFlowLanesWithClick.placeAt("processFlowDivLanesOnly");
+  sap.ui.getCore().applyChanges();
+
+
+
+
+   </script>
+
+
+   <style>
+     .processFlowCommonDemo {
+       margin-top: 20px;
+       margin-bottom: 20px;
+     }
+     .processFlowNode1 {
+       position: relative;
+       display: block;
+       width: 50%;
+       height: 80%;
+     }
+     .demoPFScrollContainer {
+       width: 1000px;
+       min-width: 1000px;
+       max-width:1000px;
+       height: 800px;
+       min-height:800px;
+       max-height: 800px;
+       border: 16px solid #dddddd;
+       margin-top: 20px;
+       margin-bottom: 20px;
+     }
+   </style>
+</head>
+
+<body class="sapUiBody" style="display: block; position: relative; height: 100%;">
+<div id="togglepathbutton" class="processFlowCommonDemo"></div>
+<input type=text>
+<div id="processFlowDivMultipleRootNodes2" class="processFlowCommonDemo demoPFScrollContainer"></div>
+<input type=text>
+<div id="processFlowDivLanesOnly" class="processFlowCommonDemo demoPFScrollContainer"></div>
+<input type=text>
+</body>
+</html>

@@ -1,0 +1,805 @@
+<!DOCTYPE HTML >
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<script src="../../../../resources/sap-ui-core.js" id="Script1"
+	data-sap-ui-libs="sap.ui.vbm, sap.suite.ui.microchart" data-sap-ui-theme="sap_bluecrystal"
+	data-sap-ui-xx-bindingSyntax="complex">	
+</script>
+
+<script async="async" src="../../../../resources/sap/ui/documentation/sdk/thirdparty/google-code-prettify/run_prettify.js"></script>
+<link href="../../../../resources/sap/ui/documentation/sdk/thirdparty/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<link href="style/bestpractices.css" type="text/css" rel="stylesheet" />
+
+<title>Visual Business Best Practices</title>
+</head>
+
+<script>
+	// delegate selector parameters to links.................................//
+	function modifylinks() {
+		if (document.location.search) {
+			var refs = document.querySelectorAll("a");
+			for (var nJ = 0; nJ < refs.length; ++nJ)
+				refs[nJ].href += document.location.search;
+		}
+	}
+</script>
+<body onload="modifylinks()" id="start" >
+
+	<!-- Fixed navbar -->
+	<div class="heroheader">
+		<h2>Getting Started</h2>
+		</div>
+	<div class="container">
+	
+	
+		<h3>One-Step GeoMap Example</h3>
+		<div class="row">
+			<div class="col12">
+				<p>Using a GeoMap inside your application is very straightforward; you just have to instantiate the sap.ui.vbm.GeoMap Control. It is also available in declarative style of Views.
+Without any further settings, the Visual Business GeoMap control comes up with the predefined default size of 800x600 pixels with map data from MapQuest.</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col6">
+				<h4>JS Views</h4>
+				<pre class="prettyprint lang-js">
+var oVBI = new sap.ui.vbm.GeoMap();
+    </pre>
+<h4>XML View</h4>
+				<pre class="prettyprint lang-xml">
+&lt;View xmlns="sap.ui.core.mvc" xmlns:vbm="sap.ui.vbm"&gt;	
+   &lt;vbm:GeoMap /&gt;
+&lt;/View&gt;
+    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder1">
+				<script defer="defer">
+					var oVBI = new sap.ui.vbm.GeoMap();
+					oVBI.placeAt("geomapplaceholder1");
+				</script>
+			</div>		
+		</div>
+		<div class="row">
+			<div class="col12">
+				<p>For different control sizes, you can use the properties <i>width</i> and <i>height</i>. You can provide absolute sizes in pixels or relative 
+		sizes in percent. In the later case it is important to size the parent elements properly otherwise the map has the size 0x0!
+				</p>	
+			</div>
+		</div>
+				
+		<h3>Visual Objects</h3>
+		<div class="row">
+			<div class="col12">
+				<p>To add visual content to your Map, Visual Business provides the abstraction of Visual Objects. These could be thought of as symbols 
+				representing a datapoint in your model. Several simple Visual Objects are currently available.
+				<ul class="vos">
+				<li><img src="media/images/spot.svg">Spot</li>
+					<li><img src="media/images/area.svg">Area</li>
+					<li><img src="media/images/route.svg">Route</li>
+					<li><img src="media/images/geocircle.svg">GeoCircle/Circle</li>
+					<li><img src="media/images/container.svg">UI5 Control Container</li>
+				</ul>These are usually only defined by properties such as their color, size and their respective geospatial coordinates. There are also more complex Visual Objects available. A Spot for example can include a picture that should be rendered. A Container needs a UI5 Control that is supposed to be rendered instead.</p>
+			</div>
+		</div>
+		<h3>Show a Location using a Semantic Spot</h3>
+		
+		<div class="row">
+			<div class="col6">
+			<p>The most common VO for highlighting a position is a Spot. In the simplest form you just need to provide the geo position in the format 
+			<i>lon;lat;0</i>. The Spot is based on a image. There are some pre-defined Spot images delivered with the control. They can be addressed with the Spot property <i>type</i>.
+			Possible types are defined by enumeration <b>sap.ui.vbm.SemanticType</b> and the default type (<i>Default</i>) selects a blue pin with a neutral status icon.  
+		</p>
+		<h4>Here is the code for JavaScript Views in UI5:</h4>
+				<pre class="prettyprint lang-js">
+var oVBI = new sap.ui.vbm.GeoMap({
+   vos : [ new sap.ui.vbm.Spots({	
+      items : [ new sap.ui.vbm.Spot({ position : "20;0;0" }) ]
+   }) ]
+});
+    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder2_1">
+				<script defer="defer">
+					var oVBI = new sap.ui.vbm.GeoMap({
+						vos : [ new sap.ui.vbm.Spots( {
+							items : [ new sap.ui.vbm.Spot({ position : "20;0;0" }) ]
+						}) ]
+					});
+					oVBI.placeAt("geomapplaceholder2_1");
+				</script>
+			</div>
+
+		</div>
+		<div class="row">
+			<div class="col6">
+		<p>By providing the <i>type</i> property you can change the look of the Spots in a pre-defined way. The Spots vary in color and size for each of the semantic types. Additionally, the status icon changes accordingly. 
+		</p>
+			<h4>Here is the code for JavaScript Views in UI5:</h4>
+				<pre class="prettyprint lang-js">
+var oVBI = new sap.ui.vbm.GeoMap({
+   vos : [ new sap.ui.vbm.Spots({	
+      items : [ new sap.ui.vbm.Spot({ type : "Error", 
+                                      position : "-20;0;0" }),
+                new sap.ui.vbm.Spot({ type : "Success", 
+                                      position : "20;0;0" }) 
+              ]
+   }) ]
+});
+    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder2_2">
+				<script defer="defer">
+					var oVBI = new sap.ui.vbm.GeoMap({
+						vos : [ new sap.ui.vbm.Spots( {
+							items : [ new sap.ui.vbm.Spot({ type : "Error", position : "-20;0;0" }),
+							          new sap.ui.vbm.Spot({ type : "Success", position : "20;0;0" }) ]
+						}) ]
+					});
+					oVBI.placeAt("geomapplaceholder2_2");
+				</script>
+			</div>
+
+		</div>
+		<div class="row">
+			<div class="col6">
+		<p>The Spot also supports a <i>text</i> property. The default visualization is suitabled for numbers with up to 5 digits given as text. 
+		If this is not sufficient, you may shorten the numbers, for example 1.000.000 = 1M. 
+		</p><h4>Here is the code for JavaScript Views in UI5:</h4>
+				<pre class="prettyprint lang-js">
+var oVBI = new sap.ui.vbm.GeoMap({
+   vos : [ new sap.ui.vbm.Spots({	
+      items : [ new sap.ui.vbm.Spot({ type : "Error", 
+                                      text : "5", 
+                                      position : "-20;0;0" }),
+                new sap.ui.vbm.Spot({ type : "Success",
+                                      text : "32678", 
+                                      position : "20;0;0" }) 
+              ]
+   }) ]
+});
+    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder2_3">
+				<script defer="defer">
+					var oVBI = new sap.ui.vbm.GeoMap({
+						vos : [ new sap.ui.vbm.Spots( {
+							items : [ new sap.ui.vbm.Spot({ type : "Error", text:"5", position : "-20;0;0" }),
+							          new sap.ui.vbm.Spot({ type : "Success", text:"32678", position : "20;0;0" }) ]
+						}) ]
+					});
+					oVBI.placeAt("geomapplaceholder2_3");
+				</script>
+			</div>
+
+		</div>				
+		
+		<h3>Route and Area Visual Objects</h3>
+		
+		<div class="row">
+			<div class="col6">
+			<p>Route and Area objects are considered more complex objects. In this section, we demonstrate how to create them. 
+			<br />The format for the <b>Route</b> geo coordinates is: <br /><br /> 
+			<b>position: 'lon(0);lat(0);z(0);lon(1);lat(1);z(1);...lon(n);lat(n);z(n)'</b><br /><br /> 
+			where <b>lon(n)</b> is <b>Longitude</b> and <b>lat(n)</b> is <b>Latitude</b>. <b>z(n)</b> is the <b>height</b> coordinate, which currently should be set to 0.
+			The arrows of the Route show the direction of it, and are given with the <b>start</b> and <b>end</b> parameters, with values <b>0 (disable)</b> or <b>1 (enable)</b>.
+			So, when the start has 0 and the end 1, the start of the Route will not have an arrow; only the end will, thus showing the direction of the route.<br />
+			The format for the <b>Area</b> geo coordinates is the same as for the Route, the only difference being that the first and the last coordinate are connected to form a closed and filled Area.
+			<br /><br />
+			<b>Notes: </b><br />
+			 - The <b>color</b> parameter defines the fill color of the objects.<br />
+			 - The <b>tooltip</b> is used in the following code just to have some action and information while hovering over the objects.  
+			</p>
+		<h4>Here is the code for JavaScript Views in UI5:</h4>
+		<pre class="prettyprint lang-js">
+var oVBI = new sap.ui.vbm.GeoMap({
+   vos : [ 
+      new sap.ui.vbm.Routes({ 
+         items : [ 
+            new sap.ui.vbm.Route({ 
+               position: '-10;30;0;30;-20;0;40;10;0', 
+               start: "0", 
+               end: "1",
+               color: 'rgb(92, 186, 230)', 
+               tooltip: 'This is a Route' 
+            })
+	   ]}),
+      new sap.ui.vbm.Areas({ 
+         items : [ 
+            new sap.ui.vbm.Area({ 
+               position: '-65;10;0;-55;-30;0;-40;-10;0',
+               color: 'rgba(217, 152, 203, 0.7)',
+               tooltip: 'This is an Area'
+		   })
+     ]})
+   ]
+});
+	    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder2_4">
+				<script defer="defer">
+					var oVBI = new sap.ui.vbm.GeoMap({
+						vos : [ 
+						        new sap.ui.vbm.Routes({ 
+									items : [ 
+										new sap.ui.vbm.Route({ 
+											position: '-10;30;0;30;-20;0;40;10;0', 
+											start: "0", 
+											end: "1", 
+											color: 'rgb(92, 186, 230)',
+											tooltip: 'This is a Route'
+										})
+									]
+						        }),
+						        new sap.ui.vbm.Areas({ 
+									items : [ 
+										new sap.ui.vbm.Area({ 
+											position: '-65;10;0;-55;-30;0;-40;-10;0', 
+											color: 'rgba(217, 152, 203, 0.7)',
+											tooltip: 'This is an Area'
+										})
+									]
+								})
+						]
+					});
+					oVBI.placeAt("geomapplaceholder2_4");
+				</script>
+			</div>
+
+		</div>
+		
+		<h3>Container Objects</h3>
+		
+		<div class="row">
+			<div class="col6">
+			<p>Container objects allow to place arbitrary SAPUI5 controls on top of the map at a given geo-position. The default alignment for the container is centered at the given position. 
+			Other aligments are also supported. The container itself is fully transparent. In case you need a colored background you may add a style class with your own CSS to the hosted control with the addStyleClass() function.  
+			</p>
+		<h4>Here is the code for JavaScript Views in UI5:</h4>
+		<pre class="prettyprint lang-js">
+var oVBI = new sap.ui.vbm.GeoMap({
+   vos : [ 
+      new sap.ui.vbm.Containers({ 
+         items : [ 
+            new sap.ui.vbm.Container({ 
+               position: '15;15;0', 
+               item:
+      //Container content          
+      new sap.suite.ui.microchart.HarveyBallMicroChart({
+         size: "S",
+         total: 100,
+         totalScale:"Mrd",
+         showTotal: false,
+         items: [ 
+         new sap.suite.ui.microchart.HarveyBallMicroChartItem({
+            fraction: 63,
+            fractionScale: "Mrd",
+            color: "Good"
+         })]
+      })
+      //End content   
+            })
+         ]})
+   ]
+});
+	    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder2_5">
+				<script defer="defer">
+				var oVBI = new sap.ui.vbm.GeoMap({
+					   vos : [ 
+					      new sap.ui.vbm.Containers({ 
+					         items : [ 
+					            new sap.ui.vbm.Container({ 
+					               position: '15;15;0', 
+					               item: new sap.suite.ui.microchart.HarveyBallMicroChart({
+					               	size: "S",
+					               	total: 100,
+					               	totalScale:"Mrd",
+					               	showTotal: false,
+					               	items: [ 
+					               		new sap.suite.ui.microchart.HarveyBallMicroChartItem({
+					               			fraction: 63,
+					               			fractionScale: "Mrd",
+					               			color: "Good"
+					               		})	
+					               	]
+					               })
+					            })
+						   ]})
+					   ]
+					});
+				oVBI.placeAt("geomapplaceholder2_5");
+				</script>
+			</div>
+
+		</div>		
+		
+		<h3>Resource Handling for Visual Objects</h3>
+		<div class="row">
+			<div class="col6">
+		<p>In addition to the semantically-typed Spot with a built-in visualization, you can use any image for a Spot. The image needs to be loaded as a 
+		resource and can be referenced by Spots. Since the Spot was built for images like pins, the image is, by default, aligned in a way that the 
+		bottom center of the image is at the given geo position. For other images, a center alignment might be more appropriate. </p>
+		<h4>Here is the code for JavaScript Views in UI5:</h4>
+				<pre class="prettyprint lang-js">
+var oVBI = new sap.ui.vbm.GeoMap({
+   resources     : [
+      new sap.ui.vbm.Resource({ "name" : "SAP_logo",
+                                "src"  : "images/SAP_logo.png"}) 
+   ],
+   vos : [ new sap.ui.vbm.Spots({
+      items : [ new sap.ui.vbm.Spot({ position : "20;0;0",
+                                      tooltip  : 'SAP',
+                                      image    : "SAP_logo",
+                                      scale    : "0.2;0.2;0.2",
+                                      alignment: "0"}) 
+      ]
+   })]
+});
+    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder3">
+				<script defer="defer">
+					var oVBI = new sap.ui.vbm.GeoMap({
+						resources : [new sap.ui.vbm.Resource({"name" : "SAP_logo", "src" : "media/images/SAP_logo.png" }) 
+					   ],
+						vos : [ new sap.ui.vbm.Spots({
+							items : [ new sap.ui.vbm.Spot({position : "20;0;0", tooltip : 'SAP', image : "SAP_logo",alignment: "0"}) 
+						   ]
+						}) ]
+					});
+					oVBI.placeAt("geomapplaceholder3");
+				</script>
+			</div>
+
+		</div>
+		
+		<h3>Setting a particular view on the map</h3>
+		<div class="row">
+			<div class="col6">
+		<p>The map control provides the properties <b>centerPosition</b> add <b>zoomlevel</b>. They can be used to set the focus on particular region.<br> 
+		It is also possible to set the map view programatically later on using those properties. Further the control provides function <b>zoomToGeoPosition()</b>, which takes one or more positions to be centered and the desired zoomlevel. </p>
+		<h4>Here is the code for JavaScript Views in UI5:</h4>
+				<pre class="prettyprint lang-js">
+var oVBI = new sap.ui.vbm.GeoMap({
+	centerPosition: "-122.81;49.14",
+	zoomlevel: 9
+});
+    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder3_2">
+				<script>
+				var oVBI = new sap.ui.vbm.GeoMap({
+					centerPosition: "-122.81;49.14",
+					zoomlevel: 9
+				});
+					oVBI.placeAt("geomapplaceholder3_2");
+				</script>
+			</div>
+
+		</div>		
+
+		<h3>Open a Context Menu on a Visual Object</h3>
+		
+		<div class="row">
+			<div class="col6">
+			<p>To enable interaction with the Spots you create, the GeoMap control enables the registration of event handlers automatically. For the purpose of a right-click on the 
+			element or a long press on touch devices, it will fire a contextMenu event. The object firing the event is the context of the event handler; this gives you direct access 
+			to all its data. In the event parameters, you'll find a ready-made instance of sap.ui.unifier.Menu for adding your menu items.</p>
+		<h4>Here is the code for JavaScript Views in UI5:</h4>
+				<pre class="prettyprint lang-js">
+var oVBI = new sap.ui.vbm.GeoMap({
+   vos: [ new sap.ui.vbm.Spots({
+      items: [
+         new sap.ui.vbm.Spot("DemoSpot", {
+            position: "20;0;0",
+            contextMenu: function(oEvent) {
+               var activeSpot = this.getId();
+               var oMenu = oEvent.mParameters.menu;
+               oMenu.addItem(new sap.ui.unified.MenuItem({
+                  text: "Context menu for " + activeSpot
+               }));
+               this.openContextMenu(oMenu);
+            }
+         })
+      ]
+   })]
+});
+    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder4">
+				<script defer="defer">
+				var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+					vos: [
+						new sap.ui.vbm.Spots({
+							items: [
+								new sap.ui.vbm.Spot("DemoSpot", {
+									position: "20;0;0",
+									contextMenu: function(oEvent) {
+										var activeSpot = this.getId();
+										var oMenu = oEvent.mParameters.menu;
+										oMenu.addItem(new sap.ui.unified.MenuItem({
+											text: "Context menu for " + activeSpot
+										}));
+										this.openContextMenu(oMenu);
+									}
+								})
+							]
+						})
+					]
+				});
+				oVBI.placeAt("geomapplaceholder4");
+				</script>
+			</div>
+
+		</div>
+		
+		<h3>Click Event</h3>
+		
+		<div class="row">
+			<div class="col6">
+			<p>Here, we use Spot VOs to demonstrate a Click event. When you left-click (tap) a spot, an alert shows the appropriate Spot ID. 
+			Again, the context of the event handler is the object firing the event. Thus, we can directly access the object data, e.g. its text property as in the sample.
+			</p>
+		<h4>Here is the code for JavaScript Views in UI5:</h4>
+		<pre class="prettyprint lang-js">
+function onClick( oEvent ) {
+   alert( "onClick " + this.getText() );
+};
+var oVBI = new sap.ui.vbm.GeoMap({
+   vos : [ new sap.ui.vbm.Spots( {
+      items : [ 
+         new sap.ui.vbm.Spot( { type : "Error", 
+                                text : "1", 
+                                position : "20;0;0",
+                                click: onClick }),
+         new sap.ui.vbm.Spot( { text: "2",
+                                position : "20;20;0",
+                                click: onClick })
+      ]
+   })]
+});
+	    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder5">
+				<script defer="defer">
+					function onClick( e ) {
+						alert( "onClick " + this.getText() );
+					};
+				
+					var oVBI = new sap.ui.vbm.GeoMap({
+						vos : [ new sap.ui.vbm.Spots( {
+							items : [ 
+								new sap.ui.vbm.Spot( { 
+									type : "Error", 
+                           text : "1", 
+									position : "20;0;0",
+									click: onClick
+								}),
+								new sap.ui.vbm.Spot( {
+									type : "Default",
+									text: "2",
+									position : "20;20;0",
+									click: onClick
+								})
+							]
+						}) ]
+					});
+					oVBI.placeAt("geomapplaceholder5");
+				</script>
+			</div>
+
+		</div>
+		
+
+
+		<h3>CenterChanged Event</h3>
+		
+		<div class="row">
+			<div class="col6">
+			<p>CenterChanged is an event which is fired when we move the map using left-click and drag (or tap and drag). 
+			In addition to the centerpoint coordinates, the event also provides the current <b>zoomlevel</b> and the bounding box for the visible map part <b>viewportBB</b>. <br>
+			All this information allows applications to keep track of the current display and may be used to load data on demand to limit the number of objects on the map to the visible ones.<br>
+			The example updates the <b>centerPoint</b> display shown below the map while we move the map around.
+			</p>
+		<h4>Here is the code for JavaScript Views in UI5:</h4>
+		<pre class="prettyprint lang-js">
+function onCenterChanged( oEvent ) {
+   var aCp = oEvent.getParameter( "centerPoint" ).split(";");
+   centerDisplay.innerText = "centerPoint X: " + 
+      Number(aCp[0]).toFixed(3) + ", Y: " + 
+      Number(aCp[1]).toFixed(3);
+};
+var oVBI = new sap.ui.vbm.GeoMap({
+   centerChanged: onCenterChanged
+});
+	    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder6">
+				<script defer="defer">
+					function onCenterChanged( e ) {
+						var aCp = e.getParameter( "centerPoint" ).split(";");
+						centerDisplay.innerText = "centerPoint X: " + 
+												Number(aCp[0]).toFixed(3) + ", Y: " + 
+												Number(aCp[1]).toFixed(3);
+					};
+				
+					var oVBI = new sap.ui.vbm.GeoMap({
+						centerChanged: onCenterChanged
+					});
+					oVBI.placeAt("geomapplaceholder6");
+				</script>
+			</div>
+
+			<div class="col6" id="geomapplaceholder6">
+			<pre><textview id="centerDisplay" wrapping=true>Move the map to show values here</textview></pre>
+			</div>
+
+		</div>
+
+		<h3>ZoomChanged Event</h3>
+		
+		<div class="row">
+			<div class="col6">
+			<p>ZoomChanged is an event which is fired when we zoom the map using the mouse wheel, pinch gesture, navigation control, or keyboard +/-.
+			Besides the <b>zoomLevel</b>, the event also provides the new <b>centerPoint</b> and the bounding box for the visible map part <b>viewportBB</b>. <br>
+			All this information allows applications to keep track of the current display and may be used to load data on demand. Thus, it is possible to refine data points on higher zoomlevels and even to change to visualization, e.g. from areas to single points.<br>
+			This example updates the zoomLevel display shown below the map while we zoom the map.
+			</p>
+		<h4>Here is the code for JavaScript Views in UI5:</h4>
+		<pre class="prettyprint lang-js">
+function onZoomChanged( oEvent ) {
+	var level = oEvent.getParameter( "zoomLevel" );
+	zoomDisplay.innerText = "zoomLevel: " + level; 
+};
+var oVBI = new sap.ui.vbm.GeoMap({
+   zoomChanged: onZoomChanged
+});
+	    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder7">
+				<script defer="defer">
+					function onZoomChanged( e ) {
+						var zl = e.getParameter( "zoomLevel" );
+						zoomDisplay.innerText = "zoomLevel: " + zl; 
+					};
+	
+					var oVBI = new sap.ui.vbm.GeoMap({
+						zoomChanged: onZoomChanged
+					});
+					oVBI.placeAt("geomapplaceholder7");
+				</script>
+			</div>
+
+			<div class="col6" id="geomapplaceholder7">
+			<pre><textview id="zoomDisplay" wrapping=true>Zoom the map to show values here</textview></pre>
+			</div>
+
+		</div>
+
+		<h3>Select / Deselect Events</h3>
+		<div class="row">
+			<div class="col12">
+				<p>When we want to control the selection of objects, we can use the select and deselect events on the VO aggregation. The events are always fired in the sequence deselect - select. Each event provides the list of affected VOs as event parameter.<br>
+		For each VO aggregation you can set properties <b>minSel</b> and <b>maxSel</b> to define the selection cardinality 
+		to control how objects can be selected.
+		Property <b>minSel</b> can be <b>0</b> (can be deselected) or <b>1</b> (cannot be deselected). Property <b>maxSel</b> can be <b>0</b> (no selection allowed at all), <b>1</b> (only one can be selected) and <b>n</b> (all can be selected).<br>
+		Left-clicking (tapping) selects an object. Holding down <b>Ctrl</b>-key while clicking toggles the selection. Pressing <b>Shift</b>-key while clicking adds the object to the selection (if possible by the defined selection params).
+		Left-clicking on an object that's not selected first deselects all other selected objects in the group, and then selects the object itself. For selecting/deselecting multiple VOs at once you can switch to the rectangular selection mode by pressing key <b>r</b>.
+		<br /><b>Note:</b> When maxSel is 0, minSel must be 0 as well!
+				</p>
+			</div>
+			<div class="col6">
+		<h4>Here is the code for JavaScript Views in UI5:</h4>
+		<pre class="prettyprint lang-js">
+function onSelect( oEvent ) {
+   alert( oEvent.getParameter("selected").length + 
+                                  " VOs selected" );
+};
+function onDeselect( oEvent ) {
+   alert( oEvent.getParameter("deselected").length + 
+                                  " VOs deselected" );
+};
+var oVBI = new sap.ui.vbm.GeoMap({
+   vos : [ new sap.ui.vbm.Spots( {
+      minSel: "0",	
+      maxSel: "n",	
+      select: onSelect,
+      deselect: onDeselect,
+      items: [ 
+         new sap.ui.vbm.Spot( { 
+            type : "Error", 
+            text : "123", 
+            position : "20;0;0",
+            selectColor: 'RHLSA(0;1.0;1.5;1.0)' }),
+         new sap.ui.vbm.Spot( { 
+            type : "Warning", 
+            position : "20;20;0",
+            selectColor: 'RHLSA(0;1.0;1.5;1.0)' })
+      ]
+   })]
+});
+	    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder8">
+				<script defer="defer">
+					function onSelect( e ) {
+						alert( e.getParameter("selected").length + " VOs selected" );
+					};
+					function onDeselect( e ) {
+						alert( e.getParameter("deselected").length + " VOs deselected" );
+					};
+	
+					var oVBI = new sap.ui.vbm.GeoMap({
+						vos : [ new sap.ui.vbm.Spots( {
+							minSel: "0",	
+					   		maxSel: "n",	
+							select:onSelect,
+							deselect:onDeselect,
+							items : [ 
+								new sap.ui.vbm.Spot( { 
+									type : "Warning", 
+									text : "123", 
+									position : "20;0;0",
+									selectColor: 'RHLSA(0;1.0;1.5;1.0)' 
+								}),
+								new sap.ui.vbm.Spot( { 
+									type : "Warning", 
+									position : "20;20;0",
+									selectColor: 'RHLSA(0;1.0;1.5;1.0)' 
+								})
+							]
+						}) ]
+					});
+					oVBI.placeAt("geomapplaceholder8");
+				</script>
+			</div>
+
+		</div>
+		
+		<h3>Detail Windows</h3>
+		
+		<div class="row">
+			<div class="col12">
+			<p>Detail windows can be used to show more information and allow extended interaction with a VO. 
+			On the click event we call the <b>openDetailWindow</b> function with a <b>caption</b> parameter to trigger the opening. Before the window is actually opened, the GeoMap control fires 
+			the <b>openWindow</b> event in which we implement the content and logic for our detail window. We suggest that you register the <b>openWindow</b> event just once and on demand and to give the VO as context by passing it as a listener.
+			Finally, you may consider destroying the content on event <b>closeWindow</b> to avoid memory leaks. However, by adding optional parameter <b>only</b> when calling placeAt, this may not be necessary.
+			<br />
+			Since the dialog window layout uses UI5 controls, please have a look at the appropriate UI5 control tutorials for an explanation on how each is used. 
+			This is just an example to show how to open a dialog window on a Visual Business control. 
+			<br />
+			<b>Note: openDetailWindow</b> function with just a caption parameter, opens a detail window at the VO anchor coordinate (or at the point of click for some objects such as the GeoCircle). 
+			If a different position is required, the format is <b>openDetailWindow( caption, x, y )</b> where the x and y coordinates are offsets from the VO anchor point. 
+			</p>
+			</div>
+			<div class="col6">
+		<h4>Here is the code for JavaScript Views in UI5:</h4>
+		<pre class="prettyprint lang-js">
+function onClick( oEvent ) {
+   this.openDetailWindow(this.getType() + " spot details");
+   //register openWindow event with the VO as context
+   var oMap = this.getParent().getParent(); 
+   oMap.attachEventOnce("openWindow", onOpenDetail, this);
+};
+var oForm = null;
+function onOpenDetail( oEvent ) {
+   //create some window content
+   if (!oForm) {
+      oForm = new sap.ui.layout.form.SimpleForm({
+         maxContainerCols: 1,
+         width: "200px",
+         labelMinWidth: 50,
+         content: [
+            new sap.m.Label({
+               text:"Position"
+            }),
+            new sap.m.Text({
+               text:this.getPosition()
+            })
+         ]
+      });
+   }
+   //place the window content
+   oForm.placeAt(oEvent.getParameter("contentarea").id,'only');
+};
+var oVBI = new sap.ui.vbm.GeoMap({
+   vos : [ new sap.ui.vbm.Spots({
+      items : [ new sap.ui.vbm.Spot( {
+         type : "Error", 
+         text : "123", 
+         position : "-30;0;0",
+         click: onClick
+      })]
+   })]
+});
+	    </pre>
+			</div>
+			<div class="col6" id="geomapplaceholder9">
+				<script defer="defer">
+					function onClick( oEvent ) {
+						this.openDetailWindow(this.getType() + " spot details");
+						this.getParent().getParent().attachEventOnce("openWindow", onOpenDetail, this);
+					};
+
+					var oForm = null;
+					function onOpenDetail( oEvent ) {
+						if (!oForm) {
+								sap.ui.getCore().loadLibrary("sap.ui.layout");
+								sap.ui.getCore().loadLibrary("sap.m");
+							   oForm = new sap.ui.layout.form.SimpleForm({
+								      maxContainerCols: 1,
+									   width: "200px",
+									   labelMinWidth: 50,
+									   content: [
+											new sap.m.Label({
+												text:"Position"
+											}),
+											new sap.m.Text({
+												text:this.getPosition()
+											})
+									   ]
+							   });
+						}
+					 	oForm.placeAt(oEvent.getParameter("contentarea").id);
+					};
+					var oVBI = new sap.ui.vbm.GeoMap({
+						vos : [ new sap.ui.vbm.Spots({
+							items : [ new sap.ui.vbm.Spot( {
+								   type : "Error", 
+									text : "123", 
+									position : "-30;0;0",
+									click: onClick
+								})
+							]
+						}) ]
+					});
+					oVBI.placeAt("geomapplaceholder9", 'only');
+				</script>
+			</div>
+
+		</div>				
+
+<!-- 		<h2 id="apps">Application samples</h2> -->
+
+	</div>
+	<!-- /container -->		
+
+	<nav class="headerbar">
+		<div class="navbrand">
+		<a href="home.html"><img src="media/images/SAP_logo.png">
+			<span>Visual Business</span></a>
+		</div>
+		<ul class="navwhite">
+					<li><a href="#start">Getting Started</a></li>
+					<li><a href="./demosamples/appsamples.html">App Samples</a></li>
+					<li><a href="http://scn.sap.com/docs/DOC-46555">Licensing/Pricing</a></li>
+					<li><a href="http://help.sap.com/saphelp_uiaddon10/helpdata/en/6e/6cfdb0d20946d591eb620c906a4784/content.htm?frameset=/en/af/838a9017434b568d80407a26179940/frameset.htm&current_toc=/en/e4/843b8c3d05411c83f58033bac7f072/plain.htm&node_id=956&show_children=false">Features/ReleaseNotes</a></li>
+				</ul>
+	</nav>
+	<ul class="tocnav"></ul>
+	
+	<script>
+	var jh3 = $("h3");
+	var navarray = [];
+	var regex = /[a-z]/gi;
+	$.each(jh3, function(key,value){
+		var escapedString = value.textContent.match(regex).join("");
+		
+		value.setAttribute("data-target", escapedString);
+		value.setAttribute("id", escapedString);
+		navarray.push({"target": value.id, "text": value.textContent});
+	});
+	
+	$.each(navarray, function(key, value) {
+		
+		var lientry = $("<li>").append($("<a>").attr("href", "#"+value.target).text(value.text));
+		$("ul.tocnav").append(lientry);
+	});
+	</script>
+</body>
+</html>
+
+

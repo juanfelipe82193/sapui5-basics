@@ -1,0 +1,259 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>How to Test SAPUI5 Controls with QUnit</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Comprehensive overview of QUnit testing for controls."><meta name="description" content="Comprehensive overview of QUnit testing for controls."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"0ddcc60b05ee40dea1a3be09e8fee8f7.html","previousTopicHref":"457eaada68a24187858fd5e8b21a4892.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loioa6b0657d226343da81ad96632cd1bd83"><h1 class="title topictitle1" hidden>How to Test <span class="ph"><span class="ph pname">SAPUI5</span></span> Controls
+with QUnit</h1><div class="body conbody"><p class="shortdesc" hidden>Comprehensive overview of QUnit testing for controls.</p>
+<div class="section"><section class="section" type="Dos and Don&apos;ts"><h2 class="section_title" style="font-size: 1.15em;">Dos and Don&apos;ts</h2>
+
+<ul class="ul">
+<li class="li">When writing QUnits, always keep your tests atomic.</li>
+<li class="li">Don&apos;t rely on the execution of previous tests.</li>
+<li class="li">Don&apos;t introduce globals, destroy controls after creating them.</li>
+<li class="li">Only test one single thing.</li>
+<li class="li">When writing a test, always make sure you break it first: don&apos;t rely on tests that have
+never failed!</li>
+<li class="li">Write human readable tests - use descriptive names for variables. Readability is more
+important than performance. You don&apos;t have to write a reuse for everything. It&apos;s
+ok to repeat yourself in unit tests if it helps readability.</li>
+<li class="li">Don&apos;t test too many internal aspects: try to test the control like an application or user
+will use it.</li>
+<li class="li">You have to find a balance between not stubbing / expecting too much of the internal aspects
+and not doing it at all. If you tightly couple your test to the implementation,
+maintenance will be a pain.</li>
+<li class="li">If your test is too long, you&apos;re squeezing too much stuff into one of your control&apos;s
+functions. Divide the complexity, then your test will be simpler and your
+productive code will be better.</li>
+<li class="li">Don&apos;t test general <span class="ph"><span class="ph pname">SAPUI5</span></span>
+functionality. Only test things actually done by your control (see &quot;What Should
+You Test?&quot; below).</li>
+<li class="li">Never write an <samp class="ph codeph">if</samp> in a test. It is a sign that you&apos;re either not stubbing
+correctly or you&apos;re testing multiple things in one test.</li>
+<li class="li">Never use the <samp class="ph codeph">expect</samp> QUnit statement. You should always write your test in
+a way that every assertion you set up will be hit 100%.</li>
+<li class="li">Whenever you encounter a Bug/Ticket, start by writing a QUnit that fails first, and
+<em class="ph i">then</em> fix the code.</li>
+<li class="li">Write your tests as small as possible: don&apos;t add a statement that is not needed for the
+test, such as an ID in the control&apos;s constructor properties.</li>
+<li class="li">Use fake timers to avoid as many async tests as possible.</li>
+<li class="li">Don&apos;t test the exact same thing multiple times.</li>
+<li class="li">Use modules for grouping your tests: this will give you a better organizational test
+setup.</li>
+<li class="li">You may use modules for <samp class="ph codeph">beforeEach/afterEach</samp>, but don&apos;t overuse this
+feature. If you have a longer module, you might not see what the test does
+because you don&apos;t know its setup.</li>
+<li class="li">It&apos;s sometimes better to write code multiple times.</li>
+<li class="li">Don&apos;t set up your system being tested in the <samp class="ph codeph">beforeEach/afterEach</samp>. It is
+very rare that all tests in a module have the same constructor. Furthermore,
+using a global constructor object is dangerous.</li>
+</ul>
+<p class="p">If you stick to these rules, you will find it much easier to refactor/maintain your tests.
+Keeping the tests atomic will make debugging much easier, because you will hit your
+breakpoints for the code being tested only. If you write QUnits without keeping to
+these rules, you may well not notice anything bad to begin with, but you <strong class="ph b">will</strong>
+eventually end up in the middle of a maintenance nightmare!</p>
+</section></div>
+<div class="section"><section class="section" type="Arrange Act Assert Pattern"><h2 class="section_title" style="font-size: 1.15em;">Arrange Act Assert Pattern</h2><p class="p">Internally, we use three templates for testing. The one shown below is the general control
+template.</p><p class="p">Use the following pattern to structure your tests. If everyone sticks to this same pattern, you will be able to read
+your colleagues&apos; tests very quickly:</p><pre class="pre codeblock prettyprint lang-js">
+QUnit.test(&quot;Should do Something&quot;, function (assert) { 
+    // Arrange
+    
+    // System under Test
+    var oMyControl = new nameSpace.myControl({
+    });
+    
+    // Act
+    
+    // Assert
+
+    // Cleanup
+    oMyControl.destroy();
+});</pre><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Arrange</p>
+<p class="p">In <samp class="ph codeph">Arrange</samp>, you should set up the dependencies and options you need for your <samp class="ph codeph">System under
+Test</samp>.</p>
+<div class="p">Examples:<ul class="ul" id="loioa6b0657d226343da81ad96632cd1bd83__ul_xsd_gng_pp">
+<li class="li">The constructor object of your control</li>
+<li class="li">Sinon spies/stubs and mocks (dependencies of your System under Test)</li>
+<li class="li">Model</li>
+</ul></div>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">System under test</p>
+<p class="p">In <samp class="ph codeph">System under Test</samp>, you should create your control and you should also render it if you want to test the
+rendering.</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Act</p>
+<p class="p">Ideally, this part is only one single line of code executing the function you want to test.</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Assert</p>
+<p class="p">This part may contain multiple statements of QUnit assertions, but ideally not too many in total.</p>
+<p class="p">Make sure that you also test negative paths, not only the expected ones.</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Optional: Cleanup</p>
+<p class="p">Here you should destroy all the controls/models you created.</p>
+<p class="p">If you don&apos;t use Sinon sandboxes, revert all the spies/stubs/mocks.</p>
+</div></section></div>
+<div class="section"><section class="section" type="What Should You Test?"><h2 class="section_title" style="font-size: 1.15em;">What Should You Test?</h2>
+
+<ul class="ul" id="loioa6b0657d226343da81ad96632cd1bd83__ul_j11_nng_pp">
+<li class="li">Test all the public functions you introduced.</li>
+<li class="li">Test all the overwritten getters and setters.</li>
+<li class="li">Test your control&apos;s events and how often they are called.</li>
+<li class="li">Test all possible user interactions (tap, keyboard, focus).</li>
+<li class="li">You could test how often your control gets rerendered when interacting with it, but only if
+you are worried that it might be rerenderd too often or not at all.</li>
+<li class="li">Test RTL if you have special things done in javascript.</li>
+<li class="li">Write some integration tests if you have a composite control (don&apos;t cover 100% of your child
+controls - that&apos;s overkill and child controls will be hard to maintain).</li>
+<li class="li">You may test default values of properties, since we cannot change them backwards afterwards
+and a test will recognize this.</li>
+<li class="li">Test how your control interacts with models (OData + Json).</li>
+<li class="li">Test the destruction of your control when working with composites, test if all
+dependencies/events are unbound on destruction.</li>
+</ul>
+</section></div>
+<div class="section"><section class="section" type="What Should You NOT Test?"><h2 class="section_title" style="font-size: 1.15em;">What Should You NOT Test?</h2>
+
+<ul class="ul" id="loioa6b0657d226343da81ad96632cd1bd83__ul_pzc_4ng_pp">
+<li class="li">Never test non-overwritten getters and setters (these are tested in the core of the
+framework).</li>
+<li class="li">Never test your complete CSS with computed styles: just check if the classes are set correctly. Focus on testing JavaScript.</li>
+<li class="li">Never test other generic framework functionality. Focus on your control.</li>
+</ul>
+</section></div>
+<div class="section"><section class="section" type="Rendering Tests"><h2 class="section_title" style="font-size: 1.15em;">Rendering Tests</h2>
+
+<p class="p">In the rendering tests part, you have to place your control in the DOM. The best place to put
+it is the <samp class="ph codeph">qunit-fixture</samp> div, since its content gets deleted after
+every test.</p>
+<p class="p">Make sure you destroy your control, since <span class="ph"><span class="ph pname">SAPUI5</span></span> will keep a reference to it and may also
+rerender it.</p>
+<p class="p">It&apos;s crucial that you call <samp class="ph codeph">sap.ui.getCore().applyChanges()</samp> after each time
+you have caused a rerendering.</p>
+<p class="p">The call to this function synchronizes the changes of your control with the DOM. If you do not
+make this call, the DOM will not be updated.</p>
+<p class="p">You can use the following template to make sure that you don&apos;t forget to destroy your
+control:</p>
+<pre class="pre codeblock prettyprint lang-js">QUnit.test(&quot;Should do Something&quot;, function(assert) {
+    // Arrange
+        var oContructor = {
+        
+    };
+    
+    // System under Test
+    var oMyControl = new nameSpace.myControl(oContructor);
+    oMyControl.placeAt(&quot;qunit-fixture&quot;);
+    sap.ui.getCore().applyChanges();
+
+    // Act
+    
+    // Assert
+
+    // Cleanup
+    oMyControl.destroy();
+});</pre>
+</section></div>
+<div class="section"><section class="section" type="Pitfalls"><h2 class="section_title" style="font-size: 1.15em;">Pitfalls</h2><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Sinon fake timers</p>
+<p class="p">If you are using <samp class="ph codeph">sinon.qunit</samp>, it will automatically use fake timers by
+itself. Fake timers will prevent any <samp class="ph codeph">setTimeout/setIntervall</samp>
+function from being executed, unless you call
+<samp class="ph codeph">this.clock.tick(milliseconds)</samp> in your test. This means that
+a Mock Server with auto-respond will not respond and OPA will not be able to
+wait for controls.</p>
+<p class="p">In addition, control events might be fired inside of a <samp class="ph codeph">setTimeout(, 0)</samp>, so
+the event might not be triggered at all.</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Testing <span class="ph"><span class="ph pname">SAPUI5</span></span> control events with Sinon</p>
+<p class="p">If you want to test <span class="ph"><span class="ph pname">SAPUI5</span></span> events, you can use spies to test how often they are
+called. If you try to test the parameters, however, you cannot do this with spies as <span class="ph"><span class="ph pname">SAPUI5</span></span> uses an eventPool that reuses the same object again. This means that
+after an event is set, all of the parameters will be deleted, Sinon will keep a reference to the object without properties.</p>
+<p class="p">The effect of this is that you cannot assert on them anymore. The workaround is to use a stub with a custom implementation that saves a copy
+of the parameters to your test function scope.</p>
+<p class="p">An example of this is shown in the cookbook below (events).</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">I&apos;ve set a property on my control: Why aren&apos;t the changes in the
+DOM?</p>
+<p class="p">The most likely reason for this is that <samp class="ph codeph">sap.ui.getCore().applyChanges()</samp> was not called. <span class="ph"><span class="ph pname">SAPUI5</span></span> does not render synchronously, but calling this function will render
+immediately.</p>
+</div></section></div>
+</div><div class="related-links"> <br><div class="childtopics"><strong>In this section:</strong></div><ul class="ullinks"><div><strong><a class="link" href="../../#/topic/0ddcc60b05ee40dea1a3be09e8fee8f7.html" target="_top">Cookbook for Testing Controls with QUnit</a></strong><br></div></ul></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

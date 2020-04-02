@@ -1,0 +1,134 @@
+<mvc:View height="100%"
+	controllerName="sap.gantt.simple.test.UtilizationChart"
+	xmlns="sap.ui.table"
+	xmlns:dnd="sap.ui.core.dnd"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns:m="sap.m"
+	xmlns:gnt="sap.gantt"
+	xmlns:gnt-def="sap.gantt.def"
+	xmlns:gnt-pattern="sap.gantt.def.pattern"
+	xmlns:gnt-cal="sap.gantt.def.cal"
+	xmlns:axistime="sap.gantt.axistime"
+	xmlns:config="sap.gantt.config"
+	xmlns:gnt2="sap.gantt.simple">
+
+	<m:Page title="Gantt Chart Container Demo Page" showNavButton="false" contentOnlyBusy="true">
+		<gnt2:GanttChartContainer id="container" enableTimeScrollSync="true">
+			<gnt2:toolbar><gnt2:ContainerToolbar/></gnt2:toolbar>
+			<gnt2:svgDefs>
+				<gnt-def:SvgDefs>
+					<gnt-pattern:SlashPattern id="pattern_slash_gray" stroke="#ccc" />
+					<gnt-pattern:BackSlashPattern id="pattern_slash_lightgray" tileWidth="5" tileHeight="9" backgroundColor="#fff" stroke="#ececec" strokeWidth="1" />
+				</gnt-def:SvgDefs>
+			</gnt2:svgDefs>
+			<gnt2:GanttChartWithTable id="ulc">
+				<gnt2:table>
+					<Table
+						selectionMode="Single"
+						visibleRowCountMode="Auto"
+						minAutoRowCount="1"
+						selectionBehavior="RowSelector"
+						rowHeight = "50"
+						rows="{
+							path: 'data>/Resources',
+							parameters: {
+								expand: 'ResourceToUtilization/UtilizationToItems'
+							}
+						}">
+						<rowSettingsTemplate>
+							<gnt2:GanttRowSettings rowId="{data>ResourceID}">
+								<gnt2:UtilizationLineChart shapeId="{data>ResourceID}" title="{data>ResourceName}" time="{data>ValidityFrom}" endTime="{data>ValidityTo}" fill="#f6f6f6"
+									dimensions="{path: 'data>ResourceToUtilization',templateShareable: true}">
+									<gnt2:UtilizationDimension name="{data>UtilizationName}" dimensionColor="{data>Color}"
+										periods="{path:'data>UtilizationToItems',templateShareable: true}">
+										<gnt2:UtilizationPeriod from="{data>StartDateTime}" to="{data>EndDateTime}" value="{data>Value}"/>
+									</gnt2:UtilizationDimension>
+								</gnt2:UtilizationLineChart>
+							</gnt2:GanttRowSettings>
+						</rowSettingsTemplate>
+						<columns>
+							<Column sortProperty="ResourceID" filterProperty="ResourceID">
+								<m:Text text="Resource ID"/>
+								<template>
+									<m:Label text="{data>ResourceID}"/>
+								</template>
+							</Column>
+							<Column sortProperty="ResourceName" filterProperty="ResourceName">
+								<m:Text text="Resource Name" />
+								<template>
+									<m:Label text="{data>ResourceName}"/>
+								</template>
+							</Column>
+						</columns>
+					</Table>
+				</gnt2:table>
+				<gnt2:axisTimeStrategy>
+					<axistime:ProportionZoomStrategy>
+						<axistime:totalHorizon>
+							<config:TimeHorizon startTime="20140628000000" endTime="20170101000000"/>
+						</axistime:totalHorizon>
+						<axistime:visibleHorizon>
+							<config:TimeHorizon startTime="20150101000000" endTime="20150315000000"/>
+						</axistime:visibleHorizon>
+					</axistime:ProportionZoomStrategy>
+				</gnt2:axisTimeStrategy>
+			</gnt2:GanttChartWithTable>
+
+			<gnt2:GanttChartWithTable id="ubc">
+				<gnt2:table>
+					<Table
+						selectionMode="Single"
+						visibleRowCountMode="Auto"
+						minAutoRowCount="1"
+						selectionBehavior="RowSelector"
+						rowHeight= "50"
+						rows="{
+							path: 'data>/Resources',
+							parameters: {
+								expand: 'ResourceToUsages'
+							}
+						}">
+						<rowSettingsTemplate>
+							<gnt2:GanttRowSettings rowId="{data>ResourceID}">
+								<gnt2:UtilizationBarChart shapeId="{data>ResourceID}" title="{data>ResourceName}" time="{data>ValidityFrom}" endTime="{data>ValidityTo}" stroke="#1C75BC" strokeWidth="1"
+									periods="{path: 'data>ResourceToUsages',templateShareable: true}">
+									<gnt2:UtilizationPeriod from="{data>UsageDate}" to="{data>UsageDate}" supply="{data>Supply}" demand="{data>Demand}" tooltip="{
+										parts: [{path: 'data>Supply'}, {path:'data>Demand'}],
+										formatter: '.ubcPeriodItemTooltip'
+									}"/>
+								</gnt2:UtilizationBarChart>
+							</gnt2:GanttRowSettings>
+						</rowSettingsTemplate>
+						<columns>
+							<Column sortProperty="ResourceID" filterProperty="ResourceID">
+								<m:Text text="Resource ID"/>
+								<template>
+									<m:Label text="{data>ResourceID}"/>
+								</template>
+							</Column>
+							<Column sortProperty="ResourceName" filterProperty="ResourceName">
+								<m:Text text="Resource Name" />
+								<template>
+									<m:Label text="{data>ResourceName}"/>
+								</template>
+							</Column>
+						</columns>
+					</Table>
+				</gnt2:table>
+
+				<gnt2:axisTimeStrategy>
+					<axistime:ProportionZoomStrategy>
+						<axistime:totalHorizon>
+							<config:TimeHorizon startTime="20140628000000" endTime="20170101000000"/>
+						</axistime:totalHorizon>
+						<axistime:visibleHorizon>
+							<config:TimeHorizon startTime="20150101000000" endTime="20150315000000"/>
+						</axistime:visibleHorizon>
+					</axistime:ProportionZoomStrategy>
+				</gnt2:axisTimeStrategy>
+
+			</gnt2:GanttChartWithTable>
+		</gnt2:GanttChartContainer>
+	</m:Page>
+</mvc:View>

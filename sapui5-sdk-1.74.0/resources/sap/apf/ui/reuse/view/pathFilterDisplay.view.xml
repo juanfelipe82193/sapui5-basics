@@ -1,0 +1,65 @@
+<!-- SAP APF Analysis Path Framework (c) Copyright 2012-2014 SAP AG. All rights reserved -->
+<mvc:View xmlns:mvc="sap.ui.core.mvc" controllerName="sap.apf.ui.reuse.controller.pathFilterDisplay" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+	<Dialog id="pathFilterDisplayDialog" showHeader="false" resizable="true" draggable="true" afterClose=".onClose">
+		<content>
+			<NavContainer id="navContainer">
+				<pages>
+					<Page id="stepPage">
+						<subHeader>
+							<Bar>
+								<contentLeft>
+									<SearchField liveChange=".onSearch"/>
+								</contentLeft>
+							</Bar>
+						</subHeader>
+						<content>
+							<List items = "{path: '/', templateShareable:false}">
+								<CustomListItem type="Navigation" press=".onStepPress" class="sapUiSmallMargin">
+									<content>
+										<HBox class="sapUiSmallMargin" width="100%" wrap="Wrap">
+											<items>
+												<VBox class="sapUiSmallMargin" width="100%">
+													<items>
+														<Label text="{text}" design="Bold" tooltip="{text}"/>
+														<Label text="{parts:['selectablePropertyLabel', 'filterValues'], formatter: '.getDescriptionForStep'}"/>
+													</items>
+												</VBox>
+												<HBox justifyContent="End" alignItems="Center" width="100%">
+													<items>
+														<core:Icon src="sap-icon://message-warning" class="sapUiSmallMarginBegin" visible="{warningIcon}" tooltip="{warningText}"/>
+														<core:Icon src="sap-icon://message-information" class="sapUiSmallMarginBegin" visible="{infoIcon}" tooltip="{infoText}"/>
+													</items>
+												</HBox>
+											</items>
+										</HBox>
+									</content>
+								</CustomListItem>
+							</List>
+						</content>
+					</Page>
+					<Page id="filterValuesPage" title="{text}" showNavButton="true" navButtonPress=".onBackPress" app:stepIndex="{stepIndex}">
+						<subHeader>
+							<Bar>
+								<contentLeft>
+									<SearchField liveChange=".onSearch"/>
+								</contentLeft>
+							</Bar>
+						</subHeader>
+						<content>
+							<List items="{filterValues}">
+								<StandardListItem title="{text}"/>
+							</List>
+						</content>
+					</Page>
+				</pages>
+			</NavContainer>
+		</content>
+		<beginButton>
+			<Button visible="false" press=".onCloseAndNavigatePress">
+			</Button>
+		</beginButton>
+		<endButton>
+			<Button press=".onCloseButton"/>
+		</endButton>
+	</Dialog>
+</mvc:View>

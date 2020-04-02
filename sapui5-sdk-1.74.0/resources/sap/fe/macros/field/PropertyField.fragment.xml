@@ -1,0 +1,58 @@
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+						 xmlns:core="sap.ui.core"
+						 xmlns:mdc="sap.ui.mdc"
+						 xmlns:log="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+						 template:require="{
+							FIELD: 'sap/fe/macros/field/FieldHelper',
+							COMMON: 'sap/fe/macros/CommonHelper',
+							ID: 'sap/fe/macros/StableIdHelper'
+						 }">
+
+	<!-- this is not from a dataField/dataPoint annotation but a property in the entityType -->
+	<template:with path="property>" helper="FIELD.valueHelpProperty" var="valueHelpProperty">
+		<mdc:Field
+			core:require="{FieldRuntime: 'sap/fe/macros/field/FieldRuntime'}"
+			log:sourcePath="/{entitySet>@sapui.name}/{property>@@FIELD.propertyName}"
+			value="{property>@@FIELD._formatProperty}"
+			editMode="{= COMMON.getEditMode(
+						${property>@},
+						${property>$Type},
+						${property>@@FIELD.fieldControl},(${entitySet>@com.sap.vocabularies.Common.v1.DraftRoot} || ${entitySet>@com.sap.vocabularies.Common.v1.DraftNode}),
+						${this>editMode},
+						${this>parentControl},
+						false,
+						undefined
+					)}"
+			display="{= FIELD.getFieldDisplay(
+						${property>@},
+						${property>$Type},
+						${property>@@FIELD.fieldControl},
+						(${entitySet>@com.sap.vocabularies.Common.v1.DraftRoot} || ${entitySet>@com.sap.vocabularies.Common.v1.DraftNode}),
+						${this>editMode},
+						${this>createMode},
+						${this>parentControl}, ${entitySet>./@},
+						(${valueHelpProperty>@com.sap.vocabularies.Common.v1.ValueListReferences} || ${valueHelpProperty>@com.sap.vocabularies.Common.v1.ValueListMapping} || ${valueHelpProperty>@com.sap.vocabularies.Common.v1.ValueList})
+					)}"
+			width="100%"
+			additionalValue="{= !(${property>@Org.OData.Measures.V1.ISOCurrency} || ${property>@Org.OData.Measures.V1.Unit} || ${this>parentControl} === 'VHTable')
+								? FIELD._buildExpressionForTextProperty(${property>@sapui.name}, ${property>@@FIELD._context})
+								: undefined }"
+			multipleLines="{= ${this>wrap} === 'false' ? false : (${property>$Type} !== 'Edm.String' ? ${property>@com.sap.vocabularies.UI.v1.MultiLineText} :
+					(${this>editMode} === 'Display' ? true : (${this>editMode}.indexOf('{') > -1 ? '{= $' + ${this>editMode} + ' === \'Display\' ? true : ' + ${property>@com.sap.vocabularies.UI.v1.MultiLineText} + '}' :
+					${property>@com.sap.vocabularies.UI.v1.MultiLineText})))}"
+			fieldGroupIds="{parts:[{path:'property>@sapui.name'}, {path:'entitySet>$Type'}], formatter: 'FIELD.getFieldGroupIds'}"
+			fieldHelp="{= (${valueHelpProperty>@com.sap.vocabularies.Common.v1.ValueListReferences} ||
+							${valueHelpProperty>@com.sap.vocabularies.Common.v1.ValueListMapping} ||
+							${valueHelpProperty>@com.sap.vocabularies.Common.v1.ValueList})
+								? ID.generate([
+									${this>vhIdPrefix} || 'FVH',
+									((${property>@@FIELD.propertyName} !== ${valueHelpProperty>@@FIELD.propertyName})
+										? ${property>@@FIELD.propertyName} + ${valueHelpProperty>@@FIELD.propertyName}
+										: ${valueHelpProperty>@@FIELD.propertyName})
+									])
+								: undefined }"
+			change="{= ${this>onChange} || 'FieldRuntime.handleChange($event)' }"
+			validateFieldGroup="FieldRuntime.handleSideEffect($event)" />
+	</template:with>
+
+</core:FragmentDefinition>

@@ -1,0 +1,289 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Batch Control</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="OData V4 allows you to group multiple operations into a single HTTP request payload, as described in the official OData V4 specification Part 1, Batch Requests (see the link under Related Information for more details)."><meta name="description" content="OData V4 allows you to group multiple operations into a single HTTP request payload, as described in the official OData V4 specification Part 1, Batch Requests (see the link under Related Information for more details)."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"7f29fb3ce5964d8090038a9d3cdf5060.html","previousTopicHref":"b54f7895b7594c61a83fa7257fa9d13f.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio74142a38e3d4467c8d6a70b28764048f"><h1 class="title topictitle1" hidden>Batch Control</h1><div class="body conbody"><p class="shortdesc" hidden>OData V4 allows you to group multiple operations into a single HTTP request payload,
+as described in the official OData V4 specification Part 1, Batch Requests (see the link
+under Related Information for more details).</p>
+<div class="p">The OData V4 model sends requests in the following cases:<ul class="ul" id="loio74142a38e3d4467c8d6a70b28764048f__ul_mns_ggr_xv">
+<li class="li">
+<p class="p"><span class="ph emphasis emphasis">Implicit read requests</span> to retrieve data for a binding </p>
+<p class="p">Example: A list binding with the absolute path
+<samp class="ph codeph">/SalesOrderList</samp> triggers a <samp class="ph codeph">GET
+SalesOrderList</samp> to read data.</p>
+</li>
+<li class="li">
+<p class="p"><span class="ph emphasis emphasis">Implicit update requests</span> via two-way binding </p>
+<p class="p">Example: Update a sales order&apos;s note through a property binding with the
+relative path <samp class="ph codeph">Note</samp>, which has a context with path
+<samp class="ph codeph">/SalesOrderList(SalesOrderID=&apos;42&apos;)</samp> triggering
+<samp class="ph codeph">PATCH SalesOrderList(SalesOrderID=&apos;42&apos;)</samp> with the note&apos;s
+value as JSON payload.</p>
+</li>
+<li class="li">
+<p class="p"><span class="ph emphasis emphasis">Explicit requests</span> triggered through API calls like
+<samp class="ph codeph">ODataListBinding.refresh</samp> or
+<samp class="ph codeph">ODataContextBinding.execute</samp></p>
+</li>
+</ul>For each of these cases, it is possible to specify a group ID of type
+<samp class="ph codeph">string</samp>.</div>
+<p class="p">A group ID has one of the following <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.SubmitMode" target="_top" alt="#/api/sap.ui.model.odata.v4.SubmitMode" title="#/api/sap.ui.model.odata.v4.SubmitMode">submit modes</a></span>
+to control the use of
+batch requests:</p>
+<ul class="ul" id="loio74142a38e3d4467c8d6a70b28764048f__ul_jkz_f2g_1cb">
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.model.odata.v4.SubmitMode.API</samp> - Requests associated with
+the group ID are sent in a batch request via <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch"><samp class="ph codeph">sap.ui.model.odata.v4.ODataModel#submitBatch</samp></a></span>
+.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.model.odata.v4.SubmitMode.Auto</samp> - Requests associated with
+the group ID are sent in a batch request which is triggered automatically before
+rendering.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">sap.ui.model.odata.v4.SubmitMode.Direct</samp> - Requests associated
+with the group ID are sent directly without batch.</p>
+</li>
+</ul>
+<p class="p">The following group IDs are possible:</p>
+<ul class="ul" id="loio74142a38e3d4467c8d6a70b28764048f__ul_mmf_sgr_xv">
+<li class="li">
+<p class="p"><samp class="ph codeph">&quot;$auto&quot;</samp> and <samp class="ph codeph">&quot;$auto.*&quot;</samp>: Predefined batch group
+ID which is the default if no group ID is specified. You can use different
+<samp class="ph codeph">$auto.*</samp> group IDs to use different batch requests. The
+suffix can be any non-empty string consisting of alphanumeric characters from
+the basic Latin alphabet, including the underscore. They have the submit mode
+<samp class="ph codeph">sap.ui.model.odata.v4.SubmitMode.Auto</samp>.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">&quot;$direct&quot;</samp>: Predefined batch group ID which has the submit mode
+<samp class="ph codeph">sap.ui.model.odata.v4.SubmitMode.Direct</samp>. For more
+information, see <a class="xref" href="../../#/topic/5a0d286c5606424b8e0d663c87445733.html" title="The OData V4 model offers the features described below which influence performance." target="_top">Performance Aspects</a>.</p>
+</li>
+<li class="li">
+<p class="p">An application group ID is a non-empty string consisting of alphanumeric
+characters from the basic Latin alphabet, including the underscore. By default,
+an application group has the submit mode
+<samp class="ph codeph">sap.ui.model.odata.v4.SubmitMode.API</samp>. It is possible to use
+a different submit mode; for details see section <a class="xref" href="../../#/topic/74142a38e3d4467c8d6a70b28764048f.html#loio74142a38e3d4467c8d6a70b28764048f__section_e1x_pfg_1cb" target="_top">Define
+submit mode for an application group ID</a>.</p>
+</li>
+</ul>
+<p class="p">To specify the group ID for implicit requests, use the parameters
+<samp class="ph codeph">$$groupId</samp> (group ID for read requests) and
+<samp class="ph codeph">$$updateGroupId</samp> (group ID for update requests) for the binding
+which triggers the request <span class="ph">(see the <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/bindList" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/bindList" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/bindList">ODataModel.bindList</a>, <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/bindContext" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/bindContext" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/bindContext">ODataModel.bindContext</a> and <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/bindProperty" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/bindProperty" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/bindProperty">ODataModel.bindProperty</a> API
+documentation)</span>.</p>
+<p class="p">Batch requests for update groups with a submit mode different from <samp class="ph codeph">$direct</samp> are
+queued per group ID. A batch request with changes is only sent if the previous batch
+request for the same group ID is returned and processed. In this case, all submitted
+changes for that group ID are combined in one batch request; changes associated with
+different calls to <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch">ODataModel.submitBatch</a></span> use different change sets inside the
+batch request.</p>
+<p class="p">Code example: Updates for the sales order note through two-way binding will use the group
+ID <samp class="ph codeph">&quot;myGroup&quot;</samp>, whereas data is read with the group
+<samp class="ph codeph">&quot;$auto&quot;</samp>. </p>
+<p class="p"><span class="ph emphasis emphasis">Batch group usage for binding created via JavaScript:</span></p>
+<pre class="pre codeblock prettyprint lang-js">
+sap.ui.define([&quot;sap/ui/model/odata/v4/ODataModel&quot;], function (ODataModel) {
+    var oModel = new ODataModel({serviceUrl : &quot;/myService/&quot;, synchronizationMode : &quot;None&quot;}),
+        oContextBinding = oModel.bindContext(&quot;/SalesOrderList(SalesOrderID=&apos;42&apos;)&quot;, /*oContext*/ undefined, {$$updateGroupId : &quot;myGroup&quot;}), 
+        oPropertyBinding = oModel.bindProperty(&quot;Note&quot;, oContextBinding.getBoundContext());
+});  </pre>
+<p class="p">XML view sample: Declares controls which create the context binding (in the
+<samp class="ph codeph">SimpleForm</samp>) and the property binding (in the
+<samp class="ph codeph">Input</samp>) as sketched in the above JavaScript code sample.</p>
+<p class="p"><span class="ph emphasis emphasis">Batch group usage for bindings created via XML view:</span></p>
+<pre class="pre codeblock prettyprint lang-xml">
+&lt;form:SimpleForm binding=&quot;{path : &apos;/SalesOrderList(SalesOrderID=\&apos;42\&apos;)&apos;, parameters : {$$updateGroupId : &apos;myGroup&apos;}}&quot; editable=&quot;true&quot; ...&gt;
+    &lt;Label labelFor=&quot;Note&quot; text=&quot;Note&quot; /&gt; 
+    &lt;Input id=&quot;Note&quot; value=&quot;{Note}&quot; /&gt;
+    ...
+&lt;/form:SimpleForm&gt; </pre>
+<p class="p">On instantiation of an OData V4 model, you can provide both a group ID and an update
+group ID; they are used as defaults if the corresponding binding parameter is not
+specified. The default for the group ID is <samp class="ph codeph">&quot;$auto&quot;</samp>. The value of group
+ID is used as a default for the update group ID.</p>
+<p class="p">For explicit requests, the group ID can be specified as an optional parameter to the
+corresponding API method. The group ID or update group ID of the binding is used as a
+default. <span class="ph">For
+more information, see the <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/execute" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/execute" title="#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/execute">ODataContextBinding.execute</a>, <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/refresh" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/refresh" title="#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/refresh">ODataContextBinding.refresh</a>, <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataListBinding/methods/refresh" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataListBinding/methods/refresh" title="#/api/sap.ui.model.odata.v4.ODataListBinding/methods/refresh">ODataListBinding.refresh</a>, <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/refresh" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/refresh" title="#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/refresh">ODataPropertyBinding.refresh</a> and <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/setValue" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/setValue" title="#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/setValue">ODataPropertyBinding.setValue</a> API
+documentation in the Demo Kit.</span></p>
+<div class="section"><section class="section" type="Change Sets and Order of Requests Inside a Batch Request"><h2 class="section_title" style="font-size: 1.15em;">Change Sets and Order of Requests Inside a Batch Request</h2>
+
+<p class="p">The OData V4 model automatically puts all non-GET requests into a single change set,
+which is located at the beginning of a batch request. All GET requests are put after
+it. If there is only a single request within the change set, it is replaced by that
+single request when submitting the batch group (saves overhead on the wire). PATCH
+requests for the same entity are merged into a single request.</p>
+</section></div>
+<div class="section"><section class="section" type="Resetting Property Changes"><h2 class="section_title" style="font-size: 1.15em;">Resetting Property Changes</h2><p class="p">You can set an update group ID for a
+binding so that property changes are collected in a batch queue. The
+<samp class="ph codeph">ODataModel.submitBatch</samp> method sends all these changes for a
+given batch group at once and the <samp class="ph codeph">ODataModel.resetChanges</samp> method
+resets the changes. With these methods, you can, for example, implement a
+<span class="ph uicontrol">Save</span> and a <span class="ph uicontrol">Cancel</span> button for a
+form: <span class="ph uicontrol">Save</span> triggers <samp class="ph codeph">submitBatch</samp>, and
+<span class="ph uicontrol">Cancel</span> triggers
+<span class="ph uicontrol">resetChanges</span>.</p><aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>The <samp class="ph codeph">resetChanges</samp>
+method only resets all implicit update requests via two-way binding for the given
+group, while read requests or requests from
+<samp class="ph codeph">ODataContextBinding.execute</samp> remain in the queue and are sent
+when the <samp class="ph codeph">submitBatch</samp> method is called.</p></aside><p class="p">The list and
+context binding also offer the <samp class="ph codeph">resetChanges</samp> method which resets
+changes for the binding and its child bindings.</p><aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p>The promise returned by
+<samp class="ph codeph">submitBatch</samp> can be used together with the
+<samp class="ph codeph">hasPendingChanges</samp> method to check whether changes were
+successfully persisted. <samp class="ph codeph">hasPendingChanges</samp> exists for the ODataModel
+as well as for ODataListBinding, ODataContextBinding and ODataPropertyBinding. Note
+that the promise returned by <samp class="ph codeph">submitBatch</samp> is only rejected if the
+complete batch request has failed.</p></aside><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Example: View</p>
+<pre class="pre codeblock prettyprint lang-js">
+&lt;Toolbar design=&quot;Transparent&quot;&gt;
+    &lt;content&gt;
+        &lt;Button icon=&quot;sap-icon://save&quot; press=&quot;onSaveSalesOrder&quot;/&gt;
+        &lt;Button icon=&quot;sap-icon://sys-cancel-2&quot; press=&quot;onCancelSalesOrder&quot;/&gt;
+    &lt;/content&gt;
+&lt;/Toolbar&gt;
+&lt;form:SimpleForm id=&quot;mySimpleForm&quot; binding=&quot;{path: &apos;/SalesOrderList(ID=\&apos;42\&apos;)&apos;, $$updateGroupId: &apos;SalesOrderUpdateGroup&apos;}&quot;&gt;
+    &lt;Label text=&quot;Sales Order ID&quot; /&gt;
+    &lt;Text text=&quot;{SalesOrderID}&quot; /&gt;
+    &lt;Label labelFor=&quot;Note&quot; text=&quot;Note&quot; /&gt;
+    &lt;Input id=&quot;Note&quot; value=&quot;{Note}&quot; /&gt;
+&lt;/form:SimpleForm&gt;</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Example: Controller</p>
+<pre class="pre codeblock prettyprint lang-js">onCancelSalesOrder : function (oEvent) {
+    this.getView().getModel().resetChanges(&quot;SalesOrderUpdateGroup&quot;);
+},
+ 
+onSaveSalesOrder : function (oEvent) {
+    var that = this;
+    this.getView().getModel().submitBatch(&quot;SalesOrderUpdateGroup&quot;).then(function(){
+        if (!that.byId(&quot;mySimpleForm&quot;).getBindingContext().getBinding().hasPendingChanges()){
+            // raise success message
+        }
+    });
+},</pre>
+</div></section></div>
+<div class="section" id="loio74142a38e3d4467c8d6a70b28764048f__section_cyg_3pw_vhb"><section class="section" type="Repeating Property Changes"><h2 class="section_title" style="font-size: 1.15em;">Repeating Property Changes</h2>
+
+<p class="p">The OData V4 model automatically repeats failed property changes (PATCH requests). If the
+update group ID has <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.SubmitMode.API" target="_top" alt="#/api/sap.ui.model.odata.v4.SubmitMode.API" title="#/api/sap.ui.model.odata.v4.SubmitMode.API">SubmitMode.API</a></span> and the property change of the entity on
+the server fails, the change is repeated with the next call of <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch">ODataModel.submitBatch</a></span> for this group. If the update group
+ID has <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.SubmitMode.Auto" target="_top" alt="#/api/sap.ui.model.odata.v4.SubmitMode.Auto" title="#/api/sap.ui.model.odata.v4.SubmitMode.Auto">SubmitMode.Auto</a></span> or <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.SubmitMode.Direct" target="_top" alt="#/api/sap.ui.model.odata.v4.SubmitMode.Direct" title="#/api/sap.ui.model.odata.v4.SubmitMode.Direct">SubmitMode.Direct</a></span> and the change fails, the change is
+repeated automatically with the next update for the entity. Since 1.67.0, <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch">ODataModel.submitBatch</a></span> can also be used for update group
+IDs with <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.SubmitMode.Auto" target="_top" alt="#/api/sap.ui.model.odata.v4.SubmitMode.Auto" title="#/api/sap.ui.model.odata.v4.SubmitMode.Auto">SubmitMode.Auto</a></span> in order to repeat, independently of an
+update.</p>
+<p class="p">The same holds true for <a class="xref" href="../../#/topic/c9723f8265f644af91c0ed941e114d46.html" title="The sap.ui.model.odata.v4.ODataListBinding#create method creates a new entity. Users can interact with a newly created entity even before it has been sent to the server." target="_top">Creating an Entity</a>.</p>
+</section></div>
+<div class="section" id="loio74142a38e3d4467c8d6a70b28764048f__section_e1x_pfg_1cb"><section class="section" type="Define submit mode for an application group ID"><h2 class="section_title" style="font-size: 1.15em;">Define submit mode for an application group ID</h2>
+
+</section></div>
+<div class="section">
+<p class="p">On construction of the model, it is possible to specify the submit mode for
+application group IDs. This is useful when you want to separate requests requiring
+short processing time on the server from those requiring long processing time, so
+that responses to &quot;fast&quot; requests are visible earlier on the UI.</p>
+<p class="p">The following example shows how to set the submit mode
+<samp class="ph codeph">sap.ui.model.odata.v4.SubmitMode.Auto</samp> for the group IDs
+<span class="keyword parmname">fastGroup</span> and <span class="keyword parmname">slowGroup</span> in the
+manifest.</p>
+<aside class="note sap-example example" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Example</strong></div>
+<p>Specify the submit mode for an application group in
+manifest.json</p><pre class="pre codeblock prettyprint">&quot;models&quot; : {
+    &quot;&quot; : {
+        &quot;dataSource&quot; : &quot;default&quot;,
+        &quot;settings&quot; : {
+            &quot;operationMode&quot; : &quot;Server&quot;,
+            &quot;synchronizationMode&quot; : &quot;None&quot;,
+            &quot;groupProperties&quot; : {
+                &quot;fastGroup&quot; : {&quot;submit&quot; : &quot;Auto&quot;},
+                &quot;slowGroup&quot; : {&quot;submit&quot; : &quot;Auto&quot;}
+            }
+        }
+    }</pre></aside>
+</div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/submitBatch">ODataModel.submitBatch</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/bindList" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/bindList" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/bindList">ODataModel.bindList</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/bindContext" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/bindContext" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/bindContext">ODataModel.bindContext</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/bindProperty" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/bindProperty" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/bindProperty">ODataModel.bindProperty</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/execute" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/execute" title="#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/execute">ODataContextBinding.execute</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/refresh" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/refresh" title="#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/refresh">ODataContextBinding.refresh</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataListBinding/methods/refresh" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataListBinding/methods/refresh" title="#/api/sap.ui.model.odata.v4.ODataListBinding/methods/refresh">ODataListBinding.refresh</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/refresh" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/refresh" title="#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/refresh">ODataPropertyBinding.refresh</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/setValue" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/setValue" title="#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/setValue">ODataPropertyBinding.setValue</a></div><div><a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html" target="_blank" alt="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html" title="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html">OData V4 Specification Part 1, Batch Requests<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

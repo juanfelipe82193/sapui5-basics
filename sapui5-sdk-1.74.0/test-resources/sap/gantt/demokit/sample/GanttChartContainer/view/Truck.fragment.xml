@@ -1,0 +1,147 @@
+<core:FragmentDefinition
+	xmlns="sap.ui.table"
+	xmlns:m="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:axistime="sap.gantt.axistime"
+	xmlns:config="sap.gantt.config"
+	xmlns:gnt2="sap.gantt.simple"
+	xmlns:gnt-cal="sap.gantt.def.cal"
+	xmlns:demokit="sap.gantt.sample.GanttChartContainer">
+	<gnt2:GanttChartWithTable id="Truck" ghostAlignment="Start" adhocLineLayer="Bottom"
+			shapeSelectionMode = "Single"
+			shapeSelectionSettings="{color:'black', strokeDasharray:'1,0'}"
+			shapeDrop="onShapeDrop"
+			shapeResize="onOrderRescheduled"
+			shapeDoubleClick="onShapeDoubleClick"
+			>
+		<gnt2:table>
+			<Table
+				selectionMode="Single"
+				visibleRowCountMode="Auto"
+				minAutoRowCount="1"
+				selectionBehavior="RowSelector"
+				enableColumnReordering="true"
+				fixedColumnCount = "1"
+				rows="{
+					path: 'data>/Resources',
+					parameters: {
+						operationMode: 'Server',
+						expand: 'ResourceToRequirements/OrderToUtilization/UtilizationToItems'
+					}
+				}">
+				<extension>
+					<m:OverflowToolbar>
+						<m:Button icon="sap-icon://expand-all" type="Transparent" press="showUtilization"/>
+						<m:Button icon="sap-icon://collapse-all" type="Transparent" press="hideUtilization"/>
+					</m:OverflowToolbar>
+				</extension>
+				<rowSettingsTemplate>
+					<gnt2:GanttRowSettings
+						rowId="{data>ResourceID}"
+						shapes1="{
+							path: 'data>ResourceToRequirements',
+							templateShareable:true
+						}"
+						shapes2="{
+							path: 'data>ResourceToRequirements',
+							templateShareable:true
+						}">
+						<gnt2:calendars>
+							<gnt2:BaseCalendar shapeId="{data>CalendarName}" calendarName="{data>CalendarName}" fill="#000"/>
+						</gnt2:calendars>
+						<gnt2:shapes1>
+							<gnt2:BaseRectangle 
+									time="{data>StartTime}" endTime="{data>EndTime}" fill="#99D101"
+									countInBirdEye="true" height="25"
+									title = "{
+												parts:[
+													{ path: 'data>RequirementID' }, 
+													{ path:'data>SourceLocation' },
+													{ path:'data>DestinationLocation' }
+												],
+												formatter: '.formatter.orderTitle'
+											}"
+									showTitle="true"
+									tooltip="{
+											parts: [
+												'i18n>freightOrderTooltip',
+												'data>RequirementID',
+												'data>SourceLocation',
+												'data>DestinationLocation',
+												'data>StartTime',
+												'data>EndTime'
+											],
+											formatter: 'jQuery.sap.formatMessage'
+									}"
+									expandable="true" selectable="true" draggable="true" resizable="true"/>
+						</gnt2:shapes1>
+						<gnt2:shapes2>
+							<demokit:UtilizationGroup shapeId="{data>UtilizationID}" expandable="true">
+								<demokit:utilizationLine>
+									<gnt2:UtilizationLineChart showMiddleLine="true" time="{data>StartTime}" endTime="{data>EndTime}"
+										shapeId="{data>RequirementID}" scheme="truck_to_ulc"
+										dimensions="{path: 'data>OrderToUtilization',templateShareable: true}">
+										<gnt2:UtilizationDimension name="{data>UtilizationName}" dimensionColor="{data>Color}"
+											periods="{path:'data>UtilizationToItems',templateShareable: true}">
+											<gnt2:UtilizationPeriod from="{data>StartTime}" to="{data>EndTime}" value="{data>Value}"/>
+										</gnt2:UtilizationDimension>
+									</gnt2:UtilizationLineChart>
+								</demokit:utilizationLine>
+							</demokit:UtilizationGroup>
+						</gnt2:shapes2>
+					</gnt2:GanttRowSettings>
+				</rowSettingsTemplate>
+				<columns>
+					<Column sortProperty="ResourceID" filterProperty="ResourceID">
+						<m:Text text="Resource ID"/>
+						<template>
+							<m:Label text="{data>ResourceID}"/>
+						</template>
+					</Column>
+					<Column sortProperty="Description" filterProperty="Description">
+						<m:Text text="Description"/>
+						<template>
+							<m:Label text="{data>Description}"/>
+						</template>
+					</Column>
+					<Column sortProperty="Capacity" filterProperty="Capacity">
+						<m:Text text="Capacity" />
+						<template>
+							<m:Label text="{data>Capacity}"/>
+						</template>
+					</Column>
+					<Column sortProperty="UintOfMeasure" filterProperty="UintOfMeasure">
+						<m:Text text="Unit of Measure" />
+						<template>
+							<m:Label text="{data>UintOfMeasure}"/>
+						</template>
+					</Column>
+					<Column sortProperty="MaximumUtilization" filterProperty="MaximumUtilization">
+						<m:Text text="Maximum Utilization" />
+						<template>
+							<m:Label text="{data>MaximumUtilization}"/>
+						</template>
+					</Column>
+				</columns>
+			</Table>
+		</gnt2:table>
+
+		<gnt2:shapeSchemes>
+			<gnt2:ShapeScheme key="truck" primary="true"/>
+			<gnt2:ShapeScheme key="truck_to_ulc" rowSpan="2"/>
+		</gnt2:shapeSchemes>
+
+		<gnt2:axisTimeStrategy>
+			<core:Fragment fragmentName="sap.gantt.sample.GanttChartContainer.view.AxisTimeStrategy" type="XML"/>
+		</gnt2:axisTimeStrategy>
+
+		<gnt2:calendarDef>
+			<gnt-cal:CalendarDefs defs="{ path:'calc>/'}">
+				<gnt-cal:Calendar key="{calc>CalendarId}" timeIntervals="{path:'calc>Intervals', templateShareable: 'true'}" backgroundColor="{= ${calc>CalendarId} === 'nwt' ? '#666' : '#ccc' }">
+					<gnt-cal:TimeInterval startTime="{calc>StartDateTime}" endTime="{calc>EndDateTime}"/>
+				</gnt-cal:Calendar>
+			</gnt-cal:CalendarDefs>
+		</gnt2:calendarDef>
+	
+	</gnt2:GanttChartWithTable>
+</core:FragmentDefinition>

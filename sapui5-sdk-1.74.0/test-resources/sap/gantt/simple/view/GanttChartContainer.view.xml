@@ -1,0 +1,330 @@
+<mvc:View height="100%"
+	controllerName="sap.gantt.simple.test.GanttChart"
+	xmlns="sap.ui.table"
+	xmlns:dnd="sap.ui.core.dnd"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns:l="sap.ui.layout"
+	xmlns:m="sap.m"
+	xmlns:gnt="sap.gantt"
+	xmlns:gnt-def="sap.gantt.def"
+	xmlns:gnt-pattern="sap.gantt.def.pattern"
+	xmlns:gnt-cal="sap.gantt.def.cal"
+	xmlns:axistime="sap.gantt.axistime"
+	xmlns:config="sap.gantt.config"
+	xmlns:gnt2="sap.gantt.simple">
+
+	<m:Page title="Gantt Chart Container Demo Page" showNavButton="false" contentOnlyBusy="true" enableScrolling="true">
+		<gnt2:GanttChartContainer id="container" enableTimeScrollSync="true">
+			<gnt2:svgDefs>
+				<gnt-def:SvgDefs>
+					<gnt-pattern:SlashPattern id="pattern_slash_blue" stroke="@sapUiChart1"/>
+					<gnt-pattern:SlashPattern id="pattern_slash_orange" stroke="@sapUiChart2"/>
+					<gnt-pattern:SlashPattern id="pattern_slash_green" stroke="@sapUiChart3"/>
+				</gnt-def:SvgDefs>
+			</gnt2:svgDefs>
+			<gnt2:toolbar>
+				<gnt2:ContainerToolbar design="Auto" showLegendButton="true" showBirdEyeButton="true">
+					<m:MenuButton text="Gantt Chart Settings" menuPosition="BeginBottom">
+						<m:menu>
+							<m:Menu itemSelected="onGanttSettingsChanged">
+								<m:items>
+									<m:MenuItem key="shapeSelectionMode" text="Shape Selection Mode" icon="sap-icon://chevron-phase">
+										<m:items>
+											<m:MenuItem text="Single" icon="sap-icon://chevron-phase-2" />
+											<m:MenuItem text="MultiWithKeyboard" icon="sap-icon://multi-select" />
+											<m:MenuItem text="Multiple" icon="sap-icon://multiselect-all" />
+										</m:items>
+									</m:MenuItem>
+									<m:MenuItem key="rowSelectionBehavior" text="Row Selection Behavior">
+										<m:items>
+											<m:MenuItem text="Row" />
+											<m:MenuItem text="RowSelector"/>
+											<m:MenuItem text="RowOnly"/>
+										</m:items>
+									</m:MenuItem>
+									<m:MenuItem key="ghostAlignment" text="Drag Drop Ghost Alignment">
+										<m:items>
+											<m:MenuItem text="Start"/>
+											<m:MenuItem text="None"/>
+											<m:MenuItem text="End"/>
+										</m:items>
+									</m:MenuItem>
+								</m:items>
+							</m:Menu>
+						</m:menu>
+					</m:MenuButton>
+
+					<m:Button text="Remove Gantt" press=".onGanttsChange"/>
+
+					<m:Button icon="sap-icon://resize-vertical" press="toggleResizeOrientation"/>
+
+					<gnt2:legendContainer>
+						<gnt2:LegendContainer legends="{path:'legend>/', factory:'.legendFactory'}" width="230px" height="250px">
+						</gnt2:LegendContainer>
+					</gnt2:legendContainer>
+				</gnt2:ContainerToolbar>
+			</gnt2:toolbar>
+
+			<gnt2:GanttChartWithTable id="gantt2" ghostAlignment="Start" adhocLineLayer="Bottom" shapeSelectionMode="Single"
+					shapeSelectionSettings="{color:'red', strokeDasharray:'1,0'}"
+					shapeMouseEnter="onShapeMouseEnter"
+					shapeMouseLeave="onShapeMouseLeave"
+					>
+				<gnt2:table>
+					<TreeTable
+						selectionMode="Single"
+						visibleRowCountMode="Auto"
+						minAutoRowCount="1"
+						selectionBehavior="RowSelector"
+						rowSelectionChange=".onTableRowSelectionChange2"
+						enableColumnReordering="true"
+						rowActionCount="1"
+						fixedColumnCount = "0"
+						rows="{
+							path: 'data>/ProjectElems',
+							parameters: {
+								operationMode: 'Server',
+								numberOfExpandedLevels: 1,
+								treeAnnotationProperties: {
+									hierarchyNodeFor: 'ProjectElemID',
+									hierarchyParentNodeFor: 'ParentProjectElemID',
+									hierarchyLevelFor: 'Level',
+									hierarchyDrillStateFor: 'DrillDownState',
+									hierarchyNodeDescendantCountFor: 'Magnitude'
+								},
+								expand: 'ProjectResourceToUtilization/UtilizationToItems'
+							}
+						}">
+						<extension>
+							<m:OverflowToolbar>
+								<m:Label text="Adhoc Line" labelFor="adhocLine"/>
+								<m:DatePicker id="adhocLine" width="200px" displayFormat="yyyy-MM-dd" valueFormat="yyyyMMddHHmmss" change="handleAdhocLineTimeChange"/>
+								<m:OverflowToolbarButton id="ulcExpandBtn"   enabled="false" icon="sap-icon://expand-group" text="Expand Shape" press="handleExpandShape"/>
+								<m:OverflowToolbarButton id="ulcCollapseBtn" enabled="false" icon="sap-icon://collapse-group" text="Collapse Shape" press="handleCollapseShape"/>
+
+								<m:ToolbarSpacer/>
+								<m:SegmentedButton width="300px" selectionChange=".switchRowSettings" selectedKey="ChevronShapeSettings">
+									<m:items>
+										<m:SegmentedButtonItem key="ChevronShapeSettings" text="Chevron"/>
+										<m:SegmentedButtonItem key="SteppedTaskShapeSettings" text="Tasks"/>
+									</m:items>
+								</m:SegmentedButton>
+							</m:OverflowToolbar>
+						</extension>
+						<rowSettingsTemplate>
+							<core:Fragment fragmentName="sap.gantt.simple.test.view.ChevronShapeSettings" type="XML"></core:Fragment>
+						</rowSettingsTemplate>
+						<rowActionTemplate>
+							<RowAction>
+								<RowActionItem icon="sap-icon://chevron-phase-2" text="Select Shape" press="markShapeAsSelected" visible="true" />
+							</RowAction>
+						</rowActionTemplate>
+						<columns>
+							<Column sortProperty="ProjectElemID" filterProperty="ProjectElemID" autoResizable="true">
+								<m:Text text="ID"/>
+								<template>
+									<m:Label text="{data>ProjectElemID}"/>
+								</template>
+							</Column>
+							<Column sortProperty="StartDate" filterProperty="StartDate" autoResizable="true">
+								<m:Text text="Start Date" wrapping="false"/>
+								<template>
+									<m:DatePicker dateValue="{data>StartDate}"/>
+								</template>
+							</Column>
+							<Column sortProperty="EndDate" filterProperty="EndDate" autoResizable="true">
+								<m:Text text="Project EndDate" wrapping="false"/>
+								<template>
+									<m:DatePicker dateValue="{data>EndDate}"/>
+								</template>
+							</Column>
+							<Column sortProperty="ProjectElemDesc" filterProperty="ProjectElemDesc" autoResizable="true">
+								<m:Text text="Project Description" wrapping="false"/>
+								<template>
+									<m:Label text="{data>ProjectElemDesc}"/>
+								</template>
+							</Column>
+						</columns>
+
+						<dragDropConfig>
+							<dnd:DragDropInfo
+									sourceAggregation="rows"
+									targetAggregation="rows"
+									dropEffect="Move"
+									dropPosition="On"
+									drop="handleTableReorderDrop"/>
+						</dragDropConfig>
+					</TreeTable>
+				</gnt2:table>
+
+				<gnt2:shapeSchemes>
+					<gnt2:ShapeScheme key="project_chevron" primary="true"/>
+					<gnt2:ShapeScheme key="project_to_ulc" rowSpan="2" />
+				</gnt2:shapeSchemes>
+
+				<gnt2:axisTimeStrategy>
+					<axistime:ProportionZoomStrategy>
+						<axistime:totalHorizon>
+							<config:TimeHorizon startTime="20140628000000" endTime="20170101000000"/>
+						</axistime:totalHorizon>
+						<axistime:visibleHorizon>
+							<config:TimeHorizon startTime="20150101000000" endTime="20150315000000"/>
+						</axistime:visibleHorizon>
+					</axistime:ProportionZoomStrategy>
+				</gnt2:axisTimeStrategy>
+
+				<gnt2:calendarDef>
+					<gnt-cal:CalendarDefs defs="{ path:'data>/Calendars', parameters: {expand: 'CalendarInterval'} }">
+						<gnt-cal:Calendar key="{data>CalendarName}" timeIntervals="{path:'data>CalendarInterval', templateShareable: 'true'}">
+							<gnt-cal:TimeInterval startTime="{data>StartDate}" endTime="{data>EndDate}"/>
+						</gnt-cal:Calendar>
+					</gnt-cal:CalendarDefs>
+				</gnt2:calendarDef>
+
+				<gnt2:layoutData>
+					<l:SplitterLayoutData size="30%" minSize="200"/>
+				</gnt2:layoutData>
+
+			</gnt2:GanttChartWithTable>
+
+			<gnt2:GanttChartWithTable id="gantt1" ghostAlignment="Start" adhocLineLayer="Bottom" shapeSelectionMode="Single" shapeSelectionSettings="{color:'blue'}"
+				shapeResize=".onShapeResize"
+				shapeContextMenu=".onShapeContextMenu">
+				<gnt2:table>
+					<TreeTable
+						selectionMode="Single"
+						visibleRowCountMode="Auto"
+						minAutoRowCount="1"
+						selectionBehavior="RowSelector"
+						rowSelectionChange=".onTableRowSelectionChange"
+						enableColumnReordering="true"
+						rowActionCount="2"
+						fixedColumnCount = "1"
+						rows="{
+							path: 'data>/ProjectElems',
+							parameters: {
+								operationMode: 'Server',
+								numberOfExpandedLevels: 1,
+								treeAnnotationProperties: {
+									hierarchyNodeFor: 'ProjectElemID',
+									hierarchyParentNodeFor: 'ParentProjectElemID',
+									hierarchyLevelFor: 'Level',
+									hierarchyDrillStateFor: 'DrillDownState',
+									hierarchyNodeDescendantCountFor: 'Magnitude'
+								},
+								expand: 'ProjectWorkingTime,ProjectTasks/TaskToSteps'
+							}
+						}">
+						<extension>
+							<m:OverflowToolbar>
+								<m:OverflowToolbarButton id="expandBtn"   enabled="false" icon="sap-icon://expand-group" text="Expand Shape" press="handleExpandShape"/>
+								<m:OverflowToolbarButton id="collapseBtn" enabled="false" icon="sap-icon://collapse-group" text="Collapse Shape" press="handleCollapseShape"/>
+								<m:Button id="addTaskBtn" enabled="false" icon="sap-icon://task" text="Add Task" press="onPressAddTask"/>
+								<m:ToolbarSpacer/>
+								<m:SegmentedButton width="300px" selectionChange=".switchRowSettings" selectedKey="SteppedTaskShapeSettings">
+									<m:items>
+										<m:SegmentedButtonItem key="ChevronShapeSettings" text="Chevron"/>
+										<m:SegmentedButtonItem key="SteppedTaskShapeSettings" text="Tasks"/>
+									</m:items>
+								</m:SegmentedButton>
+							</m:OverflowToolbar>
+						</extension>
+						<rowSettingsTemplate>
+							<core:Fragment fragmentName="sap.gantt.simple.test.view.SteppedTaskShapeSettings" type="XML"></core:Fragment>
+						</rowSettingsTemplate>
+						<rowActionTemplate>
+							<RowAction>
+								<items>
+									<RowActionItem icon="sap-icon://expand-group" text="Expand Overlap" press="toggleExpandChartOnRow" visible="true">
+										<customData>
+											<core:CustomData key="expand" value="true"/>
+										</customData>
+									</RowActionItem>
+									<RowActionItem icon="sap-icon://collapse-group" text="Collapse Overlap" press="toggleExpandChartOnRow" visible="true">
+										<customData>
+											<core:CustomData key="expand" value="false"/>
+										</customData>
+									</RowActionItem>
+								</items>
+							</RowAction>
+						</rowActionTemplate>
+						<columns>
+							<Column sortProperty="ProjectElemID" filterProperty="ProjectElemID" autoResizable="true">
+								<m:Text text="ID"/>
+								<template>
+									<m:Label text="{data>ProjectElemID}"/>
+								</template>
+							</Column>
+							<Column sortProperty="StartDate" filterProperty="StartDate" autoResizable="true">
+								<m:Text text="Start Date" wrapping="false"/>
+								<template>
+									<m:DatePicker dateValue="{data>StartDate}"/>
+								</template>
+							</Column>
+							<Column sortProperty="ProjectElemDesc" filterProperty="ProjectElemDesc" autoResizable="true">
+								<m:Text text="Project Description" wrapping="false"/>
+								<template>
+									<m:Label text="{data>ProjectElemDesc}"/>
+								</template>
+							</Column>
+						</columns>
+					</TreeTable>
+				</gnt2:table>
+
+				<gnt2:axisTimeStrategy>
+					<axistime:ProportionZoomStrategy>
+						<axistime:totalHorizon>
+							<config:TimeHorizon startTime="20140628000000" endTime="20170101000000"/>
+						</axistime:totalHorizon>
+						<axistime:visibleHorizon>
+							<config:TimeHorizon startTime="20150101000000" endTime="20150315000000"/>
+						</axistime:visibleHorizon>
+					</axistime:ProportionZoomStrategy>
+				</gnt2:axisTimeStrategy>
+
+				<gnt2:adhocLines>
+					<gnt:AdhocLine stroke="@sapUiChartCritical" strokeWidth="2" strokeDasharray="5, 1" timeStamp="20150201115959" description="Adhoc line description" />
+				</gnt2:adhocLines>
+
+				<gnt2:shapeSchemes>
+					<gnt2:ShapeScheme key="main_row_shape" primary="true"/>
+					<gnt2:ShapeScheme key="task_to_step" rowSpan="1" />
+				</gnt2:shapeSchemes>
+
+				<gnt2:calendarDef>
+					<gnt-cal:CalendarDefs defs="{ path:'data>/Calendars', parameters: {expand: 'CalendarInterval'} }">
+						<gnt-cal:Calendar key="{data>CalendarName}" timeIntervals="{path:'data>CalendarInterval', templateShareable: 'true'}">
+							<gnt-cal:TimeInterval startTime="{data>StartDate}" endTime="{data>EndDate}"/>
+						</gnt-cal:Calendar>
+					</gnt-cal:CalendarDefs>
+				</gnt2:calendarDef>
+
+				<gnt2:layoutData>
+					<l:SplitterLayoutData size="70%" minSize="200"/>
+				</gnt2:layoutData>
+
+			</gnt2:GanttChartWithTable>
+
+		</gnt2:GanttChartContainer>
+
+		<m:footer>
+			<m:Bar>
+				<m:contentLeft>
+					<m:ToggleButton text="Toggle Table" pressed="false" press=".toggleTableVisibility"/>
+					<m:ToggleButton text="Toggle Chart" pressed="false" press=".toggleGanttVisibility"/>
+				</m:contentLeft>
+
+				<m:contentRight>
+					<m:SegmentedButton width="300px" selectionChange=".toggleDensity" selectedKey="sapUiSizeCozy">
+						<m:items>
+							<m:SegmentedButtonItem key="sapUiSizeCompact" text="Compact"/>
+							<m:SegmentedButtonItem key="sapUiSizeCozy" text="Cozy"/>
+							<m:SegmentedButtonItem key="sapUiSizeCondensed" text="Condensed"/>
+						</m:items>
+					</m:SegmentedButton>
+				</m:contentRight>
+			</m:Bar>
+		</m:footer>
+	</m:Page>
+</mvc:View>

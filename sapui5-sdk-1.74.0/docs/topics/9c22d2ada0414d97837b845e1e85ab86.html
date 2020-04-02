@@ -1,0 +1,200 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Extensions for OPA5</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Extend OPA capabilities with custom extensions."><meta name="description" content="Extend OPA capabilities with custom extensions."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"a88a5e5529e54b3aa703a0b2a36cf7be.html","previousTopicHref":"fb487ef0f9bf41a3afdbd0cc97368873.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio9c22d2ada0414d97837b845e1e85ab86"><h1 class="title topictitle1" hidden>Extensions for OPA5</h1><div class="body conbody"><p class="shortdesc" hidden>Extend OPA capabilities with custom extensions.</p>
+<p class="p">You can provide application-aware assertions that are called from the test but operate in the
+context of the application being tested.</p>
+<div class="section" id="loio9c22d2ada0414d97837b845e1e85ab86__section_nng_x5k_b1b"><section class="section" type="Interface"><h2 class="section_title" style="font-size: 1.15em;">Interface</h2>
+
+<p class="p">The extension API is defined in the <samp class="ph codeph">sap.ui.test.OpaExtension</samp> class. A
+custom extension should extend this class and implement the necessary methods. The extension
+class should be available in the application and loaded in the application frame.</p>
+<ul class="ul" id="loio9c22d2ada0414d97837b845e1e85ab86__ul_mlg_2vk_b1b">
+<li class="li">
+<p class="p"><span class="ph emphasis emphasis"><samp class="ph codeph">onAfterInit()</samp></span> - called after the application is
+fully loaded. The test will wait for the returned promise to resolve before starting.
+This is a good place for extension initialization.</p>
+</li>
+<li class="li">
+<p class="p"><span class="ph emphasis emphasis"><samp class="ph codeph">onBeforeExit()</samp></span> - called after the test is
+finished but before the application is discarded. The aplication shutdown will wait for
+the returned promise to resolve. This is the place to clean up the extension.</p>
+</li>
+<li class="li">
+<p class="p"><span class="ph emphasis emphasis"><samp class="ph codeph">getAssertions()</samp></span> - called after extension
+initialization but before the test has started. It should return a map of assertion
+names and assertion functions. This map is merged in the default QUnit assertion object.
+The assertion function is called in the context of the application being tested and
+should return a promise that resolves with <samp class="ph codeph">QUnit.pushResult</samp> object. The
+promise should be resolved for both passing and failing assertion and rejected only if
+the assertion evaluation fails. The assertion function could interact with the
+application under test and the test will wait for the returned promise to resolve before
+continuing. From the point of the view of the test, this assertion is consistent with
+the classical synchronous QUnit assertions. For more information, see <a class="extlink" href="http://help.sap.com/disclaimer?site=https://api.qunitjs.com/assert/pushResult" target="_blank" alt="https://api.qunitjs.com/assert/pushResult" title="https://api.qunitjs.com/assert/pushResult">https://api.qunitjs.com/assert/pushResult<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a>.</p>
+</li>
+</ul>
+</section></div>
+<div class="section" id="loio9c22d2ada0414d97837b845e1e85ab86__section_nnd_y5k_b1b"><section class="section" type="Lifecycle"><h2 class="section_title" style="font-size: 1.15em;">Lifecycle</h2>
+
+<p class="p">To load an extension, the test should enable it by specifying extension class name as
+string in the key &apos;extensions&apos; in the options object given to
+<samp class="ph codeph">Opa5.extendConfig()</samp>. An array of extension names could be specified or
+the extension name <samp class="ph codeph">?opaExtensions=[my/custom/Extension]</samp> could be given in
+the test URL. If the extension needs some application parameters, they could be provided in
+the <samp class="ph codeph">appParams</samp>.</p>
+<p class="p">For more information, see <span class="ph">the <span class="ph uicontrol">API
+Reference</span>: <a class="xref" href="../../#/api/sap.ui.test.Opa5/methods/sap.ui.test.Opa5.extendConfig" target="_top" alt="#/api/sap.ui.test.Opa5/methods/sap.ui.test.Opa5.extendConfig" title="#/api/sap.ui.test.Opa5/methods/sap.ui.test.Opa5.extendConfig">
+<samp class="ph codeph">Opa5.extendConfig()</samp></a></span>
+</p>
+</section></div>
+<div class="section" id="loio9c22d2ada0414d97837b845e1e85ab86__section_oc2_y5k_b1b"><section class="section" type="Example"><h2 class="section_title" style="font-size: 1.15em;">Example</h2>
+
+<p class="p">Custom extension class:</p>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+  &apos;sap/ui/test/OpaExtension&apos;
+], function(OpaExtension) {
+  &quot;use strict&quot;;
+  var customExtension = OpaExtension.extend(&quot;sap.ui.test.sample.CustomOpaExtension&quot;, {
+    metadata : {
+      publicMethods : [
+        &quot;getAssertions&quot;
+      ]
+    },
+    getAssertions : function() {
+      return {
+        myCustomAssertion: function() {
+          return new Promise(function(resolve, reject) {
+
+            // start custom assertion logic, resolve the promise when ready
+            setTimeout(function() {
+
+              // Assertion passes
+              resolve({
+                result: true,
+                message: &quot;Custom assertion passes&quot;
+              });
+
+              // OR Assertion fails
+              resolve({
+                result: false,
+                message: &quot;Custom assertion fails&quot;
+              });
+
+              // OR Propagate an error while evaluating assertion
+              reject(new Error(&quot;Error while evaluating assertion, details: &quot; + details));
+
+            },0);
+
+          });
+        }
+      }
+    }
+  });
+  
+  return customExtension;
+});</pre>
+<p class="p">Activate this extension and provide some URI parameters to the application:</p>
+<pre class="pre codeblock prettyprint lang-js">Opa5.extendConfig({
+  extensions: [&quot;sap/ui/test/sample/CustomOpaExtension&quot;],
+  appParams: {
+    &quot;key&quot;: &quot;value&quot;
+  }
+});</pre>
+<p class="p">Call the custom extension from the test:</p>
+<pre class="pre codeblock prettyprint lang-js">Opa5.createPageObjects({
+  onMyView : {
+    viewName : &quot;MyView&quot;,
+    assertions : {
+      iShouldUseMyCustomAssertion : function () {
+        return this.waitFor({
+          id: &quot;MyControlId&quot;,
+          actions: new Press(),
+          success : function () {
+            Opa5.assert.myCustomAssertion();
+          }
+        });
+      }
+    }
+  }
+});</pre>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

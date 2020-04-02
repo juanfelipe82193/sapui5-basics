@@ -1,0 +1,183 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Prefilling Fields When Creating a New Entity Using an Extension Point</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="When a user creates a new entity, it is possible to prefill fields with specific values."><meta name="description" content="When a user creates a new entity, it is possible to prefill fields with specific values."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"89fa878945294931b15a581a99043005.html","previousTopicHref":"b95adf3545fc4c578ca50d1ee3ec34a1.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio189e2d8a59f04a2693a4fde7f4a91a65"><h1 class="title topictitle1" hidden>Prefilling Fields When Creating a New Entity Using an Extension Point</h1><div class="body conbody"><p class="shortdesc" hidden>When a user creates a new entity, it is possible to prefill fields with specific values. </p>
+<div class="p">There are two ways you can implement this system behavior:<ul class="ul" id="loio189e2d8a59f04a2693a4fde7f4a91a65__ul_k5x_p5l_5cb">
+<li class="li">Creation using cross-app navigation<p class="p">For more information, see <a class="xref" href="../../#/topic/11ff444f82e14eb3a2e8eca0065a5055.html" title="When a user creates a new entity, it is possible to prefill fields with specific values." target="_top">Prefilling Fields When Creating a New Entity</a>.</p></li>
+<li class="li">
+<p class="p">Passing values entered by the user into the filter bar</p>
+</li>
+</ul></div>
+<div class="section" id="loio189e2d8a59f04a2693a4fde7f4a91a65__section_ttg_h3m_5cb"><section class="section" type="Passing Values Entered by the User into the Filter Bar"><h2 class="section_title" style="font-size: 1.15em;">Passing Values Entered by the User into the Filter Bar</h2>
+
+<p class="p">In the list report, if users enter a value into the filter bar, perform a search, and then
+create a new object, this can mean that they want to create an instance that was not
+found with the previous search.You can support this scenario by providing the
+additional option &quot;Create with filters&quot; which passes filter values entered by the
+user to the newly created instance.</p>
+<p class="p">To enable this feature, perform these steps:</p>
+<ol class="ol" id="loio189e2d8a59f04a2693a4fde7f4a91a65__ol_ul2_tnl_5cb">
+<li class="li">
+<p class="p">Incorporate the following snippet into the manifest.json:</p>
+<pre class="pre codeblock prettyprint">
+... 
+&quot;sap.ui.generic.app&quot;: {  
+    &quot;_version&quot;: &quot;???&quot;,   
+    &quot;settings&quot;: {   ...   },   
+    &quot;pages&quot;: {    
+        &quot;ListReport|myEntitySet&quot;: {     
+            &quot;entitySet&quot;: &quot;myEntitySet&quot;,     
+            &quot;component&quot;: {      
+                &quot;name&quot;: &quot;sap.suite.ui.generic.template.ListReport&quot;,
+                &quot;list&quot;: true,      
+                &quot;settings&quot;: {       
+                    &quot;createWithFilters&quot;: {        
+                        &quot;strategy&quot;: &quot;extension&quot;       
+                    },
+            ...
+</pre>
+<div class="p">Result: The standard <span class="ph uicontrol">Create</span> button in the list report is replaced by
+a menu button that gives you two options:<ul class="ul" id="loio189e2d8a59f04a2693a4fde7f4a91a65__ul_lbn_w4l_5cb">
+<li class="li">
+<p class="p">The text for the first option is given by the i18n key
+<samp class="ph codeph">CREATE_NEW_OBJECT</samp>. The default text is
+<span class="keyword uinolabel">Create Object</span>. We recommend
+overwriting this text with a more specific text, for example,
+<span class="ph uicontrol">Create New Product</span>.</p>
+</li>
+<li class="li"><p class="p">The text for the second option is <span class="keyword uinolabel">Create with
+Filters</span>. We do not recommend overwriting this
+text.</p>Note that this option is enabled only if the data
+displayed in the table corresponds to the displayed filter values.
+This means the user might have to choose <span class="ph uicontrol">Go</span>
+to enable the option if the selection is not triggered
+automatically.</li>
+</ul>
+</div>
+</li>
+<li class="li">
+<p class="p">Implement the logic that transfers information from the filter bar to the creation process.
+To do so, you have to override the extension function<samp class="ph codeph">
+getPredefinedValuesForCreateExtension(oSmartFilterBar)</samp>. This
+function receives an instance of<samp class="ph codeph">
+sap.ui.comp.smartfilterbar.SmartFilterBar</samp> and must return an
+object that represents the name/value pairs that should be used in the
+creation process.</p>
+<p class="p">This is shown in the following code sample which extracts the filter values for
+<samp class="ph codeph">ProductCategory</samp> and <samp class="ph codeph">Supplier</samp> (if one
+exists and is unique):</p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">
+getPredefinedValuesForCreateExtension: function(oSmartFilterBar){   
+    var oRet = {};   
+    var oSelectionVariant = oSmartFilterBar.getUiState().getSelectionVariant();   
+    var aSelectOptions = oSelectionVariant.SelectOptions;   
+    var fnTransfer = function(sFieldname){    
+        for (var i = 0; i &lt; aSelectOptions.length; i++){     
+            var oSelectOption = aSelectOptions[i];     
+            if (oSelectOption.PropertyName === sFieldname){      
+                if (oSelectOption.Ranges.length === 1){       
+                    var oFilter = oSelectOption.Ranges[0];       
+                    if (oFilter.Sign === &quot;I&quot; &amp;&amp; oFilter.Option === &quot;EQ&quot;){        
+                        oRet[sFieldname] = oFilter.Low;       
+                    }      
+                }      
+                break;     
+            }    
+        }   
+    };     
+    fnTransfer(&quot;ProductCategory&quot;);   
+    fnTransfer(&quot;Supplier&quot;);   
+    return oRet;  
+},
+</pre></aside>
+<div class="p">
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">We recommend using this option only for fields that are available and editable on the
+object page, and that will not be changed via UI adaptation.
+Otherwise, users might potentially save values they have never seen
+or cannot change.</p></aside>
+</div>
+</li>
+</ol>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,33 @@
+/*!
+ * OpenUI5
+ * (c) Copyright 2009-2020 SAP SE or an SAP affiliate company.
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ */
+sap.ui.define([
+	"sap/ui/core/sample/odata/v4/SalesOrders/tests/WriteNonDeferredGroup",
+	"sap/ui/test/opaQunit",
+	"sap/ui/test/TestUtils"
+], function (WriteNonDeferredGroupTest, opaTest, TestUtils) {
+	/*global QUnit */
+	"use strict";
+
+	var sDefaultLanguage = sap.ui.getCore().getConfiguration().getLanguage();
+
+	QUnit.module("sap.ui.core.sample.odata.v4.SalesOrders - " +
+		"Write via application groups with SubmitMode.Auto/.Direct", {
+		before : function () {
+			sap.ui.getCore().getConfiguration().setLanguage("en-US");
+		},
+		after : function () {
+			sap.ui.getCore().getConfiguration().setLanguage(sDefaultLanguage);
+		}
+	});
+
+	//*****************************************************************************
+	[
+		"myAutoGroup", "$auto", "$auto.foo", "myDirectGroup", "$direct"
+	].forEach(function (sGroupId) {
+		opaTest("POST/PATCH SalesOrder via group: " + sGroupId,
+			WriteNonDeferredGroupTest.writeNonDeferredGroup.bind(null, sGroupId, ""));
+	});
+});

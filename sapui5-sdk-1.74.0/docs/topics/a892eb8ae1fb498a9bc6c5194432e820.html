@@ -1,0 +1,134 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Extending List Reports and Object Pages Using App Extensions</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Various framework extension points are available for list reports and object pages."><meta name="description" content="Various framework extension points are available for list reports and object pages."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"61cf0ee828824903907464c80dd0d88c.html","previousTopicHref":"84e4f8967bf643c9b81d4d84cefdf367.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loioa892eb8ae1fb498a9bc6c5194432e820"><h1 class="title topictitle1" hidden>Extending List Reports and Object Pages Using App Extensions</h1><div class="body conbody"><p class="shortdesc" hidden>Various framework extension points are available for list reports and object pages. </p>
+<div class="p"> Make sure you have read the following information: <a class="xref" href="../../#/topic/d9c146a4e0f049108cf8231bfca5585b.html" title="Before you start creating an extension for your app, make sure you have read the following information." target="_top">Read Before Extending a Generated App</a>.<aside class="note caution" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Caution</strong></div>
+<p>Use app extensions with caution and only if you
+cannot produce the required behavior by other means, such as manifest settings or
+annotations. To correctly integrate your app extension coding with SAP Fiori elements,
+use only the extensionAPI of SAP Fiori elements. For more information, see <a class="xref" href="../../#/topic/bd2994b69ef542998becbc69ab093f7e.html" title="This API consists of several elements that are described below. It can be used for the analytical list page, list report, and object page." target="_top">Using the ExtensionAPI</a>. </p><p class="p">After you&apos;ve created an app
+extension, its display (for example, control placing, CSS) and system behavior (for
+example, model and binding usage, busy handling) of the app extension lies within
+the application&apos;s responsibility. SAP Fiori elements provides support only for the
+official extensionAPI functions. Don&apos;t access or manipulate SAP Fiori elements&apos;
+internal coding.</p></aside>
+</div>
+<p class="p">You can either use the extension wizard in the SAP Web IDE to create extensions or you
+can create them manually.</p>
+<p class="p">In list reports and object pages, you can use SAP Web IDE to add the following extensions:</p>
+<ul class="ul" id="loioa892eb8ae1fb498a9bc6c5194432e820__ul_wf5_rrc_kdb">
+<li class="li">
+<p class="p">List report</p>
+<ul class="ul" id="loioa892eb8ae1fb498a9bc6c5194432e820__ul_x3j_src_kdb">
+<li class="li">
+<p class="p">Filter</p>
+</li>
+<li class="li">
+<p class="p">Action</p>
+</li>
+<li class="li">
+<p class="p">Column</p>
+</li>
+</ul>
+</li>
+<li class="li">Object page<ul class="ul" id="loioa892eb8ae1fb498a9bc6c5194432e820__ul_mnc_vrc_kdb">
+<li class="li">
+<p class="p">Action</p>
+</li>
+<li class="li">
+<p class="p">Facet</p>
+</li>
+<li class="li">
+<p class="p">Column</p>
+</li>
+<li class="li">
+<p class="p">Header</p>
+</li>
+<li class="li">
+<p class="p">Form</p>
+</li>
+</ul></li>
+</ul>
+<p class="p"> While this documentation describes how to manually define app extensions, the following how-to
+video shows you how to create a section extension on the object page using the extension
+wizard: <div class="video-links-disclaimer"><span class="video-links-disclaimer-label">Disclaimer: </span>The below video <img src="themes/sap-default/img/3rd_link.png" title="Information published on non-SAP site" alt="Information published on non-SAP site"> is not part of the SAP product documentation.  Please read the <a href="http://help.sap.com/disclaimer?site=" target="_blank">legal disclaimer</a> for video links before viewing this video.</div><div class="video-max-width"><div class="iframe-wrapper"><iframe src="https://www.youtube.com/embed/u-IwLFBh158"></iframe></div></div>.</p>
+</div><div class="related-links"> <br><div class="childtopics"><strong>In this section:</strong></div><ul class="ullinks"><div><strong><a class="link" href="../../#/topic/61cf0ee828824903907464c80dd0d88c.html" title="You define application-specific header facets using annotations, but in some cases it might be necessary to integrate components in the front end that are not available with annotations." target="_top">Extension Points for Object Page Header Facets</a></strong><br></div><div><strong><a class="link" href="../../#/topic/92ad9968e41748aeb74971f7a08a91c8.html" title="You define application-specific sections in the form of annotations, however, in some cases you might need to integrate components into the front end, for example, charts or attachments." target="_top">Extension Points for Sections on the Object Page</a></strong><br></div><div><strong><a class="link" href="../../#/topic/ce8d468269814077bc4b132572979b66.html" title="On the object page, you can use extension points to add additional subsections." target="_top">Extension Points for Subsections on the Object Page</a></strong><br></div><div><strong><a class="link" href="../../#/topic/4e49753530ad4a73a44a5f8efac238d6.html" title="On the object page, you can use extension points to extend forms in sections." target="_top">Extension Points for Forms on the Object Page</a></strong><br></div><div><strong><a class="link" href="../../#/topic/d525522c1bf54672ae4e02d66b38e60c.html" title="You can use extension points to enhance tables in SAP Fiori elements apps." target="_top">Extension Points for Tables</a></strong><br></div><div><strong><a class="link" href="../../#/topic/7619517a92414e27b71f02094bd08d06.html" title="You can use extension points to add custom actions to the list report and the object page." target="_top">Adding Custom Actions Using Extension Points</a></strong><br></div><div><strong><a class="link" href="../../#/topic/5fb9f57fcf12401bbe39a635e9a32a4e.html" title="You can extend the filter bar by using a custom filter field." target="_top">Adding Custom Fields to the Smart Filter Bar</a></strong><br></div><div><strong><a class="link" href="../../#/topic/25885b6f62ec4f61bf9271553ef369cd.html" title="You can adapt the text of the Delete dialog box that is displayed when you delete list report items." target="_top">Adapting Texts in the Delete Dialog Box (List Report)</a></strong><br></div><div><strong><a class="link" href="../../#/topic/1fd8e5201e3142d0bc002a078bb3da98.html" title="You can adapt the text of the Delete dialog box that is displayed when you delete the entire object page." target="_top">Adapting Texts in the Delete Dialog Box (Object Page Header)</a></strong><br></div><div><strong><a class="link" href="../../#/topic/b95adf3545fc4c578ca50d1ee3ec34a1.html" title="You can adapt the text of the Delete dialog box that is displayed when you delete items from nested smart tables on the object page." target="_top">Adapting Texts in the Delete Dialog Box (Object Page with Nested Smart Table)</a></strong><br></div><div><strong><a class="link" href="../../#/topic/189e2d8a59f04a2693a4fde7f4a91a65.html" title="When a user creates a new entity, it is possible to prefill fields with specific values." target="_top">Prefilling Fields When Creating a New Entity Using an Extension Point</a></strong><br></div><div><strong><a class="link" href="../../#/topic/89fa878945294931b15a581a99043005.html" title="You can perform inner app state handling for custom UI elements." target="_top">Custom State Handling for Extended Apps</a></strong><br></div></ul></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sinaDefine(['../core/core','./ResultSet'],function(c,R){"use strict";return R.derive({_meta:{properties:{facets:{required:false,default:function(){return[];}},totalCount:{required:true},nlqSuccess:{required:false,default:false}}},toString:function(){var r=[];r.push(R.prototype.toString.apply(this,arguments));for(var i=0;i<this.facets.length;++i){var f=this.facets[i];r.push(f.toString());}return r.join('\n');}});});

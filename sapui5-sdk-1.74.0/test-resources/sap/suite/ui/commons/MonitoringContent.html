@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MonitoringContent - sap.suite.ui.commons</title>
+
+    <!-- UI5 Bootstrap -->
+    <script src="../../../../../resources/sap-ui-core.js"
+            type="text/javascript"
+            id="sap-ui-bootstrap"
+            data-sap-ui-libs="sap.ui.layout,sap.suite.ui.commons,sap.m"
+            data-sap-ui-theme="sap_bluecrystal"></script>
+
+<style type="text/css">
+	.sapSuiteInfoTile {
+		margin-left:1rem;
+	}
+	
+	#controls {
+		margin-top:1rem;
+	}
+</style>
+<script type="text/javascript">
+    jQuery.sap.initMobile();
+
+	var oConfData = {
+		sizes:{
+				L:sap.suite.ui.commons.InfoTileSize.L,
+				M:sap.suite.ui.commons.InfoTileSize.M,
+				S:sap.suite.ui.commons.InfoTileSize.S,
+				Auto:sap.suite.ui.commons.InfoTileSize.Auto
+		},
+        value: "12",
+        state: sap.suite.ui.commons.LoadState.Loaded,
+        iconSrc: "sap-icon://travel-expense"
+	}
+
+	var oConfModel = new sap.ui.model.json.JSONModel();
+	oConfModel.setData(oConfData);
+	sap.ui.getCore().setModel(oConfModel);
+	
+	var oMVConfL = new sap.suite.ui.commons.MonitoringContent("configurable-tile-L", {
+		value : "{/value}",
+		size : "{/sizes/L}",
+		state: "{/state}",
+		iconSrc : "{/iconSrc}",
+		press: function (oEvent) {
+			sap.m.MessageToast.show("The large monitoring content is pressed.");
+		}
+	});
+
+	var oMVConfM = new sap.suite.ui.commons.MonitoringContent("configurable-tile-M", {
+		value : "{/value}",
+		size : "{/sizes/M}",
+		state: "{/state}",
+		iconSrc : "{/iconSrc}",
+		press: function (oEvent) {
+			sap.m.MessageToast.show("The medium monitoring content is pressed.");
+		}
+	});
+
+	var oMVConfS = new sap.suite.ui.commons.MonitoringContent("configurable-tile-S", {
+		value : "{/value}",
+		size : "{/sizes/S}",
+		state: "{/state}",
+		iconSrc : "{/iconSrc}",
+		press: function (oEvent) {
+			sap.m.MessageToast.show("The small monitoring content is pressed.");
+		}
+	});
+
+	var oMVConfAuto = new sap.suite.ui.commons.MonitoringContent("configurable-tile-auto", {
+		value : "{/value}",
+		size : "{/sizes/Auto}",
+		state: "{/state}",
+		iconSrc : "{/iconSrc}",
+		press: function (oEvent) {
+			sap.m.MessageToast.show("The auto monitoring content is pressed.");
+		}
+	});
+
+	var oPage = new sap.m.Page("initial-page", {
+		showHeader : false,
+		content : [ new sap.m.HBox({
+			justifyContent: sap.m.FlexJustifyContent.Center,
+			alignItems : "End",
+			items : [ oMVConfL, oMVConfM, oMVConfS, oMVConfAuto ]
+		}) ]
+	});
+
+	var oValueLbl = new sap.m.Label({
+		text : "Value",
+		labelFor : "value-value"
+	});
+
+	var oValueInput = new sap.m.Input("value-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter value ...'
+	});
+	oValueInput.bindValue("/value");
+
+	var oTriggerLoadLbl = new sap.m.Label({
+		text : "State",
+		labelFor : "loading-state"
+	});
+
+	var oTriggerLoadSlct = new sap.m.Select("loading-state", {
+		change : function(oE) {
+			var selectedItem = oE.getParameter("selectedItem");
+			oMVConfL.setState(selectedItem.getKey());
+			oMVConfM.setState(selectedItem.getKey());
+			oMVConfS.setState(selectedItem.getKey());
+			oMVConfAuto.setState(selectedItem.getKey());
+		},
+		items : [new sap.ui.core.Item({
+			key : "Loaded",
+			text : "Loaded"
+		}), new sap.ui.core.Item({
+			key : "Loading",
+			text : "Loading"
+		}),  new sap.ui.core.Item({
+			key : "Failed",
+			text : "Failed"
+		}) ]
+	});
+
+	
+	var oIconLbl = new sap.m.Label({
+		text : "Icon",
+		labelFor : "icon-change"
+	});
+	var oIconSlct = new sap.m.Select("icon-change", {
+		change : function(oE) {
+			var selectedItem = oE.getParameter("selectedItem");
+			oMVConfL.setIconSrc(selectedItem.getKey());
+			oMVConfM.setIconSrc(selectedItem.getKey());
+			oMVConfS.setIconSrc(selectedItem.getKey());
+			oMVConfAuto.setIconSrc(selectedItem.getKey());
+		},
+		items : [ 
+		          new sap.ui.core.Item("icon-item-1", {
+						key : "",
+						text : ""
+				   }), 
+				   new sap.ui.core.Item("icon-item-2", {
+						key : "sap-icon://travel-expense",
+						text : "sap-icon://travel-expense"
+				   }),
+				   new sap.ui.core.Item("icon-item-3", {
+						key : "sap-icon://globe",
+						text : "sap-icon://globe"
+				})
+		],
+		selectedItem: "icon-item-2"
+	});
+
+
+	var editableSimpleForm = new sap.ui.layout.form.SimpleForm("controls", {
+		maxContainerCols : 2,
+		editable : true,
+		content : [ new sap.ui.core.Title({ // this starts a new group
+			text : "Modify Content"
+		}), oValueLbl, oValueInput, 
+			oTriggerLoadLbl, oTriggerLoadSlct, oIconLbl, oIconSlct
+		]
+	});
+	oPage.addContent(editableSimpleForm);
+
+	oPage.placeAt("content");
+</script>
+</head>
+
+<body class="sapUiBody">
+    <div id="content" style="height:100%"></div>
+</body>
+</html>

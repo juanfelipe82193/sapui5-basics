@@ -1,0 +1,178 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Bootstrapping: Loading and Initializing</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="To use SAPUI5 features in your HTML page, you have to load and initialize the SAPUI5 library."><meta name="description" content="To use SAPUI5 features in your HTML page, you have to load and initialize the SAPUI5 library."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"91f1f4536f4d1014b6dd926db0e91070.html","previousTopicHref":"ec699e0817fb46a0817b0fa276a249f8.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loioa04b0d10fb494d1cb722b9e341b584ba"><h1 class="title topictitle1" hidden>Bootstrapping: Loading and Initializing </h1><div class="body conbody"><p class="shortdesc" hidden>To use <span class="ph"><span class="ph pname">SAPUI5</span></span> features
+in your HTML page, you have to load and initialize the SAPUI5 library.</p>
+<p class="p">You can use the <span class="ph"><span class="ph pname">SAPUI5</span></span>
+bootstrap script in your page to initialize <span class="ph"><span class="ph pname">SAPUI5</span></span> runtime
+automatically as soon as the script is loaded and executed by the browser. For simple
+use cases as well as the default <span class="ph"><span class="ph pname">SAPUI5</span></span> installation, this
+is sufficient to build and run UIs. In addition to this, you can specify the set of <span class="ph"><span class="ph pname">SAPUI5</span></span> libraries and the
+theme used for your application in the configuration settings.</p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">If you run your app standalone, the bootstrap is added to your HTML page. In an SAP
+Fiori launchpad environment, the launchpad executes the bootstrap and no additional
+HTML page is needed to display the app.</p></aside>
+<p class="p">The following code snippet shows a typical bootstrap script tag:</p>
+<pre class="pre codeblock prettyprint lang-html">&lt;script id=&quot;sap-ui-bootstrap&quot; 
+     type=&quot;text/javascript&quot;
+     src=&quot;resources/sap-ui-core.js&quot;
+     data-sap-ui-theme=&quot;sap_belize&quot;
+     data-sap-ui-libs=&quot;sap.m&quot;
+     data-sap-ui-compatVersion=&quot;edge&quot;&gt;
+&lt;/script&gt;</pre>
+<p class="p">The attributes <samp class="ph codeph">data-sap-ui-theme=&quot;sap_belize&quot;</samp> and
+<samp class="ph codeph">data-sap-ui-libs=&quot;sap.m&quot;</samp> already provide examples of how <span class="ph"><span class="ph pname">SAPUI5</span></span> runtime can be
+configured to the needs of an application.</p>
+<div class="section"><section class="section" type="Overview of Bootstrap Files"><h2 class="section_title" style="font-size: 1.15em;">Overview of Bootstrap Files</h2>
+
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> provides several
+bootstrap files for different use cases. The following table gives an overview of
+the most important resources and the respective use cases. The resource names refer
+to the <samp class="ph codeph">resources/</samp> folder in the <span class="ph"><span class="ph pname">SAPUI5</span></span> installation.
+The actual base URL depends on your platform and administrative setup.</p>
+<div class="table-wrapper"><table summary id="loioa04b0d10fb494d1cb722b9e341b584ba__simpletable_ksy_xsg_ps" border="1" class="simpletable"><thead><tr class="sthead">
+<th style="vertical-align:bottom;text-align:left;" id="d153313e87" class="stentry">Resource</th>
+<th style="vertical-align:bottom;text-align:left;" id="d153313e90" class="stentry">Description</th>
+</tr></thead><tbody><tr class="strow">
+<td style="vertical-align:top;" headers="d153313e87" class="stentry"><samp class="ph codeph">sap-ui-core.js</samp></td>
+<td style="vertical-align:top;" headers="d153313e90" class="stentry">
+<p class="p">This is the standard bootstrap file, which we recommend to use for
+typical use cases. It already contains jQuery,
+<samp class="ph codeph">jquery-ui-position</samp> and only the minimum required
+parts of the core library (<samp class="ph codeph">sap.ui.core</samp>). Required files
+are loaded dynamically using XMLHttpRequest (XHR).</p>
+<p class="p">For more information, see <a class="xref" href="../../#/topic/91f1f4536f4d1014b6dd926db0e91070.html" title="The standard variant for bootstrapping loads all JavaScript modules of a library in advance with one single request for performance reasons." target="_top">Standard Variant for Bootstrapping</a>. </p>
+</td>
+</tr><tr class="strow">
+<td style="vertical-align:top;" headers="d153313e87" class="stentry">
+<p class="p">Content Delivery Network (CDN)</p>
+</td>
+<td style="vertical-align:top;" headers="d153313e90" class="stentry">
+<p class="p">You can access the libraries externally from a CDN. For more information
+see <a class="xref" href="../../#/topic/2d3eb2f322ea4a82983c1c62a33ec4ae.html" title="SAPUI5 can either be loaded locally with a relative path from an SAP Web server or externally from a Content Delivery Network (CDN)." target="_top">Variant for Bootstrapping from Content Delivery Network</a>.</p>
+</td>
+</tr><tr class="strow">
+<td style="vertical-align:top;" headers="d153313e87" class="stentry"><samp class="ph codeph">sap-ui-core-nojQuery.js</samp></td>
+<td style="vertical-align:top;" headers="d153313e90" class="stentry">
+<p class="p">You use this bootstrap file for applications with their own jQuery
+version. It also contains the minimum required parts of the core
+library, but <strong class="ph b">not</strong> jQuery and
+<samp class="ph codeph">jquery-ui-position</samp>.</p>
+<p class="p">For more information, see <a class="xref" href="../../#/topic/91f1dd0c6f4d1014b6dd926db0e91070.html" title="The noJQuery variant supports bootstrapping for an application that already integrates jQuery or uses a different jQuery version than SAPUI5." target="_top">noJQuery Variant for Bootstrapping</a>. </p>
+</td>
+</tr><tr class="strow">
+<td style="vertical-align:top;" headers="d153313e87" class="stentry"><samp class="ph codeph">sap/ui/core/library-preload.js</samp></td>
+<td style="vertical-align:top;" headers="d153313e90" class="stentry">
+<p class="p">This file contains most of the modules that are contained in the
+<samp class="ph codeph">sap.ui.core</samp> library, but the modules are parsed and
+executed only on demand, and not immediately.</p>
+<aside class="note caution" id="loioa04b0d10fb494d1cb722b9e341b584ba__note_N100AB_N100A0_N10099_N1001F_N10013_N10001" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Caution</strong></div>
+<p>An
+application must not reference this file. If the configuration option is
+set to <samp class="ph codeph">preload</samp>, <span class="ph"><span class="ph pname">SAPUI5</span></span>
+automatically loads the file.</p></aside>
+<p class="p">For more information, see <a class="xref" href="../../#/topic/91f1f4536f4d1014b6dd926db0e91070.html" title="The standard variant for bootstrapping loads all JavaScript modules of a library in advance with one single request for performance reasons." target="_top">Standard Variant for Bootstrapping</a>. </p>
+</td>
+</tr><tr class="strow">
+<td style="vertical-align:top;" headers="d153313e87" class="stentry"><samp class="ph codeph">sap-ui-core-lean.js</samp></td>
+<td style="vertical-align:top;" headers="d153313e90" class="stentry">
+<p class="p">This bootstrap file is similar to the <samp class="ph codeph">sap-ui-core.js</samp>
+file, but in this use case only the jQuery and one <span class="ph"><span class="ph pname">SAPUI5</span></span> file
+are loaded immediately and the other files are loaded dynamically.</p>
+<aside class="note caution" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Caution</strong></div>
+<p class="p">This use case is usually <span class="ph emphasis emphasis">not</span> used and may be
+removed in future.</p></aside>
+</td>
+</tr><tr class="strow">
+<td style="vertical-align:top;" headers="d153313e87" class="stentry"><samp class="ph codeph">sap-ui-custom*.js</samp></td>
+<td style="vertical-align:top;" headers="d153313e90" class="stentry">
+<p class="p">File names that match this pattern are reserved for custom merged files used by the
+application.</p>
+<aside class="note" id="loioa04b0d10fb494d1cb722b9e341b584ba__note_N10120_N10119_N10112_N1001F_N10013_N10001" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Note</strong></div>
+<p>The proposed
+naming scheme for these files needs to be adapted in future versions for
+the same encapsulation reasons as mentioned above. </p></aside>
+</td>
+</tr></tbody></table></div>
+</section></div>
+</div><div class="related-links"> <br><div class="childtopics"><strong>In this section:</strong></div><ul class="ullinks"><div><strong><a class="link" href="../../#/topic/91f1f4536f4d1014b6dd926db0e91070.html" title="The standard variant for bootstrapping loads all JavaScript modules of a library in advance with one single request for performance reasons." target="_top">Standard Variant for Bootstrapping</a></strong><br></div><div><strong><a class="link" href="../../#/topic/2d3eb2f322ea4a82983c1c62a33ec4ae.html" title="SAPUI5 can either be loaded locally with a relative path from an SAP Web server or externally from a Content Delivery Network (CDN)." target="_top">Variant for Bootstrapping from Content Delivery Network</a></strong><br></div><div><strong><a class="link" href="../../#/topic/91f1dd0c6f4d1014b6dd926db0e91070.html" title="The noJQuery variant supports bootstrapping for an application that already integrates jQuery or uses a different jQuery version than SAPUI5." target="_top">noJQuery Variant for Bootstrapping</a></strong><br></div><div><strong><a class="link" href="../../#/topic/91f2c9076f4d1014b6dd926db0e91070.html#loio91f2c9076f4d1014b6dd926db0e91070" title="The initialization process starts after SAPUI5 runtime is loaded." target="_top">Initialization Process</a></strong><br></div><div><strong><a class="link" href="../../#/topic/91f08de06f4d1014b6dd926db0e91070.html" title="SAPUI5 provides several options for the configuration of the SAPUI5 runtime, such as runtime default values and script tag attributes." target="_top">Configuration of the SAPUI5 Runtime</a></strong><br></div></ul></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

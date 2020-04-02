@@ -1,0 +1,185 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Configuring Internal Navigation</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="SAP Fiori elements control the navigation within an app (internal navigation). This section describes the configuration options that you have."><meta name="description" content="SAP Fiori elements control the navigation within an app (internal navigation). This section describes the configuration options that you have."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"8bd546e27a5f41cea6e251ba04534d70.html","previousTopicHref":"4132ffa02f1148058a78dfb11c8567b0.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio2c65f07f44094012a511d6bd83f50f2d"><h1 class="title topictitle1" hidden>Configuring Internal Navigation</h1><div class="body conbody"><p class="shortdesc" hidden>SAP Fiori elements control the navigation within an app (internal navigation). This
+section describes the configuration options that you have.</p>
+<div class="section"><section class="section" type="Standard Navigation Within an App"><h2 class="section_title" style="font-size: 1.15em;">Standard Navigation Within an App</h2>
+
+<p class="p">In the manifest.json, you define which pages are available in the app. At the top level, a
+&quot;pages&quot; map is defined. This map should have only one point of entry. This is the
+main point of entry to the app and should always be a list report. Each page can
+have a &quot;pages&quot; map containing all subpages of the given page. Only one subpage is
+allowed in the list report. This should be an object page for the same entity set.
+An object page can have several subpages.</p>
+<p class="p">You can control whether it is possible to navigate to a detail page. It simply depends on
+whether you keep the predefined definition of a subpage: </p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&quot;sap.ui.generic.app&quot;: {
+  &quot;pages&quot;: {
+    &quot;MyListReport&quot;: {
+      &quot;entitySet&quot;: &quot;MyEntitySet&quot;,
+      &quot;component&quot;: {
+        &quot;name&quot;: &quot;sap.suite.ui.generic.template.ListReport&quot;,
+        &quot;list&quot;: true
+      },
+      // Navigation to detail page: eliminate this block if no navigation is needed
+      &quot;pages&quot;: {
+        &quot;MyObjectPageOnFirstLevel&quot;:          {
+          &quot;entitySet&quot;: &quot;MyEntitySet&quot;,
+          &quot;component&quot;: {
+            &quot;name&quot;: &quot;sap.suite.ui.generic.template.ObjectPage&quot;
+          },
+          &quot;pages&quot;: {
+                                   &quot;MyFirstObjectPageOnSecondLevel&quot;: {
+              &quot;navigationProperty&quot;: &quot;to_MyOtherEntitySet&quot;,
+              &quot;entitySet&quot;: &quot;MyOtherEntitySet&quot;,
+              &quot;component&quot;: {
+                &quot;name&quot;: &quot;sap.suite.ui.generic.template.ObjectPage&quot;
+              },
+            }, 
+                                               &quot;MySecondObjectPageOnSecondLevel&quot;: {
+              &quot;navigationProperty&quot;: &quot;to_MyOtherEntitySetAlternateNavigation&quot;,
+              &quot;entitySet&quot;: &quot;MyOtherEntitySet&quot;,
+              &quot;component&quot;: {
+                &quot;name&quot;: &quot;sap.suite.ui.generic.template.ObjectPage&quot;
+              },
+            }, 
+                                               &quot;MyThirdObjectPageOnSecondLevel&quot;: {
+              &quot;navigationProperty&quot;: &quot;to_MyThirdEntitySet&quot;,
+              &quot;entitySet&quot;: &quot;MyThirdEntitySet&quot;,
+              &quot;component&quot;: {
+                &quot;name&quot;: &quot;sap.suite.ui.generic.template.ObjectPage&quot;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+</pre></aside>
+<p class="p">The same holds true for the navigation to a second object page. This is possible only when the
+definition is kept in the manifest. If you want to have multiple subpages on the
+same level, you need to have multiple definitions. The subpages are identified by
+the corresponding entity set and the navigation property. </p>
+<p class="p">A chevron indicates the navigation options. The user can navigate by clicking on the line. </p>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p"> In a non-draft app, if the user is in edit mode on an object page and has made changes
+before the navigation has been executed, the system displays a message
+indicating that the changes will be lost if the user navigates without saving
+first.</p></aside>
+</section></div>
+<div class="section" id="loio2c65f07f44094012a511d6bd83f50f2d__section_dnp_sr1_1cb"><section class="section" type="Navigation Between Entities of an App"><h2 class="section_title" style="font-size: 1.15em;">Navigation Between Entities of an App</h2><div class="p">You can
+link entities within an app. This allows users to navigate between the entities
+within the application. You can use this app-internal linking in the object header,
+in sections, and in tables. For example, within a sales order app, you can link from
+a sales order to another sales order, from a sales order item to the sales order
+header, or from a sales order schedule line to a schedule line of another sales order.<aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p class="p">This feature is available only on the object page.</p></aside></div><p class="p">The following example shows how to use the
+<samp class="ph codeph">DataFieldWithNavigationPath</samp> annotation to link
+entities:</p><pre class="pre codeblock prettyprint">&lt;Annotation Term=&quot;UI.FieldGroup&quot; Qualifier=&quot;NavExample&quot;&gt;
+    &lt;Record&gt;
+        &lt;PropertyValue Property=&quot;Data&quot;&gt;
+            &lt;Collection&gt;
+                &lt;Record Type=&quot;UI.DataFieldWithNavigationPath&quot;&gt;
+                    &lt;PropertyValue Property=&quot;Label&quot; String=&quot;Ref. Sales Order&quot; /&gt;
+                    &lt;PropertyValue Property=&quot;Value&quot; Path=&quot;RefSalesOrderID&quot; /&gt;
+                    &lt;PropertyValue Property=&quot;Target&quot; NavigationPropertyPath=&quot;to_SalesOrder&quot; /&gt;
+                &lt;/Record&gt;
+            &lt;/Collection&gt;
+        &lt;/PropertyValue&gt;
+    &lt;/Record&gt;
+&lt;/Annotation&gt;</pre></section></div>
+<div class="section" id="loio2c65f07f44094012a511d6bd83f50f2d__section_opy_jxj_gz"><section class="section" type="Navigation after Executing a Function"><h2 class="section_title" style="font-size: 1.15em;">Navigation after Executing a Function</h2>
+
+<p class="p">Navigation may also be required after running a regular
+<span class="ph sap-technical-name sap-technical-name">FunctionImport</span> that is not tagged as a
+<span class="ph sap-technical-name sap-technical-name">DataFieldForIntentBasedNavigation</span>. The
+behavior after the execution of the function is controlled by the application as
+follows: If the <span class="ph sap-technical-name sap-technical-name">FunctionImport</span> returns
+<span class="ph sap-technical-name sap-technical-name">multiplicity 1</span> and
+<span class="ph sap-technical-name sap-technical-name">ReturnType=EntityType + EntitySet</span>, then
+the SAP Fiori element navigates to the instance that is returned by the function
+import.</p>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:Reference
+		Uri="http:///anaChartFakeService:44300/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='')/$value"
+		xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
+	</edmx:Reference>
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="ZGK_SFLIGHT_MAX_SEAT_CDS" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="zgk_sflight_max_seatsType" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="P_MaxSeats" />
+					<PropertyRef Name="Carrier" />
+					<PropertyRef Name="FlightConnection" />
+					<PropertyRef Name="FlightDate" />
+				</Key>
+				<Property Name="P_MaxSeats" Type="Edm.Int32" Nullable="false" sap:label="Natural number" />
+				<Property Name="Carrier" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="UpperCase" sap:label="Airline" sap:quickinfo="Airline Code" />
+				<Property Name="FlightConnection" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="NonNegative" sap:label="Connection Number" sap:quickinfo="Flight Connection Number" />
+				<Property Name="FlightDate" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Flight Date" sap:quickinfo="Flight date" />
+				<Property Name="PlaneType" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Plane Type" sap:quickinfo="Aircraft Type" />
+				<Property Name="Price" Type="Edm.Decimal" Precision="16" Scale="3" sap:label="Airfare" />
+				<Property Name="Currency" Type="Edm.String" MaxLength="5" sap:label="Airline Currency" sap:quickinfo="Local currency of airline" sap:semantics="currency-code" />
+				<NavigationProperty Name="Parameters" Relationship="ZGK_SFLIGHT_MAX_SEAT_CDS.assoc_BE9FE34D80E91BF01DD9C14420EA5F88" FromRole="ToRole_assoc_BE9FE34D80E91BF01DD9C14420EA5F88"
+					ToRole="FromRole_assoc_BE9FE34D80E91BF01DD9C14420EA5F88" sap:filterable="false" />
+			</EntityType>
+			<EntityType Name="zgk_sflight_max_seatsParameters" sap:semantics="parameters" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="P_MaxSeats" />
+				</Key>
+				<Property Name="P_MaxSeats" Type="Edm.Int32" Nullable="false" sap:parameter="mandatory" sap:label="Natural number" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+					sap:filterable="false" />
+				<NavigationProperty Name="Set" Relationship="ZGK_SFLIGHT_MAX_SEAT_CDS.assoc_BE9FE34D80E91BF01DD9C14420EA5F88" FromRole="FromRole_assoc_BE9FE34D80E91BF01DD9C14420EA5F88" ToRole="ToRole_assoc_BE9FE34D80E91BF01DD9C14420EA5F88" />
+			</EntityType>
+			<Association Name="assoc_BE9FE34D80E91BF01DD9C14420EA5F88" sap:content-version="1">
+				<End Type="ZGK_SFLIGHT_MAX_SEAT_CDS.zgk_sflight_max_seatsParameters" Multiplicity="1" Role="FromRole_assoc_BE9FE34D80E91BF01DD9C14420EA5F88" />
+				<End Type="ZGK_SFLIGHT_MAX_SEAT_CDS.zgk_sflight_max_seatsType" Multiplicity="*" Role="ToRole_assoc_BE9FE34D80E91BF01DD9C14420EA5F88" />
+			</Association>
+			<EntityContainer Name="ZGK_SFLIGHT_MAX_SEAT_CDS_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+				<EntitySet Name="zgk_sflight_max_seatsSet" EntityType="ZGK_SFLIGHT_MAX_SEAT_CDS.zgk_sflight_max_seatsType" sap:creatable="false" sap:updatable="false" sap:deletable="false"
+					sap:addressable="false" sap:content-version="1" />
+				<EntitySet Name="zgk_sflight_max_seats" EntityType="ZGK_SFLIGHT_MAX_SEAT_CDS.zgk_sflight_max_seatsParameters" sap:creatable="false" sap:updatable="false" sap:deletable="false"
+					sap:pageable="false" sap:content-version="1" />
+				<AssociationSet Name="assoc_BE9FE34D80E91BF01DD9C14420EA5F88" Association="ZGK_SFLIGHT_MAX_SEAT_CDS.assoc_BE9FE34D80E91BF01DD9C14420EA5F88" sap:creatable="false" sap:updatable="false"
+					sap:deletable="false" sap:content-version="1">
+					<End EntitySet="zgk_sflight_max_seats" Role="FromRole_assoc_BE9FE34D80E91BF01DD9C14420EA5F88" />
+					<End EntitySet="zgk_sflight_max_seatsSet" Role="ToRole_assoc_BE9FE34D80E91BF01DD9C14420EA5F88" />
+				</AssociationSet>
+			</EntityContainer>
+			<atom:link rel="self" href="http:///anaChartFakeService:44300/sap/opu/odata/sap/ZGK_SFLIGHT_MAX_SEATS_CDS/$metadata" xmlns:atom="http://www.w3.org/2005/Atom" />
+			<atom:link rel="latest-version" href="http:///anaChartFakeService:44300/sap/opu/odata/sap/ZGK_SFLIGHT_MAX_SEATS_CDS/$metadata" xmlns:atom="http://www.w3.org/2005/Atom" />
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

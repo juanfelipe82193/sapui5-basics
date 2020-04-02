@@ -1,0 +1,529 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 11: Using the Flexible Column Layout Semantic Helper</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In this step, we use the sap.f.FlexibleColumnLayoutSemanticHelper class to implement the recommended UX patterns for layout changes in the app."><meta name="description" content="In this step, we use the sap.f.FlexibleColumnLayoutSemanticHelper class to implement the recommended UX patterns for layout changes in the app."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"a96fbe44ae6544589a096041f99d38c2.html","previousTopicHref":"a59b3de038874f879cf20bfc3287bd7c.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+$('.collapsible').collapsify({"expandText":"Display Content","collapseText":"Hide Content","codeblockText":"Code Sample","codeblockCopyText":"Copy code to clipboard","codeblockSelectText":"Select code for copying to clipboard"});
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/c4de2df385174e58a689d9847c7553bd.html" title="In this tutorial, we showcase how to structure your SAPUI5 app using the layout patterns that comply with the latest SAP Fiori design guidelines." target="_top">SAP Fiori 2.0 App</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/a59b3de038874f879cf20bfc3287bd7c.html" title="In this step, we create an additional page that is displayed in a separate fullscreen column." target="_top">Step 10: Adding More Pages</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/a96fbe44ae6544589a096041f99d38c2.html" title="In this step, we set up the app to start with an initial layout of two columns." target="_top">Step 12: Starting with Two Columns</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loio276f001c5a934f6e8faedee6ea22aba1"><h1 class="title topictitle1" hidden>Step 11: Using the Flexible Column Layout Semantic Helper</h1><div class="body conbody"><p class="shortdesc" hidden>In this step, we use the <samp class="ph codeph">sap.f.FlexibleColumnLayoutSemanticHelper</samp>
+class to implement the recommended UX patterns for layout changes in the app.</p>
+<div class="p"><samp class="ph codeph">FlexibleColumnLayout</samp> gives you the freedom to implement any app logic
+that involves changing the layout (showing/hiding columns) as a result of the user&#x2019;s
+actions. However, there are certain UX patterns that are considered as optimal and are
+recommended for SAP Fiori 2.0 apps. The
+<samp class="ph codeph">FlexibleColumnLayoutSemanticHelper</samp> class helps you implement them
+by giving you tips about what layout to display when. <aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>Using this class is NOT
+mandatory in order to build an app with the <samp class="ph codeph">FlexibleColumnLayout</samp>,
+but makes it easier to achieve the optimal UX recommended in the SAP Fiori 2.0
+design guidelines.</p></aside></div>
+<p class="p">For more information, see <a class="xref" href="../../#/topic/623b01e57b2349e0888d9dc16020b135.html" title="A helper class, designed to facilitate the implementation of apps based on the sap.f.FlexibleColumnLayout control and the SAP Fiori 2.0 design guidelines." target="_top">Flexible Column Layout Semantic Helper</a>.</p>
+<div class="section collapsible expanded" id="loio276f001c5a934f6e8faedee6ea22aba1__section_yfh_d31_12b"><section class="section collapsible expanded" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loio276f001c5a934f6e8faedee6ea22aba1__fig_zfh_d31_12b"><div class="figbody">
+
+<img class="inline  " id="loio276f001c5a934f6e8faedee6ea22aba1__image_agh_d31_12b" src="loiofd98e0d8d9c74cd2a38d9177455bf085_HiRes.gif">
+</div><span class="figcap">Master-detail-detail pattern using
+<samp class="ph codeph">sap.f.FlexibleColumnLayoutSemanticHelper</samp></span></div>
+</section></div>
+<div class="section" id="loio276f001c5a934f6e8faedee6ea22aba1__section_fd2_4dd_lbb">
+<div class="section_title">Coding</div>
+<p class="p">You can view and download all files <span class="ph">at <a class="xref" href="../../#/sample/sap.f.tutorial.fiori2.11/preview" target="_top" alt="#/sample/sap.f.tutorial.fiori2.11/preview" title="#/sample/sap.f.tutorial.fiori2.11/preview">SAP Fiori 2.0 App - Step 11</a></span>.</p>
+<div class="section_title">webapp/Component.js [MODIFY]</div>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&apos;sap/ui/core/UIComponent&apos;,
+	&apos;sap/ui/model/json/JSONModel&apos;<span class="ph emphasis emphasis">,
+	&apos;sap/f/FlexibleColumnLayoutSemanticHelper&apos;,</span>
+	&apos;sap/f/library&apos;
+], function(UIComponent, JSONModel<span class="ph emphasis emphasis">, FlexibleColumnLayoutSemanticHelper</span>, fioriLibrary) {
+	&apos;use strict&apos;;
+
+	return UIComponent.extend(&apos;sap.ui.demo.fiori2.Component&apos;, {
+
+		metadata: {
+			manifest: &apos;json&apos;
+		},
+
+		init: function () {
+			var oModel,
+				oProductsModel,
+				oRouter;
+
+			UIComponent.prototype.init.apply(this, arguments);
+
+			oModel = new JSONModel();
+			this.setModel(oModel);
+
+			// set products demo model on this sample
+			oProductsModel = new JSONModel(sap.ui.require.toUrl(&apos;sap/ui/demo/mock&apos;) + &apos;/products.json&apos;);
+			oProductsModel.setSizeLimit(1000);
+			this.setModel(oProductsModel, &apos;products&apos;);
+
+			oRouter = this.getRouter();
+			oRouter.attachBeforeRouteMatched(this._onBeforeRouteMatched, this);
+			oRouter.initialize();
+		},
+
+<span class="ph emphasis emphasis">		getHelper: function () {
+			return this._getFcl().then(function(oFCL) {
+				var oSettings = {
+					defaultTwoColumnLayoutType: fioriLibrary.LayoutType.TwoColumnsMidExpanded,
+					defaultThreeColumnLayoutType: fioriLibrary.LayoutType.ThreeColumnsMidExpanded
+				};
+				return (FlexibleColumnLayoutSemanticHelper.getInstanceFor(oFCL, oSettings));
+			});
+		},</span>
+
+		_onBeforeRouteMatched: function(oEvent) {
+			var oModel = this.getModel(),
+				sLayout = oEvent.getParameters().arguments.layout<span class="ph emphasis emphasis">,
+				oNextUIState;</span>
+
+			// If there is no layout parameter, <span class="ph emphasis emphasis">query for the default level 0 layout</span> (normally OneColumn)
+			if (!sLayout) {
+<span class="ph emphasis emphasis">				this.getHelper().then(function(oHelper) {
+					oNextUIState = oHelper.getNextUIState(0);
+					oModel.setProperty(&quot;/layout&quot;, oNextUIState.layout);
+				});
+				return;</span>
+			}
+
+			oModel.setProperty(&quot;/layout&quot;, sLayout);
+		}<span class="ph emphasis emphasis">,
+
+		_getFcl: function () {
+			return new Promise(function(resolve, reject) {
+				var oFCL = this.getRootControl().byId(&apos;flexibleColumnLayout&apos;);
+				if (!oFCL) {
+					this.getRootControl().attachAfterInit(function(oEvent) {
+						resolve(oEvent.getSource().byId(&apos;flexibleColumnLayout&apos;));
+					}, this);
+					return;
+				}
+				resolve(oFCL);
+
+			}.bind(this));
+		}</span>
+	});
+});</pre>
+<p class="p">First, we add a <samp class="ph codeph">getHelper</samp> function in the <span class="ph filepath">Component.js</span>
+file in order to pass the default <samp class="ph codeph">sap.f.FlexibleColumnLayout</samp>
+parameters.</p>
+<div class="section_title">webapp/view/Detail.view.xml [MODIFY]</div>
+<pre class="pre codeblock prettyprint lang-xml">				...
+				&lt;snappedHeading&gt;
+					&lt;m:FlexBox wrap=&quot;Wrap&quot; fitContainer=&quot;true&quot; alignItems=&quot;Center&quot;&gt;
+						&lt;m:FlexBox wrap=&quot;NoWrap&quot; fitContainer=&quot;true&quot; alignItems=&quot;Center&quot; class=&quot;sapUiTinyMarginEnd&quot;&gt;
+							&lt;f:Avatar
+								src=&quot;https://sapui5.hana.ondemand.com/{products&gt;ProductPicUrl}&quot;
+								displaySize=&quot;S&quot;
+								displayShape=&quot;Square&quot;
+								class=&quot;sapUiTinyMarginEnd&quot;/&gt;
+							&lt;m:Title text=&quot;{products&gt;Name}&quot; wrapping=&quot;true&quot;/&gt;
+						&lt;/m:FlexBox&gt;
+					&lt;/m:FlexBox&gt;
+				&lt;/snappedHeading&gt;
+
+<span class="ph emphasis emphasis">				&lt;navigationActions&gt;
+					&lt;m:OverflowToolbarButton
+						type=&quot;Transparent&quot;
+						icon=&quot;sap-icon://full-screen&quot;
+						press=&quot;.handleFullScreen&quot;
+						tooltip=&quot;Enter Full Screen Mode&quot;
+						visible=&quot;{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }&quot;/&gt;
+					&lt;m:OverflowToolbarButton
+						type=&quot;Transparent&quot;
+						icon=&quot;sap-icon://exit-full-screen&quot;
+						press=&quot;.handleExitFullScreen&quot;
+						tooltip=&quot;Exit Full Screen Mode&quot;
+						visible=&quot;{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }&quot;/&gt;
+					&lt;m:OverflowToolbarButton
+						type=&quot;Transparent&quot;
+						icon=&quot;sap-icon://decline&quot;
+						press=&quot;.handleClose&quot;
+						tooltip=&quot;Close column&quot;
+						visible=&quot;{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }&quot;/&gt;
+				&lt;/navigationActions&gt;</span>
+
+				&lt;actions&gt;
+					&lt;m:ToggleButton
+						text=&quot;Edit&quot;
+						type=&quot;Emphasized&quot;
+						press=&quot;.onEditToggleButtonPress&quot;/&gt;
+					&lt;m:Button
+						text=&quot;Delete&quot;
+						type=&quot;Transparent&quot;/&gt;
+					&lt;m:Button
+						text=&quot;Copy&quot;
+						type=&quot;Transparent&quot;/&gt;
+					&lt;m:Button
+						icon=&quot;sap-icon://action&quot;
+						type=&quot;Transparent&quot;/&gt;
+				&lt;/actions&gt;
+			&lt;/ObjectPageDynamicHeaderTitle&gt;
+		&lt;/headerTitle&gt;
+		...</pre>
+<p class="p">We add navigation actions for entering and exiting fullscreen and closing the column
+for the detail page.</p>
+<div class="section_title">webapp/controller/Detail.controller.js [MODIFY]</div>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+<span class="ph emphasis emphasis">	&quot;sap/ui/core/mvc/Controller&quot;
+], function (Controller) {</span>
+	&quot;use strict&quot;;
+
+	return Controller.extend(&quot;sap.ui.demo.fiori2.controller.Detail&quot;, {
+		onInit: function () {
+			<span class="ph emphasis emphasis">this.</span>oOwnerComponent = this.getOwnerComponent();
+
+			this.oRouter = <span class="ph emphasis emphasis">this.</span>oOwnerComponent.getRouter();
+			this.oModel = <span class="ph emphasis emphasis">this.</span>oOwnerComponent.getModel();
+
+			this.oRouter.getRoute(&quot;master&quot;).attachPatternMatched(this._onProductMatched, this);
+			this.oRouter.getRoute(&quot;detail&quot;).attachPatternMatched(this._onProductMatched, this);
+			this.oRouter.getRoute(&quot;detailDetail&quot;).attachPatternMatched(this._onProductMatched, this);
+		},
+
+		onSupplierPress: function (oEvent) {
+			var supplierPath = oEvent.getSource().getBindingContext(&quot;products&quot;).getPath(),
+				supplier = supplierPath.split(&quot;/&quot;).slice(-1).pop()<span class="ph emphasis emphasis">,
+				oNextUIState;
+
+			this.oOwnerComponent.getHelper().then(function (oHelper) {
+				oNextUIState = oHelper.getNextUIState(2);
+				this.oRouter.navTo(&quot;detailDetail&quot;, {
+					layout: oNextUIState.layout,
+					supplier: supplier,
+					product: this._product
+				});
+			}.bind(this));</span>
+		},
+
+		_onProductMatched: function (oEvent) {
+			this._product = oEvent.getParameter(&quot;arguments&quot;).product || this._product || &quot;0&quot;;
+			this.getView().bindElement({
+				path: &quot;/ProductCollection/&quot; + this._product,
+				model: &quot;products&quot;
+			});
+		},
+
+		onEditToggleButtonPress: function() {
+			var oObjectPage = this.getView().byId(&quot;ObjectPageLayout&quot;),
+				bCurrentShowFooterState = oObjectPage.getShowFooter();
+
+			oObjectPage.setShowFooter(!bCurrentShowFooterState);
+		},
+
+<span class="ph emphasis emphasis">		handleFullScreen: function () {
+			var sNextLayout = this.oModel.getProperty(&quot;/actionButtonsInfo/midColumn/fullScreen&quot;);
+			this.oRouter.navTo(&quot;detail&quot;, {layout: sNextLayout, product: this._product});
+		},
+
+		handleExitFullScreen: function () {
+			var sNextLayout = this.oModel.getProperty(&quot;/actionButtonsInfo/midColumn/exitFullScreen&quot;);
+			this.oRouter.navTo(&quot;detail&quot;, {layout: sNextLayout, product: this._product});
+		},
+
+		handleClose: function () {
+			var sNextLayout = this.oModel.getProperty(&quot;/actionButtonsInfo/midColumn/closeColumn&quot;);
+			this.oRouter.navTo(&quot;master&quot;, {layout: sNextLayout});
+		},
+</span>
+		onExit: function () {
+			this.oRouter.getRoute(&quot;master&quot;).detachPatternMatched(this._onProductMatched, this);
+			this.oRouter.getRoute(&quot;detail&quot;).detachPatternMatched(this._onProductMatched, this);
+		}
+	});
+});</pre>
+<p class="p">We create the handlers needed for the navigation actions.</p>
+<div class="section_title">webapp/view/DetailDetail.view.xml [MODIFY]</div>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+	controllerName=&quot;sap.ui.demo.fiori2.controller.DetailDetail&quot;
+	xmlns=&quot;sap.f&quot;
+	xmlns:m=&quot;sap.m&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;DynamicPage toggleHeaderOnTitleClick=&quot;false&quot;&gt;
+		&lt;title&gt;
+			&lt;DynamicPageTitle&gt;
+				&lt;heading&gt;
+					&lt;m:FlexBox wrap=&quot;Wrap&quot; fitContainer=&quot;true&quot; alignItems=&quot;Center&quot;&gt;
+						&lt;m:Title text=&quot;{products&gt;text}&quot; wrapping=&quot;true&quot; class=&quot;sapUiTinyMarginEnd&quot;/&gt;
+					&lt;/m:FlexBox&gt;
+				&lt;/heading&gt;
+
+<span class="ph emphasis emphasis">				&lt;navigationActions&gt;
+					&lt;m:OverflowToolbarButton
+						type=&quot;Transparent&quot;
+						icon=&quot;sap-icon://full-screen&quot;
+						press=&quot;.handleFullScreen&quot;
+						tooltip=&quot;Enter Full Screen Mode&quot;
+						visible=&quot;{= ${/actionButtonsInfo/endColumn/fullScreen} !== null }&quot;/&gt;
+					&lt;m:OverflowToolbarButton
+						type=&quot;Transparent&quot;
+						icon=&quot;sap-icon://exit-full-screen&quot;
+						press=&quot;.handleExitFullScreen&quot;
+						tooltip=&quot;Exit Full Screen Mode&quot;
+						visible=&quot;{= ${/actionButtonsInfo/endColumn/exitFullScreen} !== null }&quot;/&gt;
+					&lt;m:OverflowToolbarButton
+						type=&quot;Transparent&quot;
+						icon=&quot;sap-icon://decline&quot;
+						press=&quot;.handleClose&quot;
+						tooltip=&quot;Close column&quot;
+						visible=&quot;{= ${/actionButtonsInfo/endColumn/closeColumn} !== null }&quot;/&gt;
+				&lt;/navigationActions&gt;</span>
+			&lt;/DynamicPageTitle&gt;
+		&lt;/title&gt;
+		&lt;content&gt;
+			&lt;m:Link text=&quot;Navigate to next page&#x2026;&quot; press=&quot;.handleAboutPress&quot;/&gt;
+		&lt;/content&gt;
+	&lt;/DynamicPage&gt;
+&lt;/mvc:View&gt;</pre>
+<p class="p">Again, we add navigation actions for entering and exiting fullscreen and closing the
+column for the detail-detail page.</p>
+<div class="section_title">webapp/controller/DetailDetail.controller.js [MODIFY]</div>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/model/json/JSONModel&quot;,
+<span class="ph emphasis emphasis">	&quot;sap/ui/core/mvc/Controller&quot;
+], function (JSONModel, Controller) {</span>
+	&quot;use strict&quot;;
+
+	return Controller.extend(&quot;sap.ui.demo.fiori2.controller.DetailDetail&quot;, {
+		onInit: function () {
+			<span class="ph emphasis emphasis">this.</span>oOwnerComponent = this.getOwnerComponent();
+
+			this.oRouter = <span class="ph emphasis emphasis">this.</span>oOwnerComponent.getRouter();
+			this.oModel = <span class="ph emphasis emphasis">this.</span>oOwnerComponent.getModel();
+
+			this.oRouter.getRoute(&quot;detailDetail&quot;).attachPatternMatched(this._onPatternMatch, this);
+		},
+
+		handleAboutPress: function () {
+<span class="ph emphasis emphasis">			var oNextUIState;
+			this.oOwnerComponent.getHelper().then(function (oHelper) {
+				oNextUIState = oHelper.getNextUIState(3);
+				this.oRouter.navTo(&quot;page2&quot;, {layout: oNextUIState.layout});
+			}.bind(this));</span>
+		},
+
+		_onPatternMatch: function (oEvent) {
+			this._supplier = oEvent.getParameter(&quot;arguments&quot;).supplier || this._supplier || &quot;0&quot;;
+			this._product = oEvent.getParameter(&quot;arguments&quot;).product || this._product || &quot;0&quot;;
+
+			this.getView().bindElement({
+				path: &quot;/ProductCollectionStats/Filters/1/values/&quot; + this._supplier,
+				model: &quot;products&quot;
+			});
+		},
+
+<span class="ph emphasis emphasis">		handleFullScreen: function () {
+			var sNextLayout = this.oModel.getProperty(&quot;/actionButtonsInfo/endColumn/fullScreen&quot;);
+			this.oRouter.navTo(&quot;detailDetail&quot;, {layout: sNextLayout, product: this._product, supplier: this._supplier});
+		},
+
+		handleExitFullScreen: function () {
+			var sNextLayout = this.oModel.getProperty(&quot;/actionButtonsInfo/endColumn/exitFullScreen&quot;);
+			this.oRouter.navTo(&quot;detailDetail&quot;, {layout: sNextLayout, product: this._product, supplier: this._supplier});
+		},
+
+		handleClose: function () {
+			var sNextLayout = this.oModel.getProperty(&quot;/actionButtonsInfo/endColumn/closeColumn&quot;);
+			this.oRouter.navTo(&quot;detail&quot;, {layout: sNextLayout, product: this._product});
+		},</span>
+
+		onExit: function () {
+			this.oRouter.getRoute(&quot;detailDetail&quot;).detachPatternMatched(this._onPatternMatch, this);
+		}
+	});
+});</pre>
+<p class="p">And respectively, we create the handlers needed for the navigation actions in the
+detail-detail controller.</p>
+<div class="section_title">webapp/controller/Master.controller.js [MODIFY]</div>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/model/json/JSONModel&quot;,
+	&quot;sap/ui/core/mvc/Controller&quot;,
+	&quot;sap/ui/model/Filter&quot;,
+	&quot;sap/ui/model/FilterOperator&quot;,
+	&apos;sap/ui/model/Sorter&apos;,
+<span class="ph emphasis emphasis">	&apos;sap/m/MessageBox&apos;
+], function (JSONModel, Controller, Filter, FilterOperator, Sorter, MessageBox) {</span>
+	&quot;use strict&quot;;
+
+	return Controller.extend(&quot;sap.ui.demo.fiori2.controller.Master&quot;, {
+		onInit: function () {
+			this.oView = this.getView();
+			this._bDescendingSort = false;
+			this.oProductsTable = this.oView.byId(&quot;productsTable&quot;);
+			this.oRouter = this.getOwnerComponent().getRouter();
+		},
+
+		onSearch: function (oEvent) {
+			var oTableSearchState = [],
+				sQuery = oEvent.getParameter(&quot;query&quot;);
+
+			if (sQuery &amp;&amp; sQuery.length &gt; 0) {
+				oTableSearchState = [new Filter(&quot;Name&quot;, FilterOperator.Contains, sQuery)];
+			}
+
+			this.oProductsTable.getBinding(&quot;items&quot;).filter(oTableSearchState, &quot;Application&quot;);
+		},
+
+		onAdd: function () {
+			MessageBox.information(&quot;This functionality is not ready yet.&quot;, {title: &quot;Aw, Snap!&quot;});
+		},
+
+		onSort: function () {
+			this._bDescendingSort = !this._bDescendingSort;
+			var oBinding = this.oProductsTable.getBinding(&quot;items&quot;),
+				oSorter = new Sorter(&quot;Name&quot;, this._bDescendingSort);
+
+			oBinding.sort(oSorter);
+		},
+
+		onListItemPress: function (oEvent) {
+			var productPath = oEvent.getSource().getBindingContext(&quot;products&quot;).getPath(),
+				product = productPath.split(&quot;/&quot;).slice(-1).pop()<span class="ph emphasis emphasis">,
+				oNextUIState;
+			this.getOwnerComponent().getHelper().then(function (oHelper) {
+				oNextUIState = oHelper.getNextUIState(1);
+				this.oRouter.navTo(&quot;detail&quot;, {
+					layout: oNextUIState.layout,
+					product: product
+				});
+			}.bind(this));</span>
+		}
+	});
+});</pre>
+<p class="p">We get the next layout from the semantic helper rather than hard coding them ourselves.</p>
+<div class="section_title">webapp/controller/App.controller.js [MODIFY]</div>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/model/json/JSONModel&quot;,
+	&quot;sap/ui/core/mvc/Controller&quot;
+], function (JSONModel, Controller) {
+	&quot;use strict&quot;;
+
+	return Controller.extend(&quot;sap.ui.demo.fiori2.controller.App&quot;, {
+		onInit: function () {
+			this.oOwnerComponent = this.getOwnerComponent();
+			this.oRouter = this.oOwnerComponent.getRouter();
+			this.oRouter.attachRouteMatched(this.onRouteMatched, this);
+		},
+
+		onRouteMatched: function (oEvent) {
+			var sRouteName = oEvent.getParameter(&quot;name&quot;),
+				oArguments = oEvent.getParameter(&quot;arguments&quot;);
+
+<span class="ph emphasis emphasis">			this._updateUIElements();</span>
+
+			// Save the current route name
+			this.currentRouteName = sRouteName;
+			this.currentProduct = oArguments.product;
+			this.currentSupplier = oArguments.supplier;
+		},
+
+		onStateChanged: function (oEvent) {
+			var bIsNavigationArrow = oEvent.getParameter(&quot;isNavigationArrow&quot;),
+				sLayout = oEvent.getParameter(&quot;layout&quot;);
+
+<span class="ph emphasis emphasis">			this._updateUIElements();</span>
+
+			// Replace the URL with the new layout if a navigation arrow was used
+			if (bIsNavigationArrow) {
+				this.oRouter.navTo(this.currentRouteName, {layout: sLayout, product: this.currentProduct, supplier: this.currentSupplier}, true);
+			}
+		},
+
+<span class="ph emphasis emphasis">		// Update the close/fullscreen buttons visibility
+		_updateUIElements: function () {
+			var oModel = this.oOwnerComponent.getModel(),
+				oUIState;
+			this.oOwnerComponent.getHelper().then(function(oHelper) {
+				oUIState = oHelper.getCurrentUIState();
+				oModel.setData(oUIState);
+			});
+		},</span>
+
+		onExit: function () {
+			this.oRouter.detachRouteMatched(this.onRouteMatched, this);
+<span class="ph emphasis emphasis">			this.oRouter.detachBeforeRouteMatched(this.onBeforeRouteMatched, this);</span>
+		}
+	});
+});</pre>
+<p class="p">Finally, we create a function in the <span class="ph filepath">App.controller.js</span> to update the
+visibility of the master, detail, and detail-detail pages.</p>
+</div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/c4de2df385174e58a689d9847c7553bd.html" title="In this tutorial, we showcase how to structure your SAPUI5 app using the layout patterns that comply with the latest SAP Fiori design guidelines." target="_top">SAP Fiori 2.0 App</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/a59b3de038874f879cf20bfc3287bd7c.html" title="In this step, we create an additional page that is displayed in a separate fullscreen column." target="_top">Step 10: Adding More Pages</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/a96fbe44ae6544589a096041f99d38c2.html" title="In this step, we set up the app to start with an initial layout of two columns." target="_top">Step 12: Starting with Two Columns</a><br></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

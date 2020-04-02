@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<edmx:Edmx Version="1.0"
+	xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:DataServices
+		xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+		m:DataServiceVersion="2.0">
+		<Schema Namespace="sap.smartbusinessdemo.services"
+			xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices"
+			xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+			xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="SalesOrderType" sap:semantics="aggregate">
+				<Key>
+					<PropertyRef Name="ID" />
+				</Key>
+				<Property Name="ID" Type="Edm.String" Nullable="false"
+					MaxLength="2147483647" sap:filterable="false" />
+				<Property Name="ProductID" Type="Edm.String" MaxLength="10"
+					sap:label="Product ID" sap:aggregation-role="dimension" sap:text="Product" />
+				<Property Name="Product" Type="Edm.String" MaxLength="1024"
+					sap:label="Product" sap:aggregation-role="dimension" />
+				<Property Name="ProductCategory" Type="Edm.String"
+					MaxLength="40" sap:label="Product Category" sap:aggregation-role="dimension" />
+				<Property Name="SourceCurrency" Type="Edm.String"
+					MaxLength="5" sap:label="Source Currency" sap:aggregation-role="dimension" />
+				<Property Name="Company" Type="Edm.String" MaxLength="80"
+					sap:label="Company" sap:aggregation-role="dimension" />
+				<Property Name="CountryCode" Type="Edm.String" MaxLength="3"
+					sap:label="Country Code" sap:aggregation-role="dimension" />
+				<Property Name="Country" Type="Edm.String" MaxLength="100"
+					sap:label="Country" sap:aggregation-role="dimension" />
+				<Property Name="Region" Type="Edm.String" MaxLength="4"
+					sap:label="Region" sap:aggregation-role="dimension" />
+				<Property Name="Year" Type="Edm.String" MaxLength="4"
+					sap:label="Year" sap:aggregation-role="dimension" />
+				<Property Name="Month" Type="Edm.String" MaxLength="2"
+					sap:label="Month" sap:aggregation-role="dimension" />
+				<Property Name="Week" Type="Edm.String" MaxLength="2"
+					sap:label="Week" sap:aggregation-role="dimension" />
+				<Property Name="Day" Type="Edm.String" MaxLength="2"
+					sap:label="Day" sap:aggregation-role="dimension" />
+				<Property Name="Coordinate" Type="Edm.String" MaxLength="50"
+					sap:label="Coordinate" sap:aggregation-role="dimension" />
+				<Property Name="NetAmount_Currency" Type="Edm.String"
+					MaxLength="5" sap:semantics="currency-code" />
+				<Property Name="TotalSalesOrder" Type="Edm.Double"
+					sap:filterable="false" sap:label="Total Sales Order"
+					sap:aggregation-role="measure" />
+				<Property Name="NetAmount" Type="Edm.Decimal" Precision="15"
+					Scale="2" sap:filterable="false" sap:label="Net Amount"
+					sap:aggregation-role="measure" sap:unit="NetAmount_Currency" />
+				<Property Name="Type" Type="Edm.String" MaxLength="1024" sap:label="Type" sap:aggregation-role="dimension" />
+                <Property Name="SpendType" Type="Edm.String" MaxLength="1024" sap:label="Spend Type" sap:aggregation-role="dimension"/>
+                <Property Name="Revenue_CURRENCY" Type="Edm.String" MaxLength="5" sap:semantics="currency-code" />
+                <Property Name="Revenue" Type="Edm.Decimal" Precision="34" sap:filterable="false" sap:label="Revenue" sap:aggregation-role="measure" sap:unit="Revenue_CURRENCY" />	
+			</EntityType>
+			<EntityType Name="SalesOrderParametersType" sap:semantics="parameters">
+				<Key>
+					<PropertyRef Name="P_Currency" />
+					<PropertyRef Name="P_CountryCode" />
+				</Key>
+				<Property Name="P_Currency" Type="Edm.String" Nullable="false"
+					MaxLength="3" sap:label="P_Currency" sap:parameter="mandatory" />
+				<Property Name="P_CountryCode" Type="Edm.String" Nullable="false"
+					DefaultValue="DE" MaxLength="20" sap:label="P_CountryCode"
+					sap:parameter="mandatory" />
+				<NavigationProperty Name="Results"
+					Relationship="sap.smartbusinessdemo.services.SalesOrderParameters_SalesOrderType"
+					FromRole="SalesOrderParametersPrincipal" ToRole="SalesOrderDependent" />
+			</EntityType>
+			<Association Name="SalesOrderParameters_SalesOrderType">
+				<End Type="sap.smartbusinessdemo.services.SalesOrderParametersType"
+					Role="SalesOrderParametersPrincipal" Multiplicity="*" />
+				<End Type="sap.smartbusinessdemo.services.SalesOrderType" Role="SalesOrderDependent"
+					Multiplicity="*" />
+			</Association>
+			<EntityContainer Name="SalesOrderWithInputParam"
+				m:IsDefaultEntityContainer="true">
+				<EntitySet Name="SalesOrder"
+					EntityType="sap.smartbusinessdemo.services.SalesOrderType"
+					sap:addressable="false" />
+				<EntitySet Name="SalesOrderParameters"
+					EntityType="sap.smartbusinessdemo.services.SalesOrderParametersType"
+					sap:addressable="false" />
+				<AssociationSet Name="SalesOrderParameters_SalesOrder"
+					Association="sap.smartbusinessdemo.services.SalesOrderParameters_SalesOrderType">
+					<End Role="SalesOrderParametersPrincipal" EntitySet="SalesOrderParameters" />
+					<End Role="SalesOrderDependent" EntitySet="SalesOrder" />
+				</AssociationSet>
+			</EntityContainer>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

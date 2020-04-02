@@ -1,0 +1,130 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Mock Server</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In this tutorial, we will explore some advanced features of the mock server."><meta name="description" content="In this tutorial, we will explore some advanced features of the mock server."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"7a78f1b707c248fd9ec53dcb5f10814c.html","previousTopicHref":"2ca583d6b9c24e4d8f189eada7c4b668.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio3a9728ec31f94ca18a7d543ce419d85d"><h1 class="title topictitle1" hidden>Mock Server</h1><div class="body conbody"><p class="shortdesc" hidden>In this tutorial, we will explore some advanced features of the mock server. </p>
+<p class="p">If no OData service is available or you simply don&#x2019;t want to depend on the OData backend
+connectivity for your development and tests, the mock server can mimic the OData
+back-end calls. It is designed to simulate an OData provider by intercepting the HTTP
+communication made to the server, and providing a fake output. All this is transparent
+to the data binding and usage of OData model.</p>
+<p class="p">In certain scenarios, using only the built-in OData simulation of the mock server is
+insufficient for completely server-independent tests. For example, if your application
+is using an OData feature that is not supported by the mock server, or if your
+application invokes a function import that depends on server specific implementation
+(and thus is also not simulated generically). We will demonstrate how to use function
+callbacks in order to change existing mock requests.</p>
+<p class="p">Additionally, we will demonstrate how to mock an additional request that is not simulated out
+of the box by the <span class="ph"><span class="ph pname">SAPUI5</span></span>
+mock server.</p>
+<aside class="note caution" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Caution</strong></div>
+<p class="p">The tutorial describes how to use some advanced features of the mock server, disregarding the
+legal aspects of shipping mock data. Usually the mock data and mock server
+invocation is done in a test folder that is not shipped to customers. Be very
+careful that you don&apos;t ship mock data!</p></aside>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loio3a9728ec31f94ca18a7d543ce419d85d__fig_rwd_smq_st"><div class="figbody">
+<img class="inline  " id="loio3a9728ec31f94ca18a7d543ce419d85d__image_xw4_smq_st" src="loio55edd9fa2cc24f398a9373d6d497d3e4_HiRes.png">
+</div></div>
+<aside class="note tip" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Tip</strong></div>
+<p class="p">You don&apos;t have to do all tutorial steps sequentially, you can also jump directly
+to any step you want. Just download the code from the previous step, and start
+there.</p><p class="p">You can view and download the files for all steps in the Demo Kit <span class="ph">at <a class="xref" href="../../#/entity/sap.ui.core.tutorial.mockserver" target="_top" alt="#/entity/sap.ui.core.tutorial.mockserver" title="#/entity/sap.ui.core.tutorial.mockserver">Mock Server</a></span>. Copy the code to your workspace and make sure
+that the application runs by calling the <samp class="ph codeph">webapp/index.html</samp>
+file. Depending on your development environment you might have to adjust
+resource paths and configuration entries.</p><div class="p">For more information check the following sections of the tutorials overview page (see <a class="xref" href="../../#/topic/8b49fc198bf04b2d9800fc37fecbb218.html" title="Set up your development environment and go through our tutorials. They introduce you to all major development paradigms of SAPUI5 using practical examples in an interactive format." target="_top">Get Started: Setup and Tutorials</a>):<ul class="ul" id="loio3a9728ec31f94ca18a7d543ce419d85d__ul_uxg_vmr_xs">
+<li class="li">
+<p class="p"><a class="xref" href="../../#/topic/8b49fc198bf04b2d9800fc37fecbb218.html#loio8b49fc198bf04b2d9800fc37fecbb218__tutorials_download" target="_top">Downloading Code for a Tutorial Step</a></p>
+</li>
+<li class="li">
+<p class="p"><a class="xref" href="../../#/topic/8b49fc198bf04b2d9800fc37fecbb218.html#loio8b49fc198bf04b2d9800fc37fecbb218__tutorials_adaptation" target="_top">Adapting Code to Your Development Environment</a></p>
+</li>
+</ul></div></aside>
+</section></div>
+<div class="section"><section class="section" type="Prerequisites"><h2 class="section_title" style="font-size: 1.15em;">Prerequisites</h2>
+
+<p class="p">This tutorial assumes you have access to the <span class="ph pname">SAP Web IDE</span> either by having a trial account or a
+customer account. For more information, see <a class="xref" href="../../#/topic/13ced9493472408999143bc99bbb73b9.html" title="SAP Web IDE is a web-based development environment that is optimized for developing SAPUI5 complex apps using the latest innovations, developing and extending SAP Fiori apps, developing mobile hybrid apps, and extending SAP Web IDE with plug-ins and templates." target="_top">App Development Using SAP Web IDE</a>.</p>
+<p class="p">You should also be familiar with the concepts explained in the <a class="xref" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a> tutorial and with the OData
+specification.</p>
+</section></div>
+</div><div class="related-links"> <ol><li><strong><a class="link" href="../../#/topic/7a78f1b707c248fd9ec53dcb5f10814c.html" title="We start with a simple app scenario with a list of items bound to an OData service. Since the OData service is not available yet on a real server, we will use the mock server to simulate both data and data calls." target="_top">Step 1: Initial App Without Data</a></strong><br></li><li><strong><a class="link" href="../../#/topic/50897decc9504b2a875fb41d89fd254a.html" title="In this step, we use the mock server to add data to our app without dependency to any remote server or system." target="_top">Step 2: Creating a Mock Server to Simulate Data</a></strong><br></li><li><strong><a class="link" href="../../#/topic/46c1ca4eb2804af6bfa371ad51c9b887.html" title="In this step, we add the functionality to interpret URL parameters in our local mock server configuration." target="_top">Step 3: Handling Custom URL Parameters</a></strong><br></li><li><strong><a class="link" href="../../#/topic/95e5b87804ef4059bb68dd511666d4e3.html" title="We only want to display the upcoming meetings and hide the meetings happened in the past in our app. By using a function import that calculates these items on the back end we do not need to do the calculation on the client. The mock server will be instructed to do the calculation locally for testing purposes." target="_top">Step 4: Calling a Function Import</a></strong><br></li></ol><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/69d3cbd4150c4ffb884e788f7f60fd93.html" title="Mock server is a mocking framework for HTTP and HTTPS that is used to simplify integration testing and to decouple development teams by allowing to develop against a service that is not complete or unstable." target="_top">Mock Server</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

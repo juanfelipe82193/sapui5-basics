@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+   <edmx:DataServices m:DataServiceVersion="2.0">
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="RSAO_ODATA_SRV" xml:lang="en" sap:schema-version="1">
+         <EntityType Name="Bookmark" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="Id" />
+            </Key>
+            <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="ID of Runtime Data" sap:updatable="false" />
+            <Property Name="Type" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Bookmark Type" sap:creatable="false" sap:updatable="false" />
+            <Property Name="Version" Type="Edm.String" sap:label="For Compatibility Check" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Title" Type="Edm.String" sap:label="Title" sap:creatable="false" sap:updatable="false" />
+            <Property Name="Description" Type="Edm.String" sap:label="Description" sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+            <Property Name="MainObjectId" Type="Edm.String" MaxLength="40" sap:label="Object Name" sap:creatable="false" sap:updatable="false" />
+            <Property Name="MainObjectType" Type="Edm.String" MaxLength="4" sap:label="Object Type" sap:creatable="false" sap:updatable="false" />
+            <Property Name="Owner" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Owner" sap:creatable="false" sap:updatable="false" />
+            <Property Name="Status" Type="Edm.String" MaxLength="1" sap:label="Status of Runtime Data" sap:creatable="false" sap:updatable="false" />
+            <Property Name="LastReadTimestamp" Type="Edm.DateTime" Precision="0" sap:label="Time Last Read" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="CreationTimestamp" Type="Edm.DateTime" Precision="0" sap:label="Time of Creation" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="IsPublic" Type="Edm.Boolean" Nullable="false" sap:label="Publically Available" sap:creatable="false" sap:updatable="false" />
+            <Property Name="IsReadOnly" Type="Edm.Boolean" Nullable="false" sap:label="If true, cannot be overwritten nor deleted" sap:creatable="false" sap:updatable="false" sap:sortable="false" />
+            <Property Name="GroupIdentifier" Type="Edm.String" sap:label="Bookmark can belong to a group" sap:creatable="false" sap:updatable="false" />
+            <NavigationProperty Name="References" Relationship="RSAO_ODATA_SRV.BookmarkToReference" FromRole="FromRole_BookmarkToReference" ToRole="ToRole_BookmarkToReference" sap:label="Bookmark References" />
+            <NavigationProperty Name="Data" Relationship="RSAO_ODATA_SRV.BookmarkToData" FromRole="FromRole_BookmarkToData" ToRole="ToRole_BookmarkToData" sap:label="Bookmark Data" />
+         </EntityType>
+         <EntityType Name="BookmarkData" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="Id" />
+            </Key>
+            <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Bookmark ID" sap:creatable="false" sap:updatable="false" />
+            <Property Name="Data" Type="Edm.String" sap:label="Runtime Data as String" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="DataX" Type="Edm.Binary" sap:label="Runtime Data as X-String" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+         </EntityType>
+         <EntityType Name="BookmarkReference" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="Id" />
+               <PropertyRef Name="ObjectId" />
+            </Key>
+            <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Bookmark ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="ObjectType" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="TLOGO type" sap:creatable="false" sap:updatable="false" />
+            <Property Name="ObjectId" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="TLOGO name" sap:creatable="false" sap:updatable="false" />
+            <Property Name="SystemAlias" Type="Edm.String" MaxLength="80" sap:label="System" sap:creatable="false" sap:updatable="false" />
+         </EntityType>
+         <EntityType Name="BiApplication" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="Techname" />
+            </Key>
+            <Property Name="Techname" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Technical Name" sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+            <Property Name="ObjectType" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Object Type" sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+            <Property Name="Descr" Type="Edm.String" MaxLength="60" sap:label="Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Owner" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Person Respons." sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+            <Property Name="LastChanged" Type="Edm.DateTime" Precision="0" sap:label="Last Changed" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <NavigationProperty Name="Data" Relationship="RSAO_ODATA_SRV.BiApplicationToData" FromRole="FromRole_BiApplicationToData" ToRole="ToRole_BiApplicationToData" sap:label="Application Data" />
+            <NavigationProperty Name="Texts" Relationship="RSAO_ODATA_SRV.BiApplicationToTexts" FromRole="FromRole_BiApplicationToTexts" ToRole="ToRole_BiApplicationToTexts" sap:label="Translated Texts" />
+         </EntityType>
+         <EntityType Name="SdkExtension" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="Techname" />
+            </Key>
+            <Property Name="Techname" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Technical Name" sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+            <Property Name="ObjectType" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Object Type" sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+            <Property Name="Descr" Type="Edm.String" MaxLength="60" sap:label="Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Owner" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Person Respons." sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+            <Property Name="LastChanged" Type="Edm.DateTime" Precision="0" sap:label="Last Changed" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <NavigationProperty Name="Data" Relationship="RSAO_ODATA_SRV.SdkExtensionToData" FromRole="FromRole_SdkExtensionToData" ToRole="ToRole_SdkExtensionToData" sap:label="SDK Extension Data" />
+         </EntityType>
+         <EntityType Name="BiApplicationData" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="Techname" />
+            </Key>
+            <Property Name="Techname" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Technical Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="data" Type="Edm.Binary" Nullable="false" sap:label="Object Content" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+         </EntityType>
+         <EntityType Name="SdkExtensionData" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="Techname" />
+            </Key>
+            <Property Name="Techname" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Technical Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="data" Type="Edm.Binary" Nullable="false" sap:label="Object Content" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+         </EntityType>
+         <EntityType Name="TlogoText" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="Techname" />
+               <PropertyRef Name="ObjectType" />
+               <PropertyRef Name="Id" />
+               <PropertyRef Name="Language" />
+            </Key>
+            <Property Name="Techname" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Technical Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="ObjectType" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Object Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Id" Type="Edm.String" Nullable="false" sap:label="Text ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Language" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Text" Type="Edm.String" Nullable="false" sap:label="Translated Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+         </EntityType>
+         <EntityType Name="BiApplicationText" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="Techname" />
+               <PropertyRef Name="Id" />
+               <PropertyRef Name="Language" />
+            </Key>
+            <Property Name="Techname" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Technical Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Id" Type="Edm.String" Nullable="false" sap:label="Text ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Language" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            <Property Name="Text" Type="Edm.String" Nullable="false" sap:label="Translated Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+         </EntityType>
+         <Association Name="SdkExtensionToData" sap:content-version="1" sap:label="SDK Extension Data">
+            <End Type="RSAO_ODATA_SRV.SdkExtension" Multiplicity="1" Role="FromRole_SdkExtensionToData" />
+            <End Type="RSAO_ODATA_SRV.SdkExtensionData" Multiplicity="1" Role="ToRole_SdkExtensionToData" />
+            <ReferentialConstraint>
+               <Principal Role="FromRole_SdkExtensionToData">
+                  <PropertyRef Name="Techname" />
+               </Principal>
+               <Dependent Role="ToRole_SdkExtensionToData">
+                  <PropertyRef Name="Techname" />
+               </Dependent>
+            </ReferentialConstraint>
+         </Association>
+         <Association Name="BookmarkToReference" sap:content-version="1" sap:label="Bookmark References">
+            <End Type="RSAO_ODATA_SRV.Bookmark" Multiplicity="1" Role="FromRole_BookmarkToReference" />
+            <End Type="RSAO_ODATA_SRV.BookmarkReference" Multiplicity="*" Role="ToRole_BookmarkToReference" />
+            <ReferentialConstraint>
+               <Principal Role="FromRole_BookmarkToReference">
+                  <PropertyRef Name="Id" />
+               </Principal>
+               <Dependent Role="ToRole_BookmarkToReference">
+                  <PropertyRef Name="Id" />
+               </Dependent>
+            </ReferentialConstraint>
+         </Association>
+         <Association Name="BookmarkToData" sap:content-version="1" sap:label="Bookmark Data">
+            <End Type="RSAO_ODATA_SRV.Bookmark" Multiplicity="1" Role="FromRole_BookmarkToData" />
+            <End Type="RSAO_ODATA_SRV.BookmarkData" Multiplicity="1" Role="ToRole_BookmarkToData" />
+            <ReferentialConstraint>
+               <Principal Role="FromRole_BookmarkToData">
+                  <PropertyRef Name="Id" />
+               </Principal>
+               <Dependent Role="ToRole_BookmarkToData">
+                  <PropertyRef Name="Id" />
+               </Dependent>
+            </ReferentialConstraint>
+         </Association>
+         <Association Name="BiApplicationToData" sap:content-version="1" sap:label="BI Application Data">
+            <End Type="RSAO_ODATA_SRV.BiApplication" Multiplicity="1" Role="FromRole_BiApplicationToData" />
+            <End Type="RSAO_ODATA_SRV.BiApplicationData" Multiplicity="1" Role="ToRole_BiApplicationToData" />
+            <ReferentialConstraint>
+               <Principal Role="FromRole_BiApplicationToData">
+                  <PropertyRef Name="Techname" />
+               </Principal>
+               <Dependent Role="ToRole_BiApplicationToData">
+                  <PropertyRef Name="Techname" />
+               </Dependent>
+            </ReferentialConstraint>
+         </Association>
+         <Association Name="BiApplicationToTexts" sap:content-version="1" sap:label="Translated Texts">
+            <End Type="RSAO_ODATA_SRV.BiApplication" Multiplicity="1" Role="FromRole_BiApplicationToTexts" />
+            <End Type="RSAO_ODATA_SRV.BiApplicationText" Multiplicity="*" Role="ToRole_BiApplicationToTexts" />
+            <ReferentialConstraint>
+               <Principal Role="FromRole_BiApplicationToTexts">
+                  <PropertyRef Name="Techname" />
+               </Principal>
+               <Dependent Role="ToRole_BiApplicationToTexts">
+                  <PropertyRef Name="Techname" />
+               </Dependent>
+            </ReferentialConstraint>
+         </Association>
+         <EntityContainer Name="RSAO_ODATA_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+            <EntitySet Name="BookmarkSet" EntityType="RSAO_ODATA_SRV.Bookmark" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+            <EntitySet Name="BookmarkDataSet" EntityType="RSAO_ODATA_SRV.BookmarkData" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+            <EntitySet Name="BookmarkReferenceSet" EntityType="RSAO_ODATA_SRV.BookmarkReference" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+            <EntitySet Name="BiApplicationSet" EntityType="RSAO_ODATA_SRV.BiApplication" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+            <EntitySet Name="SdkExtensionSet" EntityType="RSAO_ODATA_SRV.SdkExtension" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+            <EntitySet Name="BiApplicationDataSet" EntityType="RSAO_ODATA_SRV.BiApplicationData" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+            <EntitySet Name="SdkExtensionDataSet" EntityType="RSAO_ODATA_SRV.SdkExtensionData" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+            <EntitySet Name="TlogoTextSet" EntityType="RSAO_ODATA_SRV.TlogoText" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+            <EntitySet Name="BiApplicationTextSet" EntityType="RSAO_ODATA_SRV.BiApplicationText" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+            <AssociationSet Name="BookmarkToData_AssocSet" Association="RSAO_ODATA_SRV.BookmarkToData" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+               <End EntitySet="BookmarkSet" Role="FromRole_BookmarkToData" />
+               <End EntitySet="BookmarkDataSet" Role="ToRole_BookmarkToData" />
+            </AssociationSet>
+            <AssociationSet Name="SdkExtensionToData_AssocSet" Association="RSAO_ODATA_SRV.SdkExtensionToData" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+               <End EntitySet="SdkExtensionSet" Role="FromRole_SdkExtensionToData" />
+               <End EntitySet="SdkExtensionDataSet" Role="ToRole_SdkExtensionToData" />
+            </AssociationSet>
+            <AssociationSet Name="BiApplicationToData_AssocSet" Association="RSAO_ODATA_SRV.BiApplicationToData" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+               <End EntitySet="BiApplicationSet" Role="FromRole_BiApplicationToData" />
+               <End EntitySet="BiApplicationDataSet" Role="ToRole_BiApplicationToData" />
+            </AssociationSet>
+            <AssociationSet Name="BiApplicationToTexts_AssocSet" Association="RSAO_ODATA_SRV.BiApplicationToTexts" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+               <End EntitySet="BiApplicationSet" Role="FromRole_BiApplicationToTexts" />
+               <End EntitySet="BiApplicationTextSet" Role="ToRole_BiApplicationToTexts" />
+            </AssociationSet>
+            <AssociationSet Name="BookmarkToReference_AssocSet" Association="RSAO_ODATA_SRV.BookmarkToReference" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+               <End EntitySet="BookmarkSet" Role="FromRole_BookmarkToReference" />
+               <End EntitySet="BookmarkReferenceSet" Role="ToRole_BookmarkToReference" />
+            </AssociationSet>
+            <FunctionImport Name="searchByReferenceSubset" ReturnType="Collection(RSAO_ODATA_SRV.Bookmark)" EntitySet="BookmarkSet" m:HttpMethod="GET" sap:action-for="RSAO_ODATA_SRV.Bookmark">
+               <Parameter Name="BookmarkType" Type="Edm.String" Mode="In" MaxLength="1" />
+               <Parameter Name="ObjectIds" Type="Edm.String" Mode="In" />
+               <Parameter Name="Tlogos" Type="Edm.String" Mode="In" />
+               <Parameter Name="IncludePublic" Type="Edm.Boolean" Mode="In" Nullable="true" />
+               <Parameter Name="IncludeOwned" Type="Edm.Boolean" Mode="In" Nullable="true" />
+            </FunctionImport>
+            <FunctionImport Name="searchByReferences" ReturnType="Collection(RSAO_ODATA_SRV.Bookmark)" EntitySet="BookmarkSet" m:HttpMethod="GET" sap:action-for="RSAO_ODATA_SRV.Bookmark">
+               <Parameter Name="BookmarkType" Type="Edm.String" Mode="In" MaxLength="1" />
+               <Parameter Name="ObjectIds" Type="Edm.String" Mode="In" />
+               <Parameter Name="Tlogos" Type="Edm.String" Mode="In" />
+               <Parameter Name="IncludeOwned" Type="Edm.Boolean" Mode="In" Nullable="true" />
+               <Parameter Name="IncludePublic" Type="Edm.Boolean" Mode="In" Nullable="true" />
+            </FunctionImport>
+            <FunctionImport Name="deleteByReferences" ReturnType="Collection(RSAO_ODATA_SRV.Bookmark)" EntitySet="BookmarkSet" m:HttpMethod="GET" sap:action-for="RSAO_ODATA_SRV.Bookmark">
+               <Parameter Name="BookmarkType" Type="Edm.String" Mode="In" MaxLength="1" />
+               <Parameter Name="ObjectIds" Type="Edm.String" Mode="In" />
+               <Parameter Name="Tlogos" Type="Edm.String" Mode="In" />
+            </FunctionImport>
+            <FunctionImport Name="deleteByReferenceSubset" ReturnType="Collection(RSAO_ODATA_SRV.Bookmark)" EntitySet="BookmarkSet" m:HttpMethod="GET" sap:action-for="RSAO_ODATA_SRV.Bookmark">
+               <Parameter Name="Tlogos" Type="Edm.String" Mode="In" />
+               <Parameter Name="BookmarkType" Type="Edm.String" Mode="In" MaxLength="1" />
+               <Parameter Name="ObjectIds" Type="Edm.String" Mode="In" />
+            </FunctionImport>
+            <FunctionImport Name="searchByReferencesEx" ReturnType="Collection(RSAO_ODATA_SRV.Bookmark)" EntitySet="BookmarkSet" m:HttpMethod="GET" sap:action-for="RSAO_ODATA_SRV.Bookmark">
+               <Parameter Name="GroupIdentifier" Type="Edm.String" Mode="In" />
+               <Parameter Name="Tlogos" Type="Edm.String" Mode="In" />
+               <Parameter Name="ObjectIds" Type="Edm.String" Mode="In" />
+               <Parameter Name="IncludePublic" Type="Edm.Boolean" Mode="In" />
+               <Parameter Name="BookmarkType" Type="Edm.String" Mode="In" MaxLength="1" />
+               <Parameter Name="IncludeOwned" Type="Edm.Boolean" Mode="In" />
+               <Parameter Name="ExactMatch" Type="Edm.Boolean" Mode="In" />
+            </FunctionImport>
+         </EntityContainer>
+         <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="/sap/opu/odata/sap/RSAO_ODATA_SRV/$metadata" />
+         <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="/sap/opu/odata/sap/RSAO_ODATA_SRV/$metadata" />
+      </Schema>
+   </edmx:DataServices>
+</edmx:Edmx>

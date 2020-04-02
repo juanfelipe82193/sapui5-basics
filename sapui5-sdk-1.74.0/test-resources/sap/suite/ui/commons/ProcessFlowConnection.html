@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<title>Process Flow Connection test suite page</title>
+
+<!-- UI5 Bootstrap -->
+<script type="text/javascript"
+  id="sap-ui-bootstrap"
+  src="../../../../../resources/sap-ui-core.js"
+  data-sap-ui-libs="sap.ui.commons, sap.suite.ui.commons, sap.m"
+  data-sap-ui-theme="sap_belize">
+</script>
+
+<script type="text/javascript">
+  //jQuery.sap.initMobile();
+
+  drawProcessFlowConnections = function(flowLine) {
+
+    draw = function(id) {
+      var connectionData = new Array();
+      connectionData.push(getSingleConnectionData(id));
+
+      var processFlowConnection = new sap.suite.ui.commons.ProcessFlowConnection(flowLine + "_" + id);
+      processFlowConnection.setDrawData(connectionData);
+      processFlowConnection.placeAt("processFlowConnection_" + flowLine + "_" + id);
+    };
+
+      getSingleConnectionData = function(id) {
+      var singleConnectionData = new Object();
+      singleConnectionData.flowLine = flowLine;
+      singleConnectionData.targetNodeState = getTargetNodeState(id);
+      singleConnectionData.displayState = getDisplayState(id);
+      if (flowLine.indexOf("r") >= 0) {
+        singleConnectionData.hasArrow = getArrowState(id);
+      } else {
+        singleConnectionData.hasArrow = false;
+      }
+
+      return singleConnectionData;
+    };
+
+    getTargetNodeState = function(id) {
+      var connectionTypes = id.split("_");
+      switch(connectionTypes[0]) {
+        case "created":
+          return sap.suite.ui.commons.ProcessFlowNodeState.Positive;
+        case "planned":
+          return sap.suite.ui.commons.ProcessFlowNodeState.Planned;
+        default:
+          return null;
+      }
+    };
+
+    getDisplayState = function(id) {
+      var connectionTypes = id.split("_");
+      switch(connectionTypes[1]) {
+        case "regular":
+          return sap.suite.ui.commons.ProcessFlowDisplayState.Regular;
+        case "highlighted":
+          return sap.suite.ui.commons.ProcessFlowDisplayState.Highlighted;
+        case "dimmed":
+          return sap.suite.ui.commons.ProcessFlowDisplayState.Dimmed;
+        default:
+          return null;
+      }
+    };
+
+    getArrowState = function(id) {
+      var connectionTypes = id.split("_");
+      if(connectionTypes.length == 3 && connectionTypes[2]=="arrow") {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    draw("created_regular");
+    draw("created_regular_arrow");
+    draw("planned_regular");
+    draw("planned_regular_arrow");
+    draw("created_highlighted");
+    draw("created_highlighted_arrow");
+    draw("planned_highlighted");
+    draw("planned_highlighted_arrow");
+    draw("created_dimmed");
+    draw("created_dimmed_arrow");
+    draw("planned_dimmed");
+    draw("planned_dimmed_arrow");
+  };
+
+  drawProcessFlowConnections("rtlb");
+  drawProcessFlowConnections("rtl");
+  drawProcessFlowConnections("rtb");
+  drawProcessFlowConnections("rlb");
+  drawProcessFlowConnections("tlb");
+  drawProcessFlowConnections("rt");
+  drawProcessFlowConnections("rl");
+  drawProcessFlowConnections("rb");
+  drawProcessFlowConnections("tl");
+  drawProcessFlowConnections("tb");
+  drawProcessFlowConnections("lb");
+
+  sap.ui.getCore().applyChanges();
+</script>
+
+<style>
+  table {
+    border-spacing: 30px;
+  }
+  .sampleDiv {
+    width: 48px;
+    height: 209px;
+    margin: 0 auto;
+  }
+</style>
+</head>
+
+<body class="sapUiBody">
+  <table>
+    <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th colspan="2"><b>created+regular</b></th>
+        <th colspan="2"><b>planned+regular</b></th>
+        <th colspan="2"><b>created+highlighted</b></th>
+        <th colspan="2"><b>planned+highlighted</b></th>
+        <th colspan="2"><b>created+dimmed</b></th>
+        <th colspan="2"><b>planned+dimmed</b></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <th><b>RTLB</b></th>
+        <td><div class="sampleDiv" id="processFlowConnection_rtlb_created_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtlb_created_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtlb_planned_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtlb_planned_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtlb_created_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtlb_created_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtlb_planned_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtlb_planned_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtlb_created_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtlb_created_dimmed_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtlb_planned_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtlb_planned_dimmed_arrow"></div></td>
+      </tr>
+      <tr>
+        <th><b>RTL</b></th>
+        <td><div class="sampleDiv" id="processFlowConnection_rtl_created_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtl_created_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtl_planned_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtl_planned_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtl_created_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtl_created_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtl_planned_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtl_planned_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtl_created_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtl_created_dimmed_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtl_planned_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtl_planned_dimmed_arrow"></div></td>
+      </tr>
+      <tr>
+        <th><b>RTB</b></th>
+        <td><div class="sampleDiv" id="processFlowConnection_rtb_created_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtb_created_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtb_planned_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtb_planned_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtb_created_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtb_created_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtb_planned_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtb_planned_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtb_created_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtb_created_dimmed_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtb_planned_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rtb_planned_dimmed_arrow"></div></td>
+      </tr>
+      <tr>
+        <th><b>RLB</b></th>
+        <td><div class="sampleDiv" id="processFlowConnection_rlb_created_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rlb_created_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rlb_planned_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rlb_planned_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rlb_created_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rlb_created_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rlb_planned_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rlb_planned_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rlb_created_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rlb_created_dimmed_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rlb_planned_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rlb_planned_dimmed_arrow"></div></td>
+      </tr>
+      <tr>
+        <th><b>TLB</b></th>
+        <td><div class="sampleDiv" id="processFlowConnection_tlb_created_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tlb_created_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tlb_planned_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tlb_planned_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tlb_created_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tlb_created_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tlb_planned_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tlb_planned_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tlb_created_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tlb_created_dimmed_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tlb_planned_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tlb_planned_dimmed_arrow"></div></td>
+      </tr>
+      <tr>
+        <th><b>RT</b></th>
+        <td><div class="sampleDiv" id="processFlowConnection_rt_created_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rt_created_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rt_planned_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rt_planned_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rt_created_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rt_created_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rt_planned_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rt_planned_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rt_created_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rt_created_dimmed_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rt_planned_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rt_planned_dimmed_arrow"></div></td>
+      </tr>
+      <tr>
+        <th><b>RL</b></th>
+        <td><div class="sampleDiv" id="processFlowConnection_rl_created_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rl_created_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rl_planned_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rl_planned_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rl_created_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rl_created_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rl_planned_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rl_planned_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rl_created_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rl_created_dimmed_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rl_planned_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rl_planned_dimmed_arrow"></div></td>
+      </tr>
+      <tr>
+        <th><b>RB</b></th>
+        <td><div class="sampleDiv" id="processFlowConnection_rb_created_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rb_created_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rb_planned_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rb_planned_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rb_created_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rb_created_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rb_planned_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rb_planned_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rb_created_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rb_created_dimmed_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rb_planned_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_rb_planned_dimmed_arrow"></div></td>
+      </tr>
+      <tr>
+        <th><b>TL</b></th>
+        <td><div class="sampleDiv" id="processFlowConnection_tl_created_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tl_created_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tl_planned_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tl_planned_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tl_created_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tl_created_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tl_planned_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tl_planned_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tl_created_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tl_created_dimmed_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tl_planned_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tl_planned_dimmed_arrow"></div></td>
+      </tr>
+      <tr>
+        <th><b>TB</b></th>
+        <td><div class="sampleDiv" id="processFlowConnection_tb_created_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tb_created_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tb_planned_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tb_planned_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tb_created_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tb_created_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tb_planned_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tb_planned_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tb_created_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tb_created_dimmed_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tb_planned_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_tb_planned_dimmed_arrow"></div></td>
+      </tr>
+      <tr>
+        <th><b>LB</b></th>
+        <td><div class="sampleDiv" id="processFlowConnection_lb_created_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_lb_created_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_lb_planned_regular"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_lb_planned_regular_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_lb_created_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_lb_created_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_lb_planned_highlighted"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_lb_planned_highlighted_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_lb_created_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_lb_created_dimmed_arrow"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_lb_planned_dimmed"></div></td>
+        <td><div class="sampleDiv" id="processFlowConnection_lb_planned_dimmed_arrow"></div></td>
+      </tr>
+      </tbody>
+  </table>
+
+</body>
+</html>

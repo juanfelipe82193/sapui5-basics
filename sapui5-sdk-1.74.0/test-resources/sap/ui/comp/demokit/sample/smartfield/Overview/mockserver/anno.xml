@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+    <edmx:Reference Uri="/sap/bc/ui5_ui5/ui2/ushell/resources/sap/ushell/components/factsheet/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/bc/ui5_ui5/ui2/ushell/resources/sap/ushell/components/factsheet/vocabularies/Communication.xml">
+        <edmx:Include Alias="vCard" Namespace="com.sap.vocabularies.Communication.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml">
+        <edmx:Include Alias="CQP" Namespace="Org.OData.Measures.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/bc/ui5_ui5/ui2/ushell/resources/sap/ushell/components/factsheet/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/sap/S_PROTOTYPE_MDS_SRV/$metadata">
+        <edmx:Include Alias="COLLE" Namespace="COLLE"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <!-- Text annotations for SalesOrderType -->
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="COLLE.SalesOrderType/SalesOrderID">
+                <Annotation Term="Common.Text" Path="CreationUserName"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="COLLE.SalesOrderType/BusinessPartnerID">
+                <Annotation Term="Common.Text" Path="CreationUserName">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextLast" />
+                </Annotation>
+            </Annotations>
+
+            <!-- Text annotations for BusinessPartnerType -->
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="COLLE.BusinessPartnerType/BusinessPartnerID">
+                <Annotation Term="Common.Text" Path="CompanyName"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="COLLE.BusinessPartnerType/BusinessPartnerRole">
+                <Annotation Term="Common.Text" Path="LegalForm">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst" />
+                </Annotation>
+            </Annotations>
+            
+            <Annotations Target="COLLE.BusinessPartnerType">
+                <!-- Set the text arrangement on entity type level -->
+                <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextLast" />
+
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Should be: ID (Text)" />
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="BusinessPartnerID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Should be: Text (ID)" />
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="BusinessPartnerRole"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="COLLE.SalesOrderType">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record>
+                        <PropertyValue String="Sales Order" Property="TypeName"/>
+                        <PropertyValue String="Sales Orders" Property="TypeNamePlural"/>
+                        <PropertyValue Property="Title">
+                            <Record>
+                                <PropertyValue Property="Value">
+                                    <Apply Function="odata.concat">
+                                        <String>Sales Order </String>
+                                        <Path>SalesOrderID</Path>
+                                    </Apply>
+                                </PropertyValue>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataFieldWithNavigation">
+                                <PropertyValue Property="Value" Path="CompanyName" />
+                                <PropertyValue Property="Target" Path="to_BusinessPartner" />
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Normal Text Annotation: Text (ID)" />
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Text Annotation with Text Arrangement: ID (Text)" />
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="BusinessPartnerID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderDraftUUID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="ActiveSalesOrderID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="CurrencyCode"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="GrossAmount"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="NetAmount"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="TaxAmount"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="LifecycleStatus"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="BillingStatus"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="DeliveryStatus"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="OpportunityID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="CreationDateTime"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="CreationUserName"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="LastChangedDateTime"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="LastChangedUserName"/>
+                        </Record>
+                        <Record Type="com.sap.vocabularies.UI.v1.DataFieldForAction">
+                            <Annotation Term="com.sap.vocabularies.UI.v1.Importance"
+                                        EnumMember="com.sap.vocabularies.UI.v1.ImportanceType/Medium" />
+                            <PropertyValue Property="Label" String="Copy" />
+                            <PropertyValue Property="Action"
+                                           String="COLLE.COLLE_Entities/SalesOrderCopy" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.UI.v1.DataFieldForAction">
+                            <Annotation Term="com.sap.vocabularies.UI.v1.Importance"
+                                        EnumMember="com.sap.vocabularies.UI.v1.ImportanceType/Medium" />
+                            <PropertyValue Property="Label" String="Calculate Gross Amount" />
+                            <PropertyValue Property="Action"
+                                           String="COLLE.COLLE_Entities/SalesOrderCalculateGrossAmount" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.UI.v1.DataFieldForAction">
+                            <Annotation Term="com.sap.vocabularies.UI.v1.Importance"
+                                        EnumMember="com.sap.vocabularies.UI.v1.ImportanceType/Medium" />
+                            <PropertyValue Property="Label" String="Approve Sales Order" />
+                            <PropertyValue Property="Action"
+                                           String="COLLE.COLLE_Entities/SalesOrderApprove" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.UI.v1.DataFieldForAction">
+                            <Annotation Term="com.sap.vocabularies.UI.v1.Importance"
+                                        EnumMember="com.sap.vocabularies.UI.v1.ImportanceType/Medium" />
+                            <PropertyValue Property="Label" String="Validate" />
+                            <PropertyValue Property="Action"
+                                           String="COLLE.COLLE_Entities/SalesOrderValidation" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="ActiveSalesOrderID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="BusinessPartnerID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="CurrencyCode"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="GrossAmount"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="NetAmount"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="TaxAmount"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="LifecycleStatus"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="BillingStatus"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="DeliveryStatus"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="OpportunityID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="CreationDateTime"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="CreationUserName"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="LastChangedDateTime"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="LastChangedUserName"/>
+                        </Record>
+                        <Record Type="com.sap.vocabularies.UI.v1.DataFieldForAction">
+                            <Annotation Term="com.sap.vocabularies.UI.v1.Importance"
+                                        EnumMember="com.sap.vocabularies.UI.v1.ImportanceType/Medium" />
+                            <PropertyValue Property="Label" String="Copy" />
+                            <PropertyValue Property="Action"
+                                           String="COLLE.COLLE_Entities/SalesOrderCopy" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.UI.v1.DataFieldForAction">
+                            <Annotation Term="com.sap.vocabularies.UI.v1.Importance"
+                                        EnumMember="com.sap.vocabularies.UI.v1.ImportanceType/Medium" />
+                            <PropertyValue Property="Label" String="Validate" />
+                            <PropertyValue Property="Action"
+                                           String="COLLE.COLLE_Entities/SalesOrderValidation" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="General"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Business Partner - ID (Text) set on Entity Type Level"/>
+                            <PropertyValue Property="Target" AnnotationPath="BusinessPartner/@UI.Identification"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Contacts"/>
+                            <PropertyValue Property="Target" AnnotationPath="Item/@vCard.Contact"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Sales Order Items"/>
+                            <PropertyValue Property="Target" AnnotationPath="Item/@UI.LineItem"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="COLLE.SalesOrderItemType">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record>
+                        <PropertyValue String="Sales Order Item" Property="TypeName"/>
+                        <PropertyValue String="Sales Order Items" Property="TypeNamePlural"/>
+                        <PropertyValue Property="TypeImageUrl" Path="Product/PictureURL"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="com.sap.vocabularies.UI.v1.HeaderInfoType">
+                                <PropertyValue Property="Value">
+                                    <Apply Function="odata.concat">
+                                        <String>Item </String>
+                                        <Path>SalesOrderItemID</Path>
+                                    </Apply>
+                                </PropertyValue>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record>
+                                <PropertyValue Property="Value" Path="ProductID" />
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="vCard.Contact">
+                    <Record Type="vCard.ContactType">
+                        <PropertyValue Property="kind" Path="ProductID"/>
+                        <PropertyValue Property="fn" Path="ProductID"/>
+                        <PropertyValue Property="title" Path="ProductID"/>
+                        <PropertyValue Property="role" Path="ProductID"/>
+                        <PropertyValue Property="org" Path="ProductID"/>
+                        <PropertyValue Property="email">
+                            <Collection>
+                                <Record Type="vCard.EmailAddressType">
+                                    <PropertyValue Property="address" Path="EmailAddress"/>
+                                    <PropertyValue Property="ProductID" EnumMember="vCard.ContactInformationType/work"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="tel">
+                            <Collection>
+                                <Record Type="vCard.PhoneNumberType">
+                                    <PropertyValue Property="uri">
+                                        <Apply Function="odata.concat">
+                                            <String>tel:</String>
+                                            <Path>SalesOrderID</Path>
+                                        </Apply>
+                                    </PropertyValue>
+                                    <PropertyValue Property="type" EnumMember="vCard.PhoneType/work vCard.PhoneType/voice"/>
+                                </Record>
+                                <Record Type="vCard.PhoneNumberType">
+                                    <PropertyValue Property="uri">
+                                        <Apply Function="odata.concat">
+                                            <String>tel:</String>
+                                            <Path>SalesOrderID</Path>
+                                        </Apply>
+                                    </PropertyValue>
+                                    <PropertyValue Property="type" EnumMember="vCard.PhoneType/cell vCard.PhoneType/voice"/>
+                                </Record>
+                                <Record Type="vCard.PhoneNumberType">
+                                    <PropertyValue Property="uri">
+                                        <Apply Function="odata.concat">
+                                            <String>tel:</String>
+                                            <Path>SalesOrderID</Path>
+                                        </Apply>
+                                    </PropertyValue>
+                                    <PropertyValue Property="type" EnumMember="vCard.PhoneType/fax"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderItemDraftUUID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderDraftUUID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="ActiveSalesOrderItemID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderItemID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="ProductID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="Quantity"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="QuantityUnitCode"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="DeliveryDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="GrossAmount"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="NetAmount"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="TaxAmount"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="CurrencyCode"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="AvailableToPromiseStatus"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="OpportunityItemID"/>
+                        </Record>
+                        <Record Type="com.sap.vocabularies.UI.v1.DataFieldForAction">
+                            <Annotation Term="com.sap.vocabularies.UI.v1.Importance"
+                                        EnumMember="com.sap.vocabularies.UI.v1.ImportanceType/Medium" />
+                            <PropertyValue Property="Label" String="Copy" />
+                            <PropertyValue Property="Action"
+                                           String="COLLE.COLLE_Entities/ItemCopy" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.UI.v1.DataFieldForAction">
+                            <Annotation Term="com.sap.vocabularies.UI.v1.Importance"
+                                        EnumMember="com.sap.vocabularies.UI.v1.ImportanceType/Medium" />
+                            <PropertyValue Property="Label" String="Calculate Gross Amount" />
+                            <PropertyValue Property="Action"
+                                           String="COLLE.COLLE_Entities/ItemCalculateGrossAmount" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataFieldWithUrl">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderID"/>
+                            <PropertyValue Property="Url">
+                                <Apply Function="odata.fillUriTemplate">
+                                    <String>#SalesOrder-displayFactSheet?SalesOrder={ID1}</String>
+                                    <LabeledElement Name="ID1">
+                                        <Path>SalesOrderID</Path>
+                                    </LabeledElement>
+                                </Apply>
+                            </PropertyValue>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="ActiveSalesOrderItemID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderItemID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="ProductID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="Quantity"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="QuantityUnitCode"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="DeliveryDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="GrossAmount"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="NetAmount"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="TaxAmount"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="CurrencyCode"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="AvailableToPromiseStatus"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="OpportunityItemID"/>
+                        </Record>
+                        <Record Type="com.sap.vocabularies.UI.v1.DataFieldForAction">
+                            <Annotation Term="com.sap.vocabularies.UI.v1.Importance"
+                                        EnumMember="com.sap.vocabularies.UI.v1.ImportanceType/Medium" />
+                            <PropertyValue Property="Label" String="Copy" />
+                            <PropertyValue Property="Action"
+                                           String="COLLE.COLLE_Entities/ItemCopy" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.UI.v1.DataFieldForAction">
+                            <Annotation Term="com.sap.vocabularies.UI.v1.Importance"
+                                        EnumMember="com.sap.vocabularies.UI.v1.ImportanceType/Medium" />
+                            <PropertyValue Property="Label" String="Calculate Gross Amount" />
+                            <PropertyValue Property="Action"
+                                           String="COLLE.COLLE_Entities/ItemCalculateGrossAmount" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.CollectionFacet">
+                            <PropertyValue Property="Label" String="General Information"/>
+                            <PropertyValue Property="ID" String="GeneralInformation"/>
+                            <PropertyValue Property="Facets">
+                                <Collection>
+                                    <Record Type="UI.ReferenceFacet">
+                                        <PropertyValue Property="Label" String="General"/>
+                                        <PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+                                    </Record>
+                                    <Record Type="UI.ReferenceFacet">
+                                        <PropertyValue Property="Label" String="Product Data"/>
+                                        <PropertyValue Property="Target" AnnotationPath="Product/@UI.Identification"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                            <Annotation Term="UI.IsSummary"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Schedule Lines"/>
+                            <PropertyValue Property="Target" AnnotationPath="ScheduleLine/@UI.LineItem"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="COLLE.ProductType">
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="Height"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="Width"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="Depth"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="DimensionUnit"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="WeightMeasure"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="WeightUnit"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="TypeImageUrl" Path="PictureURL"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="COLLE.SalesOrderScheduleLineType">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record>
+                        <PropertyValue String="Schedule Line" Property="TypeName"/>
+                        <PropertyValue String="Schedule Lines" Property="TypeNamePlural"/>
+                        <PropertyValue Property="Title">
+                            <Record>
+                                <PropertyValue Property="Value" String="Schedule Line"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record>
+                                <PropertyValue Property="Value" String="" />
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderSLDraftUUID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderItemID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderDraftUUID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderItemDraftUUID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="ActiveDeliveryDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="DeliveryDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="Quantity"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="QuantityUnitCode"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderSLDraftUUID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderItemID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderDraftUUID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="SalesOrderItemDraftUUID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="ActiveDeliveryDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="DeliveryDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="Quantity"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                            <PropertyValue Property="Value" Path="QuantityUnitCode"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.CollectionFacet">
+                            <Annotation Term="UI.IsSummary"/>
+                            <PropertyValue Property="Facets">
+                                <Collection>
+                                    <Record Type="UI.ReferenceFacet">
+                                        <PropertyValue Property="Label" String="General"/>
+                                        <PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,60 @@
+<mvc:View
+		controllerName="sap.gantt.sample.GanttChart2CustomShape.Gantt"
+		height="100%"
+		xmlns="sap.gantt.simple"
+		xmlns:axistime="sap.gantt.axistime"
+		xmlns:config="sap.gantt.config"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:my="sap.gantt.sample.GanttChart2CustomShape"
+		xmlns:table="sap.ui.table">
+	<GanttChartContainer>
+		<toolbar>
+			<ContainerToolbar />
+		</toolbar>
+		<GanttChartWithTable id="gantt" shapeSelectionMode="Single">
+			<axisTimeStrategy>
+				<axistime:ProportionZoomStrategy>
+					<axistime:totalHorizon>
+						<config:TimeHorizon
+								startTime="20171001000000"
+								endTime="20191129000000"/>
+					</axistime:totalHorizon>
+					<axistime:visibleHorizon>
+						<config:TimeHorizon
+								startTime="20181001000000"
+								endTime="20181129000000"/>
+					</axistime:visibleHorizon>
+				</axistime:ProportionZoomStrategy>
+			</axisTimeStrategy>
+			<table>
+				<table:TreeTable
+						selectionMode="Single"
+						visibleRowCountMode="Auto"
+						minAutoRowCount="12"
+						selectionBehavior="RowSelector"
+						enableColumnReordering="true"
+						rows="{
+						path: '/root',
+						parameters: {
+							arrayNames: ['children'],
+							numberOfExpandedLevels: 1
+						}
+					}">
+					<table:columns>
+						<table:Column label="" template="text" />
+					</table:columns>
+					<table:rowSettingsTemplate>
+						<GanttRowSettings rowId="{id}" shapes1="{shapes}">
+							<shapes1>
+								<my:CustomShape time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+												endTime="{path: 'endTime', formatter: '.fnTimeConverter'}" strokeWidth="3"
+												fill="{= ${type} === 1 ? '@sapUiChartPaletteQualitativeHue5' : 'white' }" type="{type}"
+												stroke="{= ${type} === 2 ? '@sapUiChartPaletteQualitativeHue6' : 'none' }"/>
+							</shapes1>
+						</GanttRowSettings>
+					</table:rowSettingsTemplate>
+				</table:TreeTable>
+			</table>
+		</GanttChartWithTable>
+	</GanttChartContainer>
+</mvc:View>

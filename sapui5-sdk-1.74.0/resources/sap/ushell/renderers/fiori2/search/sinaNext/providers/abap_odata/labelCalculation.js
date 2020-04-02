@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sinaDefine(['../../core/core','../../core/LabelCalculator'],function(c,L){"use strict";var m={};m.createLabelCalculator=function(){return new L({key:function(d){return[d.labelPlural,d._private.system,d._private.client];},data:function(d){return{label:d.label,labelPlural:d.labelPlural};},setLabel:function(d,l,a){l[0]=a.label;d.label=l.join(' ');l[0]=a.labelPlural;d.labelPlural=l.join(' ');},setFallbackLabel:function(d,a){d.label=a.label+' duplicate '+d.id;d.labelPlural=d.label;}});};return m;});

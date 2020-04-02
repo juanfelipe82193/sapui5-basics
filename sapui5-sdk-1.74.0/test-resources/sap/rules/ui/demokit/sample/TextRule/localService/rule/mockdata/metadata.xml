@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+           xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+           xmlns:sap="http://www.sap.com/Protocols/SAPData">
+
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="RULE_SRV" xml:lang="en" sap:schema-version="1"
+                xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="Ruleset" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                    <PropertyRef Name="Version"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="ID" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Version" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false"
+                          sap:label="Version" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ProjectId" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Project ID" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Name" sap:sortable="false"/>
+                <Property Name="Description" Type="Edm.String" MaxLength="80" sap:unicode="false"
+                          sap:label="Description" sap:sortable="false"/>
+                <Property Name="ValidFrom" Type="Edm.DateTime" Nullable="false" Precision="0" sap:unicode="false"
+                          sap:label="Valid from" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ValidTo" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Valid to"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false"
+                          sap:label="State" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="CreatedOn" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Created On"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Created By"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ChangedOn" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Changed On"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ChangedBy" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Changed By"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="IsDraft" Type="Edm.Boolean" sap:unicode="false" sap:label="Is Draft"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <NavigationProperty Name="RulesetToCurrentRules" Relationship="RULE_SRV.RulesetToCurrentRules"
+                                    FromRole="FromRole_RulesetToCurrentRules" ToRole="ToRole_RulesetToCurrentRules"/>
+                <NavigationProperty Name="RulesetToCurrentRuleService"
+                                    Relationship="RULE_SRV.RulesetToCurrentRuleService"
+                                    FromRole="FromRole_RulesetToCurrentRuleService"
+                                    ToRole="ToRole_RulesetToCurrentRuleService"/>
+                <NavigationProperty Name="RulesetRule" Relationship="RULE_SRV.RulesetToRulesetRules"
+                                    FromRole="FromRole_RulesetToRulesetRules" ToRole="ToRole_RulesetToRulesetRules"/>
+                <NavigationProperty Name="RulesetRuleService" Relationship="RULE_SRV.RulesetToRulesetRuleServices"
+                                    FromRole="FromRole_RulesetToRulesetRuleServices"
+                                    ToRole="ToRole_RulesetToRulesetRuleServices"/>
+            </EntityType>
+            <EntityType Name="RulesetRule" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="RulesetId"/>
+                    <PropertyRef Name="RulesetVersion"/>
+                    <PropertyRef Name="RuleId"/>
+                    <PropertyRef Name="RuleVersion"/>
+                </Key>
+                <Property Name="RulesetId" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Ruleset ID" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RulesetVersion" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false"
+                          sap:label="Ruleset Version" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="RuleId" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Rule ID" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RuleVersion" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false"
+                          sap:label="Rule Version" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="ValidFrom" Type="Edm.DateTime" Nullable="false" Precision="0" sap:unicode="false"
+                          sap:label="Valid from" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="ValidTo" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Valid to"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="Rule" Relationship="RULE_SRV.RulesetRuleToRule"
+                                    FromRole="FromRole_RulesetRuleToRule" ToRole="ToRole_RulesetRuleToRule"/>
+            </EntityType>
+            <EntityType Name="RulesetRuleService" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="RulesetId"/>
+                    <PropertyRef Name="RulesetVersion"/>
+                    <PropertyRef Name="RuleServiceId"/>
+                    <PropertyRef Name="RuleServiceVersion"/>
+                </Key>
+                <Property Name="RulesetId" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Ruleset ID" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RulesetVersion" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false"
+                          sap:label="Ruleset Version" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="RuleServiceId" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Rule Service ID" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RuleServiceVersion" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false"
+                          sap:label="Rule Service Version" sap:creatable="false" sap:updatable="false"
+                          sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ValidFrom" Type="Edm.DateTime" Nullable="false" Precision="0" sap:unicode="false"
+                          sap:label="Valid from" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="ValidTo" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Valid to"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="RuleService" Relationship="RULE_SRV.RulesetRuleServiceToRuleService"
+                                    FromRole="FromRole_RulesetRuleServiceToRuleService"
+                                    ToRole="ToRole_RulesetRuleServiceToRuleService"/>
+            </EntityType>
+            <EntityType Name="Rule" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                    <PropertyRef Name="Version"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Id" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Version" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false"
+                          sap:label="Version" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ProjectId" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Project Id" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Name" sap:sortable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="80" sap:unicode="false"
+                          sap:label="Description" sap:sortable="false"/>
+                <Property Name="ValidFrom" Type="Edm.DateTime" Nullable="false" Precision="0" sap:unicode="false"
+                          sap:label="Valid From" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ValidTo" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Valid To"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false"
+                          sap:label="Status" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="CreatedOn" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Created On"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Created By"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ChangedOn" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Changed On"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ChangedBy" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Changed By"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="RuleFormat" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false"
+                          sap:label="Format" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="Type" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false"
+                          sap:label="Type" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ExpressionLanguageVersion" Type="Edm.String" MaxLength="11" sap:unicode="false"
+                          sap:label="Expression Language Version" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ResultDataObjectId" Type="Edm.String" Nullable="false" MaxLength="255"
+                          sap:unicode="false" sap:label="Result Data Object Id" sap:sortable="false"/>
+                <Property Name="ResultDataObjectName" Type="Edm.String" Nullable="false" MaxLength="255"
+                          sap:unicode="false" sap:label="Result Data Object Name" sap:sortable="false"/>
+                <Property Name="IsDraft" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Is Draft"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="UsableInExpressionLanguage" Type="Edm.Boolean" sap:unicode="false"
+                          sap:label="Usable in Expression Language" sap:sortable="false"/>
+                <NavigationProperty Name="TextRule" Relationship="RULE_SRV.RuleToTextRule"
+                                    FromRole="FromRole_RuleToTextRule" ToRole="ToRole_RuleToTextRule"/>
+            </EntityType>
+            <EntityType Name="TextRule" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="RuleId"/>
+                    <PropertyRef Name="RuleVersion"/>
+                </Key>
+                <Property Name="RuleId" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Rule ID" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="RuleVersion" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false"
+                          sap:label="Version" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="Format" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Format" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+
+                <NavigationProperty Name="TextRuleConditions" Relationship="RULE_SRV.TextRuleToTextRuleCondition"
+                                    FromRole="FromRole_TextRuleToTextRuleCondition"
+                                    ToRole="ToRole_TextRuleToTextRuleCondition"/>
+                <NavigationProperty Name="TextRuleResults" Relationship="RULE_SRV.TextRuleToTextRuleResult"
+                                    FromRole="FromRole_TextRuleToTextRuleResult"
+                                    ToRole="ToRole_TextRuleToTextRuleResult"/>
+            </EntityType>
+            <EntityType Name="TextRuleCondition" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="RuleId"/>
+                    <PropertyRef Name="RuleVersion"/>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="RuleVersion" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false"
+                          sap:label="Version" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="RuleId" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Rule ID" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="Id" Type="Edm.String" Nullable="false" sap:unicode="false" sap:label="Id"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Sequence" Type="Edm.Int32" Nullable="false" MaxLength="255"
+                          sap:unicode="false" sap:label="Sequence" sap:creatable="true" sap:updatable="true"
+                          sap:sortable="true" sap:filterable="true"/>
+                <Property Name="Type" Type="Edm.String" Nullable="false" MaxLength="255"
+                          sap:unicode="false" sap:label="Type" sap:creatable="true" sap:updatable="true"
+                          sap:sortable="true" sap:filterable="true"/>
+                <Property Name="Expression" Type="Edm.String" Nullable="true" MaxLength="20" sap:unicode="false"
+                          sap:label="Expression" sap:creatable="true" sap:updatable="true" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="ParentId" Type="Edm.String" Nullable="true" sap:unicode="false"
+                          sap:label="ParentId" sap:creatable="true" sap:updatable="true" sap:sortable="true"
+                          sap:filterable="true"/>
+                <NavigationProperty Name="TextRuleResultExpressions"
+                                    Relationship="RULE_SRV.TextRuleConditionToTextRuleResultExpression"
+                                    FromRole="FromRole_TextRuleConditionToTextRuleResultExpression"
+                                    ToRole="ToRole_TextRuleConditionToTextRuleResultExpression"/>
+
+            </EntityType>
+            <EntityType Name="TextRuleResult" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="RuleVersion"/>
+                    <PropertyRef Name="RuleId"/>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="RuleVersion" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false"
+                          sap:label="Version" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="RuleId" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Rule ID" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="Id" Type="Edm.String" Nullable="false" sap:unicode="false" sap:label="Id"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DataObjectAttributeName" Type="Edm.String" Nullable="false" MaxLength="255"
+                          sap:unicode="false" sap:label="do. attr. name" sap:creatable="false" sap:updatable="false"
+                          sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DataObjectAttributeId" Type="Edm.String" Nullable="false" MaxLength="255"
+                          sap:unicode="false" sap:label="do. attr. id" sap:creatable="false" sap:updatable="false"
+                          sap:sortable="false" sap:filterable="false"/>
+                <Property Name="BusinessDataType" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false"
+                          sap:label="Vocabulary bdt" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="Expression" Type="Edm.String" Nullable="false" sap:unicode="false"
+                          sap:label="Value" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="AccessMode" Type="Edm.String" Nullable="false" sap:unicode="false"
+                          sap:label="Value" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="TextRuleResultExpression" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ResultId"/>
+                    <PropertyRef Name="ConditionId"/>
+                    <PropertyRef Name="RuleVersion"/>
+                    <PropertyRef Name="RuleId"/>
+                </Key>
+                <Property Name="RuleVersion" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false"
+                          sap:label="Version" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="RuleId" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Rule ID" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="ResultId" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false"
+                          sap:label="ResultId" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="ConditionId" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="ConditionId" sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="Expression" Type="Edm.String" Nullable="true" MaxLength="255" sap:unicode="false"
+                          sap:label="Expression" sap:creatable="true" sap:updatable="true" sap:sortable="false"
+                          sap:filterable="false"/>
+                <Property Name="Sequence" Type="Edm.Int32" Nullable="false" MaxLength="255"
+                          sap:unicode="false" sap:label="Sequence" sap:creatable="true" sap:updatable="true"
+                          sap:sortable="true" sap:filterable="true"/>
+
+            </EntityType>
+            <EntityType Name="Project" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                    <PropertyRef Name="Version"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="ID" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Version" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false"
+                          sap:label="Version" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ValidFrom" Type="Edm.DateTime" Nullable="false" Precision="0" sap:unicode="false"
+                          sap:label="Valid from" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ValidTo" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Valid to"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Name" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false"
+                          sap:label="State" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="80" sap:unicode="false"
+                          sap:label="Description" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="CreatedOn" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Created On"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Created By"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ChangedOn" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Changed On"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ChangedBy" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Changed By"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="IsDraft" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Is Draft"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <NavigationProperty Name="Rulesets" Relationship="RULE_SRV.ProjectToRulesets"
+                                    FromRole="FromRole_ProjectToRulesets" ToRole="ToRole_ProjectToRulesets"/>
+                <NavigationProperty Name="Rules" Relationship="RULE_SRV.ProjectToRules"
+                                    FromRole="FromRole_ProjectToRules" ToRole="ToRole_ProjectToRules"/>
+                <NavigationProperty Name="RuleServices" Relationship="RULE_SRV.ProjectToRuleServices"
+                                    FromRole="FromRole_ProjectToRuleServices" ToRole="ToRole_ProjectToRuleServices"/>
+            </EntityType>
+            <EntityType Name="RuleService" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                    <PropertyRef Name="Version"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="ID" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Version" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false"
+                          sap:label="Version" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ValidFrom" Type="Edm.DateTime" Nullable="false" Precision="0" sap:unicode="false"
+                          sap:label="Valid from" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ValidTo" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Valid to"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Name" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false"
+                          sap:label="State" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="80" sap:unicode="false"
+                          sap:label="Description" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="CreatedOn" Type="Edm.DateTime" Nullable="false" Precision="0" sap:unicode="false"
+                          sap:label="Created On" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Created By"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ChangedOn" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Changed On"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="ChangedBy" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Changed By"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="IsDraft" Type="Edm.Boolean" sap:unicode="false" sap:label="Is Draft"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="DraftCreatedOn" Type="Edm.DateTime" Precision="0" sap:unicode="false"
+                          sap:label="Draft Created On" sap:creatable="false" sap:updatable="false"
+                          sap:sortable="false"/>
+                <Property Name="ProjectId" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false"
+                          sap:label="Project ID" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+            </EntityType>
+            <Association Name="RulesetRuleServiceToRuleService" sap:content-version="1">
+                <End Type="RULE_SRV.RulesetRuleService" Multiplicity="1"
+                     Role="FromRole_RulesetRuleServiceToRuleService"/>
+                <End Type="RULE_SRV.RuleService" Multiplicity="1" Role="ToRole_RulesetRuleServiceToRuleService"/>
+            </Association>
+            <Association Name="RulesetToCurrentRules" sap:content-version="1">
+                <End Type="RULE_SRV.Ruleset" Multiplicity="1" Role="FromRole_RulesetToCurrentRules"/>
+                <End Type="RULE_SRV.Rule" Multiplicity="*" Role="ToRole_RulesetToCurrentRules"/>
+            </Association>
+            <Association Name="RulesetToCurrentRuleService" sap:content-version="1">
+                <End Type="RULE_SRV.Ruleset" Multiplicity="1" Role="FromRole_RulesetToCurrentRuleService"/>
+                <End Type="RULE_SRV.RuleService" Multiplicity="0..1" Role="ToRole_RulesetToCurrentRuleService"/>
+            </Association>
+            <Association Name="RulesetToRulesetRules" sap:content-version="1">
+                <End Type="RULE_SRV.Ruleset" Multiplicity="1" Role="FromRole_RulesetToRulesetRules"/>
+                <End Type="RULE_SRV.RulesetRule" Multiplicity="*" Role="ToRole_RulesetToRulesetRules"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_RulesetToRulesetRules">
+                        <PropertyRef Name="Version"/>
+                        <PropertyRef Name="Id"/>
+                    </Principal>
+                    <Dependent Role="ToRole_RulesetToRulesetRules">
+                        <PropertyRef Name="RulesetVersion"/>
+                        <PropertyRef Name="RulesetId"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="RulesetToRulesetRuleServices" sap:content-version="1">
+                <End Type="RULE_SRV.Ruleset" Multiplicity="1" Role="FromRole_RulesetToRulesetRuleServices"/>
+                <End Type="RULE_SRV.RulesetRuleService" Multiplicity="*" Role="ToRole_RulesetToRulesetRuleServices"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_RulesetToRulesetRuleServices">
+                        <PropertyRef Name="Version"/>
+                        <PropertyRef Name="Id"/>
+                    </Principal>
+                    <Dependent Role="ToRole_RulesetToRulesetRuleServices">
+                        <PropertyRef Name="RulesetVersion"/>
+                        <PropertyRef Name="RulesetId"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="ProjectToRulesets" sap:content-version="1">
+                <End Type="RULE_SRV.Project" Multiplicity="1" Role="FromRole_ProjectToRulesets"/>
+                <End Type="RULE_SRV.Ruleset" Multiplicity="*" Role="ToRole_ProjectToRulesets"/>
+            </Association>
+            <Association Name="ProjectToRules" sap:content-version="1">
+                <End Type="RULE_SRV.Project" Multiplicity="1" Role="FromRole_ProjectToRules"/>
+                <End Type="RULE_SRV.Rule" Multiplicity="*" Role="ToRole_ProjectToRules"/>
+            </Association>
+            <Association Name="ProjectToRuleServices" sap:content-version="1">
+                <End Type="RULE_SRV.Project" Multiplicity="1" Role="FromRole_ProjectToRuleServices"/>
+                <End Type="RULE_SRV.RuleService" Multiplicity="*" Role="ToRole_ProjectToRuleServices"/>
+            </Association>
+            <Association Name="RulesetRuleToRule" sap:content-version="1">
+                <End Type="RULE_SRV.RulesetRule" Multiplicity="1" Role="FromRole_RulesetRuleToRule"/>
+                <End Type="RULE_SRV.Rule" Multiplicity="1" Role="ToRole_RulesetRuleToRule"/>
+            </Association>
+            <Association Name="RuleToTextRule" sap:content-version="1">
+                <End Type="RULE_SRV.Rule" Multiplicity="1" Role="FromRole_RuleToTextRule"/>
+                <End Type="RULE_SRV.TextRule" Multiplicity="0..1" Role="ToRole_RuleToTextRule"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_RuleToTextRule">
+                        <PropertyRef Name="Id"/>
+                        <PropertyRef Name="Version"/>
+                    </Principal>
+                    <Dependent Role="ToRole_RuleToTextRule">
+                        <PropertyRef Name="RuleId"/>
+                        <PropertyRef Name="RuleVersion"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="TextRuleToTextRuleCondition" sap:content-version="1">
+                <End Type="RULE_SRV.TextRule" Multiplicity="1" Role="FromRole_TextRuleToTextRuleCondition"/>
+                <End Type="RULE_SRV.TextRuleCondition" Multiplicity="*" Role="ToRole_TextRuleToTextRuleCondition"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_TextRuleToTextRuleCondition">
+                        <PropertyRef Name="RuleId"/>
+                        <PropertyRef Name="RuleVersion"/>
+                    </Principal>
+                    <Dependent Role="ToRole_TextRuleToTextRuleCondition">
+                        <PropertyRef Name="RuleId"/>
+                        <PropertyRef Name="RuleVersion"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="TextRuleToTextRuleResult" sap:content-version="1">
+                <End Type="RULE_SRV.TextRule" Multiplicity="1" Role="FromRole_TextRuleToTextRuleResult"/>
+                <End Type="RULE_SRV.TextRuleResult" Multiplicity="*" Role="ToRole_TextRuleToTextRuleResult"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_TextRuleToTextRuleResult">
+                        <PropertyRef Name="RuleId"/>
+                        <PropertyRef Name="RuleVersion"/>
+                    </Principal>
+                    <Dependent Role="ToRole_TextRuleToTextRuleResult">
+                        <PropertyRef Name="RuleId"/>
+                        <PropertyRef Name="RuleVersion"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="TextRuleConditionToTextRuleResultExpression" sap:content-version="1">
+                <End Type="RULE_SRV.TextRuleCondition" Multiplicity="1" Role="FromRole_TextRuleConditionToTextRuleResultExpression"/>
+                <End Type="RULE_SRV.TextRuleResultExpression" Multiplicity="*" Role="FromRole_TextRuleConditionToTextRuleResultExpression"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_TextRuleConditionToTextRuleResultExpression">
+                        <PropertyRef Name="Id"/>
+                    </Principal>
+                    <Dependent Role="FromRole_TextRuleConditionToTextRuleResultExpression">
+                        <PropertyRef Name="ConditionId"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+
+
+            <EntityContainer Name="RULE_SRV_Entities" m:IsDefaultEntityContainer="true"
+                             sap:supported-formats="atom json xlsx">
+                <EntitySet Name="Rulesets" EntityType="RULE_SRV.Ruleset" sap:deletable="false" sap:pageable="false"
+                           sap:content-version="1"/>
+                <EntitySet Name="RulesetRules" EntityType="RULE_SRV.RulesetRule" sap:updatable="false"
+                           sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="RulesetRuleServices" EntityType="RULE_SRV.RulesetRuleService" sap:updatable="false"
+                           sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="Rules" EntityType="RULE_SRV.Rule" sap:deletable="false" sap:pageable="false"
+                           sap:content-version="1"/>
+                <EntitySet Name="Projects" EntityType="RULE_SRV.Project" sap:creatable="false" sap:updatable="false"
+                           sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="RuleServices" EntityType="RULE_SRV.RuleService" sap:creatable="false"
+                           sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="TextRules" EntityType="RULE_SRV.TextRule" sap:creatable="false"
+                           sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+
+                <EntitySet Name="TextRuleConditions" EntityType="RULE_SRV.TextRuleCondition" sap:creatable="false"
+                           sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="TextRuleResults" EntityType="RULE_SRV.TextRuleResult" sap:creatable="false"
+                           sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="TextRuleResultExpressions" EntityType="RULE_SRV.TextRuleResultExpression" sap:creatable="false"
+                           sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <AssociationSet Name="RulesToTextRule" Association="RULE_SRV.RuleToTextRule" sap:creatable="false"
+                                sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="Rules" Role="FromRole_RuleToTextRule"/>
+                    <End EntitySet="TextRules" Role="ToRole_RuleToTextRule"/>
+                </AssociationSet>
+                <AssociationSet Name="TextRulesToTextRuleConditions" Association="RULE_SRV.TextRuleToTextRuleCondition" sap:creatable="false"
+                                sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="TextRules" Role="FromRole_TextRuleToTextRuleCondition"/>
+                    <End EntitySet="TextRuleConditions" Role="ToRole_TextRuleToTextRuleCondition"/>
+                </AssociationSet>
+                <AssociationSet Name="TextRulesToTextRuleResults" Association="RULE_SRV.TextRuleToTextRuleResult" sap:creatable="false"
+                                sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="TextRules" Role="FromRole_TextRuleToTextRuleResult"/>
+                    <End EntitySet="TextRuleResults" Role="ToRole_TextRuleToTextRuleResult"/>
+                </AssociationSet>
+                <AssociationSet Name="TextRuleConditionToTextRuleResultExpressions" Association="RULE_SRV.TextRuleConditionToTextRuleResultExpression" sap:creatable="false"
+                                sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="TextRuleConditions" Role="FromRole_TextRuleConditionToTextRuleResultExpression"/>
+                    <End EntitySet="TextRuleResultExpressions" Role="ToRole_TextRuleConditionToTextRuleResultExpression"/>
+                </AssociationSet>
+
+
+
+                <AssociationSet Name="RulesetRuleToRules" Association="RULE_SRV.RulesetRuleToRule" sap:creatable="false"
+                                sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="RulesetRules" Role="FromRole_RulesetRuleToRule"/>
+                    <End EntitySet="Rules" Role="ToRole_RulesetRuleToRule"/>
+                </AssociationSet>
+                <AssociationSet Name="RulesetToCurrentRuleService" Association="RULE_SRV.RulesetToCurrentRuleService"
+                                sap:creatable="false" sap:updatable="false" sap:deletable="false"
+                                sap:content-version="1">
+                    <End EntitySet="Rulesets" Role="FromRole_RulesetToCurrentRuleService"/>
+                    <End EntitySet="RuleServices" Role="ToRole_RulesetToCurrentRuleService"/>
+                </AssociationSet>
+                <AssociationSet Name="RulesetToRulesetRuleService" Association="RULE_SRV.RulesetToRulesetRuleServices"
+                                sap:creatable="false" sap:updatable="false" sap:deletable="false"
+                                sap:content-version="1">
+                    <End EntitySet="Rulesets" Role="FromRole_RulesetToRulesetRuleServices"/>
+                    <End EntitySet="RulesetRuleServices" Role="ToRole_RulesetToRulesetRuleServices"/>
+                </AssociationSet>
+                <AssociationSet Name="RulesetToRulesetRules" Association="RULE_SRV.RulesetToRulesetRules"
+                                sap:creatable="false" sap:updatable="false" sap:deletable="false"
+                                sap:content-version="1">
+                    <End EntitySet="Rulesets" Role="FromRole_RulesetToRulesetRules"/>
+                    <End EntitySet="RulesetRules" Role="ToRole_RulesetToRulesetRules"/>
+                </AssociationSet>
+                <AssociationSet Name="ProjectToRuleServices" Association="RULE_SRV.ProjectToRuleServices"
+                                sap:creatable="false" sap:updatable="false" sap:deletable="false"
+                                sap:content-version="1">
+                    <End EntitySet="Projects" Role="FromRole_ProjectToRuleServices"/>
+                    <End EntitySet="RuleServices" Role="ToRole_ProjectToRuleServices"/>
+                </AssociationSet>
+                <AssociationSet Name="ProjectToRulesets" Association="RULE_SRV.ProjectToRulesets" sap:creatable="false"
+                                sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="Projects" Role="FromRole_ProjectToRulesets"/>
+                    <End EntitySet="Rulesets" Role="ToRole_ProjectToRulesets"/>
+                </AssociationSet>
+                <AssociationSet Name="RulesetRuleServiceToRuleServices"
+                                Association="RULE_SRV.RulesetRuleServiceToRuleService" sap:creatable="false"
+                                sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="RulesetRuleServices" Role="FromRole_RulesetRuleServiceToRuleService"/>
+                    <End EntitySet="RuleServices" Role="ToRole_RulesetRuleServiceToRuleService"/>
+                </AssociationSet>
+                <AssociationSet Name="RulesetToCurrentRules" Association="RULE_SRV.RulesetToCurrentRules"
+                                sap:creatable="false" sap:updatable="false" sap:deletable="false"
+                                sap:content-version="1">
+                    <End EntitySet="Rulesets" Role="FromRole_RulesetToCurrentRules"/>
+                    <End EntitySet="Rules" Role="ToRole_RulesetToCurrentRules"/>
+                </AssociationSet>
+                <AssociationSet Name="ProjectToRules" Association="RULE_SRV.ProjectToRules" sap:creatable="false"
+                                sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="Projects" Role="FromRole_ProjectToRules"/>
+                    <End EntitySet="Rules" Role="ToRole_ProjectToRules"/>
+                </AssociationSet>
+                <FunctionImport Name="CheckRule" ReturnType="RULE_SRV.Rule" EntitySet="Rules" m:HttpMethod="GET"
+                                sap:label="Check" sap:action-for="RULE_SRV.Rule">
+                    <Parameter Name="RuleId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+                <FunctionImport Name="EditRuleset" ReturnType="RULE_SRV.Ruleset" EntitySet="Rulesets"
+                                m:HttpMethod="POST" sap:label="Edit" sap:action-for="RULE_SRV.Ruleset">
+                    <Parameter Name="RulesetId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+                <FunctionImport Name="DeleteRule" ReturnType="RULE_SRV.Rule" EntitySet="Rules" m:HttpMethod="POST"
+                                sap:label="Delete" sap:action-for="RULE_SRV.Rule">
+                    <Parameter Name="RuleId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+                <FunctionImport Name="ActivateRule" ReturnType="RULE_SRV.Rule" EntitySet="Rules" m:HttpMethod="POST"
+                                sap:label="Activate" sap:action-for="RULE_SRV.Rule">
+                    <Parameter Name="RuleId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+                <FunctionImport Name="EditRule" ReturnType="RULE_SRV.Rule" EntitySet="Rules" m:HttpMethod="POST"
+                                sap:label="Edit" sap:action-for="RULE_SRV.Rule">
+                    <Parameter Name="RuleId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+                <FunctionImport Name="DeleteRuleDraft" ReturnType="RULE_SRV.Rule" EntitySet="Rules" m:HttpMethod="POST"
+                                sap:label="Delete Rule Draft" sap:action-for="RULE_SRV.Rule">
+                    <Parameter Name="RuleId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+                <FunctionImport Name="CopyRuleRow" ReturnType="RULE_SRV.Rule" EntitySet="Rules" m:HttpMethod="POST"
+                                sap:label="Copy Rule Row" sap:action-for="RULE_SRV.Rule">
+                    <Parameter Name="SourceRowId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                    <Parameter Name="TargetRowSeq" Type="Edm.String" Mode="In" MaxLength="255"/>
+                    <Parameter Name="RuleId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                    <Parameter Name="OverrideTargetRow" Type="Edm.Boolean" Mode="In" Nullable="true"/>
+                    <Parameter Name="DeleteSourceRow" Type="Edm.Boolean" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="ActivateRuleset" ReturnType="RULE_SRV.Ruleset" EntitySet="Rulesets"
+                                m:HttpMethod="POST" sap:label="Activate" sap:action-for="RULE_SRV.Ruleset">
+                    <Parameter Name="RulesetId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+                <FunctionImport Name="CheckRuleset" ReturnType="RULE_SRV.Ruleset" EntitySet="Rulesets"
+                                m:HttpMethod="GET" sap:label="Check" sap:action-for="RULE_SRV.Ruleset">
+                    <Parameter Name="RulesetId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+                <FunctionImport Name="DeleteRuleset" ReturnType="RULE_SRV.Ruleset" EntitySet="Rulesets"
+                                m:HttpMethod="POST" sap:label="Delete" sap:action-for="RULE_SRV.Ruleset">
+                    <Parameter Name="RulesetId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+                <FunctionImport Name="DeleteRulesetDraft" ReturnType="RULE_SRV.Ruleset" EntitySet="Rulesets"
+                                m:HttpMethod="POST" sap:label="Delete Ruleset Draft" sap:action-for="RULE_SRV.Ruleset">
+                    <Parameter Name="RulesetId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+                <FunctionImport Name="SaveRule" ReturnType="RULE_SRV.Rule" EntitySet="Rules" m:HttpMethod="POST"
+                                sap:label="Save" sap:action-for="RULE_SRV.Rule">
+                    <Parameter Name="RuleId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+                <FunctionImport Name="RefreshRuleResultDataObject" ReturnType="RULE_SRV.Rule" EntitySet="Rules"
+                                m:HttpMethod="POST" sap:label="Refresh Rule Result Data Object"
+                                sap:action-for="RULE_SRV.Rule">
+                    <Parameter Name="RuleId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+                <FunctionImport Name="SetRuleResultDataObject" ReturnType="RULE_SRV.Rule" EntitySet="Rules"
+                                m:HttpMethod="POST" sap:label="Set Rule Result Data Object"
+                                sap:action-for="RULE_SRV.Rule">
+                    <Parameter Name="ResultDataObjectId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                    <Parameter Name="RuleId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+                <FunctionImport Name="SaveRuleset" ReturnType="RULE_SRV.Ruleset" EntitySet="Rulesets"
+                                m:HttpMethod="POST" sap:label="Save" sap:action-for="RULE_SRV.Ruleset">
+                    <Parameter Name="RulesetId" Type="Edm.String" Mode="In" MaxLength="255"/>
+                </FunctionImport>
+            </EntityContainer>
+            <atom:link rel="self" href="https://localhost:8080/sap/opu/odata/SAP/RULE_SRV/$metadata"
+                       xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="https://localhost:8080/sap/opu/odata/SAP/RULE_SRV/$metadata"
+                       xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

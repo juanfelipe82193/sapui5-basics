@@ -1,0 +1,32 @@
+<!--
+    /**
+     * This fragment renders a DataFieldForAnnotation, e.g. Datapoint or Contact
+     * @param annotationPath context to the target of a annotation path
+     * @returns
+     */
+-->
+
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+						 xmlns="sap.m"
+						 xmlns:macro="sap.fe.macros"
+						 xmlns:core="sap.ui.core"
+						 template:require="{
+							COMMON: 'sap/fe/macros/CommonHelper'
+						 }">
+
+	<template:if test="{= ${annotationPath>}.indexOf('com.sap.vocabularies.UI.v1.DataPoint') >= 0}">
+		<template:then>
+			<template:with path="annotationPath>Value" var="property">
+				<core:Fragment fragmentName="sap.fe.macros.field.DataField" type="XML"/>
+			</template:with>
+		</template:then>
+		<template:elseif test="{= ${annotationPath>}.indexOf('com.sap.vocabularies.Communication.v1.Contact') >= 0}">
+				<template:with path="annotationPath>" var="contact">
+					<template:with path="contact>fn" var="property">
+						<macro:Contact metadataContexts="{ model: 'contact', path:'',  name: 'contact'},{ model: 'dataField', path:'',  name: 'dataField'}" displayHeader="false"/>
+					</template:with>
+				</template:with>
+		</template:elseif>
+	</template:if>
+
+</core:FragmentDefinition>

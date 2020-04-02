@@ -1,0 +1,238 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!-- <link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" /> -->
+
+		<script src="../../../../resources/sap-ui-core.js"
+			id="Script1"
+			data-sap-ui-libs="sap.ui.commons,sap.ui.vbm"
+			data-sap-ui-theme="sap_bluecrystal" >
+		</script>
+
+		<script>
+			var gZoomLevel = 0.0;		// current zoom level of visual business
+			var gExcelData = null;		// sample data from the excel
+			var gPanel = null;
+
+			function FindDataRecord( key )
+			{
+				for( var nJ = 0, len = gExcelData.DATA.length; nJ < len; ++nJ )
+				{
+					var record = gExcelData.DATA[ nJ ];
+					if( key == record[0] )
+						return record;
+				}
+				return null;
+			};
+
+			// create data setter object for vbi, this is dependent on the vbi application
+			var oSpotsData = 
+			{
+				"SAPVB": {
+					"Data":	{
+							"Set": {
+								"N":	{
+											"name": "Spots",
+											"type": "N",
+											"E" : 
+												[
+												]
+										}
+								}
+							}
+				}
+			};
+
+			// this is the spot instance object with current attributes
+			function Spot( key, lat, lon, tooltip, image, text, scale, changeable  ) 
+			{ 
+				this.K = key.toString();						// this is the key
+				this.P = "" + lat + ";" + lon + ";0 ";		// this is the position
+				this.TT = tooltip;
+				this.I = image;
+				this.T = text;
+				this.S = "" + scale + ";" + scale + ";0";
+				this["VB:c"] = changeable ? "true" : "false";
+			};
+
+			// this is the detail window data, when the detail is aleady opened it will be removed first
+			function DetailWindow( posbind, caption ) 
+			{ 
+				var oDetailsWindowData = 
+				{
+					"SAPVB": {
+						"Windows": {
+							"Remove": [
+								{
+								"name": "Detail"
+								} 
+								],
+							"Set": {
+								"name": "Detail",
+								"Window": {
+									"id": "Detail",
+									"type": "callout",
+									"refParent": "Window1",
+									"refScene": "",
+									"modal": "false",
+									"width": "400",
+									"height": "",
+									"pos.bind": posbind,
+									"caption": caption,
+									"offsetX": "17",
+									"offsetY": "-30"
+								}
+							}
+						}
+					}
+				};
+				return oDetailsWindowData;
+			};
+
+			function onOpenWindow( oEvent )
+			{
+				// create a panel instance
+				// here comes some ui5 content fpr the detail window
+				if( !gPanel )
+				{
+					gPanel = new sap.ui.commons.Panel({width: "350px", showCollapseIcon: false});
+					gPanel.setAreaDesign(sap.ui.commons.enums.AreaDesign.Plain);
+					gPanel.setBorderDesign(sap.ui.commons.enums.BorderDesign.None);
+
+					//Set the title of the panel
+					gPanel.setTitle(new sap.ui.core.Title({text: "Location Data"}));
+					//As alternative if no icon is desired also the following shortcut might be possible:
+					//gPanel.setText("Contact Data");
+
+					//Create a matrix layout with 2 columns
+					var oMatrix = new sap.ui.commons.layout.MatrixLayout({layoutFixed: true, width: '300px', columns: 2});
+					oMatrix.setWidths('100px', '200px');
+
+					//Create a simple form within the layout
+					var oLabel = new sap.ui.commons.Label({text: 'Name'});
+					var oInput = new sap.ui.commons.TextField({value: 'Mustermann', width: '100%'});
+					oLabel.setLabelFor(oInput);
+					oMatrix.createRow(oLabel, oInput);
+
+					oLabel = new sap.ui.commons.Label({text: 'First Name'});
+					oInput = new sap.ui.commons.TextField({value: 'Max', width: '100%'});
+					oLabel.setLabelFor(oInput);
+					oMatrix.createRow(oLabel, oInput);
+
+					//Add the form to the panels content area
+					gPanel.addContent(oMatrix);
+
+					//Add some buttons to the panel header
+					gPanel.addButton(new sap.ui.commons.Button({text: 'Save'}));
+					gPanel.addButton(new sap.ui.commons.Button({text: 'Cancel'}));
+				}
+
+				//Attach the panel to the page
+				gPanel.placeAt( oEvent.getParameter( "contentarea" ).id );
+			};
+
+			function onCloseWindow( oEvent )
+			{
+				// when the panel should be destroyed it can be done.............//
+				// if( gPanel )
+				//   gPanel.destroy();
+				// gPanel = null;
+			};
+
+			function UpdateObjects( level )
+			{
+				// get the table of spots
+				var aSpot = oSpotsData.SAPVB.Data.Set.N.E = [];
+
+				if( level > 10 )
+				{
+					// put all the new spots into the table and load
+					if( gExcelData )
+					{
+						for( var nJ = 0, len = gExcelData.DATA.length; nJ < len; ++nJ )
+						{
+							var record = gExcelData.DATA[ nJ ];
+							aSpot.push( new Spot( record[0], record[13].replace(/,/g, "."), record[12].replace(/,/g, "."), record[14], "dev_red.png", "", 0.5, true ) );
+						}
+						oVBI.load( oSpotsData );
+					}
+				} else
+				{
+					// put all the new spots into the table and load
+					if( gExcelData )
+					{
+						for( var nJ = 0, len = gExcelData.DATA.length; nJ < len; ++nJ )
+						{
+							var record = gExcelData.DATA[ nJ ];
+							aSpot.push( new Spot( record[0], record[13].replace(/,/g, "."), record[12].replace(/,/g, "."), record[14], "flag.png", "", 1.0, false ) );
+						}
+						oVBI.load( oSpotsData );
+					}
+				}
+			}
+			// event handler for visual business events
+			function onSubmit( e )
+			{
+				// here the events is coming from visal business
+				var oEvent = JSON.parse( e.mParameters.data );
+				// if( console ) console.log( oEvent.Action.name );
+				
+				switch( oEvent.Action.name )
+				{
+					case "ZOOM_EVENT":
+						// as long as the application does not change 
+						gZoomLevel = parseFloat( oEvent.Action.AddActionProperties.AddActionProperty[0]["#"] ); 
+						UpdateObjects( gZoomLevel );
+						break;
+					case "CENTERCHANGED_EVENT":
+						// the center of the scene has changed
+						gZoomLevel = parseFloat( oEvent.Action.AddActionProperties.AddActionProperty[0]["#"] );
+						break;
+					case "CLICK_ON_SPOT":
+						// there was a click on the spot
+						var inst = oEvent.Action.instance;			// this is the instance that fired the event
+						var key = inst.split(".")[1];					// this is the key of clicked spot
+
+						oVBI.load( new DetailWindow( inst + ".GeoPosition", (FindDataRecord( key ))[ 14 ] ) );
+						break;
+
+				}
+			};
+
+			// create the visual business control
+			var oVBI = new sap.ui.vbm.VBI('lumiraVBI',
+			{
+				width : 1024,
+				height: 620,
+				openWindow: onOpenWindow,		// set detail content filler
+				submit: onSubmit					// set the event handler
+			});
+			oVBI.placeAt("content");
+
+
+			// load the json and set the default text area text
+			var dat = $.getJSON("media/vblumira/main.json", function( dat ) 
+			{
+					oVBI.load( dat );
+
+				// here is some lumira data, 
+				var exceldata = $.getJSON("media/vblumira/data.json", function( exceldata ) 
+				{
+					gExcelData = exceldata;			// set global excel data
+					UpdateObjects( gZoomLevel );
+				});
+			});
+		</script>
+	</head>
+	 
+	<body style="width:100%;height:100%" class="sapUiBody" >
+		<div style="width:100%;height:100%" id="content"></div>
+		<!--
+		<button onclick=onClearMap() >Clear Map</button>
+		<button onclick=onDetailWindow1() >Custom Content</button>
+		<button onclick=onDetailWindow2() >Scene Content</button>
+		<button onclick=onDetailWindow3() >No Content</button>
+			-->
+	</body>
+</html>

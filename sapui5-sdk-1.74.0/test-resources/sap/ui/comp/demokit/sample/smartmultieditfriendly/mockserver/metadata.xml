@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+		   xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+		   xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+		   xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="EmployeesNamespace"
+				sap:schema-version="1"
+				xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="Employee"
+						sap:label="Employees"
+						sap:content-version="1">
+				<Key>
+					<PropertyRef Name="Id"/>
+				</Key>
+				<Property Name="CustomerID"
+						  Type="Edm.String"
+						  Nullable="false"
+						  MaxLength="10"
+						  sap:label="Customer ID"
+						  sap:creatable="false"/>
+				<Property Name="FirstName"
+						  Type="Edm.String"
+						  Nullable="false"
+						  sap:label="First Name"/>
+				<Property Name="LastName"
+						  Type="Edm.String"
+						  Nullable="false"
+						  sap:label="Last Name"/>
+				<Property Name="Gender"
+						  Type="Edm.String"
+						  Nullable="false"
+						  sap:updatable="true"
+						  sap:label="Gender"
+						  sap:value-list="fixed-values"
+						  sap:text="GenderName"/>
+				<Property Name="GenderName"
+						  Type="Edm.String"
+						  Nullable="false"
+						  sap:updatable="true"
+						  sap:label="Gender description"/>
+				<Property Name="Company"
+						  Type="Edm.String"
+						  Nullable="false"
+						  sap:label="Company"/>
+				<Property Name="Department"
+						  Type="Edm.String"
+						  Nullable="true"
+						  sap:updatable="true"
+						  sap:label="Department"/>
+				<Property Name="Country"
+						  Type="Edm.String"
+						  Nullable="false"
+						  sap:label="Country"/>
+				<Property Name="Email"
+						  Type="Edm.String"
+						  Nullable="false"
+						  sap:label="Email"
+						  sap:creatable="false"
+						  sap:updatable="true"/>
+				<Property Name="IPAddress"
+						  Type="Edm.String"
+						  Nullable="false"
+						  sap:label="IP Address"/>
+			</EntityType>
+			<EntityType Name="Department" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="Department"/>
+				</Key>
+				<Property Name="Department"
+						  Type="Edm.String"
+						  Nullable="false"
+						  MaxLength="30"
+						  sap:updatable="true"
+						  sap:label="Department"
+						  sap:display-format="UpperCase"/>
+			</EntityType>
+			<EntityType Name="GenderValueHelp" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="GENDER-CODE"/>
+				</Key>
+				<Property Name="GENDER-CODE"
+						  Type="Edm.String"
+						  sap:label="Gender code label"
+						  sap:text="GENDER-TEXT"/>
+				<Property Name="GENDER-TEXT"
+						  Type="Edm.String"
+						  sap:label="Gender text label"/>
+			</EntityType>
+
+			<EntityContainer Name="EmployeesNamespace_Entities"
+							 m:IsDefaultEntityContainer="true"
+							 sap:supported-formats="atom json xlsx">
+				<EntitySet Name="Employees"
+						   EntityType="EmployeesNamespace.Employee"
+						   sap:creatable="true"
+						   sap:updatable="true"
+						   sap:deletable="true"
+						   sap:content-version="1"/>
+				<EntitySet Name="DepartmentsValueHelp"
+						   EntityType="EmployeesNamespace.Department"
+						   sap:content-version="1"/>
+				<EntitySet Name="GendersValueHelp"
+						   EntityType="EmployeesNamespace.GenderValueHelp"
+						   sap:semantics="fixed-values"
+						   sap:countable="false"
+						   sap:content-version="1"/>
+			</EntityContainer>
+
+			<Annotations Target="EmployeesNamespace.Employee/Department"
+						 xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+					<Record>
+						<PropertyValue Property="Label" String="Departments"/>
+						<PropertyValue Property="CollectionPath" String="DepartmentsValueHelp"/>
+						<PropertyValue Property="SearchSupported" Bool="true"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+									<PropertyValue
+											Property="LocalDataProperty"
+											PropertyPath="Department"/>
+									<PropertyValue
+											Property="ValueListProperty"
+											String="Department"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+
+			<Annotations Target="EmployeesNamespace.Employee/Gender"
+						 xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+					<Record>
+						<PropertyValue Property="Label" String="Genders"/>
+						<PropertyValue Property="CollectionPath" String="GendersValueHelp"/>
+						<PropertyValue Property="SearchSupported" Bool="true"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+									<PropertyValue
+											Property="LocalDataProperty"
+											PropertyPath="Gender"/>
+									<PropertyValue
+											Property="ValueListProperty"
+											String="GENDER-CODE"/>
+								</Record>
+								<Record
+										Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+									<PropertyValue
+											Property="ValueListProperty"
+											String="GENDER-TEXT"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+
+			<Annotations Target="EmployeesNamespace.Employee"
+						 xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.UI.v1.LineItem">
+					<Collection>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="CustomerID"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="FirstName"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="LastName"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="Gender"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="Company"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="Department"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="Country"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="Email"/>
+						</Record>
+						<Record Type="com.sap.vocabularies.UI.v1.DataField">
+							<PropertyValue Property="Value" Path="IPAddress"/>
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>NumericTile - sap.suite.ui.commons</title>
+
+    <!-- UI5 Bootstrap -->
+    <script src="../../../../../resources/sap-ui-core.js"
+            type="text/javascript"
+            id="sap-ui-bootstrap"
+            data-sap-ui-libs="sap.ui.commons,sap.suite.ui.commons,sap.m"
+            data-sap-ui-theme="sap_bluecrystal"></script>
+
+<style type="text/css">
+	.sapSuiteInfoTile {
+		margin-left:1rem;
+	}
+	
+	#controls {
+		margin-top:1rem;
+	}
+</style>
+<script type="text/javascript">
+    jQuery.sap.initMobile();
+
+
+	
+	var oConfData = {
+		sizes:{
+				L:sap.suite.ui.commons.InfoTileSize.L,
+				M:sap.suite.ui.commons.InfoTileSize.M,
+				S:sap.suite.ui.commons.InfoTileSize.S,
+				Auto:sap.suite.ui.commons.InfoTileSize.Auto
+		},
+		scale: "MM",
+		unit: "EUR",
+		state: sap.suite.ui.commons.LoadState.Loaded,
+		valueColor:sap.suite.ui.commons.InfoTileValueColor.Error,
+		indicator: sap.suite.ui.commons.DeviationIndicator.None,
+		title : "US Profit Margin",
+		footer : "Current Quarter",
+		description: "Maximum deviation"
+	}
+
+	var oConfModel = new sap.ui.model.json.JSONModel();
+	oConfModel.setData(oConfData);
+	sap.ui.getCore().setModel(oConfModel);
+	
+	var oNVConfL = new sap.suite.ui.commons.NumericTile("configurable-tile-L", {
+		value : "{/value}",
+		scale : "{/scale}",
+		unit : "{/unit}",
+		state: "{/state}",
+		//valueColor: "{/valueColor}",
+		indicator : "{/indicator}",
+		size : "{/sizes/L}",
+		title : "{/title}",
+		footer : "{/footer}",
+		description : "{/description}",
+		press : function(oEvent) {
+			sap.m.MessageToast.show("The large tile is pressed");
+		}
+	});
+
+	var oNVConfM = new sap.suite.ui.commons.NumericTile("configurable-tile-M", {
+		value : "{/value}",
+		scale : "{/scale}",
+		unit : "{/unit}",
+		state: "{/state}",
+		//valueColor: "{/valueColor}",
+		indicator : "{/indicator}",
+		size : "{/sizes/M}",
+		title : "{/title}",
+		footer : "{/footer}",
+		description : "{/description}",
+		press : function(oEvent) {
+			sap.m.MessageToast.show("The medium tile is pressed");
+		}
+	});
+
+	var oNVConfS = new sap.suite.ui.commons.NumericTile("configurable-tile-S", {
+		value : "{/value}",
+		scale : "{/scale}",
+		unit : "{/unit}",
+		state: "{/state}",
+		//valueColor: "{/valueColor}",
+		indicator : "{/indicator}",
+		size : "{/sizes/S}",
+		title : "{/title}",
+		footer : "{/footer}",
+		description : "{/description}",
+		press : function(oEvent) {
+			sap.m.MessageToast.show("The small tile is pressed");
+		}
+	});
+
+	var oNVConfAuto = new sap.suite.ui.commons.NumericTile("configurable-tile-auto", {
+		value : "{/value}",
+		scale : "{/scale}",
+		unit : "{/unit}",
+		state: "{/state}",
+		//valueColor: "{/valueColor}",
+		indicator : "{/indicator}",
+		size : "{/sizes/Auto}",
+		title : "{/title}",
+		footer : "{/footer}",
+		description : "{/description}",
+		press : function(oEvent) {
+			sap.m.MessageToast.show("The auto tile is pressed");
+		}
+	});
+
+	var oPage = new sap.m.Page("initial-page", {
+		showHeader : false,
+		content : [ new sap.m.HBox({
+			alignItems : "End",
+			items : [ oNVConfL, oNVConfM, oNVConfS, oNVConfAuto ]
+		}) ]
+	});
+
+	var oTitleLbl = new sap.m.Label({
+		text : "Title",
+		labelFor : "title-value"
+	});
+
+	var oTitleInput = new sap.m.Input("title-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter title ...'
+	});
+	
+	oTitleInput.bindValue("/title");
+
+	var oDescLbl = new sap.m.Label({
+		text : "Description",
+		labelFor : "desc-value"
+	});
+
+	var oDescInput = new sap.m.Input("desc-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter description ...'
+	});
+	oDescInput.bindValue("/description");
+
+	var oScaleLbl = new sap.m.Label({
+		text : "Scale",
+		labelFor : "scale-value"
+	});
+
+	var oScaleInput = new sap.m.Input("scale-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter scale ...'
+	});
+	oScaleInput.bindValue("/scale");
+
+	var oValueLbl = new sap.m.Label({
+		text : "Value",
+		labelFor : "value-value"
+	});
+
+	var oValueInput = new sap.m.Input("value-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter value ...'
+	});
+	oValueInput.bindValue("/value");
+
+	var oUnitLbl = new sap.m.Label({
+		text : "Unit",
+		labelFor : "unit-value"
+	});
+	var oUnitInput = new sap.m.Input("unit-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter unit ...'
+	});
+	oUnitInput.bindValue("/unit");
+
+	var oFooterLbl = new sap.m.Label({
+		text : "Footer",
+		labelFor : "footer-value"
+	});
+
+	var oFooterInput = new sap.m.Input("footer-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter footer ...'
+	});
+	oFooterInput.bindValue("/footer");
+
+	var oTriggerLoadLbl = new sap.m.Label({
+		text : "State",
+		labelFor : "loading-state"
+	});
+
+	var oTriggerLoadSlct = new sap.m.Select("loading-state", {
+		change : function(oE) {
+			var selectedItem = oE.getParameter("selectedItem");
+			oNVConfL.setState(selectedItem.getKey());
+			oNVConfM.setState(selectedItem.getKey());
+			oNVConfS.setState(selectedItem.getKey());
+			oNVConfAuto.setState(selectedItem.getKey());
+		},
+		items : [new sap.ui.core.Item({
+			key : "Loaded",
+			text : "Loaded"
+		}), new sap.ui.core.Item({
+			key : "Loading",
+			text : "Loading"
+		}),  new sap.ui.core.Item({
+			key : "Failed",
+			text : "Failed"
+		}) ]
+	});
+
+	var oValueColorChangeLbl = new sap.m.Label({
+		text : "Value Color",
+		labelFor : "value-color-change"
+	});
+
+	var oValueColorChangeSlct = new sap.m.Select("value-color-change", {
+		change : function(oE) {
+			var selectedItem = oE.getParameter("selectedItem");
+			if ("NotSet" === selectedItem.getKey()) {
+				return;
+			}
+			oNVConfL.setValueColor(selectedItem.getKey());
+			oNVConfM.setValueColor(selectedItem.getKey());
+			oNVConfS.setValueColor(selectedItem.getKey());
+			oNVConfAuto.setValueColor(selectedItem.getKey());
+		},
+		items : [ new sap.ui.core.Item({
+			key : "NotSet",
+			text : "Not Set"
+		}), new sap.ui.core.Item({
+			key : "Error",
+			text : "Error"
+		}), new sap.ui.core.Item({
+			key : "Neutral",
+			text : "Neutral"
+		}), new sap.ui.core.Item({
+			key : "Critical",
+			text : "Critical"
+		}), new sap.ui.core.Item({
+			key : "Good",
+			text : "Good"
+		})
+
+		]
+	});
+
+	var oDeviationChangeLbl = new sap.m.Label({
+		text : "Deviation",
+		labelFor : "deviation-change"
+	});
+
+	var oDeviationChangeSlct = new sap.m.Select("deviation-change", {
+		change : function(oE) {
+			var selectedItem = oE.getParameter("selectedItem");
+			oNVConfL.setIndicator(selectedItem.getKey());
+			oNVConfM.setIndicator(selectedItem.getKey());
+			oNVConfS.setIndicator(selectedItem.getKey());
+			oNVConfAuto.setIndicator(selectedItem.getKey());
+		},
+		items : [ new sap.ui.core.Item({
+			key : "None",
+			text : "None"
+		}), new sap.ui.core.Item({
+			key : "Up",
+			text : "Up"
+		}), new sap.ui.core.Item({
+			key : "Down",
+			text : "Down"
+		}) ]
+	});
+
+	var editableSimpleForm = new sap.ui.layout.form.SimpleForm("controls", {
+		maxContainerCols : 2,
+		editable : true,
+		content : [ new sap.ui.core.Title({ // this starts a new group
+			text : "Modify Tiles"
+		}), oTitleLbl, oTitleInput, oDescLbl, oDescInput, oScaleLbl, oScaleInput, 
+			oUnitLbl, oUnitInput, oValueLbl, oValueInput, oFooterLbl, oFooterInput, 
+			oTriggerLoadLbl, oTriggerLoadSlct, oValueColorChangeLbl,
+			oValueColorChangeSlct, oDeviationChangeLbl, oDeviationChangeSlct 
+		]
+	});
+	oPage.addContent(editableSimpleForm);
+
+	oPage.placeAt("content");
+</script>
+</head>
+
+<body class="sapUiBody">
+    <div id="content" style="height:100%"></div>
+</body>
+</html>

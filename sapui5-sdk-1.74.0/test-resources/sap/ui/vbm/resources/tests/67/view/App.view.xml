@@ -1,0 +1,113 @@
+<mvc:View class="test-view" controllerName="vbm-regression.tests.67.controller.App" xmlns:l="sap.ui.layout" xmlns="sap.m" xmlns:vbm="sap.ui.vbm" xmlns:mvc="sap.ui.core.mvc">
+
+	<FlexBox direction="Row" width="100%" height="100%">
+		<items>
+
+			<Panel width="100%" height="100%">
+				<layoutData>
+					<FlexItemData baseSize="50%"></FlexItemData>
+				</layoutData>
+				<content>
+
+					<l:VerticalLayout width="100%">
+						<Panel headerText="Instructions"  expandable="true" expanded="false">
+							<content>
+							<l:VerticalLayout width="100%">
+								<Label text="The aim: " design="Bold"></Label>
+								<Text text="To check the Events &amp; Responsive Popover in ThreeJS viewport using VB Adapter"></Text>
+								<Label class="voffset-25" text="To test:" design="Bold"></Label>
+								<Text class="voffset-10" text="1. Press the &quot;Initial Load&quot; button and wait for the JSON payload to populate (Note: It takes a bit longer in Chrome)"></Text>
+								<Text class="voffset-10" text="2. Press the &quot;Load into Adapter&quot; button to load the payload into adapter (Note that there is no visual change)"></Text>
+								<Text class="voffset-10" text="3. Press the &quot;Truck Europe&quot; button to populate the JSON payload representing the truck model"></Text>
+								<Text class="voffset-10" text="4. Press the &quot;Load into Adapter&quot; button and verify that the truck loads in the viewport"></Text>
+								<Text class="voffset-10" text="5. Press the &quot;Fly to (Top view)&quot; button and verify that the camera switches to show the top view of the truck"></Text>
+								<Text class="voffset-10" text="6. Check selection and hover:"></Text>
+								<Text class="voffset-10" text="- There are three groups in the model - The boxes, the axles and the cabin (single part). Check that you can select only one part in a group with single clicks. You should be able to select multiple parts using Control and Shift"></Text>
+								<Text class="voffset-5" text="- Check that you can unselect using Control but not using Shift"></Text>
+								<Text class="voffset-5" text="- The Output (event) JSON payload is received when you interact with the parts"></Text>
+								<Text class="voffset-5" text="'DETAIL_REQUEST' and 'CONTEXT_MENU_REQUEST' events are received when you click and right click on the parts while 'DOUBLE_CLICK' event is received when double clicked on the boxes and cabin"></Text>
+								<Text class="voffset-5" text="The hover event 'GLANCE_REQUEST' is received when you hover over the parts. Verify that this event does not fire when just moving the mouse / passing over the boxes or rotating the model. Event should fire only when you have hovered over a specific part for 500ms"></Text>
+								<Text class="voffset-5" text="The 'KEY_PRESS' event is received when the keyboard keys are pressed. It contains data about the key code and whether any modifier keys were pressed. Note that this event is not fired if only a modifier key is pressed"></Text>
+								<Text class="voffset-10" text="7. Press the &quot;Context Menu&quot; button to populate the context menu payload"></Text>
+								<Text class="voffset-10" text="8. Press the &quot;Load into Adapter&quot; button and verify that a context menu opens"></Text>
+								<Text class="voffset-10" text="9. Click on any part and notice that the X and Y coordinates of that point are received in the event payload. Use those coordinates in the context menu input payload (first line with 'x' and 'y' properties) to verify that the menu opens at the same position which you previously clicked on"></Text>
+								<Text class="voffset-10" text="10. Press the &quot;Responsive Popover 1&quot; button and load the payload into the adapter. A responsive popover should open. Verify that it gets closed when you click anywhere in the viewport/page. Also verify that its point of origin does not go out of the viewport bounds. You can do this by panning the model to one corner and then opening the popover. Repeat this with the other two responsive popover buttons"></Text>
+								<Text class="voffset-10" text="11. Verify that the camera positions are saved as you pan and zoom and that you can navigate between saved positions using the Previous and Next buttons. Home button should take you back to the initial load position."></Text>
+							</l:VerticalLayout>
+							</content>
+						</Panel>
+						<l:HorizontalLayout allowWrapping="true" class="voffset-25">
+							<Panel headerText="Payloads">
+								<l:VerticalLayout width="100%">
+									<l:HorizontalLayout width="100%">
+										<Button width="150px" text="Initial Load" press="onInitialLoad" class="spacer-10" />
+										<Button width="180px" text="Fly to (Top view)" press="onFlyTo" class="spacer-10" />
+									</l:HorizontalLayout>
+								</l:VerticalLayout>
+								<l:HorizontalLayout width="100%">
+									<Button width="150px" text="Truck Europe" press="onTruckEurope" class="spacer-10" />
+									<Button width="150px" text="Context Menu" press="onContextMenu" class="spacer-10" />
+								</l:HorizontalLayout>
+								<l:VerticalLayout width="100%">
+									<l:HorizontalLayout width="100%" allowWrapping="true">
+										<Button width="180px" text="Responsive Popover 1" press="onResponsivePopover1" class="spacer-10" />
+										<Button width="180px" text="Responsive Popover 2" press="onResponsivePopover2" class="spacer-10" />
+										<Button width="180px" text="Responsive Popover 3" press="onResponsivePopover3" class="spacer-10" />
+									</l:HorizontalLayout>
+									<Button width="150px" text="Load into Adapter" press="onLoad" class="spacer-10" />
+									<Label text="Camera Positions" design="Bold"></Label>
+								</l:VerticalLayout>
+								<l:HorizontalLayout width="100%" allowWrapping="true">
+									<Button width="150px" text="Home" press="onCameraHome" class="spacer-10" />
+									<Button width="150px" text="Previous" press="onCameraPrev" class="spacer-10" />
+									<Button width="150px" text="Next" press="onCameraNext" class="spacer-10" />
+									<Button id= "btnCameraStatus" width="150px" text="0 - 0" enabled="false"  class="spacer-10" />
+								</l:HorizontalLayout>	
+							</Panel>
+						</l:HorizontalLayout>
+						<TextArea id="input" width="100%" height="250px" placeholder="Input (method) JSON payload" value="{source>/methodPayload}">
+							<layoutData>
+								<FlexItemData baseSize="25%">
+								</FlexItemData>
+							</layoutData>
+						</TextArea>
+						<TextArea id="output" width="100%" height="250px" placeholder="Output (event) JSON payload" value="{source>/eventPayload}">
+							<layoutData>
+								<FlexItemData baseSize="25%">
+								</FlexItemData>
+							</layoutData>
+						</TextArea>
+						<Panel headerText="Screenshots" expandable="true" expanded="false">
+							<content>
+							<l:VerticalLayout width="100%">
+								<Label text="Expected output: Responsive Popover 1" design="Bold"></Label>
+								<Image height="50%" width="50%" src="img/Popover1.jpg"></Image>
+								<Label text="Expected output: Responsive Popover 2" design="Bold"></Label>
+								<Image height="50%" width="50%" src="img/Popover2.jpg"></Image>
+								<Label text="Expected output: Responsive Popover 3" design="Bold"></Label>
+								<Image height="50%" width="50%" src="img/Popover3.jpg"></Image>
+							</l:VerticalLayout>
+							</content>
+						</Panel>
+					</l:VerticalLayout>
+				</content>
+			</Panel>
+
+			<Panel height="100%" width="100%">
+				<layoutData>
+					<FlexItemData baseSize="60%"></FlexItemData>
+				</layoutData>
+				<content>
+					<FlexBox id="flexBox" direction="Column" width="100%" height="100%">
+						<items>
+							<vbm:Viewport id="viewport2" width="100%" height="100%" cameraChange="onCameraChange">
+							</vbm:Viewport>
+						</items>
+					</FlexBox>	
+				</content>
+			</Panel> 
+
+		</items>
+	</FlexBox>
+
+</mvc:View>

@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Rendering test</title>
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize"
+	data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet"
+	href="../../../../resources/sap/ui/thirdparty/qunit.css"
+	type="text/css" media="screen" />
+<script type="text/javascript"
+	src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript"
+	src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript"
+	src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="json/TESTDATA_MIXED_EXCEPTIONS.js"></script>
+<script type="text/javascript" src="testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Rendering Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Rendering tests",
+				{
+					setup: function () {
+						this.oTableControl = sapzen.crosstab.test.jsonTestData.mixedExceptions.control;
+						this.oCrosstab = new sap.zen.crosstab.Crosstab();
+						this.oCrosstab.setWidth("1600px");
+						this.oCrosstab.setHeight("1200px");
+						this.oCrosstab.applyControlProperties(this.oTableControl);
+						sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+						sap.ui.getCore().applyChanges();
+
+						this.checkCellStyle = function (oCell, sClassToCheck) {
+							var oDomCell = null;
+							if (oCell) {
+								oDomCell = jQuery.sap.byId(oCell.getId());
+								ok(oDomCell.attr("class").indexOf(sClassToCheck) !== -1, "Cell: " + oCell.getId() + " "
+										+ oCell.getText()
+										+ " with exception style in model must have corresponding CSS style: "
+										+ sClassToCheck);
+							}
+						};
+
+					},
+					teardown: function () {
+						this.oCrosstab = null;
+					}
+				});
+
+		test("Check symbol exceptions in row header area", function () {
+			var oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+			var oCell = oRowHeaderArea.getCell(0, 1);
+			this.checkCellStyle(oCell, "sapzencrosstab-HeaderCellAlert1StatusSymbol");
+			this.checkCellStyle(oCell, "sapzencrosstab-HeaderCellSymbolAlertBackground");
+		});
+
+		test("Check symbol exceptions in row column area", function () {
+			var oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+			var oCell = oColumnHeaderArea.getCell(1, 2);
+			this.checkCellStyle(oCell, "sapzencrosstab-HeaderCellAlert1StatusSymbol");
+			this.checkCellStyle(oCell, "sapzencrosstab-HeaderCellSymbolAlertBackground");
+		});
+
+		test("Check background color and symbol exceptions in data area", function () {
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oCell = oDataArea.getCell(7, 0);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert5Background");
+
+			oCell = oDataArea.getCell(9, 1);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert9Background");
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellSymbolAlertBackground");
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert1StatusSymbol");
+		});
+
+		test("Check background color and font color exception", function () {
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oCell = oDataArea.getCell(6, 6);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert1Background");
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert9FontColor");
+		});
+
+		test("Check several symbol exceptions", function () {
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oCell = oDataArea.getCell(8, 3);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellSymbolAlertBackground");
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert5TrendGreySymbol");
+
+			oCell = oDataArea.getCell(2, 3);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellSymbolAlertBackground");
+			this.checkCellStyle(oCell, "DataCellAlert4TrendDescendingSymbol");
+
+			oCell = oDataArea.getCell(4, 4);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellSymbolAlertBackground");
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert1TrendAscendingSymbol");
+
+			oCell = oDataArea.getCell(6, 5);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellSymbolAlertBackground");
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert1StatusSymbol");
+		});
+	</script>
+
+</body>
+
+</html>
+

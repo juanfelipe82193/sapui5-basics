@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Test Page</title>
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="../../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize"
+	data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<script type="text/javascript" src="../json/TESTDATA_DELTA_RESPONSE_CHROME.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_BIGTABLE.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_FULL.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_MSG_IN_TABLE.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PLAINTABLE.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PLAINTABLE2.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PLAINTABLE3.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_BIGHEADERS.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_ALEX_CSV.js"></script>
+<script type="text/javascript"
+	src="../json/TESTDATA_ALEX_DIM_IN_COLS.js"></script>
+<script type="text/javascript"
+	src="../json/TESTDATA_BICS_C03_BICSTEST_Q0000.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_CSNQUERY.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_CSVTABLE.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_DELTAINITNODS.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_DELTATABLE.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_HG_TEST_123.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_TETAPP.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_QUINN_IE9.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_HIER_SELECTION.js"></script>
+</head>
+
+<body>
+	<div id="WidthHeightArea"></div>
+	<br />
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		//Fill the dropdown to select the test data	
+		$(document).ready(initPage);
+
+		function initPage () {
+
+			var sWidth = "1000";
+			var sHeight = "500";
+
+			// provide width/height input fields
+			var oLayout = new sap.ui.commons.layout.MatrixLayout();
+			oLayout.setWidth("300px");
+
+			var oItems = [];
+			var i = 0;
+			for ( var testData in sapzen.crosstab.test.jsonTestData) {
+				if (sapzen.crosstab.test.jsonTestData.hasOwnProperty(testData)) {
+					oItems[i] = new sap.ui.core.ListItem(testData, {
+						text: testData
+					});
+					i++;
+				}
+			}
+
+			var oDataSourceDropDown = new sap.ui.commons.DropdownBox("dataSourceDropDown", {
+				displaySecondaryValues: false,
+				items: oItems,
+				change: onChange
+			});
+			oDataSourceDropDown.setValue(oItems[0].getText());
+
+			var oDsLabel = new sap.ui.commons.Label({
+				text: 'Select data source: '
+			});
+
+			oLayout.createRow(oDsLabel, oDataSourceDropDown);
+
+			var oWidthLabel = new sap.ui.commons.Label({
+				text: 'Width in px: ',
+			});
+
+			var oWidthTextField = new sap.ui.commons.TextField('widthField');
+			oWidthTextField.attachChange(onApplyButtonClicked);
+			oWidthTextField.setValue(sWidth);
+
+			var oHeightLabel = new sap.ui.commons.Label({
+				text: 'Height in px: '
+			});
+
+			var oHeightTextField = new sap.ui.commons.TextField('heightField');
+			oHeightTextField.attachChange(onApplyButtonClicked);
+			oHeightTextField.setValue(sHeight);
+
+			var oSmoothCheckbox = new sap.ui.commons.CheckBox('smoothCheckbox');
+			oSmoothCheckbox.setText("Smooth scrolling");
+			oSmoothCheckbox.attachChange(onChange);
+
+			var oButton = new sap.ui.commons.Button('renderButton', {
+				text: "Apply",
+				press: onApplyButtonClicked
+			});
+
+			oButton.focus();
+			// add controls to the layout container
+			oLayout.createRow(oWidthLabel, oWidthTextField);
+			oLayout.createRow(oHeightLabel, oHeightTextField);
+			oLayout.createRow(oSmoothCheckbox);
+
+			oLayout.createRow(oButton);
+
+			// connect the layout container with the previously created <span>
+			oLayout.placeAt("WidthHeightArea");
+
+			//Render the crosstab
+			var oTableControl = sapzen.crosstab.test.jsonTestData[oItems[0].getText()].control;
+			var oCrosstab = new sap.zen.crosstab.Crosstab();
+			oCrosstab.setWidth(sWidth + "px");
+			oCrosstab.setHeight(sHeight + "px");
+			oCrosstab.applyControlProperties(oTableControl);
+			sap.ui.setRoot("uiCrosstabArea", oCrosstab);
+			sap.ui.getCore().applyChanges();
+
+			function onApplyButtonClicked (oControlEvent) {
+				var oWidthTextField = sap.ui.getCore().getControl("widthField");
+				var oHeightTextField = sap.ui.getCore().getControl("heightField");
+				sWidth = oWidthTextField.getValue();
+				sHeight = oHeightTextField.getValue();
+				oCrosstab.setWidth(sWidth + "px");
+				oCrosstab.setHeight(sHeight + "px");
+
+				sap.ui.getCore().applyChanges();
+			}
+
+			function onChange (oControlEvent) {
+				var SelValue = oControlEvent.getParameter("newValue");
+				if (SelValue) {
+					var oTable = sapzen.crosstab.test.jsonTestData[SelValue];
+					oTableControl = oTable.control;
+				}
+
+				oTableControl.pixelscrolling = oSmoothCheckbox.getChecked();
+				if (oTableControl.pixelscrolling) {
+					oTableControl.changed = true;
+				}
+
+				if (!oCrosstab) {
+					oCrosstab = new sap.zen.crosstab.Crosstab();
+				}
+				oCrosstab.setWidth(sWidth + "px");
+				oCrosstab.setHeight(sHeight + "px");
+				if (oTableControl.type === "xtable") {
+					oCrosstab.updateControlProperties(oTableControl);
+				}
+				sap.ui.setRoot("uiCrosstabArea", oCrosstab);
+				sap.ui.getCore().applyChanges();
+				return true;
+			}
+
+		}
+	</script>
+
+</body>
+
+</html>

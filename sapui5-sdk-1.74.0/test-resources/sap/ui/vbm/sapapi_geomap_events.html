@@ -1,0 +1,682 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!-- <link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" /> -->
+
+	<script src="../../../../resources/sap-ui-core.js"
+		data-sap-ui-libs="sap.m,sap.ui.commons,sap.ui.table,sap.ui.vbm"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#btnZoomIn{
+			margin-right: 10px;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 38.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#margin{
+			margin-right: 50px;
+		}
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 56.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+	
+   function onToControl()
+   {
+      oVBI.maximize();
+   };
+   
+   function onToThumbnail()
+   {
+      oVBI.minimize(306,120);     
+   };    	
+	
+	function onZoomChanged( e )
+	{
+		var zl = e.getParameter( "zoomLevel" );
+		var cp = e.getParameter( "centerPoint" );
+		var vp = e.getParameter( "viewportBB" );
+		if( evtoutput.value !== undefined ){
+			evtlist.value = "onZoomChanged " + this + " (zoomLevel: "+zl+", centerPoint: "+cp+", vpBB ul: "+vp.upperLeft+", vpBB lr: "+vp.lowerRight+")\n";
+		}
+	};
+	
+	function onCenterChanged( e )
+	{
+		var zl = e.getParameter( "zoomLevel" );
+		var cp = e.getParameter( "centerPoint" );
+		var vp = e.getParameter( "viewportBB" );
+		if( evtoutput.value !== undefined ){
+			evtlist.value = "onCenterChanged " + this + " (zoomLevel: "+zl+", centerPoint: "+cp+", vpBB ul: "+vp.upperLeft+", vpBB lr: "+vp.lowerRight+")\n";
+		}
+	};
+	
+    function onPress( e )
+	{
+    	if( evtoutput.value !== undefined ){
+			evtlist.value = "onPress " + this + "\n" + evtlist.value;
+		}
+	};
+	
+	function onClick( e )
+	{
+		if( evtoutput.value !== undefined ){
+			var sOut = "onClick " + this + " (";
+			for (var name in e.mParameters) {
+				sOut = sOut + " " + name + ":" + e.mParameters[name];
+			}
+			evtlist.value = sOut + ")\n" + evtlist.value;
+		}
+	};
+
+	function onContextMenu( e )
+	{
+		if( evtoutput.value !== undefined ){
+			var sOut = "onContextMenu " + this + " (";
+			for (var name in e.mParameters) {
+				sOut = sOut + " " + name + ":" + e.mParameters[name];
+			}
+			evtlist.value = sOut + ")\n" + evtlist.value;			
+		}
+	};
+	
+	function onDrop( e )
+	{
+			if( evtoutput.value !== undefined ){
+				var sOut = "onDrop " + this + " (";
+				for (var name in e.mParameters) {
+					sOut = sOut + " " + name + ":" + e.mParameters[name];
+				}
+				evtlist.value = sOut + ")\n" + evtlist.value;
+			}
+	};
+	
+	function onSubmit( e )
+	{
+		if( evtoutput.innerText !== undefined ){
+			evtoutput.innerText = e.getParameter( "data" );
+		}			
+		else if( evtoutput.textContent !== undefined ){
+  			evtoutput.textContent = e.getParameter( "data" );	// due to ff
+  		}
+	};
+	
+	// create analytic map and bind to model
+/*	var oMapConfig =	{       "MapProvider":
+      [      
+          {  "name": "MAPQUEST",
+             "type": "",
+             "description": "",
+             "tileX": "256",
+             "tileY": "256",                               
+             "maxLOD": "19",
+             "copyright": "Tiles Courtesy of MapQuest © OpenStreetMap under ODbL v1.0",
+             "Source":                                 
+             [      
+                  { "id": "s1", "url": "http://otile1.mqcdn.com/tiles/1.0.0/map/{LOD}/{X}/{Y}.png" },            
+                  { "id": "s2", "url": "http://otile2.mqcdn.com/tiles/1.0.0/map/{LOD}/{X}/{Y}.png" }
+             ]                             
+          } ,
+          {  "name": "MAPQUESTCYCLE",
+             "type": "",
+             "description": "",
+             "tileX": "256",
+             "tileY": "256",                               
+             "maxLOD": "19",
+             "copyright": "Tiles Courtesy of MapQuest © OpenStreetMap under ODbL v1.0",
+             "Source":                                 
+             [      
+                  { "id": "s1", "url": "http://a.tile.opencyclemap.org/cycle/{LOD}/{X}/{Y}.png" },   
+                  { "id": "s1", "url": "http://b.tile.opencyclemap.org/cycle/{LOD}/{X}/{Y}.png" }, 
+                  { "id": "s2", "url": "http://c.tile.opencyclemap.org/cycle/{LOD}/{X}/{Y}.png" }
+             ]                             
+          },            
+          {               
+            "name": "MAPQUESTHIKE",
+            "type": "",
+            "description": "",
+            "tileX": "256",
+            "tileY": "256",
+            "maxLOD": "18",
+            "copyright": "Satellite Tiles Courtesy of MapQuest using OpenStreetMap under ODbL (1.0)",
+            "Source": [
+               {
+                  "id": "s1",
+                  "url": "http://toolserver.org/tiles/hikebike/{LOD}/{X}/{Y}.png"
+               }
+            ]
+          }                          
+      ]                   ,
+      "MapLayerStacks": 
+      [ {
+               "name": "Default",
+               "MapLayer": {
+                  "name": "layer1",
+                  "refMapProvider": "MAPQUEST",
+                  "opacity": "1.0",
+                  "colBkgnd": "RGB(255,255,255)"
+                } 
+         }, 
+         {
+         "name": "Hike",
+         "MapLayer": {
+            "name": "layer1",
+            "refMapProvider": "MAPQUESTHIKE",
+            "opacity": "1.0",
+            "colBkgnd": "RGB(255,255,255)"
+            }
+          } ,
+          {
+             "name": "Cycle",
+             "MapLayer": {
+                "name": "layer1",
+                "refMapProvider": "MAPQUESTCYCLE",
+                "opacity": "1.0",
+                "colBkgnd": "RGB(255,255,255)"
+              }         
+          }      
+      ]
+     };*/
+	
+	
+	var cWidth = "1024px";
+	var cHeight = "400px";
+	var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+	    width : cWidth,
+    	height:  cHeight,
+    	initialPosition: "10;0;0",
+    	click: onClick.bind("Map"),
+    	contextMenu: onContextMenu.bind("Map"),
+    	drop:onDrop.bind("Map"),
+    	refMapLayerStack: "Default",
+    	submit : onSubmit,
+    	zoomChanged: onZoomChanged.bind("Map"),
+    	centerChanged: onCenterChanged.bind("Map"),
+    	resources: [
+    				new sap.ui.vbm.Resource( { "name": "pin_blue", "src": "demokit/media/images/pin_blue.png" } ),
+    				new sap.ui.vbm.Resource( { "name": "pin_yellow", "src": "demokit/media/images/pin_yellow.png" } ),
+    				new sap.ui.vbm.Resource( { "name": "pin_gray", "src": "demokit/media/images/pin_white.png" })    				
+			],
+    	vos: [ 
+			new sap.ui.vbm.Boxes("box", {
+			    click: onClick.bind("Box"),
+				posChangeable: true,
+				scaleChangeable: true,
+			    contextMenu: onContextMenu.bind("Box"),
+			    // explicitly specify 
+			    items: [
+			        box0= new sap.ui.vbm.Box("box0",{ 
+			        	scale: '0.1;0.1;0.1', 
+			        	position: '-70;30;0',  
+			        	tooltip: 'Box0', 
+			        	color: 'RGB(0,255,0)', 
+			        	click: onClick.bind("Box0"), 
+			        	contextMenu: onContextMenu.bind("Box0") }),
+		        	new sap.ui.vbm.Box("box1",{ 
+			        	scale: '0.1;0.1;0.1', 
+			        	position: '-70;-15;0',  
+			        	tooltip: 'Box1', 
+			        	color: 'RGB(0,0,255)', 
+			        	click: onClick.bind("Box1"), 
+			        	contextMenu: onContextMenu.bind("Box1"), 
+                    	drop: onDrop.bind("Box1"),
+                    	handleMoved: onDrop.bind("Box1 Handle"),
+   	            	 	handleClick: onClick.bind("Box1 Handle"),
+   	            	 	handleContextMenu: onContextMenu.bind("Box1 Handle"),
+                    	changeable: true })]
+			}),
+	         new sap.ui.vbm.Spots( "spot", {
+	              	click: onClick.bind("Spot"),
+					posChangeable: true,
+				    scaleChangeable: true,
+	              contextMenu: onContextMenu.bind("Spot"), 
+  	              dragSource: [new sap.ui.vbm.DragSource({type:'HUGO10'})],
+	              dropTarget: [new sap.ui.vbm.DropTarget({type:'HUGO20'}),
+	                           new sap.ui.vbm.DropTarget({type:'LINK2'})],
+	            items: [ 
+	                    spot0=new sap.ui.vbm.Spot( "spot0", { 
+	                    	contentOffset: '0;-7',
+	                    	position: '-40;20;0', 
+	                    	tooltip: 'Spot0', 
+	                    	image: 'pin_blue', 
+	                    	labelText:'s0->s0,r0',
+// 	    				    type: sap.ui.vbm.SemanticType.Default,
+	                    	dragData: 'Drag data for Spot0',
+	        	            dragSource: [new sap.ui.vbm.DragSource({type:'HUGO1'})],
+	        	            dropTarget: [new sap.ui.vbm.DropTarget({type:'HUGO1'})],
+	                    	click: onClick.bind("Spot0"), 
+	                    	contextMenu: onContextMenu.bind("Spot0"), 
+	                    	drop: onDrop.bind("Spot0") }  ),
+	                    new sap.ui.vbm.Spot( "spot1", { 
+	                    	contentOffset: '0;-7',
+	                    	position: '-40;-20;0', 
+	                    	tooltip: 'Spot1', 
+	                    	image: 'pin_yellow', 
+	                    	labelPos: '1',
+// 	    				    type: sap.ui.vbm.SemanticType.Default,
+	                    	handleMoved: onDrop.bind("Spot1 Handle"),
+       	            	 	handleClick: onClick.bind("Spot1 Handle"),
+       	            	 	handleContextMenu: onContextMenu.bind("Spot1 Handle"), 
+	                    	drop: onDrop.bind("Spot1"),
+	                    	changeable: true }  ),
+                    	new sap.ui.vbm.Spot( "spot9", { 
+	                    	contentOffset: '0;-7',
+	                    	position: '-40;-40;0', 
+	                    	tooltip: 'Spot9', 
+	                    	image: 'pin_gray', 
+// 	    				    type: sap.ui.vbm.SemanticType.Default,
+	                    	dragData: 'Drag data for Spot9',
+	        	            dragSource: [new sap.ui.vbm.DragSource({type:'HUGO1'})],
+	        	            dropTarget: [new sap.ui.vbm.DropTarget({type:'HUGO2'})],
+	                    	handleMoved: onDrop.bind("Spot9 Handle"),
+       	            	 	handleClick: onClick.bind("Spot9 Handle"),
+       	            	 	handleContextMenu: onContextMenu.bind("Spot9 Handle"), 
+	                    	drop: onDrop.bind("Spot9"),
+	                    	changeable: true }  )]
+	         	}),
+	         new sap.ui.vbm.Areas("area", {
+	   	 	    click: onClick.bind("Area"), 
+	   	 	    posChangeable: true,
+	   	 	    contextMenu: onContextMenu.bind("Area"),
+	   	 	    items: [
+	                    area0=new sap.ui.vbm.Area("area0",{ 
+	                    	position: '-10;40;0; -10;20;0; 20;20;0', 
+	                    	tooltip: 'Area0', 
+	                    	color: 'ARGB(0x64;0xFF;0x33;0xCC)', 
+	                    	colorBorder: 'RGB(100;0;255)',
+	                    	borderDash: '10;10;5;10',
+	                    	edgeClick: onClick.bind("Area0 Edge"),
+        	            	edgeContextMenu: onContextMenu.bind("Area0 Edge"),
+	                    	hotDeltaColor: 'RHLSA(90;1.0;1.0;1.0)',
+        				    selectColor: 'RHLSA(150;1.0;1.0;1.0)',
+	                    	click: onClick.bind("Area0"), 
+	                    	contextMenu: onContextMenu.bind("Area0") } ),
+	                    
+	                    new sap.ui.vbm.Area("area1",{ 
+	                    	position: '20;-10;0; 20;-30;0; -10;-30;0; -10;-10;0', 
+	                    	tooltip: 'Area1', 
+	                    	color: 'ARGB(0x64;0xFF;0x66;0x33)', 
+	                    	colorBorder: 'RGB(0;0;255)',
+	                    	borderDash: '7;7',
+	                    	edgeClick: onClick.bind("Area1 Edge"),
+        	            	edgeContextMenu: onContextMenu.bind("Area1 Edge"),
+        	            	handleMoved: onDrop.bind("Area1 Handle"),
+        	            	handleClick: onClick.bind("Area1 Handle"),
+        	            	handleContextMenu: onContextMenu.bind("Area1 Handle"),
+	                    	changeable: true,
+	                    	click: onClick.bind("Area1"), 
+	                    	contextMenu: onContextMenu.bind("Area1") } )	
+		   	 	]}),
+		   	 new sap.ui.vbm.Areas("areaMulti", {
+		   	 	    click: onClick.bind("AreaMulti"),
+		   	 	    contextMenu: onContextMenu.bind("AreaMulti"),
+		   	 	    items: [
+	                    	multiArea0=new sap.ui.vbm.Area("areaMulti0",{ 
+		                    	position: '[["20;-40;0; 20;-50;0; 10;-50;0; 10;-40;0"],["0;-40;0; 0;-50;0; -10;-50;0; -10;-40;0"]]', 
+		                    	tooltip: 'AreaMulti0', 
+		                    	color: 'ARGB(0x64;0xDD;0x66;0x33)', 
+		                    	colorBorder: 'ARGB(0x64;0xDD;0x66;0x33)',
+		                    	edgeClick: onClick.bind("AreaMulti0 Edge"),
+	        	            	edgeContextMenu: onContextMenu.bind("AreaMulti0 Edge"),
+	        	            	handleMoved: onDrop.bind("AreaMulti0 Handle"),
+	        	            	handleClick: onClick.bind("AreaMulti0 Handle"),
+	        	            	handleContextMenu: onContextMenu.bind("AreaMulti0 Handle"),
+		                    	changeable: false,
+		                    	click: onClick.bind("AreaMulti0"), 
+		                    	contextMenu: onContextMenu.bind("AreaMulti0") } ) 
+		   		]}),		   	 	            
+		   	 new sap.ui.vbm.GeoCircles( "geoCircle", {
+				  	click: onClick.bind("GeoCircle" ),
+				  	posChangeable: true,
+				  	radiusChangeable: true,
+			       	contextMenu: onContextMenu.bind( "GeoCircle" ),
+		       	    items:  [
+						 geoCircle0=new sap.ui.vbm.GeoCircle("geoCircle0",{ 
+							 radius: "1000000",  
+							 position: '60;30;0', 
+							 tooltip: 'GeoCircle0', 
+							 color: 'RGBA(0,255,0,100)', 
+							 colorBorder: 'RGBA(0,255,0,100)', 
+							 click: onClick.bind( "GeoCircle0"),  
+							 contextMenu: onContextMenu.bind( "GeoCircle0" )}),
+						 new sap.ui.vbm.GeoCircle("geoCircle1",{ 
+							 radius: "1000000",  
+							 position: '60;-20;0', 
+							 tooltip: 'GeoCircle1', 
+							 color: 'RGBA(0,0,255,100)', 
+							 colorBorder: 'RGBA(0,0,255,100)', 
+							 handleMoved: onDrop.bind("GeoCircle1 Handle"),
+        	            	 handleClick: onClick.bind("GeoCircle1 Handle"),
+        	            	 handleContextMenu: onContextMenu.bind("GeoCircle1 Handle"),
+	                    	 changeable: true,
+							 click: onClick.bind( "GeoCircle1"),  
+							 contextMenu: onContextMenu.bind( "GeoCircle1" )})
+		       	    ]}),
+	       	 new sap.ui.vbm.Routes( "route", {
+               	 click: onClick.bind("Route" ),
+               	 posChangeable: true,
+               	 contextMenu: onContextMenu.bind( "Route" ),
+	             dragSource: [new sap.ui.vbm.DragSource({type:'HUGO2'})],
+	             dropTarget: [new sap.ui.vbm.DropTarget({type:'LINK2'})],
+               	 items:  [
+               	    route0=new sap.ui.vbm.Route("route0",{ 
+               	    	  position: '100;40;0; 100;20;0; 80;20;0', 
+               	    	  tooltip: 'Route0', 
+               	    	  end: "1", 
+               	    	  start: "0", 
+               	    	  color: 'RGB(0,255,0)',
+	                      labelText:'r0->s1,s9,r1,r9',
+                    	  dragData: 'Drag data for Route0',
+        	              dragSource: [new sap.ui.vbm.DragSource({type:'LINK1'})],
+        	              dropTarget: [new sap.ui.vbm.DropTarget({type:'HUGO10'})],
+               	    	  click: onClick.bind("Route0"), 
+               	    	  contextMenu: onContextMenu.bind("Route0"), 
+	                      drop: onDrop.bind("Route0") }),
+           	    	new sap.ui.vbm.Route("route1",{ 
+             	    	  position: '100;-10;0; 100;-30;0; 80;-30;0', 
+             	    	  tooltip: 'Route1', 
+             	    	  end: "1", 
+             	    	  start: "0", 
+             	    	  color: 'RGB(0,0,255)', 
+             	    	  handleMoved: onDrop.bind("Route1 Handle"),
+    	            	  handleClick: onClick.bind("Route1 Handle"),
+    	            	  handleContextMenu: onContextMenu.bind("Route1 Handle"),
+                    	  changeable: true,
+             	    	  click: onClick.bind("Route1"), 
+             	    	  contextMenu: onContextMenu.bind("Route1"), 
+	                      drop: onDrop.bind("Route1") }),
+              	    new sap.ui.vbm.Route("route9",{ 
+              	    	  position: '110;-10;0; 110;-40;0; 80;-40;0', 
+              	    	  tooltip: 'Route9', 
+              	    	  end: "1", 
+              	    	  start: "0", 
+              	    	  color: 'RGB(0,0,255)', 
+						  lineDash: '7;10;3;10',
+                     	  dragData: 'Drag data for Route9',
+         	              dragSource: [new sap.ui.vbm.DragSource({type:'LINK2'})],
+         	              dropTarget: [new sap.ui.vbm.DropTarget({type:'LINK1'})],
+              	    	  handleMoved: onDrop.bind("Route9 Handle"),
+     	            	  handleClick: onClick.bind("Route9 Handle"),
+     	            	  handleContextMenu: onContextMenu.bind("Route9 Handle"),
+                     	  changeable: true,
+              	    	  click: onClick.bind("Route9"), 
+              	    	  contextMenu: onContextMenu.bind("Route9"), 
+ 	                      drop: onDrop.bind("Route9") })
+               	          ]}),
+			new sap.ui.vbm.Circles( "circle", {
+			    click: onClick.bind("Circle" ),
+			    posChangeable: true,
+			    radiusChangeable: true,
+			    contextMenu: onContextMenu.bind( "Circle" ),
+			    // bind to an array in the model
+			    items: [
+			       circle0=new sap.ui.vbm.Circle("circle0",{ 
+			        	position: '130;30;0', 
+			        	tooltip: 'Circle0',
+			        	radius: '30',
+			        	color: 'RGB(0,255,0)', 
+			        	colorBorder: 'RGB(0,255,0)',
+			        	labelText: 'Circle',
+			        	click: onClick.bind( "Circle0"),  
+			        	contextMenu: onContextMenu.bind( "Circle0" )}),
+		        	new sap.ui.vbm.Circle("circle1",{ 
+			        	position: '130;-20;0', 
+			        	tooltip: 'Circle1',
+			        	radius: '30',
+			        	color: 'RGB(0,0,255)', 
+			        	colorBorder: 'RGB(0,0,255)', 
+			        	click: onClick.bind( "Circle1"),  
+			        	contextMenu: onContextMenu.bind( "Circle1" ), 
+           	    	  	handleMoved: onDrop.bind("Circle1 Handle"),
+	            	  	handleClick: onClick.bind("Circle1 Handle"),
+	            	  	handleContextMenu: onContextMenu.bind("Circle1 Handle"),
+                	  	changeable: true})
+			]}),
+			new sap.ui.vbm.Pies("pie", {
+		 	    click: onClick.bind("Pie"),
+			    posChangeable: true,
+			    scaleChangeable: true, 
+		 	    contextMenu: onContextMenu.bind("Pie"),
+		 	    // explicitly specify 
+		 	    items: [
+	               pie0=new sap.ui.vbm.Pie( "pie0",
+   	                     { 
+   	                        scale: '1;1;1', 
+   	                        position: '160;30;0',  
+   	                        tooltip: 'Pie0', 
+   	                        click: onClick.bind("Pie0"), 
+   	                        contextMenu: onContextMenu.bind("Pie0"), 
+   	                        items: [
+   	                          	new sap.ui.vbm.PieItem({ 
+   	                          		value: '10', 
+   	                          		tooltip: '10 items' }  ),
+   	                          	new sap.ui.vbm.PieItem({ 
+   	                          		value: '20', 
+   	                          		tooltip: '20 items' }  ),
+   	                          	new sap.ui.vbm.PieItem({ 
+   	                          		value: '30', 
+   	                          		tooltip: '30 items' }  )
+   	                        ] } ), 
+                    new sap.ui.vbm.Pie( "pie1",
+   	                     { 
+   	                        scale: '1;1;1', 
+   	                        position: '160;-17;0',  
+   	                        tooltip: 'Pie1', 
+   	                        click: onClick.bind("Pie1"), 
+   	                        contextMenu: onContextMenu.bind("Pie1"), 
+   	           	    	  	handleMoved: onDrop.bind("Pie1 Handle"),
+   		            	  	handleClick: onClick.bind("Pie1 Handle"),
+   		            	  	handleContextMenu: onContextMenu.bind("Pie1 Handle"),
+   	                	  	changeable: true,
+   	                        items: [
+   	                          	new sap.ui.vbm.PieItem({ 
+   	                          		value: '10', 
+   	                          		tooltip: '10 items' }  ),
+   	                          	new sap.ui.vbm.PieItem({ 
+   	                          		value: '20', 
+   	                          		tooltip: '20 items' }  ),
+   	                          	new sap.ui.vbm.PieItem({ 
+   	                          		value: '30', 
+   	                          		tooltip: '30 items' }  )
+   	                        ] } )] 
+				 	}),
+				 	new sap.ui.vbm.Containers( "container", {
+			         	    items:[
+			         	    	new sap.ui.vbm.Container( "container0",{ 
+			                    	 position: '-110;30;0', 
+			                    	 tooltip: 'Container0', 
+			                    	 item: [
+			                    	        smiley0=new sap.m.Image( { 
+			                             	 src:"demokit/media/images/smiley.png",
+			                             	 press: onPress.bind( "Smiley0")
+			                          	   })
+			                    	  ]
+			                    } ),
+			                    new sap.ui.vbm.Container( "container1",{ 
+			                    	 position: '-110;-15;0', 
+			                    	 tooltip: 'Container1', 			                    	 
+		   	                	  	 changeable: true,
+			                    	 item: [
+			                    	        smiley1=new sap.m.Image( { 
+			                             	 src:"demokit/media/images/smiley.png",
+			                             	 press: onPress.bind( "Smiley1")
+			                    	        })
+			                    	 ]
+			                    } )
+			          	    ]
+			         } )
+	   		]
+	});
+	//oVBI.setMapConfiguration(oMapConfig);
+	oVBI.setMapConfiguration(JSON.parse(localStorage.getItem('map')));
+
+	spot0.setTooltip(new sap.ui.commons.RichTooltip({
+ 		text : "This is a rich tooltip. It is used to provide tool tips that can have long text, image and title.",
+ 		title: "Spot0: Rich Tooltip",
+ 		imageSrc : "demokit/media/images/smiley.png"
+ 	}));
+ 	
+ 	area0.setTooltip(new sap.ui.commons.RichTooltip({
+ 		text : "This is a rich tooltip. It is used to provide tool tips that can have long text, image and title.",
+ 		title: "Area0: Rich Tooltip",
+ 		imageSrc : "demokit/media/images/smiley.png"
+ 	}));
+ 	
+ 	multiArea0.setTooltip(new sap.ui.commons.RichTooltip({
+ 		text : "This is a rich tooltip. It is used to provide tool tips that can have long text, image and title.",
+ 		title: "MultiArea0: Rich Tooltip",
+ 		imageSrc : "demokit/media/images/smiley.png"
+ 	}));
+ 	
+ 	box0.setTooltip(new sap.ui.commons.RichTooltip({
+ 		text : "This is a rich tooltip. It is used to provide tool tips that can have long text, image and title.",
+ 		title: "Box0: Rich Tooltip",
+ 		imageSrc : "demokit/media/images/smiley.png"
+ 	}));
+ 	
+ 	geoCircle0.setTooltip(new sap.ui.commons.RichTooltip({
+ 		text : "This is a rich tooltip. It is used to provide tool tips that can have long text, image and title.",
+ 		title: "GeoCircle0: Rich Tooltip",
+ 		imageSrc : "demokit/media/images/smiley.png"
+ 	}));
+ 	
+ 	route0.setTooltip(new sap.ui.commons.RichTooltip({
+ 		text : "This is a rich tooltip. It is used to provide tool tips that can have long text, image and title.",
+ 		title: "Route0: Rich Tooltip",
+ 		imageSrc : "demokit/media/images/smiley.png"
+ 	}));
+ 	
+ 	circle0.setTooltip(new sap.ui.commons.RichTooltip({
+ 		text : "This is a rich tooltip. It is used to provide tool tips that can have long text, image and title.",
+ 		title: "Circle0: Rich Tooltip",
+ 		imageSrc : "demokit/media/images/smiley.png"
+ 	}));
+ 	
+ 	pie0.setTooltip(new sap.ui.commons.RichTooltip({
+ 		text : "This is a rich tooltip. It is used to provide tool tips that can have long text, image and title.",
+ 		title: "Pie0: Rich Tooltip",
+ 		imageSrc : "demokit/media/images/smiley.png"
+ 	}));
+ 	
+ 	smiley0.setTooltip(new sap.ui.commons.RichTooltip({
+ 		text : "This is a rich tooltip. It is used to provide tool tips that can have long text, image and title.",
+ 		title: "Smiley0: Rich Tooltip",
+ 		imageSrc : "demokit/media/images/smiley.png"
+ 	}));
+ 	
+ 	smiley1.setTooltip(new sap.ui.commons.RichTooltip({
+ 		text : "This is a rich tooltip. It is used to provide tool tips that can have long text, image and title.",
+ 		title: "Smiley1: Rich Tooltip",
+ 		imageSrc : "demokit/media/images/smiley.png"
+ 	}));
+ 	
+	oVBI.placeAt("content");
+	
+	</script>
+
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business GeoMap Sample</h1>
+		<div id="description1">
+					<h3> The aim: </h3>
+		<p> To test the usage of the GeoMap events: click, context menu, and drop.</p>
+		<br>
+		<h3> To test: </h3>
+			<p style="color:red"> Note: Steps 5 and 6 in the followinf instructions cannot be tested on touch devices</p>
+			<p style="color:red;">* You can refer to the Event Output or Event list when testing the following.</p> 
+			<ol>
+				<li> Check that on initial load your Geomap control contains multiple visual objects.</li><br>
+				<img src="img/VO.jpg" alt="text for Thumbnail" style="width:550px;height:230px;"><br>
+				
+				<li><ol>
+					
+					<h4> Testing GeoMap control:</h4>
+						<li> Click on the map and check the Event Output Action name property displays "click"</li>
+					<li> Right click on the map and check the Event Output Action name property displays "contextMenu"</li>
+					<!--<li> Drag the map and check the Event Output Action name property displays "drag"</li>-->
+					<li>Left click on the map and drag and check the Event Output Action name property displays "centerChanged"</li>
+					<li> Zoom in on the map and check the Event Output Action name property displays "zoomChanged"</li><br>
+					</ol></li>
+				
+				<li> <ol>
+					<h4> Testing VO Events:</h4>
+					<p> VO include circles, spots, routes, areas, pies, boxes...</p><br>
+					<li> Click on different visual objects and observe the Event Output Action name property. Check that the property displays the value "click"
+					when you click on any Visual object. </li>
+					<li>Right click on different visual objects and observe the Event Output Action name property. Check that the property displays the value "contextMenu"
+					when you right click on any Visual object.</li>
+					<li>Right click on different visual objects and observe the Event Output Action name property. Check that the property displays the value "edgeContextMenu"
+					when you right click on any Visual objects edge.</li>
+					<!--<li>Right click and on different visual objects and observe the Event Output Action name property. Check that the property displays the value "drag"
+					when you right click and drag VO.</li>-->
+					</ol></li>
+				<!--<li> Additional Area VO events: edgeClick, and edgeContextMenu.</li>-->
+				<li>
+					<h4> Testing Changeable VO events: </h4>
+				<ol>
+					<li> Click on different VO and drag the object using the red mark in the center. Observe the Event Output Action name property and check that
+					it is set to "handleMoved" once you drag and <b>release</b> the VO.</li>
+					<li> Right click on the red mark on the center of different VO and observe the Event Output Action name property and check that
+					it is set to "handleContextMenu"</li>
+					<li> Click on the red mark on the center of each VO and check the Event Output Action name property displays "handleClick"</li>
+				</ol><br>
+				</li>
+				<li> Drag and Drop: Spot0(s0), Spot1(s1), Route0(r0), Route1(r1) can be dragged and dropped on each other according to the rule specified in their labels.</li>
+				<li> Draggable items can also be dropped on the external area.</li>
+				<li> Changeable items can't be dragged</li>
+				<li> Click button "Minimize to thumbnail" and check that all Events disabled.</li>
+				<li> Click button "Maximize back" and check that all Events anre enabled</li>
+			</ol>
+			<br/>
+			</div>
+		<div id='description2'><br>
+		<div id="content"></div>
+		           <br>
+    <button id="ToThumbnail" onClick="onToThumbnail()"> Minimize to Thumbnail  </button>
+    <button id="ToControl" onClick="onToControl()"> Maximize back  </button>      <br>
+    <br>
+		<text>Event Output: </text><br>
+		<br/>
+		<textarea style="width:1024px;box-sizing:border-box" id="evtoutput" rows="25" ></textarea>
+		<br/><br>
+		<text>Event List: </text>
+		<br/><br>
+		<textarea style="width:1024px" id="evtlist" rows="10" wrap="off">Empty</textarea>
+			</div>
+	</body>
+</html>

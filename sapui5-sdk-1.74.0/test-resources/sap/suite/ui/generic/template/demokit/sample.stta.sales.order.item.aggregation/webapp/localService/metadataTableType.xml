@@ -1,0 +1,147 @@
+<edmx:Edmx
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="STTA_SALES_ORDER_ITEM_AGGR_SRV" xml:lang="en" sap:schema-version="1">
+            <EntityType Name="I_PrototypeProductType" sap:label="Product" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ProductID"/>
+                </Key>
+                <Property Name="ProductID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="ProductID_Text" sap:label="Product ID" sap:quickinfo="EPM: Product ID"/>
+                <Property Name="ProductID_Text" Type="Edm.String" MaxLength="255" sap:label="Description" sap:quickinfo="EPM: Text field for names and descriptions" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="TypeCode" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Product Type Code" sap:quickinfo="EPM: Product Type Code"/>
+                <Property Name="Category" Type="Edm.String" MaxLength="40" sap:label="Product Category" sap:quickinfo="EPM: Product Category"/>
+                <Property Name="TaxTarifCode" Type="Edm.Byte" sap:label="Tax Tariff Code" sap:quickinfo="EPM: Product Tax Tariff Code"/>
+                <Property Name="MeasureUnit" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:quickinfo="EPM: Quantity Unit" sap:semantics="unit-of-measure"/>
+                <Property Name="WeightMeasure" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="WeightUnit" sap:label="Weight" sap:quickinfo="EPM: Weight Measure"/>
+                <Property Name="WeightUnit" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:quickinfo="EPM: Weight Unit" sap:semantics="unit-of-measure"/>
+                <Property Name="Price" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Product Unit Price" sap:quickinfo="EPM: Product Unit Price"/>
+                <Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" sap:label="ISO Currency Code" sap:quickinfo="EPM: Currency Code" sap:semantics="currency-code"/>
+                <Property Name="PictureURL" Type="Edm.String" MaxLength="255" sap:display-format="UpperCase" sap:label="Product Image URI" sap:quickinfo="EPM: URI of Product Image"/>
+                <Property Name="Width" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="DimensionUnit" sap:label="Product Width" sap:quickinfo="EPM: Width"/>
+                <Property Name="Depth" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="DimensionUnit" sap:label="Product Depth" sap:quickinfo="EPM: Depth"/>
+                <Property Name="Height" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="DimensionUnit" sap:label="Product Height" sap:quickinfo="EPM: Height"/>
+                <Property Name="DimensionUnit" Type="Edm.String" MaxLength="3" sap:label="Dimension Unit" sap:quickinfo="EPM: Dimension Unit" sap:semantics="unit-of-measure"/>
+            </EntityType>
+            <EntityType Name="STTA_C_SO_ItemAggrType" sap:semantics="" sap:label="Sales Order Item Aggregation" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.String" Nullable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SalesOrderId" Type="Edm.String" MaxLength="10" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:label="Sales Order ID" sap:quickinfo="EPM: Sales Order Number" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="ItemPosition" Type="Edm.String" MaxLength="10" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:label="Item Position" sap:quickinfo="EPM: Sales Order Item Position"/>
+                <Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" sap:aggregation-role="dimension" sap:label="Currency" sap:text="CurrencyCode_Text" sap:quickinfo="CurrencyCode" sap:semantics="currency-code"/>
+   				<Property Name="CurrencyCode_Text" Type="Edm.String" MaxLength="40" sap:label="Currency Text" sap:quickinfo="CurrencyCode_Text" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="ProductId" Type="Edm.String" MaxLength="10" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:text="to_Product/ProductID_Text" sap:label="Product ID" sap:quickinfo="EPM: Product ID" sap:value-list="standard"/>
+                <Property Name="ProductCategory" Type="Edm.String" MaxLength="40" sap:aggregation-role="dimension" sap:label="Product Category" sap:quickinfo="EPM: Product Category"/>
+                <Property Name="LastChangedUserName" Type="Edm.String" MaxLength="12" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:label="User Name" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="Category" Type="Edm.String" MaxLength="40" sap:aggregation-role="dimension" sap:label="Category" sap:quickinfo="EPM: Category"/>
+                <Property Name="DeliveryDate" Type="Edm.DateTime" Precision="7" sap:aggregation-role="dimension" sap:display-format="Date" sap:label="Delivery Date" sap:quickinfo="DeliveryDate (Edm.DateTime, format: Date)"/>
+                <Property Name="DeliveryDateTime" Type="Edm.DateTime" Precision="7" sap:aggregation-role="dimension" sap:label="Delivery Date Time" sap:quickinfo="LastChangedDateTime (Edm.DateTime)" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CreationDate" Type="Edm.DateTimeOffset" sap:aggregation-role="dimension" sap:display-format="Date" sap:label="Creation Date" sap:quickinfo="CreationDate (Edm.DateTimeOffset, format: Date)" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" sap:aggregation-role="dimension" sap:label="Creation Date Time" sap:quickinfo="CreationDateTime (Edm.DateTimeOffset)" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CalendarDate" Type="Edm.String" sap:aggregation-role="dimension" sap:display-format="Date" sap:label="Calendar Date" sap:quickinfo="CalendarDate (Edm.String, format: Date)"/>
+                <Property Name="FinalDate" Type="Edm.Date" sap:aggregation-role="dimension" sap:display-format="Date" sap:label="Final Date" sap:quickinfo="FinalDate (Edm.Date, format: Date)"/>
+                <Property Name="FinalTime" Type="Edm.Time" sap:display-format="Time" sap:aggregation-role="dimension" sap:label="Final Time" sap:quickinfo="FinalTime (Edm.Time)" sap:creatable="false" sap:updatable="false" sap:filterable="true" Nullable="false"/>
+                <Property Name="GrossAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:aggregation-role="measure" sap:unit="CurrencyCode" sap:label="Total Gross Amount" sap:quickinfo="GrossAmount (Edm.Decimal)" sap:filterable="false"/>
+                <Property Name="NetAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:aggregation-role="measure" sap:unit="CurrencyCode" sap:label="Total Net Amount" sap:quickinfo="NetAmount (Edm.Decimal)" sap:filterable="false"/>
+                <Property Name="TaxAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:aggregation-role="measure" sap:unit="CurrencyCode" sap:label="Total Tax Amount" sap:quickinfo="TaxAmount (Edm.Decimal)" sap:filterable="false"/>
+                <Property Name="BasicPrice" Type="Edm.Decimal" Precision="16" Scale="3" sap:aggregation-role="dimension" sap:unit="CurrencyCode" sap:label="Basic Price" sap:quickinfo="BasicPrice (Edm.Decimal)" sap:filterable="false"/>
+                <Property Name="Height" Type="Edm.Decimal" Precision="13" Scale="3" sap:aggregation-role="dimension" sap:unit="DimensionUnit" sap:label="Height" sap:quickinfo="Height (Edm.Decimal)"/>
+                <Property Name="Width" Type="Edm.Decimal" Precision="13" Scale="3" sap:aggregation-role="dimension" sap:unit="DimensionUnit" sap:label="Width" sap:quickinfo="Width (Edm.Decimal)"/>
+                <Property Name="DimensionUnit" Type="Edm.String" MaxLength="3" sap:text="DimensionUnit_Text" sap:aggregation-role="dimension" sap:label="Dimension Unit" sap:quickinfo="DimensionUnit" sap:semantics="unit-of-measure"/>
+   				<Property Name="DimensionUnit_Text" Type="Edm.String" MaxLength="40" sap:aggregation-role="dimension" sap:label="DimensionUnit Text" sap:creatable="false" sap:updatable="false" sap:quickinfo="DimensionUnit_Text"/>
+                <Property Name="Availability" Type="Edm.Byte" sap:aggregation-role="dimension" Nullable="false" sap:label="Availability" sap:quickinfo="Availability (Edm.Byte)"/>
+                <Property Name="IsActive" Type="Edm.Boolean" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:label="Active" sap:quickinfo="IsActive (Edm.Boolean)"/>
+                <NavigationProperty Name="to_Product" Relationship="STTA_SALES_ORDER_ITEM_AGGR_SRV.assoc_A64AF0DB159276742923970106DDA802" FromRole="FromRole_assoc_A64AF0DB159276742923970106DDA802" ToRole="ToRole_assoc_A64AF0DB159276742923970106DDA802"/>
+                <NavigationProperty Name="to_ScheduleLine" Relationship="STTA_SALES_ORDER_ITEM_AGGR_SRV.assoc_14BD96462BB4D4E685333E3504F01ABD" FromRole="FromRole_assoc_14BD96462BB4D4E685333E3504F01ABD" ToRole="ToRole_assoc_14BD96462BB4D4E685333E3504F01ABD"/>
+            </EntityType>
+            <EntityType Name="STTA_C_SO_SalesOrderSL_NDType" sap:label="Sales Order ScheduleLine non draft" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="SalesOrderID"/>
+					<PropertyRef Name="SalesOrderItemID"/>
+					<PropertyRef Name="DeliveryDate"/>
+				</Key>
+				<Property Name="SalesOrderID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Order ID" sap:quickinfo="EPM: Sales Order Number" sap:creatable="false" sap:updatable="false"/>
+				<Property Name="SalesOrderItemID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Item Position" sap:quickinfo="EPM: Sales Order Item Position" sap:creatable="false" sap:updatable="false"/>
+				<Property Name="DeliveryDate" Type="Edm.DateTimeOffset" Nullable="false" Precision="7" sap:label="Delivery Date" sap:quickinfo="EPM: Schedule Line Delivery Date"/>
+				<Property Name="Quantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="QuantityUnitCode" sap:label="Quantity" sap:quickinfo="EPM: Quantity"/>
+				<Property Name="QuantityUnitCode" Type="Edm.String" MaxLength="3" sap:label="Internal UoM" sap:quickinfo="Unit of Measurement" sap:semantics="unit-of-measure"/>
+				<Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Delivery Date" sap:quickinfo="EPM: Schedule Line Delivery Date" sap:creatable="false" sap:updatable="false"/>
+				<Property Name="CreationUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name" sap:creatable="false" sap:updatable="false"/>
+				<Property Name="LastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Delivery Date" sap:quickinfo="EPM: Schedule Line Delivery Date" sap:creatable="false" sap:updatable="false"/>
+				<Property Name="LastChangedUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name" sap:creatable="false" sap:updatable="false"/>
+			</EntityType>
+            <Association Name="assoc_14BD96462BB4D4E685333E3504F01ABD" sap:content-version="1">
+				<End Type="STTA_SALES_ORDER_ITEM_AGGR_SRV.STTA_C_SO_ItemAggrType" Multiplicity="1" Role="FromRole_assoc_14BD96462BB4D4E685333E3504F01ABD"/>
+				<End Type="STTA_SALES_ORDER_ITEM_AGGR_SRV.STTA_C_SO_SalesOrderSL_NDType" Multiplicity="*" Role="ToRole_assoc_14BD96462BB4D4E685333E3504F01ABD"/>
+			</Association>
+            <Association Name="assoc_A64AF0DB159276742923970106DDA802" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_ITEM_AGGR_SRV.STTA_C_SO_ItemAggrType" Multiplicity="1" Role="FromRole_assoc_A64AF0DB159276742923970106DDA802"/>
+                <End Type="STTA_SALES_ORDER_ITEM_AGGR_SRV.I_PrototypeProductType" Multiplicity="0..1" Role="ToRole_assoc_A64AF0DB159276742923970106DDA802"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_A64AF0DB159276742923970106DDA802">
+                        <PropertyRef Name="ProductID"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_A64AF0DB159276742923970106DDA802">
+                        <PropertyRef Name="ProductId"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <EntityContainer Name="STTA_SALES_ORDER_ITEM_AGGR_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="I_PrototypeProduct" EntityType="STTA_SALES_ORDER_ITEM_AGGR_SRV.I_PrototypeProductType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="STTA_C_SO_ItemAggr" EntityType="STTA_SALES_ORDER_ITEM_AGGR_SRV.STTA_C_SO_ItemAggrType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="STTA_C_SO_SalesOrderSL_ND" EntityType="STTA_SALES_ORDER_ITEM_AGGR_SRV.STTA_C_SO_SalesOrderSL_NDType" sap:searchable="true" sap:content-version="1"/>
+				<AssociationSet Name="assoc_14BD96462BB4D4E685333E3504F01ABD" Association="STTA_SALES_ORDER_ITEM_AGGR_SRV.assoc_14BD96462BB4D4E685333E3504F01ABD" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+					<End EntitySet="STTA_C_SO_ItemAggr" Role="FromRole_assoc_14BD96462BB4D4E685333E3504F01ABD"/>
+					<End EntitySet="STTA_C_SO_SalesOrderSL_ND" Role="ToRole_assoc_14BD96462BB4D4E685333E3504F01ABD"/>
+				</AssociationSet>
+                <AssociationSet Name="assoc_A64AF0DB159276742923970106DDA802" Association="STTA_SALES_ORDER_ITEM_AGGR_SRV.assoc_A64AF0DB159276742923970106DDA802" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="STTA_C_SO_ItemAggr" Role="FromRole_assoc_A64AF0DB159276742923970106DDA802"/>
+                    <End EntitySet="I_PrototypeProduct" Role="ToRole_assoc_A64AF0DB159276742923970106DDA802"/>
+                </AssociationSet>
+            </EntityContainer>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_ITEM_AGGR_SRV.STTA_C_SO_ItemAggrType/ItemPosition">
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_ITEM_AGGR_SRV.STTA_C_SO_ItemAggrType/ProductId">
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Product"/>
+                        <PropertyValue Property="CollectionPath" String="I_PrototypeProduct"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="ProductId"/>
+                                    <PropertyValue Property="ValueListProperty" String="ProductID"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ProductID_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+
+                <Annotations Target="STTA_SALES_ORDER_ITEM_AGGR_SRV.STTA_C_SO_ItemAggrType/CalendarDate">
+	                <Annotation Term="com.sap.vocabularies.Common.v1.IsCalendarDate" Bool="true"/>
+                </Annotations>
+
+            </Annotations>
+            <atom:link
+                xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="./sap/STTA_SALES_ORDER_ITEM_AGGR_SRV/$metadata"/>
+                <atom:link
+                    xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="./sap/STTA_SALES_ORDER_ITEM_AGGR_SRV/$metadata"/>
+                </Schema>
+            </edmx:DataServices>
+        </edmx:Edmx>

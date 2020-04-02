@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sinaDefine(['../../../sina/sinaFactory'],function(s){"use strict";QUnit.test('Configuration',function(a){var d=a.async();s.createAsync('../Provider').then(function(b){b.getConfigurationAsync().then(function(c){c.setPersonalizedSearch(false);c.saveAsync().then(function(){c.resetPersonalizedSearchDataAsync().then(function(){a.equal(1,1);d();});});});});});});

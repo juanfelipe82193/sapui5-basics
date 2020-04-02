@@ -1,0 +1,348 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Consuming OData V2 Services with the OData V4 Model</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The SAPUI5 framework can consume OData V2 Services in a non-intrusive way as if working directly with OData V4."><meta name="description" content="The SAPUI5 framework can consume OData V2 Services in a non-intrusive way as if working directly with OData V4."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"7d914317c0b64c23824bf932cc8a4ae1.html","previousTopicHref":"2613ebc835764abd9aefd2e6fa8b7392.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio365bdbd737034334a38a6fef07345196"><h1 class="title topictitle1" hidden>Consuming OData V2 Services with the OData V4 Model</h1><div class="body conbody"><p class="shortdesc" hidden>The <span class="ph"><span class="ph pname">SAPUI5</span></span> framework can
+consume OData V2 Services in a non-intrusive way as if working directly with OData
+V4.</p>
+<div class="section" id="loio365bdbd737034334a38a6fef07345196__section_jb5_msp_fbb"><section class="section" type="Overview"><h2 class="section_title" style="font-size: 1.15em;">Overview</h2>
+
+<p class="p">With <span class="ph"><span class="ph pname">SAPUI5</span></span> the OData V4 Model
+supports the consumption of OData V2 services. The framework takes care to convert
+the metadata and the data in a way that the application developer writes its
+application as he would do with an OData V4 model with a corresponding OData V4
+service. As OData V4 supports various features that are not covered by OData V2,
+some features of the OData V4 model cannot be used. A list of the limitations is
+available below.</p>
+<p class="p">Here is an example of a manifest.json file, which shows how to configure your application to
+consume a V2 service with the V4 model.</p>
+<pre class="pre codeblock prettyprint">{
+    &quot;_version&quot; : &quot;1.1.0&quot;,
+    &quot;sap.app&quot; : {
+        ...
+        &quot;dataSources&quot; : {
+            &quot;default&quot; : {
+                &quot;uri&quot; : &quot;&lt;ODataV2 Service URL&gt;&quot;,
+                &quot;type&quot; : &quot;OData&quot;,
+                &quot;settings&quot; : {
+                    &quot;odataVersion&quot; : &quot;2.0&quot;
+                }
+            }
+        },
+        ...
+    },
+    ...
+    &quot;sap.ui5&quot; : {
+        ...
+        &quot;dependencies&quot; : {
+            &quot;minUI5Version&quot; : &quot;1.49&quot;,
+            ...
+        },
+        &quot;models&quot; : {
+            &quot;&quot; : {
+                &quot;dataSource&quot; : &quot;default&quot;,
+                &quot;settings&quot; : {
+                    &quot;autoExpandSelect&quot; : false,
+                    &quot;operationMode&quot; : &quot;Server&quot;,
+                    &quot;synchronizationMode&quot; : &quot;None&quot;
+                },
+                &quot;type&quot; : &quot;sap.ui.model.odata.v4.ODataModel&quot;
+            }
+        },
+        ...
+    }
+}</pre>
+<p class="p">If you have an OData V2 service and you want to consume this service with an OData V4
+model, you have to set <samp class="ph codeph">type</samp> of the corresponding model to
+<kbd class="ph userinput">sap.ui.model.odata.v4.ODataModel</kbd> and
+<samp class="ph codeph">odataVersion</samp> of the corresponding data source to
+<kbd class="ph userinput">2.0</kbd>. Both settings are needed. Additionally, the
+<samp class="ph codeph">minUI5Version</samp> has to be at least <span class="ph emphasis emphasis">1.49</span>.</p>
+</section></div>
+<div class="section" id="loio365bdbd737034334a38a6fef07345196__section_djd_wtp_fbb"><section class="section" type="Type Mapping and Data Conversion"><h2 class="section_title" style="font-size: 1.15em;">Type Mapping and Data Conversion</h2>
+
+<p class="p">OData V4 has several types, which do not exist in OData V2 (e.g. <samp class="ph codeph">Edm.Date</samp>,
+<samp class="ph codeph">Edm.TimeOfDay</samp>) and the other way around
+<samp class="ph codeph">dm.DateTime</samp>, <samp class="ph codeph">Edm.Time</samp>), so we need a mapping
+between corresponding data types.</p>
+<p class="p">The following OData V2 types are supported and mapped:</p>
+<ul class="ul" id="loio365bdbd737034334a38a6fef07345196__ul_zpn_szk_nbb">
+<li class="li">
+<p class="p"><samp class="ph codeph">Edm.Binary</samp>, <samp class="ph codeph">Edm.Boolean</samp>,
+<samp class="ph codeph">Edm.Byte</samp>, <samp class="ph codeph">Edm.Decimal</samp>,
+<samp class="ph codeph">Edm.Double</samp>, <samp class="ph codeph">Edm.Guid</samp>,
+<samp class="ph codeph">Edm.Int16</samp>, <samp class="ph codeph">Edm.Int32</samp>,
+<samp class="ph codeph">Edm.Int64</samp>, <samp class="ph codeph">Edm.SByte</samp>,
+<samp class="ph codeph">Edm.String</samp> do not need a type mapping as they exist in
+both OData versions.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">Edm.DateTime</samp> is mapped to OData V4 type
+<samp class="ph codeph">Edm.Date</samp> if the property has the OData V2 annotation
+<samp class="ph codeph">sap:display-format=&quot;date&quot;</samp> or otherwise to
+<samp class="ph codeph">Edm.DateTimeOffset</samp> with UTC timezone.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">Edm.Time</samp> is mapped to OData V4 type
+<samp class="ph codeph">Edm.TimeOfDay</samp>.</p>
+</li>
+</ul>
+<p class="p">Some data types have different representation in OData V2 and OData V4. The
+application developer should only use the OData V4 values. The framework takes care
+that the values are converted before sending the request to the backend (e.g. as a
+value of a key property) and after receiving the response from the backend.</p>
+<p class="p">Here are some examples:</p>
+<ul class="ul" id="loio365bdbd737034334a38a6fef07345196__ul_aw2_xbl_nbb">
+<li class="li">
+<p class="p">OData V2 uses a different alphabet for the base-64 encoding for
+<samp class="ph codeph">Edm.Binary</samp>. OData V2 uses &apos;<kbd class="ph userinput">+</kbd>&apos;
+and &apos;<kbd class="ph userinput">/</kbd>&apos; but OData V4 uses instead
+&apos;<kbd class="ph userinput">-</kbd>&apos; and &apos;<kbd class="ph userinput">_</kbd>&apos;.</p>
+</li>
+<li class="li">
+<p class="p">For <samp class="ph codeph">Edm.DateTimeOffset</samp> OData V2 uses a JavaScript Date (i.e.
+<kbd class="ph userinput">Date(1420529121547)</kbd>) and OData V4 a String (i.e.
+<kbd class="ph userinput">&quot;2015-01-06T12:25:21.547&quot;</kbd>) representation.</p>
+</li>
+</ul>
+</section></div>
+<div class="section" id="loio365bdbd737034334a38a6fef07345196__section_tfd_1xp_fbb"><section class="section" type="Mapping of OData V4 Features"><h2 class="section_title" style="font-size: 1.15em;">Mapping of OData V4 Features</h2><div class="sectiondiv subsection">
+<p class="p subsectiontitle">System Query Options</p>
+<p class="p"><span class="ph emphasis emphasis">$expand / $select system query options</span></p>
+<div class="p">OData V4 supports &quot;$expand with options&quot;, which means an $expand option can
+contain query options for the expanded navigation property such as $select,
+$orderby or $expand itself.. OData V2 does not support &quot;$expand with options&quot;
+but only $expand and $select with path values. An OData V4 $expand option, which
+contains only $select and $expand options, is transformed to the corresponding
+OData V2 $expand and $select options by &quot;flattening&quot; the OData V4 structure.<aside class="note sap-example example" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Example</strong></div>
+<p class="p">OData V4 system query options to expand line items:</p><pre class="pre codeblock prettyprint">$expand=SO_2_SOITEM($select=DeliveryDate,ItemPosition,SalesOrderID)
+$select=SalesOrderID,GrossAmount</pre><p class="p">These options are converted into following OData V2 system query
+options:</p><pre class="pre codeblock prettyprint">$expand=SO_2_SOITEM
+$select=SO_2_SOITEM/DeliveryDate,SO_2_SOITEM/ItemPosition,SO_2_SOITEM/SalesOrderID,SalesOrderID,GrossAmount
+</pre></aside>
+</div>
+<div class="p">
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">Because of the flat structure of $expand and $select, the URLs get longer
+than the URLs in OData V4. In some browsers that might be an issue if
+you use $direct as group ID. (for more information see: <a class="xref" href="../../#/topic/74142a38e3d4467c8d6a70b28764048f.html" title="OData V4 allows you to group multiple operations into a single HTTP request payload, as described in the official OData V4 specification Part 1, Batch Requests (see the link under Related Information for more details)." target="_top">Batch Control</a>).</p></aside>
+</div>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">$orderby</p>
+<p class="p">OData V4 supports system query option $orderby also in $expand structures, but
+OData V2 supports only $orderby on top level. When consuming an OData V2 service
+with an OData V4 model, system query $orderby on top level is supported but an
+error is raised if $orderby is used in $expand.</p>
+<p class="p"><samp class="ph codeph">$orderby</samp> can also work with expressions, but those need to be
+identical in V2 and V4.</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">$count</p>
+<p class="p">In OData V2 $count can only be used on top level. An error is raised if $count is
+used in $expand. On top level, $count is converted to V2 $inlinecount and
+propagated to the request.</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">$filter</p>
+<div class="p">In OData V2 $filter can only be used on top level. An error is raised if $filter
+is used in $expand. On top level, $filter is converted to V2 syntax and
+propagated to the request. $filter supports comparisons, <samp class="ph codeph">and</samp>,
+<samp class="ph codeph">or</samp>, <samp class="ph codeph">not</samp> and the following built-in
+functions:<ul class="ul" id="loio365bdbd737034334a38a6fef07345196__ul_n3r_1nl_gdb">
+<li class="li">
+<p class="p">String functions: <samp class="ph codeph">concat</samp>, <samp class="ph codeph">contains</samp>
+(converted to <samp class="ph codeph">substringof</samp>),
+<samp class="ph codeph">endswith</samp>, <samp class="ph codeph">indexof</samp>,
+<samp class="ph codeph">length</samp>, <samp class="ph codeph">startswith</samp>,
+<samp class="ph codeph">tolower</samp>, <samp class="ph codeph">toupper</samp>,
+<samp class="ph codeph">trim</samp></p>
+</li>
+<li class="li">
+<p class="p">Date and time functions: <samp class="ph codeph">day</samp>, <samp class="ph codeph">hour</samp>,
+<samp class="ph codeph">minute</samp>, <samp class="ph codeph">month</samp>,
+<samp class="ph codeph">second</samp>, <samp class="ph codeph">year</samp></p>
+</li>
+<li class="li">
+<p class="p">Arithmetic functions: <samp class="ph codeph">ceiling</samp>,
+<samp class="ph codeph">floor</samp>, <samp class="ph codeph">round</samp></p>
+</li>
+</ul></div>
+</div><p class="p">The remaining functions are unsupported because they have no equivalent
+in V2.</p><aside class="note caution" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Caution</strong></div>
+<div class="p">Avoid passing literals to date, time and arithmetic functions, because the
+parameter to these functions can have different types and it cannot be decided
+which one is correct.<aside class="note sap-example example" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Example</strong></div>
+<p>In floor(42) the 42 can be either an
+<samp class="ph codeph">Edm.Double</samp> or an <samp class="ph codeph">Edm.Decimal</samp>. Avoid
+comparing two literals like, for example <samp class="ph codeph">42 eq 42</samp>, because
+the converter determines the type of a literal from the other operand in
+comparisons.</p></aside></div></aside><div id="subsection_kmw_4fl_nbb" class="sectiondiv subsection">
+<p class="p subsectiontitle">OData V2 Annotations</p>
+<p class="p">Following V2 (attributes with namespace <a class="extlink" href="http://help.sap.com/disclaimer?site=http://www.sap.com/Protocols/SAPData" target="_blank" alt="http://www.sap.com/Protocols/SAPData" title="http://www.sap.com/Protocols/SAPData">http://www.sap.com/Protocols/SAPData<img src="themes/sap-default/img/sap_link.png" class="link-sap" alt="Information published on SAP site" title="Information published on SAP site" border="0"></a>) annotations are converted to
+corresponding V4 annotations (see OData V2 Model -&gt; Meta Model for OData V2
+-&gt;<a class="xref" href="../../#/topic/6c47b2b39db9404582994070ec3d57a2.html#loio341823349ed04df1813197f2a0d71db2__Enhancement" target="_top">Enhancement of the OData Meta Model</a>).</p>
+<p class="p"><span class="ph emphasis emphasis">OData V2 Annotations defined at
+<samp class="ph codeph">EntitySet</samp>:</span></p>
+<ul class="ul" id="loio365bdbd737034334a38a6fef07345196__ul_vt4_n2l_nbb">
+<li class="li">
+<p class="p">creatable, deletable, deletable-path, label, pageable, requires-filter,
+searchable, topable, updatable, updatable-path</p>
+</li>
+</ul>
+<p class="p"><span class="ph emphasis emphasis">OData V2 Annotations defined at
+<samp class="ph codeph">Property</samp>:</span></p>
+<ul class="ul" id="loio365bdbd737034334a38a6fef07345196__ul_lf3_p2l_nbb">
+<li class="li">
+<p class="p">aggregation-role, creatable, creatable-path, display-format (with values
+<span class="keyword parmname">NonNegative</span> and
+<span class="keyword parmname">UpperCase</span>), field-control, filterable,
+filter-restriction, heading, label, precision, quickinfo,
+required-in-filter, sortable text, unit, updatable, visible</p>
+</li></ul>
+<p class="p"><span class="ph emphasis emphasis">OData V2 Annotations defined at
+<samp class="ph codeph">Schema</samp>:</span></p>
+<ul class="ul" id="loio365bdbd737034334a38a6fef07345196__ul_e1x_l4l_gdb">
+<li class="li">
+<p class="p">sap:schema-version=&quot;foo&quot;</p>
+</li>
+</ul>
+<div class="p">sap:semantics:<ul class="ul" id="loio365bdbd737034334a38a6fef07345196__ul_cwh_v2l_nbb">
+<li class="li">
+<p class="p">bday, body, city, class, completed, country, currency-code
+dtend, dtstart, due, duration, familyname, fbtype,
+fiscalyear, fiscalyearperiode, from, givenname, honorific,
+location, middlename, name, nickname, note, org, org-role,
+org-unit, percent-complete, photo, pobox, priority,
+received, region, sender, status, street, subject, suffix,
+tel (with types <span class="keyword parmname">cell</span>,
+<span class="keyword parmname">work</span>, <span class="keyword parmname">fax</span>),
+title, transp, url, unit-of-measure, url, wholeday, year,
+yearmonth, yearmonthday, yearquarter, yearweek, zip</p>
+</li>
+</ul></div>
+<p class="p"><span class="ph emphasis emphasis">OData V2 Annotations defined at
+<samp class="ph codeph">NavigationProperty</samp>:</span></p>
+<ul class="ul">
+<li class="li">
+<p class="p">filterable, creatable, creatable-path</p>
+</li></ul>
+<p class="p"><span class="ph emphasis emphasis">OData V2 Annotations defined at
+<samp class="ph codeph">FunctionImport</samp>:</span></p>
+<ul class="ul">
+<li class="li">
+<p class="p">action-for, label</p>
+</li></ul>
+<p class="p">Warnings are logged for all SAP attributes that have not been processed by
+the V2 converter.</p>
+</div></section></div>
+<div class="section" id="loio365bdbd737034334a38a6fef07345196__section_xm5_3yp_fbb"><section class="section" type="Limitations"><h2 class="section_title" style="font-size: 1.15em;">Limitations</h2>
+
+<p class="p">Not all OData V4 features are supported yet when consuming an OData V2 service. We have
+following limitations: </p>
+<ul class="ul" id="loio365bdbd737034334a38a6fef07345196__ul_dzh_myp_fbb">
+<li class="li">
+<p class="p">The OData V4 model can consume an OData V2 service for read scenarios
+only.</p>
+</li>
+<li class="li">
+<p class="p">The OData V2 services has to provide inline type metadata in responses, i.e. property
+<samp class="ph codeph">__metadata.__type</samp>. This information is needed to
+convert the data between the OData V2 and the OData V4 types.</p>
+</li>
+<li class="li">
+<p class="p">Supported data types are listed above (see <a class="xref" href="../../#/topic/365bdbd737034334a38a6fef07345196.html#loio365bdbd737034334a38a6fef07345196__section_djd_wtp_fbb" target="_top">Type
+Mapping and Data Conversion</a>).</p>
+</li>
+<li class="li">
+<p class="p">System query options $orderby, $filter and $count on top level and $expand and $select are
+supported. All other system query options raise an exception.</p>
+</li>
+<li class="li">
+<p class="p">Not all OData V2 annotations are converted yet. Supported OData V2
+annotations are listed above (see <a class="xref" href="../../#/topic/365bdbd737034334a38a6fef07345196.html#loio365bdbd737034334a38a6fef07345196__subsection_kmw_4fl_nbb" target="_top">OData V2 Annotations</a>).</p>
+</li>
+</ul>
+<aside class="note caution" aria-labelledby="note_4_title"><div class="title" id="note_4_title"><strong>Caution</strong></div>
+<p class="p">OData V4 validates that namespaces are always loaded from the same URI. Ensure to reference
+the metadata document (e.g.
+<span class="keyword parmname">.../IWBEP/GWSAMPLE_BASIC/$metadata</span>) in additional
+annotation files and not the service document
+(<span class="keyword parmname">.../IWBEP/GWSAMPLE_BASIC</span>).</p></aside>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

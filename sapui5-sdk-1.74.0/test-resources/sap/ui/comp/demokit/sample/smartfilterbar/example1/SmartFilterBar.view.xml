@@ -1,0 +1,43 @@
+<mvc:View
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+	xmlns:smartTable="sap.ui.comp.smarttable"
+	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	controllerName="sap.ui.comp.sample.smartfilterbar.example1.SmartFilterBar" height="100%">
+
+	<VBox fitContainer="true">
+		<Button id="toggleUpdateMode" text="Change to 'LiveMode'" press="toggleUpdateMode"></Button>
+
+		<smartFilterBar:SmartFilterBar id="smartFilterBar" persistencyKey="UniqueAndStablePersistencyKey"
+			considerSelectionVariants="true" entitySet="LineItemsSet" beforeVariantSave="onBeforeVariantSave"
+			beforeVariantFetch="onBeforeVariantFetch" afterVariantLoad="onAfterVariantLoad">
+			<smartFilterBar:controlConfiguration>
+				<smartFilterBar:ControlConfiguration key="MyOwnFilterField" index="1" label="Custom Filterfield"
+					groupId="_BASIC" width="300px" mandatory="mandatory" visibleInAdvancedArea="true">
+					<smartFilterBar:customControl>
+						<Select id="foo" customData:hasValue="true">
+							<core:Item key="1" text="ONE"/>
+							<core:Item key="2" text="TWO"/>
+							<core:Item key="3" text="THREE"/>
+						</Select>
+					</smartFilterBar:customControl>
+				</smartFilterBar:ControlConfiguration>
+				<smartFilterBar:ControlConfiguration key="Validated" filterType="single"/>
+			</smartFilterBar:controlConfiguration>
+			<!-- layout data used to make the table growing but the filter bar fixed -->
+			<smartFilterBar:layoutData>
+				<FlexItemData shrinkFactor="0"/>
+			</smartFilterBar:layoutData>
+		</smartFilterBar:SmartFilterBar>
+
+		<smartTable:SmartTable id="smartTable" entitySet="LineItemsSet" smartFilterId="smartFilterBar" tableType="Table"
+			useExportToExcel="true" useVariantManagement="false" useTablePersonalisation="true" header="Line Items" showRowCount="true">
+			<smartTable:layoutData>
+				<FlexItemData growFactor="1" baseSize="0%"/>
+			</smartTable:layoutData>
+		</smartTable:SmartTable>
+
+	</VBox>
+</mvc:View>

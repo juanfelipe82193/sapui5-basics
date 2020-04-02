@@ -1,0 +1,246 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js" id="sap-ui-bootstrap" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+
+	</script>
+
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		.col {
+			color: red;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+
+	<script>
+		// creation of the visual business control...........................//
+
+		sap.ui.localResources("vbitestapp");
+		oVBI1 = new sap.ui.vbm.VBI('vbiThumbnail', {
+			width: "100%",
+			height: 400,
+			submit: onSubmit, // set the event handler for submit
+			zoom: onZoom
+		});
+
+		oVBI1.placeAt("content");
+		oVBI1.minimize(-1, 150);
+		// this resizes the control to a thumbnail of height 150. The width is not specified (it is <= 0), so it is calculated according
+		// to width/height ratio of the actual control. Please note that at the time the minimize is done here, this ratio is not yet available,
+		// it requires rendering to evaluate which width "100%" is in pixels
+
+		// load the json into the vbi control................................//
+		var dat = $.getJSON("media/vbthumbnail/main.json", function(dat) {
+			oVBI1.load(dat);
+		});
+
+
+		function onZoom(e) {
+			// gives you info that a zoom was done..............................//
+		};
+
+
+		function onToControl() {
+			oVBI1.maximize();
+		};
+
+		function onAddEvents() {
+			var dat = $.getJSON("media/vbthumbnail/AddEvents.json", function(dat) {
+				oVBI1.load(dat);
+			});
+		};
+
+		function onRemoveEvents() {
+			var dat = $.getJSON("media/vbthumbnail/RemoveEvents.json", function(dat) {
+				oVBI1.load(dat);
+			});
+		};
+
+		function onToControl2() {
+			oVBI1.maximize(600, 400);
+			document.getElementById('para').innerHTML = jQuery("#vbiThumbnail").width();
+			document.getElementById('para2').innerHTML = jQuery("#vbiThumbnail").height();
+		};
+
+		function onToControl3() {
+			oVBI1.maximize(860, 600);
+			document.getElementById('para3').innerHTML = jQuery("#vbiThumbnail").width();
+			document.getElementById('para4').innerHTML = jQuery("#vbiThumbnail").height();
+		};
+
+		function Width100() {
+			oVBI1.setWidth("100%");
+			document.getElementById('para6').innerHTML = jQuery("#vbiThumbnail")[0].style.width;
+		};
+
+		function Width100ChangeMode() {
+			oVBI1.maximize();
+			document.getElementById('para5').innerHTML = jQuery("#vbiThumbnail")[0].style.width;
+		};
+
+		function onToThumbnail() {
+			oVBI1.minimize(240, 150, 960, 600, "15px Arial", "rgba(255,0,0,0)", 4, String(Date.now()));
+		};
+
+		function onToThumbnail2() {
+			var scene = oVBI1.mVBIContext.GetMainScene();
+			if (scene && scene.m_nDivHeight) {
+				oVBI1.minimize(50 * (scene.m_nDivWidth / scene.m_nDivHeight), 50);
+			}
+		};
+
+		function onToThumbnail3() {
+			var scene = oVBI1.mVBIContext.GetMainScene();
+			oVBI1.minimize(scene.m_nDivWidth, scene.m_nDivHeight, 0, 0, $("#font").val(), $("#col").val(), parseInt($("#position").val(), 10), $("#text").val());
+		};
+
+		function onBtnZoomIn() {
+			oVBI1.zoomToGeoPosition(-3.679, 40.4379, 6);
+		};
+
+		function onBtnZoomOut() {
+			oVBI1.zoomToGeoPosition(0, 28, 0);
+		};
+
+		function onDetailWindow1() {
+			var dat = $.getJSON("media/vbthumbnail/opendetail1.json", function(dat) {
+				oVBI1.load(dat);
+			});
+		};
+
+		function onMakePic() {
+			pic.src = oVBI1.getPicOfOverlay(parseInt($("#picMode").val(), 10));
+		};
+
+		function onSubmit(e) {
+			var datEvent = JSON.parse(e.mParameters.data);
+
+			if (datEvent.Action.name == "AWAKE") {
+				if (confirm("Please confirm to activate the control")) {
+					onToControl();
+				}
+			}
+
+			if (datEvent.Action.name == "ZOOMEDAWAKE") {
+				var pos, zoom;
+				for (var ii = 0; ii < datEvent.Action.AddActionProperties.AddActionProperty.length; ++ii) {
+					var para = datEvent.Action.AddActionProperties.AddActionProperty[ii];
+					if (para.name == "pos") pos = para["#"];
+					if (para.name == "zoom") zoom = para["#"];
+				}
+				var p = pos.split(";");
+				onToControl();
+				oVBI1.zoomToGeoPosition(parseFloat(p[0]), parseFloat(p[1]), Math.ceil(parseFloat(zoom)));
+			}
+		};
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: Minimizing the Control to a Thumbnail</h1>
+
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test zoom and detail window in thumbnail mode aswel as create screenshots of thumbnail.</p>
+		<br>
+		<h3> To test: </h3>
+<ol>
+	<li> Click "Allow Events on Thumbnail" and interact with the map. There should be an alert box asking for you to 'Please confirm to activate the control'. Click OK.
+	The thumbnail should increase in size</li>
+	
+				<li>  click button "Zoom to world". This will zoom to geo position : (0, 28, 0); 
+	<ul>
+	<li> longitude = 0</li>
+		<li> latitude = 28 </li>
+		<li> lod = level of detail = 0 </li>
+		
+	</ul>
+					 You should see 3 spots. a large label displaying "This is a Route in Spain" and behind the label should
+				be a route in spain. <br><br>
+				<img src="img/thumbnail2.jpg" alt="text for Thumbnail" style="width:400px;height:280px;"> <br></li><br>
+				<li>Double click "Zoom To Spain". The GeoMap should display a route around Spain.
+				Check that you can see the route label "This is a Route in spain" <br><br>
+				<img src="img/thumbnail3.jpg" alt="text for Thumbnail" style="width:400px;height:280px;"> <br></li><br>
+			<li> Click on button 'Detail Window' and check that you can see a detail window on the map. <i>You will need to zoom in order to find the detail window</i></li>
+	<li>in input box "make Screenshot of div with mode" choose a "Mode" value and click "Go!". <br>
+				<i> What is Screenshot? </i>
+								<p style="color:green;">Returns a Screenshot of the Overlay. <u>Please note that the map cannot be included due to browser restrictions. </u>Function returns the visible part of the Canvas excluding map, copyright info, navigation control, scaler, legend, detail windows, container elements.</p>
+				<i> What modes can i choose from? </i>
+			<ul>
+				<li> 0 - Overlay only</li>
+				<img src="img/thumb1.jpg" alt="text for Thumbnail" style="width:200px;height:100px;">
+				<li> 1 - Default - Include labels</li>
+				<img src="img/thumb2.jpg" alt="text for Thumbnail" style="width:200px;height:100px;"><br>
+				<i>2 and 3 try to include maps - 3 inlcudes the map with labels- <b>These 2 modes are experimental.</b></i>
+		</ul>
+	</ol>
+	
+	</div>
+	<div id="description2">
+<br>
+		<button id="AddEvents" onClick="onAddEvents()">Allow Events on Thumbnail</button>
+		<br>
+		<br>
+		<button id="btnZoomOut" onClick="onBtnZoomOut()"> Zoom To World </button>
+		<button id="btnZoomIn" onClick="onBtnZoomIn()"> Zoom To Spain </button>
+		<button onclick=onDetailWindow1()>Detail Window</button>
+		<br>
+		<br>
+		<label for="picMode">make Screenshot of div with mode =</label>
+		<input id="picMode" value="1" size="1"></input>
+		<button id="btnMakePic" onClick="onMakePic()">Go!</button>
+		<br>
+	<br>
+		<img id="pic" style="width:25%;height:100px;">
+	<br>
+	<br>
+		<div id="content"></div>
+	</div>
+
+</body>
+
+</html>

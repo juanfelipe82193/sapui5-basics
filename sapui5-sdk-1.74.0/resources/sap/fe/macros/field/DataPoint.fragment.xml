@@ -1,0 +1,49 @@
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+						 xmlns="sap.m"
+						 xmlns:core="sap.ui.core"
+						 xmlns:mdc="sap.ui.mdc"
+						 template:require="{
+							FIELD: 'sap/fe/macros/field/FieldHelper',
+							MODEL: 'sap/ui/model/odata/v4/AnnotationHelper'
+						 }">
+
+
+	<template:if test="{= ${dataPoint>Visualization}}">
+        <template:then>
+            <template:if test="{= ${dataPoint>Visualization/$EnumMember} === 'com.sap.vocabularies.UI.v1.VisualizationType/Rating'}">
+                <template:then>
+                    <RatingIndicator enabled="true"
+                        class="{this>class}"
+                        binding="{= ${dataPoint>@@.MODEL.getNavigationBinding} }"
+                        maxValue="{dataPoint>TargetValue@@MODEL.format}"
+						displayOnly="false"
+                        value="{dataPoint>Value@@MODEL.format}"
+                        tooltip="{= FIELD.getTooltip(${dataPoint>Title}, ${dataPoint>Value@@MODEL.format}, ${dataPoint>Visualization/$EnumMember})}"/>
+                </template:then>
+                <template:elseif test="{= ${dataPoint>Visualization/$EnumMember} === 'com.sap.vocabularies.UI.v1.VisualizationType/Progress'}">
+                    <template:with path="dataPoint>Value" var="valueProperty">
+						<mdc:contentDisplay>
+							<ProgressIndicator enabled="true"
+								binding="{= ${dataPoint>@@.MODEL.getNavigationBinding} }"
+								displayValue="{= FIELD.buildExpressionForProgressIndicatorDisplayValue(${valueProperty>@@MODEL.value}, ${dataPoint>TargetValue@@MODEL.value}, ${valueProperty>$Path@Org.OData.Measures.V1.Unit})}"
+								percentValue="{= FIELD.buildExpressionForProgressIndicatorPercentValue(${valueProperty>@@MODEL.value}, ${dataPoint>TargetValue@@MODEL.value}, ${valueProperty>$Path@Org.OData.Measures.V1.Unit})}"
+								tooltip="{= FIELD.getTooltip(${dataPoint>Title}, ${valueProperty>@@MODEL.format}, ${dataPoint>Visualization/$EnumMember})}"
+								state="{path: 'dataPoint>./', formatter: '.FIELD.buildExpressionForCriticalityColor'}"
+							/>
+						</mdc:contentDisplay>
+                    </template:with>
+                </template:elseif>
+            </template:if>
+        </template:then>
+        <template:else>
+            <template:with path="dataPoint>Value" var="property">
+				<mdc:contentDisplay>
+					<ObjectStatus
+						icon="{=(${dataPoint>CriticalityRepresentation/$EnumMember} === 'com.sap.vocabularies.UI.v1.CriticalityRepresentationType/WithoutIcon') ? '' : ${path: 'dataPoint>Criticality/$Path', formatter: '.FIELD.buildExpressionForCriticalityIcon'}}"
+						state="{path: 'dataPoint>./', formatter: '.FIELD.buildExpressionForCriticalityColor'}"
+						text="{= ${property>$Path@com.sap.vocabularies.Common.v1.Text} ? ${property>$Path@@.FIELD.buildExpressionForTextValue} : ${property>@@MODEL.format} }"/>
+				</mdc:contentDisplay>
+            </template:with>
+        </template:else>
+    </template:if>
+</core:FragmentDefinition>

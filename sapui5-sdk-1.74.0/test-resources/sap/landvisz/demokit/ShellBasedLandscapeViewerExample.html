@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<script src="resources/sap-ui-core.js" id="sap-ui-bootstrap"
+	data-sap-ui-preload="false"
+	data-sap-ui-libs="sap.ui.commons,sap.landvisz,sap.ui.ux3"
+	data-sap-ui-theme="sap_goldreflection">
+	
+</script>
+
+<script>
+	//Initialize the example data and the model
+	var alphaData = ["A", "B", "C", "R", "O", "T", "X", "S", "Z"];
+	var type = ["Java", "Abap", "Hana", "Sup", "MSNet", "Sbop"];
+	var data = {
+		systems : []
+	};
+	for ( var i = 0; i < 10; i++) {
+		var oSystem = {
+			uuid : "entity_" + i,
+			qualifier : type[Math.floor((Math.random() * 6) + 1)],
+			id : alphaData[Math.floor((Math.random() * 8) + 1)] + alphaData[Math.floor((Math.random() * 8) + 1)] + "" + i,
+			type : "TechnicalSystem",
+			description : "Description of Technical System"
+		};
+		data.systems.push(oSystem);
+	}
+
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData(data);
+	console.log(oModel.getJSON());
+
+	//Initialize the Dataset and the layouts
+
+	var oLandView = new sap.landvisz.LandscapeViewer({
+		width : "100%",
+		height : "100%",
+		selectable : true,
+		//selectedIndex : -1,
+		editable : false,
+		visible : true,
+		enableGrouping : false,
+		showToolbar : true,
+		enableSearch : true,
+		enableSorting : true,
+		enabledRefresh : true,
+		showNoData : true,
+		title : "Sample Landscape Viewer",
+		enableFilter : true,
+		filterProperty : "NotDefined",
+		//sortingOrder : "",
+		sorted : true,
+		sortingProperty : "Not Definecd"
+	});
+
+	/*
+	text
+	tooltip
+	type
+	qualifierText
+	qualifierTooltip
+	qualifierType
+	renderingSize
+	defaultState
+	description*/
+	var oCLVEntity = new sap.landvisz.LandscapeEntity();
+	oCLVEntity.bindProperty("text", "id");
+	oCLVEntity.bindProperty("tooltip", "id");
+	oCLVEntity.bindProperty("type", "type");
+	oCLVEntity.bindProperty("qualifierText", "qualifier");
+	oCLVEntity.bindProperty("qualifierTooltip", "qualifier");
+	oCLVEntity.bindProperty("qualifierType", "qualifier");
+	//	oCLVEntity.bindProperty("id", "uuid");
+	oCLVEntity.bindProperty("description", "description");
+	oLandView.setModel(oModel);
+	oLandView.attachTemplate(oCLVEntity, "systems");
+	//oLandView.bindEntities("/systems,");
+//	oLandView.placeAt("content");
+</script>
+
+<script>
+	var oShell = new sap.ui.ux3.Shell("myShell", {
+		appTitle : "Test Page",
+		appIcon : "images/SAPLogo.gif",
+		appIconTooltip : "SAP logo",
+		showLogoutButton : true,
+		showSearchTool : true,
+		showInspectorTool : true,
+		showFeederTool : true,
+		worksetItems : [new sap.ui.ux3.NavigationItem("WI_home", {
+			key : "wi_home",
+			text : "Home"
+		}), new sap.ui.ux3.NavigationItem("WI_1", {
+			key : "wi_1",
+			text : "Examples",
+			subItems : [new sap.ui.ux3.NavigationItem("WI_1_1", {
+				key : "wi_1_1",
+				text : "Text"
+			}), new sap.ui.ux3.NavigationItem("WI_1_2", {
+				key : "wi_1_2",
+				text : "Button"
+			}), new sap.ui.ux3.NavigationItem("WI_1_3", {
+				key : "wi_1_3",
+				text : "Image"
+			})]
+		}), new sap.ui.ux3.NavigationItem("WI_API", {
+			key : "wi_api",
+			text : "API Documentation"
+		})],
+		content : oLandView,
+		headerItems : [new sap.ui.commons.TextView({
+			text : "User Name",
+			tooltip : "U.Name"
+		}), new sap.ui.commons.Button({
+			text : "Personalize",
+			tooltip : "Personalize",
+			press : function(oEvent) {
+				alert("Here could open an personalize dialog");
+			}
+		}), new sap.ui.commons.MenuButton({
+			text : "Help",
+			tooltip : "Help Menu",
+			menu : new sap.ui.commons.Menu("menu1", {
+				items : [new sap.ui.commons.MenuItem("menuitem1", {
+					text : "Help"
+				}), new sap.ui.commons.MenuItem("menuitem2", {
+					text : "Report Incident"
+				}), new sap.ui.commons.MenuItem("menuitem3", {
+					text : "About"
+				})]
+			})
+		})],
+		worksetItemSelected : function(oEvent) {
+			var sId = oEvent.getParameter("id");
+			var oShell = oEvent.oSource;
+			switch (sId) {
+				case "WI_home" :
+					oShell.setContent(oLandView);
+					break;
+				case "WI_1_1" :
+					oShell.setContent(oText);
+					break;
+				case "WI_1_2" :
+					oShell.setContent(oButton);
+					break;
+				case "WI_1_3" :
+					oShell.setContent(oImage);
+					break;
+				case "WI_API" :
+					oShell.setContent(oAPI);
+					break;
+				default :
+					break;
+			}
+		},
+		paneBarItemSelected : function(oEvent) {
+			var sKey = oEvent.getParameter("key");
+			var oShell = oEvent.oSource;
+			switch (sKey) {
+				case "pi_date" :
+					var oDate = new Date();
+					oShell.setPaneContent(new sap.ui.commons.TextView({
+						text : oDate.toLocaleString()
+					}), true);
+					break;
+				case "pi_browser" :
+					oShell.setPaneContent(new sap.ui.commons.TextView({
+						text : "You browser provides the following information:\n" + navigator.userAgent
+					}), true);
+					break;
+				default :
+					break;
+			}
+		},
+		logout : function() {
+			alert("Logout Button has been clicked.\nThe application can now do whatever is required.");
+		},
+		search : function(oEvent) {
+			alert("Search triggered: " + oEvent.getParameter("text"));
+		},
+		feedSubmit : function(oEvent) {
+			alert("Feed entry submitted: " + oEvent.getParameter("text"));
+		},
+		paneClosed : function(oEvent) {
+			alert("Pane has been closed: " + oEvent.getParameter("id"));
+		}
+	}).placeAt("content");
+</script>
+
+</head>
+<body class="sapUiBody" role="application">
+	<div id="content"></div>
+</body>
+</html>

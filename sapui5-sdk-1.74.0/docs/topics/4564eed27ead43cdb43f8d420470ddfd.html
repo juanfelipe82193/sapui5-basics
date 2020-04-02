@@ -1,0 +1,223 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Modifying Startup Parameters Using an Extension</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="You can modify startup parameters using an extension method."><meta name="description" content="You can modify startup parameters using an extension method."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"52fc48b479314d0688be24f699778c47.html","previousTopicHref":"7e34ea9317a54806a725ddf9878530d7.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio4564eed27ead43cdb43f8d420470ddfd"><h1 class="title topictitle1" hidden>Modifying Startup Parameters Using an Extension</h1><div class="body conbody"><p class="shortdesc" hidden>You can modify startup parameters using an extension method.</p>
+<div class="p">You can use the extension method <samp class="ph codeph">modifyStartupExtension</samp> to: <ul class="ul" id="loio4564eed27ead43cdb43f8d420470ddfd__ul_nvx_ybt_52b">
+<li class="li">
+<p class="p">Modify selection variants: You can modify the filter context while navigating
+from the SAP Fiori launchpad or from another application to the list report,
+the overview page, or the analytical list page. </p>
+<ul class="ul" id="loio4564eed27ead43cdb43f8d420470ddfd__ul_aq1_tvf_v2b">
+<li class="li">
+<p class="p">List report</p>
+<p class="p">A source app may provide parameters which need to be modified so that
+they can be applied to the SmartFilterBar in the target app. For
+example, the source app provides the parameters
+<samp class="ph codeph">FiscalYear</samp> and <samp class="ph codeph">FiscalPeriod</samp>,
+but the target app only understands the
+<samp class="ph codeph">FiscalYearPeriod</samp> parameter. This means that the
+two source app parameters need to be combined into one parameter,
+<samp class="ph codeph">FiscalYearPeriod</samp>, in the target app before the
+paramaters can be applied to the SmartFilterBar. </p>
+<p class="p">In some cases, parameters need to be added, deleted, or renamed. </p>
+</li>
+<li class="li">
+<p class="p">Analytical list page and overview page</p>
+<p class="p">The filter context is passed to the application using the standard
+<samp class="ph codeph">SelectionVariant</samp> annotation format.</p>
+<div class="p">In addition, the filter context may contain:<ul class="ul" id="loio4564eed27ead43cdb43f8d420470ddfd__ul_xsh_bwf_v2b">
+<li class="li">
+<p class="p">Values from a default variant (such as
+DisplayCurrency)</p>
+</li>
+<li class="li">
+<p class="p">SAP Fiori launchpad user default values</p>
+</li>
+<li class="li">
+<p class="p">CDS default values that come from
+<samp class="ph codeph">Common.FilterDefaultValue</samp></p>
+</li>
+</ul></div>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<div class="p">The analytical list page ensures that the
+<samp class="ph codeph">SelectionVariant</samp> passed to the application
+via the extension is filled with the filter context that would
+otherwise be set to the filter bar. This filter context can have
+different values based on the scenario:<ul class="ul" id="loio4564eed27ead43cdb43f8d420470ddfd__ul_cds_mlz_gfb">
+<li class="li">
+<p class="p">External navigation to the analytical list page: The
+<samp class="ph codeph">SelectionVariant</samp> will have the
+navigation context passed by the source application.
+It could have the <samp class="ph codeph">DisplayCurrency</samp>
+value set in the SAP Fiori launchpad user default
+settings.</p>
+</li>
+<li class="li">Navigation to the analytical list page via SAP Fiori
+launchpad tile: If a default variant is maintained, the
+<samp class="ph codeph">SelectionVariant</samp> has values from
+the default variant. If not, it has the values from the
+SAP Fiori launchpad user default values. If these values
+are also missing, the <samp class="ph codeph">SelectionVariant</samp>
+has the CDS defaults that come from the
+<samp class="ph codeph">Common.FilterDefaultValue</samp>.</li>
+</ul></div></aside>
+</li>
+</ul>
+</li>
+<li class="li">
+<p class="p">Dynamically choosing a particular tab when starting a list report with
+multiple views and multiple tables</p>
+<p class="p">This can be relevant, for example, when launching an app from the SAP Fiori
+launchpad or during external navigation to a list report with multiple views
+and multible tables. For example, when navigating from an overview page,
+depending on the card clicked, a particular tab should be selected in the
+list report.</p>
+</li>
+</ul></div>
+<p class="p">The object <samp class="ph codeph">oStartupObject</samp> passed in this method has the following
+properties:</p>
+<ul class="ul" id="loio4564eed27ead43cdb43f8d420470ddfd__ul_a2f_psz_52b">
+<li class="li">
+<p class="p"><samp class="ph codeph">selectionVariant</samp>: Contains the selection variant object that is passed from
+source app. You can modify this object in the target app.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">urlParameters</samp>: Is used to decide which tab is to be loaded dynamically. The
+data in <samp class="ph codeph">urlParameters</samp> is used only as a deciding factor for
+dynamically selecting a tab (relevant for list report only).</p>
+<p class="p">For example, if <samp class="ph codeph">urlParameters</samp> contains the sales order status &quot;paid&quot;, the
+system chooses the tab that contains the sales order status &quot;paid&quot; in the
+multiple views application.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">selectedQuickVariantSelectionKey</samp>: Optional string that is the key provided
+while creating the tabs in the manifest. By setting this value, the default tab
+is set (relevant for list report only).</p>
+</li>
+</ul>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p>The call to the extension point is performed only if there&apos;s initial navigation to the
+analytical list page. It is not triggered at other times (for example, when the user
+changes variants or when the user makes changes to selections in the filter bar, or when
+navigating back/ refreshing an analytical list page app that has an iappState.</p></aside>
+<div class="section" id="loio4564eed27ead43cdb43f8d420470ddfd__section_uyr_qcg_v2b"><section class="section" type="Code Samples"><h2 class="section_title" style="font-size: 1.15em;">Code Samples</h2><div class="sectiondiv subsection">
+<p class="p subsectiontitle">List Report</p>
+<p class="p">To pass the filter context during navigation, overwrite the
+<samp class="ph codeph">modifyStartupExtension</samp> extension method in the list
+report.</p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">
+modifyStartupExtension: function(oStartupObject) {
+        oSelectionVariant = oStartupObject.selectionVariant;
+        if (oSelectionVariant) {
+        oSelectionVariant.removeSelectOption(&quot;TaxAmount&quot;);
+        oSelectionVariant.addSelectOption(&quot;Product&quot;, &quot;I&quot;, &quot;EQ&quot;, &quot;EPM-2365436&quot;);
+        }
+        oStartupObject.selectedQuickVariantSelectionKey = &quot;_tab2&quot;;
+    }
+</pre></aside>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Analytical List Page</p>
+</div>To pass the filter context during navigation, define the
+<samp class="ph codeph">oStartupObject</samp> object in your application extension.controller.js
+file as shown here:<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">modifyStartupExtension: function (oStartupObject) {
+    var oSelectionVariant = oStartupObject.selectionVariant;
+    if (oSelectionVariant.getSelectOption(&quot;CustomerCountry&quot;) &amp;oSelectionVariant.getSelectOption(&quot;CustomerCountry&quot;)[&quot;0&quot;].Low === &quot;AR&quot;) {
+        oSelectionVariant.addSelectOption(&quot;WBSElement&quot;, &quot;I&quot;, &quot;EQ&quot;, &quot;BLUE PRINT VALIDATION&quot;);
+        oSelectionVariant.addSelectOption(&quot;CompanyCode&quot;, &quot;I&quot;, &quot;EQ&quot;, &quot;EASI&quot;);
+    }
+}
+</pre></aside><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Overview Page</p>
+<div class="p">To pass the filter context during navigation, define the
+<samp class="ph codeph">oCustomSelectionVariant</samp> object in your application
+extension.controller.js file as shown here:<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_4_title"><div class="title" id="note_4_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">modifyStartupExtension: function (oCustomSelectionVariant) {
+ 
+    oCustomSelectionVariant.addSelectOption(&quot;SupplierName&quot;, &quot;I&quot;, &quot;EQ&quot;, &quot;Talpa&quot;);
+}
+</pre></aside></div>
+
+
+</div></section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,69 @@
+<edmx:Edmx
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace=".UI2.FDM_SPACE_REPOSITORY_SRV" xml:lang="en" sap:schema-version="1">
+            <EntityType Name="Space" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="id"/>
+                </Key>
+                <Property Name="createdByFullname" Type="Edm.String" MaxLength="80" sap:label="Full Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="designTime" Type="Edm.String" MaxLength="1" sap:label="Single-Character Flag" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="id" Type="Edm.String" Nullable="false" MaxLength="35" sap:label="Space ID" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="modifiedByFullname" Type="Edm.String" MaxLength="80" sap:label="Full Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="title" Type="Edm.String" MaxLength="100" sap:label="Space Title" sap:sortable="false"/>
+                <Property Name="description" Type="Edm.String" MaxLength="100" sap:label="Space Description" sap:sortable="false"/>
+                <Property Name="createdBy" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Created by" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="createdOn" Type="Edm.DateTime" Nullable="false" Precision="0" sap:label="Created On" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="modifiedBy" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Last modified by" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="modifiedOn" Type="Edm.DateTime" Nullable="false" Precision="0" ConcurrencyMode="Fixed" sap:label="Last modified on" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="owner" Type="Edm.String" Nullable="false" MaxLength="12" sap:label="Owner" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="masterLanguage" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Original Lang." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="devclass" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Package" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="transportId" Type="Edm.String" MaxLength="20" sap:label="Request/Task" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="pages" Relationship=".UI2.FDM_SPACE_REPOSITORY_SRV.Space_Page" FromRole="FromRole_Space_Page" ToRole="ToRole_Space_Page"/>
+            </EntityType>
+            <EntityType Name="Page" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="id"/>
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" MaxLength="35" sap:label="Page ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="title" Type="Edm.String" Nullable="false" MaxLength="100" sap:label="Page Title" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="description" Type="Edm.String" Nullable="false" MaxLength="100" sap:label="Page Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="spaces" Relationship=".UI2.FDM_SPACE_REPOSITORY_SRV.Space_Page" FromRole="ToRole_Space_Page" ToRole="FromRole_Space_Page"/>
+            </EntityType>
+            <Association Name="Space_Page" sap:content-version="1">
+                <End Type=".UI2.FDM_SPACE_REPOSITORY_SRV.Space" Multiplicity="*" Role="FromRole_Space_Page"/>
+                <End Type=".UI2.FDM_SPACE_REPOSITORY_SRV.Page" Multiplicity="*" Role="ToRole_Space_Page"/>
+            </Association>
+            <EntityContainer Name=".UI2.FDM_SPACE_REPOSITORY_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="spaceSet" EntityType=".UI2.FDM_SPACE_REPOSITORY_SRV.Space" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="pageSet" EntityType=".UI2.FDM_SPACE_REPOSITORY_SRV.Page" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <AssociationSet Name="Space_PageSet" Association=".UI2.FDM_SPACE_REPOSITORY_SRV.Space_Page" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="spaceSet" Role="FromRole_Space_Page"/>
+                    <End EntitySet="pageSet" Role="ToRole_Space_Page"/>
+                </AssociationSet>
+                <FunctionImport Name="deleteSpace" ReturnType=".UI2.FDM_SPACE_REPOSITORY_SRV.Space" EntitySet="spaceSet" m:HttpMethod="POST" sap:label="Delete Space" sap:action-for=".UI2.FDM_SPACE_REPOSITORY_SRV.Space">
+                    <Parameter Name="transportId" Type="Edm.String" Mode="In"/>
+                    <Parameter Name="spaceId" Type="Edm.String" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="assignPage" ReturnType=".UI2.FDM_SPACE_REPOSITORY_SRV.Space" EntitySet="spaceSet" m:HttpMethod="POST" sap:label="Assign Page to Space" sap:action-for=".UI2.FDM_SPACE_REPOSITORY_SRV.Space">
+                    <Parameter Name="transportId" Type="Edm.String" Mode="In"/>
+                    <Parameter Name="pageId" Type="Edm.String" Mode="In"/>
+                    <Parameter Name="spaceId" Type="Edm.String" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="unassignPage" ReturnType=".UI2.FDM_SPACE_REPOSITORY_SRV.Space" EntitySet="spaceSet" m:HttpMethod="POST" sap:label="Unassign Page from Space" sap:action-for=".UI2.FDM_SPACE_REPOSITORY_SRV.Space">
+                    <Parameter Name="transportId" Type="Edm.String" Mode="In"/>
+                    <Parameter Name="spaceId" Type="Edm.String" Mode="In"/>
+                    <Parameter Name="pageId" Type="Edm.String" Mode="In"/>
+                </FunctionImport>
+            </EntityContainer>
+            <atom:link rel="self" href="https://host:port/sap/opu/odata/UI2/FDM_SPACE_REPOSITORY_SRV/$metadata"
+                xmlns:atom="http://www.w3.org/2005/Atom" />
+            <atom:link rel="latest-version" href="https://host:port/sap/opu/odata/UI2/FDM_SPACE_REPOSITORY_SRV/$metadata"
+                    xmlns:atom="http://www.w3.org/2005/Atom" />
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

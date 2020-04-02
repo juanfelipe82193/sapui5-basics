@@ -1,0 +1,243 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>
+		<title>
+			RichTextEditor - TinyMCE4 Stresstest
+		</title>
+		<script src="../../../../resources/sap-ui-core.js"
+				id="sap-ui-bootstrap"
+				data-sap-ui-libs="sap.m,sap.ui.layout,sap.ui.richtexteditor"
+				data-sap-ui-theme="sap_bluecrystal">
+		</script>
+		<!-- only load the main library "sap.m" and the Blue Crystal theme -->
+		<script>
+
+			jQuery.sap.require("sap.ui.richtexteditor.RichTextEditor");
+
+			var iLoops = 20;
+			var bNewEditor = true;
+
+			var oLoops = new sap.m.Input({
+				value: 20
+			});
+
+			var sSelectedEditor = "rte4";
+			var matches = window.location.search.match(/editor=([^&]*)/);
+			if (matches && matches[1]) {
+				sSelectedEditor = matches[1];
+			}
+
+			var oEditorChoice = new sap.m.ComboBox({
+				layoutData: new sap.ui.layout.GridData({
+					span: "XL3 L3 M3 S3"
+				}),
+				items: [
+					new sap.ui.core.Item({ text: "RichTextEditor TinyMCE4", key: "rte4" }),
+					new sap.ui.core.Item({ text: "RichTextEditor TinyMCE3", key: "rte3" }),
+				],
+				selectedKey: sSelectedEditor,
+				change: function() {
+					var sEditor = oEditorChoice.getSelectedKey();
+
+					var sNewUrl;
+					if (window.location.search.indexOf("editor=") > -1) {
+						sNewUrl = window.location.search.replace(/editor=[^&]*/, "editor=" + sEditor);
+					} else {
+						var sSearchValue = "";
+						if (window.location.search.length > 0) {
+							sSearchValue = "&editor=" + sEditor
+						} else {
+							sSearchValue = "?editor=" + sEditor
+						}
+
+						sNewUrl = window.location.href + sSearchValue;
+					}
+					window.location = sNewUrl;
+				}
+			});
+
+			var oCheckSwitch = new sap.m.CheckBox({
+				text: "Switch Editable",
+				selected: true
+			});
+			var oCheckRerender = new sap.m.CheckBox({
+				text: "Rerender",
+				selected: true
+			});
+			var oCheckReinit = new sap.m.CheckBox({
+				text: "Reinitialize",
+				selected: true
+			});
+			var oCheckDestroy = new sap.m.CheckBox({
+				text: "Destroy and Create",
+				selected: true
+			});
+			var oCheckDestroyRandom = new sap.m.CheckBox({
+				text: "Destroy and Create Randomly",
+				selected: true
+			});
+
+			var oTests = sap.ui.layout.VerticalLayout({
+				layoutData: new sap.ui.layout.GridData({
+					span: "XL4 L4 M4 S4"
+				}),
+				content: [
+					oCheckSwitch, oCheckRerender, oCheckReinit, oCheckDestroy, oCheckDestroyRandom
+				]
+			});
+
+
+			var oButton = new sap.m.Button({
+				text: "Run Test",
+				press: function() {
+					var aTests = [];
+					oCheckSwitch.getSelected()        && aTests.push(fnSwitch);
+					oCheckRerender.getSelected()      && aTests.push(fnRerender);
+					oCheckReinit.getSelected()        && aTests.push(fnReinit);
+					oCheckDestroy.getSelected()       && aTests.push(fnDestroyAndCreate);
+					oCheckDestroyRandom.getSelected() && aTests.push(fnDestroyAndCreateAtRandom);
+
+					var oEditorClass;
+					var mEditorOptions;
+					switch (oEditorChoice.getSelectedKey()) {
+						case "rte3":
+							mEditorOptions = {
+								editorType: sap.ui.richtexteditor.EditorType.TinyMCE,
+								useLegacyTheme: false
+							};
+							oEditorClass = sap.ui.richtexteditor.RichTextEditor;
+
+							break;
+
+						case "rte4":
+							mEditorOptions = {
+								editorType: sap.ui.richtexteditor.EditorType.TinyMCE4,
+							};
+							oEditorClass = sap.ui.richtexteditor.RichTextEditor;
+							break;
+
+						default:
+							throw new Error("Invalid Editor type selected: " + oEditorChoice.getSelectedKey());
+					}
+
+
+					fnTest({
+						editorOptions: mEditorOptions,
+						editor: oEditorClass,
+						loops: parseInt(oLoops.getValue()),
+						tests: aTests
+					});
+				}
+			});
+
+			var oLayout = sap.ui.layout.Grid({
+				defaultSpan: "XL1 L1 M1 S1",
+				content: [
+					new sap.m.Text({
+						text: "Loops: "
+					}),
+					oLoops,
+					new sap.m.Text({
+						text: "Editor: "
+					}),
+					oEditorChoice,
+					oTests,
+					oButton
+				]
+			});
+
+
+			oLayout.placeAt("control");
+
+
+
+			var fnCreateEditor = function(mOptions) {
+				if (window._rteInstance) {
+					window._rteInstance.destroy();
+				}
+
+				var controlOptions = mOptions.editor === sap.ui.richtexteditor.RichTextEditor
+					? mOptions.editorOptions
+					: {};
+
+				window._rteInstance = new mOptions.editor(controlOptions);
+				window._rteInstance.placeAt("content");
+				window._rteInstance.setValue("Some value...");
+			};
+
+
+			var fnSwitch = function() {
+				return new Promise(function(fnResolve) {
+					console.warn("Setting editable");
+					window._rteInstance.setEditable(!window._rteInstance.getEditable());
+					fnResolve();
+					//setTimeout(fnResolve, 0);
+				});
+			};
+
+			var fnRerender = function() {
+				return new Promise(function(fnResolve) {
+					console.warn("Rerender");
+					window._rteInstance.rerender();
+					fnResolve();
+					//setTimeout(fnResolve, 0);
+				});
+			};
+
+			var fnReinit = function() {
+				return new Promise(function(fnResolve) {
+					console.warn("Reinitialize");
+					window._rteInstance.reinitialize();
+					fnResolve();
+					//setTimeout(fnResolve, 0);
+				});
+			};
+
+			var fnDestroyAndCreate = function(mOptions) {
+				return new Promise(function(fnResolve) {
+					console.warn("Destroy and Create");
+					fnCreateEditor(mOptions);
+					fnResolve();
+					//setTimeout(fnResolve, 0);
+				});
+			};
+
+			var fnDestroyAndCreateAtRandom = function(mOptions) {
+				return new Promise(function(fnResolve) {
+					console.warn("Destroy and Create at random");
+					setTimeout(fnCreateEditor.bind(this, mOptions), Math.round(Math.random() * 5000));
+					fnResolve();
+				});
+			}
+
+
+
+			var fnTest = function(mOptions) {
+				fnCreateEditor(mOptions);
+
+				var pNext = new Promise(function(fnResolve) {
+					setTimeout(fnResolve, 500);
+				});
+
+				for (var i = 0; i < mOptions.tests.length; ++i) {
+					var fnTest = mOptions.tests[i].bind(this, mOptions);
+					for (var n = 0; n < mOptions.loops; ++n) {
+						pNext = pNext.then(fnTest);
+					} /**/
+				}
+			};
+
+
+
+
+		</script>
+	</head>
+	<body class="sapUiBody">
+		<div id="control">
+		</div>
+		<div id="content">
+		</div>
+	</body>
+</html>

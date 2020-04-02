@@ -1,0 +1,45 @@
+<mvc:View
+    controllerName="sap.ushell_abap.transport.controller.TransportInformation"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:mvc="sap.ui.core.mvc"
+    core:require="{String: 'sap/ui/model/type/String'}">
+    <form:SimpleForm editable="true">
+        <Label text="{i18n>Label.Package}" />
+        <Input
+            id="packageInput"
+            maxLength="30"
+            required="true"
+            change=".onChange"
+            liveChange=".onPackageLiveChange"
+            valueLiveUpdate="true"
+            editable="{= !${/packageInputReadOnly}}"
+            valueStateText="{i18n>Message.EmptyPackage}"
+            value="{
+                path: '/package',
+                type: 'String'
+            }"
+            type="Text"
+            showSuggestion="true"
+            suggestionItems="{PackageModel>/packageSet/}">
+            <suggestionItems>
+                <core:Item text="{PackageModel>devclass}" />
+            </suggestionItems>
+        </Input>
+        <Label text="{i18n>Label.WorkbenchRequest}" required="{/workbenchRequired}" />
+        <Select
+            id="workbenchRequestSelect"
+            forceSelection="false"
+            change=".onChange"
+            selectedKey="{/workbenchRequest}"
+            enabled="{/workbenchRequired}"
+            width="100%"
+            items="{
+                path: 'PackageModel>/transportSet/',
+                sorter: { path: 'trkorr' }
+            }">
+            <core:Item key="{PackageModel>trkorr}" text="{PackageModel>trkorr}-{PackageModel>description}" />
+        </Select>
+    </form:SimpleForm>
+</mvc:View>

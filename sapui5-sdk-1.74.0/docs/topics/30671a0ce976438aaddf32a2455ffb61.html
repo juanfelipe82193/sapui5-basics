@@ -1,0 +1,160 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Common Pitfalls in JSDoc</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The use of the JSDoc toolkit has some pitfalls. By following the guidelines outlined below, these issues can be avoided."><meta name="description" content="The use of the JSDoc toolkit has some pitfalls. By following the guidelines outlined below, these issues can be avoided."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"41de83f642224556b8716dec2b41ce86.html","previousTopicHref":"eeaa5de14e5f4fc1ac796bc0c1ada5fb.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loio30671a0ce976438aaddf32a2455ffb61"><h1 class="title topictitle1" hidden>Common Pitfalls in JSDoc</h1><div class="body"><p class="shortdesc" hidden>The use of the JSDoc toolkit has some pitfalls. By following the guidelines outlined
+below, these issues can be avoided.</p>
+<div class="section"><section class="section" type="Multiple Documentation Comments Before a Symbol"><h2 class="section_title" style="font-size: 1.15em;">Multiple Documentation Comments Before a Symbol</h2>
+
+<p class="p">In case of multiple documentation comments before a JavaScript symbol, JSDoc only
+associates the last comment with the symbol. Therefore, multiple documentation
+comments before a symbol must be avoided. The comment and code sequence below
+results in an unwanted documentation for the <samp class="ph codeph">adjustFilters</samp> symbol.
+To avoid this, move the TODOs, either within the function or before the
+documentation comment.</p>
+<pre class="pre codeblock prettyprint lang-js">
+/**
+ * Maps the UI filter objects to the internal Filter object.
+ *
+ * @param filteredColumns The current UI filters that will be mapped
+ * to the internal format.
+ * @returns The newly formatted format.
+ * @private
+ */
+/** TODO: Call getOperator when custom filters are supported */
+/** TODO: getValue2 to fix later when we have ranges with BETWEEN operator */
+sap.ui.table.internal.BehaviorManager.prototype.adjustFilters = function(filteredColumns) {
+  // ...
+}</pre>
+</section></div>
+<div class="section"><section class="section" type="Special Case: Section Separators"><h2 class="section_title" style="font-size: 1.15em;">Special Case: Section Separators</h2><p class="p">JSDoc interprets any multiline comment
+starting with a double asterisks ( <samp class="ph codeph">/**</samp> ) as a documentation comment
+for the JavaScript symbol that follows the documentation comment. However, some
+developers use &quot;decorative&quot; documentation comments to separate sections in their
+JavaScript modules, and using a multiline comment consisting of asterisks is just
+one example for such decorative
+comments:</p><pre class="pre codeblock prettyprint lang-js">
+// Update aggregation
+  this.insertSection(oSection, iTargetIndex, true);
+
+  /****Update index/id mapping table********************************/
+  aSections = this.getSections();
+  for (var i = 0; i &lt; aSections.length; i++) {
+    this.aIdMappings[aSections[i].getId()] = i;
+  }</pre>For
+JSDoc, however, this looks like a documentation comment for the
+<samp class="ph codeph">aSections</samp> variable. And if this is the last documentation comment
+for <samp class="ph codeph">aSections</samp>, it appears in the generated JSDoc for the enclosing
+module or class. The only way to avoid such silly mistakes in documentation, is to avoid
+the pairing of multiline documentation comments and symbols to be documented. So do
+<strong class="ph b">not</strong> use stars/asterisks for a separating banner comment. You can use other
+characters, for example /* ==== */ or /* ----- */, or at least avoid the double
+asterisks at the beginning. A very unnoticeable replacement would be to use a double
+quote /*&quot;************/ as only the last documentation comment before a symbol is used.
+Another very good option to avoid misinterpretation of banner comments is to document
+the symbol that follows.</section></div>
+<div class="section"><section class="section" type="HTML Tags in Documentation Comments"><h2 class="section_title" style="font-size: 1.15em;">HTML Tags in Documentation Comments</h2>
+
+<p class="p">JSDoc explicitly allows HTML tags in documentation comments. This allows, as in JavaDoc, to
+structure longer or more complex documentation comments with the help of some HTML
+markup. Typical use cases are ordered or unordered lists or semantic tags like
+<samp class="ph codeph">&lt;code&gt;</samp> or <samp class="ph codeph">&lt;em&gt;</samp>. But be aware that
+the support for HTML tags for formatting purposes unfortunately implies that JSDoc
+must not escape them. So, if you want to include an HTML literally, for example, to
+explain what kind of HTML is produced by a control, the HTML tag must be
+HTML-escaped in the source code. Otherwise, it will mark up the final JSDoc output,
+which will most likely break.</p>
+<p class="p"><span class="ph emphasis emphasis">Example</span></p>
+<p class="p">In the example, note the escaped <samp class="ph codeph">&lt;TR&gt;</samp> in the first and the
+third line of the documentation comment:</p>
+<pre class="pre codeblock prettyprint lang-js">
+/**
+ * This function return the rowNumber given a row&amp;lt;TR&gt;.
+ *
+ * @private
+ * @param {DomRow} &amp;lt;TR&gt; dom object.
+ * @returns {int} the row number maintained in the data object.
+ */
+sap.ui.table.Table.prototype.getRowNumber = function(oDomRow) {
+
+</pre>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Composite Controls</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content><meta name="description" content><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"329a029f39e249a1bf89e3ffc006c8e1.html","previousTopicHref":"ca6a310c4b4b401c8ee0545995f2c6fb.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loioe7fe3e60481240518d7e9e25ea7eaa6f"><h1 class="title topictitle1" hidden>Composite Controls</h1><div class="body conbody"><p class="shortdesc" hidden></p>
+<div class="p">Composite <span class="ph"><span class="ph pname">SAPUI5</span></span> controls, like
+Wizard or Semantic Page, are read based on the specific behavior of their parts. Still
+these controls require additional ARIA labels to correctly separate the areas within the
+control. Here are some examples: <ul class="ul" id="loioe7fe3e60481240518d7e9e25ea7eaa6f__ul_mqt_gm3_px">
+<li class="li">
+<p class="p">Wizard Navigation Area - needs to be marked as a <samp class="ph codeph">navigation</samp>
+landmark</p>
+</li>
+<li class="li">
+<p class="p">Dynamic Side Content - needs to be marked as a <samp class="ph codeph">complementary</samp>
+landmark</p>
+</li>
+</ul></div>
+<p class="p">When creating new composite controls, you need to make sure to properly assign your
+controls to regions and label these regions correctly. </p>
+<div class="section"><section class="section" type="sap.m.Page Custom Landmarks"><h2 class="section_title" style="font-size: 1.15em;">sap.m.Page Custom Landmarks</h2>
+
+<p class="p">The <samp class="ph codeph">sap.m.Page</samp> control is used in a lot of applications. As a container
+control it has three distinct regions that hold content - header, content area and
+footer. There is also an additional role for the whole page. Each of these areas
+needs to have a clearly defined ARIA role that explains what the region does. The
+ARIA roles for all these regions can be set to custom values using the properties of
+<samp class="ph codeph">sap.m.PageAccessibleLandmarkInfo</samp>. Possible values for these
+roles are stored in the <samp class="ph codeph">AccessibleLandmarkRole</samp> enumeration. In the
+example below you can see how this is done in the <samp class="ph codeph">landmarkInfo</samp>
+property of <samp class="ph codeph">sap.m.Page</samp>. </p>
+<pre class="pre codeblock prettyprint">&lt;App&gt;
+	&lt;Page title=&quot;Hello World&quot; height=&quot;100%&quot;&gt;
+		&lt;headerContent&gt;
+			&lt;Title text=&quot;Just Page&quot; /&gt;
+		&lt;/headerContent&gt;
+		&lt;subHeader&gt;
+			&lt;Bar&gt;
+				&lt;contentLeft&gt;
+					&lt;Text text=&quot;Text in content left bar subheader &quot;/&gt;
+				&lt;/contentLeft&gt;
+			&lt;/Bar&gt;
+		&lt;/subHeader&gt;
+		&lt;footer&gt;
+			&lt;Bar&gt;
+				&lt;contentLeft&gt;
+					&lt;Text text=&quot;Text in content left bar footer &quot;/&gt;
+				&lt;/contentLeft&gt;
+			&lt;/Bar&gt;
+		&lt;/footer&gt;
+		&lt;content&gt;
+			&lt;Text text=&quot;Text in page content&quot;/&gt;
+		&lt;/content&gt;
+		&lt;landmarkInfo&gt;
+			
+			&lt;PageAccessibleLandmarkInfo 
+				rootRole=&quot;Region&quot; 
+				rootLabel=&quot;Root Label&quot;
+				contentRole=&quot;Region&quot;
+				contentLabel=&quot;Content Label&quot;
+				footerRole=&quot;Region&quot;
+				footerLabel=&quot;Footer Label&quot;
+				headerRole=&quot;Region&quot;
+				headerLabel=&quot;Header Label&quot;
+				subHeaderRole=&quot;Region&quot;
+				subHeaderLabel=&quot;SubHeader Label&quot; /&gt;
+		&lt;/landmarkInfo&gt;
+	&lt;/Page&gt;
+&lt;/App&gt;</pre>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

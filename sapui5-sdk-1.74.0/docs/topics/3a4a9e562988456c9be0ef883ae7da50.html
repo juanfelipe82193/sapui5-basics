@@ -1,0 +1,201 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Lifecycle of Binding Templates</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content><meta name="description" content><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"7cdff73f308b4b10bdf7d83b7aba72e7.html","previousTopicHref":"ec79a5d5918f4f7f9cbc2150e66778cc.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio3a4a9e562988456c9be0ef883ae7da50"><h1 class="title topictitle1" hidden>Lifecycle of Binding Templates</h1><div class="body conbody"><p class="shortdesc" hidden></p>
+<p class="p">The lifecycle of the binding templates differs from the lifecycle of controls that are
+contained in an aggregation. Whenever a control object is destroyed, any aggregating
+object is destroyed as well. For list binding templates, you specify the behavior by
+using the additional property <samp class="ph codeph">templateShareable</samp> in the parameter of the
+<samp class="ph codeph">bindAggregation</samp> method of class
+<samp class="ph codeph">sap.ui.base.ManagedObject</samp>. </p>
+<div class="p">In <span class="ph emphasis emphasis">XML views</span>, you can also use the <samp class="ph codeph">templateShareable</samp>
+property by adding it to the binding info as follows:
+<pre class="pre codeblock prettyprint lang-xml">&lt;Table id=&quot;EmployeeEquipments&quot; headerText=&quot;Employee Equipments&quot; items=&quot;{
+    path: &apos;EMPLOYEE_2_EQUIPMENTS&apos;,
+    <span class="ph emphasis emphasis">templateShareable: false</span>
+}&quot;&gt;
+    &lt;columns&gt;
+        &lt;!-- ... --&gt;
+    &lt;/columns&gt;
+    &lt;items&gt;
+        &lt;ColumnListItem&gt;
+            &lt;cells&gt;
+                &lt;Text text=&quot;{ID}&quot;/&gt;
+            &lt;/cells&gt;
+            &lt;cells&gt;
+                &lt;Text text=&quot;{EQUIPMENT_2_PRODUCT/Name}&quot;/&gt;
+            &lt;/cells&gt;
+            &lt;cells&gt;
+                &lt;Text text=&quot;{Category}&quot;/&gt;
+            &lt;/cells&gt;
+            &lt;cells&gt;
+                &lt;!-- Name=&quot;PRODUCT_2_CATEGORY&quot; Type=&quot;Collection(...)&quot; --&gt;
+                &lt;List items=&quot;{
+                    path: &apos;EQUIPMENT_2_PRODUCT/PRODUCT_2_CATEGORY&apos;,
+                    <span class="ph emphasis emphasis">templateShareable: true</span>
+                }&quot;&gt;
+                    &lt;StandardListItem title=&quot;{CategoryName}&quot;/&gt;
+                &lt;/List&gt;
+            &lt;/cells&gt;
+            &lt;cells&gt;
+                &lt;Text text=&quot;{EQUIPMENT_2_PRODUCT/PRODUCT_2_SUPPLIER/Supplier_Name}&quot;/&gt;
+            &lt;/cells&gt;
+        &lt;/ColumnListItem&gt;
+    &lt;/items&gt;
+&lt;/Table&gt;</pre><ul class="ul" id="loio3a4a9e562988456c9be0ef883ae7da50__ul_lmr_f4s_4v">
+<li class="li">
+<p class="p"><samp class="ph codeph">templateShareable = &quot;false&quot;</samp> (preferred setting)</p>
+<p class="p">If you set the parameter to <samp class="ph codeph">false</samp> the lifecycle is
+controlled by the framework. It will destroy the template when the binding
+is removed (<samp class="ph codeph">unbindAggregation</samp>,
+<samp class="ph codeph">unbindItems</samp>) </p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">templateShareable = &quot;true&quot;</samp></p>
+<div class="p">If you set the parameter to <samp class="ph codeph">true</samp> the template is
+<span class="ph emphasis emphasis">not</span> destroyed when (the binding of) the aggregated
+object is destroyed. Use this option in the following cases only:<ul class="ul" id="loio3a4a9e562988456c9be0ef883ae7da50__ul_i5t_frs_4v">
+<li class="li">
+<p class="p">The template is reused in your app to define an additional list
+binding. </p>
+<p class="p">Since the template is not destroyed, this could also affect some
+other aggregation that uses the same template at a later point
+in time.</p>
+</li>
+<li class="li">
+<p class="p">The parent control that contains the list binding with the
+template is cloned. The binding info is used in the clone as
+well.</p>
+<p class="p">This means, when <samp class="ph codeph">templateShareable</samp> is set to
+<samp class="ph codeph">true</samp>, the template will not be cloned, when
+it is set to <samp class="ph codeph">false</samp> it will be cloned when the
+parent is cloned.</p>
+</li>
+</ul>In these cases, the app has to make sure that the templates are
+properly cleaned up at some point in time - at the latest when the
+corresponding controller or component is destroyed.</div>
+</li>
+<li class="li">
+<div class="p">If the parameter is undefined, (neither <samp class="ph codeph">true</samp> nor
+<samp class="ph codeph">false</samp>), the framework checks at several points in time
+whether all list bindings are removed. If there are no bindings, the
+templates is marked as <samp class="ph codeph">candidate for destroy()</samp>, but it is
+not immediately destroyed. The candidate is destroyed in the following
+cases:<ul class="ul" id="loio3a4a9e562988456c9be0ef883ae7da50__ul_c43_v5m_rv">
+<li class="li">
+<p class="p">A <span class="ph emphasis emphasis">new object with the same ID</span> is
+created.</p>
+</li>
+<li class="li">
+<p class="p">The component that owns the objects is destroyed.</p>
+</li>
+</ul></div>
+<div class="p">If the framework determines that a &quot;candidate for destroy&quot; is still in use in
+another binding or in a clone operation, the framework makes sure that the
+candidate is not destroyed by implicitly setting
+<samp class="ph codeph">templateShareable</samp> to <samp class="ph codeph">true</samp> (as this
+best reflects how the app deals with the template). But now the template is
+not destroyed at all (an error message is issued), and the app
+implementation needs to make sure that the binding template is destroyed as
+soon as it is no longer needed.<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<div class="p">The error messages are:<ul class="ul" id="loio3a4a9e562988456c9be0ef883ae7da50__ul_zss_hcm_vv">
+<li class="li">
+<p class="p"><span class="ph uicontrol">A binding template that is marked as
+&apos;candidate for destroy&apos; is reused in a
+binding.</span></p>
+</li>
+<li class="li">
+<p class="p"><span class="ph uicontrol">During a clone operation, a template was found
+that neither was marked with
+&apos;templateShareable:true&apos; nor
+&apos;templateShareable:false&apos;.</span>
+</p>
+</li>
+</ul></div></aside></div>
+<aside class="note caution" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Caution</strong></div>
+<p class="p">To leave the parameter undefined is<span class="ph emphasis emphasis"> very
+error-prone</span>, therefore we don&apos;t recommend this! Always set
+the parameter explicitly to <samp class="ph codeph">true</samp> or
+<samp class="ph codeph">false</samp>.</p></aside>
+</li>
+</ul></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

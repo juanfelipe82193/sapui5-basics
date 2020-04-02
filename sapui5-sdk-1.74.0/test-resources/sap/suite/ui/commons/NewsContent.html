@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>NewsContent - sap.suite.ui.commons</title>
+
+<!-- http://vmw2983:50200/sapui5/resources/sap-ui-core.js -->
+    <!-- UI5 Bootstrap -->
+    <script src="../../../../../resources/sap-ui-core.js"
+            type="text/javascript"
+            id="sap-ui-bootstrap"
+            data-sap-ui-libs="sap.ui.commons,sap.suite.ui.commons,sap.m,sap.ui.ux3"
+            data-sap-ui-theme="sap_bluecrystal"></script>
+
+
+<style type="text/css">
+	#controls {
+		margin-top:1rem;
+	}
+	
+	.sapSuiteUiCommonsNwC {
+		margin: 2px;
+	}
+	
+</style>
+
+<script src="locationColor.js" ></script>
+
+<script type="text/javascript">
+    jQuery.sap.initMobile();
+
+    var oConfData = {
+		contentText: "SAP Unveils Powerful New Player Comparison Tool Exclusively on NFL.com",
+		subheader: "August 21, 2013",
+		tooltip: "Recent news:\n{AltText}\nClick to follow"
+	}
+
+	var oConfModel = new sap.ui.model.json.JSONModel();
+	oConfModel.setData(oConfData);
+	sap.ui.getCore().setModel(oConfModel);
+	var aNewsConts = [];
+	
+	var fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The news content is pressed.");
+	};
+	
+	var buildNewsContent = function(sSize, sText) {
+		var oNC = new sap.suite.ui.commons.NewsContent("configurable-news-content-" + sSize, {
+			contentText: "{/contentText}",
+			subheader: "{/subheader}",
+			tooltip: "{/tooltip}",
+			size: sSize,
+			press: fnPress
+		});
+		aNewsConts.push(oNC);
+		return new sap.m.FlexBox("nc-fb"+sSize, {
+	    	items: [oNC],
+       		layoutData: new sap.ui.commons.layout.ResponsiveFlowLayoutData({ minWidth: 370 }),
+       		height: "80px"
+	    });
+	};
+	
+	var oNCForm = new sap.ui.layout.form.SimpleForm("news-content-form", {
+		content: [ 
+			buildNewsContent("L", "large"), 
+			buildNewsContent("S", "small"), 
+			buildNewsContent("Auto", "auto") 
+		]
+	});
+	
+	var oCTLbl = new sap.m.Label({
+		text : "Content Text",
+		labelFor : "content-text-value"
+	});
+
+	var oCTInput = new sap.m.Input("content-text-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter value ...'
+	});
+	oCTInput.bindValue("/contentText");
+
+	var oSbhLbl = new sap.m.Label({
+		text : "Subheader",
+		labelFor : "subheader-value"
+	});
+
+	var oSbhInput = new sap.m.Input("subheader-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter value ...'
+	});
+	oSbhInput.bindValue("/subheader");
+
+    var oTooltipLbl = new sap.m.Label({
+        text : "Tooltip",
+        labelFor : "tooltip"
+    });
+
+    var oTooltipInput = new sap.m.TextArea("tooltip", {
+        rows: 3,
+        placeholder: 'Enter tooltip (use {AltText} for inserting the default text) ...',
+        value: "{/tooltip}"
+    });
+    
+    var oTooltipSwtchLbl = new sap.m.Label({
+		text : "QuickView Tooltip",
+		labelFor : "tooltip-swtch"
+	});
+
+    var oTooltipSwtch = new sap.m.Switch({ 
+		id: "tooltip-swtch", 
+		state: false,
+		name: "QuickView tooltip",
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			for (var i = 0; i < aNewsConts.length; i++) {
+				aNewsConts[i].setTooltip(bState ? 
+						new sap.ui.ux3.QuickView({	content: new sap.m.Text({ text: oTooltipInput.getValue().split("{AltText}").join(aNewsConts[i].getAltText()) })})
+						: oTooltipInput.getValue());
+			}
+		}
+	});
+
+	var oPressLbl = new sap.m.Label({
+		text : "Press Action",
+		labelFor : "press-action"
+	});
+
+    var oPressSwtch = new sap.m.Switch({
+ 	   id : "press-action",
+ 	   state: true,
+ 	   change: function(oE) {
+			var bState = oE.getParameter("state");
+			for (var i = 0; i < aNewsConts.length; i++) {
+				if(bState) {
+					aNewsConts[i].attachPress(fnPress);
+				} else {
+					aNewsConts[i].detachPress(fnPress);
+				}
+			}
+ 	   }
+    });
+	
+	var editableSimpleForm = new sap.ui.layout.form.SimpleForm("controls", {
+		maxContainerCols : 2,
+		editable : true,
+		content : [ 
+		    new sap.ui.core.Title({ text : "Modify News Content" }),
+		    oCTLbl, oCTInput, oSbhLbl, oSbhInput, oPressLbl, oPressSwtch, oTooltipLbl, oTooltipInput,  oTooltipSwtchLbl, oTooltipSwtch
+		]
+	});
+
+	var oPage = new sap.m.Page({content:[oNCForm,editableSimpleForm]});
+	oPage.placeAt("content");
+	setBackgroundColor(oPage);
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+    <div id="content" style="height:100%"></div>
+</body>
+</html>

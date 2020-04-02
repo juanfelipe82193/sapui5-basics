@@ -1,0 +1,37 @@
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+						 xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:uxap="sap.uxap" 
+						 template:require="{
+							AH: 'sap/suite/ui/generic/template/js/AnnotationHelper',
+							AHModel: 'sap/ui/model/odata/AnnotationHelper',
+							AHActionButtons: 'sap/suite/ui/generic/template/ObjectPage/annotationHelpers/AnnotationHelperActionButtons'}">
+
+	<uxap:actions>
+		<template:with path="facetCandidate>Target" helper="AHModel.resolvePath" var="target">
+			<template:if test="{target>Data}">
+				<template:repeat list="{target>Data}" var="dataField">
+					<template:if test="{= ${dataField>RecordType} === 'com.sap.vocabularies.UI.v1.DataFieldForAction' || ${dataField>RecordType} === 'com.sap.vocabularies.UI.v1.DataFieldForIntentBasedNavigation'}">
+						<template:with path="dataField>Action"	helper="AHModel.gotoFunctionImport"	var="action">
+							<Button
+								id="action::{path: 'dataField>', formatter: 'AH.getStableIdPartFromDataField'}::{path: 'facetCandidate>', formatter: 'AH.getStableIdPartFromFacet'}::FormAction"
+								text="{path: 'dataField>Label', formatter: 'AHModel.format'}"
+								type="Transparent"
+								press="{= ${dataField>RecordType} === 'com.sap.vocabularies.UI.v1.DataFieldForAction' ? ${path: 'dataField>', formatter: 'AHActionButtons.getCallAction'} : '._templateEventHandlers.onDataFieldForIntentBasedNavigation'}" 
+								enabled="{ui>/enabled}"
+								visible="{parts: [{path: 'action>sap:applicable-path'}, {path: 'entitySet>entityType'}, {path: 'dataField>'}], formatter: 'AH.actionControl'}">
+								<!-- Add Custom data required by onDataFieldForIntentBasedNavigationSelectedContext in CommonEventHandlers if necessary -->
+								<template:if test="{= ${dataField>RecordType} === 'com.sap.vocabularies.UI.v1.DataFieldForIntentBasedNavigation'}">
+									<customData>
+										<core:CustomData key="Action"
+											value="{path: 'dataField>Action', formatter: 'AHModel.format'}" />
+										<core:CustomData key="SemanticObject"
+											value="{path: 'dataField>SemanticObject', formatter: 'AHModel.format'}" />
+									</customData>
+								</template:if>
+							</Button>
+						</template:with>
+					</template:if>
+				</template:repeat>
+			</template:if>
+		</template:with>
+	</uxap:actions>
+</core:FragmentDefinition>

@@ -1,0 +1,1 @@
+sap.ui.define([],function(){"use strict";var f=function(a,p,t){var r=-1;if(Array.isArray(a)&&typeof p==="function"){for(var i=0;i<a.length;i++){if(p.call(t,a[i],i,a)){r=i;break;}}}return r;};return f;});

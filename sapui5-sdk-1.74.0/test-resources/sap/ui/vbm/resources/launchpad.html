@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="UTF-8">
+	<script>
+		var getParams = function (url) {
+			var params = {};
+			var parser = document.createElement('a');
+			parser.href = url;
+			var query = parser.search.substring(1);
+			var vars = query.split('&');
+			for (var i = 0; i < vars.length; i++) {
+				var pair = vars[i].split('=');
+				params[pair[0]] = decodeURIComponent(pair[1]);
+			}
+			return params;
+		};
+
+		var sapui5ver = getParams(window.location.href).ver;
+		var domain = getParams(window.location.href).domain || "";
+		var localvbm = getParams(window.location.href).localvbm || false;
+		var cdn = "http://localhost:8080/vbitest/resources/sap-ui-core.js";
+		if(sapui5ver && sapui5ver.length!= 0) {
+			var dom = "";
+			if(domain.length != 0) {
+				dom = "http://" + domain.replace(/\|/g, ".");
+			}
+			cdn = dom + "/sapui5-sdk-internal/" + sapui5ver + "/resources/sap-ui-core.js";
+		}
+
+		var bootstrap = "<script id='sap-ui-bootstrap' \
+					src='" + cdn + "' \
+					data-sap-ui-theme='sap_belize_plus' \
+					data-sap-ui-preload='sync' \
+					data-sap-ui-libs='sap.m, sap.ui.core, sap.ui.layout, sap.ui.unified'";
+
+					if(localvbm && localvbm == 'true') {
+						bootstrap += "data-sap-ui-resourceroots='{\"vbm-regression\": \"./\",\"sap.ui.vbm\": \"/vbitest/resources/sap/ui/vbm/\"}'";
+					} else {
+						bootstrap += "data-sap-ui-resourceroots='{\"vbm-regression\": \"./\"}'";
+					}
+					
+					bootstrap  += "data-sap-ui-xx-bindingSyntax='complex'><\/script>";
+					
+		// Need to add SAPUI5 bootstrap dynamically, as the <script> src tag needs to vary in some demos
+		document.write(bootstrap);
+	</script>
+
+	<link rel="Stylesheet" href="main.css" type="text/css" />
+	<script src="map_config.js"></script>
+	<script src="main_launchpad.js"></script>
+
+</head>
+
+<body id="content" class="sapUiBody">
+</body>
+
+</html>

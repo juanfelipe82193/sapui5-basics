@@ -1,0 +1,38 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:gnt2="sap.gantt.simple"
+	xmlns:test="sap.gantt.simple.test"
+	xmlns:core="sap.ui.core">
+	<test:CustomGanttRowSettings highlight="{data>Status}" rowId="{data>ProjectElemID}"
+		calendars="{path:'data>ProjectWorkingTime', templateShareable: 'true'}"
+		tasks="{path:'data>ProjectTasks',templateShareable: 'true'}" >
+		<test:calendars>
+			<gnt2:BaseCalendar shapeId="{data>WorkingTimeID}" calendarName="{data>CalendarName}"/>
+		</test:calendars>
+
+		<test:tasks>
+			<test:SteppedTask shapeId="{data>TaskID}" scheme="main_row_shape"
+				time="{data>StartDate}"
+				endTime="{data>EndDate}"
+				tooltip="{data>Tooltip}"
+				draggable="true" selectable="true" expandable="true" hoverable="false" countInBirdEye="true" resizable="true"
+				steps="{path: 'data>TaskToSteps',templateShareable: true}"
+				breaks= "{path: 'data>TaskToSteps',templateShareable: true}">
+				<test:task>
+					<gnt2:BaseRectangle time="{data>StartDate}" endTime="{data>EndDate}" fill="#1A9898" height="21" title="{data>TaskDesc}" showTitle="true"/>
+				</test:task>
+				<test:steps>
+					<gnt2:BaseRectangle shapeId="{data>StepID}" time="{data>StartDate}" endTime="{data>EndDate}" height="21"
+										fill="{path: 'data>StepStatus',formatter:'.stepShapeColorFormatter'}" yBias="-2" selectable="true"/>
+				</test:steps>
+
+				<test:breaks>
+					<gnt2:BaseRectangle shapeId="{data>StepID}" scheme="task_to_step" time="{data>StartDate}" endTime="{data>EndDate}" height="21"
+										fill="{path: 'data>StepStatus',formatter:'.stepShapeColorFormatter'}"
+										transform="translate(1, 1)"
+										selectable="true"/>
+				</test:breaks>
+			</test:SteppedTask>
+		</test:tasks>
+	</test:CustomGanttRowSettings>
+</core:FragmentDefinition>

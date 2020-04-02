@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html>
+	 <head>
+		  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		  <link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+		  <script src="../../../../resources/sap-ui-core.js"
+				id="Script1"
+				data-sap-ui-libs="sap.ui.vbm"
+				data-sap-ui-theme="sap_bluecrystal" >
+		  </script>
+
+				<script>
+					 // creation of visual business...............................//
+					 sap.ui.localResources("vbitestapp");
+
+					function onSubmit( e )
+					{
+						 if( evtoutput.innerText !== undefined )
+							 evtoutput.innerText = e.getParameter( "data" );
+						 else
+						if( evtoutput.textContent !== undefined )
+							 evtoutput.textContent = e.getParameter( "data" );	// due to ff
+					};
+
+					 // create the html version of visual business................//
+					 var oVBIHTML = new sap.ui.vbm.VBI('vbiH',
+					 {
+						width : 600,
+						height: 500,
+						plugin: false,
+						submit: onSubmit        // set the event handler
+					 });
+					 oVBIHTML.placeAt("vbiHTML");
+
+					 // create the native version of visual business..............//
+					 var oVBINATIVE = new sap.ui.vbm.VBI('vbiN',
+					 {
+						width : 600,
+						height: 500,
+						plugin: true,
+						submit: onSubmit        // set the event handler
+					 });
+					 oVBINATIVE.placeAt("vbiNATIVE");
+
+					 // load the json main project................................//
+					var dat = $.getJSON("media/vbduet/main.json", function( dat ) 
+					{
+						// load the same initial data into both implementations....//
+						oVBIHTML.load( dat );
+						oVBINATIVE.load( dat );
+					});
+					 
+					function getNativeCurrentZoomAndPos()
+					{		
+						var dat = $.getJSON("media/vbduet/triggerevent.json", function( dat ) 
+					    {
+							oVBINATIVE.load( dat );
+					     });
+					};
+				</script>
+		 </head>
+	 
+		 <body class="sapUiBody" >
+		  <h1>Visual Business UI5: Duet Sample</h1>
+		  <ul>
+		  <li> Shows the same API usage on a HTML5 and the Native imlementation.
+		  </ul> 
+		  <table>
+				<tr>
+					 <td><h2>HTML5</h2></td>
+					 <td><h2>NATIVE</h2></td>
+				</tr>
+				<tr>
+					 <td><div id="vbiHTML"></div></td>
+					 <td><div id="vbiNATIVE"></div></td>
+				</tr>
+				<tr>
+					 <td colspan="2"><h6>Event:</h6><br><textarea style="width:100%;box-sizing:border-box" id="evtoutput" rows="8" ></textarea></td>
+				</tr>
+		  </table>
+			  <script>
+					 //...........................................................//
+					 // setting some objects......................................//
+		
+		
+					 function onSetBlock()
+					 {
+						  // load the json and set the default text area text
+					 var dat = $.getJSON("media/vbduet/new_block.json", function( dat ) 
+					 {
+							oVBIHTML.load( dat );
+							oVBINATIVE.load( dat );
+					 });
+					 };
+		
+					 function onSetPie()
+					 {
+					 var dat = $.getJSON("media/vbduet/new_pie.json", function( dat ) 
+					 {
+							oVBIHTML.load( dat );
+							oVBINATIVE.load( dat );
+					 });
+					 };
+
+					 function onSetFlags()
+					 {
+					 var dat = $.getJSON("media/vbduet/new_flags.json", function( dat ) 
+					 {
+							oVBIHTML.load( dat );
+							oVBINATIVE.load( dat );
+					 });
+					 };
+		
+					 function onClearMap()
+					 {
+					 var dat = $.getJSON("media/vbduet/clear.json", function( dat ) 
+					 {
+							oVBIHTML.load( dat );
+							oVBINATIVE.load( dat );
+					 });
+					 };
+
+					 function onDetailWindow()
+					 {
+					 var dat = $.getJSON("media/vbduet/opendetail.json", function( dat ) 
+					 {
+								oVBIHTML.load( dat );
+								oVBINATIVE.load( dat );                            
+					 });
+					 };
+
+		</script>
+		<button onclick=onSetBlock() >Set Block</button>
+		<button onclick=onSetPie() >Set Pie</button>
+		<button onclick=onSetFlags() >Set Flags</button>
+		<button onclick=onClearMap() >Clear Map</button>
+		<button onclick=onDetailWindow() >Open Detail Window</button>
+
+		 </body>
+</html>

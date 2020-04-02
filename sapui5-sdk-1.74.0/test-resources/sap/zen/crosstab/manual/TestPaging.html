@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Paging - manual test page</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<script type="text/javascript" src="../testutils/TestUtils.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_FULL.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_0_0.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_1_0.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_2_0.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_3_0.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_0_1.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_1_1.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_2_1.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_3_1.js"></script>
+</head>
+
+<body>
+	<div id="area1" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		//Render the crosstab
+		$(document).ready(function() {
+			var oCrosstab = new sap.zen.crosstab.Crosstab();
+			// var oTableControl = sapzen.crosstab.test.jsonTestData.PAGING_Q1_FULL.control;
+			var oTableControl = sapzen.crosstab.test.jsonTestData.PAGING_Q1_PAGED_0_0.control;
+			oCrosstab.setWidth("800px");
+			oCrosstab.setHeight("600px");
+			
+			oCrosstab.registerPageRequestHandler(function(iRow, iCol) {
+				var sPageString = iRow + "_" + iCol;
+				var oData = sapzen.crosstab.test.jsonTestData["PAGING_Q1_PAGED_" + sPageString].control;
+				
+				// setTimeout(sendResponse, 2000);
+				sendResponse();
+				
+				function sendResponse() {
+					oCrosstab.updateControlProperties(oData);	
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(oCrosstab);
+				}
+			});
+
+			oCrosstab.applyControlProperties(oTableControl);
+			oCrosstab.placeAt("area1");
+		});
+	</script>
+
+</body>
+
+</html>

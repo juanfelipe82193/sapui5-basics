@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+	<edmx:Reference Uri="/services_kiw/sap/bc/ui5_ui5/ui2/ushell/resources/sap/ushell/components/factsheet/vocabularies/UI.xml">
+		<edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/services_kiw/sap/bc/ui5_ui5/ui2/ushell/resources/sap/ushell/components/factsheet/vocabularies/Communication.xml">
+		<edmx:Include Alias="vCard" Namespace="com.sap.vocabularies.Communication.v1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml">
+		<edmx:Include Alias="CQP" Namespace="Org.OData.Measures.V1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/services_kiw/sap/bc/ui5_ui5/ui2/ushell/resources/sap/ushell/components/factsheet/vocabularies/Common.xml">
+		<edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/services_kiw/sap/opu/odata/sap/ZCOSTCENTERCOSTSQUERY0020_CDS/$metadata">
+		<edmx:Include Alias="ZCOSTCENTERCOSTSQUERY0020_CDS" Namespace="ZCOSTCENTERCOSTSQUERY0020_CDS"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Core.V1.xml">
+		<edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Alias="ZCOSTCENTERCOSTSQUERY0020_CDSAnnotation" Namespace="sap.cbesh.cestbon.ZCOSTCENTERCOSTSQUERY0020_CDSAnnotation">
+
+
+			<Annotations Target="ZCOSTCENTERCOSTSQUERY0020_CDS.ZCOSTCENTERCOSTSQUERY0020Type">
+				<Annotation Term="UI.SelectionPresentationVariant" Qualifier="MainContent">
+					<Record>
+						<PropertyValue Property="ID" String=""/>
+						<PropertyValue Property="Text" String=""/>
+						<PropertyValue Property="SelectionVariant" Path="@UI.SelectionVariant#Default"/>
+						<PropertyValue Property="PresentationVariant" Path="@UI.PresentationVariant#Default"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.SelectionVariant" Qualifier="Default">
+					<Record>
+						<PropertyValue Property="SelectOptions">
+							<Collection>
+								<Record Type="UI.SelectOptionType">
+									<PropertyValue Property="PropertyName" PropertyPath="CompanyCode"/>
+									<PropertyValue Property="Ranges">
+										<Collection>
+											<Record Type="UI.SelectionRangeType">
+												<PropertyValue EnumMember="UI.SelectionRangeSignType/I" Property="Sign"/>
+												<PropertyValue EnumMember="UI.SelectionRangeOptionType/EQ" Property="Option"/>
+												<PropertyValue Property="Low" String="EASI"/>
+											</Record>
+										</Collection>
+									</PropertyValue>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.PresentationVariant" Qualifier="Default">
+					<Record>
+						<PropertyValue Property="SortOrder" >
+							<Collection>
+								<Record Type="Common.SortOrderType">
+									<PropertyValue Property="Property" PropertyPath="ActualCost"/>
+									<PropertyValue Property="Descending" Bool="true"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="GroupBy">
+							<Collection>
+								<PropertyPath>CalendarMonth</PropertyPath>
+								<PropertyPath>LedgerFiscalYear</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="InitialExpansionLevel" Int="2"/>
+						<PropertyValue Property="Visualizations">
+							<Collection>
+								<AnnotationPath>@com.sap.vocabularies.UI.v1.Chart#Bar</AnnotationPath>
+								<AnnotationPath>@com.sap.vocabularies.UI.v1.LineItem#ActualCosts</AnnotationPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.SelectionFields">
+					<Collection>
+						<PropertyPath>WBSElement</PropertyPath>
+						<PropertyPath>CompanyCode</PropertyPath> 
+						<PropertyPath>FiscalMonth</PropertyPath>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.HeaderInfo">
+					<Record>
+						<PropertyValue Property="TypeName" String="Title"/>
+						<PropertyValue Property="TypeNamePlural" String="Title"/>
+						<PropertyValue Property="Title">
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Label" String="Line Item"/>
+								<PropertyValue Property="Value" Path="Project"/>
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.Chart" Qualifier="Bar">
+						<Record Type="UI.ChartDefinitionType">
+							<PropertyValue Property="Title" String="Revenue by Customer"/>
+							<PropertyValue Property="ChartType" EnumMember="UI.ChartType/BarDual"/>
+							<PropertyValue Property="Dimensions">
+								<Collection>
+									<PropertyPath>FiscalPeriod</PropertyPath>
+								</Collection>
+							</PropertyValue>
+							<PropertyValue Property="DimensionAttributes">
+								<Collection>
+									<Record Type="UI.ChartDimensionAttributeType">
+										<PropertyValue Property="Dimension" PropertyPath="FiscalMonth"/>
+										<PropertyValue Property="Role" EnumMember="UI.ChartDimensionRoleType/Category"/>
+									</Record>
+								</Collection>
+							</PropertyValue>
+							<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>ActualCost</PropertyPath>
+								<PropertyPath>ActualMarginRelative</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="UI.ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="ActualCost"/>
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1"/>
+								</Record>
+								<Record Type="UI.ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="ActualMarginRelative"/>
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis2"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						</Record>
+					</Annotation>
+					<Annotation Term="UI.LineItem" Qualifier="ActualCosts">
+						<Annotation Term="UI.Criticality" Path="FixedStructureItem" Qualifier="ActualCosts" />
+						<Collection>
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="CalendarMonth"/>
+								<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+							</Record>
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="ActualCost"/>
+								<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+							</Record>
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="CompanyCodeCurrency"/>
+								<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+							</Record>
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="LedgerFiscalYear"/>
+								<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+							</Record>
+						</Collection>
+					</Annotation>
+				</Annotations>
+			</Schema>
+		</edmx:DataServices>
+	</edmx:Edmx>

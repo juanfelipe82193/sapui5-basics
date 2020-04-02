@@ -1,0 +1,132 @@
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:mdc="sap.ui.mdc"
+	xmlns:mdcField="sap.ui.mdc.field"
+	xmlns:mdcLink="sap.ui.mdc.link"
+	xmlns:macro="sap.fe.macros"
+	template:require="{
+				MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+				COMMON: 'sap/fe/macros/CommonHelper',
+				FIELD: 'sap/fe/macros/field/FieldHelper'
+				}">
+
+	<mdc:fieldInfo>
+		<mdcField:FieldInfo binding="{property>@@FIELD.getNavigationEntity}">
+			<mdcLink:ContentHandler sourceControl="{= ${this>idPrefix} ? COMMON.getStableId(['F', ${this>idPrefix}, ${property>$Path@@.MODEL.value}]) : undefined }">
+				<template:with path="property>" helper="FIELD.getNavigationEntity" var="entityType">
+					<mdcLink:linkHandler>
+						<template:if test="{entityType>./@com.sap.vocabularies.UI.v1.HeaderInfo}">
+							<template:with path="entityType>./@com.sap.vocabularies.UI.v1.HeaderInfo" var="headerInfo">
+								<template:with path="property>$Path@" var="semanticObjectsList" helper="FIELD.getSemanticObjectsList">
+									<mdcLink:FlpLinkHandler
+										sourceControl="{= ${this>idPrefix} ? COMMON.getStableId(['F', ${this>idPrefix}, ${property>$Path@@.MODEL.value}]) : undefined }"
+										textOfMainItem="{headerInfo>Title/Value@@MODEL.value}"
+										descriptionOfMainItem="{headerInfo>Description/Value@@MODEL.value}"
+										iconOfMainItem="{= ${headerInfo>ImageUrl@@MODEL.value} || ${headerInfo>TypeImageUrl@@MODEL.value}}"
+										mainSemanticObject="{property>$Path@com.sap.vocabularies.Common.v1.SemanticObject@@MODEL.value}"
+										semanticObjects="{path: 'semanticObjectsList>', formatter:'FIELD.joinArray'}">
+										<mdcLink:semanticObjectMappings>
+											<mdcLink:SemanticObjectMapping semanticObject="{property>$Path@com.sap.vocabularies.Common.v1.SemanticObject@@MODEL.value}">
+												<template:repeat list="{property>$Path@com.sap.vocabularies.Common.v1.SemanticObjectMapping}" var="mapping">
+													<mdcLink:SemanticObjectMappingItem
+														key="{mapping>LocalProperty/$PropertyPath}"
+														value="{mapping>SemanticObjectProperty@@MODEL.value}"/>
+												</template:repeat>
+											</mdcLink:SemanticObjectMapping>
+										</mdcLink:semanticObjectMappings>
+										<mdcLink:semanticObjectUnavailableActions>
+											<mdcLink:SemanticObjectUnavailableAction
+												semanticObject="{property>$Path@com.sap.vocabularies.Common.v1.SemanticObject@@MODEL.value}"
+												actions="{property>$Path@com.sap.vocabularies.Common.v1.SemanticObjectUnavailableActions@@FIELD.joinArray}">
+											</mdcLink:SemanticObjectUnavailableAction>
+										</mdcLink:semanticObjectUnavailableActions>
+
+										<template:with path="property>$Path@" var="qualifiers" helper="FIELD.getSemanticObjectsQualifiers">
+											<template:repeat list="{qualifiers>}" var="qualifier">
+												<template:if test="{qualifier>@com.sap.vocabularies.Common.v1.SemanticObjectMapping}">
+													<mdcLink:semanticObjectMappings>
+														<mdcLink:SemanticObjectMapping semanticObject="{qualifier>@com.sap.vocabularies.Common.v1.SemanticObject}">
+															<template:repeat list="{qualifier>@com.sap.vocabularies.Common.v1.SemanticObjectMapping}" var="mapping">
+																<mdcLink:SemanticObjectMappingItem
+																	key="{mapping>LocalProperty/$PropertyPath}"
+																	value="{mapping>SemanticObjectProperty}"/>
+															</template:repeat>
+														</mdcLink:SemanticObjectMapping>
+													</mdcLink:semanticObjectMappings>
+												</template:if>
+												<template:if test="{qualifier>@com.sap.vocabularies.Common.v1.SemanticObjectUnavailableActions}">
+													<mdcLink:semanticObjectUnavailableActions>
+														<mdcLink:SemanticObjectUnavailableAction
+															semanticObject="{qualifier>@com.sap.vocabularies.Common.v1.SemanticObject}"
+															actions="{path: 'qualifier>@com.sap.vocabularies.Common.v1.SemanticObjectUnavailableActions', formatter:'FIELD.joinArray'}">
+														</mdcLink:SemanticObjectUnavailableAction>
+													</mdcLink:semanticObjectUnavailableActions>
+												</template:if>
+
+											</template:repeat>
+										</template:with>
+									</mdcLink:FlpLinkHandler>
+								</template:with>
+							</template:with>
+						</template:if>
+					</mdcLink:linkHandler>
+					<mdcLink:additionalContent>
+						<template:repeat list="{entityType>./@com.sap.vocabularies.UI.v1.QuickViewFacets}" var="facet">
+							<template:if test="{= ${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Contact') > -1 }">
+								<template:then>
+									<template:with path="facet>Target/$AnnotationPath" var="contact">
+										<HBox class="sapUiSmallMargin">
+											<mdcLink:ContactDetails>
+												<mdcLink:ContactDetailsItem formattedName="{contact>fn@@MODEL.value}">
+													<template:if test="{contact>tel}">
+														<mdcLink:phones>
+															<template:repeat list="{contact>tel}" var="telephone">
+																<mdcLink:ContactDetailsPhoneItem uri="{telephone>uri@@MODEL.value}"
+																	types="{= ${telephone>type} &amp;&amp; ${telephone>type/$EnumMember}.split('/').pop() || undefined }"/>
+															</template:repeat>
+														</mdcLink:phones>
+													</template:if>
+													<template:if test="{contact>email}">
+														<mdcLink:emails>
+															<template:repeat list="{contact>email}" var="emailId">
+																<mdcLink:ContactDetailsEmailItem uri="{emailId>address@@MODEL.value}"
+																	types="{= ${emailId>type} &amp;&amp; ${emailId>type/$EnumMember}.split('/').pop() || undefined }"/>
+															</template:repeat>
+														</mdcLink:emails>
+													</template:if>
+													<template:if test="{contact>adr}">
+														<mdcLink:addresses>
+															<template:repeat list="{contact>adr}" var="address">
+																<mdcLink:ContactDetailsAddressItem street="{address>street@@MODEL.value}"
+																	code="{address>code@@MODEL.value}"
+																	locality="{address>locality@@MODEL.value}"
+																	region="{address>region@@MODEL.value}"
+																	country="{address>country@@MODEL.value}"
+																	types="{= ${address>type} &amp;&amp; ${address>type/$EnumMember}.split('/').pop() || undefined }"/>
+															</template:repeat>
+														</mdcLink:addresses>
+													</template:if>
+												</mdcLink:ContactDetailsItem>
+											</mdcLink:ContactDetails>
+										</HBox>
+									</template:with>
+								</template:then>
+								<template:elseif test="{= (${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.FieldGroup') > -1 ||
+													${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.Identification') > -1) ||
+													${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.DataPoint') > -1}">
+													<macro:Form
+														editMode="Display"
+														metadataContexts="{ model: 'facet', path:'', name: 'facet'},{ model:'entityType',path:'',name:'entitySet'}"
+														useFormContainerLabels="true"
+													/>
+								</template:elseif>
+							</template:if>
+						</template:repeat>
+					</mdcLink:additionalContent>
+				</template:with>
+			</mdcLink:ContentHandler>
+		</mdcField:FieldInfo>
+	</mdc:fieldInfo>
+</core:FragmentDefinition>
+

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2009-2017 SAP SE, All Rights Reserved -->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>
+        function onLoad () {
+            addEventListener("message", processMessages);
+
+            window.parent.postMessage({
+                "service": "qbs.AppBeforeCloseEvent.resetValue"
+            }, "*")
+
+            window.parent.postMessage({
+                "type": "request",
+                "service": "sap.ushell.services.CrossApplicationNavigation.registerBeforeAppCloseEvent",
+                "request_id": "id-1406564112128-0",
+                "body": {
+                    "data" : "1234"
+                }
+            }, "*")
+        }
+
+        function onUnLoad () {
+            window.parent.postMessage({
+                "service": "qbs.AppBeforeCloseEvent.oniFrameClose"
+            }, "*")
+            removeEventListener("message", processMessages);
+        }
+
+        function processMessages(oMessage)
+        {
+            var oMessageData = oMessage.data;
+
+            if (typeof oMessageData === "string") {
+                try {
+                    oMessageData = JSON.parse(oMessage.data);
+                } catch (e) {
+                    oMessageData = {
+                        service: ""
+                    };
+                }
+            }
+
+            if (oMessageData.service === "sap.ushell.services.CrossApplicationNavigation.beforeAppCloseEvent") {
+                window.parent.postMessage({
+                    "service": "qbs.AppBeforeCloseEvent.onBeforeClose"
+                }, "*")
+
+                window.parent.postMessage({
+                    "type": "response",
+                    "service": "sap.ushell.services.CrossApplicationNavigation.registerBeforeAppCloseEvent",
+                    "request_id": oMessageData.request_id,
+                    "status": "success",
+                    "body": {}
+                }, "*")
+            }
+        }
+
+        function onNavigateToLetterBoxApp () {
+            window.parent.postMessage({
+                "type": "request",
+                "service": "sap.ushell.services.CrossApplicationNavigation.toExternal",
+                "request_id": "id-1406564112128-0",
+                "body": {
+                    "oArgs": {
+                        "target": {
+                            "semanticObject": "Action",
+                            "action": "toLetterBoxing"
+                        }
+                    }
+                }
+            }, "*");
+        }
+    </script>
+</head>
+<body onload="onLoad()" onunload="onUnLoad()">
+<div>this is a simple HTML page to test FLP post post message APIs:</div>
+<br/>
+<br/>
+<div>1. sap.ushell.services.CrossApplicationNavigation.registerBeforeAppCloseEvent</div>
+<br/>
+<div>2. sap.ushell.services.CrossApplicationNavigation.beforeAppCloseEvent</div>
+<br/>
+<button id="idNavigateToLetterBoxApp" onclick="onNavigateToLetterBoxApp()">Navigate to Letter Box App</button>
+<br/>
+</body>
+</html>

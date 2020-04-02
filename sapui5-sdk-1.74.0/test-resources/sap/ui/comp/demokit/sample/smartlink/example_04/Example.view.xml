@@ -1,0 +1,82 @@
+<core:View xmlns:core="sap.ui.core" xmlns:smartField="sap.ui.comp.smartfield"
+		   xmlns:smartForm="sap.ui.comp.smartform" xmlns:l="sap.ui.layout"
+		   xmlns:table="sap.ui.table" xmlns:m="sap.m" xmlns="sap.ui.comp.navpopover"
+		   xmlns:smartTable="sap.ui.comp.smarttable" controllerName="sap.ui.comp.sample.smartlink.example_04.Example">
+
+	<l:VerticalLayout class="sapUiContentPadding" width="100%">
+		<l:VerticalLayout width="100%">
+			<l:content>
+				<m:Text class="sapUiSmallMarginTop, sapUiLargeMarginBottom"
+						text="Link personalization is disabled."/>
+			</l:content>
+		</l:VerticalLayout>
+
+		<l:content>
+			<m:Text class="sapUiLargeMarginTop" text="SmartField with displayBehaviour idAndDescription"/>
+		</l:content>
+	</l:VerticalLayout>
+	<smartForm:SmartForm>
+		<smartForm:Group>
+			<smartForm:GroupElement>
+				<smartField:SmartField value="{Name}">
+					<smartField:configuration>
+						<smartField:Configuration
+								displayBehaviour="idAndDescription"/>
+					</smartField:configuration>
+				</smartField:SmartField>
+			</smartForm:GroupElement>
+		</smartForm:Group>
+		<smartForm:semanticObjectController>
+			<SemanticObjectController entitySet="ProductCollection"
+									  enableAvailableActionsPersonalization='\{"Name":false\}'/>
+		</smartForm:semanticObjectController>
+	</smartForm:SmartForm>
+
+
+	<l:VerticalLayout class="sapUiContentPadding" width="100%">
+		<l:content>
+			<m:Text class="sapUiLargeMarginTop" text="Default behavior of SmartTable"/>
+		</l:content>
+	</l:VerticalLayout>
+	<smartTable:SmartTable tableType="Table" enableAutoBinding="true" entitySet="ProductCollection"
+						   useVariantManagement="false" useTablePersonalisation="false" showRowCount="false"
+						   useExportToExcel="false">
+		<smartTable:semanticObjectController>
+			<SemanticObjectController enableAvailableActionsPersonalization='\{"Name":false\}'/>
+		</smartTable:semanticObjectController>
+	</smartTable:SmartTable>
+
+
+	<l:VerticalLayout class="sapUiContentPadding" width="100%">
+		<l:content>
+			<m:Text class="sapUiLargeMarginTop"
+					text="SmartField with displayBehaviour idAndDescription embedded into SmartTable"/>
+		</l:content>
+	</l:VerticalLayout>
+	<smartTable:SmartTable tableType="Table" enableAutoBinding="true" entitySet="ProductCollection"
+						   useVariantManagement="false" useTablePersonalisation="false" showRowCount="false"
+						   useExportToExcel="false">
+		<table:Table items="{/ProductCollection}">
+			<table:columns>
+				<table:Column>
+					<table:customData>
+						<core:CustomData key="p13nData" value='\{"columnKey": "Name", "leadingProperty": "Name"}'/>
+					</table:customData>
+					<m:Label text="Name"/>
+					<table:template>
+						<smartField:SmartField value="{Name}">
+							<smartField:configuration>
+								<smartField:Configuration displayBehaviour="idAndDescription"/>
+							</smartField:configuration>
+						</smartField:SmartField>
+					</table:template>
+				</table:Column>
+			</table:columns>
+		</table:Table>
+		<smartTable:semanticObjectController>
+			<SemanticObjectController enableAvailableActionsPersonalization='\{"Name":false\}'/>
+		</smartTable:semanticObjectController>
+	</smartTable:SmartTable>
+
+
+</core:View>

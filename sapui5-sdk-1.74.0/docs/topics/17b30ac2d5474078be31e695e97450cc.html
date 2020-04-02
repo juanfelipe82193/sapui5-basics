@@ -1,0 +1,165 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Accessing Data in Controller Code</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In the OData V4 model, bindings are used to access and modify backend data also if the data is accessed or modified in controller code."><meta name="description" content="In the OData V4 model, bindings are used to access and modify backend data also if the data is accessed or modified in controller code."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"10ca58b701414f7f93cd97156f898f80.html","previousTopicHref":"22ee78b422614b40ad4c1938dc23d967.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio17b30ac2d5474078be31e695e97450cc"><h1 class="title topictitle1" hidden>Accessing Data in Controller Code</h1><div class="body conbody"><p class="shortdesc" hidden>In the OData V4 model, bindings are used to access and modify backend data also if the data is accessed or modified in controller
+code.</p>
+<p class="p">You can create bindings that are independent of controls using the factory methods <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel.bindContext" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel.bindContext" title="#/api/sap.ui.model.odata.v4.ODataModel.bindContext">sap.ui.model.odata.v4.ODataModel.bindContext</a></span>, <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel.bindList" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel.bindList" title="#/api/sap.ui.model.odata.v4.ODataModel.bindList">sap.ui.model.odata.v4.ODataModel.bindList</a></span>, and <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel.bindProperty" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel.bindProperty" title="#/api/sap.ui.model.odata.v4.ODataModel.bindProperty">sap.ui.model.odata.v4.ODataModel.bindProperty</a></span>.</p>
+<div class="section" id="loio17b30ac2d5474078be31e695e97450cc__section_acw_zcc_v3b"><section class="section" type="Contexts"><h2 class="section_title" style="font-size: 1.15em;">Contexts</h2>
+
+<p class="p"><span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.Context" target="_top" alt="#/api/sap.ui.model.odata.v4.Context" title="#/api/sap.ui.model.odata.v4.Context">sap.ui.model.odata.v4.Context</a></span> is central for CRUD operations in the controller code.
+<samp class="ph codeph">sap.ui.model.odata.v4.Context</samp> provides the following functions:</p>
+<ul class="ul" id="loio17b30ac2d5474078be31e695e97450cc__ul_bty_42c_v3b">
+<li class="li">
+<p class="p"><samp class="ph codeph">requestObject</samp>: Returns a promise on the value for the given path relative to the context.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">requestProperty</samp>: Returns a promise on the property value for the given path relative to the context.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">getObject</samp>: Returns the value for the given path relative to this context</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">getProperty</samp>: Returns the property value for the given path relative to this context.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">setProperty</samp>: Sets a new value for the property identified by the given path.</p>
+</li>
+</ul>
+</section></div>
+<div class="section" id="loio17b30ac2d5474078be31e695e97450cc__section_h4x_1dc_v3b"><section class="section" type="Lists"><h2 class="section_title" style="font-size: 1.15em;">Lists</h2>
+
+<p class="p">A list binding is obtained either with <samp class="ph codeph">sap.ui.model.odata.v4.ODataModel.bindList</samp>, or by getting an existing list binding bound
+to a control. Entities of the list can be requested using
+<span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataListBinding.requestContexts" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataListBinding.requestContexts" title="#/api/sap.ui.model.odata.v4.ODataListBinding.requestContexts">sap.ui.model.odata.v4.ODataModel.ODataListBinding.requestContexts</a>.</span>
+The function returns
+a promise resolving with an array of the requested contexts. The data of each context can be accessed using the
+<samp class="ph codeph">requestObject</samp>, <samp class="ph codeph">requestProperty</samp>, <samp class="ph codeph">getObject</samp>, and <samp class="ph codeph">getProperty</samp>
+methods of <samp class="ph codeph">sap.ui.model.odata.v4.Context</samp>. To modify the data,
+<samp class="ph codeph">sap.ui.model.odata.v4.Context.setProperty</samp> can be used.</p>
+<pre class="pre codeblock prettyprint lang-js">var oList = oModel.bindList(&quot;/SalesOrderList&quot;);
+
+oList.requestContexts(10, 20).then(function (aContexts) {
+    aContexts.forEach(function (oContext) {
+        // As we have fetched the data already, we can access &quot;Note&quot; through getProperty
+        var sNote = oContext.getProperty(&quot;Note&quot;); 
+        if (!sNote) {
+            oContext.setProperty(&quot;Note&quot;, &quot;No notes&quot;);
+        }
+    });
+});</pre>
+<p class="p">New entities can be created with <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataListBinding.create" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataListBinding.create" title="#/api/sap.ui.model.odata.v4.ODataListBinding.create">sap.ui.model.odata.v4.ODataModel.ODataListBinding.create</a></span>. It is not required to read existing records
+before.</p>
+<pre class="pre codeblock prettyprint lang-js">var oList = oModel.bindList(&quot;/SalesOrderList&quot;),
+    oNewContext = oList.create();</pre>
+</section></div>
+<div class="section" id="loio17b30ac2d5474078be31e695e97450cc__section_tvt_bdc_v3b"><section class="section" type="Single Entities"><h2 class="section_title" style="font-size: 1.15em;">Single Entities</h2>
+
+<p class="p">A context binding is obtained either with <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel.bindContext" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel.bindContext" title="#/api/sap.ui.model.odata.v4.ODataModel.bindContext">sap.ui.model.odata.v4.ODataModel.bindContext</a></span>, or by getting an existing context binding from the
+control tree. Data can be accessed through the bound context, see <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataContextBinding.getBoundContext" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataContextBinding.getBoundContext" title="#/api/sap.ui.model.odata.v4.ODataContextBinding.getBoundContext">sap.ui.model.odata.v4.ODataContextBinding.getBoundContext</a></span>.
+Using <samp class="ph codeph">sap.ui.model.odata.v4.ODataContextBinding.requestObject</samp> is a short cut for
+<samp class="ph codeph">oBinding.getBoundContext().requestObject()</samp>. sap.ui.model.odata.v4.Context.setProperty is used to modify data.</p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>Relative bindings need to be resolved meaning that a context must have been set before data access is possible.</p></aside>
+<pre class="pre codeblock prettyprint lang-js">var oContextBinding = oModel.bindContext(&quot;/SalesOrderList(&apos;0500000000&apos;)&quot;);
+
+oContextBinding.requestObject(&quot;Note&quot;).then(function (sNote) {
+    if (!sNote) {
+        oContextBinding.getBoundContext().setProperty(&quot;Note&quot;, &quot;No notes&quot;);
+    }
+});</pre>
+</section></div>
+<div class="section" id="loio17b30ac2d5474078be31e695e97450cc__section_hg5_cdc_v3b"><section class="section" type="Single Properties"><h2 class="section_title" style="font-size: 1.15em;">Single Properties</h2>
+
+<p class="p">The access to single properties may either be done using a context binding as described above in the <span class="ph uicontrol">Single Entities</span>
+section, or by using a property binding. The property binding is obtained with <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel.bindProperty" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel.bindProperty" title="#/api/sap.ui.model.odata.v4.ODataModel.bindProperty">sap.ui.model.odata.v4.ODataModel.bindProperty</a></span>, or by getting an existing property binding bound to a
+control. The value can be requested using <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataPropertyBinding.requestValue" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataPropertyBinding.requestValue" title="#/api/sap.ui.model.odata.v4.ODataPropertyBinding.requestValue">sap.ui.model.odata.v4.ODataPropertyBinding.requestValue</a></span>. A
+synchronous access is possible with sap.ui.model.odata.v4.ODataPropertyBinding.getValue, if the value is already available.</p>
+<p class="p">The value of a property binding can be modified using <samp class="ph codeph">sap.ui.model.odata.v4.ODataPropertyBinding.setValue</samp>.</p>
+<pre class="pre codeblock prettyprint lang-js">var oNote = oModel.bindProperty(&quot;/SalesOrderList(&apos;0500000000&apos;)/Note&quot;);
+ 
+ 
+oNote.requestValue().then(function (sValue) {
+    // do something with sValue
+    // Note: We cannot use setValue as oNote is an absolute property binding
+});</pre>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

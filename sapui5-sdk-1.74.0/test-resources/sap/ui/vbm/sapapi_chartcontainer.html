@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+				<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+				<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+				<script src="../../../../resources/sap-ui-core.js"
+					 id="Script1"
+					 data-sap-ui-libs="sap.ui.vbm"
+					 data-sap-ui-theme="sap_bluecrystal" >
+				</script>
+
+				<script>
+
+				  // query for charts library
+			     jQuery.sap.require( "sap.suite.ui.microchart.ColumnMicroChart" );				
+		   
+					// creation of visual business
+					sap.ui.localResources("vbitestapp");
+
+					// helper functions
+               function CreateChart( id )
+               {
+                     var oChart = new sap.suite.ui.microchart.ColumnMicroChart( 'chart' + id, { 
+                        size : "S",
+                        columns: [
+                              new sap.suite.ui.microchart.ColumnMicroChartData( { value: 60, color: "Neutral" } ),                  
+                              new sap.suite.ui.microchart.ColumnMicroChartData( { value: 10, color: "Error" } ),
+                              new sap.suite.ui.microchart.ColumnMicroChartData( { value: 20, color: "Error" } ),                     
+                              new sap.suite.ui.microchart.ColumnMicroChartData( { value: 30, color: "Error" } ),
+                         ]
+                     });
+
+                     return oChart; 
+               };
+					
+		         function onOpenWindow( oEvent )
+		         {
+		            // attach the panel to the page
+		            var id = oEvent.getParameter( "contentarea" ).id;
+                  var chart = CreateChart( 'chart' + id );
+                  chart.placeAt( id );
+                  
+		         };
+
+		         function onCloseWindow( oEvent )
+		         {
+		            // when the panel should be destroyed it can be done.............//
+		            // if( oPanel )
+		            //   oPanel.destroy();
+		            // oPanel = null;
+		         };					
+			
+					
+					var oVBI1 = new sap.ui.vbm.VBI('vbiWrap',{
+						width : "100%",
+						height: "600px",
+		            openWindow: onOpenWindow,
+		            closeWindow: onCloseWindow
+					});
+					oVBI1.placeAt("content");
+
+					// load the json  
+					var dat = $.getJSON("media/vbchartcontainer/main.json", function( dat ) 
+					{
+						oVBI1.load( dat );
+    				});
+				
+					
+			         function onModify()
+			         {
+						// load just data  and set it to check if removal of charts is working
+						var dat = $.getJSON("media/vbchartcontainer/modify.json", function( dat ) 
+						{
+							oVBI1.load( dat );
+	    				});
+			         };					
+				   
+				</script>
+		 </head>
+
+		 <body style="height:100%" class="sapUiBody" role="application">
+			  <h1>Visual Business UI5: ChartContainer Test</h1>
+			  <div id="content"></div>
+              <button id="btn" onclick="onModify()">Modify</button>
+
+		 </body>
+</html>

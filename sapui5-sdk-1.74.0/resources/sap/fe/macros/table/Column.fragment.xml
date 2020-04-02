@@ -1,0 +1,23 @@
+<core:FragmentDefinition
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns:mdcTable="sap.ui.mdc.table"
+	xmlns:core="sap.ui.core"
+	template:require="{
+		MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+		TABLE: 'sap/fe/macros/table/TableHelper',
+		FIELD: 'sap/fe/macros/field/FieldHelper',
+		ID: 'sap/fe/macros/StableIdHelper'
+	}"
+>
+	<!-- TODO: Reevaluate MDC column width -->
+	<mdcTable:Column
+		id="{= ${this>id} ? ID.generate([${this>id}, 'C', ${dataField>Target/$AnnotationPath} || ${dataField>Value/$Path}]) : undefined }"
+		width="{= TABLE.getColumnWidth(${dataField>Value/$Path@},${dataField>$Type},${dataField>Value/$Path/@@FIELD.fieldControl},(${collection>@com.sap.vocabularies.Common.v1.DraftRoot} || ${collection>@com.sap.vocabularies.Common.v1.DraftNode}), ${dataField>Value/$Path/$Type}, ${dataField>Value/$Path/$MaxLength}) }"
+		header="{= ${dataField>@@MODEL.label} || ${dataField>@com.sap.vocabularies.Common.v1.Label} }"
+		dataProperties="{= ${dataField>Value/$Path} }"
+		hAlign="{= (['Edm.Decimal','Edm.DateTimeOffset','Edm.Date'].indexOf(${dataField>Value/$Path/$Type}) >= 0) ? 'End' : (${dataField>Criticality/$Path}) ? 'Center' : 'Begin' }">
+
+		<core:Fragment fragmentName="sap.fe.macros.table.ColumnContent" type="XML"/>
+
+	</mdcTable:Column>
+</core:FragmentDefinition>

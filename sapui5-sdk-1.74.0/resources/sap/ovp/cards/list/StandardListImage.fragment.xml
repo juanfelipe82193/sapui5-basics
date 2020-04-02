@@ -1,0 +1,34 @@
+<core:FragmentDefinition
+        xmlns="sap.m"
+        xmlns:core="sap.ui.core"
+        xmlns:ovp="sap.ovp.ui"
+        xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+        xmlns:build="sap.build">
+
+    <List id="ovpList" items="{parts:[{path:'entitySet>'}, {path:'ovpCardProperties>/annotationPath'}], formatter: 'sap.ovp.cards.AnnotationHelper.formatItems'}">
+
+        <template:with path='ovpCardProperties>/annotationPath' helper="sap.ovp.cards.AnnotationHelper.resolveEntityTypePath" var='lineItem'>
+                <customData>
+                    <ovp:CustomData key="aria-label" value="{ovplibResourceBundle>imageListCardType}" writeToDom="true" />
+                </customData>
+                <items>
+                <!-- for info: the formatter function checks the number of data points and if the data points are more than 0, then third data point is displayed. else first data point is displayed -->
+                <StandardListItem
+                        id="listItem"
+                        class="sapOvpStandardListItem sapOvpStandardListItemImagesIcons"
+                        icon="{path: 'lineItem>', formatter: 'sap.ovp.cards.AnnotationHelper.formatImageUrl'}"
+                        iconInset = "false"
+                        title="{parts:[{path:'lineItem>'}, {path:'ovpConstants>/firstDataFieldIndex'}], formatter: 'sap.ovp.cards.AnnotationHelper.formatDataFieldValueOnIndex'}"
+                        description="{parts:[{path:'lineItem>'}, {path:'ovpConstants>/secondDataFieldIndex'}], formatter: 'sap.ovp.cards.AnnotationHelper.formatDataFieldValueOnIndex'}"
+                        info="{parts:[{path:'lineItem>'}, {path:'ovpConstants>/firstDataPointIndex'}, {path:'ovpConstants>/thirdDataFieldIndex'}], formatter: 'sap.ovp.cards.AnnotationHelper.formatDataPointOrField'}"
+                        infoState="{= ${path: 'lineItem>', formatter: 'sap.ovp.cards.AnnotationHelper.getDataPointsCount'} > 0 ? ${path: 'lineItem>', formatter: 'sap.ovp.cards.AnnotationHelper.formatFirstDataPointState'} : 'None' }"
+                        type="Active"
+                        press="onListItemPress">
+                </StandardListItem>
+                </items>
+
+        </template:with>
+
+    </List>
+
+</core:FragmentDefinition>

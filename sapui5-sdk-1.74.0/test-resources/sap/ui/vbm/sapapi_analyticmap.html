@@ -1,0 +1,242 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.m,sap.ui.commons,sap.ui.table,sap.ui.vbm"
+		data-sap-ui-theme="sap_bluecrystal" >
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#btnZoomIn{
+			margin-right: 10px;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 40.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#margin {
+			margin-right: 50px;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 55.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+
+	// for testing here are some event handlers
+	function onRegionClick( e )
+	{
+// 		alert( "onRegionClick "  + e.getParameter( "code" ) );
+		sap.m.MessageToast.show( "onRegionClick " + e.getParameter( "code" ) );
+	};
+
+	function onLegendClick( e )
+	{
+		sap.m.MessageToast.show( "onLegendClick; clicked on  " + e.getParameters().id );
+	};
+	
+	function onLegendItemClick( e )
+	{
+		sap.m.MessageToast.show( "onLegendItemClick; clicked on  " + e.getParameters().id  );
+	};
+	
+	function onRegionContextMenu( e )
+	{
+		sap.m.MessageToast.show( "onRegionContextMenu: " + e.getParameter( "code" ) );
+	};
+
+	function onMapClick( e )
+	{
+		sap.m.MessageToast.show( "onMapClick Position: " + e.getParameter("pos"));
+	}; 
+	function onMapContextMenu( e )
+	{
+		sap.m.MessageToast.show( "onMapContextMenu Position: " + e.getParameter("pos"));
+	};	
+
+	// have some data
+	var oData = 
+		{
+	       regionProperties :
+				[
+					{ "code": "DE", "region" : "Germany" , "color": "rgb(92,186,230)", "tooltip":"Germany\r\nBIP: 3.577 Mrd. USD\r\nPopulation: 80,716 Mio" },
+					{ "code": "FR", "region" : "France" , "color": "rgb(182,217,87)"},
+					{ "code": "IT", "region" : "Italy" , "color": "rgb(250,195,100)"},
+               { "code": "GR", "region" : "Greece" , "color": "rgb(140,211,255)"},
+               { "code": "ES", "region" : "Spain" , "color": "rgb(217,152,203)"},
+               { "code": "PT", "region" : "Portugal" , "color": "rgb(242,210,73)"}
+				],
+           Circles :
+               [
+                  { "key" : "1", "pos": "30;0;0",  "tooltip": "Circle1" },
+                  { "key":  "2", "pos": "30;30;0", "tooltip": "Circle2" },
+                  { "key":  "3", "pos": "30;60;0", "tooltip": "Circle3" }
+               ]
+				
+		};
+	
+	// create model and set the data
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+
+	// change the L0 geojson location to internal folder, due it is not......//
+	// allowed for us to deliver it..........................................//
+	jQuery.sap.require( "sap.ui.vbm.AnalyticMap");
+	sap.ui.vbm.AnalyticMap.GeoJSONURL  =  "media/analyticmap/L0.json";
+	           
+	
+	// create analytic map and bind to model
+	var oVBI = new sap.ui.vbm.AnalyticMap('vbi',
+			{
+					width : "100%",
+					height: "100%",
+					plugin: false,
+					regions : {
+						path : "/regionProperties",
+						template: new sap.ui.vbm.Region(  { code: "{code}", color: '{color}', tooltip: '{tooltip}', click: onRegionClick, contextMenu: onRegionContextMenu  } )
+					},
+
+					legend : new sap.ui.vbm.Legend(
+					      {
+					        caption : "Analytic Legend",
+					        click : onLegendClick,
+					        items : {
+									path : "/regionProperties",
+									template: new sap.ui.vbm.LegendItem(  { text: "{region}", color: '{color}', click: onLegendItemClick, tooltip: '{tooltip}' } )
+								}
+					      }
+					),
+					
+					regionClick : onRegionClick,
+					regionContextMenu : onRegionContextMenu,
+					click: onMapClick,
+					contextMenu: onMapContextMenu
+			});
+
+	
+	oVBI.setModel( oModel );
+	oVBI.placeAt("content");
+
+	// just to test dynamic model changes
+	function onChangeModel1()
+	{
+		oModel.setProperty( "/regionProperties/2/color", "rgba(255,0,0,1.0)" );
+	};
+
+   // just to test dynamic model changes
+   function onChangeModel2()
+   {
+      if( oData.regionProperties.length )
+         oData.regionProperties = oData.regionProperties.splice( 0, oData.regionProperties.length - 1 );
+      
+      oModel.setData( oData );
+   };
+	
+	
+	function onZoomToRegions()
+	{
+	   // oVBI.zoomToGeoPosition( 0.0, 0.0, 0 );
+	     oVBI.zoomToRegions( [ 'DE','IT','FR' ] );
+		// oVBI.zoomToRegions( ['DE','IT','FR' ] );
+	};
+
+	function onRemoveAllRegions()
+	{
+	   // oVBI.destroyRegions();
+	   oVBI.unbindAggregation( "regions" ); //();
+	   // oVBI.removeAllRegions();
+	};
+	
+	function onGetCurrentZoomlevel()
+	{		
+		if( evtoutput.innerText !== undefined )
+			evtoutput.innerText = oVBI.mVBIContext.GetMainScene().GetCurrentZoomlevel();
+		else
+	  if( evtoutput.textContent !== undefined )
+			evtoutput.textContent = oVBI.mVBIContext.GetMainScene().GetCurrentZoomlevel();	// due to ff
+	};
+	
+	function onGetCentrePos()
+	{
+	   if( evtoutput.innerText !== undefined )
+			evtoutput.innerText = oVBI.mVBIContext.GetMainScene().GetCenterPos();
+		else
+	  if( evtoutput.textContent !== undefined )
+			evtoutput.textContent = oVBI.mVBIContext.GetMainScene().GetCenterPos();	// due to ff
+	};
+	
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business AnalyticMap Sample</h1>
+			<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test Visual Business AnalyticMap Control.</p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+				<li>Check that the grey countries are in-active. They do not react on hover, except pointer and tooltip, and can not be selected. They
+				     only raise click events.</li>
+				<li> Check that the colored countries are active. They react on hover and can be selected. They raise click and (de)select events.</li><i> to test click events click on the country. To test de-select click elsewhere on the map.</i>
+				<li> Click on a colored country and then click on a grey country and check that the colored country is deselected.</li>
+				<li> Check that if any colored country is selected all other countries get a lighter color.</li>
+				<li> <!--Hovered and--> Click on a colored country and check that the selected country gets a dark grey border around it. </li>
+			<!--<li> Click on grey colored countries and check that once you click the grey areas become darker.</li>-->
+				<li> There are click and contextMenu events assigned to the map, regions, and legend entries. Click on the different areas and check that you receive a Message Toast.</li>
+			<li> Click on button "Change Model" and check that the color for country Italy changes from orange to red</li>
+			<li> Click the button "Change Again" and check that a region is removed (spliced) each time the user clicks the button. </li>
+			<li> Click "Zoom Regions" and check that the map zooms in on the regions. </li>
+			<li> Click "Remove all Regions" and check that all of the regions are removed from the GeoMap.</li>
+				</ol>
+		</div>
+		<div id="description2">
+			<br>
+					 <button id="ChangeModel1" onclick="onChangeModel1()" >Change Model</button>
+		 <button id="ChangeModel2" onclick="onChangeModel2()" >Change Again</button>
+		 <button id="ZoomRegions" onclick="onZoomToRegions()" >Zoom Regions</button>
+		 <button id="removeAllRegions" onclick="onRemoveAllRegions()" >Remove all Regions</button>
+			<br>
+			<br>
+		 	<div class="ratio_box">
+		 	  <div class="content" id="content"></div>
+		   </div>
+
+			</div>
+	</body>
+</html>

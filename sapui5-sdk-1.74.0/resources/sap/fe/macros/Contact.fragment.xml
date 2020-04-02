@@ -1,0 +1,70 @@
+
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:mdcField="sap.ui.mdc.field"
+	xmlns:mdc="sap.ui.mdc"
+	xmlns:mdcLink="sap.ui.mdc.link"
+	template:require="{ MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+			            FIELD: 'sap/fe/macros/field/FieldHelper' }">
+			<mdc:Field id= "{= ${this>id} || undefined}"
+				editMode="Display"
+				width="100%"
+				visible = "{= ${dataField>@@.FIELD.getHiddenPathExpression}}"
+				value="{contact>fn@@MODEL.format}">
+				<mdc:fieldInfo>
+					<mdcField:FieldInfo>
+						<mdcLink:ContentHandler enablePersonalization="false">
+							<mdcLink:linkHandler>
+								<mdcLink:LinkHandler>
+									<mdcLink:LinkItem
+										isMain="true"
+										text="{contact>fn@@MODEL.format}"
+										description="{contact>title@@MODEL.format}"
+										icon="{contact>photo@@MODEL.format}"/>
+								</mdcLink:LinkHandler>
+							</mdcLink:linkHandler>
+							<mdcLink:additionalContent>
+								<mdcLink:ContactDetails>
+									<mdcLink:ContactDetailsItem formattedName="{contact>fn@@MODEL.format}"
+										photo="{contact>photo@@MODEL.format}"
+										title="{contact>title@@MODEL.format}"
+										role="{contact>role@@MODEL.format}"
+										org="{contact>org@@MODEL.format}">
+										<template:if test="{contact>tel}">
+											<mdcLink:phones>
+												<template:repeat list="{contact>tel}" var="telephone">
+													<mdcLink:ContactDetailsPhoneItem uri="{telephone>uri@@MODEL.format}"
+														types="{= ${telephone>type} &amp;&amp; ${telephone>type/$EnumMember}.split('/').pop() || undefined }"/>
+												</template:repeat>
+											</mdcLink:phones>
+										</template:if>
+										<template:if test="{contact>email}">
+											<mdcLink:emails>
+												<template:repeat list="{contact>email}" var="emailId">
+													<mdcLink:ContactDetailsEmailItem uri="{emailId>address@@MODEL.format}"
+														types="{= ${emailId>type} &amp;&amp; ${emailId>type/$EnumMember}.split('/').pop() || undefined }"/>
+												</template:repeat>
+											</mdcLink:emails>
+										</template:if>
+										<template:if test="{contact>adr}">
+											<mdcLink:addresses>
+												<template:repeat list="{contact>adr}" var="address">
+													<mdcLink:ContactDetailsAddressItem street="{address>street@@MODEL.format}"
+														code="{address>code@@MODEL.format}"
+														locality="{address>locality@@MODEL.format}"
+														region="{address>region@@MODEL.format}"
+														country="{address>country@@MODEL.format}"
+														types="{= ${address>type} &amp;&amp; ${address>type/$EnumMember}.split('/').pop() || undefined }"/>
+												</template:repeat>
+											</mdcLink:addresses>
+										</template:if>
+									</mdcLink:ContactDetailsItem>
+								</mdcLink:ContactDetails>
+							</mdcLink:additionalContent>
+						</mdcLink:ContentHandler>
+					</mdcField:FieldInfo>
+				</mdc:fieldInfo>
+			</mdc:Field>
+</core:FragmentDefinition>

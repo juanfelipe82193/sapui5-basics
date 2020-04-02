@@ -1,0 +1,56 @@
+<core:FragmentDefinition xmlns="sap.suite.ui.microchart" 
+	xmlns:core="sap.ui.core" 
+	xmlns:m="sap.m" 
+	xmlns:oDataV4MicroChart="sap.fe.macros.microchart"
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1" template:require="{
+		MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+		MICROCHART: 'sap/fe/macros/microchart/MicroChartHelper',
+		ID: 'sap/fe/macros/StableIdHelper'
+	}">
+	<template:with path="chartAnnotation>Measures/0" helper="MICROCHART.getMeasureAttributeForMeasure" var="MeasureAttribute">
+		<template:with path="MeasureAttribute>DataPoint/$AnnotationPath/" var="DataPoint">
+			<template:with path="DataPoint>Value/$Path" helper="MODEL.resolve$Path" var="Measure">
+			<template:with path="chartAnnotation>Dimensions/0/" var="Dimension">
+				<oDataV4MicroChart:MicroChartContainer
+					id="{= ${this>id} ? ID.generate([${this>id}, 'mCC']) : undefined }"
+					renderLabels="{= ${this>renderLabels} !== 'false' ? true : false }"
+					chartTitle="{= ${this>title} || ${chartAnnotation>Title}}"
+					chartDescription="{= ${this>description} || ${chartAnnotation>Description}}"
+					uomPath="{= ${this>renderLabels} === 'false' ? undefined : ((${Measure>@Org.OData.Measures.V1.ISOCurrency} || ${Measure>@Org.OData.Measures.V1.Unit}) ? (${Measure>@Org.OData.Measures.V1.ISOCurrency/$Path} || ${Measure>@Org.OData.Measures.V1.Unit/$Path}) : undefined) }"
+					measures="{= MICROCHART.getMeasurePropertyPaths(${chartAnnotation>}, ${collection>./@}, 'Line')}"
+					dimension="{= ${Dimension>$PropertyPath@com.sap.vocabularies.Common.v1.Text} ? ${Dimension>$PropertyPath@com.sap.vocabularies.Common.v1.Text/$Path} : ${Dimension>$PropertyPath} }"
+					measurePrecision="{= ${Measure>$Precision} ? ${Measure>$Precision} : undefined }"
+					measureScale="{= (${DataPoint>ValueFormat} &amp;&amp; ${DataPoint>ValueFormat/NumberOfFractionalDigits}) ?  ${DataPoint>ValueFormat/NumberOfFractionalDigits} : ${DataPoint>Value/$Path/$Scale} ? ${DataPoint>Value/$Path/$Scale} : 1 }"
+					dimensionPrecision="{= ${Dimension>$PropertyPath/$Precision} ? ${Dimension>$PropertyPath/$Precision} : undefined }"
+					dataPointQualifiers="{= MICROCHART.getDataPointQualifiersForMeasures(${chartAnnotation>}, ${collection>./@}, 'Line')}"
+					binding="{= ${this>groupId} ? ('{path:\'\', parameters : { $$groupId: \'' + ${this>groupId} + '\'} }') : undefined }">
+					<LineMicroChart showThresholdLine="false">
+						<lines>
+							<template:repeat list="{chartAnnotation>Measures}" var="Measure">
+								<template:with path="Measure>" helper="MICROCHART.getMeasureAttributeForMeasure" var="MeasureAttribute">
+									<template:with path="MeasureAttribute>DataPoint/$AnnotationPath/" var="DataPoint">
+										<template:if test="{= ${DataPoint>Value} &amp;&amp; ${Dimension>$PropertyPath} &amp;&amp; MICROCHART.isNotAlwaysHidden('Line', ${DataPoint>Value}, undefined,${DataPoint>Value/$Path@com.sap.vocabularies.UI.v1.Hidden}) }">
+											<template:then>
+												<template:with path="DataPoint>Value/$Path" helper="MODEL.resolve$Path" var="DataPointMeasure">
+													<LineMicroChartLine points="{= '{path:\'' + (${collection>$kind} === 'EntitySet' ? '/' : '') + ${collection>@sapui.name} + '\', parameters : {' + MICROCHART.getSelectParameters('','','',((${DataPointMeasure>@Org.OData.Measures.V1.ISOCurrency} || ${DataPointMeasure>@Org.OData.Measures.V1.Unit}) ? (${DataPointMeasure>@Org.OData.Measures.V1.ISOCurrency/$Path} || ${DataPointMeasure>@Org.OData.Measures.V1.Unit/$Path}) : ''), (${Dimension>$PropertyPath@com.sap.vocabularies.Common.v1.Text} ? ${Dimension>$PropertyPath@com.sap.vocabularies.Common.v1.Text/$Path} : ${Dimension>$PropertyPath})) + '} }' }">
+														<points>
+															<LineMicroChartPoint x="{Dimension>@@.MODEL.value}" y="{DataPoint>Value@@.MODEL.value}"/>
+														</points>
+													</LineMicroChartLine>
+												</template:with>
+											</template:then>
+											<template:elseif test="{= MICROCHART.logWarning('Line', { DataPoint_Value : ${DataPoint>Value}, Dimension : ${Dimension>$PropertyPath} }) }">
+											</template:elseif>
+										</template:if>
+									</template:with>
+								</template:with>
+							</template:repeat>
+						</lines>
+					</LineMicroChart>
+				</oDataV4MicroChart:MicroChartContainer>
+			</template:with>
+			</template:with>
+		</template:with>
+	</template:with>
+
+</core:FragmentDefinition>

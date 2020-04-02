@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>UI5 CVOM HTML5 Charts - sap.service.visualization</title>
+
+<script id="sap-ui-bootstrap" type="text/javascript"
+  src="../../../resources/sap-ui-core.js"
+   data-sap-ui-libs="sap.viz"></script>
+<script type="text/javascript" src="./GroupedLineDemo/userDefinedTooltip.js"></script>
+<style>
+	#mytooltip{
+ 	background:#FFFFFF;
+ 	border-width:1px;
+ 	width : 100px;
+	border-style:solid;
+	border-color:#666666;
+	font-family:'Open Sans', Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	}
+	#mytooltip #body{
+	 border-style:solid;
+	 border-width:1px;
+ 	border-color: transparent transparent #888888 transparent;
+	}
+	#mytooltip .circle {
+	background: #37A047;
+	height:12px;
+	width:12px;
+	-moz-border-radius:12px;
+	-webkit-border-radius:12px;
+	text-align:center;
+	color:transparent;
+	line-height: 12px;
+	font-weight: bold;
+	font-size: 13px;
+	font-family: sans-serif;
+	}
+	#deprecatedBanner {
+		display: block;
+		padding: 10px;
+		border: 3px solid red;
+		border-radius: 10px;
+		opacity: 0.75;
+		color: red;
+		font-weight: bold;
+		font-size: 0.8rem;
+		z-index: 99999;
+		background-color: white;
+		overflow-y: hidden;
+	}
+</style>
+<script>
+function getGroupEvent(event){
+  var groups = this._rootNode.selectAll("rect.v-grouptooltip-rect");
+  for( var i = 0, len = groups[0].length; i < len ; i++)
+  {
+    var rect = groups[0][i].getBoundingClientRect();
+    if(rect.left <= event.data.point.x && rect.right >event.data.point.x 
+        && rect.top <= event.data.point.y && rect.bottom > event.data.point.y  ){
+      return groups[0][i];
+    }
+  }
+  
+  return null;
+}
+
+		var oModel = new sap.ui.model.json.JSONModel({
+		  data:[              
+	       { Country : "Canada", profit: 341.25,revenue:410.87 },
+	       { Country : "China",profit: 133.82,revenue:338.29},
+	       { Country : "France",profit: 348.76,revenue:487.66 },
+	       { Country : "Germany",profit: 217.29,revenue:470.23},
+	       { Country : "India",profit: 117.00,revenue:170.93},
+	       { Country : "United States",profit: 609.16,revenue:905.08},
+	     ]
+		});   
+	
+		var oDataSet = new sap.viz.ui5.data.FlattenedDataset({
+		  dimensions : [ 
+		      {
+		          axis : 1, 
+		          name : 'Country', 
+		          value : "{Country}"
+		      }
+		  ],
+		  
+		  measures : [ 
+	      // measure 1
+	      {
+	          name : 'profit', // 'name' is used as label in the Legend 
+	          value : '{profit}' // 'value' defines the binding for the displayed value   
+	      },
+				{
+				  name: 'revenue',
+				  value: '{revenue}'
+				}
+		  ],
+			 // 'data' is used to bind the whole data collection that is to be displayed in the chart 
+			 data : {
+			      path : "/data"
+			 }
+			});
+     
+      var line = new sap.viz.ui5.Line({
+        width : "800px",
+        height : "400px",
+        title : {
+          visible : true,
+          text : "Revenue By Customer"
+        },
+        plotArea: {
+           marker: {
+             visible: true
+           },
+           animation:
+           {
+               dataLoading: true,
+           },
+           showGroupDetail: true
+        },
+        interaction:{
+          'decorations': [{'name': 'showDetail', 'fn':function(data, bShow){ tooltip.showTooltip(data, bShow);}},
+                        {'name': 'hideDetail', 'fn':function(data){ tooltip.hideTooltip();}}],
+          'triggers':[ {
+                          'key' : 'hover_on_plot',
+                          'event' : 'hover',
+                          'target':  '(\\s+|^)(v-m-plot)(\\s+|$)'  //'(\\s+|^)v-datapoint(\\s+|$)'
+                      },
+                      {
+                          'key' : 'hover_on_non_plot',
+                          'event' : 'hover',
+                          'target':     '(\\s+|^)(v-m-plot)(\\s+|$)' ,
+                          'matchMode' : 'negative'
+                      }],
+         'handlers':[{triggerKey : 'hover_on_plot', fn :function(event){
+           var groupTarget = getGroupEvent.call(this, event);
+           if(groupTarget){
+           //  if(!(this._hoveringGroupRect && this._hoveringGroupRect === groupTarget)){
+               this._hoveringGroupRect = groupTarget;
+               data = groupTarget.__data__;
+               var offset = $(this._rootNode.select(".v-m-plot").node()).offset();
+               /////////inject extension point/////////   
+               var containerNode = this._rootNode.node();
+               var tooltipData = {
+                   "data":  data.data.data,
+                   "position": {x:data.point.x + offset.left, y:data.point.y + offset.top},
+                   "container": containerNode,
+
+                      
+               };
+               
+              
+                tooltipData.hoverline = {
+                    startx:data.hoverline.startx + offset.left, starty: data.hoverline.starty + offset.top,
+                    endx: data.hoverline.endx + offset.left, endy: data.hoverline.endy + offset.top
+                };
+               
+         
+               this.runDecoration('showDetail', tooltipData, true);
+              // showDetail.call(this, groupTarget, "infoMode", groupTarget.__data__.point);
+             }
+          // }
+         } },
+         {triggerKey: 'hover_on_non_plot', fn: function(event){       this._hoveringGroupRect = null;
+         this.runDecoration('hideDetail', "infoMode");}}]
+                      
+        },
+        dataset : oDataSet  
+      });
+      var tooltip;
+      line.addEventDelegate({
+        onAfterRendering : function(){
+          tooltip = new MyTooltip(document.getElementById("mytooltip"));
+        }
+      });
+      line.setModel(oModel);
+      line.placeAt('content');
+
+</script>
+
+</head>
+<body class='sapUiBody'>
+	<div>
+		<span id="deprecatedBanner" title="The chart controls in the <code>sap.viz.ui5</code> package (which were always marked as <i>experimental</i>) have been deprecated since 1.32.0. <br>They are no longer actively developed and won't receive new features or improvements, only important bug fixes. They will only remain in the <br>SAPUI5 distribution for backward compatibility. <br><br><b>SAP strongly recommends that existing consumers of those controls migrate to the new VizFrame<br>control to benefit from new charting enhancements and timely support. </b><br><br><b>Note</b>: As the feature set, design and API usage of VizFrame might differ from the old chart controls, make sure you evaluate it thoroughly before migration.">
+			<span style ="color: red;">IMPORTANT NOTICE: viz-chart deprecated since version 1.32.0<br/><br/></span>
+			<span style="text-align: left;">The chart controls in the <code>sap.viz.ui5</code> package (which were always marked as <i>experimental</i>) have been deprecated since 1.32.0. <br>They are no longer actively developed and won't receive new features or improvements, only important bug fixes. They will only remain in the <br>SAPUI5 distribution for backward compatibility. <br><br><b>SAP strongly recommends that existing consumers of those controls migrate to the new VizFrame<br>control to benefit from new charting enhancements and timely support. </b><br><br><b>Note</b>: As the feature set, design and API usage of VizFrame might differ from the old chart controls, make sure you evaluate it thoroughly before migration.</span>
+		</span>
+	</div>
+	<div id='content' style="width: 800px; height: 600px;"></div>
+	<div id = "hoverline" style= "position:absolute; display:none"></div>
+	<div id="mytooltip" style="display:block; position:absolute">
+	    <div id = "body" style="position:relative"> </div>
+	    <div id = "footer" style="position:relative"> </div>
+	</div>
+</body>
+</html>

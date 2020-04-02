@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define([],function(){"use strict";var T=function(){};T.prototype._changeHandler=function(d){return function(v){var m=d.getModel();var V=jQuery.extend({},m.getProperty("/validation"),{transport:v});m.setProperty("/validation",V);};};T.prototype.enhanceDialogWithTransport=function(d,t,o){var c=this._changeHandler(d);c(false);var C=function(p){var P=t.decorateResultWithTransportInformation(p);o(P);};t.attachChangeEventHandler(c);d.attachConfirm(C);d.transportExtensionPoint(t);return d;};return T;});

@@ -1,0 +1,255 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Standard Composite Controls</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Composite controls are a means to save time and effort by reusing existing controls for the implementation."><meta name="description" content="Composite controls are a means to save time and effort by reusing existing controls for the implementation."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"b83a4dcb7d0e46969027345b8d32fd44.html","previousTopicHref":"d6bab27b5dc041b29b419bae8ae8f1d1.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loioc1512f6ce1454ff1913e3857bad56392"><h1 class="title topictitle1" hidden>Standard Composite Controls</h1><div class="body"><p class="shortdesc" hidden>Composite controls are a means to save time and effort by reusing existing controls for
+the implementation.</p>
+<p class="p">For application developers, the composite control is a black box, therefore, an application
+developer cannot distinguish a composite control from native (non-composite) controls.
+As the application developer can not distinguish the controls, the control developer can
+change the implementation later and avoid composition (or the other way around). For
+existing uses of the respective control, this change is fully compatible.</p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">If you do <span class="ph emphasis emphasis">not</span> intend to re-use a control in several places, a composite
+control may not be your best choice. Composite controls are best suited for
+(massive) re-use and for a public API that shields the application developer from
+its inner workings. If these are not your requirements, consider to use other
+techniques of factoring out common parts within your application. You can, for
+example, simply write an XML fragment or a function returning the root of some
+control tree.</p></aside>
+<div class="section"><section class="section" type="Simple Example: Search Field"><h2 class="section_title" style="font-size: 1.15em;">Simple Example: Search Field</h2><p class="p">To create a composite control, you
+start with crafting its API including properties, events, aggregations, and so on as
+you do it for any other control. Choose either element or control as base type. The
+following simple example combines an input field with a button that we call &quot;search
+field&quot;. To the outside world, it offers an editable value and can fire a search
+event.</p><img class="inline  " id="loioc1512f6ce1454ff1913e3857bad56392__image_dnf_dph_5q" src="loiofd6475b8d1fd4b75bad61b7dc2e8ce3c_LowRes.png"><div class="sectiondiv subsection">
+<p class="p subsectiontitle">API</p>
+<p class="p">As any other control, you can describe composite controls via the JavaScript control
+definition API, see <a class="xref" href="../../#/topic/8dcab0011d274051808f959800cabf9f.html" title="You can create own content for SAPUI5. To develop controls in JavaScript, you can either extend existing controls or create new ones." target="_top">Developing Controls</a> and
+the following example.</p>
+<pre class="pre codeblock prettyprint lang-js">// &quot;Control&quot; required from &quot;sap/ui/core/Control&quot;
+var SearchField = Control.extend(&quot;SearchField&quot;, {
+  metadata : {
+    properties : {
+       &quot;value&quot; : &quot;string&quot;
+    },
+    aggregations: {
+       &quot;_input&quot; : {type : &quot;sap.m.Input&quot;, multiple : false, visibility: &quot;hidden&quot;},
+       &quot;_btn&quot; : {type : &quot;sap.m.Button&quot;, multiple : false, visibility: &quot;hidden&quot;}
+    },
+    events: {
+       &quot;search&quot; : {}
+    }
+  }
+});</pre>
+<p class="p">The two aggregations with visibility set to <samp class="ph codeph">hidden</samp> are defined
+in the code snippets above. These aggregations are used to hold the inner
+controls. Aggregations are used to define a parent-child relationship between a
+parent control and its children (controls or elements). The knowledge about this
+relationship is, for example, relevant for the <span class="ph"><span class="ph pname">SAPUI5</span></span> core to
+dispatch events properly, or to cleanup the children when the parent is
+destroyed. Hidden aggregations are control internal and are used especially to
+register the inner controls within the control hierarchy without making them
+publicly available. Because hidden aggregations are only used internally within
+a composite control for hidden aggregations, no typed <samp class="ph codeph">accessor</samp>
+functions are generated, they are not cloned, and data binding is not
+enabled.</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Behavior</p>
+<p class="p">The control implementation, that is, its behavior, contains the code for
+initialization and clean-up hooks as well as glue code for properties and
+events.</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Init</p>
+<p class="p">The <samp class="ph codeph">init</samp> function contains the composite&apos;s parts and stores references to
+them.
+If you want to hide the composite parts, you should <span class="ph emphasis emphasis">not</span>
+assign an ID to those parts, but rather let the framework compute the IDs
+automatically. This reduces the possibility that a
+composite&apos;s parts are accessed from outside via the
+<samp class="ph codeph">sap.ui.getCore().byId(...)</samp> function.</p>
+<p class="p">If you have to assign IDs to the composite parts, then you should create those
+IDs by concatenating the main control ID (ID of your composite instance) with a
+single dash (<samp class="ph codeph">-</samp>) and an additional ID for the part like in the
+following example:</p>
+<pre class="pre codeblock prettyprint lang-js">mySearchField-input
+mySearchField-btn</pre>
+<p class="p">To avoid conflicts with the internal IDs of parts, the part ID
+(<samp class="ph codeph">input</samp> or <samp class="ph codeph">btn</samp> in the example) must be
+prefix-free. That means, it should not contain another dash (for example, don&apos;t
+use parts <samp class="ph codeph">input-label</samp> and <samp class="ph codeph">input</samp> at the same
+time). If the control that is used as part <samp class="ph codeph">input</samp> also is a
+composite control and accidentally uses part <samp class="ph codeph">label</samp>, then you&apos;ll
+have a conflict between
+<samp class="ph codeph">mySearchField-input</samp><samp class="ph codeph">-label</samp>
+(<samp class="ph codeph">label</samp> part of the <samp class="ph codeph">input</samp>) and your
+<samp class="ph codeph">mySearchField-input-label</samp> artifact
+(<samp class="ph codeph">input-label</samp> part of your composite).</p>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> reserves the single dash
+(<samp class="ph codeph">-)</samp> for composite controls and their parts, a double
+dash (<samp class="ph codeph">--)</samp> is used to combine the ID of views and their
+contained controls and a triple dash (<samp class="ph codeph">---)</samp>is used to
+combine component IDs and the IDs of their owned controls or views.</p></aside>
+<p class="p">During the <samp class="ph codeph">init</samp> function, the settings of the composite only
+have their default values. If the application developer has provided some values
+to the constructor, these values will only be set later on. It is, therefore,
+crucial for the correct behavior of your composite control that you implement
+one of the synchronization mechanisms described below.</p>
+<pre class="pre codeblock prettyprint lang-js">// &quot;Button&quot; required from &quot;sap/m/Button&quot;
+// &quot;Input&quot; required from &quot;sap/m/Input&quot;
+/**
+ * Initialization hook... creating composite parts
+ */
+SearchField.prototype.init = function(){
+  var that = this;
+  this.setAggregation(&quot;_input&quot;, new Input({
+    change: function(oEvent){
+      that.setProperty(&quot;value&quot;, oEvent.getParameter(&quot;Value&quot;), true /*no re-rendering needed, change originates in HTML*/); //see section Properties for explanation
+    }
+  }));
+  this.setAggregation(&quot;_btn&quot;, new Button({
+    text: &quot;Search&quot;,
+    press: function(){
+      that.fireSearch();
+    }
+  }));
+};</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Exit</p>
+<p class="p">You can use the <samp class="ph codeph">exit</samp> function to clean up your control when it
+is destroyed. You do not need to destroy the inner controls. This is done
+automatically by the framework because the inner controls are kept in hidden
+aggregations.</p>
+<pre class="pre codeblock prettyprint lang-js">/**
+ * Clean-up hook... destroying composite parts.
+ */
+SearchField.prototype.exit = function() {
+  //nothing to do here
+};</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Properties</p>
+<p class="p">Changes to settings in the API of a composite control are usually reflected in
+its parts. In the following example, the value property is propagated to the
+input part. To do so, the generated setter for that property is overwritten.
+Make sure that you include the proper implementation which generically sets a
+property inside the element base class, else you would have to override the
+getter also.</p>
+<p class="p">Note how the input&apos;s change event is used to update the composite&apos;s value
+property. Because the change originated in the HTML input field, no re-rendering
+is needed. This is expressed by the third parameter of the
+<samp class="ph codeph">setProperty</samp> call. This trick is applicable whenever a
+property change does not require a re-rendering on this control level.</p>
+<aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p class="p">Changing the input part&apos;s value triggers a re-rendering of the input.</p></aside>
+<pre class="pre codeblock prettyprint lang-js">/**
+ * Propagate value to input.
+ */
+SearchField.prototype.setValue = function(sValue){
+    this.setProperty(&quot;value&quot;, sValue, true /*no re-rendering of whole search field needed*/);
+    this.getAggregation(&quot;_input&quot;).setValue(sValue); // Note: this triggers re-rendering of input!
+};</pre>
+<p class="p">Propagating the API settings to the parts is usually not as straightforward as
+shown in the example above. If intercepting the changes by overriding the
+setters is not sufficient or too complicated, an alternative approach might be
+to implement a single <samp class="ph codeph">updateAllParts</samp> method and call it at the
+beginning of the renderer of the composite control or in the
+<samp class="ph codeph">onBeforeRendering</samp> hook of the control itself..</p>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Renderer</p>
+<p class="p">You can use markup for layouting in the renderer implementation. But at the heart
+of it, you simply delegate (via the render manager) to the composite parts&apos;
+renderers. This is where you really benefit from re-using other controls with
+non-trivial renderers. If you have chosen the <samp class="ph codeph">updateAllParts</samp>
+approach to keep the composite API settings and the settings of the parts in
+sync, make sure that you call <samp class="ph codeph">updateAllParts</samp> before the real
+rendering starts.</p>
+<pre class="pre codeblock prettyprint lang-js">SearchFieldRenderer.render = function(oRm, oSearchField) {
+  // oSearchField.updateAllParts(); // called depending on your &apos;sync&apos; approach
+  oRm.openStart(&quot;div&quot;, oSearchField); 
+  oRm.class(&quot;SearchField&quot;); 
+  oRm.openEnd();
+  oRm.renderControl(oSearchField.getAggregation(&quot;_input&quot;));
+  oRm.renderControl(oSearchField.getAggregation(&quot;_btn&quot;));
+  oRm.close(&quot;div&quot;);
+};</pre>
+</div></section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

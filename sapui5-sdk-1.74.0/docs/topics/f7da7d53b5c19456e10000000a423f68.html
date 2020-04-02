@@ -1,0 +1,241 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Analysis Path Processing</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><meta name="LOIO.FOLDER.IWB_FOLDER_ID" content="1234AC50C238B656E10000000A445394"><meta name="LOIO.FOLDER.IWB_TECH_NAME" content="HELPX.UI_EXT"><meta name="LOIO.FOLDER.IWB_FOLDER_GROUP" content="SAPXH"><meta name="LOIO.FOLDER.IWB_SHH_KEY" content><meta name="LOIO.FOLDER.IWB_TRANSLATION_MEMORY" content><meta name="LOIO.FOLDER.TERM_DOMAIN" content="FF"><meta name="LOIO.IWB_TYPE" content="ICG"><meta name="LOIO.IWB_SHH_KEY" content><meta name="LOIO.KW_CONVREF.CLASS" content><meta name="LOIO.KW_CONVREF.OBJID" content><meta name="PHIO.IWB_INDUSTRY" content="SHL"><meta name="PHIO.RELEASE" content="1.0_2014Q3"><meta name="PHIO.CREATED_AT" content="20140605161053"><meta name="PHIO.LAST_CHANGED_AT" content="20140605161053"><meta name="PHIO.IWB_LEVEL" content><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"0109e67712bc4966bfa8922909e92a87.html","previousTopicHref":"50467c53595a6655e10000000a423f68.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loiof7da7d53b5c19456e10000000a423f68"><h1 class="title topictitle1" hidden>Analysis Path Processing</h1><div class="body">
+<p class="p">The main purpose of the core module
+(<span class="ph sap-technical-name sap-technical-name">sap.apf.core</span>) is to handle and process
+analysis paths. A path and its steps are created, accessed, and processed using the APF
+API. During path processing, the following tasks are executed going through all steps in
+the order of their positions in the analysis path:</p>
+<ol class="ol">
+<li class="li"><p class="p">Execute the OData requests of the steps</p></li>
+<li class="li"><p class="p">Supply the representations of the steps with the response data</p></li>
+<li class="li"><p class="p">Notify the application UI using a callback function</p></li>
+</ol>
+<p class="p">In addition, the path logic accumulates filters that are derived from selections made in
+representations, and applies those filters in subsequent OData requests.</p>
+<p class="p">An analysis path contains an ordered sequence of one or more analysis steps. </p>
+<p class="p">A step is created using the APF API method
+<span class="ph sap-technical-name sap-technical-name">createStep(<var class="keyword varname">&lt;id&gt;</var>,<var class="keyword varname">&lt;callback&gt;</var>)</span>.
+It is inserted at the end of the path. The first method parameter is a unique
+identifier, which refers to the configuration entity that defines the step. The second
+parameter supplies a callback function, which is called once after the step has been
+created and processed.</p>
+<p class="p">Path processing is triggered using the APF API method
+<span class="ph sap-technical-name sap-technical-name">updatePath(<var class="keyword varname">&lt;callback&gt;</var>)</span>.
+The callback function is called each time after a step has been processed.</p>
+<div class="section"><section class="section" type="Runtime Objects"><h2 class="section_title" style="font-size: 1.15em;">Runtime Objects</h2>
+
+<p class="p">The following runtime objects exist:</p>
+<ul class="ul">
+<li class="li">
+<p class="p">A <span class="ph sap-technical-name sap-technical-name">step</span> object consists of a
+<span class="ph sap-technical-name sap-technical-name">request</span> object and a
+<span class="ph sap-technical-name sap-technical-name">binding</span> object.</p>
+</li>
+<li class="li">
+<p class="p">A <span class="ph sap-technical-name sap-technical-name">request</span> object defines an OData
+server request. It creates and processes the OData request, processes the
+response, and sends the response data to the corresponding step.</p>
+</li>
+<li class="li">
+<p class="p">The <span class="ph sap-technical-name sap-technical-name">binding</span> object sends the
+response data to the selected
+<span class="ph sap-technical-name sap-technical-name">representation</span> object. A
+<span class="ph sap-technical-name sap-technical-name">binding</span> object associates a
+step with one or more
+<span class="ph sap-technical-name sap-technical-name">representation</span> objects and
+identifies and handles the
+<span class="ph sap-technical-name sap-technical-name">representation</span> object that is
+currently selected. The <span class="ph sap-technical-name sap-technical-name">binding</span>
+object also defines how the selected representation translates its selection
+into a filter object.</p>
+</li>
+<li class="li">
+<p class="p">A <span class="ph sap-technical-name sap-technical-name">representation</span> object wraps a
+chart, a table, or any other representation of data. When the user switches
+the representation, a different
+<span class="ph sap-technical-name sap-technical-name">representation</span> object is
+selected and supplied with data.</p>
+</li>
+<li class="li">
+<p class="p">A <samp class="ph codeph">filter</samp> object represents the selections made on the
+charts.</p>
+</li>
+</ul>
+<p class="p">The relation between the objects described above is depicted in the following
+figure:</p>
+<div class="fig fignone" id="loiof7da7d53b5c19456e10000000a423f68__fig_v4k_v3x_l4"><div class="figbody">
+
+<img class="inline  " id="loiof7da7d53b5c19456e10000000a423f68__image_af3_43x_l4" src="loioc2f67ecb92c343fa9755a08613bd7ff0_LowRes.png">
+</div><span class="figcap">Runtime Objects of a Path</span></div>
+</section></div>
+<div class="section"><section class="section" type="Processing of Runtime Objects"><h2 class="section_title" style="font-size: 1.15em;">Processing of Runtime Objects</h2>
+<p class="p">The steps are processed in the order of their positions in the path. The first step
+is processed first. The filter resulting from the first step is used to process the
+second step, and so on.</p>
+<p class="p">To describe the processing of an analysis path in more details, the following
+variables are relevant:</p>
+<div class="table-wrapper tablenoborder"><table summary class="table" frame="border" border="1" rules="all"><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d430107e225"><p class="p">Variable</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d430107e230"><p class="p">Description</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d430107e225 "><p class="p"><span class="ph sap-technical-name sap-technical-name">S_1,..,S_n</span></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d430107e230 "><p class="p">Path of length n</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d430107e225 "><p class="p"><span class="ph sap-technical-name sap-technical-name">S_i</span></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d430107e230 "><p class="p">Step</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d430107e225 "><p class="p"><span class="ph sap-technical-name sap-technical-name">R_i</span></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d430107e230 "><p class="p">Request for step
+<span class="ph sap-technical-name sap-technical-name">S_i</span></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d430107e225 "><p class="p"><span class="ph sap-technical-name sap-technical-name">B_i</span></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d430107e230 "><p class="p">Binding for step
+<span class="ph sap-technical-name sap-technical-name">S_i</span></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d430107e225 "><p class="p"><span class="ph sap-technical-name sap-technical-name">RO_i_s</span></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d430107e230 "><p class="p">Selected representation object for step
+<span class="ph sap-technical-name sap-technical-name">S_i</span></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d430107e225 "><p class="p"><span class="ph sap-technical-name sap-technical-name">F_i</span></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d430107e230 "><p class="p">Filter object associated to step
+<span class="ph sap-technical-name sap-technical-name">S_i</span></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d430107e225 "><p class="p"><span class="ph sap-technical-name sap-technical-name">F_0</span></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d430107e230 "><p class="p">Filter for the entire path. This filter is either empty or it
+is the filter set by the APF API method
+<span class="ph sap-technical-name sap-technical-name">addPathFilter())</span>.
+This filter defines the OData filter for request
+<span class="ph sap-technical-name sap-technical-name">R_1</span> of step
+<span class="ph sap-technical-name sap-technical-name">S_1</span>.</p>
+</td>
+</tr>
+</tbody></table></div>
+<p class="p">The processing of step <span class="ph sap-technical-name sap-technical-name">S_i</span> begins with
+requesting the filter <span class="ph sap-technical-name sap-technical-name">F_(i-1)</span> of the
+previous step. Note that for step <span class="ph sap-technical-name sap-technical-name">S_1</span>, this
+is filter <span class="ph sap-technical-name sap-technical-name">F_0</span>.</p>
+<p class="p">Step <span class="ph sap-technical-name sap-technical-name">S_i</span> is further processed by sending an
+OData request <span class="ph sap-technical-name sap-technical-name">R_i</span> to the server. The filter
+expression of request <span class="ph sap-technical-name sap-technical-name">R_i</span> is defined by the
+previous filter <span class="ph sap-technical-name sap-technical-name">F_(i-1)</span>.</p>
+<p class="p">When request <span class="ph sap-technical-name sap-technical-name">R_i</span> returns successfully, it
+sends its response data to the selected representation object
+<span class="ph sap-technical-name sap-technical-name">RO_i_s</span>. This representation object then
+creates its own filter based on this data and its own UI selections. This filter can
+be requested by the subsequent step.</p>
+<p class="p">The filter <span class="ph sap-technical-name sap-technical-name">F_i</span> is defined as a conjunctive
+accumulation of the previous filter <span class="ph sap-technical-name sap-technical-name">F_(i-1)</span>
+and the filter defined by the selected representation object
+<span class="ph sap-technical-name sap-technical-name">(RO_i_s)</span>. The filter
+<span class="ph sap-technical-name sap-technical-name">F_i</span> is used for processing step
+<span class="ph sap-technical-name sap-technical-name">S_(i+1)</span>.</p>
+<p class="p">Filter F_0 is defined by URL parameters passed to the application, such as SAPCLIENT,
+and by filters. In the figure above, F_0 is represented as the &#x201C;Filter/Context&#x201D;
+object directly associated to the path object.</p>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

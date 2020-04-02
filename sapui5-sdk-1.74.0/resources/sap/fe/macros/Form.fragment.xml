@@ -1,0 +1,72 @@
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns="sap.m"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:mdc="sap.ui.mdc"
+	xmlns:macro="sap.fe.macros"
+	xmlns:core="sap.ui.core"
+	xmlns:unittest="http://schemas.sap.com/sapui5/preprocessorextension/sap.fe.unittesting/1"
+	xmlns:log="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	template:require="{
+		macroLibrary: 'sap/fe/macros/macroLibrary',
+		MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+		COMMON: 'sap/fe/macros/CommonHelper',
+		FORM: 'sap/fe/macros/form/FormHelper'
+	}">
+
+	<!-- Checking PartOfPreview for incoming facet -->
+	<template:if test="{= ${facet>} &amp;&amp;
+						!(${facet>./@com.sap.vocabularies.UI.v1.Hidden} === true) &amp;&amp;
+						((${facet>$Type}.indexOf('com.sap.vocabularies.UI.v1.ReferenceFacet') >= 0 &amp;&amp;
+						(${this>partOfPreview} === null || (${this>partOfPreview} !== 'false' &amp;&amp;
+						${facet>@com.sap.vocabularies.UI.v1.PartOfPreview} !== false ) || (${this>partOfPreview} === 'false' &amp;&amp;
+						${facet>@com.sap.vocabularies.UI.v1.PartOfPreview} === false ))) || (${facet>$Type}.indexOf('com.sap.vocabularies.UI.v1.CollectionFacet') >= 0 &amp;&amp;
+						FORM.checkIfCollectionFacetNeedsToBeRendered(${facet>}, ${this>partOfPreview}))) }">
+		<template:then>
+			<f:Form unittest:id="form"
+				id="{this>id}"
+				title="{this>formTitle}"
+				editable="{= (['Display','ReadOnly','Disabled'].indexOf(${this>editMode}) > -1) ? false : ${this>editMode} === 'Editable' ? true : ('{= %' + ${this>editMode} + ' === \'Editable\' }') }"
+				log:entitySet="{entitySet>@sapui.name}"
+				visible="{= ${facet>./@com.sap.vocabularies.UI.v1.Hidden/$Path} ? ('{= !${' + ${facet>./@com.sap.vocabularies.UI.v1.Hidden/$Path} + '} }') : true }"
+				class="sapUxAPObjectPageSubSectionAlignContent">
+				<f:layout>
+					<f:ColumnLayout columnsM="2"
+						columnsL="3"
+						columnsXL="4"
+						labelCellsLarge="12" />
+				</f:layout>
+				<f:formContainers>
+					<template:if test="{= ${facet>} &amp;&amp; ${facet>$Type}.indexOf('com.sap.vocabularies.UI.v1.CollectionFacet') >= 0 }">
+						<template:then>
+							<!-- In case of a Collection Facet -->
+							<template:repeat list="{path:'facet>Facets'}"
+								var="facet">
+								<!-- Repeating  for all facets inside collection -->
+								<template:if test="{= !(${facet>./@com.sap.vocabularies.UI.v1.Hidden} === true) &amp;&amp; ${facet>$Type}.indexOf('com.sap.vocabularies.UI.v1.ReferenceFacet') >= 0 &amp;&amp; (${this>partOfPreview} === null || (${this>partOfPreview} !== 'false' &amp;&amp; ${facet>@com.sap.vocabularies.UI.v1.PartOfPreview} !== false ) || (${this>partOfPreview} === 'false' &amp;&amp; ${facet>@com.sap.vocabularies.UI.v1.PartOfPreview} === false )) }">
+									<core:Fragment fragmentName="sap.fe.macros.form.DataFieldCollection"
+										type="XML"/>
+								</template:if>
+							</template:repeat>
+						</template:then>
+						<template:elseif test="{= ${facet>} &amp;&amp; ${facet>$Type}.indexOf('com.sap.vocabularies.UI.v1.ReferenceFacet') >= 0 }">
+							<!-- In case of Reference Facet -->
+							<core:Fragment fragmentName="sap.fe.macros.form.DataFieldCollection"
+								type="XML"/>
+						</template:elseif>
+					</template:if>
+				</f:formContainers>
+			</f:Form>
+		</template:then>
+		<!-- 		TODO: Using 'dataFieldCollection' as direct metadata context. Still in Progress
+		<template:elseif test="{dataFieldCollection>}">
+			<f:Form id="{= ${this>id} || undefined}" title="{this>formTitle}" editable="{= ${this>editMode} === 'Editable' ? true : false }" log:entitySet="{entitySet>@sapui.name}">
+				<f:layout>
+					<f:ColumnLayout columnsM="2" columnsL="3" columnsXL="4" />
+				</f:layout>
+				<f:formContainers>
+					<core:Fragment fragmentName="sap.fe.macros.FormContainer" type="XML"/>
+				</f:formContainers>
+			</f:Form>
+		</template:elseif> -->
+	</template:if>
+</core:FragmentDefinition>

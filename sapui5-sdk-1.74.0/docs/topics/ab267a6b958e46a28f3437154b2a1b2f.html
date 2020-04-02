@@ -1,0 +1,195 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Value Lists</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The OData V4 model supports the access to value list metadata and data."><meta name="description" content="The OData V4 model supports the access to value list metadata and data."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"b54f7895b7594c61a83fa7257fa9d13f.html","previousTopicHref":"d2ce3f51e5e34198b0c1a7f6ddd98def.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loioab267a6b958e46a28f3437154b2a1b2f"><h1 class="title topictitle1" hidden>Value Lists</h1><div class="body conbody"><p class="shortdesc" hidden>The OData V4 model supports the access to value list metadata and data.</p>
+<p class="p">Value lists enable you to read the possible values for a given property, such as
+<samp class="ph codeph">Category</samp> in the <samp class="ph codeph">Product</samp> entity type. A value list
+is typically visualized as a dropdown list, or as a value help dialog, that is, a popup
+with additional features such as filters which help finding the correct value. For
+performance reasons, you can reduce the service <samp class="ph codeph">$metadata</samp> document size
+by outsourcing value list information to value list services. Consequently, the value
+list information is accessed in two steps:</p>
+<ol class="ol" id="loioab267a6b958e46a28f3437154b2a1b2f__ol_ufg_q43_yy">
+<li class="li">
+<p class="p">Determine the value list type that is available for a given property via
+<samp class="ph codeph">ODataPropertyBinding.requestValueListType</samp> without loading
+the value list service. This is typically called to determine the visualization
+of this property.</p>
+<p class="p">The <samp class="ph codeph">sap.ui.model.odata.v4.ValueListType</samp>, that the promise
+delivers, can have the following values:</p>
+<ul class="ul" id="loioab267a6b958e46a28f3437154b2a1b2f__ul_a5z_cpk_qy">
+<li class="li">
+<p class="p"><samp class="ph codeph">None</samp>: No value list exists.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">Fixed</samp>: One enumeration of fixed values exists.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">Standard</samp>: A dynamic value list with multiple queries
+including selection criteria exists.</p>
+</li>
+</ul>
+</li>
+<li class="li">
+<p class="p">Determine the value list detail information on demand via
+<samp class="ph codeph">ODataPropertyBinding.requestValueListInfo</samp> which returns a
+map of all annotations <samp class="ph codeph">com.sap.vocabularies.Common.v1.ValueList</samp>
+or <samp class="ph codeph">com.sap.vocabularies.Common.v1.ValueListMapping</samp> by
+qualifier. Each mapping has the <samp class="ph codeph">ValueListMappingType</samp> type as
+specified in the OData 4.0 Common Vocabulary, see <a class="extlink" href="http://help.sap.com/disclaimer?site=https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common#ValueListMappingType" target="_blank" alt="https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common#ValueListMappingType" title="https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common#ValueListMappingType">OData 4.0 Vocabularies - SAP Common<img src="themes/sap-default/img/sap_link.png" class="link-sap" alt="Information published on SAP site" title="Information published on SAP site" border="0"></a>. Each mapping is
+enriched by a <samp class="ph codeph">$model</samp> property of type
+<samp class="ph codeph">sap.ui.model.odata.v4.ODataModel</samp> which can be used to
+access the value list metadata and retrieve value list data.</p>
+<p class="p">For value lists of type <samp class="ph codeph">Fixed</samp>, only one mapping is expected and
+the qualifier is ignored. The mapping is available with key &quot;&quot;.</p>
+</li>
+</ol>
+<p class="p">Additionally, you can use the synchronous method
+<samp class="ph codeph">ODataPropertyBinding.getValueListType</samp> if the metadata for the
+property is already available. If this is not the case, an exception is thrown. The API
+is available in <samp class="ph codeph">sap.ui.model.odata.v4.ODataMetaModel</samp> analogously for
+use cases where controls are not yet in place, for example, during XML templating.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: Retrieving the value list type for a property</span></p>
+<pre class="pre codeblock prettyprint">   
+       onModelContextChange : function (oEvent) {
+        var oBinding = this.getBinding(&quot;value&quot;);
+ 
+        if (oBinding &amp;&amp; oBinding.isResolved()) {
+            oBinding.requestValueListType().then(function (sValueListType) {
+ 
+ 
+                // render the control depending on the value list type and attach the below
+                // event handler onValueHelp which is invoked when the user requests value help
+ 
+                switch (sValueListType) {
+                    case ValueListType.Standard:
+                        ...
+                        break;
+                    case ValueListType.Fixed:
+                        ...
+                        break;
+                    case ValueListType.None:
+                        ...
+                        break;
+                }
+                that.setAggregation(&quot;field&quot;, oField);
+            });
+        }
+    },
+...
+    onValueHelp : function (oEvent) {
+        var oBinding = this.getBinding(&quot;value&quot;);
+ 
+        oBinding.requestValueListInfo().then(function (mValueListInfo) {
+            // this assumes value list type &quot;Fixed&quot;
+            var oValueListMapping = mValueListInfo[&quot;&quot;],
+                oValueListMetaModel = oValueListMapping.$model.getMetaModel();
+  
+            ...
+        ]);
+    },
+...</pre>
+<div class="section" id="loioab267a6b958e46a28f3437154b2a1b2f__section_azb_gwg_jfb"><section class="section" type="The ValueList Annotation"><h2 class="section_title" style="font-size: 1.15em;">The <samp class="ph codeph">ValueList</samp> Annotation</h2>
+
+<p class="p">There are two options to place the <samp class="ph codeph">ValueList</samp> annotation:</p>
+<ul class="ul" id="loioab267a6b958e46a28f3437154b2a1b2f__ul_u25_hwg_jfb">
+<li class="li">
+<p class="p">In the value list service (the preferred way): When adding a value list for a
+property, the OData service only contains an annotation with the property as
+target and the term com.sap.vocabularies.Common.v1.ValueListReferences
+pointing to the metadata of the value list service. The ValueList annotation
+itself is in the referenced service. It must not have the properties
+CollectionRoot and SearchSupported.</p>
+</li>
+<li class="li">
+<p class="p">In the OData service itself: In this case, the <samp class="ph codeph">ValueList</samp>
+annotation must have the property <samp class="ph codeph">CollectionRoot</samp> pointing
+to the metadata of the value list service. The annotation
+<samp class="ph codeph">com.sap.vocabularies.Common.v1.ValueListReferences</samp> is
+not needed.</p>
+<p class="p">The disadvantage of this solution is that the complete value list information
+for all properties of the service is preloaded when the application is
+initialized.</p>
+</li>
+</ul>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common#ValueListType" target="_blank" alt="https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common#ValueListType" title="https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common#ValueListType">OData 4.0 Vocabularies - SAP Common &gt; ValueListType</a></div><div><a class="link" href="https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common#ValueListMappingType" target="_blank" alt="https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common#ValueListMappingType" title="https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common#ValueListMappingType">OData 4.0 Vocabularies - SAP Common &gt; ValueListMappingType</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ValueListType" target="_top" alt="#/api/sap.ui.model.odata.v4.ValueListType" title="#/api/sap.ui.model.odata.v4.ValueListType">sap.ui.model.odata.v4.ValueListType</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/getValueListType" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/getValueListType" title="#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/getValueListType">sap.ui.model.odata.v4.ODataPropertyBinding#getValueListType</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/requestValueListInfo" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/requestValueListInfo" title="#/api/sap.ui.model.odata.v4.ODataPropertyBinding/methods/requestValueListInfo">sap.ui.model.odata.v4.ODataPropertyBinding#requestValueListInfo</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/getValueListType" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/getValueListType" title="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/getValueListType">sap.ui.model.odata.v4.ODataMetaModel#getValueListType</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/requestValueListInfo" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/requestValueListInfo" title="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/requestValueListInfo">sap.ui.model.odata.v4.ODataMetaModel#requestValueListInfo</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

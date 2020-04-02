@@ -1,0 +1,251 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js" id="sap-ui-bootstrap" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+
+	</script>
+
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+
+		h4 {
+			margin: 1em 0;
+		}
+
+		i {
+			color: blue
+		}
+
+		.col {
+			color: red;
+		}
+
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+
+	<script>
+		// creation of the visual business control...........................//
+
+		sap.ui.localResources("vbitestapp");
+		oVBI1 = new sap.ui.vbm.VBI('vbiThumbnail', {
+			width: "100%",
+			height: 400,
+			submit: onSubmit, // set the event handler for submit
+			zoom: onZoom
+		});
+
+		oVBI1.placeAt("content");
+		oVBI1.minimize(-1, 150);
+		// this resizes the control to a thumbnail of height 150. The width is not specified (it is <= 0), so it is calculated according
+		// to width/height ratio of the actual control. Please note that at the time the minimize is done here, this ratio is not yet available,
+		// it requires rendering to evaluate which width "100%" is in pixels
+
+		// load the json into the vbi control................................//
+		var dat = $.getJSON("media/vbthumbnail/main.json", function(dat) {
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array){
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(dat);
+		});
+
+
+		function onZoom(e) {
+			// gives you info that a zoom was done..............................//
+		};
+
+
+		function onToControl() {
+			oVBI1.maximize();
+		};
+
+		function onAddEvents() {
+			var dat = $.getJSON("media/vbthumbnail/AddEvents.json", function(dat) {
+				oVBI1.load(dat);
+			});
+		};
+
+		function onRemoveEvents() {
+			var dat = $.getJSON("media/vbthumbnail/RemoveEvents.json", function(dat) {
+				oVBI1.load(dat);
+			});
+		};
+
+		function onToControl2() {
+			oVBI1.maximize(600, 400);
+			setTimeout(function () {
+				document.getElementById('para').innerHTML = jQuery("#vbiThumbnail").width();
+				document.getElementById('para2').innerHTML = jQuery("#vbiThumbnail").height();
+			}, 0);
+		};
+
+		function onToControl3() {
+			oVBI1.maximize(860, 600);
+			setTimeout(function () {
+				document.getElementById('para3').innerHTML = jQuery("#vbiThumbnail").width();
+				document.getElementById('para4').innerHTML = jQuery("#vbiThumbnail").height();
+			}, 0);
+		};
+
+		function Width100() {
+			oVBI1.setWidth("100%");
+			setTimeout(function () {
+				document.getElementById('para6').innerHTML = jQuery("#vbiThumbnail")[0].style.width;
+			}, 0);
+		};
+
+		function Width100ChangeMode() {
+			oVBI1.maximize();
+			oVBI1.setWidth("100%");
+			setTimeout(function () {
+				document.getElementById('para5').innerHTML = jQuery("#vbiThumbnail")[0].style.width;
+			}, 0);
+		};
+
+		function onToThumbnail() {
+			oVBI1.minimize(240, 150, 960, 600, "15px Arial", "rgba(255,0,0,0)", 4, String(Date.now()));
+		};
+
+		function onToThumbnail2() {
+			var scene = oVBI1.mVBIContext.GetMainScene();
+			if (scene && scene.m_nDivHeight) {
+				oVBI1.minimize(50 * (scene.m_nDivWidth / scene.m_nDivHeight), 50);
+			}
+		};
+
+		function onSubmit(e) {
+			var datEvent = JSON.parse(e.mParameters.data);
+
+			if (datEvent.Action.name == "AWAKE") {
+				if (confirm("Please confirm to activate the control")) {
+					onToControl();
+				}
+			}
+
+			if (datEvent.Action.name == "ZOOMEDAWAKE") {
+				var pos, zoom;
+				for (var ii = 0; ii < datEvent.Action.AddActionProperties.AddActionProperty.length; ++ii) {
+					var para = datEvent.Action.AddActionProperties.AddActionProperty[ii];
+					if (para.name == "pos") pos = para["#"];
+					if (para.name == "zoom") zoom = para["#"];
+				}
+				var p = pos.split(";");
+				onToControl();
+				oVBI1.zoomToGeoPosition(parseFloat(p[0]), parseFloat(p[1]), Math.ceil(parseFloat(zoom)));
+			}
+		};
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: Minimizing the Control to a Thumbnail</h1>
+
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test the visualization of "minimize to thumbnail" and "maximize to control" features. The page comes up with a minimized control (thumbnail)
+			omitting some parts of the control such as labels, detail windows, scale and navigation control.</p>
+		<br>
+		<h3> To test: </h3>
+		<p style="color:red;">* Please refresh the page before testing each step. </p>
+		<ol>
+			<li> Check that when you load the page initially zooming and panning the map is disabled. </li>
+			<li> Click the "Allow Events on Thumbnail" button, and try to zoom or pan the map. You should receive an alert box asking you to confirm to activate the control. Confirm by clicking "OK".
+				<li> Refresh the page. Click the "Allow Events on thumbnail" button. Interact with the map. You should see an alert box. click "CANCEL", and then click "Remove Events from Thumbnail".
+					Try to interact with the map again - you should not get an alert box this time.</li>
+				<br>
+		<p style="color:red;">* Maximizing can only be done from thumbnail mode. You must refresh or minimize to thumbnail before running each of the following instructions. </p>
+			<br>
+			<li>Click the "Maximize" button. You should be able to interact with the GeoMap control.
+					<li>Click the "Maximize 600x400" button. The GeoMap control should have a width of 600px, and a height of 400px.
+						<p>Width: </p>
+						<p class="col" id="para"></p>
+						<p>Height: </p>
+						<p class="col" id="para2"></p>
+					</li>
+					<li> Click the "Maximize 860x600" button. The GeoMap control should have a width of 860px, and a height of 600px.
+						<p>Width: </p>
+						<p class="col" id="para3"></p>
+						<p>Height: </p>
+						<p class="col" id="para4"></p>
+					</li>
+					<li> Click the "Set width to 100% and change mode" button. Check that the width changes to 100% (below).
+						<p>Width: </p>
+						<p class="col" id="para5"></p>
+						Check that the GeoMap Control allows interactivity.</li>
+					<li> Click the "Set width to 100% without changing mode" button. Check that the width changes to 100% (below).
+						<p>Width: </p>
+						<p class="col" id="para6"> </p>
+						Check that the GeoMap Control does not allow interactivity. You should not be able to interact with the map.</li>
+					<li> Click the "Minimize To Thumbnail (using 960x600 control)" button. The control will "minimize" to thumbnail. <i> What does this do? - minimize(iNewWidth, iNewHeight, iFullWidth?, iFullHeight?, font?, fontCol?, fontPos?, text?) <br>
+											oVBI1.minimize(240, 150, 960, 600, "15px Arial", "rgba(255,0,0,0)", 4, String(Date.now()));<br></i> you should not be able to zoom/move the map.</li>
+
+					<li> Click the "Minimize To Very Small Thumbnail" button. You should not be able to interact with the map. The map should be minimized and appear very small.
+					</li>
+
+					</ul>
+		</ol>
+
+	</div>
+	<div id="description2">
+		<br>
+		<button id="AddEvents" onClick="onAddEvents()">Allow Events on Thumbnail</button>
+		<button id="RemoveEvents" onClick="onRemoveEvents()">Remove Events from Thumbnail</button>
+		<br>
+		<br>
+		<button id="ToControl" onClick="onToControl()"> Maximize</button>
+		<button id="ToControl2" onClick="onToControl2()"> Maximize 600x400 </button>
+		<button id="ToControl3" onClick="onToControl3()"> Maximize 860x600 </button>
+		<button id="Width100" onClick="Width100ChangeMode()"> Set Width to 100% and Change mode</button>
+		<button id="Width100" onClick="Width100()"> Set Width to 100% without changing mode </button>
+		<br>
+		<button id="ToThumbnail" onClick="onToThumbnail()"> Minimize To Thumbnail (using 960x600 control) </button>
+		<button id="ToThumbnail2" onClick="onToThumbnail2()"> Minimize To Very Small Thumbnail </button>
+
+
+		<br>
+
+		<div id="content"></div>
+	</div>
+
+</body>
+
+</html>

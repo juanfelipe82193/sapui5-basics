@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+	xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+	xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+	xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:Reference Uri="https://mydomain.com/catalogService/common/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
+	</edmx:Reference>
+	<edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml">
+		<edmx:Include Alias="MEASURES" Namespace="Org.OData.Measures.V1" />
+	</edmx:Reference>
+	<edmx:Reference Uri="https://mydomain.com/catalogService/ui/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI" />
+	</edmx:Reference>
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="CmcNamespace" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="StockPrice">
+				<Key>
+					<PropertyRef Name="Day" />
+				</Key>
+				<Property Name="Day" Type="Edm.DateTime" />
+				<Property Name="Price" Type="Edm.Int32" />
+				<Property Name="Title" Type="Edm.String" />
+				<Property Name="Description" Type="Edm.String" />
+				<Property Name="Currency" Type="Edm.String" />
+				<Property Name="Criticality" Type="Edm.String" />
+			</EntityType>
+			<EntityContainer Name="CmcNamespace_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+				<EntitySet Name="StockPrices" EntityType="CmcNamespace.StockPrice" sap:content-version="1" />
+			</EntityContainer>
+			<Annotations Target="CmcNamespace.StockPrice" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="UI.Chart" Qualifier="ColumnChartQualifier">
+					<Record>
+						<PropertyValue Property="ChartType" EnumMember="UI.ChartType/Column" />
+						<PropertyValue Property="Title" Path="ChartTitle" />
+						<PropertyValue Property="Description" Path="Description" />
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>Day</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Price</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="Price" />
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#ColumnChartDataPoint" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="ColumnChartDataPoint">
+					<Record>
+						<PropertyValue Property="Value" Path="Price" />
+						<PropertyValue Property="Title" Path="Title" />
+						<PropertyValue Property="Criticality" Path="Criticality" />
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="CmcNamespace.StockPrice/Price">
+				<Annotation Term="MEASURES.ISOCurrency" Path="Currency"/>
+				<Annotation Term="Common.Text" Path="DisplayValue" />
+			</Annotations>
+			<atom:link rel="self" href="https://mydomain.com/myService/$metadata" xmlns:atom="http://www.w3.org/2005/Atom" />
+			<atom:link rel="latest-version" href="https://mydomain.com/myService/$metadata" xmlns:atom="http://www.w3.org/2005/Atom" />
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <title>Example - sap.rules.ui.ExpressionAdvanced</title>
+      <script id="sap-ui-bootstrap"
+         type="text/javascript"
+         data-sap-ui-theme="sap_fiori_3"
+         src="../../../../resources/sap-ui-core.js"
+      >
+      </script>
+      
+      <script type="text/javascript"> 
+      sap.ui.define(
+        [
+            "jquery.sap.global",
+			"sap/rules/ui/services/ExpressionLanguage",
+			"sap/rules/ui/ExpressionAdvanced",
+			"sap/rules/ui/type/Expression"
+        ],
+        function (jQuery, ExpressionLanguage, ExpressionAdvanced, ExpressionType){
+	    	//Get vocabulary data
+	        var oVocaGaming = (function getTestData(){
+	            return jQuery.sap.sjax({
+	                url: './qunit/data/parser/vocabulary/gaming.txt',
+					dataType: "json"
+	            }).data;
+	        })();
+			var oVocaGaming1 = (function getTestData(){
+				return jQuery.sap.sjax({
+					//url: './qunit/data/parser/vocabulary/gaming.txt',
+					url: './qunit/data/parser/vocabulary/purchasing.txt',
+					dataType: "json"
+				}).data;
+			})();
+
+	    	var oParser = new ExpressionLanguage();
+	    	oParser.setData(oVocaGaming);
+			var oParser1 = new ExpressionLanguage();
+			oParser1.setData(oVocaGaming1);
+			
+			var oExpressionModel = new sap.ui.model.json.JSONModel({
+				expression:"today is after '2016-10-12'"
+			});
+			
+			var oExpressionType = new ExpressionType();
+			oExpressionType.setExpressionLanguage(oParser);
+
+	        var oAdvancedExpressionEditor= new sap.rules.ui.ExpressionAdvanced({
+				expressionLanguage: oParser,
+	        	placeholder: "Please enter a gaming relevant expression",
+	        	value: {
+	        		path: "/expression",
+        			type: oExpressionType
+	        	},
+				editable:true,
+				validateOnLoad:true
+			}).setModel(oExpressionModel);
+	        oAdvancedExpressionEditor.placeAt("content");
+	        
+			var oAdvancedExpressionEditor1 = new sap.rules.ui.ExpressionAdvanced({
+				expressionLanguage: oParser,
+				placeholder: "",
+				value: "age o",
+				editable:false,
+				validateOnLoad:true
+			});
+			oAdvancedExpressionEditor1.placeAt("content1");
+	
+			var oAdvancedExpressionEditor2 = new sap.rules.ui.ExpressionAdvanced({
+				expressionLanguage: oParser,
+				placeholder: "",
+				value: "name of the player is equal to id of the player or ( 1 is greater than 2 )",
+				editable:false,
+				validateOnLoad:true
+			});
+			oAdvancedExpressionEditor2.placeAt("content2");
+
+			var oAdvancedExpressionEditor3 = new sap.rules.ui.ExpressionAdvanced({
+				expressionLanguage: oParser1,
+				placeholder: "Please enter a purchasing relevant expression",
+				value: "",
+				editable:true,
+				validateOnLoad:true
+			});
+			oAdvancedExpressionEditor3.placeAt("content3");
+
+		  });
+      </script>
+   </head>
+   <body class="sapUiBody" role="application">
+      <h1 id="header">Test Page for <code> sap.rules.ui.ExpressionAdvanced</code></h1>
+      <div id="content"></div>
+	  <div id="content1"></div>
+	  <div id="content2"></div>
+	  <div id="content3"></div>
+   </body>
+</html>

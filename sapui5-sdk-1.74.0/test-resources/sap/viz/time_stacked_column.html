@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta charset="UTF-8" />
+		<title>UI5 CVOM HTML5 VizFrame</title>
+		<meta name="keywords" content="Control Table" />
+		<link rel="stylesheet" type="text/css"
+		href="../../../resources/sap/viz/ui5/controls/css/controls.css"/>
+		
+		<script id="sap-ui-bootstrap" src="../../../resources/sap-ui-core.js"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-libs="sap.ui.commons, sap.ui.ux3, sap.m,sap.viz"></script>
+
+		<script id='horizontal_VizContainerSimpleExample'>
+var initOptions = {
+    "vizType":'timeseries_stacked_column',
+    "uiConfig": {
+    "applicationSet": "fiori"
+}};
+var vizframe = new sap.viz.ui5.controls.VizFrame(initOptions);
+var model = new sap.ui.model.json.JSONModel(
+{
+    "businessData": [{
+        "Date": new Date(2016, 0, 1).getTime(),
+        "Country": "China",
+        "Profit": 641.46
+    }, {
+        "Date": new Date(2016, 0, 1).getTime(),
+        "Country": "China",
+        "Profit": 130.68
+    }, {
+        "Date": new Date(2016, 0, 1).getTime(),
+        "Country": "China",
+        "Profit": 385.46
+    }, {
+        "Date": new Date(2016, 0, 2).getTime(),
+        "Country": "USA",
+        "Profit": 522.46
+    }, {
+        "Date": new Date(2016, 0, 2).getTime(),
+        "Country": "USA",
+        "Profit1": 469.98,
+        "Revenue1": 138.17,
+    }, {
+        "Date": new Date(2016, 0, 2).getTime(),
+        "Country": "USA",
+        "Profit": 728.38
+    }, {
+        "Date": new Date(2016, 0, 3).getTime(),
+        "Country": "Canada",
+        "Profit": 128.74
+    }, {
+        "Date": new Date(2016, 0, 3).getTime(),
+        "Country": "Canada",
+        "Profit1": 963.08,
+        "Revenue1": 477.48,
+    }, {
+        "Date": new Date(2016, 0, 3).getTime(),
+        "Country": "Canada",
+        "Profit": 812.61
+    }]
+}
+);
+var dataset = new sap.viz.ui5.data.FlattenedDataset(
+{
+    "dimensions": [{
+        "name": "Date",
+        "value": "{Date}",
+        "dataType": "date"
+    }, {
+        "name": "Country",
+        "value": "{Country}"
+    },],
+    "measures": [{
+        "name": "Profit",
+        "value": "{Profit}"
+    }],
+    "data": {
+        "path": "/businessData"
+    }
+});
+vizframe.setModel(model);
+vizframe.setDataset(dataset);
+var feeds =[
+	new sap.viz.ui5.controls.common.feeds.FeedItem({"uid":"timeAxis","type":"Dimension","values":["Date"]})
+	,
+	new sap.viz.ui5.controls.common.feeds.FeedItem({"uid":"color","type":"Dimension","values":["Country"]})
+	,
+	new sap.viz.ui5.controls.common.feeds.FeedItem({"uid":"valueAxis","type":"Measure","values":["Profit"]})
+	]
+feeds.forEach(function(feedItem) {
+vizframe.addFeed(feedItem);
+var popOver = new sap.viz.ui5.controls.Popover({});
+popOver.connect(vizframe.getVizUid());
+})
+vizframe.placeAt("content");
+		</script>
+
+		<script type="text/javascript">
+			jQuery(window).resize(function() {
+				$('#horizontal_sample').height('').width('');
+			});
+		</script>
+	</head>
+	<body class="sapUiBody">
+		<h2>Introduction</h2>
+
+		<div id="content"></div>
+	</body>
+</html>

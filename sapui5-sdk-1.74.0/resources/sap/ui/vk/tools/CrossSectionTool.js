@@ -1,0 +1,7 @@
+/*!
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+
+        (c) Copyright 2009-2015 SAP SE. All rights reserved
+    
+ */
+sap.ui.define(["./Tool","./CrossSectionToolHandler","./CrossSectionToolGizmo"],function(T,C,a){"use strict";var b=T.extend("sap.ui.vk.tools.CrossSectionTool",{metadata:{properties:{showEditingUI:{type:"boolean",defaultValue:false}}},constructor:function(i,s){if(b._instance){return b._instance;}T.apply(this,arguments);this._viewport=null;this._handler=new C(this);this._gizmo=null;b._instance=this;}});b.prototype.init=function(){if(T.prototype.init){T.prototype.init.call(this);}this.setFootprint(["sap.ui.vk.threejs.Viewport"]);this.setAggregation("gizmo",new a());};b.prototype.setActive=function(v,c,g){T.prototype.setActive.call(this,v,c,g);if(this._viewport){if(v){this._gizmo=this.getGizmo();this._gizmo.show(this._viewport,this);this._addLocoHandler();}else{this._removeLocoHandler();if(this._gizmo){this._gizmo.hide();this._gizmo=null;}}}return this;};b.prototype.setAxis=function(i){if(this._gizmo){this._gizmo.setAxis(i);}return this;};b.prototype.setFlip=function(f){if(this._gizmo){this._gizmo.setFlip(f);}return this;};b.prototype.getFlip=function(){return this._gizmo?this._gizmo._flip:undefined;};b.prototype.setShowEditingUI=function(v){this.setProperty("showEditingUI",v,true);if(this._viewport){this._viewport.setShouldRenderFrame();}return this;};b.prototype.queueCommand=function(c){if(this._addLocoHandler()){if(this.isViewportType("sap.ui.vk.threejs.Viewport")){c();}}return this;};return b;});

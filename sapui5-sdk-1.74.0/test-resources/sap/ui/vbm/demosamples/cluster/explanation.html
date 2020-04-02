@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta charset="UTF-8">
+		<title>SAPUI5 cluster</title>
+	
+	</head>
+	<body id="content" class="sapUiBody">
+		<p>This sample application demonstrates the clustering of spot objects on a map. Initially the spots are unclustered. When clicking the toggle button the objects are grouped together depending on their location. The number in the cluster object indicates the amount of objects clustered together. If you click on a cluster object a popover will open and show the list of all objects' tooltips. You can zoom in and out and see how the clustering changes depending on the zoom level. When you move the mouse over a cluster you can see the underlying area of the involved spots.</p>
+		<div class="row">
+			<h3>Add GeoMap control to view</h3>
+			<div>
+				<p>We start placing a <code>GeoMap</code> control on the view with a spot aggregation. The properties of the spots are listed in json-file: index, geo location, tooltip and status. Status is defined as <code>CustomData</code>, which is a map with a key - value pair. The Spots aggregation needs a <code>customProperties</code> property which points to it.</p>  
+			</div>    		
+			<div>
+			   <h4>XML View code</h4>
+				<pre class="prettyprint lang-xml">
+&lt;vbm:GeoMap id='vbi' width="100%" height="100%"
+   initialZoom='6' initialPosition="9.3;52;0"&gt;
+   &lt;vbm:vos&gt;
+      &lt;vbm:Spots customProperties="{= ['status']}" items="{/spots}"&gt;
+         &lt;vbm:items&gt;
+            &lt;vbm:Spot position='{A1}' tooltip='{A2}'
+               type='Success'&gt;
+               &lt;vbm:customData&gt;
+                  &lt;core:CustomData key='status' value='{status}' /&gt;
+               &lt;/vbm:customData&gt;
+            &lt;/vbm:Spot&gt;
+         &lt;/vbm:items&gt;
+      &lt;/vbm:Spots&gt;
+   &lt;/vbm:vos&gt;
+&lt;/vbm:GeoMap&gt;
+				</pre> 			   
+    		</div>
+			<div>
+			   <h4>JSON View code</h4>
+				<pre class="prettyprint lang-json">
+{
+"spots": [
+{"VB:ix":"0","A1":"9.22622;52.47909;0","A2": "LTL001001", "status":"good"},
+{"VB:ix":"1","A1":"11.01954;53.38237;0","A2": "LTL001002", "status":"good"}
+...
+]
+}
+				</pre> 			   
+    		</div>
+    	</div>
+ 		<div class="row">
+			<h3>Add a Model and assign it to the view</h3>
+			<div class="col6">
+			   <h4>Controller code</h4>
+				<pre class="prettyprint lang-js">
+onInit: function() {
+   this.oVBI = null;
+   this.oCurrentClustering = null;
+   var oController = this;
+   var oModel = new sap.ui.model.json.JSONModel();
+   oModel.setSizeLimit(99999);
+
+   $.getJSON("media/clusterUnclustered.json", function(data) {
+      oModel.setData(data);
+      oController.oData = data;
+   });
+			
+   this.getView().setModel(oModel);
+   this.oVBI = this.getView().byId("vbi");
+}
+				</pre> 
+    		</div>
+			<div class="col6">
+				<p>In function <code>onInit</code> we do some initialization for controller variables. 
+				Then we create a <code>JSONModel</code>, get the data from  the json file and assign it to the view.
+				The model will serve as data source for our <code>spots</code>. 
+				Note that we need to extend the size limit for the model because we specify more than 100 spot items.</p>
+			</div>    		
+    	</div>   
+ 		<div class="row">
+			<h3>Set and Remove Clustering</h3>
+			<div class="col6">
+			   <h4>Controller code</h4>
+				<pre class="prettyprint lang-js">
+onToggleCluster: function(e) {
+   var bCluster = e.getParameter("pressed");
+
+   if (bCluster) {
+      if (!this.oCurrentClustering) {
+         this.oCurrentClustering = new sap.ui.vbm.ClusterTree({
+            rule: "status=good",
+            click: this.onClickCluster.bind(this),
+            vizTemplate: new sap.ui.vbm.Cluster({
+               type: "Success",
+               icon: 'sap-icon://shipping-status'
+            })
+         });
+      }
+      this.oVBI.addCluster(this.oCurrentClustering);
+      e.getSource().setText("Cluster off");
+   } else {
+      this.oVBI.removeCluster(this.oCurrentClustering);
+      e.getSource().setText("Cluster on");
+   }
+
+}
+				
+				</pre> 
+    		</div>
+			<div class="col6">
+				<p>The function <code>onToggleCluster</code> turns the clustering mode on or off depending on the toggle button press state.
+				The clustering aggregation object is created when it is called for the first time. In our sample we define a <code>ClusterTree object</code>. 
+				The rule defines which items will be clustered. The click event is bound to an <code>onClickCluster</code> method.
+				The <code>vizTemplate</code> is the aggregation we use to define a control that serves as a visualization template for our cluster.
+				In our sample we specify the <code>Cluster</code> control with the properties semantic type and an icon to show.
+				Finally our <code>GeoMap</code> control adds or removes the clustering object. </p>
+			</div>    		
+    	</div>   
+ 		<div class="row">
+			<h3>Show Cluster Details</h3>
+			<div class="col6">
+			   <h4>Controller code</h4>
+				<pre class="prettyprint lang-js">
+onClickCluster: function( evt ){
+   var oTarget = evt.getParameter("instance").getItem(); 
+   var ident = evt.getParameter("instance").getKey();
+   var type = sap.ui.vbm.ClusterInfoType.ContainedVOs;
+   var info = this.oVBI.getInfoForCluster(ident, type);			
+   var cluster = [];
+   for (var j = 0; j < info.length; j++) {
+      var spot = this.oVBI.getVoByInternalId(info[j]);
+      if (spot) {
+         cluster.push({name: spot.getTooltip()});
+      }
+   }
+			
+   var oClusterModel = new sap.ui.model.json.JSONModel();
+   oClusterModel.setSizeLimit(99999);
+   oClusterModel.setData({"cluster":cluster});
+			
+   var oPopover = new sap.m.Popover({
+      title: "Cluster Details", 
+      placement:"Right",
+      content: new sap.m.List({
+         items:{
+            path: "/cluster",
+            template: new sap.m.StandardListItem({
+               title: '{name}',
+               icon: 'sap-icon://shipping-status'
+            })
+         }
+      })});
+   oPopover.setModel(oClusterModel);
+   ....
+}
+				</pre> 
+    		</div>
+			<div class="col6">
+				<p>The function <code>onClickCluster</code> shows some detail information on a cluster object when it is clicked. 
+				To get this information we need to call method <code>getInfoForCluster</code> on our GeoMap control. 
+				First parameter identifies the cluster itself, second parameter specifies the type of information needed.
+				The returned info is an array of internal IDs, and to get the spots out of them we use the method <code>getVoByInternalId</code>.
+				The spots' tooltips are assembled in an array and set as data into a new model.
+				We define a popover with a list of items to show it. 
+				The list gets a single list item element assigned to the items aggregation - acting as a template for the aggregation binding. The attribute 'title' of the template object are bound to model attribute 'name'.</p>
+			</div>    		
+    	</div>   
+
+	
+	</body>
+</html>

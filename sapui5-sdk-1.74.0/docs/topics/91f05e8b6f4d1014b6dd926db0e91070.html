@@ -1,0 +1,312 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Context Binding (Element Binding)</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Context binding (or element binding) allows you to bind elements to a specific object in the model data, which will create a binding context and allow relative binding within the control and all of its children. This is especially helpful in master-detail scenarios."><meta name="description" content="Context binding (or element binding) allows you to bind elements to a specific object in the model data, which will create a binding context and allow relative binding within the control and all of its children. This is especially helpful in master-detail scenarios."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"91f057786f4d1014b6dd926db0e91070.html","previousTopicHref":"91f0652b6f4d1014b6dd926db0e91070.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio91f05e8b6f4d1014b6dd926db0e91070"><h1 class="title topictitle1" hidden>Context Binding (Element Binding)</h1><div class="body conbody"><p class="shortdesc" hidden>Context binding (or element binding) allows you to bind elements to a specific object
+in the model data, which will create a binding context and allow relative binding within the
+control and all of its children. This is especially helpful in master-detail
+scenarios.</p>
+<p class="p">Let&#x2019;s assume we have the following JSON data:</p>
+<pre class="pre codeblock prettyprint lang-js">{
+	&quot;company&quot; : {
+		&quot;name&quot;  : &quot;Acme Inc.&quot;
+		&quot;street&quot;: &quot;23 Franklin St.&quot; 
+		&quot;city&quot;  : &quot;Claremont&quot;
+		&quot;state&quot; : &quot;New Hampshire&quot;
+		&quot;zip&quot;	: &quot;03301&quot;
+		&quot;revenue&quot;: &quot;1833990&quot;
+	}
+}
+</pre>
+<p class="p">Here&#x2019;s how you would use element binding in an XML view:</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+	controllerName=&quot;sap.ui.sample.App&quot;
+	xmlns=&quot;sap.m&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;Input id=&quot;companyInput&quot;
+		binding=&quot;{/company}&quot;
+		value=&quot;{name}&quot;
+		tooltip=&quot;The name of the company is &apos;{name}&apos;&quot;/&gt;	
+&lt;/mvc:View&gt;</pre>
+<p class="p">By setting <samp class="ph codeph">binding=&quot;{/company}&quot;</samp>, we can refer to
+<samp class="ph codeph">company</samp> children without having to qualify the full binding path,
+when binding <samp class="ph codeph">Input</samp> control&#x2019;s properties such as the
+<samp class="ph codeph">value</samp>. Using plain property binding, our XML view would look like
+this:</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+	controllerName=&quot;sap.ui.sample.App&quot;
+	xmlns=&quot;sap.m&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;Input id=&quot;companyInput&quot;
+		value=&quot;{/company/name}&quot;
+		tooltip=&quot;The name of the company is &apos;{/company/name}&apos;}&quot;/&gt;	
+&lt;/mvc:View&gt;</pre>
+<p class="p">To define an element binding in JavaScript, for example in a controller, use the
+<samp class="ph codeph">bindElement</samp> method on a control:</p>
+<pre class="pre codeblock prettyprint lang-js">var oInput = this.byId(&quot;companyInput&quot;)
+oInput.bindElement(&quot;/company&quot;);
+oInput.bindProperty(&quot;value&quot;, &quot;name&quot;);</pre>
+<p class="p">Element binding is especially interesting for containers or layouts containing many
+controls that are all visualizing properties of the same model object. Here&#x2019;s an XML
+view with a <samp class="ph codeph">VerticalLayout</samp> using element binding:</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+	controllerName=&quot;sap.ui.sample.App&quot;
+	xmlns=&quot;sap.m&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;l:VerticalLayout id=&quot;vLayout&quot;
+		binding=&quot;{/company}&quot;
+		width=&quot;100%&quot;&gt;
+			&lt;Text text=&quot;{name}&quot; /&gt;
+			&lt;Text text=&quot;{city}&quot; /&gt;
+			&lt;Text text=&quot;{county}&quot; /&gt;
+	&lt;/l:VerticalLayout&gt; 
+&lt;/mvc:View&gt;</pre>
+<p class="p">To realize this in JavaScript, proceed as follows in your controller:</p>
+<pre class="pre codeblock prettyprint lang-js">var oVerticalLayout = this.getView().byId(&apos;vLayout&apos;);
+oVerticalLayout.bindElement(&quot;/company&quot;);
+oVerticalLayout.addContent(new Text({text: &quot;{name}&quot;}));
+oVerticalLayout.addContent(new Text({text: &quot;{city}&quot;}));
+oVerticalLayout.addContent(new Text({text: &quot;{county}&quot;})););</pre>
+<p class="p">Given your XML view contains a <samp class="ph codeph">VerticalLayout</samp>, it will look like
+this:</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+	controllerName=&quot;sap.ui.sample.App&quot;
+	xmlns=&quot;sap.m&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;l:VerticalLayout id=&quot;vLayout&quot; 
+		width=&quot;100%&quot;/&gt; 			 
+&lt;/mvc:View&gt;</pre>
+<div class="section" id="loio91f05e8b6f4d1014b6dd926db0e91070__section_96C8BDB746E149CD964641F456C7FF93"><section class="section" type="Setting a New Context for the Binding (Master-Detail)"><h2 class="section_title" style="font-size: 1.15em;">Setting a New Context for the Binding (Master-Detail)</h2>
+
+<p class="p">You create a new binding context for an element that is used to resolve bound
+properties or aggregations relative to the given path. You can use this method if
+the existing binding path changes or has not been provided before, for example in
+master-detail scenarios, as outlined below.</p>
+<p class="p">Let&apos;s look at the following JSON model featuring a company list:</p>
+<pre class="pre codeblock prettyprint lang-js">{
+	companies : [
+		{
+			name : &quot;Acme Inc.&quot;,
+			city: &quot;Belmont&quot;,
+			state: &quot;NH&quot;,
+			county: &quot;Belknap&quot;,
+			revenue : 123214125.34  
+		},{
+			name : &quot;Beam Hdg.&quot;,
+			city: &quot;Hancock&quot;,
+			state: &quot;NH&quot;,
+			county: &quot;Belknap&quot;
+			revenue : 3235235235.23  
+		},{
+			name : &quot;Carot Ltd.&quot;,
+			city: &quot;Cheshire&quot;,
+			state: &quot;NH&quot;,
+			county: &quot;Sullivan&quot;,
+			revenue : &quot;Not Disclosed&quot;  
+		}]
+}</pre>
+<p class="p">Let&#x2019;s take this simple view, containing a single input control:</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+	controllerName=&quot;sap.ui.sample.App&quot;
+	xmlns=&quot;sap.m&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;Input id=&quot;companyInput&quot;
+		 value=&quot;{name}&quot;/&gt;	
+&lt;/mvc:View&gt;</pre>
+<p class="p">In your controller, you can now bind the input control as follows:</p>
+<pre class="pre codeblock prettyprint lang-js">var oInput = this.byId(&quot;companyInput&quot;);
+oInput.bindElement(&quot;/companies/0&quot;);</pre>
+<p class="p">The XML view has bound the <samp class="ph codeph">value</samp> of the input to the
+<samp class="ph codeph">name</samp> property in the model. As the path to this property in the
+model is not set, this will not resolve. To resolve the binding, you use the
+<samp class="ph codeph">bindElement</samp> method which creates a new context from the
+specified relative path.</p>
+<p class="p">To remove the current binding context, call the <samp class="ph codeph">unbindElement</samp> method
+on the input control. By doing this, all bindings now resolve relative to the parent
+context again.</p>
+<p class="p">You can also use the <samp class="ph codeph">bindElement</samp> method in conjunction with list
+binding. Let&#x2019;s consider the following extension of our JSON data:</p>
+<pre class="pre codeblock prettyprint lang-js">{
+	regions: [
+		{
+			name: &quot;Americas&quot;,
+			companies : [
+			{
+				name : &quot;Acme Inc.&quot;,
+				zip : &quot;03301&quot;,
+				city: &quot;Belmont&quot;,
+				county: &quot;Belknap&quot;,
+				state: &quot;NH&quot;,
+				revenue : 123214125.34, 
+				publ: true
+			},
+			{
+				name : &quot;Beam Hdg.&quot;,
+				zip : &quot;03451&quot;,
+				city: &quot;Hancock&quot;,
+				county: &quot;Sullivan&quot;,
+				state: &quot;NH&quot;,
+				revenue : 3235235235.23,
+				publ: true
+			},
+			{
+				name : &quot;Carot Ltd.&quot;,
+				zip : &quot;03251&quot;,
+				city: &quot;Cheshire&quot;,
+				county: &quot;Sullivan&quot;,
+				state: &quot;NH&quot;,
+				revenue : &quot;Not Disclosed&quot;,
+				publ: false 
+			}]
+		},{
+			name: &quot;DACH&quot;,
+			companies : [
+			{
+				name : &quot;Taubtrueb&quot;,
+				zip : &quot;89234&quot;,
+				city: &quot;Ginst&quot;,
+				county: &quot;Musenhain&quot;,
+				state: &quot;NRW&quot;,
+				revenue : 2525, 
+				publ: true
+			},
+			{
+				name : &quot;Krawehl&quot;,
+				zip : &quot;45362&quot;,
+				city: &quot;Schlonz&quot;,
+				county: &quot;Humpf&quot;,
+				state: &quot;BW&quot;,
+				revenue : 2342525, 
+				publ: true
+			}]
+		}
+	] 
+}</pre>
+<p class="p">Say we want to display companies in a <samp class="ph codeph">sap.m.List</samp> control. Here&#x2019;s
+what the XML view will look like:</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+	controllerName=&quot;sap.ui.sample.App&quot;
+	xmlns=&quot;sap.m&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	  &lt;List id=&#x201D;companyList&#x201D; items=&quot;{companies}&quot;&gt;
+		&lt;items&gt;
+			&lt;StandardListItem
+	 	title=&quot;{name}&quot;
+	 	description=&quot;{city}&quot;
+			/&gt;
+		 &lt;/items&gt;
+	  &lt;/List&gt;
+&lt;/mvc:View&gt;</pre>
+<p class="p">Please note that <samp class="ph codeph">items=&quot;{companies}&quot;</samp> cannot be resolved initially,
+since it is a relative path. In your controller, you can now provide an element
+binding for the list control:</p>
+<pre class="pre codeblock prettyprint lang-js">var oList = this.byId(&quot;companyList&quot;);
+oList.bindElement(&quot;/regions/0&quot;);</pre>
+<p class="p">This will display the companies for region <span class="ph emphasis emphasis">Americas</span>, while the
+code below displays all companies in the <span class="ph emphasis emphasis">DACH</span> region (Germany,
+Austria, Switzerland):</p>
+<pre class="pre codeblock prettyprint lang-js">var oList = this.byId(&quot;companyList&quot;);
+oList.bindElement(&quot;/regions/1&quot;);</pre>
+</section></div>
+<div class="section" id="loio91f05e8b6f4d1014b6dd926db0e91070__section_mdz_2r2_xbb"><section class="section" type="API Reference"><h2 class="section_title" style="font-size: 1.15em;">API Reference</h2>
+
+<div class="p">For more information, see the API Reference for the following methods:<ul class="ul" id="loio91f05e8b6f4d1014b6dd926db0e91070__ul_stx_4r2_xbb">
+<li class="li"><p class="p"><a class="xref" href="../../#/api/sap.ui.base.ManagedObject/methods/bindObject" target="_top" alt="#/api/sap.ui.base.ManagedObject/methods/bindObject" title="#/api/sap.ui.base.ManagedObject/methods/bindObject">API Reference:
+<samp class="ph codeph">sap.ui.base.ManagedObject.bindObject</samp></a>.</p>
+</li>
+<li class="li"><p class="p"><a class="xref" href="../../#/api/sap.ui.base.ManagedObject/methods/getObjectBinding" target="_top" alt="#/api/sap.ui.base.ManagedObject/methods/getObjectBinding" title="#/api/sap.ui.base.ManagedObject/methods/getObjectBinding">API Reference:
+<samp class="ph codeph">sap.ui.base.ManagedObject.getObjectBinding</samp></a>.</p>
+</li>
+<li class="li"><p class="p"><a class="xref" href="../../#/api/sap.ui.base.ManagedObject/methods/unbindObject" target="_top" alt="#/api/sap.ui.base.ManagedObject/methods/unbindObject" title="#/api/sap.ui.base.ManagedObject/methods/unbindObject">API Reference:
+<samp class="ph codeph">sap.ui.base.ManagedObject.unbindObject</samp></a>.</p>
+</li>
+<li class="li"><p class="p"><a class="xref" href="../../#/api/sap.ui.core.Element/methods/bindElement" target="_top" alt="#/api/sap.ui.core.Element/methods/bindElement" title="#/api/sap.ui.core.Element/methods/bindElement">API Reference:
+<samp class="ph codeph">sap.ui.core.Element.bindElement</samp></a>.</p>
+</li>
+<li class="li"><p class="p"><a class="xref" href="../../#/api/sap.ui.core.Element/methods/getElementBinding" target="_top" alt="#/api/sap.ui.core.Element/methods/getElementBinding" title="#/api/sap.ui.core.Element/methods/getElementBinding">API Reference:
+<samp class="ph codeph">sap.ui.core.Element.getElementBinding</samp></a>.</p>
+</li>
+<li class="li"><p class="p"><a class="xref" href="../../#/api/sap.ui.core.Element/methods/unbindElement" target="_top" alt="#/api/sap.ui.core.Element/methods/unbindElement" title="#/api/sap.ui.core.Element/methods/unbindElement">API Reference:
+<samp class="ph codeph">sap.ui.core.Element.unbindObject</samp></a>.</p>
+</li>
+</ul></div>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/6c7c5c266b534e7ea9a28f861dc515f5.html" title="Now we want to do something with that newly generated list. In most cases you will use a list to allow the selection of an item and then show the details of that item elsewhere. In order to achieve this, we use a form with relatively bound controls and bind it to the selected entity via element binding." target="_top">Tutorial Step 13: Element Binding</a></div><div><a class="link" href="../../#/topic/e2e6f4127fe4450ab3cf1339c42ee832.html" title="You bind UI elements to data of a data source by defining a binding path to the model that represents the data source in the app." target="_top">Binding Syntax</a></div><div><a class="link" href="../../#/topic/07e4b920f5734fd78fdaa236f26236d8.html" title="Data that is presented on the UI often has to be converted so that is human readable and fits to the locale of the user. On the other hand, data entered by the user has to be parsed and validated to be understood by the data source. For this purpose, you use formatters and data types." target="_top">Formatting, Parsing, and Validating Data</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,92 @@
+<mvc:View
+	xmlns="sap.f"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:m="sap.m"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+	xmlns:smartTable="sap.ui.comp.smarttable"
+	xmlns:sv="sap.ui.comp.smartvariants"
+	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	controllerName="sap.ui.comp.sample.smartfilterbar.example2.SmartFilterBar"
+	height="100%">
+	<m:Button id="toggleUpdateMode" text="Change to 'LiveMode'" press="toggleUpdateMode"></m:Button>
+
+	<DynamicPage id="synamicPage">
+		<title>
+			<DynamicPageTitle>
+				<heading>
+					<sv:SmartVariantManagement id="__SVM01"
+						persistencyKey="fiori.test.application2.view.S4" showShare="true" showExecuteOnSelection="true" entitySet="LineItemsSet"/>
+				</heading>
+				<snappedContent>
+					<m:Text id="statusText"></m:Text>
+				</snappedContent>
+
+			</DynamicPageTitle>
+		</title>
+		<header>
+			<DynamicPageHeader>
+				<content>
+
+					<smartFilterBar:SmartFilterBar id="smartFilterBar"
+						smartVariant="__SVM01" useToolbar="false" entitySet="LineItemsSet"
+						persistencyKey="fiori.test.application2.view.S4.FilterBar"
+						assignedFiltersChanged="onAssignedFiltersChanged">
+
+						<smartFilterBar:controlConfiguration>
+							<smartFilterBar:ControlConfiguration
+									key="MyOwnFilterField" index="1" label="Custom Filter Field"
+									groupId="_BASIC" width="300px" mandatory="mandatory"
+									visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<m:Select id="foo" customData:hasValue="true">
+										<core:Item key="1" text="ONE"/>
+										<core:Item key="2" text="TWO"/>
+										<core:Item key="3" text="THREE"/>
+									</m:Select>
+								</smartFilterBar:customControl>
+
+							</smartFilterBar:ControlConfiguration>
+
+							<smartFilterBar:ControlConfiguration
+									key="Bukrs" label="{i18n>CAT_LABEL}">
+							</smartFilterBar:ControlConfiguration>
+
+							<!--
+							<smartFilterBar:ControlConfiguration
+									key="Kunnr" filterType="single">
+								</smartFilterBar:ControlConfiguration>
+							-->
+						</smartFilterBar:controlConfiguration>
+
+						<smartFilterBar:groupConfiguration>
+							<smartFilterBar:GroupConfiguration
+									key="LineItems" label="{i18n>GROUP_LABEL}">
+							</smartFilterBar:GroupConfiguration>
+						</smartFilterBar:groupConfiguration>
+
+						<!-- layout data used to make the table growing but the filter bar fixed -->
+						<smartFilterBar:layoutData>
+							<m:FlexItemData shrinkFactor="0"/>
+						</smartFilterBar:layoutData>
+					</smartFilterBar:SmartFilterBar>
+
+				</content>
+			</DynamicPageHeader>
+		</header>
+		<content>
+			<smartTable:SmartTable id="smartTable"
+				smartVariant="__SVM01"
+				persistencyKey="fiori.test.application2.view.S4.SmartTable"			
+				entitySet="LineItemsSet" smartFilterId="smartFilterBar" tableType="Table"
+				useExportToExcel="true" useVariantManagement="true"
+				useTablePersonalisation="true" header="Line Items" showRowCount="true">
+				<smartTable:layoutData>
+					<m:FlexItemData growFactor="1" baseSize="0%"/>
+				</smartTable:layoutData>
+			</smartTable:SmartTable>
+
+		</content>
+
+	</DynamicPage>
+</mvc:View>

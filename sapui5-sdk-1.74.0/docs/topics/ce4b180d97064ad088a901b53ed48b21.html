@@ -1,0 +1,389 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Cookbook for OPA5</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Advanced topics and best practices for OPA tests."><meta name="description" content="Advanced topics and best practices for OPA tests."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"21aeff6928f84d179a47470123afee59.html","previousTopicHref":"22f175e7084247bc896c15280af9d1dc.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loioce4b180d97064ad088a901b53ed48b21"><h1 class="title topictitle1" hidden>Cookbook for OPA5</h1><div class="body conbody"><p class="shortdesc" hidden>Advanced topics and best practices for OPA tests.</p>
+<div class="section"><section class="section" type="Executing a Single Statement After Other waitFors are Done"><h2 class="section_title" style="font-size: 1.15em;">Executing a Single Statement After Other <samp class="ph codeph">waitFors</samp> are Done</h2>
+
+<p class="p">If you skip all parameters except for the <samp class="ph codeph">success</samp> parameter, you can
+execute your code after the other <samp class="ph codeph">waitFors</samp> are done. Since there is
+no <samp class="ph codeph">check</samp> function, OPA runs directly to
+<samp class="ph codeph">success</samp>.</p>
+<pre class="pre codeblock prettyprint lang-js">
+iChangeTheHashToTheThirdProduct : function () {
+        return this.waitFor({
+            success : function () {
+                sap.ui.test.Opa5.getWindow().location.hash = &quot;#/Products(2)&quot;;
+            }
+        });
+    },</pre>
+</section></div>
+<div class="section"><section class="section" type="Passing a Parameter from One waitFor to Another"><h2 class="section_title" style="font-size: 1.15em;">Passing a Parameter from One <samp class="ph codeph">waitFor</samp> to Another</h2>
+
+<p class="p">To check special conditions, for example, how one control relates to another control,
+you have to pass a control found in one <samp class="ph codeph">waitFor</samp> statement as input
+for another <samp class="ph codeph">waitFor</samp> statement. The following two options exist:</p>
+<ul class="ul" id="loioce4b180d97064ad088a901b53ed48b21__ul_jcn_vwr_1q">
+<li class="li">
+<p class="p">Storing the control in a variable in the outer scope: Use this option if you
+have a common outer scope, like the same functions, or the same page object
+file.</p>
+</li>
+<li class="li">
+<p class="p">Storing the control in the OPA context: Use this option if you have to pass
+the parameter, for example, across some page objects.</p>
+</li>
+</ul>
+<pre class="pre codeblock prettyprint lang-js">
+iDoSomething: function () {
+        var oControl;
+        this.waitFor({
+            id : &quot;myControlId&quot;,
+            success : function (oCtrl) {
+                //store control in outer scope
+                oControl = oCtrl;
+                
+                //as alternative you could store the control in the Opa context
+                sap.ui.test.Opa.getContext().control = oCtrl;
+            }
+        });
+        return this.waitFor({
+            controlType : &quot;some.other.control&quot;
+            check: function (aControlsFromThisWaitFor) {
+                //now you can compare oControl with aControlsFromThisWaitFor
+
+                //or you can compare sap.ui.test.Opa.getContext().control with aControlsFromThisWaitFor
+            }
+        });
+    },
+</pre>
+</section></div>
+<div class="section" id="loioce4b180d97064ad088a901b53ed48b21__section_abh_nmk_b1b"><section class="section" type="Application Parameters"><h2 class="section_title" style="font-size: 1.15em;">Application Parameters</h2>
+
+<p class="p">As of version 1.48, you can easily specify URL parameters that are relevant for the
+application being tested. Simply place them in the <samp class="ph codeph">appParams</samp> object
+under <samp class="ph codeph">Opa5.extendConfig()</samp>. Only primitive types are supported. The
+provided object is serialized to URL search string and all parameters are available
+to the application being tested.</p>
+<pre class="pre codeblock prettyprint lang-js">Opa5.extendConfig({
+    appParams: {
+        &quot;key&quot;: &quot;value&quot;
+    }
+});</pre>
+<p class="p">When the application is started with <samp class="ph codeph">Opa5.iStartMyAppInAFrame()</samp>, its
+parameters are appended to the application URL as provided in the first parameter.
+Application parameters overwrite any duplicated string in the URL that is given as
+first parameter of <samp class="ph codeph">iStartMyAppInAFrame()</samp>. Alternatively, when
+<samp class="ph codeph">Opa5.iStartMyUIComponent()</samp> is used, the URL parameters are
+appended to the current URL as the component is started in the same browser window.
+On <samp class="ph codeph">Opa5.iTeardownMyApp()</samp>, the application parameters are cleared
+from the current URL.</p>
+<p class="p">For more details, see <span class="ph">the
+<span class="ph uicontrol">API Reference</span> for <a class="xref" href="../../#/api/sap.ui.test.Opa5" target="_top" alt="#/api/sap.ui.test.Opa5" title="#/api/sap.ui.test.Opa5"><samp class="ph codeph">Opa5</samp></a></span>
+</p>
+</section></div>
+<div class="section" id="loioce4b180d97064ad088a901b53ed48b21__section_fr2_qqk_b1b"><section class="section" type="URL Parameters"><h2 class="section_title" style="font-size: 1.15em;">URL Parameters</h2>
+
+<p class="p">As of version 1.48, OPA supports overwriting global configuration parameters for a
+single execution from URL. On startup, OPA parses
+<samp class="ph codeph">window.location.href</samp> and extracts all search parameters
+starting with &apos;opa&apos;. The prefix is removed and the resulting string has its first
+character changed to lower case. For example, the
+<samp class="ph codeph">?opaExecutionDelay=600</samp> string in a URL sets the value of
+<samp class="ph codeph">executionDelay</samp> to 600 ms. All OPA config parameters of
+primitive string and number types that are documented in
+<samp class="ph codeph">Opa.resetConfig()</samp> could be overwritten.</p>
+<p class="p">All URL parameters that do not start with &apos;opa&apos; are considered relevant for the
+application being tested and are passed to it. Application parameters from a URL
+always overwrite the application parameters provided in
+<samp class="ph codeph">Opa5.extendConfig()</samp>.</p>
+<p class="p">For more details, see <span class="ph">the
+<span class="ph uicontrol">API Reference</span>: <a class="xref" href="../../#/api/sap.ui.test.Opa/methods/sap.ui.test.Opa.resetConfig" target="_top" alt="#/api/sap.ui.test.Opa/methods/sap.ui.test.Opa.resetConfig" title="#/api/sap.ui.test.Opa/methods/sap.ui.test.Opa.resetConfig"><samp class="ph codeph">Opa5.extendConfig()</samp></a>
+and <a class="xref" href="../../#/api/sap.ui.test.Opa/methods/sap.ui.test.Opa.resetContext" target="_top" alt="#/api/sap.ui.test.Opa/methods/sap.ui.test.Opa.resetContext" title="#/api/sap.ui.test.Opa/methods/sap.ui.test.Opa.resetContext"><samp class="ph codeph">Opa.resetConfig()</samp></a></span>
+</p>
+</section></div>
+<div class="section" id="loioce4b180d97064ad088a901b53ed48b21__section_ahv_ywt_sbb"><section class="section" type="Working with Message Toasts"><h2 class="section_title" style="font-size: 1.15em;">Working with Message Toasts</h2>
+
+<p class="p">A message toast is a small, non-disruptive popup for displaying information or
+success messages. Message toasts automatically disappear after a timeout unless the
+user moves the mouse over the message or taps on it.</p>
+<p class="p">To ensure stable execution of OPA5 tests which manipulate
+<samp class="ph codeph">messageToast</samp> elements, it is recommended to set explicitly
+<samp class="ph codeph">autoWait</samp> parameter to <samp class="ph codeph">false</samp> only for the
+affected <samp class="ph codeph">waitFor</samp> methods, as shown by the following example:</p>
+<pre class="pre codeblock prettyprint lang-js">this.waitFor({
+        ...
+        autoWait: false,
+        ...
+        }
+    });</pre>
+<p class="p">To retrieve a message toast control and manipulate it accordingly, use standard
+jQuery selectors with the help of the <samp class="ph codeph">check</samp> parameter of OPA5
+<samp class="ph codeph">waitFor</samp> method, as <samp class="ph codeph">messageToast</samp> elements
+cannot be retrieved by interaction with the <span class="ph"><span class="ph pname">SAPUI5</span></span> API.</p>
+<p class="p">Example:</p>
+<pre class="pre codeblock prettyprint lang-js">iShouldSeeMessageToastAppearance: function () {
+                     return this.waitFor({
+                        // Turn off autoWait
+                        autoWait: false,
+                        check: function () {
+                            // Locate the message toast using its class name in a jQuery function
+                            return Opa5.getJQuery()(&quot;.sapMMessageToast&quot;).length &gt; 0;
+                        },
+                        success: function () {
+                            Opa5.assert.ok(true, &quot;The message toast was shown&quot;);
+                        },
+                        errorMessage: &quot;The message toast did not show up&quot;
+                    });
+                }</pre>
+</section></div>
+<div class="section" id="loioce4b180d97064ad088a901b53ed48b21__section_yy3_5gr_p2b"><section class="section" type="Working with Busy Controls"><h2 class="section_title" style="font-size: 1.15em;">Working with Busy Controls</h2>
+
+<p class="p">There are OPA5 rules that limit the ways you can use busy controls. Some OPA5
+features prevent you from locating controls while they are busy. For example,
+actions require that the control is interactable and therefore not busy and
+<samp class="ph codeph">autoWait</samp> ensures that all controls on the page are
+interactable. You can&apos;t test a control in its busy state when these features are
+enabled. You can always work with controls that are not busy as OPA5 either waits
+for them to become interactable (and not busy) or enforces no limitations.</p>
+<div class="table-wrapper tablenoborder"><table summary id="loioce4b180d97064ad088a901b53ed48b21__table_p4x_bhr_p2b" class="table" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">The following table is a cheatsheet with the values for each OPA5 rule and
+the outcome for busy control testing:</span></span></caption><colgroup><col width="25%"><col width="25%"><col width="25%"><col width="25%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry align_center" style="text-align:center;vertical-align:middle;" id="d258607e251">
+<p class="p"><samp class="ph codeph">OPA5.config</samp>
+<samp class="ph codeph">autoWait</samp></p>
+</th>
+<th class="entry align_center" style="text-align:center;vertical-align:middle;" id="d258607e261">
+<p class="p"><samp class="ph codeph">waitFor</samp> actions</p>
+</th>
+<th class="entry align_center" style="text-align:center;vertical-align:middle;" id="d258607e269">
+<p class="p"><samp class="ph codeph">waitFor</samp>
+<samp class="ph codeph">autoWait</samp></p>
+</th>
+<th class="entry align_center" style="text-align:center;vertical-align:middle;" id="d258607e279">
+<p class="p">verify busy control</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e251 ">
+<p class="p">&#x2713;</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e261 ">
+<p class="p">&#x2713;</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e269 ">
+<p class="p">any</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e279 ">
+<p class="p">X</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e251 ">
+<p class="p">&#x2713;</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e261 ">
+<p class="p">X</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e269 ">
+<p class="p">true / not modified</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e279 ">
+<p class="p">X</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e251 ">
+<p class="p">&#x2713;</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e261 ">
+<p class="p">X</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e269 ">
+<p class="p">false</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e279 ">
+<p class="p">&#x2713;</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e251 ">
+<p class="p">X</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e261 ">
+<p class="p">&#x2713;</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e269 ">
+<p class="p">any</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e279 ">
+<p class="p">X</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e251 ">
+<p class="p">X</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e261 ">
+<p class="p">X</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e269 ">
+<p class="p">false / not modified</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e279 ">
+<p class="p">&#x2713;</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e251 ">
+<p class="p">X</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e261 ">
+<p class="p">X</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e269 ">
+<p class="p">true</p>
+</td>
+<td class="entry align_center" style="text-align:center;vertical-align:middle;" headers="d258607e279 ">
+<p class="p">X</p>
+</td>
+</tr>
+</tbody></table></div>
+<p class="p">A common scenario is asserting the busy state of a control. Testing whether a control
+is not busy is meaningless when <samp class="ph codeph">autoWait</samp> is globally enabled. An
+example of testing for busyness with enabled <samp class="ph codeph">autoWait</samp> can be found
+in the <span class="ph"><a class="xref" href="../../#/entity/sap.ui.test.Opa5" target="_top" alt="#/entity/sap.ui.test.Opa5" title="#/entity/sap.ui.test.Opa5">OPA5 Samples</a></span>.</p>
+</section></div>
+<div class="section" id="loioce4b180d97064ad088a901b53ed48b21__section_tbb_f1q_jkb"><section class="section" type="Working with Responsive Toolbars"><h2 class="section_title" style="font-size: 1.15em;">Working with Responsive Toolbars</h2>
+
+<p class="p">A responsive toolbar can have overflowing content depending on the screen size. This
+content is moved to a popover, which can be opened by pressing a toggle button in
+the toolbar. A toggle button is displayed only when there&apos;s overflowing content.
+This is a problem for tests because they must only try to press the button when it&apos;s
+visible and interactable. One way to solve this is to always start the application
+being tested with a fixed screen size. Another way is to first look for toggle
+button with no visibility restrictions and then press on it only if it exists:</p>
+<pre class="pre codeblock prettyprint lang-js">this.waitFor({
+    id: sToolbarId, // find the toolbar
+    success: function (oToolbar) {
+        this.waitFor({
+        controlType: &quot;sap.m.ToggleButton&quot;,
+        visible: false, // look for ANY toggle button in the toolbar
+        matchers: new Ancestor(oToolbar),
+        success: function (aToggleButton) {
+            if (aToggleButton[0].$().length) {
+                // if the button exists, press on it
+                this.waitFor({
+                    controlType: &quot;sap.m.ToggleButton&quot;,
+                    matchers: new Ancestor(oToolbar),
+                    actions: new Press()
+                });
+            } else {
+            Opa5.assert.ok(true, &quot;The toggle button is not present&quot;);
+        }
+    }
+});</pre>
+</section></div>
+<div class="section" id="loioce4b180d97064ad088a901b53ed48b21__section_hfj_xbl_wfb"><section class="section" type="Deactivating Tests in Need of Adaptation"><h2 class="section_title" style="font-size: 1.15em;">Deactivating Tests in Need of Adaptation</h2>
+
+<p class="p">As of version 1.61, you can use the <samp class="ph codeph">opaTodo</samp> and
+<samp class="ph codeph">opaSkip</samp> methods in addition to <samp class="ph codeph">opaTest</samp>. They
+are similar to <samp class="ph codeph">Qunit.todo</samp> and <samp class="ph codeph">QUnit.skip</samp> and have
+the same signatures as their QUnit counterparts.</p>
+<p class="p">In QUnit1, <samp class="ph codeph">opaTodo</samp> is equivalent to <samp class="ph codeph">opaTest</samp> as
+<samp class="ph codeph">QUnit.todo</samp> is not yet available. In QUnit2,
+<samp class="ph codeph">opaTodo</samp> will succeed if the test has at least one failing
+assertion or if it timeouts with either OPA5 or QUnit timeout.</p>
+<p class="p">If a test has to be adapted after recent changes, you have to disable it temporarily
+in order to have a successful build. A test which is commented out can easily be
+forgotten and its coverage value lost. <samp class="ph codeph">opaTodo</samp> prompts you to
+uncomment the test once an adaptation is provided.</p>
+<p class="p"><samp class="ph codeph">opaTodo</samp> and <samp class="ph codeph">opaSkip</samp> are readily available to your
+test as globals.</p>
+<p class="p">Example:</p>
+<pre class="pre codeblock prettyprint lang-js">oOpa.waitFor({
+    success: function () {
+        Opa5.assert.ok(false, &quot;Should not report test that needs adaptation&quot;);
+    }
+});</pre>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

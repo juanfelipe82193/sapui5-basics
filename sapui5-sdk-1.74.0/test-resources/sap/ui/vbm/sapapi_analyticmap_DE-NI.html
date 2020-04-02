@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../resources/sap-ui-core.js" id="Script1" data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+
+		h4 {
+			margin: 1em 0;
+		}
+
+		i {
+			color: blue
+		}
+
+		.col {
+			color: red;
+		}
+
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+		// for testing here are some event handlers
+		function onRegionClick(e) {
+			alert("onRegionClick " + e.getParameter("code"));
+		};
+
+		function onRegionContextMenu(e) {
+			alert("onRegionContextMenu: " + e.getParameter("code"));
+		};
+
+		function onClickItem(e) {
+			// click on item
+			alert("onClick" + this);
+		};
+
+		function onContextMenuItem(e) {
+			// context menu on item
+			alert("onContextMenu" + this);
+		};
+
+		// have some data
+		var oData = {
+			regionProperties: [{
+				"code": "DE-NI",
+				"color": "rgba(184,225,245,1.0)",
+				"tooltip": "Niedersachsen enclosing Bremen"
+			}, {
+				"code": "DE-BE",
+				"color": "rgba(5,71,102,1.0)",
+			}]
+		};
+
+		// create model and set the data
+		var oModel = new sap.ui.model.json.JSONModel();
+		oModel.setData(oData);
+
+		// change the L0 geojson location to internal folder, due it is not......//
+		// allowed for us to deliver it..........................................//
+		jQuery.sap.require("sap.ui.vbm.AnalyticMap");
+		sap.ui.vbm.AnalyticMap.GeoJSONURL = "media/vbarea/DE-NI.geojson";
+
+
+
+		// create analytic map and bind to model
+		var oVBI = new sap.ui.vbm.AnalyticMap('vbi', {
+			width: "100%",
+			height: "100%",
+			plugin: false,
+			initialZoom: 8,
+			initialPosition: "9;52.6;0",
+			regions: {
+				path: "/regionProperties",
+				template: new sap.ui.vbm.Region({
+					code: "{code}",
+					color: '{color}',
+					tooltip: '{tooltip}',
+					click: onRegionClick,
+					contextMenu: onRegionContextMenu
+				})
+			},
+
+			legend: new sap.ui.vbm.Legend({
+				caption: "Analytic Legend",
+				items: {
+					path: "/regionProperties",
+					template: new sap.ui.vbm.LegendItem({
+						text: "{code}",
+						color: '{color}',
+						tooltip: '{tooltip}'
+					})
+				}
+			}),
+
+			regionClick: onRegionClick,
+			regionContextMenu: onRegionContextMenu
+		});
+
+
+		oVBI.setModel(oModel);
+		oVBI.placeAt("content");
+
+		// just to test dynamic model changes
+		function onChangeModel1() {
+			oModel.setProperty("/regionProperties/0/color", "rgba(255,0,0,1.0)");
+		};
+
+		function onRemoveAllRegions() {
+			// oVBI.destroyRegions();
+			oVBI.unbindAggregation("regions"); //();
+			document.getElementById('regions').innerHTML = oVBI.getRegions().length;
+			// oVBI.removeAllRegions();
+		};
+
+		/*	function onGetCurrentZoomlevel()
+			{
+				if( evtoutput.innerText !== undefined )
+					evtoutput.innerText = oVBI.mVBIContext.GetMainScene().GetCurrentZoomlevel();
+				else
+			  if( evtoutput.textContent !== undefined )
+					evtoutput.textContent = oVBI.mVBIContext.GetMainScene().GetCurrentZoomlevel();	// due to ff
+			};*/
+
+		/*	function onGetCentrePos()
+			{
+			   if( evtoutput.innerText !== undefined )
+					evtoutput.innerText = oVBI.mVBIContext.GetMainScene().GetCenterPos();
+				else
+			  if( evtoutput.textContent !== undefined )
+					evtoutput.textContent = oVBI.mVBIContext.GetMainScene().GetCenterPos();	// due to ff
+			};*/
+
+	</script>
+
+	<body class="sapUiBody">
+		<h1>Visual Business AnalyticMap Sample</h1>
+		<div id="description1">
+			<h3> The aim: </h3>
+			<p>To check that multi-polygon objects with exclusions behave correctly. Exclusions are "holes" in an Area. </p>
+			<h3> To test: </h3>
+			<p>The test on the right consists of a Visual Business AnalyticMap Control with full feature MultiPolygon GeoJSON.
+				The Area consists of multiple parts, with at least one part containing an exclusion. </p>
+			<ol>
+				<li> Check that an AnalyticMap control has loaded.</li>
+				<img src="img/AnalyticMap.jpg" alt="text for Thumbnail" style="width:400px;height:280px;">
+				<li> Check that the AnalyticMap has at least one exclusion.</li>
+				<img src="img/exclusion.jpg" alt="text for Thumbnail" style="width:400px;height:280px;">
+				<li> Check that there is an Analytic legend on the top right of the AnalyticMap control.</li>
+				<img src="img/legend.jpg" alt="text for Thumbnail" style="width:400px;height:280px;">
+				<li> Click the "Change Model" button, and check that the DE-NI region changes its colour to red.</li>
+				<img src="img/ChangeColor.jpg" alt="text for Thumbnail" style="width:400px;height:280px;">
+				<li>Click the "Remove all Regions" button. This button will call the method removeAllRegions().
+					<br> The AnalyticMap control should change colour and the regions array should return 0.
+					<p><i>If the regions have been removed, the array length should equal 0 (see result below)</i> </p>
+					<br>
+					<p> Regions array length:</p>
+					<p style="font-size: 40px; color:red;" id="regions"></p>
+				</li>
+				<img src="img/AnalyticMap1.jpg" alt="text for Thumbnail" style="width:400px;height:280px;">
+				<img src="img/arrayLength.jpg" alt="text for Thumbnail" style="width:200px;height:80px;">
+				<li> Click on the region on the map and check that an alert box appears which is similar to the image below
+					<img src="img/alertRegion.jpg" alt="text for Thumbnail" style="width:400px;height:150px;"></li>
+			</ol>
+		</div>
+		<div id="description2">
+			<br>
+			<br>
+			<button id="ChangeModel1" onclick="onChangeModel1()">Change Model</button>
+			<button id="removeAllRegions" onclick="onRemoveAllRegions()">Remove all Regions</button>
+			<br>
+			<br>
+			<div class="ratio_box">
+
+				<div class="content" id="content"></div>
+			</div>
+
+			<br />
+			<!--<textarea style="width:100%;box-sizing:border-box" id="evtoutput" rows="5" ></textarea>-->
+		</div>
+	</body>
+
+</html>

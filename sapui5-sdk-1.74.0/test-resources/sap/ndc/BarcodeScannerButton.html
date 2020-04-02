@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<title>BarcodeScannerButton - sap.ndc</title>
+
+<base href="../../">
+<!--[if lte IE 9]><script type="text/javascript">
+(function() {
+	var baseTag = document.getElementsByTagName('base')[0];
+	baseTag.href = baseTag.href;
+})();
+</script><![endif]-->
+
+<script id="sap-ui-bootstrap" 
+	type="text/javascript"
+	data-sap-ui-libs="sap.ndc, sap.m"
+	data-sap-ui-theme="sap_bluecrystal"
+	src="../resources/sap-ui-core.js">
+</script>
+
+<script>
+	jQuery.sap.require("sap.ndc.BarcodeScannerButton");
+	
+	var oApp = new sap.m.App("myApp", {initialPage: "myPage"});
+	var oPage = new sap.m.Page("myPage", {
+		title: "sap.ndc.BarcodeScannerButton"
+	});
+	
+	oApp.addPage(oPage);
+	
+	oApp.setModel(sap.ndc.BarcodeScanner.getStatusModel(), "status");
+	var oModel = new sap.ui.model.json.JSONModel({
+		btnFallback: true,
+		btnVisible: true,
+		closeCode: "",
+		mockFvEnabled: false,
+		featureEnabled: true,
+		mockScannerEnabled: false,
+		mockCode: "1234567890123",
+		mockCancel: false
+	});
+	oApp.setModel(oModel);
+	
+	var sCheckString;
+	
+	var oScanButton = new sap.ndc.BarcodeScannerButton({
+		provideFallback: "{/btnFallback}",
+		visible: "{/btnVisible}",
+		scanSuccess: onScanSuccess,
+		scanFail: onScanError,
+		inputLiveUpdate: onScanLiveupdate
+	});
+	
+	var oFioriClient = {};
+
+	oPage.addContent(oScanButton);
+	
+	var oList = new sap.m.List();
+	
+	oList.addItem(new sap.m.GroupHeaderListItem({
+		title: "Properties"
+	}));
+	oList.addItem(new sap.m.InputListItem({
+		label: "provideFallback",
+		content: new sap.m.CheckBox({
+			selected: "{/btnFallback}"
+		})
+	}));
+	oList.addItem(new sap.m.InputListItem({
+		label: "visible",
+		content: new sap.m.CheckBox({
+			selected: "{/btnVisible}"
+		})
+	}));
+	oList.addItem(new sap.m.GroupHeaderListItem({
+		title: "Scanner status"
+	}));
+	oList.addItem(new sap.m.StandardListItem({
+		title: "Feature available",
+		info: "{status>/available}",
+		infoState: {
+			path: "status>/available",
+			formatter: function (bAvailable) {
+				if (bAvailable) {
+					return sap.ui.core.ValueState.Success;
+				} else {
+					return sap.ui.core.ValueState.Error;
+				}
+			}
+		}
+	}));
+	oList.addItem(new sap.m.GroupHeaderListItem({
+		title: "Close scan dialog if bar code is"
+	}));
+	oList.addItem(new sap.m.InputListItem({
+		label: "Bar code",
+		content: new sap.m.Input({
+			placeholder: "Enter code",
+			value: "{/closeCode}"
+		})
+	}));
+	oList.addItem(new sap.m.GroupHeaderListItem({
+		title: "Mock Feature"
+	}));
+	oList.addItem(new sap.m.InputListItem({
+		label: "Mock FV",
+		content: new sap.m.Switch({
+			state: "{/mockFvEnabled}",
+			change: onMockFVToggle
+		})
+	}));
+	oList.addItem(new sap.m.InputListItem({
+		label: "Feature enabled",
+		content: new sap.m.CheckBox({
+			selected: "{/featureEnabled}",
+			select: fireSettingsDoneEvent
+		}),
+		visible: "{/mockFvEnabled}"
+	}));
+	oList.addItem(new sap.m.InputListItem({
+		label: "Mock Scanner",
+		content: new sap.m.Switch({
+			state: "{/mockScannerEnabled}",
+			change: onMockScannerToggle
+		})
+	}));
+	oList.addItem(new sap.m.InputListItem({
+		label: "Bar code",
+		content: new sap.m.Input({
+			placeholder: "Enter code",
+			value: "{/mockCode}"
+		}),
+		visible: "{/mockScannerEnabled}"
+	}));
+	oList.addItem(new sap.m.InputListItem({
+		label: "Scan cancelled",
+		content: new sap.m.CheckBox({
+			selected: "{/mockCancel}"
+		}),
+		visible: "{/mockScannerEnabled}"
+	}));
+	
+	oPage.addContent(oList);
+	
+	function onScanSuccess(oEvent) {
+		if (oEvent.getParameter("cancelled")) {
+			sap.m.MessageToast.show("Scan cancelled", { duration:1000 });
+		} else {
+			sap.m.MessageToast.show("Scanned: " + oEvent.getParameter("text"), { duration:2000 });
+		}
+	}
+
+	function onScanError(oEvent) {
+		sap.m.MessageToast.show("Scan failed" + oEvent, { duration:1000 });
+	}
+
+	function onScanLiveupdate(oEvent) {
+		var sCloseCode = oModel.getProperty("/closeCode");
+		if (sCloseCode && sCloseCode === oEvent.getParameter("newValue")) {
+			sap.ndc.BarcodeScanner.closeScanDialog();
+		}
+	}
+
+	function onScan() {
+		sap.ndc.BarcodeScanner.scan(onScanSuccess, onScanError, onScanLiveupdate);
+	}
+	
+	function fireSettingsDoneEvent() {
+		var oEvent = new CustomEvent("mockSettingsDone", { detail: { id: "mockSettingsDone", args: "SettingCompleted" } });
+		document.dispatchEvent(oEvent);
+	}
+	
+	function onMockFVToggle(oEvent) {
+		var state = oEvent.getParameter("state");
+		
+		if (state) {
+			try {
+				oFioriClient.isFeatureEnabled = sap.Settings.isFeatureEnabled
+			} catch (e) {
+				sap.Settings = {};
+			}
+			
+			sap.Settings.isFeatureEnabled = function (feature, success, error) {
+				if (feature === "cordova.plugins.barcodeScanner") {
+					success(oModel.getProperty("/featureEnabled"));
+				} else if (oFioriClient.isFeatureEnabled) {
+					oFioriClient.isFeatureEnabled.call(sap.Settings, feature, success, error);
+				}
+			}
+			
+		} else {
+			sap.Settings.isFeatureEnabled = oFioriClient.isFeatureEnabled;
+		}
+		fireSettingsDoneEvent();
+	}
+	
+	function onMockScannerToggle(oEvent) {
+		var state = oEvent.getParameter("state");
+		
+		if (state) {
+			try {
+				oFioriClient.barcodeScanner = cordova.plugins.barcodeScanner
+			} catch (e) {
+				cordova = {
+					plugins: {}
+				};
+			}
+			
+			cordova.plugins.barcodeScanner = {
+				scan: function (success, error) {
+					var mSettings = oModel.getData();
+					
+					if (typeof success === "function") {
+						success({
+							cancelled: mSettings.mockCancel,
+							text: mSettings.mockCode
+						});
+					}
+				}
+			}
+		} else {
+			cordova.plugins.barcodeScanner = oFioriClient.barcodeScanner;
+		}
+		fireSettingsDoneEvent();
+	}
+
+	oApp.placeAt("body");
+</script>
+</head>
+<body id="body" class="sapUiBody">
+	
+</body>
+</html>

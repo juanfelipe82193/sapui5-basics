@@ -1,0 +1,179 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 26: Remote OData Service</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="So far we have worked with local JSON data, but now we will access a real OData service to visualize remote data."><meta name="description" content="So far we have worked with local JSON data, but now we will access a real OData service to visualize remote data."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"bae9d90d2e9c4206889368f04edab508.html","previousTopicHref":"c4b2a32bb72f483faa173e890e48d812.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/c4b2a32bb72f483faa173e890e48d812.html" title="To make our list of invoices even more user-friendly, we sort it alphabetically instead of just showing the order from the data model. Additionally, we introduce groups and add the company that ships the products so that the data is easier to consume." target="_top">Step 25: Sorting and Grouping</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/bae9d90d2e9c4206889368f04edab508.html" title="We just ran our app against a real service, but for developing and testing our app we do not want to rely on the availability of the &#x201C;real&#x201D; service or put additional load on the system where the data service is located." target="_top">Step 27: Mock Server Configuration</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loio44062441f3bd4c67a4f665ae362d1109"><h1 class="title topictitle1" hidden>Step 26: Remote OData Service</h1><div class="body conbody"><p class="shortdesc" hidden>So far we have worked with local JSON data, but now we will access a real OData service to visualize remote data.</p>
+<div class="section" id="loio44062441f3bd4c67a4f665ae362d1109__section_kgq_kvp_r2b">
+<p class="p">In the real world, data often resides on remote servers and is accessed via an OData service. We will add a data source configuration
+to the manifest and replace the JSONModel type for our <samp class="ph codeph">invoice</samp> model with the publicly available Northwind OData
+service to visualize remote data. You will be surprised how little needs to be changed in order to make this work!</p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>If you cannot get it to run, don&apos;t worry too much, the remaining steps will also work with the local JSON data you have used so far. In <a class="xref" href="../../#/topic/bae9d90d2e9c4206889368f04edab508.html" title="We just ran our app against a real service, but for developing and testing our app we do not want to rely on the availability of the &#x201C;real&#x201D; service or put additional load on the system where the data service is located." target="_top">Step 27: Mock Server Configuration</a>, you will learn how to simulate a back-end system to achieve a similar working
+scenario. However, you should at least read this chapter about remote OData services to learn about non-local data sources.</p></aside>
+</div>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loio44062441f3bd4c67a4f665ae362d1109__fig_r1j_pst_mr"><div class="figbody">
+
+<img class="inline  " id="loio44062441f3bd4c67a4f665ae362d1109__image_trp_5j2_yr" src="loio99a649180be34423b9c6ba8379b26098_HiRes.png">
+</div><span class="figcap">Products from the OData invoices test service are now shown within our
+app</span></div>
+</section></div>
+<div class="section">
+<div class="section_title">Coding</div>
+<p class="p">You can view and download all files <span class="ph">at <a class="xref" href="../../#/sample/sap.m.tutorial.walkthrough.26/preview" target="_top" alt="#/sample/sap.m.tutorial.walkthrough.26/preview" title="#/sample/sap.m.tutorial.walkthrough.26/preview">Walkthrough - Step 26</a></span>.</p>
+<div class="section_title">webapp/manifest.json</div>
+<pre class="pre codeblock prettyprint lang-js">{
+  &quot;_version&quot;: &quot;1.12.0&quot;,
+  &quot;sap.app&quot;: {
+	...
+	&quot;ach&quot;: &quot;CA-UI5-DOC&quot;<span class="ph emphasis emphasis">,
+	&quot;dataSources&quot;: {
+	  &quot;invoiceRemote&quot;: {
+		&quot;uri&quot;: &quot;https://services.odata.org/V2/Northwind/Northwind.svc/&quot;,
+		&quot;type&quot;: &quot;OData&quot;,
+		&quot;settings&quot;: {
+		  &quot;odataVersion&quot;: &quot;2.0&quot;
+		}
+	  }
+	}</span>
+  },
+  &quot;sap.ui&quot;: {
+	...
+  },
+  &quot;sap.ui5&quot;: {
+	...
+	&quot;models&quot;: {
+	  &quot;i18n&quot;: {
+		&quot;type&quot;: &quot;sap.ui.model.resource.ResourceModel&quot;,
+		&quot;settings&quot;: {
+		  &quot;bundleName&quot;: &quot;sap.ui.demo.walkthrough.i18n.i18n&quot;
+		}
+	  },
+	  &quot;invoice&quot;: {<span class="ph emphasis emphasis">
+		&quot;dataSource&quot;: &quot;invoiceRemote&quot;
+	  </span>}
+	}
+  }
+}</pre>
+<p class="p">In the <samp class="ph codeph">sap.app</samp> section of the descriptor file, we add a data source
+configuration. With the <samp class="ph codeph">invoiceRemote</samp>, key we specify a
+configuration object that allows automatic model instantiation. We specify the type
+of the service (<samp class="ph codeph">OData</samp>) and the model version
+(<samp class="ph codeph">2.0</samp>). In this step, we want to use the publicly available
+Northwind OData service located at
+<span class="ph filepath">https://services.odata.org/V2/Northwind/Northwind.svc/</span>.
+Therefore, the URI points to the official Northwind OData service.</p>
+<p class="p">In the <samp class="ph codeph">models</samp> section, we replace the content of the
+<samp class="ph codeph">invoice</samp> model. This key is still used as model name when the
+model is automatically instantiated during the component initialization. However,
+the <samp class="ph codeph">invoiceRemote</samp> value of the <samp class="ph codeph">dataSource</samp> key is a
+reference to the data source section that we specified above. This configuration
+allows the component to retrieve the technical information for this model during the
+start-up of the app.</p>
+<p class="p">Our component now automatically creates an instance of <samp class="ph codeph">sap.ui.model.odata.v2.ODataModel</samp> according to the settings we specified
+above, and makes it available as a model named <samp class="ph codeph">invoice</samp>. When you use the <samp class="ph codeph">invoiceRemote</samp> data source,
+the <samp class="ph codeph">ODataModel</samp> fetches the data from the real Northwind OData service. The invoices we receive from the Northwind
+OData service have identical properties as the JSON data we used previously (except for the <samp class="ph codeph">status</samp> property, which is
+not available in the Northwind OData service).</p>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p>If you want to have a default model on the component, you can change the name of the model to an empty string in the descriptor
+file. Automatically instantiated models can be retrieved by calling <samp class="ph codeph">this.getModel</samp> in the component. In the
+controllers of component-based apps you can call <samp class="ph codeph">this.getView().getModel()</samp> to get the automatically instantiated
+model. For retrieving a named model you have to pass on the model name defined in the descriptor file to <samp class="ph codeph">getModel</samp>,
+that is, in the component you would call <samp class="ph codeph">this.getModel(&quot;invoice&quot;)</samp> to get our automatically generated
+<samp class="ph codeph">invoice</samp> model that we defined in the descriptor.</p></aside>
+<p class="p">You can now try to run the app and see what happens - we will see an error related to our new configuration in the console:</p>
+<div class="fig fignone" id="loio44062441f3bd4c67a4f665ae362d1109__fig_jyf_f1k_c5"><div class="figbody">
+
+<img class="inline  " id="loio44062441f3bd4c67a4f665ae362d1109__image_lmw_d1k_c5" src="loio2c36d72282e34903a97197783fe92122_HiRes.png">
+</div><span class="figcap">Violations of the same-origin policy in Google Chrome</span></div>
+<p class="p">Due to the so called same-origin policy, browsers deny AJAX requests to service endpoints in case the service endpoint has a different
+domain/subdomain, protocol, or port than the app. The browser refuses to connect to a remote URL directly for security reasons.
+Depending on your development enviroment you have different options to overcome this limitation:</p>
+<ul class="ul" id="loio44062441f3bd4c67a4f665ae362d1109__ul_zt3_dlr_r2b">
+<li class="li"><a class="xref" href="../../#/topic/5bb388fc289d44dca886c8fa25da466e.html#loio5bb388fc289d44dca886c8fa25da466e__UsingHelperService" target="_top">SAP Web IDE: Configure a destination</a></li>
+<li class="li"><a class="xref" href="../../#/topic/5bb388fc289d44dca886c8fa25da466e.html#loio5bb388fc289d44dca886c8fa25da466e__CORSAnywhere" target="_top">Local Development: Configure a local proxy (CORS anywhere)</a></li>
+<li class="li"><a class="xref" href="../../#/topic/5bb388fc289d44dca886c8fa25da466e.html#loio5bb388fc289d44dca886c8fa25da466e__DisablingSameOriginPolicy" target="_top">Workaround: Disabling the same-origin policy in the
+browser</a> (not recommended, only for testing)</li>
+</ul>
+</div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/c4b2a32bb72f483faa173e890e48d812.html" title="To make our list of invoices even more user-friendly, we sort it alphabetically instead of just showing the order from the data model. Additionally, we introduce groups and add the company that ships the products so that the data is easier to consume." target="_top">Step 25: Sorting and Grouping</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/bae9d90d2e9c4206889368f04edab508.html" title="We just ran our app against a real service, but for developing and testing our app we do not want to rely on the availability of the &#x201C;real&#x201D; service or put additional load on the system where the data service is located." target="_top">Step 27: Mock Server Configuration</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="extlink" href="http://help.sap.com/disclaimer?site=http://www.odata.org/" target="_blank" alt="http://www.odata.org/" title="http://www.odata.org/">OData Home Page<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v2.ODataModel" target="_top" alt="#/api/sap.ui.model.odata.v2.ODataModel" title="#/api/sap.ui.model.odata.v2.ODataModel">API Reference: <samp class="ph codeph">sap.ui.model.odata.v2.ODataModel</samp></a></div><div><a class="link" href="../../#/topic/dfe4f79843c44c40b3fb95ebffb65646.html" title="This section contains the most common issues that you might face when developing SAPUI5 apps and how to solve them." target="_top">First-Aid Kit</a></div><div><a class="link" href="../../#/topic/5bb388fc289d44dca886c8fa25da466e.html" target="_top">Request Fails Due to Same-Origin Policy (Cross-Origin Resource Sharing - CORS)</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>LandscapeViewer</name>
+    <derived/>
+    <documentation>Visualize the landscape objects in a new user experience</documentation>
+    <baseType>sap.landvisz/Option</baseType>
+    <properties>
+        <property name="defaultDependencyView" type="sap.landvisz/DependencyType" defaultValue="NETWORK_VIEW" group="Identification">
+            <documentation>View type of landscape view</documentation>
+        </property>
+        <property name="height" type="sap.ui.core/int" group="Dimension">
+            <documentation>Height of Viewer container</documentation>
+        </property>
+        <property name="width" type="sap.ui.core/int" group="Dimension">
+            <documentation>width of the Viewer container</documentation>
+        </property>
+        <property name="title" type="sap.ui.core/string" group="Data">
+            <documentation>Header of the rendered view</documentation>
+        </property>
+        <property name="networkDependencyLabel" type="sap.ui.core/string" defaultValue="Network View" group="Data">
+            <documentation>Label of the network view</documentation>
+        </property>
+        <property name="boxDependencyLabel" type="sap.ui.core/string" defaultValue="Box View" group="Data">
+            <documentation>Label of box view</documentation>
+        </property>
+        <property name="boxDependencyLevels" type="sap.ui.core/string[]" group="Data">
+            <documentation>Levels information in Box dependency view</documentation>
+        </property>
+        <property name="showDependencyNavigator" type="sap.ui.core/boolean" defaultValue="true" group="Identification">
+            <documentation>Navigator for dependency views</documentation>
+        </property>
+        <property name="visibleDependency" type="sap.landvisz/DependencyVisibility" defaultValue="BOTH" group="Identification">
+            <documentation>Dependency View Visibility</documentation>
+        </property>
+        <property name="viewType" type="sap.landvisz/ViewType" group="Identification">
+            <documentation>View type of landscape view</documentation>
+        </property>
+        <property name="navigationPath" type="sap.ui.core/string" group="Data">
+            <documentation>Text displayed in the dependency view</documentation>
+        </property>
+        <property name="hasParent" type="sap.ui.core/boolean" defaultValue="true" group="Misc">
+            <documentation>control has to be added in the container or directly in the window.</documentation>
+        </property>
+        <property name="selectionViewPosition" type="sap.landvisz/SelectionViewPosition" defaultValue="CENTER" group="Identification">
+            <documentation>positions for selection view entity</documentation>
+        </property>
+        <property name="showClose" type="sap.ui.core/boolean" defaultValue="true" group="Identification">
+            <documentation>close button visibility</documentation>
+        </property>
+        <property name="componentViewLabel" type="sap.ui.core/string" defaultValue="Component View" group="Data">
+            <documentation>Label for the component view</documentation>
+        </property>
+        <property name="deploymentViewLabel" type="sap.ui.core/string" defaultValue="Deployment View" group="Data">
+            <documentation>Label for deployment view.</documentation>
+        </property>
+        <property name="solutionOptionType" type="sap.landvisz/OptionType" group="Identification">
+            <documentation>determines whether the option is rendered on view or entity</documentation>
+        </property>
+        <property name="solutionType" type="sap.landvisz/SolutionType" group="Identification">
+            <documentation>Type of solution rendered</documentation>
+        </property>
+        <property name="showDeploymentTypeSection" type="sap.ui.core/boolean" defaultValue="false" group="Identification">
+            <documentation>Deployment type section</documentation>
+        </property>
+        <property name="deploymentOptionsLabel" type="sap.ui.core/string" defaultValue="Deployment Options :" group="Data">
+            <documentation>Label for the options</documentation>
+        </property>
+        <property name="deploymentOptionsTooltip" type="sap.ui.core/string" group="Data">
+            <documentation>tooltip of label for the options</documentation>
+        </property>
+        <property name="componentViewTooltip" type="sap.ui.core/string" group="Data">
+            <documentation>tooltip for component view button</documentation>
+        </property>
+        <property name="deploymentViewTooltip" type="sap.ui.core/string" group="Data">
+            <documentation>tooltip for deployment view button</documentation>
+        </property>
+        <property name="closeButtonTooltip" type="sap.ui.core/string" group="Data">
+            <documentation>tooltip for close button</documentation>
+        </property>
+        <property name="plugContentHeight" type="sap.ui.core/int" defaultValue="0" group="Misc">
+            <documentation>Specify the height of plugged content</documentation>
+        </property>
+        <property name="connectionLine" type="sap.landvisz/ConnectionLine" defaultValue="Line" group="Misc">
+            <documentation>Type of line to be drawn</documentation>
+        </property>
+    </properties>
+    <events>
+        <event name="close" allowPreventDefault="false">
+            <documentation>closes the view</documentation>
+        </event>
+        <event name="loadSolutionView" allowPreventDefault="false">
+            <documentation>load the solution view either deployment or component</documentation>
+        </event>
+    </events>
+    <aggregations>
+        <aggregation name="systems" type="sap.landvisz/LandscapeEntity" cardinality="0..n">
+            <documentation>Systems to be rendered in the landscape viewer</documentation>
+        </aggregation>
+        <aggregation name="connectionEntities" type="sap.landvisz/ConnectionEntity" cardinality="0..n">
+            <documentation>Optional: connection Entity between two systems.</documentation>
+        </aggregation>
+        <aggregation name="connectors" type="sap.landvisz/Connector" cardinality="0..n">
+            <documentation>connector contains from and to information</documentation>
+        </aggregation>
+        <aggregation name="solutionOptions" type="sap.landvisz/Option" cardinality="0..n">
+            <documentation>Options for the solution</documentation>
+        </aggregation>
+        <aggregation name="plugContent" type="sap.ui.core/Control" cardinality="0..1">
+            <documentation>a control which can be plugged into this control and can be only plugged in top section.</documentation>
+        </aggregation>
+    </aggregations>
+    <methods>
+        <method name="appendNavigationPath" type="sap.ui.core/void">
+            <documentation>Append the text in the navigation path</documentation>
+            <parameters>
+                <parameter name="navigationText" type="sap.ui.core/string">
+                    <documentation>text to be appended in the navigation path</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="getCurrentSolutionView" type="sap.ui.core/string">
+            <documentation>return the current solution loaded.</documentation>
+        </method>
+        <method name="getSelectedOption" type="sap.ui.core/object">
+            <documentation>returns an object of the internal connection entity</documentation>
+        </method>
+    </methods>
+</control>

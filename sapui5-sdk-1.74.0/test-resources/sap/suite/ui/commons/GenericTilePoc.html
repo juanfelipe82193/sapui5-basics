@@ -1,0 +1,310 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        
+        <title>GenericTile - sap.suite.ui.commons</title>
+        <style type="text/css">
+		body,
+        .sapMPage   {
+            background: rgba(23,130,153,1);
+        }
+        
+        #initial-page-scroll>.sapSuiteGT {
+          margin:1rem;
+        }
+        
+        </style>
+        
+        <script src="../../../../../resources/sap-ui-core.js"
+            type="text/javascript"
+            id="sap-ui-bootstrap"
+            data-sap-ui-libs="sap.ui.layout,sap.suite.ui.commons,sap.m"
+            data-sap-ui-theme="sap_bluecrystal">
+        </script>
+        <script type="text/javascript">
+        jQuery.sap.initMobile();
+        
+        var oGenericTileData = {
+                subheader : "Expenses By Region",
+                header : "Comparative Anual Totals",
+                footerNum : "Actual and Target",
+                footerComp : "Compare across regions",
+                scale: "MM",
+                unit: "EUR",
+                value: 8888,
+                size:"Auto",
+                frameType:"OneByOne",
+                state: sap.suite.ui.commons.LoadState.Loaded,
+                valueColor:sap.suite.ui.commons.InfoTileValueColor.Good,
+                indicator: sap.suite.ui.commons.DeviationIndicator.Up,
+                title : "US Profit Margin",
+                footer : "Current Quarter",
+                description: "Maximum deviation",
+                data: [
+                       { title: "Americas", value: 10, color: "Good" },
+                       { title: "EMEA", value: 50, color: "Good" },
+                       { title: "APAC", value: -20, color: "Error" }
+                   ],
+        }
+
+        var oGenericTileModel = new sap.ui.model.json.JSONModel();
+        oGenericTileModel.setData(oGenericTileData);
+        
+        var oPage = new sap.m.Page("initial-page",{
+            showHeader: false,
+        });
+        
+       var oNVConfContS = new sap.suite.ui.commons.NumericContent("numeric-cont-l", {
+            value : "{/value}",
+            scale : "{/scale}",
+            unit : "{/unit}",
+            indicator : "{/indicator}",
+            valueColor : "{/valueColor}",
+            size : "{/size}",
+            formatterValue : "{/isFormatterValue}",
+            truncateValueTo : "{/truncateValueTo}",
+        });
+        
+        var oNVConfS = new sap.suite.ui.commons.TileContent("numeric-tile-cont-l", {
+            unit : "{/unit}",
+            size : "{/size}",
+            footer : "{/footerNum}",
+            content: oNVConfContS,
+        });
+
+        
+        var oCmprsDataTmpl = new sap.suite.ui.commons.ComparisonData({
+            title: "{title}",
+            value: "{value}",
+            color: "{color}"
+        });
+        
+        var oCmprsChrtTmpl = new sap.suite.ui.commons.ComparisonChart("comp-chart-r", {
+            size : "{/size}",
+            scale: "{/scale}",
+            data: {
+                template : oCmprsDataTmpl,
+                path : "/data"
+            },
+        });
+        
+        var oNVConfM = new sap.suite.ui.commons.TileContent("comp-tile-cont-r", {
+            unit : "{/unit}",
+            size : "{/size}",
+            footer : "{/footerComp}",
+            content: oCmprsChrtTmpl,
+        });
+       
+        var oGenericTile = new sap.suite.ui.commons.GenericTile({
+            subheader : "{/subheader}",
+            frameType : "{/frameType}",
+            size : "{/size}",
+            header : "{/header}",
+            press: function (oEvent) {
+                sap.m.MessageToast.show("The tile is pressed.");
+            },
+            tileContent : [oNVConfS]
+        });
+        
+        oPage.addContent(oGenericTile);
+    
+        oGenericTile = new sap.suite.ui.commons.GenericTile({
+            subheader : "{/subheader}",
+            frameType : "{/frameType}",
+            size : "{/size}",
+            header : "{/header}",
+            press: function (oEvent) {
+                sap.m.MessageToast.show("The tile is pressed.");
+            },
+            tileContent : [oNVConfM.clone()]
+        });
+    
+        oPage.addContent(oGenericTile);
+        
+          oGenericTile = new sap.suite.ui.commons.GenericTile({
+                subheader : "{/subheader}",
+                frameType : "{/frameType}",
+                size : "{/size}",
+                header : "{/header}",
+                press: function (oEvent) {
+                    sap.m.MessageToast.show("The tile is pressed.");
+                },
+                tileContent : [oNVConfM.clone()]
+            });
+        
+        oPage.addContent(oGenericTile);
+        
+
+        
+        oGenericTile = new sap.suite.ui.commons.GenericTile({
+            subheader : "{/subheader}",
+            frameType : "{/frameType}",
+            size : "{/size}",
+            header : "{/header}",
+            press: function (oEvent) {
+                sap.m.MessageToast.show("The tile is pressed.");
+            },
+            tileContent : [oNVConfS.clone()]
+        });
+    
+        oPage.addContent(oGenericTile);
+        
+        var oTitleLbl = new sap.m.Label({
+            text : "Header",
+            labelFor : "title-value"
+        });
+        
+        var oTitleInput = new sap.m.Input("title-value",{
+              type: sap.m.InputType.Text,
+              placeholder: 'Enter header ...'
+        });
+        oTitleInput.bindValue("/header");       
+        
+        
+        
+        var oTitleDscr = new sap.m.Label({
+            text : "Subheader",
+            labelFor : "desc-value"
+        });
+        
+        var oDescInput = new sap.m.Input("desc-value",{
+              type: sap.m.InputType.Text,
+              placeholder: 'Enter description ...'
+        });
+        oDescInput.bindValue("/subheader");
+        
+        var oTitleFoot = new sap.m.Label({
+            text : "Footers",
+            labelFor : "footer-value"
+        });
+        
+        var oFooterInputNum = new sap.m.Input("footer-num-value",{
+              type: sap.m.InputType.Text,
+              placeholder: 'Enter Numeric Footer ...'
+        });
+        oFooterInputNum.bindValue("/footerNum");
+        
+        var oFooterInputComp = new sap.m.Input("footer-cmp-value",{
+              type: sap.m.InputType.Text,
+              placeholder: 'Enter Comp Footer ...'
+        });
+        oFooterInputComp.bindValue("/footerComp");
+        
+        var oTitleUnit = new sap.m.Label({
+            text : "Units",
+            labelFor : "unit-value"
+        });
+        
+        var oUnitInput = new sap.m.Input("unit-value",{
+              type: sap.m.InputType.Text,
+              placeholder: 'Enter Units ...'
+        });
+        oUnitInput.bindValue("/unit");
+        
+        var oSizeLbl = new sap.m.Label({
+            text : "Size",
+            labelFor : "size-value"
+        });
+        
+        var oSizeSlct = new sap.m.Select("size-value",{
+            change : function (oE) {
+                var selectedItem = oE.getParameter("selectedItem");
+                oGenericTileData.size = selectedItem.getKey();
+                oGenericTileModel.checkUpdate(); 
+            },
+            items : [
+                new sap.ui.core.Item({key: "Auto", text: "Auto"}),
+                new sap.ui.core.Item({key: "S", text: "Small"}),
+                new sap.ui.core.Item({key: "M", text: "Middle"})
+            ]
+        });
+        
+        var oFtLbl = new sap.m.Label({
+              text : "Frame Type",
+              labelFor : "ft-value"
+          });
+          
+        var oFtSlct = new sap.m.Select("ft-value",{
+            change : function (oE) {
+                var selectedItem = oE.getParameter("selectedItem");
+                oGenericTileData.frameType = selectedItem.getKey();
+                oGenericTileModel.checkUpdate(); 
+            },
+            items : [
+                new sap.ui.core.Item({key: "OneByOne", text: "OneByOne"}),
+                new sap.ui.core.Item({key: "TwoByOne", text: "TwoByOne"}),
+            ]
+        });
+                
+       var oShowNumLbl = new sap.m.Label({
+             text : "Show Inner Content",
+             labelFor : "showNum-switch"
+       });
+       var oShowNum = new sap.m.Switch({
+           id : "showNum-switch",
+           state:true,
+           change: function(oE) {
+               var bState = oE.getParameter("state");
+               if(!bState) {
+                   oGenericTile.removeTileContent(oNVConfS);
+               } else {
+                   oGenericTile.insertTileContent(oNVConfS,0);
+               }
+           }
+       })
+       
+       var oShowComp = new sap.m.Switch({
+         id : "showComp-switch",
+         state:true,
+         change: function(oE) {
+             var bState = oE.getParameter("state");
+             if(!bState) {
+                 oGenericTile.removeTileContent(oNVConfM);
+             } else {
+                 oGenericTile.insertTileContent(oNVConfM,1);
+             }
+         }
+       });
+     
+            
+        var editableSimpleForm = new sap.ui.layout.form.SimpleForm("controls",{
+            maxContainerCols : 2,
+            editable: true,
+            content : [
+                new sap.ui.core.Title({ // this starts a new group
+                    text: "Modify 2x1 Tile"
+                }),
+                oTitleLbl,
+                oTitleInput,
+                oTitleDscr,
+                oDescInput,
+                oTitleFoot,
+                 oFooterInputNum,
+                 oFooterInputComp,
+                oTitleUnit,
+                oUnitInput,
+                oSizeLbl,
+                oSizeSlct,
+                oFtLbl,
+                oFtSlct,
+                oShowNumLbl,
+                oShowNum,
+                oShowComp
+            ]
+        });
+        //oPage.addContent(editableSimpleForm);
+        
+
+        oPage.setModel(oGenericTileModel);
+        
+        var oApp = new sap.m.App("myApp", {initialPage:"initial-page"});
+        oApp.addPage(oPage).placeAt("content");
+
+        </script>
+
+    </head>
+    <body id="body" class="sapUiBody">
+        <div id="content"></div>
+    </body>
+</html>

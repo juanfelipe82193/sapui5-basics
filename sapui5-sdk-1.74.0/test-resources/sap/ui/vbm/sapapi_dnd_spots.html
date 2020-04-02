@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js" id="sap-ui-bootstrap" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		.col {
+			color: red;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 900px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 900px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+		sap.ui.localResources("vbitestapp");
+
+		function onSubmit(e) {
+			var x, y;
+			var datEvent = JSON.parse(e.mParameters.data);
+			switch (datEvent.Action.name) {
+				case "DROPIT":
+					if (evtoutput.innerText !== undefined)
+						evtoutput.innerText = e.getParameter("data");
+					else
+					if (evtoutput.textContent !== undefined)
+						evtoutput.textContent = e.getParameter("data"); // due to ff
+					break;
+			}
+		};
+
+
+
+
+		// create the controls and position them.............................//
+		var oVBI1 = new sap.ui.vbm.VBI('vbiWrap2', {
+			width: 600,
+			height: 620,
+			submit: onSubmit
+		});
+		oVBI1.placeAt("content");
+
+
+		// load the projects into the controls...............................//
+		var dat = $.getJSON("media/vbdnd/main.json", function(dat) {
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array) {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(dat);
+		});
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: Sample should show Drag and Drop functionality for Spots and Links.</h1>
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test Drag and Drop functionality for Spots and Links.</p>
+		<br>
+		<h3> To test: </h3>
+		<p style="color:red"> Note: This cannot be tested on touch devices</p>
+
+		<ol>
+			<p><b>Check the following:</b></p>
+			<i> There are no visual changes - You just need to observe the textarea </i>
+			<br>
+			<br>
+			<li>Spot 0 can be dropped on Spot 1, Spot 2 and on the Link Frankfurt-Kassel.</li>
+			<img src="img/spotdropped.jpg" alt="text for Thumbnail" style="width:650px;height:220px;">
+			<img src="img/spotdropped2.jpg" alt="text for Thumbnail" style="width:650px;height:220px;">
+			<img src="img/spotdropped3.jpg" alt="text for Thumbnail" style="width:650px;height:220px;">
+
+			<li>Spot 1 can be dropped on Spot 0 and on Spot 2 .</li>
+			<img src="img/spotdropped4.jpg" alt="text for Thumbnail" style="width:650px;height:220px;">
+			<img src="img/spotdropped5.jpg" alt="text for Thumbnail" style="width:650px;height:220px;">
+
+			<li>Spot 2 can be dropped on Spot 0, Spot 1 and on itself.</li>
+			<img src="img/spotdropped6.jpg" alt="text for Thumbnail" style="width:650px;height:220px;">
+			<img src="img/spotdropped7.jpg" alt="text for Thumbnail" style="width:650px;height:220px;">
+			<img src="img/spotdropped8.jpg" alt="text for Thumbnail" style="width:650px;height:220px;">
+			<li>The Link Frankfurt-Kassel can be dropped on Spot 0, Spot 2 and the Link Berlin-Hamburg.</li>
+			<img src="img/spotdropped9.jpg" alt="text for Thumbnail" style="width:650px;height:220px;">
+			<img src="img/spotdropped10.jpg" alt="text for Thumbnail" style="width:700px;height:220px;">
+			<img src="img/spotdropped11.jpg" alt="text for Thumbnail" style="width:800px;height:220px;">
+			<li>The Link Berlin-Hamburg can be dropped on Spot 0, Spot 2 and the Link Frankfurt-Kassel.</li>
+			<img src="img/spotdropped12.jpg" alt="text for Thumbnail" style="width:650px;height:220px;">
+			<img src="img/spotdropped13.jpg" alt="text for Thumbnail" style="width:700px;height:220px;">
+			<img src="img/spotdropped14.jpg" alt="text for Thumbnail" style="width:800px;height:220px;">
+			<li>All Spots and Links can be dropped on External Area. <i>this can be found below the map control</i> 
+				<br>
+				<br>
+			<img src="img/spotdroppedExternal.jpg" alt="text for Thumbnail" style="width:700px;height:300px;">
+</li>
+			
+		</ol>
+	</div>
+	<div id="description2">
+		<table>
+			<tr>
+				<td rowspan="4">
+					<div id="content"></div>
+				</td>
+
+				<br>
+
+
+			</tr>
+		</table>
+		<table>
+			<th>Event Output</th>
+			<tr>
+				<td>
+					<textarea id="evtoutput" rows="11" cols="80"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th>External Drop Area</th>
+			</tr>
+			<tr>
+				<td>
+					<textarea id="extdroparea" rows="11" cols="80"></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+</body>
+
+</html>

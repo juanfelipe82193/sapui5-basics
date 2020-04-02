@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.ui.codeeditor.Example</title>
+
+<base href="../../../../">
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.m, sap.ui.codeeditor"
+	data-sap-ui-theme="sap_bluecrystal"
+	src="resources/sap-ui-core.js">
+</script>
+
+<script id="code" type="text/plain" >
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="utf-8">
+		<title>Hello World App</title>
+		<script
+			id="sap-ui-bootstrap"
+			src="../../../../../resources/sap-ui-core.js"
+			data-sap-ui-theme="sap_belize"
+			data-sap-ui-libs="sap.m"
+			data-sap-ui-preload="async">
+		<&sol;script>
+		<script>
+			sap.ui.getCore().attachInit(function () {
+				// create a mobile app and display page1 initially
+				var app = new sap.m.App("myApp", {
+					initialPage: "page1"
+				});
+
+				// create the first page
+				var page1 = new sap.m.Page("page1", {
+					title: "Hello World",
+					showNavButton: false,
+					content: new sap.m.Button({
+						text: "Go to Page 2",
+						press: function () {
+							// navigate to page2
+							app.to("page2");
+						}
+					})
+				});
+
+				// create the second page with a back button
+				var page2 = new sap.m.Page("page2", {
+					title: "Hello Page 2",
+					showNavButton: true,
+					navButtonPress: function () {
+						// go back to the previous page
+						app.back();
+					}
+				});
+
+				// add both pages to the app
+				app.addPage(page1).addPage(page2);
+				// place the app into the HTML document
+				app.placeAt("content");
+			});
+		<&sol;script>
+	</head>
+	<body class="sapUiBody" id="content">
+	</body>
+</html>
+</script>
+
+<script>
+	var codeEditor;
+	sap.ui.getCore().attachInit(function() {
+		codeEditor = new sap.ui.codeeditor.CodeEditor({
+			type: "html",
+			value: jQuery("#code").html().trim().replace(/&sol;/g, "/"), // Handling escaped closing script tag sol
+			height: "auto",
+			maxLines: 70,
+			tooltip: "Code editor control"
+		});
+
+		new sap.m.App({
+			pages: [
+				new sap.m.Page({
+					title: "Code Editor",
+					content: [
+						new sap.m.Label({text: "Hello World App"}),
+						codeEditor,
+						new sap.m.Button({text: "Save"})
+					]
+				})
+			]
+		}).placeAt("content");
+
+		codeEditor.addCustomCompleter({
+			getCompletions: function (callback, context) {
+				// callback is provided to us by ACE so we can execute it in a way like
+				// below in order to display suggestions to the user
+
+				// ideally, the array argument, provided to the following method call,
+				// will be dynamically generated based on the content of the context
+				// object
+
+				// let's assume the context contained an sPrefix equal to 'read', which
+				// means the cursor in ACE is at the end of a 'read' word
+
+				// by executing the following call, we can show a list of suggestions
+				// like that: readFile, readStream, readResponse 
+				callback(null, [
+					{
+						// name is not displayed on the screen
+						name: "readFile",
+						// value is displayed on the screen
+						value: "readFile()",
+						// score determines which suggestion goes first
+						score: "1",
+						// meta is short info displayed on the right of value
+						meta: "function"
+					},
+					{
+						// name is not displayed on the screen
+						name: "readStream",
+						// value is displayed on the screen
+						value: "readStream(input)",
+						// score determines which suggestion goes first
+						score: "3",
+						// meta is short info displayed on the right of value
+						meta: "params: input"
+					},
+					{
+						// name is not displayed on the screen
+						name: "readStream",
+						// value is displayed on the screen
+						value: "readStream(input, encoding)",
+						// score determines which suggestion goes first
+						score: "2",
+						// meta is short info displayed on the right of value
+						meta: "params: input, encoding"
+					}
+				])
+
+			}
+		});
+
+	});
+
+</script>
+</head>
+<body id="body" class="sapUiBody">
+	<div id="content"></div>
+</body>
+</html>

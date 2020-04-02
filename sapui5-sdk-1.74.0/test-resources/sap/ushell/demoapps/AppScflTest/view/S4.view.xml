@@ -1,0 +1,228 @@
+<sap.ui.core:View controllerName="AppScflTest.view.S4" xmlns="sap.m" xmlns:sap.ui.layout.form="sap.ui.layout.form" xmlns:sap.ui.layout="sap.ui.layout" xmlns:sap.ui.core="sap.ui.core">
+	<Page id="POItemPage">
+		<content>
+			<ObjectHeader title="{Description}" number="{path: 'ValueOrdered', formatter: 'AppScflTest.util.Conversions.formatNumber'}" numberUnit="{Currency}" introActive="false" titleActive="false" iconActive="false">
+				<attributes>
+					<ObjectAttribute text="{path: 'QuantityOrdered', formatter: 'AppScflTest.util.Conversions.formatNumber'} {UnitOrderedDescription}" active="false"></ObjectAttribute>
+					<ObjectAttribute text="{path: 'PricePerUnit', formatter: 'AppScflTest.util.Conversions.formatNumber'} {CurrencyForPPU} / {path: 'QuantityForPPU', formatter: 'AppScflTest.util.Conversions.formatNumber'} {UnitForPPUDescription}"
+						active="false"></ObjectAttribute>
+					<ObjectAttribute text="{i18n>XFLD_OrderedDate} {path: 'OrderedDate', formatter: 'AppScflTest.util.Conversions.formatDate'}" active="false"></ObjectAttribute>
+				</attributes>
+				<firstStatus>
+					<ObjectStatus text="{Status}" state="Success"></ObjectStatus>
+				</firstStatus>
+				<secondStatus>
+					<ObjectStatus text="{parts:[{path: 'DeliveryErrorIndicator'}, {path: 'DeliveryDate'}], formatter : 'AppScflTest.util.Conversions.formatDeliveryOverdue'}" state="Error"
+						icon="{path: 'DeliveryErrorIndicator', formatter : 'AppScflTest.util.Conversions.formatDeliveryOverdueIcon'}"></ObjectStatus>
+				</secondStatus>
+			</ObjectHeader>
+			<sap.ui.layout.form:Form id="InfoForm" class="purchaseOrderForm detailControlPaddingBottom">
+				<sap.ui.layout.form:formContainers>
+					<sap.ui.layout.form:FormContainer title="{i18n>XTIT_Information}">
+						<sap.ui.layout.form:layoutData>
+							<sap.ui.layout:ResponsiveFlowLayoutData linebreak="true" margin="false"></sap.ui.layout:ResponsiveFlowLayoutData>
+						</sap.ui.layout.form:layoutData>
+						<sap.ui.layout.form:formElements>
+							<sap.ui.layout.form:FormElement>
+								<sap.ui.layout.form:layoutData>
+									<sap.ui.layout:ResponsiveFlowLayoutData linebreak="true" margin="false"></sap.ui.layout:ResponsiveFlowLayoutData>
+								</sap.ui.layout.form:layoutData>
+								<sap.ui.layout.form:label>
+									<Label text="{i18n>XFLD_Material}"></Label>
+								</sap.ui.layout.form:label>
+								<sap.ui.layout.form:fields>
+									<Text text="{MaterialID}" maxLines="0">
+										<layoutData>
+											<sap.ui.layout:ResponsiveFlowLayoutData weight="2"></sap.ui.layout:ResponsiveFlowLayoutData>
+										</layoutData>
+									</Text>
+								</sap.ui.layout.form:fields>
+							</sap.ui.layout.form:FormElement>
+							<sap.ui.layout.form:FormElement>
+								<sap.ui.layout.form:layoutData>
+									<sap.ui.layout:ResponsiveFlowLayoutData linebreak="true" margin="false"></sap.ui.layout:ResponsiveFlowLayoutData>
+								</sap.ui.layout.form:layoutData>
+								<sap.ui.layout.form:label>
+									<Label text="{i18n>XFLD_MaterialGroup}"></Label>
+								</sap.ui.layout.form:label>
+								<sap.ui.layout.form:fields>
+									<Text text="{MaterialGroupDescription} ({MaterialGroup})" maxLines="0">
+										<layoutData>
+											<sap.ui.layout:ResponsiveFlowLayoutData weight="2"></sap.ui.layout:ResponsiveFlowLayoutData>
+										</layoutData>
+									</Text>
+								</sap.ui.layout.form:fields>
+							</sap.ui.layout.form:FormElement>
+							<sap.ui.layout.form:FormElement id="incoTermsBox">
+								<sap.ui.layout.form:layoutData>
+									<sap.ui.layout:ResponsiveFlowLayoutData linebreak="true" margin="false"></sap.ui.layout:ResponsiveFlowLayoutData>
+								</sap.ui.layout.form:layoutData>
+								<sap.ui.layout.form:label>
+									<Label text="{i18n>XFLD_Incoterms}"></Label>
+								</sap.ui.layout.form:label>
+								<sap.ui.layout.form:fields>
+									<Text text="{parts:[{path : 'Incoterm'}, {path : 'IncotermLocation'}, {path : 'IncotermDescription'}], formatter : 'AppScflTest.util.Conversions.incoTermsFormatter'}" maxLines="0">
+										<layoutData>
+											<sap.ui.layout:ResponsiveFlowLayoutData weight="2"></sap.ui.layout:ResponsiveFlowLayoutData>
+										</layoutData>
+									</Text>
+								</sap.ui.layout.form:fields>
+							</sap.ui.layout.form:FormElement>
+						</sap.ui.layout.form:formElements>
+					</sap.ui.layout.form:FormContainer>
+				</sap.ui.layout.form:formContainers>
+				<sap.ui.layout.form:layout>
+					<sap.ui.layout.form:ResponsiveLayout></sap.ui.layout.form:ResponsiveLayout>
+				</sap.ui.layout.form:layout>
+			</sap.ui.layout.form:Form>
+			<sap.ui.layout.form:Form id="delivery_form" class="purchaseOrderForm">
+				<sap.ui.layout.form:formContainers>
+					<sap.ui.layout.form:FormContainer title="{ path : 'DeliveryDate' , formatter : 'AppScflTest.util.Conversions.formatDeliveredOn'}">
+						<sap.ui.layout.form:layoutData>
+							<sap.ui.layout:ResponsiveFlowLayoutData linebreak="true" margin="false"></sap.ui.layout:ResponsiveFlowLayoutData>
+						</sap.ui.layout.form:layoutData>
+						<sap.ui.layout.form:formElements>
+							<sap.ui.layout.form:FormElement visible="{ path : 'PlantName' , formatter : 'AppScflTest.util.Conversions.isVisible'}"> <!-- parts:[{path : 'PlantName'}] -->
+								<sap.ui.layout.form:layoutData>
+									<sap.ui.layout:ResponsiveFlowLayoutData linebreak="true" margin="false"></sap.ui.layout:ResponsiveFlowLayoutData>
+								</sap.ui.layout.form:layoutData>
+								<sap.ui.layout.form:label>
+									<Label text="{i18n>XFLD_Plant}"></Label>
+								</sap.ui.layout.form:label>
+								<sap.ui.layout.form:fields>
+									<Text text="{PlantName}" maxLines="0">
+										<layoutData>
+											<sap.ui.layout:ResponsiveFlowLayoutData weight="2"></sap.ui.layout:ResponsiveFlowLayoutData>
+										</layoutData>
+									</Text>
+								</sap.ui.layout.form:fields>
+							</sap.ui.layout.form:FormElement>
+							<sap.ui.layout.form:FormElement visible="{ path : 'DeliveryAddress' , formatter : 'AppScflTest.util.Conversions.isVisible'}"> <!-- parts:[{path : 'DeliveryAddress'}] -->
+								<sap.ui.layout.form:layoutData>
+									<sap.ui.layout:ResponsiveFlowLayoutData linebreak="true" margin="false"></sap.ui.layout:ResponsiveFlowLayoutData>
+								</sap.ui.layout.form:layoutData>
+								<sap.ui.layout.form:label>
+									<Label text="{i18n>XFLD_Address}"></Label>
+								</sap.ui.layout.form:label>
+								<sap.ui.layout.form:fields>
+									<Text text="{DeliveryAddress}" maxLines="0">
+										<layoutData>
+											<sap.ui.layout:ResponsiveFlowLayoutData weight="2"></sap.ui.layout:ResponsiveFlowLayoutData>
+										</layoutData>
+									</Text>
+								</sap.ui.layout.form:fields>
+							</sap.ui.layout.form:FormElement>
+						</sap.ui.layout.form:formElements>
+					</sap.ui.layout.form:FormContainer>
+				</sap.ui.layout.form:formContainers>
+				<sap.ui.layout.form:layout>
+					<sap.ui.layout.form:ResponsiveLayout></sap.ui.layout.form:ResponsiveLayout>
+				</sap.ui.layout.form:layout>
+			</sap.ui.layout.form:Form>
+			<sap.ui.layout:VerticalLayout class="detailControlPadding" width="100%">
+				<sap.ui.layout:content>
+					<Table headerText="{i18n>XTIT_pricingConditions}" items="{PricingConditions/}">
+						<items>
+							<ColumnListItem counter="0">
+								<cells>
+									<ObjectIdentifier title="{Description} ({PricingCondition})" badgeNotes="false" badgePeople="false" badgeAttachments="false"></ObjectIdentifier>
+									<ObjectNumber number="{ path: 'Value' , formatter: 'AppScflTest.util.Conversions.formatNumber'}" numberUnit="{Currency}"></ObjectNumber> <!-- parts: [{path: 'Value'}] -->
+								</cells>
+							</ColumnListItem>
+						</items>
+						<columns>
+							<Column minScreenWidth="tablet" demandPopin="true">
+								<header>
+									<Label text="{i18n>XFLD_Description}" width="100%"></Label>
+								</header>
+							</Column>
+							<Column hAlign="Right" minScreenWidth="tablet" demandPopin="true">
+								<header>
+									<Label text="{i18n>XFLD_Price}" textAlign="Right" width="100%"></Label>
+								</header>
+							</Column>
+						</columns>
+					</Table>
+				</sap.ui.layout:content>
+			</sap.ui.layout:VerticalLayout>
+			<sap.ui.layout:VerticalLayout class="detailControlPadding detailControlPaddingSubsequent" width="100%">
+				<sap.ui.layout:content>
+					<Table id="AccountAssignmentTable" headerText="{i18n>accountAssignment.accountAssignmentLabel}" noDataText="{i18n>accountAssignment.placeholder}" items="{Accountings/}">
+						<items>
+							<ColumnListItem id="AccountAssignmentTableTemplate" counter="0">
+								<cells>
+									<ObjectIdentifier title="{parts:[{path : 'AccountDescription'}, {path : 'AccountNumber'}], formatter : 'sap.ca.common.uilib.Formatter.commonIDFormatter'}" badgeNotes="false" badgePeople="false" badgeAttachments="false"></ObjectIdentifier>
+									<Text text="{AccountCategoryDescription}" maxLines="0"></Text>
+									<Text text="{parts:[{path : 'GlAccountDescription'}, {path : 'GlAccountNumber'}], formatter : 'sap.ca.common.uilib.Formatter.commonIDFormatter'}" maxLines="0"></Text>
+									<ObjectNumber number="{DistributionPercentage}" numberUnit="%"></ObjectNumber>
+								</cells>
+							</ColumnListItem>
+						</items>
+						<columns>
+							<Column hAlign="Left">
+								<header>
+									<Label text="{i18n>accountAssignment.accountAssignmentName}" textAlign="Left" width="100%"></Label>
+								</header>
+							</Column>
+							<Column hAlign="Left" minScreenWidth="tablet" demandPopin="true">
+								<header>
+									<Label text="{i18n>accountAssignment.category}" textAlign="Left" width="100%"></Label>
+								</header>
+							</Column>
+							<Column hAlign="Left" minScreenWidth="tablet" demandPopin="true">
+								<header>
+									<Label text="{i18n>accountAssignment.account}" textAlign="Left" width="100%"></Label>
+								</header>
+							</Column>
+							<Column hAlign="Right">
+								<header>
+									<Label text="{i18n>accountAssignment.accountAssignmentPercentage}" textAlign="Right" width="100%"></Label>
+								</header>
+							</Column>
+						</columns>
+					</Table>
+				</sap.ui.layout:content>
+			</sap.ui.layout:VerticalLayout>
+			<sap.ui.layout:VerticalLayout class="detailControlPadding detailControlPaddingSubsequent" width="100%">
+				<sap.ui.layout:content>
+					<Table headerText="{i18n>XTIT_FollowUpDocuments}" noDataText="{i18n>XTIT_NoFollowUpDocuments}" items="{POItemDocFlows/}">
+						<items>
+							<ColumnListItem tap="goToDocFlow" type="Navigation" counter="0">
+								<cells>
+									<VBox direction="Column">
+										<items>
+											<sap.ui.core:Icon src="{parts:[{path:'DocumentType'}], formatter:'AppScflTest.util.Conversions.getIconURI'}" size="32px"></sap.ui.core:Icon>
+										</items>
+									</VBox>
+									<VBox direction="Column">
+										<items>
+											<ObjectNumber number="{parts:[{path:'DocumentTypeName'},{path:'DocumentId'},{path:'Year'}], formatter:'AppScflTest.util.Conversions.formatDocumentName'}"></ObjectNumber>
+											<Text text="{path: 'CreatedAt',   formatter: 'AppScflTest.util.Conversions.formatCreatedOn'}" maxLines="0"></Text>
+										</items>
+									</VBox>
+									<VBox direction="Column">
+										<items>
+											<ObjectNumber number="{Quantity}" numberUnit="{UnitDescription}"></ObjectNumber>
+											<ObjectStatus text="{Status}" state="Success"></ObjectStatus>
+										</items>
+									</VBox>
+									<VBox direction="Column">
+										<items>
+											<ObjectNumber number="{path: 'Value', formatter: 'AppScflTest.util.Conversions.formatNumber'}" numberUnit="{Currency}"></ObjectNumber>
+										</items>
+									</VBox>
+								</cells>
+							</ColumnListItem>
+						</items>
+						<columns>
+							<Column width="8%" hAlign="Left"></Column>
+							<Column width="42%" hAlign="Left"></Column>
+							<Column width="20%" hAlign="Left"></Column>
+							<Column width="20%" hAlign="Right"></Column>
+						</columns>
+					</Table>
+				</sap.ui.layout:content>
+			</sap.ui.layout:VerticalLayout>
+		</content>
+	</Page>
+</sap.ui.core:View>

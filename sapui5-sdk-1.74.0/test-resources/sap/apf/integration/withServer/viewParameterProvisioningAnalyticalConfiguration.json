@@ -1,0 +1,78 @@
+{ "bindings" : [ { "id" : "bindingTemplate1",
+        "representations" : [ { "id" : "representationId1",
+              "label" : { "key" : "representationText1",
+                  "kind" : "text",
+                  "type" : "label"
+                },
+              "parameter" : { "sRepresentationType" : "RepresentationTestDouble",
+                  "type" : "parameter"
+                },
+              "representationTypeId" : "representationTypeId1",
+              "type" : "representation"
+            } ],
+        "requiredFilters" : [ "SAPClient",
+            "CompanyCode",
+            "Customer"
+          ],
+        "type" : "binding"
+      } ],
+  "categories" : [ { "id" : "categoryTemplate1",
+        "label" : { "file" : "sap/apf/resources/i18n/test_texts.properties",
+            "key" : "localTextReference2",
+            "kind" : "text"
+          }
+      } ],
+  "representationTypes" : [ { "constructor" : "sap.apf.testhelper.doubles.Representation",
+        "id" : "representationTypeId1",
+        "label" : { "file" : "resources/i18n/test_texts.properties",
+            "key" : "Text1",
+            "kind" : "text"
+          },
+        "picture" : "resources/images/geomap-dsobycountry-thumbnail-icon.png"
+      } ],
+  "requests" : [ { "entityType" : "WCAClearedReceivableQuery",
+        "id" : "clearedReceivable",
+        "selectProperties" : [ "SAPClient",
+            "CompanyCode",
+            "Customer",
+            "CustomerName",
+            "AcctsReceivableItemAgeInDays"
+          ],
+        "service" : "/sap/hba/apps/wca/dso/s/odata/wca.xsodata"
+      },
+      { "entityType" : "WCAReceivableHistoryQuery",
+        "id" : "receivableHistory",
+        "selectProperties" : [ "SAPClient",
+            "CompanyCode",
+            "CustomerName",
+            "NetDueDays"
+          ],
+        "service" : "/sap/hba/apps/wca/dso/s/odata/wca.xsodata"
+      },
+      { "entityType" : "CompanyCodeQuery",
+        "id" : "companyCode",
+        "selectProperties" : [ "SAPClient",
+            "CompanyCode",
+            "CompanyCodeName",
+            "Country"
+          ],
+        "service" : "/sap/hba/apps/wca/dso/s/odata/wca.xsodata"
+      }
+    ],
+  "steps" : [ { "binding" : "bindingTemplate1",
+        "categories" : [ { "id" : "categoryTemplate1" } ],
+        "id" : "stepTemplate1",
+        "request" : "clearedReceivable"
+      },
+      { "binding" : "bindingTemplate1",
+        "categories" : [ { "id" : "categoryTemplate1" } ],
+        "id" : "stepTemplate2",
+        "request" : "receivableHistory"
+      },
+      { "binding" : "bindingTemplate1",
+        "categories" : [ { "id" : "categoryTemplate1" } ],
+        "id" : "stepTemplate3",
+        "request" : "companyCode"
+      }
+    ]
+}

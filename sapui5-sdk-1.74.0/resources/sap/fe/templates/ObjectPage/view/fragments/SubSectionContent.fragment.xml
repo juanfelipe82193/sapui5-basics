@@ -1,0 +1,32 @@
+<core:FragmentDefinition
+	xmlns:uxap="sap.uxap"
+	xmlns:core="sap.ui.core"
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	template:require="{
+		OP: 'sap/fe/templates/ObjectPage/AnnotationHelper'
+	}">
+
+	<template:with path="facet>" var="parentFacet">
+		<template:if test="{= !${facet>Facets} || OP.doesFacetOnlyContainForms(${facet>Facets}) }">
+			<template:then>
+				<!-- Two scenarios:
+				1. parentFacet has Facets and all child Facets can be rendered forms, then parentFacet is rendered as a single form and child Facets as it's form containers.
+				2. parentFacet does not have Facets, then parentFacet is rendered directly. -->
+				<template:if test="{= !(${facet>./@com.sap.vocabularies.UI.v1.Hidden} === true)}">
+					<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.Facet" type="XML"/>
+				</template:if>
+			</template:then>
+			<template:else>
+				<!-- parentFacet has Facets and all child Facets cannot be rendered as forms, then
+				1. All child facets which can be rendered as forms are rendered as separate forms.(eg. FieldGroups)
+				2. child facets that cannot be rendered as forms are rendered directly.(eg. LineItems and Charts) -->
+				<template:repeat list="{facet>Facets}" var="facet">
+					<template:if test="{= !(${facet>./@com.sap.vocabularies.UI.v1.Hidden} === true)}">
+						<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.Facet" type="XML"/>
+					</template:if>
+				</template:repeat>
+			</template:else>
+		</template:if>
+	</template:with>
+
+</core:FragmentDefinition>

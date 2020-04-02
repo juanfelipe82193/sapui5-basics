@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="UTF-8">
+
+	<title>Testpage - TM Collada Loader</title>
+
+	<script id="sap-ui-bootstrap"
+	        data-sap-ui-libs="sap.ui.vk, sap.ui.unified, sap.m, sap.ui.layout"
+	        data-sap-ui-theme="sap_belize"
+	        src="../../../../resources/sap-ui-core.js"
+	>
+	</script>
+
+	<script>
+		sap.ui.getCore().attachInit(function() {
+			sap.ui.require([
+				"sap/ui/vk/ContentConnector", "sap/ui/vk/threejs/Viewport", "sap/ui/vk/SceneTree",
+				"sap/ui/vk/threejs/ViewStateManager", "sap/ui/layout/Splitter", "sap/ui/layout/SplitterLayoutData",
+				"sap/ui/model/json/JSONModel", "sap/ui/vk/ContentResource", "sap/m/Page", "sap/m/App", "sap/m/MessageToast"
+			], function(
+				ContentConnector, Viewport, SceneTree,
+				ViewStateManager, Splitter, SplitterLayoutData,
+				JSONModel, ContentResource, Page, App, MessageToast
+			) {
+				var contentConnector = new ContentConnector({
+					contentChangesFinished: function(event) {
+						var failureReason = event.getParameter("failureReason");
+						if (failureReason && failureReason.length > 0) {
+							MessageToast.show(failureReason[0].errorMessage || "Failed to load content resources.");
+						}
+					},
+					contentReplaced: function(event) {
+						var content = event.getParameter("newContent"),
+							scene = content && content.scene && content.scene.getSceneRef();
+						if (scene) {
+							scene.rotation.x = THREE.Math.degToRad(90);
+						}
+					}
+				});
+
+				var viewStateManager = new ViewStateManager({
+					contentConnector: contentConnector
+				});
+
+				var sceneTree = new SceneTree({
+					contentConnector: contentConnector,
+					viewStateManager: viewStateManager
+				});
+
+				var viewport = new Viewport({
+					contentConnector: contentConnector,
+					viewStateManager: viewStateManager,
+					layoutData: new SplitterLayoutData({
+						size: "70%"
+					})
+				});
+
+				var splitter = new Splitter({
+					height: "400px",
+					width: "100%",
+					contentAreas: [
+						sceneTree,
+						viewport
+					]
+				});
+
+				var page = new Page({
+					title: "Sample TM Collada Loader",
+					content: [ splitter ]
+				});
+
+				var app = new App();
+				app.addDependent(contentConnector).addDependent(viewStateManager);
+				app.addPage(page);
+				app.placeAt("body");
+
+				////////////////////////////////////////////////////////////
+				// BEGIN: Normalisation
+
+				var normalizeObject3D = function(node) {
+					// Re-centre according to the VB ActiveX implementation.
+
+					var center = new THREE.Box3().setFromObject(node).getCenter();
+					node.applyMatrix(new THREE.Matrix4().makeTranslation(-center.x, -center.y, +center.z)); // NB: sic! the Z move is positive.
+
+					// Normalize coordinates (not the size!) according to the VB ActiveX implementation.
+
+					var box = new THREE.Box3().setFromObject(node);
+					var scaleFactor = Math.max(
+						Math.abs(box.min.x),
+						Math.abs(box.min.y),
+						Math.abs(box.min.z),
+						Math.abs(box.max.x),
+						Math.abs(box.max.y),
+						Math.abs(box.max.z)
+					);
+					if (scaleFactor) {
+						scaleFactor = 1 / scaleFactor;
+					}
+					node.applyMatrix(new THREE.Matrix4().makeScale(scaleFactor, scaleFactor, scaleFactor));
+
+					box = new THREE.Box3().setFromObject(node);
+					center = box.getCenter();
+					node.translateZ(center.z - box.min.z);
+
+					return node;
+				};
+
+				var removeLightsAndCameras = function(node) {
+					var objectsToRemove = [];
+					node.traverse(function(object) {
+						if (object.isLight || object.isCamera) {
+							objectsToRemove.push(object);
+						}
+					});
+					objectsToRemove.forEach(function(object) {
+						while (object && object !== node) { // Do not remove the top level node.
+							var parent = object.parent;
+							if (object.children.length === 0) {
+								parent.remove(object);
+							}
+							object = parent;
+						}
+					});
+					return node;
+				};
+
+				// END: Normalisation
+				////////////////////////////////////////////////////////////
+
+				////////////////////////////////////////////////////////////
+				// BEGIN: Three.js object
+
+				var loadThreeJSObject = function(parentNode, contentResource) {
+					parentNode.add(contentResource.getName() !== "Axes" ? normalizeObject3D(contentResource.getSource()) : contentResource.getSource());
+					return Promise.resolve({
+						node: parentNode,
+						contentResource: contentResource
+					});
+				};
+
+				// END: Three.js object
+				////////////////////////////////////////////////////////////
+
+				////////////////////////////////////////////////////////////
+				// BEGIN: Collada
+
+				var loadCollada = function(parentNode, contentResource) {
+					return new Promise(function(resolve, reject) {
+						var url = "https://threejs.org/examples/js/loaders/ColladaLoader.js";
+						jQuery.ajax({
+							url: url,
+							dataType: "script",
+							cache: true,
+							async: false
+						}).done(function() {
+							var loader = new THREE.ColladaLoader();
+							loader.load(contentResource.getSource(),
+								function(collada) { // onload
+									removeLightsAndCameras(collada.scene);
+									collada.scene.traverse(function(object) {
+										if (object instanceof THREE.Mesh && object.geometry && object.geometry.type === "Geometry") {
+											object.geometry.vertices.forEach(function(vertex) {
+												vertex.x *= -1;
+											});
+											object.geometry.faces.forEach(function(face) {
+												var tmp = face.a;
+												face.a = face.b;
+												face.b = tmp;
+												if (face.normal) {
+													face.normal.x *= -1;
+												}
+												if (face.vertexNormals) {
+													tmp = face.vertexNormals[0];
+													face.vertexNormals[0] = face.vertexNormals[1];
+													face.vertexNormals[1] = tmp;
+													face.vertexNormals[0].x *= -1;
+													face.vertexNormals[1].x *= -1;
+													face.vertexNormals[2].x *= -1;
+												}
+												if (face.vertexColors) {
+													tmp = face.vertexColors[0];
+													face.vertexColors[0] = face.vertexColors[1];
+													face.vertexColors[1] = tmp;
+												}
+											});
+										}
+									});
+									collada.scene.applyMatrix(new THREE.Matrix4().makeScale(1, -1, -1));
+									parentNode.add(normalizeObject3D(collada.scene));
+									resolve({
+										node: parentNode,
+										contentResource: contentResource
+									});
+								},
+								null,  // onprogress
+								reject // onfail
+							);
+						}).fail(function() {
+							MessageToast.show("Cannot load Collada loader from " + url);
+							reject();
+						});
+					});
+				};
+
+				ContentConnector.addContentManagerResolver({
+					pattern: "dae",
+					dimension: 3,
+					contentManagerClassName: "sap.ui.vk.threejs.ContentManager",
+					settings: {
+						loader: loadCollada
+					}
+				});
+
+				// END: Collada
+				////////////////////////////////////////////////////////////
+
+				////////////////////////////////////////////////////////////////
+				// BEGIN: MIME type resolver
+
+				var resolveMime = function(contentResource) {
+					if (contentResource.getSource() instanceof THREE.Object3D) {
+						return Promise.resolve({
+							dimension: 3,
+							contentManagerClassName: "sap.ui.vk.threejs.ContentManager",
+							settings: { loader: loadThreeJSObject }
+						});
+					} else if (sap.ui.core.URI.isValid(contentResource.getSource())) {
+						return new Promise(function(resolve, reject) {
+							var xhr = new XMLHttpRequest();
+							xhr.onerror = function(event) {
+								reject();
+							};
+							xhr.onload = function(event) {
+								var loader;
+								if (xhr.status === 200) {
+									var contentType = xhr.getResponseHeader("Content-Type");
+									console.log("URL " + xhr.responseURL + " has content type " + contentType);
+									switch (contentType) {
+										case "model/vnd.collada+xml":
+											loader = loadCollada;
+											break;
+										default:
+											loader = null;
+											break;
+									}
+								}
+								if (loader) {
+									resolve({
+										dimension: 3,
+										contentManagerClassName: "sap.ui.vk.threejs.ContentManager",
+										settings: { loader: loader }
+									});
+								} else {
+									reject();
+								}
+							};
+							xhr.open("HEAD", contentResource.getSource(), true);
+							xhr.send(null);
+						});
+					} else {
+						return Promise.reject();
+					}
+				};
+
+				ContentConnector.addContentManagerResolver(resolveMime);
+
+				// END: MIME type resolver
+				////////////////////////////////////////////////////////////////
+
+				var data = [
+					{
+						type: "axes",
+						name: "Axes"
+					},
+					{
+						id: "body",
+						name: "Body",
+						url: "/m/lso/body.dae",
+						position: [ -3.7, 0, 1.75 ],
+						scale: [ 2.444, 2.703, 2.6 ]
+					},
+					{
+						id: "axle 1",
+						name: "Axle 1",
+						url: "/m/lso/axle.dae",
+						position: [ -3.375, 0, 1.2 ],
+						scale: [ 1.5, 1.275, 1.5 ]
+					},
+					{
+						id: "axle 2",
+						name: "Axle 2",
+						url: "/m/lso/axle.dae",
+						position: [ 1.525, 0, 1.2 ],
+						scale: [ 1.5, 1.275, 1.5 ]
+					},
+					{
+						id: "axle 3",
+						name: "Axle 3",
+						url: "/m/lso/axle.dae",
+						position: [ 2.725, 0, 1.2 ],
+						scale: [ 1.5, 1.275, 1.5 ]
+					},/*
+					{ name: "box1", type: "box", position: [1.675, -0.8, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box2", type: "box", position: [1.675, -0.8, -1.2009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box3", type: "box", position: [1.675, 0.0, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box4", type: "box", position: [1.675, 0.0, -1.2009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box5", type: "box", position: [1.675, 0.8, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box6", type: "box", position: [1.675, 0.8, -1.2009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box7", type: "box", position: [2.875, -0.8, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box8", type: "box", position: [2.875, -0.8, -1.2009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box9", type: "box", position: [2.875, 0.0, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box10", type: "box", position: [2.875, 0.0, -1.2009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box11", type: "box", position: [2.875, 0.8, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box12", type: "box", position: [2.875, 0.8, -1.2009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box13", type: "box", position: [4.075, -0.8, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box14", type: "box", position: [4.075, -0.8, -1.2009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box15", type: "box", position: [4.075, 0.0, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box16", type: "box", position: [4.075, 0.0, -1.2009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box17", type: "box", position: [4.075, 0.8, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.9999999999999998E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box18", type: "box", position: [4.075, 0.8, -1.2009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.2449999999999997E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box19", type: "box", position: [0.475, -0.8, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.5000000000000002E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box20", type: "box", position: [0.475, -0.8, -1.3009999999999999E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.5000000000000002E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box21", type: "box", position: [0.475, 0.0, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.5000000000000002E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box22", type: "box", position: [0.475, 0.0, -1.3009999999999999E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.5000000000000002E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box23", type: "box", position: [0.475, 0.8, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.5000000000000002E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box24", type: "box", position: [0.475, 0.8, -1.3009999999999999E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.6000000000000005E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box25", type: "box", position: [-1.925, -0.8, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.9999999999999996E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box26", type: "box", position: [-1.925, -0.8, -1.4009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.9999999999999996E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box27", type: "box", position: [-1.925, 0.0, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.9999999999999996E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box28", type: "box", position: [-1.925, 0.0, -1.4009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.9999999999999996E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box29", type: "box", position: [-1.925, 0.8, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.9999999999999996E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box30", type: "box", position: [-1.925, 0.8, -1.4009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.9999999999999996E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box31", type: "box", position: [-0.725, -0.8, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.9999999999999996E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box32", type: "box", position: [-0.725, -0.8, -1.4009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.9999999999999996E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box33", type: "box", position: [-0.725, 0.0, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.9999999999999996E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box34", type: "box", position: [-0.725, 0.0, -1.4009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.9999999999999996E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box35", type: "box", position: [-0.725, 0.8, -1.0E-3], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 6.9999999999999996E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box36", type: "box", position: [-0.725, 0.8, -1.4009999999999998E0], scale: [5.9999999999999998E-01, 4.0000000000000002E-01, 5.4100000000000004E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box37", type: "box", position: [4.375, 0.0, 5.0E-1], scale: [2.5000000000000000E-01, 2.5000000000000000E-01, 1.2500000000000000E-01], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box38", type: "box", position: [-2.51, 0.0, -2.0E-3], scale: [1.4999999999999999E-02, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box39", type: "box", position: [-1.525, 0.0, -2.0E-3], scale: [1.4999999999999999E-02, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box40", type: "box", position: [-0.525, 0.0, -2.0E-3], scale: [1.4999999999999999E-02, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box41", type: "box", position: [0.475, 0.0, -2.0E-3], scale: [1.4999999999999999E-02, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box42", type: "box", position: [1.475, 0.0, -2.0E-3], scale: [1.4999999999999999E-02, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box43", type: "box", position: [2.475, 0.0, -2.0E-3], scale: [1.4999999999999999E-02, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box44", type: "box", position: [3.475, 0.0, -2.0E-3], scale: [1.4999999999999999E-02, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box45", type: "box", position: [4.475, 0.0, -2.0E-3], scale: [1.4999999999999999E-02, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box46", type: "box", position: [1.175, -1.26, -2.0E-3], scale: [3.7000000000000002E+00, 1.4999999999999999E-02, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box47", type: "box", position: [1.175, -0.275, -2.0E-3], scale: [3.7000000000000002E+00, 1.4999999999999999E-02, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box48", type: "box", position: [1.175, 0.725, -2.0E-3], scale: [3.7000000000000002E+00, 1.4999999999999999E-02, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box49", type: "box", position: [-2.51, -1.274, -1.0E-3], scale: [1.4999999999999999E-02, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box50", type: "box", position: [-1.525, -1.274, -1.0E-3], scale: [1.4999999999999999E-02, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box51", type: "box", position: [-0.525, -1.274, -1.0E-3], scale: [1.4999999999999999E-02, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box52", type: "box", position: [0.475, -1.274, -1.0E-3], scale: [1.4999999999999999E-02, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box53", type: "box", position: [1.475, -1.274, -1.0E-3], scale: [1.4999999999999999E-02, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box54", type: "box", position: [2.475, -1.274, -1.0E-3], scale: [1.4999999999999999E-02, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box55", type: "box", position: [3.475, -1.274, -1.0E-3], scale: [1.4999999999999999E-02, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box56", type: "box", position: [4.475, -1.274, -1.0E-3], scale: [1.4999999999999999E-02, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box57", type: "box", position: [1.175, -1.275, -1.6E-2], scale: [3.7000000000000002E+00, 1.4999999999999999E-02, 5.0000000000000001E-04], rotation: [ 9.0000000000000000E+01, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box58", type: "box", position: [1.175, -1.275, -1.0009999999999999E0], scale: [3.7000000000000002E+00, 1.4999999999999999E-02, 5.0000000000000001E-04], rotation: [ 9.0000000000000000E+01, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box59", type: "box", position: [1.175, -1.275, -2.0009999999999999E0], scale: [3.7000000000000002E+00, 1.4999999999999999E-02, 5.0000000000000001E-04], rotation: [ 9.0000000000000000E+01, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box60", type: "box", position: [-2.525, -1.259, -1.0E-3], scale: [1.4999999999999999E-02, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box61", type: "box", position: [-2.525, -0.274, -1.0E-3], scale: [1.4999999999999999E-02, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box62", type: "box", position: [-2.525, 0.726, -1.0E-3], scale: [1.4999999999999999E-02, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box63", type: "box", position: [-2.525, 0.0, -1.6E-2], scale: [1.4999999999999999E-02, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box64", type: "box", position: [-2.525, 0.0, -1.0009999999999999E0], scale: [1.4999999999999999E-02, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box65", type: "box", position: [-2.525, 0.0, -2.0009999999999999E0], scale: [1.4999999999999999E-02, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box66", type: "box", position: [4.86, 0.0, -1.0E-3], scale: [1.4999999999999999E-02, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box67", type: "box", position: [1.175, 1.26, -1.0E-3], scale: [3.7000000000000002E+00, 1.4999999999999999E-02, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box68", type: "box", position: [4.86, -1.274, -1.0E-3], scale: [1.4999999999999999E-02, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box69", type: "box", position: [1.175, -1.275, -2.786E0], scale: [3.7000000000000002E+00, 1.4999999999999999E-02, 5.0000000000000001E-04], rotation: [ 9.0000000000000000E+01, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box70", type: "box", position: [-2.525, 1.261, -1.0E-3], scale: [1.4999999999999999E-02, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box71", type: "box", position: [-2.525, 0.0, -2.786E0], scale: [1.4999999999999999E-02, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box72", type: "box", position: [1.175, 0.0, 0], scale: [3.7000000000000002E+00, 1.2749999999999999E+00, 5.0000000000000001E-04], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box73", type: "box", position: [1.175, -1.275, 0], scale: [3.7000000000000002E+00, 5.0000000000000001E-04, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box74", type: "box", position: [-2.525, 0.0, 0], scale: [5.0000000000000001E-04, 1.2749999999999999E+00, 1.3999999999999999E+00], rotation: [0.0000000000000000E+00, 0.0000000000000000E+00, 0.0000000000000000E+00] }
+*/
+					{ name: "BOX", type: "box", position: [-20, 0.0, 0], scale: [5, 5, 5], rotation: [0, 0, 0] }
+/*
+					{ name: "box", type: "box", position: [1.175, -1.275, -1.6E-2], scale: [3.7000000000000002E+00, 1.4999999999999999E-02, 5.0000000000000001E-04], rotation: [ 9.0000000000000000E+01, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box", type: "box", position: [1.175, -1.275, -1.0009999999999999E0], scale: [3.7000000000000002E+00, 1.4999999999999999E-02, 5.0000000000000001E-04], rotation: [ 9.0000000000000000E+01, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box", type: "box", position: [1.175, -1.275, -2.0009999999999999E0], scale: [3.7000000000000002E+00, 1.4999999999999999E-02, 5.0000000000000001E-04], rotation: [ 9.0000000000000000E+01, 0.0000000000000000E+00, 0.0000000000000000E+00] },
+					{ name: "box", type: "box", position: [1.175, -1.275, -2.786E0], scale: [3.7000000000000002E+00, 1.4999999999999999E-02, 5.0000000000000001E-04], rotation: [ 9.0000000000000000E+01, 0.0000000000000000E+00, 0.0000000000000000E+00] }
+*/
+				];
+
+				contentConnector.setModel(new JSONModel(data));
+				contentConnector.bindContentResources({
+					path: "/",
+					factory: function(id, context) {
+						var position    = context.getProperty("position") || [ 0, 0, 0 ],
+							scale       = context.getProperty("scale")    || [ 1, 1, 1 ],
+							rotation    = context.getProperty("rotation") || [ 0, 0, 0 ],
+							localMatrix = sap.ui.vk.TransformationMatrix.convertTo4x3(
+									new THREE.Matrix4().compose(
+										new THREE.Vector3(-position[0], position[1], position[2]),
+										new THREE.Quaternion().setFromEuler(new THREE.Euler(THREE.Math.degToRad(rotation[0]), THREE.Math.degToRad(rotation[1]), THREE.Math.degToRad(rotation[2]), 'XYZ')),
+										new THREE.Vector3(scale[0], scale[1], scale[2])
+									).elements
+								);
+
+						var url  = context.getProperty("url"),
+							type = context.getProperty("type");
+
+						if (type === "box") {
+							var boxGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+							window.box = boxGeometry;
+							for (var face = 0; face < 6; ++face) {
+								boxGeometry.faces[face * 2 + 0].color = new THREE.Color("red");
+							}
+							// boxGeometry.faces[face * 2 + 1].color = new THREE.Color("red");
+							var box = new THREE.Object3D()
+										// .add(new THREE.LineSegments(
+										// 	boxGeometry,
+										// 	new THREE.LineBasicMaterial({
+										// 		color: 0xffffff,
+										// 		transparent: true,
+										// 		opacity: 0.5
+										// 	})
+										// ))
+										.add(new THREE.Mesh(
+											boxGeometry,
+											new THREE.MeshBasicMaterial({
+												color: 0xffffff,
+												vertexColors: THREE.FaceColors
+											})
+											/*,
+											new THREE.MeshPhongMaterial({
+												color: 0x156289,
+												emissive: 0x072534,
+												side: THREE.DoubleSide,
+												shading: THREE.FlatShading
+											})*/
+										));
+							box.applyMatrix(new THREE.Matrix4().makeScale(1, -1, -1));
+							return new ContentResource({
+								source: box,
+								name: "{name}",
+								localMatrix: localMatrix
+							});
+						} else if (type === "axes") {
+							return new ContentResource({
+								source: new THREE.AxisHelper(1),
+								name: "{name}"
+							});
+						} else {
+							return new ContentResource({
+								sourceId: "{id}",
+								source: "{url}",
+								name: "{name}",
+								localMatrix: localMatrix
+							});
+						}
+					}
+				});
+			});
+		});
+	</script>
+</head>
+
+<body id="body" class="sapUiBody">
+</body>
+
+</html>

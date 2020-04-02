@@ -1,0 +1,81 @@
+{
+    "sap.flp": {
+        "columns": "5",
+        "rows": "6"
+    },
+    "sap.app": {
+        "type": "card",
+        "tags": {
+            "keywords": [
+                "Products"
+            ]
+        }
+    },
+    "sap.ui5": {
+        "services": {
+            "IntentBasedNavigation": {
+                "factoryName": "sap.ushell.ui5service.CardNavigation"
+            }
+        }
+    },
+    "sap.card": {
+        "type": "List",
+        "header": {
+            "title": "EPM Products",
+            "icon": {
+                "src": "sap-icon://product"
+            },
+            "status": {
+                "text": "Top 7"
+            },
+            "actions": [
+                {
+                    "type": "Navigation",
+                    "service": "IntentBasedNavigation",
+                    "parameters": {
+                        "intentSemanticObject": "EPMProduct",
+                        "intentAction": "manage_st"
+                    }
+                }
+            ]
+        },
+        "content": {
+            "maxItems": 7,
+            "data": {
+                "path": "/d/results",
+                "request": {
+                    "url": "/sap/opu/odata/sap/SEPMRA_PROD_MAN/SEPMRA_C_PD_Product?sap-client=120&$format=json&$skip=0&$top=7&$orderby=to_ProductTextInOriginalLang/Name%20asc&$filter=IsActiveEntity%20eq%20false%20or%20SiblingEntity/IsActiveEntity%20eq%20null&$select=ProductPictureURL%2cProductForEdit%2cProductForEdit_fc%2cto_ProductTextInOriginalLang%2fName%2cto_ProductCategory%2fMainProductCategory%2cProductCategory%2cto_Supplier%2fCompanyName%2cto_Supplier%2cto_ProductStock%2fStockAvailability%2cto_ProductStock%2fto_StockAvailability%2fStockAvailability_Text%2cto_CollaborativeReview%2fAverageRatingValue%2cPrice%2cCurrency%2cProduct%2cDraftUUID%2cIsActiveEntity%2cHasDraftEntity%2cHasActiveEntity%2cCopy_ac%2cDraftAdministrativeData&$expand=to_ProductCategory%2cto_Supplier%2cto_ProductStock%2cto_ProductStock%2fto_StockAvailability%2cto_ProductTextInOriginalLang%2cto_CollaborativeReview%2cDraftAdministrativeData&$inlinecount=allpages"
+                }
+            },
+            "item": {
+                "title": {
+                    "label": "{title}",
+                    "value": "{to_ProductTextInOriginalLang/Name}",
+                    "importance": 0
+                },
+                "description": {
+                    "label": "{state}",
+                    "value": "{Product}",
+                    "importance": 0
+                },
+                "icon": {
+                    "src": "{ProductPictureURL}"
+                },
+                "highlight": "{:= %{to_CollaborativeReview/AverageRatingValue} >= 4.0 ? 'Success' : %{to_CollaborativeReview/AverageRatingValue} >= 2.6 ? 'Warning' : 'Error' }",
+                "actions": [
+                    {
+                        "type": "Navigation",
+                        "service": "IntentBasedNavigation",
+                        "parameters": {
+                            "intentSemanticObject": "EPMProduct",
+                            "intentAction": "manage_st",
+                            "intentParameters": {
+                                "Product": "{Product}"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

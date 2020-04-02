@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Paging Tests</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PLAINTABLE.js"></script>
+<script type="text/javascript" src="../testutils/TestUtils.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_0_0.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_1_0.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_2_0.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_3_0.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_0_1.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_1_1.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_2_1.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PAGING_Q1_PAGED_3_1.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Paging Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Paging Tests", {
+			setup : function() {
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				// var oTableControl = sapzen.crosstab.test.jsonTestData.PAGING_Q1_FULL.control;
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.PAGING_Q1_PAGED_0_0.control;
+				this.oCrosstab.setWidth("1600px");
+				this.oCrosstab.setHeight("1200px");
+				this.iRequestCounter = 0;
+				var that = this;
+
+				this.oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+				this.oDataArea = this.oCrosstab.getDataArea();
+				this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+				this.oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+
+				this.oCrosstab.registerPageRequestHandler(function(iRow, iCol) {
+					var sPageString = iRow + "_" + iCol;
+					var oData = sapzen.crosstab.test.jsonTestData["PAGING_Q1_PAGED_" + sPageString].control;
+
+					// setTimeout(sendResponse, 2000);
+					that.iRequestCounter++;
+					sendResponse();
+
+					function sendResponse() {
+						that.oCrosstab.updateControlProperties(oData);
+						sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(that.oCrosstab);
+					}
+				});
+
+				this.checkCellWidth = function(oCell1, oCell2) {
+					var oDomCell1 = jQuery.sap.byId(oCell1.getId());
+					var oDomCell2 = jQuery.sap.byId(oCell2.getId());
+
+					ok(oDomCell1.outerWidth() === oDomCell2.outerWidth(), "Both cells must have the same width!");
+				};
+
+				this.checkAllCells = function(oArea) {
+					var iStartCol = oArea.getRenderStartCol();
+					var iEndCol = oArea.getRenderColCnt() + iStartCol - 1;
+
+					var iStartRow = oArea.getRenderStartRow();
+					var iEndRow = oArea.getRenderRowCnt() + iStartRow - 1;
+
+					var iRow = 0, iCol = 0;
+					var oCell = null;
+
+					for (iRow = iStartRow; iRow <= iEndRow; iRow++) {
+						for (iCol = iStartCol; iCol <= iEndCol; iCol++) {
+							oCell = oArea.getCellDirect(iRow, iCol);
+							if (oCell) {
+								ok(!oCell.isLoading(), "Cell: " + iRow + "/" + iCol + " in Area: "
+										+ oArea.getAreaType() + " must not be loading");
+								sap.zen.crosstab.testutils.TestUtils.checkCellbyId(oArea, iRow, iCol);
+							}
+						}
+					}
+				};
+
+				this.checkCellHeight = function(oCell1, oCell2) {
+					var oDomCell1 = jQuery.sap.byId(oCell1.getId());
+					var oDomCell2 = jQuery.sap.byId(oCell2.getId());
+
+					ok(oDomCell1.outerHeight() === oDomCell2.outerHeight(), "Both cells must have the same height!");
+				};
+
+				this.checkCellStyle = function(oCell, sStateToCheck, sClassToCheck) {
+					var oDomCell = null;
+					if (oCell) {
+						oDomCell = jQuery.sap.byId(oCell.getId());
+						ok(oDomCell.attr("class").indexOf(sClassToCheck) !== -1, "Cell: " + oCell.getId()
+								+ " with total style in model must have corresponding CSS style: " + sClassToCheck);
+					}
+				};
+
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+
+				setTimeout(function() {
+					start();
+				}, 2000);
+				stop();
+			},
+
+			teardown : function() {
+				this.oCrosstab = null;
+				this.oTableControl = null;
+			}
+		});
+
+		test("Number of page requests", function() {
+			ok(this.iRequestCounter === 7, "7 page requests are expected for full table");
+		});
+
+		test("Check all cells loaded in DataArea", function() {
+			this.checkAllCells(this.oDataArea);
+		});
+		
+		test("Check all cells loaded in ColumnHeaderArea", function() {
+			this.checkAllCells(this.oColumnHeaderArea);
+		});
+		
+		test("Check all cells loaded in RowHeaderArea", function() {
+			this.checkAllCells(this.oRowHeaderArea);
+		});
+		
+		test("Check all cells loaded in DimensionHeaderArea", function() {
+			this.checkAllCells(this.oDimensionHeaderArea);
+		});
+
+		test("Spotcheck the rendering of the areas", function() {
+			sap.zen.crosstab.testutils.TestUtils.checkCell(this.oDimensionHeaderArea, 2, 1);
+			sap.zen.crosstab.testutils.TestUtils.checkCell(this.oDataArea, 0, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkCell(this.oRowHeaderArea, 0, 1);
+			sap.zen.crosstab.testutils.TestUtils.checkCell(this.oColumnHeaderArea, 2, 0);
+		});
+
+		test("Check the width alignment of the columns", function() {
+			this.checkCellWidth(this.oDimensionHeaderArea.getCell(2, 1), this.oRowHeaderArea.getCell(0, 1));
+			this.checkCellWidth(this.oColumnHeaderArea.getCell(2, 3), this.oDataArea.getCell(0, 3));
+		});
+
+		test("Check the height alignment of the rows", function() {
+			this.checkCellHeight(this.oDimensionHeaderArea.getCell(2, 1),this. oColumnHeaderArea.getCell(2, 0));
+			this.checkCellHeight(this.oRowHeaderArea.getCell(0, 1), this.oDataArea.getCell(0, 0));
+		});
+		
+		test("Check the vertical cell merging", function() {
+			var oCell = this.oRowHeaderArea.getCellDirect(0,0);
+			ok(oCell, "The span cell must be at position 0/0");
+			
+			var iRowSpan = oCell.getRowSpan();
+			ok(iRowSpan===9, "The row span must be 9");
+			
+			for (var i = 1; i<iRowSpan; i++){
+				oCell = this.oRowHeaderArea.getCellDirect(i,0);
+				if (oCell){
+					ok(false, "There must be no other cell except the cell with rowspan");
+				}
+			}
+			
+			oCell = this.oRowHeaderArea.getCellDirect(0,0);
+			ok(oCell, "The span cell must be at position 9/0");
+			
+			var iRowSpan = oCell.getRowSpan();
+			ok(iRowSpan===9, "The row span must be 9");
+			
+			for (var i = 10; i<iRowSpan+9; i++){
+				oCell = this.oRowHeaderArea.getCellDirect(i,0);
+				if (oCell){
+					ok(false, "There must be no other cell except the cell with rowspan");
+				}
+			}
+		});
+	</script>
+
+</body>
+
+</html>

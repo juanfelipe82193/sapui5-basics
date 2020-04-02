@@ -1,0 +1,59 @@
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+						 xmlns:fe="sap.fe.templates.controls.messages" xmlns="sap.m" xmlns:core="sap.ui.core"
+						 template:require="{
+							 ID: 'sap/fe/macros/StableIdHelper',
+						 	 CORE: 'sap/fe/core/AnnotationHelper',
+							 MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+							 OP: 'sap/fe/templates/ObjectPage/AnnotationHelper'
+							}">
+
+	<OverflowToolbar id="{= ID.generate(['fe','op', 'footer',  ${entitySet>@sapui.name}] )}" visible="{=   CORE.showFooter(${entityType>./@com.sap.vocabularies.UI.v1.Identification},true) }">
+			<fe:MessageButton id="MessageButton" messageChange="getFooterVisiblity" type="Emphasized"/>
+			<ToolbarSpacer/>
+			<template:if test="{= ${entitySet>@com.sap.vocabularies.Common.v1.DraftRoot} || ${entitySet>@com.sap.vocabularies.Common.v1.DraftNode} }">
+				<DraftIndicator state="{ui>/draftStatus}"/>
+			</template:if>
+		<template:if test="{= ${viewData>/viewLevel} > 1}">
+			<Button text="{sap.fe.i18n>OBJECT_PAGE_APPLY_DRAFT}"
+					type="Emphasized"
+					enabled="true"
+					press=".editFlow.applyDocument(${$view>/getBindingContext})"
+					visible="{= ${uiModel>/editMode} === 'Editable'}"/>
+		</template:if>
+		<template:repeat list="{entityType>./@com.sap.vocabularies.UI.v1.Identification}" var="dataField">
+			<template:if test="{= !(${dataField>./@com.sap.vocabularies.UI.v1.Hidden} === true) }">
+				<template:if test="{= ${dataField>$Type} === 'com.sap.vocabularies.UI.v1.DataFieldForAction' &amp;&amp; ${dataField>Determining} === true}">
+					<template:with path="dataField>Action" helper="CORE.getActionContext" var="actionContext">
+					<template:with path="dataField>Action" helper="CORE.getPathToBoundActionOverload" var="isBound">
+					<template:if test ="{= ${isBound>$IsBound} !== true || ${actionContext>@Org.OData.Core.V1.OperationAvailable} !== false }">
+						<Button
+							id="{= ID.generate(['fe','op', 'footer', ${entitySet>@sapui.name}, ${dataField>Action}] )}"
+							text="{dataField>Label}"
+							press="{= '.handlers.onCallAction(${$view>/}, \'' + ${dataField>Action} + '\',
+							{ contexts: ${$view>/#fe::op/}.getBindingContext(), invocationGrouping : \'' + (${dataField>InvocationGrouping/$EnumMember} === 'com.sap.vocabularies.UI.v1.OperationGroupingType/ChangeSet' ? 'ChangeSet' : 'Isolated') + '\', label: \'' + ${dataField>Label} + '\'})'}"
+							visible="{= ${dataField>./@com.sap.vocabularies.UI.v1.Hidden/$Path} ? '{= !%' + %{dataField>./@com.sap.vocabularies.UI.v1.Hidden@@MODEL.value} + '}' : 'true' }"
+							enabled="{= ${isBound>$IsBound} !== true ? 'true'
+							: ${actionContext>@Org.OData.Core.V1.OperationAvailable} === null ? '{= !${#' + ${dataField>Action} + '} ? false : true }'
+							: ${actionContext>@Org.OData.Core.V1.OperationAvailable/$Path} ? '{= $' + ${actionContext>@Org.OData.Core.V1.OperationAvailable@@MODEL.format} + '}'
+							: 'true' }"
+							hideText="false" importance="Medium" type="Default"/>
+			  		</template:if>
+					</template:with>
+					</template:with>
+				</template:if>
+			</template:if>
+		</template:repeat>
+		<template:if test="{= ${entitySet>@com.sap.vocabularies.Common.v1.DraftRoot} || ${entitySet>@com.sap.vocabularies.Session.v1.StickySessionSupported/SaveAction} }">
+			<Button id="{= ID.generate(['fe', 'save', ${entitySet>@sapui.name}]) }"
+						text="{sap.fe.i18n>OBJECT_PAGE_SAVE}" type="Emphasized"
+						visible="{= ${ui>/editable} === 'Editable' }"
+						enabled="true" press="saveDocument(${$view>/getBindingContext})"  />
+		</template:if>
+		<template:if test="{= ${entitySet>@com.sap.vocabularies.Common.v1.DraftRoot} || ${entitySet>@com.sap.vocabularies.Session.v1.StickySessionSupported/DiscardAction} }">
+			<Button id="{= ID.generate(['fe', 'cancel', ${entitySet>@sapui.name}]) }"
+					text="{sap.fe.i18n>OBJECT_PAGE_CANCEL}" press=".editFlow.cancelDocument(${$view>/getBindingContext},{cancelButton:${$source>}})"
+					visible="{= ${ui>/editable} === 'Editable' }"
+					enabled="true" />
+		</template:if>
+	</OverflowToolbar>
+</core:FragmentDefinition>

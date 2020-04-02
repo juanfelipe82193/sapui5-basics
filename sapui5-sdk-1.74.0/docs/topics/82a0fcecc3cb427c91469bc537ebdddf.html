@@ -1,0 +1,166 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Declarative API for Initial Components</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The declarative API enables you to define the initially started component directly in the HTML markup."><meta name="description" content="The declarative API enables you to define the initially started component directly in the HTML markup."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"562803c6f55c49608d01a453cc0590ab.html","previousTopicHref":"346599f0890d4dfaaa11c6b4ffa96312.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio82a0fcecc3cb427c91469bc537ebdddf"><h1 class="title topictitle1" hidden>Declarative API for Initial Components</h1><div class="body conbody"><p class="shortdesc" hidden>The declarative API enables you to define the initially started component directly in
+the HTML markup.</p>
+<div class="section" id="loio82a0fcecc3cb427c91469bc537ebdddf__section_p1l_4by_jkb"><section class="section" type="Using the ComponentSupportModule"><h2 class="section_title" style="font-size: 1.15em;">Using the <samp class="ph codeph">ComponentSupport</samp>Module</h2>
+
+<p class="p">With the declarative <samp class="ph codeph">sap/ui/core/ComponentSupport</samp> API it is possible to define the initially started component
+directly in the HTML markup instead of the imperative way using JavaScript. The declarative <samp class="ph codeph">ComponentSupport</samp> is not
+activated by default, but must be enabled via the bootstrap:</p>
+<pre class="pre codeblock prettyprint lang-html">&lt;!-- index.html --&gt;
+&lt;script id=&quot;sap-ui-bootstrap&quot;
+    src=&quot;/resources/sap-ui-core.js&quot;
+    ...
+    data-sap-ui-oninit=&quot;module:sap/ui/core/ComponentSupport&quot;
+    ...&gt;
+&lt;/script&gt;</pre>
+<p class="p">This module scans the DOM for HTML elements containing a special data attribute named <samp class="ph codeph">data-sap-ui-component</samp>. All DOM
+elements marked with this data attribute will be regarded as container elements into which a
+<samp class="ph codeph">sap/ui/core/ComponentContainer</samp> is inserted. Additional data attributes are then used to define the constructor
+arguments of the created <samp class="ph codeph">ComponentContainer</samp> instance, e.g. <samp class="ph codeph">data-name</samp> for the name of the component
+which should be instantiated:</p>
+<pre class="pre codeblock prettyprint lang-html">&lt;!-- index.html --&gt;
+&lt;body id=&quot;content&quot; class=&quot;sapUiBody sapUiSizeCompact&quot; role=&quot;application&quot;&gt;
+    ...
+    &lt;div data-sap-ui-component
+        data-id=&quot;container&quot;
+        data-name=&quot;sap.ui.core.samples.formatting&quot;
+        ...
+        data-handle-validation=&quot;true&quot;
+        ...&gt;
+    &lt;/div&gt;
+    ...
+&lt;/body&gt;</pre>
+</section></div>
+<div class="section" id="loio82a0fcecc3cb427c91469bc537ebdddf__section_tks_rby_jkb"><section class="section" type="Declarative Configuration of ComponentContainer"><h2 class="section_title" style="font-size: 1.15em;">Declarative Configuration of <samp class="ph codeph">ComponentContainer</samp></h2><p class="p">As HTML is case-insensitive, in
+order to define a property with upper-case characters, you have to &quot;escape&quot; them with the hyphen character. This is similar to CSS
+attributes. In the following sample the <samp class="ph codeph">handleValidation</samp> argument of the <samp class="ph codeph">ComponentContainer</samp>
+constructor is used:</p><pre class="pre codeblock prettyprint lang-html">
+&lt;div data-sap-ui-component ... data-handle-validation=&quot;true&quot; ...&gt;&lt;/div&gt;
+</pre><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Asynchronouos loading with <samp class="ph codeph">ComponentSupport</samp></p>
+<p class="p">The <samp class="ph codeph">ComponentSupport</samp> module enforces asynchronous module loading of the component with &quot;manifest first&quot;. This
+means, that the <samp class="ph codeph">manifest.json</samp> file is loaded before evaluating the component to optimize loading behavior. In
+this way libraries and other dependencies can be loaded asynchronously and in parallel. To achieve this, the following settings
+for the ComponentContainer are applied by default: </p>
+<ul class="ul" id="loio82a0fcecc3cb427c91469bc537ebdddf__ul_zs1_2vc_kkb">
+<li class="li"><samp class="ph codeph">async</samp> {*boolean*} (forced to <samp class="ph codeph">true</samp>)</li>
+<li class="li"><samp class="ph codeph">manifest</samp> {*boolean|string*} (forced to <samp class="ph codeph">true</samp> if no string is provided to ensure manifest
+first)</li>
+<li class="li"><samp class="ph codeph">lifecycle</samp> {*sap.ui.core.ComponentLifecycle*} (defaults to <samp class="ph codeph">Container</samp>)</li>
+<li class="li"><samp class="ph codeph">autoPrefixId</samp> {*boolean*} (defaults to <samp class="ph codeph">true</samp>)</li>
+</ul>
+<p class="p">For details on the manifest, see <a class="xref" href="../../#/topic/be0cf40f61184b358b5faedaec98b2da.html" title="The descriptor for applications, components, and libraries is inspired by the Web Application Manifest concept introduced by the W3C. The descriptor provides a central, machine-readable and easy-to-access location for storing metadata associated with an application, an application component, or a library." target="_top">Descriptor for Applications, Components, and Libraries</a>.</p>
+<p class="p"><span class="ph">See also <a class="xref" href="../../#/api/module:sap/ui/core/ComponentSupport" target="_top" alt="#/api/module:sap/ui/core/ComponentSupport" title="#/api/module:sap/ui/core/ComponentSupport">
+<samp class="ph codeph">ComponentSupport</samp></a> and <a class="xref" href="../../#/api/sap.ui.core.ComponentContainer" target="_top" alt="#/api/sap.ui.core.ComponentContainer" title="#/api/sap.ui.core.ComponentContainer">
+<samp class="ph codeph">ComponentContainer</samp></a> for more information. </span>
+</p>
+</div></section></div>
+<div class="section" id="loio82a0fcecc3cb427c91469bc537ebdddf__section_zmp_rwc_kkb"><section class="section" type="Delay the Initial Component Instantiation"><h2 class="section_title" style="font-size: 1.15em;">Delay the Initial Component Instantiation</h2>
+
+<p class="p">In some cases, the component initialisation must wait until all pre-required modules have been loaded. If this is the case, the
+<samp class="ph codeph">ComponentSupport</samp> module needs to be executed later, and you have to replace the <samp class="ph codeph">onInit</samp> module
+execution in the bootstrap with a custom module:</p>
+<div class="p">
+<pre class="pre codeblock prettyprint lang-html">&lt;!-- index.html --&gt;
+&lt;script id=&quot;sap-ui-bootstrap&quot;
+    src=&quot;resources/sap-ui-core.js&quot;
+    data-sap-ui-onInit=&quot;module:sap/ui/demo/myBootstrap&quot;&gt; &lt;!-- Execute custom module on init --&gt;
+&lt;/script&gt;</pre>
+</div>
+<p class="p">The custom module can load dependencies and execute code before activating the <samp class="ph codeph">ComponentSupport</samp> module: </p>
+<div class="p">
+<pre class="pre codeblock prettyprint lang-js">
+// sap/ui/demo/myBootstrap.js
+sap.ui.define([&quot;sap/ui/demo/MyModule&quot;], function(MyModule) {
+
+    // Execute code which needs to be executed before component initialization
+    MyModule.init().then(function() {
+        // Requiring the ComponentSupport module automatically executes the component initialisation for all declaratively defined components
+        sap.ui.require([&quot;sap/ui/core/ComponentSupport&quot;]);
+    });
+
+});</pre>
+</div>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

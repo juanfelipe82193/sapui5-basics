@@ -1,0 +1,236 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Sorting, Grouping, and Filtering for List Binding</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content><meta name="description" content><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"3a4a9e562988456c9be0ef883ae7da50.html","previousTopicHref":"335848ac1174435c901baaa55f6d7819.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loioec79a5d5918f4f7f9cbc2150e66778cc"><h1 class="title topictitle1" hidden>Sorting, Grouping, and Filtering for List Binding</h1><div class="body conbody"><p class="shortdesc" hidden></p>
+<div class="section" id="loioec79a5d5918f4f7f9cbc2150e66778cc__section_606348F7CECC432C9E18DACEFB3127CF"><section class="section" type="Initial Sorting, Grouping and Filtering for List Binding"><h2 class="section_title" style="font-size: 1.15em;">Initial Sorting, Grouping and Filtering for List Binding</h2>
+
+<p class="p">To provide initial <span class="ph emphasis emphasis">sorting and grouping</span> in an XML view, proceed as follows:</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+	controllerName=&quot;sap.ui.sample.App&quot;
+	xmlns=&quot;sap.m&quot;
+	xmlns:l=&quot;sap.ui.layout&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;		
+	&lt;List items=&quot;{ path: &apos;/companies&apos;, 
+		sorter: { path: &apos;county&apos;, descending: false, group: &apos;.getCounty&apos;}, 
+		groupHeaderFactory: &apos;.getGroupHeader&apos;}&quot;&gt;
+		&lt;items&gt;
+			&lt;StandardListItem
+				title=&quot;{name}&quot;
+				description=&quot;{city}&quot;
+			/&gt;
+		&lt;/items&gt;
+	&lt;/List&gt;
+	
+&lt;/mvc:View&gt;</pre>
+<p class="p">The <samp class="ph codeph">this</samp> context of a group header factory function is generally set to the control (or managed object) that owns the binding.
+However, in XML views, the reference to the group header factory is done in the view controller by putting a dot (<samp class="ph codeph">.</samp>) in front
+of the name of the group header factory function (<samp class="ph codeph">{ groupHeaderFactory:&apos;.myGroupHeader&apos; }</samp>). In this case, the group header
+factory&apos;s this context is bound to the controller.</p>
+<p class="p">The list uses a sorter which sorts the list of companies in ascending order by the <samp class="ph codeph">county</samp> column. It also groups its rows using
+the App.controller&#x2019;s <samp class="ph codeph">getCounty</samp> method to provide the captions and the <samp class="ph codeph">getGroupHeader</samp> function to provide
+non-standard group header controls, as shown here:</p>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/core/mvc/Controller&quot;,
+	&quot;sap/ui/model/json/JSONModel&quot;,
+	&quot;sap/m/GroupHeaderListItem &quot;
+], function (Controller, JSONModel, GroupHeaderListItem) {
+	&quot;use strict&quot;;
+	return Controller.extend(&quot;sap.ui.sample.App&quot;, {
+		onInit : function () {
+			&#x2026;
+		},	
+
+		getCounty: function(oContext) {
+			return oContext.getProperty(&apos;county&apos;);
+		},
+		
+		getGroupHeader: function(oGroup) {
+			return new GroupHeaderListItem({
+				title : oGroup.key,
+				upperCase : false
+			}
+		);
+	},   
+});</pre>
+<p class="p">As you can see, <samp class="ph codeph">getCounty</samp> generates the group caption, which in this case is the county of the current companies.
+<samp class="ph codeph">getGroupHeader</samp> serves as a group header factory function: use this if you would like to use non-standard group headers. In
+our example, we would like the group header caption not to be upper case (which is the default). After sorting and grouping, the company list
+looks like this:</p>
+<div class="fig fignone" id="loioec79a5d5918f4f7f9cbc2150e66778cc__fig_nzl_xvf_tt"><div class="figbody">
+<img class="inline  " id="loioec79a5d5918f4f7f9cbc2150e66778cc__image_cnr_zvf_tt" src="loiocdd09735362d4227809f3028201a1bba_LowRes.png">
+</div></div>
+<p class="p">The following XML snippet provides initial filtering:</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+	controllerName=&quot;sap.ui.sample.App&quot;
+	xmlns=&quot;sap.m&quot;
+	xmlns:l=&quot;sap.ui.layout&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;		
+	&lt;List items=&quot;{ path: &apos;/companies&apos;, 
+		filters: [{path: &apos;city&apos;, operator: &apos;StartsWith&apos;, value1: &apos;B&apos;},
+			{path: &apos;revenue&apos;, operator: &apos;LT&apos;, value1: 150000000}]}&quot;&gt;		
+		&lt;items&gt;
+			&lt;StandardListItem
+				title=&quot;{name}&quot;
+				description=&quot;{city}&quot;
+			/&gt;
+		&lt;/items&gt;
+	&lt;/List&gt;	  
+&lt;/mvc:View&gt;</pre>
+<p class="p">The example shown here will only display companies whose city name begins with a &#x2018;b&#x2019; and whose revenue is less than 150 million. As you can see,
+you can provide more than one filter, each of which may refer to different columns using different filter operators. For a complete list of
+permitted filter operators, <span class="ph">see <a class="xref" href="../../#/api/sap.ui.model.FilterOperator" target="_top" alt="#/api/sap.ui.model.FilterOperator" title="#/api/sap.ui.model.FilterOperator">sap.ui.model.FilterOperator</a> in the <span class="ph uicontrol">API Reference</span> part of the Demo Kit</span>.</p>
+<p class="p">As shown below, initial sorting, grouping and filtering can of course also be provided using JavaScript.</p>
+<p class="p">You can define a sorter and/or filters:</p>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+    &quot;sap/ui/model/Sorter&quot;,
+    &quot;sap/ui/model/Filter&quot;
+], function(Sorter, Filter) {
+//returns group header captions
+var fnGetCounty = function(oContext) {
+    return oContext.getProperty(&apos;county&apos;);
+}
+
+var oSorter = new Sorter({
+    path: &apos;county&apos;, 
+    descending: false, 
+    group: fnGetCounty});
+
+var oFilterCity = new Filter(&quot;city&quot;,
+    sap.ui.model.FilterOperator.StartsWith, &quot;B&quot;),
+    oFilterRevenue = new sap.ui.model.Filter(&quot;revenue&quot;,
+        sap.ui.model.FilterOperator.LT, 150000000);
+);
+
+});
+</pre>
+<p class="p">You can pass sorters and filters to the list binding:</p>
+<pre class="pre codeblock prettyprint lang-js">
+var oList = new sap.m.List({
+	items: {path: &quot;/companies&quot;, template: oItemTemplate, 
+		sorter: oSorter, filters:[oFilterCity, oFilterRevenue]  
+	}
+});</pre>
+<p class="p">You can also use the other list binding possibilities (for example
+<samp class="ph codeph">bindAggregation</samp> or <samp class="ph codeph">bindItems</samp>) and provide the
+sorter and filters as parameters.</p>
+</section></div>
+<div class="section" id="loioec79a5d5918f4f7f9cbc2150e66778cc__section_N100CF_N10013_N10001"><section class="section" type="Manual Sorting and Filtering for List Binding"><h2 class="section_title" style="font-size: 1.15em;">Manual Sorting and Filtering for List Binding</h2>
+
+<p class="p">You can sort or filter data manually after the list binding is complete by getting the
+corresponding binding and calling the sort/filter function:</p>
+<pre class="pre codeblock prettyprint lang-js">// manual sorting
+oList.getBinding(&quot;items&quot;).sort(oSorter);
+
+// manual filtering
+oList.getBinding(&quot;items&quot;).filter([oFilterCity, oFilterRevenue]);</pre>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p"><samp class="ph codeph">getBinding</samp> requires the name of the bound list. In this example, we are
+looking at the <samp class="ph codeph">items</samp> of the <samp class="ph codeph">sap.m.List</samp>
+control.</p></aside>
+<p class="p">For more information about the various sorting and filter methods and operators, <span class="ph">see the documentation for Filter, Sorter, and Filter operations under
+<a class="xref" href="../../#/api/sap.ui.model" target="_top" alt="#/api/sap.ui.model" title="#/api/sap.ui.model">sap.ui.model</a> in the <span class="ph uicontrol">API Reference</span> part of the Demo Kit</span>.</p>
+</section></div>
+<div class="section" id="loioec79a5d5918f4f7f9cbc2150e66778cc__section_jxn_fmp_rcb"><section class="section" type="Using Complex Syntax to Add Filters and Sorters"><h2 class="section_title" style="font-size: 1.15em;">Using Complex Syntax to Add Filters and Sorters</h2>
+
+<p class="p">Complex syntax can be used to add filters and sorters for list binding. One or multiple
+objects can be defined.</p>
+<pre class="pre codeblock prettyprint lang-js">
+&lt;table:Table rows=&quot;{
+    path: &apos;/table&apos;, 
+    filters: [{
+        path: &apos;field3&apos;, 
+        operator: &apos;EQ&apos;,
+        value1: &apos;test&apos;
+    }],
+    sorter: [{
+        path: &apos;field1&apos;, 
+        descending: false
+    }, {
+        path: &apos;field2&apos;, 
+        descending: true
+    }]
+ }&quot;&gt;
+...
+&lt;/table:Table&gt;
+</pre>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

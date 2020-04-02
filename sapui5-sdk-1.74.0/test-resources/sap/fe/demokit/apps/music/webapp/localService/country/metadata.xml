@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		   xmlns="http://docs.oasis-open.org/odata/ns/edm">
+	<edmx:Reference Uri="../../../../sadl/sap/i_aivs_countrycode_text/0001/$metadata">
+		<edmx:Include Namespace="com.sap.gateway.sadl.i_aivs_countrycode_text.v0001"
+					  Alias="REF__I_AIVS_COUNTRYCODE_TEXT"/>
+	</edmx:Reference>
+	<edmx:Reference
+			Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+	</edmx:Reference>
+	<edmx:Reference
+			Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CORE',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="Org.OData.Core.V1" Alias="Core"/>
+	</edmx:Reference>
+	<edmx:Reference
+			Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+	</edmx:Reference>
+	<edmx:Reference
+			Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+	</edmx:Reference>
+	<edmx:Reference
+			Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="SAP__common"/>
+	</edmx:Reference>
+	<edmx:Reference
+			Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema Namespace="com.sap.gateway.sadl.i_aivs_countrycode_vh.v0001" Alias="SAP__self">
+			<EntityType Name="I_AIVS_CountryCode_VhType">
+				<Key>
+					<PropertyRef Name="CountryCode"/>
+				</Key>
+				<Property Name="CountryCode" Type="Edm.String" Nullable="false" MaxLength="3"/>
+				<Property Name="CountryCode_Text" Type="Edm.String" MaxLength="50"/>
+				<Property Name="CountryIndicator" Type="Edm.String" MaxLength="3"/>
+				<NavigationProperty Name="_Text"
+									Type="com.sap.gateway.sadl.i_aivs_countrycode_text.v0001.I_AIVS_CountryCode_TextType"/>
+			</EntityType>
+			<EntityContainer Name="Container">
+				<EntitySet Name="I_AIVS_CountryCode_Vh"
+						   EntityType="com.sap.gateway.sadl.i_aivs_countrycode_vh.v0001.I_AIVS_CountryCode_VhType">
+					<NavigationPropertyBinding Path="_Text"
+											   Target="com.sap.gateway.sadl.i_aivs_countrycode_text.v0001.Container/I_AIVS_CountryCode_Text"/>
+				</EntitySet>
+			</EntityContainer>
+			<Annotations Target="SAP__self.I_AIVS_CountryCode_VhType/CountryCode">
+				<Annotation Term="SAP__common.Text" Path="CountryCode_Text"/>
+				<Annotation Term="SAP__common.Label" String="Country Code"/>
+				<Annotation Term="SAP__common.QuickInfo" String="AIS: Country Code"/>
+			</Annotations>
+			<Annotations Target="SAP__self.I_AIVS_CountryCode_VhType/CountryCode_Text">
+				<Annotation Term="SAP__common.FieldControl" EnumMember="SAP__common.FieldControlType/ReadOnly"/>
+				<Annotation Term="SAP__common.Label" String="Long name"/>
+				<Annotation Term="SAP__common.QuickInfo" String="Country Name (Max. 50 Characters)"/>
+			</Annotations>
+			<Annotations Target="SAP__self.I_AIVS_CountryCode_VhType">
+				<Annotation Term="UI.PresentationVariant">
+					<Record>
+						<PropertyValue Property="SortOrder">
+							<Collection>
+								<Record Type="SAP__common.SortOrderType">
+									<PropertyValue Property="Property" PropertyPath="CountryIndicator"/>
+									<PropertyValue Property="Descending" Bool="false"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="Communication.Contact">
+					<Record/>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.Container/I_AIVS_CountryCode_Vh">
+				<Annotation Term="Capabilities.SearchRestrictions">
+					<Record>
+						<PropertyValue Property="Searchable" Bool="true"/>
+						<PropertyValue Property="UnsupportedExpressions"
+									   EnumMember="Capabilities.SearchExpressions/AND Capabilities.SearchExpressions/OR Capabilities.SearchExpressions/NOT Capabilities.SearchExpressions/group Capabilities.SearchExpressions/phrase"/>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="SAP__self.I_AIVS_CountryCode_VhType/CountryIndicator">
+				<Annotation Term="SAP__common.Label" String="Vehicle country key"/>
+				<Annotation Term="SAP__common.Heading" String="Veh."/>
+			</Annotations>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

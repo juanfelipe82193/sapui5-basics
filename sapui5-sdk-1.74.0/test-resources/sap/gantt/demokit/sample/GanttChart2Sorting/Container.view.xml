@@ -1,0 +1,147 @@
+<mvc:View
+		controllerName="sap.gantt.sample.GanttChart2Sorting.Container"
+		height="100%"
+		xmlns="sap.gantt.simple"
+		xmlns:m="sap.m"
+		xmlns:axistime="sap.gantt.axistime"
+		xmlns:config="sap.gantt.config"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:sortingSample="sap.gantt.sample.GanttChart2Sorting"
+		xmlns:table="sap.ui.table">
+	<GanttChartContainer>
+		<toolbar>
+			<ContainerToolbar />
+		</toolbar>
+		<GanttChartWithTable id="gantt" shapeSelectionMode="Single">
+			<axisTimeStrategy>
+				<axistime:ProportionZoomStrategy>
+					<axistime:totalHorizon>
+						<config:TimeHorizon
+								startTime="20181029000000"
+								endTime="20181129000000"/>
+					</axistime:totalHorizon>
+					<axistime:visibleHorizon>
+						<config:TimeHorizon
+								startTime="20181029000000"
+								endTime="20181129000000"/>
+					</axistime:visibleHorizon>
+				</axistime:ProportionZoomStrategy>
+			</axisTimeStrategy>
+			<table>
+				<table:TreeTable
+						selectionMode="Single"
+						visibleRowCountMode="Auto"
+						minAutoRowCount="12"
+						selectionBehavior="RowSelector"
+						enableColumnReordering="true"
+						rows="{
+						path: '/rootGroup',
+						parameters: {
+							arrayNames: ['children'],
+							numberOfExpandedLevels: 1
+						}
+					}">
+					<table:columns>
+						<table:Column label="Column" template="text" />
+					</table:columns>
+					<table:extension>
+						<m:OverflowToolbar>
+							<m:Label text="Sorting using custom Group" />
+						</m:OverflowToolbar>
+					</table:extension>
+					<table:rowSettingsTemplate>
+						<GanttRowSettings rowId="{id}" shapes1="{textInfront}" shapes2="{textBehind}">
+							<shapes1>
+								<sortingSample:CustomGroup>
+									<sortingSample:rectangles>
+										<BaseRectangle time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+													   endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+													   fill="@sapUiChartPaletteQualitativeHue1" fillOpacity="0.8"
+										/>
+									</sortingSample:rectangles>
+									<sortingSample:texts>
+										<BaseText text="{text}" time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+												  endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"/>
+									</sortingSample:texts>
+								</sortingSample:CustomGroup>
+							</shapes1>
+							<shapes2>
+								<sortingSample:CustomGroupTextBehind>
+									<sortingSample:rectangles>
+										<BaseRectangle time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+													   endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+													   fill="@sapUiChartPaletteQualitativeHue1" fillOpacity="0.8"
+										/>
+									</sortingSample:rectangles>
+									<sortingSample:texts>
+										<BaseText text="{text}" time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+												  endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"/>
+									</sortingSample:texts>
+								</sortingSample:CustomGroupTextBehind>
+							</shapes2>
+						</GanttRowSettings>
+					</table:rowSettingsTemplate>
+				</table:TreeTable>
+			</table>
+		</GanttChartWithTable>
+		<GanttChartWithTable id="gantt2" shapeSelectionMode="Single">
+			<axisTimeStrategy>
+				<axistime:ProportionZoomStrategy>
+					<axistime:totalHorizon>
+						<config:TimeHorizon
+								startTime="20181029000000"
+								endTime="20181129000000"/>
+					</axistime:totalHorizon>
+					<axistime:visibleHorizon>
+						<config:TimeHorizon
+								startTime="20181029000000"
+								endTime="20181129000000"/>
+					</axistime:visibleHorizon>
+				</axistime:ProportionZoomStrategy>
+			</axisTimeStrategy>
+			<table>
+				<table:TreeTable
+						selectionMode="Single"
+						visibleRowCountMode="Auto"
+						minAutoRowCount="12"
+						selectionBehavior="RowSelector"
+						enableColumnReordering="true"
+						rows="{
+						path: '/rootRowSetting',
+						parameters: {
+							arrayNames: ['children'],
+							numberOfExpandedLevels: 1
+						}
+					}">
+					<table:columns>
+						<table:Column label="Column" template="text" />
+					</table:columns>
+					<table:extension>
+						<m:OverflowToolbar>
+							<m:Label text="Sorting using custom Row Setting" />
+						</m:OverflowToolbar>
+					</table:extension>
+					<table:rowSettingsTemplate>
+						<sortingSample:CustomRowSettings rowId="{id}" rectangles="{rectangles}" chevrons="{chevrons}" texts="{texts}">
+							<sortingSample:rectangles>
+								<BaseRectangle time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+											   endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+											   fill="@sapUiChartPaletteQualitativeHue1" />
+							</sortingSample:rectangles>
+							<sortingSample:chevrons>
+								<BaseChevron time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+											 endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+											 fill="@sapUiChartPaletteQualitativeHue1" />
+							</sortingSample:chevrons>
+							<sortingSample:texts>
+								<BaseText time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+										  endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+										  text="{text}" xBias="{xBias}"/>
+							</sortingSample:texts>
+						</sortingSample:CustomRowSettings>
+					</table:rowSettingsTemplate>
+				</table:TreeTable>
+			</table>
+		</GanttChartWithTable>
+	</GanttChartContainer>
+</mvc:View>

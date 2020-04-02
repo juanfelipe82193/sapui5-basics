@@ -1,0 +1,154 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Using an OData Service to Load Data to the SAPUI5 ABAP Repository</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="You can use the OData service /UI5/ABAP_REPOSITORY_SRV to upload a SAPUI5 app, component, or library to the SAPUI5 ABAP repository."><meta name="description" content="You can use the OData service /UI5/ABAP_REPOSITORY_SRV to upload a SAPUI5 app, component, or library to the SAPUI5 ABAP repository."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"a560bd6ed4654fd1b338df065d331872.html","previousTopicHref":"77b2d31368e742288ba1f48289104fad.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loioa883327a82ef4cc792f3c1e7b7a48de8"><h1 class="title topictitle1" hidden>Using an OData Service to Load Data to the <span class="ph pname">SAPUI5</span> ABAP Repository</h1><div class="body conbody"><p class="shortdesc" hidden>You can use the OData service <samp class="ph codeph">/UI5/ABAP_REPOSITORY_SRV</samp> to upload a
+<span class="ph pname">SAPUI5</span> app, component, or
+library to the <span class="ph pname">SAPUI5</span> ABAP
+repository.</p>
+<p class="p">If you use a repository, for example git, and a build server, for example Jenkins, for the
+central coordination of your <span class="ph pname">SAPUI5</span> developments, you can use
+the OData service <samp class="ph codeph">/UI5/ABAP_REPOSITORY_SRV</samp> to upload the respective
+files that are collected in a zip file to the <span class="ph pname">SAPUI5</span> ABAP repository. The OData
+service uploads the zip file to the SAP NetWeaver AS ABAP into a BSP application that is
+created or updated during the uplaod. This BSP application represents the <span class="ph pname">SAPUI5</span> ABAP repository. From
+there, the app, for example, can be used in the SAP Fiori launchpad. The OData service
+<samp class="ph codeph">/UI5/ABAP_REPOSITORY_SRV</samp> uses the SAP Gateway service builder
+project <samp class="ph codeph">/UI5/ABAP_REPOSITORY</samp>.</p>
+<p class="p">The OData service offers the basic entity <samp class="ph codeph">Repository</samp> and supports
+<samp class="ph codeph">GET</samp>, <samp class="ph codeph">CREATE</samp>, <samp class="ph codeph">UPDATE</samp>, and
+<samp class="ph codeph">DELETE</samp> operations. On return, the HTTP status reports either
+success or errors which may have occurred during the operation. The response header or
+the response body contain additional information.</p>
+<p class="p">The base64-encoded zip archive that contains the app, component, or library files is
+provided in the <samp class="ph codeph">ZipArchive</samp> property. The operations
+<samp class="ph codeph">CREATE</samp> and <samp class="ph codeph">UPDATE</samp> use the file provided in the
+property for the operation. You use the <samp class="ph codeph">GET</samp> method of the OData service
+to retrieve a basic XML form that you can use for the <samp class="ph codeph">CREATE</samp> and
+<samp class="ph codeph">UPDATE</samp> operations. To remove a <span class="ph pname">SAPUI5</span> ABAP repository, you use the
+<samp class="ph codeph">DELETE</samp> method that, if successful, deleted the corresponding BSP
+application and its SICF service and updates the <span class="ph pname">SAPUI5</span> application index.</p>
+<p class="p">The following URL parameters are provided for the communication of mandatory or optional
+parameters for the operations that are not part of the <samp class="ph codeph">Repository</samp>
+entity itself:</p>
+<ul class="ul" id="loioa883327a82ef4cc792f3c1e7b7a48de8__ul_llz_pwd_scb">
+<li class="li">
+<p class="p"><samp class="ph codeph">CodePage</samp>: Contains the information about the code page of your
+text files, for example, <samp class="ph codeph">CodePage=&apos;UTF8&apos;</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">TestMode</samp>: If set to <samp class="ph codeph">TRUE</samp>, the operation runs as a test and
+no upload takes place.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">TransportRequest</samp>: Specifies an ABAP transport request</p>
+</li>
+</ul>
+<p class="p">If you upload a zip archive containing a SAPUI5 app, component, or library into the SAP
+NetWeaver AS ABAP for deployment or for delivery, a <span class="ph pname">SAPUI5</span> ABAP repository is created or
+updated and the Business Add-In (BAdI) <span class="ph uicontrol">SAPUI5 Repository Load</span>
+(<samp class="ph codeph">/UI5/BADI_REPOSITORY_LOAD</samp>) is called. You need to implement this
+BAdI on the SAP NetWeaver AS ABAP and use it to check and adjust the parameters that
+control the OData service, for example, if you want to determine or create an ABAP
+transport request automatically. For more information about the Business Add-In, see the
+BAdI documentation in the SAP system.</p>
+<p class="p">To further control the upload operation of the OData service, you can use the following
+text files in the archive:</p>
+<ul class="ul" id="loioa883327a82ef4cc792f3c1e7b7a48de8__ul_drl_112_scb">
+<li class="li">
+<p class="p"><samp class="ph codeph">&apos;.Ui5RepositoryIgnore&apos;</samp>: Each line in this text file describes a file pattern
+that indicates which files shall be ignored during the upload. The line contains
+a substring of the file path or a regular expression starting with &apos;^&apos; and
+ending with &apos;$&apos;. This setting overwrites the build-in default.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">&apos;.Ui5RepositoryTextFiles&apos;</samp> and <samp class="ph codeph">&apos;.Ui5RepositoryBinaryFiles&apos;</samp>:
+These text files are used to identify text and binary content in addition to the
+build-in default. If it is not clear whether a file is text or binary, a warning
+is issued in the log and the file is not uploaded.</p>
+</li>
+</ul>
+<p class="p">For testing the OData service, you can use the SAP NetWeaver AS ABAP with the SAP Gateway
+client (transaction <samp class="ph codeph">/IWFND/GW_CLIENT</samp>).</p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>For operations on a <span class="ph pname">SAPUI5</span> ABAP repository, you need the <samp class="ph codeph">S_DEVELOP</samp>
+authorization.</p></aside>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="https://help.sap.com/viewer/68bf513362174d54b58cddec28794093/7.52.latest/en-US/bb2bfe50645c741ae10000000a423f68.html" target="_blank" alt="https://help.sap.com/viewer/68bf513362174d54b58cddec28794093/7.52.latest/en-US/bb2bfe50645c741ae10000000a423f68.html" title="https://help.sap.com/viewer/68bf513362174d54b58cddec28794093/7.52.latest/en-US/bb2bfe50645c741ae10000000a423f68.html">Activate and Maintain Services</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

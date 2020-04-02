@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sinaDefine(['../core/core','./SinaObject'],function(c,S){"use strict";return S.derive({_meta:{properties:{personalizedSearch:{required:true,setter:true},isPersonalizedSearchEditable:{required:true}}},resetPersonalizedSearchDataAsync:function(){return this.sina.provider.resetPersonalizedSearchDataAsync(this);},saveAsync:function(){return this.sina.provider.saveConfigurationAsync(this);}});});

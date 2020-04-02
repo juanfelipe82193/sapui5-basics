@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+	<script src="../../../../resources/sap-ui-core.js" id="Script1" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		.col {
+			color: red;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+		function onSubmit(e) {
+			if (evtoutput.innerText !== undefined)
+				evtoutput.innerText = e.getParameter("data");
+			else
+			if (evtoutput.textContent !== undefined)
+				evtoutput.textContent = e.getParameter("data"); // due to ff
+		};
+
+		// creation of visual business
+		var oVBI1 = new sap.ui.vbm.VBI('vbiWrap', {
+			width: "100%",
+			height: 500,
+			submit: onSubmit // set the event handler
+		});
+		oVBI1.placeAt("content");
+
+		// load the json and set the default text area text
+		var dat = $.getJSON("media/vbselect/main.json", function(dat) {
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array) {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(dat);
+		});
+
+		function trackLasso() {
+			oVBI1.setLassoSelection(true);
+		}
+
+		function trackRect() {
+			oVBI1.setRectangularSelection(true);
+		}
+		oVBI1.attachChangeTrackingMode(function(ev) {
+			var iMode = ev.getParameter("mode");
+			var bSet = ev.getParameter("bSet");
+			alert("props lasso: " + oVBI1.getLassoSelection() + "props rect: " + oVBI1.getRectangularSelection() + "VBI api:" + iMode + ", " + bSet);
+
+		});
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: Selection Cardinality Test</h1>
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test cardinality and both Lasso and Rectangular selection. </p>
+		<br>
+		<h3> To test: </h3>
+		<p>The application defines 5 tables containing spots. The spot tables are rendered horizontally.</p>
+		<br>
+		<p>In each table a different selection cardinality is specified. The selection cardinality is written on the spots in the format (minSelect:maxSelect). The selection is restricted by cardinality rules.</p>
+		<br>
+		<p>The ctl-key toggles the selection; the shift-key adds a selection; no modifier just sets a new selection for the affected table.</p>
+		<p>Use the shift and ctrl keys and click on the spots to change the selection.</p>
+		<ol>
+			<li> Check that you have 5 rows and 3 columns of spots.</li>
+			<li> Check that the cardinality on each of the 5 rows works as expected.</li>
+			<li> Press keyboard key 'a' for lasso selection and check that lasso selection works by dragging the pointer on the map</li>
+			<li> Press keyboard key 'r' for rectangular selection and check that rectangular selection works by dragging the pointer on the map</li>
+			<i>Alternatively you can use the link provided above the Map control to choose selection mode.</i>
+
+		</ol><a href="#rect" onclick="trackRect()">Click here for rectangular selection mode</a>
+		<br>
+		<br><a href="#lasso" onclick="trackLasso()">Click here for Lasso selection mode</a>
+		<br>
+		<br>
+		<p style="color:red">You can refer to the text area for more information</p>
+	</div>
+	<div id="description2">
+		<br>
+		<br>
+		<div id="content"></div>
+		<br />
+		<textarea style="width: 100%; box-sizing: border-box" id="evtoutput" rows="8"></textarea>
+	</div>
+</body>
+
+</html>

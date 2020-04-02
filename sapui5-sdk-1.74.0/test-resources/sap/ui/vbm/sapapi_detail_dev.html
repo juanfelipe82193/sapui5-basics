@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	  <meta name="viewport" content="width=device-width">
+      <!-- <link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" /> -->
+
+      <script src="../../../../resources/sap-ui-core.js"
+         id="Script1"
+         data-sap-ui-libs="sap.ui.commons,sap.ui.vbm"
+         data-sap-ui-theme="sap_bluecrystal" >
+      </script>
+
+      <script>
+            
+         var oPanel = null;
+
+         function onOpenWindow( oEvent )
+         {
+            if( oEvent.getParameter( "id" ) != "Detail1" )
+               return;
+
+            // create a panel instance
+            if( !oPanel )
+            {
+               oPanel = new sap.ui.commons.Panel({width: "350px", showCollapseIcon: false});
+               oPanel.setAreaDesign(sap.ui.commons.enums.AreaDesign.Plain);
+               oPanel.setBorderDesign(sap.ui.commons.enums.BorderDesign.None);
+
+               //Set the title of the panel
+               oPanel.setTitle(new sap.ui.core.Title({text: "Location Data"}));
+               //As alternative if no icon is desired also the following shortcut might be possible:
+               //oPanel.setText("Contact Data");
+
+               //Create a matrix layout with 2 columns
+               var oMatrix = new sap.ui.commons.layout.MatrixLayout({layoutFixed: true, width: '300px', columns: 2});
+               oMatrix.setWidths('100px', '200px');
+
+               //Create a simple form within the layout
+               var oLabel = new sap.ui.commons.Label({text: 'Name'});
+               var oInput = new sap.ui.commons.TextField({value: 'Mustermann', width: '100%'});
+               oLabel.setLabelFor(oInput);
+               oMatrix.createRow(oLabel, oInput);
+
+               oLabel = new sap.ui.commons.Label({text: 'First Name'});
+               oInput = new sap.ui.commons.TextField({value: 'Max', width: '100%'});
+               oLabel.setLabelFor(oInput);
+               oMatrix.createRow(oLabel, oInput);
+
+               //Add the form to the panels content area
+               oPanel.addContent(oMatrix);
+
+               //Add some buttons to the panel header
+               //oPanel.addButton(new sap.ui.commons.Button({text: 'Save'}));
+               //oPanel.addButton(new sap.ui.commons.Button({text: 'Cancel'}));
+            }
+
+            //Attach the panel to the page
+            oPanel.placeAt( oEvent.getParameter( "contentarea" ).id );
+         };
+
+         function onCloseWindow( oEvent )
+         {
+            // when the panel should be destroyed it can be done.............//
+            // if( oPanel )
+            //   oPanel.destroy();
+            // oPanel = null;
+         };
+       
+         // creation of visual business...........................//
+         sap.ui.localResources("vbitestapp");
+
+         function onSubmit( e )
+         {
+            var datEvent = JSON.parse( e.mParameters.data );
+            //var instance = parseInt(datEvent.Action.instance);
+            var instance = datEvent.Action.instance.match(/\d+/g);
+            if ( instance ){
+               if ( instance[0] == 0 )
+            		onDetailWindow1();
+               else if ( instance[0] == 1 )
+                  onDetailWindow2();
+               else if ( instance[0] == 2 )
+                  onDetailWindow3();
+            }
+         };
+        
+         var oVBI1 = new sap.ui.vbm.VBI('ds',
+         {
+            width: "100%",
+            //width: "1024px",
+            height: "434px",
+            openWindow: onOpenWindow,
+            submit: onSubmit        // set the event handler
+         });
+         oVBI1.placeAt("content");
+
+         // load the json and set the default text area text
+         var dat = $.getJSON("media/vbdetail/maindevices.json", function( dat ) 
+         {
+               oVBI1.load( dat );
+         });
+      </script>
+   </head>
+    
+   <body class="sapUiBody" >
+               <div id="content"></div>
+           <script>
+                //...........................................................//
+                // setting some objects......................................//
+      
+                function onClearMap()
+                {
+				       var dat = $.getJSON("media/vbdetail/clear.json", function( dat ) 
+				       {
+                           oVBI1.load( dat );
+				       });
+                };
+
+                function onDetailWindow1()
+                {
+				       var dat = $.getJSON("media/vbdetail/opendetail1devices.json", function( dat ) 
+				       {
+                           oVBI1.load( dat );
+				       });
+                };
+
+                function onDetailWindow2()
+                {
+				       var dat = $.getJSON("media/vbdetail/opendetail2devices.json", function( dat ) 
+				       {
+                           oVBI1.load( dat );
+				       });
+                };
+
+                function onDetailWindow3()
+                {
+				       var dat = $.getJSON("media/vbdetail/opendetail3devices.json", function( dat ) 
+				       {
+                           oVBI1.load( dat );
+				       });
+                };
+                
+                
+		</script>
+               
+   </body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>URL Whitelist Filtering</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The SAPUI5 framework provides a client-side API to manage a white list for URLs. This whitelist can be used to validate arbitrary URLs if they are permitted or not."><meta name="description" content="The SAPUI5 framework provides a client-side API to manage a white list for URLs. This whitelist can be used to validate arbitrary URLs if they are permitted or not."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"d04a6d41480c4396af16b5d2b25509ec.html","previousTopicHref":"91f0bd316f4d1014b6dd926db0e91070.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loio91f3768f6f4d1014b6dd926db0e91070"><h1 class="title topictitle1" hidden>URL Whitelist Filtering</h1><div class="body"><p class="shortdesc" hidden>The <span class="ph"><span class="ph pname">SAPUI5</span></span> framework
+provides a client-side API to manage a white list for URLs. This whitelist can be used to
+validate arbitrary URLs if they are permitted or not.</p>
+<p class="p">Internal examples of
+how controls can use this feature are those controls which accept arbitrary HTML content
+like the <samp class="ph codeph">sap.ui.richttexteditor.RichTextEditor</samp> and the
+<samp class="ph codeph">sap.ui.core.HTML</samp>. These controls use the URL white list when a
+check (sanitization) is performed on the content. URLs inside their content are then
+automatically removed, except if they are listed in the URL whitelist. The option to
+sanitize the value can be enabled or disabled in the respective control properly via the
+<samp class="ph codeph">RichTextEditor.sanitizeValue</samp> or the
+<samp class="ph codeph">HTML.sanitizeContent</samp> property. For the HTML control it is disabled
+by default whereas for the RichTextEditor the sanitize option is enabled. When adding a
+path to the white list be aware to add a <span class="q">&#x201C;/&#x201D;</span> at the start of the path if necessary,
+so <span class="q">&#x201C;/index.epx&#x201D;</span> would be the correct entry instead of <span class="q">&#x201C;index.epx&#x201D;</span>. The last
+example below shows this.</p>
+<div class="section" id="loio91f3768f6f4d1014b6dd926db0e91070__section_16EB929B857E45C2B245F2E97E9E5E8D"><section class="section" type="Maintaining the URL Whitelist"><h2 class="section_title" style="font-size: 1.15em;">Maintaining the URL Whitelist</h2>
+
+<p class="p">The whitelist can be maintained with the following API: </p>
+<ul class="ul">
+<li class="li">
+<p class="p">
+<samp class="ph codeph">jQuery.sap.addUrlWhitelist</samp>
+</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">jQuery.sap.clearUrlWhitelist</samp>
+</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">jQuery.sap.getUrlWhitelist</samp>
+</p>
+</li>
+<li class="li">
+<p class="p">
+<samp class="ph codeph">jQuery.sap.removeUrlWhitelist</samp>
+</p>
+</li>
+</ul>
+<p class="p">Here is an example how valid URLs can be added to the white list: </p>
+<pre class="pre codeblock prettyprint lang-js">// jQuery.sap.addUrlWhitelist(/* protocol */ undefined, /* host */ undefined, /* port */ undefined, /* path */ undefined);
+
+
+jQuery.sap.addUrlWhitelist(undefined, &quot;www.sap.com&quot;);
+
+jQuery.sap.addUrlWhitelist(&quot;https&quot;, &quot;sdn.sap.com&quot;);
+
+jQuery.sap.addUrlWhitelist(undefined, &quot;sap.de&quot;, &quot;1080&quot;);</pre>
+</section></div>
+<div class="section" id="loio91f3768f6f4d1014b6dd926db0e91070__section_D3F15D5E106B41C0A037A91D5EAD13DC"><section class="section" type="Validating a URL"><h2 class="section_title" style="font-size: 1.15em;">Validating a URL</h2>
+
+<p class="p">A URL can be validated by using the following API:
+<samp class="ph codeph">jQuerysapvalidateUrl</samp>. </p>
+<p class="p">Here is an example how a given URL is validated against the before maintained white
+list: </p>
+<pre class="pre codeblock prettyprint lang-js">jQuery.sap.validateUrl(&quot;http://www.sap.com&quot;); // =&gt; true
+
+jQuery.sap.validateUrl(&quot;http://sdn.sap.com&quot;); // =&gt; false (wrong protocol)
+
+jQuery.sap.validateUrl(&quot;https://sdn.sap.com&quot;); // =&gt; true
+
+jQuery.sap.validateUrl(&quot;ftp://sap.de:1080/anyftpfolder&quot;); // =&gt; true</pre>
+<p class="p">If no whitelist is maintained the URL validity check also basically checks the URL
+for being defined in a valid format. </p>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

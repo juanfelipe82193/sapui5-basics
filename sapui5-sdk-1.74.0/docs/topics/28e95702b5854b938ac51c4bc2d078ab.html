@@ -1,0 +1,216 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Example: Adding Columns to a Responsive Table in the List Report</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="For responsive tables, you have to implement two extension points to add a custom column."><meta name="description" content="For responsive tables, you have to implement two extension points to add a custom column."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"a12ad6058db84e8cb60a3a9b2ade63fb.html","previousTopicHref":"382a6c39fd494c12a4ee23c8659909bd.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page task  - topic-topic task-task " id="loio28e95702b5854b938ac51c4bc2d078ab"><h1 class="title topictitle1" hidden>Example: Adding Columns to a Responsive Table in the List Report</h1><div class="body taskbody"><p class="shortdesc" hidden>For responsive tables, you have to implement two extension points to add a custom
+column.</p>
+<div class="section context"><span id="steps" class="anchor"></span><div class="tasklabel"><h2 class="sectiontitle tasklabel">Context</h2></div>
+<aside class="note caution" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Caution</strong></div>
+<p>Use app extensions with caution and only if you
+cannot produce the required behavior by other means, such as manifest settings or
+annotations. To correctly integrate your app extension coding with SAP Fiori elements,
+use only the extensionAPI of SAP Fiori elements. For more information, see <a class="xref" href="../../#/topic/bd2994b69ef542998becbc69ab093f7e.html" title="This API consists of several elements that are described below. It can be used for the analytical list page, list report, and object page." target="_top">Using the ExtensionAPI</a>. </p><p class="p">After you&apos;ve created an app
+extension, its display (for example, control placing, CSS) and system behavior (for
+example, model and binding usage, busy handling) of the app extension lies within
+the application&apos;s responsibility. SAP Fiori elements provides support only for the
+official extensionAPI functions. Don&apos;t access or manipulate SAP Fiori elements&apos;
+internal coding.</p></aside>
+<p class="p">For information about the configuration options and examples for defining custom
+columns in smart tables, see <a class="xref" href="../../#/topic/bed8274140d04fc0b9bcb2db42d8bac2.html#loiobed8274140d04fc0b9bcb2db42d8bac2" title="The sap.ui.comp.smarttable.SmartTable control is used to create different types of tables based on OData metadata. The control allows the user to define personalized table settings." target="_top">Smart Table</a>.</p>
+<p class="p">The table containing additional custom columns can look like this:</p>
+<div class="fig fignone" id="loio28e95702b5854b938ac51c4bc2d078ab__fig_hj4_mw3_rz"><div class="figbody">
+
+<img class="inline  " id="loio28e95702b5854b938ac51c4bc2d078ab__image_iyk_qw3_rz" src="loio4efc171e219c4390b1d87604bd0e9cfe_LowRes.png">
+</div><span class="figcap">Custom columns in responsive table</span></div>
+</div>
+<section class="section procedure"><span id="steps" class="anchor"></span><div class="ol steps tasklabel"><h2 class="sectiontitle tasklabel">Procedure</h2></div><ol class="ol steps"><li class="li step stepexpand">
+<span class="ph cmd">Define a fragment for the view extension.</span>
+<div class="itemgroup info">
+<p class="p">For a custom column in a responsive table, you have to implement two
+extensions. First, implement the definition of the custom columns, then,
+implement the content of the custom columns.</p>
+<p class="p">You can change the sequence of the columns via the
+<span class="ph sap-technical-name sap-technical-name">customData</span> property
+<span class="ph sap-technical-name sap-technical-name">columnIndex</span>, as shown in the
+sample code below. </p>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">If the content of your custom column refers to a property (such
+as<samp class="ph codeph">{Price}</samp>), you need to include a corresponding
+<samp class="ph codeph">&quot;leadingProperty&quot;</samp> entry in the <samp class="ph codeph">CustomData</samp> of
+the column definition.</p></aside>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&lt;core:FragmentDefinition xmlns:core=&quot;sap.ui.core&quot;
+       xmlns=&quot;sap.m&quot;&gt;
+       &lt;Column&gt;
+              &lt;Text text=&quot;{i18n|sap.suite.ui.generic.template.ListReport|STTA_C_MP_Product&gt;xfld.Rating}&quot; /&gt;
+              &lt;customData&gt;
+                     &lt;core:CustomData key=&quot;p13nData&quot;
+                            value=&apos;\{&quot;columnKey&quot;: &quot;Rating&quot;, &quot;leadingProperty&quot;:&quot;Price&quot;, &quot;columnIndex&quot; : &quot;100&quot;}&apos; /&gt;
+              &lt;/customData&gt;
+       &lt;/Column&gt;
+       &lt;Column&gt;
+              &lt;Text text=&quot;{i18n|sap.suite.ui.generic.template.ListReport|STTA_C_MP_Product&gt;xfld.BreakoutColumn}&quot; /&gt;
+              &lt;customData&gt;
+                     &lt;core:CustomData key=&quot;p13nData&quot;
+                            value=&apos;\{&quot;columnKey&quot;: &quot;Test&quot;, &quot;columnIndex&quot; : &quot;101&quot;}&apos; /&gt;
+              &lt;/customData&gt;
+       &lt;/Column&gt;
+&lt;/core:FragmentDefinition&gt;
+</pre></aside>
+<p class="p">In the example project
+webapp/ext/fragments/ListReportResponsiveTableColumns.fragment.xml, enter
+the following:</p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&lt;core:FragmentDefinition xmlns:core=&quot;sap.ui.core&quot; xmlns=&quot;sap.m&quot;&gt;
+       &lt;RatingIndicator value=&quot;{= ${Price} &gt; 500 ? 1:5}&quot;&gt;&lt;/RatingIndicator&gt;
+       &lt;Text text=&quot;{i18n|sap.suite.ui.generic.template.ListReport|STTA_C_MP_Product&gt;xfld.BreakoutColumnContent}&quot;&gt;&lt;/Text&gt;
+&lt;/core:FragmentDefinition&gt;
+</pre></aside>
+</div>
+</li><li class="li step stepexpand">
+<span class="ph cmd">Register your view extensions in the manifest.json file of your application, as
+follows:</span>
+<div class="itemgroup info">
+<div class="p">
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_4_title"><div class="title" id="note_4_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">...
+ &quot;extends&quot;: {
+      &quot;extensions&quot;: {
+        &quot;sap.ui.viewExtensions&quot;: {
+          &quot;sap.suite.ui.generic.template.ListReport.view.ListReport&quot;: { 
+            &quot;ResponsiveTableColumnsExtension|STTA_C_MP_Product&quot;: {
+                  &quot;className&quot;: &quot;sap.ui.core.Fragment&quot;,
+                  &quot;fragmentName&quot;: &quot;STTA_MP.ext.fragments.ListReportResponsiveTableColumns&quot;,
+                  &quot;type&quot;: &quot;XML&quot;
+            },
+            &quot;ResponsiveTableCellsExtension|STTA_C_MP_Product&quot;: {
+                  &quot;className&quot;: &quot;sap.ui.core.Fragment&quot;,
+                  &quot;fragmentName&quot;: &quot;STTA_MP.ext.fragments.ListReportResponsiveTableCells&quot;,
+                  &quot;type&quot;: &quot;XML&quot;
+            },...
+</pre></aside>
+</div>
+</div>
+<div class="itemgroup info">
+<div class="p">If you use <span class="ph sap-technical-name sap-technical-name">QuickVariantSelectionX</span>,
+you need to define the extensions per tab. In this case, the names of the
+extension points
+are<span class="ph sap-technical-name sap-technical-name">ResponsiveTableColumnExtension|&lt;EntitySet&gt;|&lt;tabKey&gt;</span>
+and
+<span class="ph sap-technical-name sap-technical-name">ResponsiveTableCellsExtensions|&lt;EntitySet&gt;|&lt;tabKey&gt;</span>,
+respectively. <span class="ph sap-technical-name sap-technical-name">&lt;tabKey&gt;</span> is the
+key provided when defining the
+<span class="ph sap-technical-name sap-technical-name">QuickVariantSelectionX</span>. See
+also <a class="xref" href="../../#/topic/37aeed74e17a42caa2cba3123f0c15fc.html" title="You can define multiple views of a table and display them in multiple table mode. In addition to tables, you can display charts in the views. Users can switch between views using an icon tab bar." target="_top">Defining Multiple Views on a List Report Table - Multiple Table Mode</a>. <aside class="note" aria-labelledby="note_5_title"><div class="title" id="note_5_title"><strong>Note</strong></div>
+<p>If you do
+not use |&lt;tab key&gt; as part of the extension point name, for
+compatibility reasons, the feature will also work. However, you cannot
+provide stable IDs for the columns and cells. </p></aside></div>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_6_title"><div class="title" id="note_6_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">...
+&quot;extends&quot;: {
+  &quot;extensions&quot;: {
+    &quot;sap.ui.viewExtensions&quot;: {
+     &quot;sap.suite.ui.generic.template.ListReport.view.ListReport&quot;: { 
+        &quot;ResponsiveTableColumnsExtension|STTA_C_MP_Product|Expensive&quot;: {
+          &quot;className&quot;: &quot;sap.ui.core.Fragment&quot;,
+         &quot;fragmentName&quot;: &quot;STTA_MP.ext.fragments.ListReportResponsiveTableColumnsExpensive&quot;,
+          &quot;type&quot;: &quot;XML&quot;
+        },
+        &quot;ResponsiveTableCellsExtension|STTA_C_MP_Product|Expensive&quot;: {
+          &quot;className&quot;: &quot;sap.ui.core.Fragment&quot;,
+          &quot;fragmentName&quot;: &quot;STTA_MP.ext.fragments.ListReportResponsiveTableCellsExpensive&quot;,
+          &quot;type&quot;: &quot;XML&quot;
+        },
+        &quot;ResponsiveTableColumnsExtension|STTA_C_MP_Product|Cheap&quot;: {
+          &quot;className&quot;: &quot;sap.ui.core.Fragment&quot;,
+         &quot;fragmentName&quot;: &quot;STTA_MP.ext.fragments.ListReportResponsiveTableColumnsCheap&quot;,
+          &quot;type&quot;: &quot;XML&quot;
+        },
+        &quot;ResponsiveTableCellsExtension|STTA_C_MP_Product|Cheap&quot;: {
+          &quot;className&quot;: &quot;sap.ui.core.Fragment&quot;,
+          &quot;fragmentName&quot;: &quot;STTA_MP.ext.fragments.ListReportResponsiveTableCellsCheap&quot;,
+          &quot;type&quot;: &quot;XML&quot;
+        },...
+</pre></aside>
+</div>
+</li></ol></section>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

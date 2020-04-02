@@ -1,0 +1,337 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Defining Control Properties</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content><meta name="description" content><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"91f0a8dc6f4d1014b6dd926db0e91070.html","previousTopicHref":"91f29fea6f4d1014b6dd926db0e91070.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loioac56d92162ed47ff858fdf1ce26c18c4"><h1 class="title topictitle1" hidden>Defining Control Properties</h1><div class="body"><p class="shortdesc" hidden></p>
+<p class="p">Control properties are defined as follows:</p>
+<pre class="pre codeblock prettyprint lang-js">properties: {
+   &quot;title&quot; : &quot;string&quot;,                         // a simple string property, default value is undefined
+   &quot;buttonText&quot; : {defaultValue: &quot;Search&quot;},    // when no type is given, the type is string
+   &quot;showLogoutButton&quot; : {type : &quot;boolean&quot;, defaultValue : true},   // a boolean property where a default value is given
+   &quot;width&quot; : {type : &quot;sap.ui.core.CSSSize&quot;, defaultValue : &quot;50px&quot;} // a CSS size property where a default value is given
+}</pre>
+<p class="p">After the property is defined, the control automatically has the
+<samp class="ph codeph">setShowLogoutButton</samp> and <samp class="ph codeph">getShowLogoutButton</samp>
+methods for storing data. It is possible to assign custom definitions to these methods
+by overriding them and calling the generic property methods <samp class="ph codeph">setProperty</samp>
+and <samp class="ph codeph">getProperty</samp>:</p>
+<pre class="pre codeblock prettyprint lang-js">MyControl.prototype.setShowLogoutButton = function(show) {
+	// &#x2026;here anything in addition to the default handling can be done&#x2026;
+	// then do the default handling:
+	this.setProperty(&quot;showLogoutButton&quot;, show); // this validates and stores the new value
+	return this; // return &quot;this&quot; to allow method chaining
+};
+</pre>
+<div class="section"><section class="section" type="Allowed Property Types"><h2 class="section_title" style="font-size: 1.15em;">Allowed Property Types</h2>
+
+<div class="p">
+<div class="table-wrapper tablenoborder"><table summary id="loioac56d92162ed47ff858fdf1ce26c18c4__table_gkp_kb2_2y" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Built-in Types</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d454821e65">
+<p class="p">Type</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d454821e71">
+<p class="p">Description</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d454821e65 ">
+<p class="p"><samp class="ph codeph">boolean</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d454821e71 ">
+<p class="p">Can either be <samp class="ph codeph">true</samp> or
+<samp class="ph codeph">false</samp>. Properties of that type should not
+be set to <samp class="ph codeph">undefined</samp> or
+<samp class="ph codeph">null</samp>. The default value is
+<samp class="ph codeph">false</samp>.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d454821e65 ">
+<p class="p"><samp class="ph codeph">int</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d454821e71 ">
+<p class="p">JavaScript primitive values of type <samp class="ph codeph">number</samp>
+and that don&#x2019;t have a fractional part. To keep the
+implementation efficient, the constraint is not enforced.
+Declaring a property as type <samp class="ph codeph">int</samp> is rather
+for information reasons. The corresponding object expects
+any given value to be an integer value. The default value of
+the type is the number <samp class="ph codeph">0</samp>.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d454821e65 ">
+<p class="p"><samp class="ph codeph">float</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d454821e71 ">
+<p class="p">JavaScript primitive values of type <samp class="ph codeph">number</samp>
+that can have a fractional part. It is named
+<samp class="ph codeph">float</samp> instead of
+<samp class="ph codeph">number</samp> to differentiate it from type
+<samp class="ph codeph">int</samp> . The default value is the number
+<samp class="ph codeph">0</samp>. </p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d454821e65 ">
+<p class="p"><samp class="ph codeph">string</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d454821e71 ">
+<p class="p">JavaScript string literal (<samp class="ph codeph">typeof value ===
+&#x201A;string&#x2019;</samp>) or a <samp class="ph codeph">String</samp> object
+(<samp class="ph codeph">value instanceof String</samp>). The default
+value is an empty string.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d454821e65 ">
+<p class="p"><samp class="ph codeph">object</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d454821e71 ">
+<p class="p">Plain JavaScript object (an object whose constructor is
+<samp class="ph codeph">Object</samp>). Most of the time, other
+objects are accepted as well, but deserializers (e.g. for
+XML views) will try to convert the object from or to a JSON
+string. The default value is <samp class="ph codeph">null</samp>.</p>
+<p class="p">Don&apos;t mix this type up with the <samp class="ph codeph">any</samp> type!
+(Sorry, we maybe should have named it
+&#x201E;<samp class="ph codeph">serializable</samp>&#x201C; or
+&#x201E;<samp class="ph codeph">JSON</samp>&#x201C; or something like that, to make
+this more clear...).</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d454821e65 ">
+<p class="p"><samp class="ph codeph">any</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d454821e71 ">
+<p class="p">Any valid Javascript value (including primitives, objects,
+functions, regular expressions, and native objects). The
+support in serialized formats is quite limited. Valid JSON
+strings will be deserialized to an object. The default value
+is <samp class="ph codeph">null</samp>.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d454821e65 ">
+<p class="p"><samp class="ph codeph">function</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d454821e71 ">
+<p class="p">Can be any JavaScript function. Note that properties of this
+type currently can&apos;t be used in serialized formats like
+XMLViews. If an XMLView needs to set a value for a control
+property of type function, it has to set the value in its
+controller code (e.g. in the <samp class="ph codeph">onInit</samp>
+hook).</p>
+</td>
+</tr>
+</tbody></table></div>
+<div class="table-wrapper tablenoborder"><table summary id="loioac56d92162ed47ff858fdf1ce26c18c4__table_lbg_fc2_2y" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Derived Types</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d454821e284">
+<p class="p">Category</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d454821e290">
+<p class="p">Description</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d454821e284 ">
+<p class="p">regular expression (RegExp)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d454821e290 ">
+<p class="p">Derived from the built-in type <samp class="ph codeph">string</samp>.</p>
+<p class="p">Restricted subtypes that limit their valid values to strings
+that match a given regular expression.</p>
+<p class="p"><samp class="ph codeph">RegExp</samp> types can only be defined by calling
+the <samp class="ph codeph">DataType.createType()</samp> method.</p>
+<div class="p">Example:<pre class="pre codeblock prettyprint">var fooType = DataType.createType(&apos;foo&apos;, {
+    isValid : function(vValue) {
+        return /^(foo(bar)?)$/.test(vValue);
+    }
+}, DataType.getType(&apos;string&apos;));
+</pre></div>
+<p class="p">If <samp class="ph codeph">mSettings</samp> contains an implementation for
+<samp class="ph codeph">isValid</samp>, then the validity check of the
+newly created type will first execute the check of the base
+type and then call the given <samp class="ph codeph">isValid</samp>
+function.</p>
+<p class="p"><span class="ph">For more information, see the <a class="xref" href="../../#/api/sap.ui.base.DataType" target="_top" alt="#/api/sap.ui.base.DataType" title="#/api/sap.ui.base.DataType">API
+Reference</a>.</span>
+</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d454821e284 ">
+<p class="p">enumeration (enum)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d454821e290 ">
+<p class="p">Derived from the built-in type <samp class="ph codeph">string</samp>.</p>
+<p class="p">Restricted subtypes can be derived that limit their valid
+values to a fixed set of values (enumeration). An
+<samp class="ph codeph">enum</samp> type is defined through an object
+literal whose keys represent the allowed values.</p>
+<div class="p">Restrictions:<ul class="ul" id="loioac56d92162ed47ff858fdf1ce26c18c4__ul_yvw_l1w_k1b">
+<li class="li">
+<p class="p"> The value for each key must be a string literal,
+equal to the key itself.</p>
+</li>
+<li class="li">
+<p class="p">Renamings or aliases are not supported and only
+keys and values of type <samp class="ph codeph">string</samp>
+are supported.</p>
+</li>
+</ul>This was an early design decision in <span class="ph"><span class="ph pname">SAPUI5</span></span> and framework code relies on it. That code might fail for
+enumerations that don&#x2019;t obey these restrictions.</div>
+<p class="p">To reference an <samp class="ph codeph">enum</samp> type in a property
+definition, its global name must be used (like
+<samp class="ph codeph">sap.m.ValueColor</samp> in the example
+below).</p>
+<p class="p">.</p>
+<p class="p">Example:</p>
+<pre class="pre codeblock prettyprint lang-js">/**
+* Enumeration of possible value color settings.
+*
+* @enum {string}
+* @public
+*/
+sap.m.ValueColor = {
+
+	/**
+	* Neutral value color.
+	* @public
+	*/
+	Neutral : &quot;Neutral&quot;,
+
+	[&#x2026;]
+};
+</pre>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d454821e284 ">
+<p class="p">array</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d454821e290 ">
+<div class="p">You don&apos;t have to define array types before using an array.
+From each valid type above, an array type with one or more
+dimensions can be derived by simply appending a pair of
+square brackets (<samp class="ph codeph">[]</samp>) for each dimension,
+for example:<ul class="ul" id="loioac56d92162ed47ff858fdf1ce26c18c4__ul_qxj_pn2_2y">
+<li class="li">
+<p class="p"><samp class="ph codeph">int[]</samp> is a one-dimensional array
+of integers</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">int[][]</samp> is a two-dimensional
+array of integers (or more precisely an array of
+integer arrays) </p>
+</li>
+</ul>The type of an element in an array is called the
+component type (<samp class="ph codeph">int</samp> in the first example,
+<samp class="ph codeph">int[]</samp> in the second).</div>
+<p class="p">The <samp class="ph codeph">DataType</samp> object for an array type has a
+method <samp class="ph codeph">getComponentType</samp> to retrieve the
+component <samp class="ph codeph">type</samp>. For non-array types, this
+method returns <samp class="ph codeph">null</samp>.</p>
+<p class="p">The default value for any array type is the empty array.</p>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+</section></div>
+<div class="section"><section class="section" type="Runtime Behavior and API of Property Types"><h2 class="section_title" style="font-size: 1.15em;">Runtime Behavior and API of Property Types</h2>
+
+<p class="p">At runtime, each type is represented as instance of the class
+<samp class="ph codeph">DataType</samp> (<samp class="ph codeph">sap/ui/base/DataType.js</samp>). A type can
+be looked up by its name by calling <samp class="ph codeph">DataType.getType(name)</samp>. The
+framework treats all values for the above types as if they would be atomic. Changes
+inside a value (e.g. changing the property of a value of type
+<samp class="ph codeph">object</samp> or adding, removing, or changing members of an array)
+are not detected by the framework and might lead to unexpected results. Instead, any
+change should be applied by setting a new (or modified) value with a call like
+<samp class="ph codeph">setText</samp>, <samp class="ph codeph">setCaption</samp>,
+<samp class="ph codeph">setColor</samp>. </p>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/api/sap.ui.base.DataType" target="_top" alt="#/api/sap.ui.base.DataType" title="#/api/sap.ui.base.DataType">API Reference: <samp class="ph codeph">sap.ui.base.DataType</samp></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

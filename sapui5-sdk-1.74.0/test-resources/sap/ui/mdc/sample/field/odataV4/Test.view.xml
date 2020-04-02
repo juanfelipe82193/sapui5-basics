@@ -1,0 +1,600 @@
+<mvc:View height="100%" controllerName="sap.ui.mdc.sample.field.odataV4.Test"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:m="sap.m"
+	xmlns:mdc="sap.ui.mdc"
+	xmlns:mdcField="sap.ui.mdc.field"
+	xmlns:l="sap.ui.layout"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:c="sap.ui.core"
+	xmlns:legend="sap.ui.core.feature.legend"
+	xmlns:custom="sap.ui.mdc.sample.field.lib">
+
+	<m:App id="MyApp" defaultTransitionName="show">
+		<m:Page id="P0" title="Simple Fields" titleLevel="H1">
+			<form:SimpleForm layout="ResponsiveGridLayout" editable="true"
+				labelSpanXL="5" labelSpanL="5" labelSpanM="4" columnsXL="3" columnsL="2" columnsM="1"
+				singleContainerFullSize="false" adjustLabelSpan="false">
+				<c:Title text="normal Fields"></c:Title>
+
+				<m:Label text="A simple Field"></m:Label>
+				<mdc:Field id="F1" value="{Name}" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<m:Label text="A simple Field in display mode"></m:Label>
+				<mdc:Field id="F2" value="{Name}" editMode="Display" display="ValueDescription" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<m:Label text="A required Field"></m:Label>
+				<mdc:Field id="F4" required="true" placeholder="placeholder" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<m:Label text="A readonly Field"></m:Label>
+				<mdc:Field id="F5" value="{Name}" editMode="ReadOnly" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<m:Label text="A disabled Field"></m:Label>
+				<mdc:Field id="F6" value="{Name}" editMode="Disabled" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<m:Label text="display only with additionalValue"></m:Label>
+				<mdc:Field id="F7a" value="{ProductId}" additionalValue="{Name}" display="ValueDescription" editMode="Display" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<m:Label text="Toggle Display mode"></m:Label>
+				<mdc:Field id="F11" value="{Name}" editMode="Display" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+				<m:ToggleButton text="Display" pressed="true" press="toggleDisplay"></m:ToggleButton>
+
+				<m:Label text="A multi line Field in display mode"></m:Label>
+				<mdc:Field id="F17" value="{Description}" editMode="Display" multipleLines="true" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<m:Label text="A multi line Field in edit mode"></m:Label>
+				<mdc:Field id="F18" value="{Description}" editMode="Editable" multipleLines="true" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<m:Label text="Field with error"></m:Label>
+				<mdc:Field id="F19" value="{Name}" valueState="Error" valueStateText="error text" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<m:Label text="Field with text alignment End"></m:Label>
+				<mdc:Field id="F20" value="{Name}" textAlign="End" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<m:Label text="Field with text direction RTL"></m:Label>
+				<mdc:Field id="F21" value="{Name}" textDirection="RTL" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<c:Title text="Fields with content controls"></c:Title>
+
+				<m:Label text="Slider"></m:Label>
+				<mdc:Field id="F3" value="{Quantity}" change="handleChange" liveChange="handleLiveChange" dataType="Edm.Float">
+					<m:Slider value="{path: '$field>/conditions', type: 'sap.ui.mdc.field.ConditionsType'}"/>
+				</mdc:Field>
+
+				<m:Label text="display only with additionalValue"></m:Label>
+				<mdc:Field id="F7" value="{Name}" additionalValue="{ProductId}" display="ValueDescription" editMode="Display" change="handleChange" liveChange="handleLiveChange">
+					<m:Text text="{path: '$field>/conditions', type: 'sap.ui.mdc.field.ConditionsType'}" />
+				</mdc:Field>
+
+				<m:Label text="Link"></m:Label>
+				<mdc:Field id="F12" value="Url" additionalValue="{= '../../../../../../../' + ${ProductPicUrl}}" editMode="Display" change="handleChange" liveChange="handleLiveChange" press="handlePress">
+					<m:Link text="{path: '$field>/conditions', type: 'sap.ui.mdc.field.ConditionsType'}" href="{path:'$field>/additionalValue', type:'sap.ui.model.type.String'}" />
+				</mdc:Field>
+
+				<c:Title text="different types"></c:Title>
+
+				<m:Label text="type date"></m:Label>
+				<mdc:Field id="F8" value="{Date}" dataType="Edm.Date" dataTypeFormatOptions="{style: 'short'}" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+
+				<m:Label text="type date in display mode"></m:Label>
+				<mdc:Field id="F9" value="{Date}" dataType="Edm.Date" dataTypeFormatOptions="{style: 'short'}" editMode="Display" change="handleChange"></mdc:Field>
+
+				<m:Label text="type dateTime"></m:Label>
+				<mdc:Field id="F10" value="{DateTime}" dataType="Edm.DateTimeOffset" dataTypeFormatOptions="{style: 'short'}" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+				<mdc:Field id="F10a" value="{path: 'DateTime', type: 'sap.ui.model.odata.type.DateTime'}" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<m:Label text="type dateTime in display mode"></m:Label>
+				<mdc:Field id="F13" value="{DateTime}" dataType="Edm.DateTimeOffset" dataTypeFormatOptions="{style: 'short'}" editMode="Display" change="handleChange"></mdc:Field>
+
+				<m:Label text="type Time"></m:Label>
+				<mdc:Field id="F14" value="{path:'Time', type:'sap.ui.model.odata.type.TimeOfDay', formatOptions: {style: 'short'}, targetType: 'string'}" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<m:Label text="type Time in display mode"></m:Label>
+				<mdc:Field id="F15" value="{path:'Time', type:'sap.ui.model.odata.type.TimeOfDay', formatOptions: {style: 'short'}, targetType: 'string'}" editMode="Display" change="handleChange"></mdc:Field>
+
+				<m:Label text="Link"></m:Label>
+				<mdc:Field id="F16" value="SAP" additionalValue="http://www.sap.com" dataType="Link" editMode="Display" press="handlePress"></mdc:Field>
+
+				<m:Label text="type Boolean"></m:Label>
+				<mdc:Field id="F22" value="{Important}" dataType="Edm.Boolean" display="Description" change="handleChange" liveChange="handleLiveChange"></mdc:Field>
+
+				<m:Label text="type Boolean in display mode"></m:Label>
+				<mdc:Field id="F23" value="{Important}" dataType="Edm.Boolean" display="Description" editMode="Display" change="handleChange"></mdc:Field>
+
+			</form:SimpleForm>
+			<m:footer>
+				<m:Bar>
+					<m:contentLeft>
+						<c:Icon id="MyIcon"></c:Icon>
+						<m:Text id="MyText" text="Event" width="400px" wrapping="false"></m:Text>
+					</m:contentLeft>
+					<m:contentMiddle>
+						<m:SegmentedButton selectedKey="P0" width="320px" select="handleButton">
+							<m:items>
+								<m:SegmentedButtonItem key="P0" text="Simple"></m:SegmentedButtonItem>
+								<m:SegmentedButtonItem key="P1" text="FieldHelp"></m:SegmentedButtonItem>
+								<m:SegmentedButtonItem key="P2" text="FieldInfo"></m:SegmentedButtonItem>
+								<m:SegmentedButtonItem key="P3" text="Table"></m:SegmentedButtonItem>
+							</m:items>
+						</m:SegmentedButton>
+					</m:contentMiddle>
+					<m:contentRight>
+						<c:Icon id="MyIconRight"></c:Icon>
+						<m:Text id="MyTextRight" text="LiveChange" width="400px" wrapping="false"></m:Text>
+					</m:contentRight>
+				</m:Bar>
+			</m:footer>
+		</m:Page>
+		<m:Page id="P1" title="FieldHelp Fields" titleLevel="H1">
+			<form:SimpleForm layout="ResponsiveGridLayout" editable="true"
+				labelSpanXL="5" labelSpanL="5" labelSpanM="4" columnsXL="3" columnsL="2" columnsM="1"
+				singleContainerFullSize="false" adjustLabelSpan="false">
+				<c:Title text="standard help"></c:Title>
+
+				<m:Label text="Base fieldHelp"></m:Label>
+				<mdc:Field id="F2-1" value="{SupplierName}" change="handleChange" liveChange="handleLiveChange" fieldHelp="F2-1-H">
+					<mdc:dependents>
+						<mdcField:FieldHelpBase id="F2-1-H"></mdcField:FieldHelpBase>
+					</mdc:dependents>
+				</mdc:Field>
+
+				<c:Title text="custom help"></c:Title>
+				<m:Label text="using SampleFieldHelp"></m:Label>
+				<mdc:Field id="F2-2" value="{SupplierName}" change="handleChange" liveChange="handleLiveChange" fieldHelp="F2-2-H">
+					<mdc:dependents>
+						<custom:SampleFieldHelp id="F2-2-H">
+							<c:Item id="I1" text="Item 1" key="I1"></c:Item>
+							<c:Item id="I2" text="Item 2" key="I2"></c:Item>
+							<c:Item id="I3" text="Item 3" key="I3"></c:Item>
+						</custom:SampleFieldHelp>
+					</mdc:dependents>
+				</mdc:Field>
+
+				<m:Label text="using CustomFieldHelp"></m:Label>
+				<mdc:Field id="F2-3" value="{Category}" change="handleChange" liveChange="handleLiveChange" fieldHelp="F2-3-H">
+					<mdc:dependents>
+						<mdcField:CustomFieldHelp id="F2-3-H" beforeOpen="handleBeforeOpen">
+							<m:HBox>
+								<m:Button id="B1" icon="sap-icon://wrench" press="handleIconPress"/>
+								<m:Button id="B2" icon="sap-icon://lightbulb" press="handleIconPress"/>
+								<m:Button id="B3" icon="sap-icon://camera" press="handleIconPress"/>
+								<m:Button id="B4" icon="sap-icon://umbrella" press="handleIconPress"/>
+							</m:HBox>
+						</mdcField:CustomFieldHelp>
+					</mdc:dependents>
+				</mdc:Field>
+
+				<c:Title text="list help"></c:Title>
+				<m:Label text="using ListFieldHelp"></m:Label>
+				<mdc:Field id="F2-4" value="870394932" display="Description" change="handleChange" liveChange="handleLiveChange" fieldHelp="F2-4-H">
+					<mdc:dependents>
+						<mdcField:ListFieldHelp id="F2-4-H"
+								items="{path: '/ProductCollection'}" >
+							<c:ListItem text="{Name}" additionalText="{ProductId}" key="{ProductId}" icon="{= '../../../../../../../' + ${ProductPicUrl}}"/>
+						</mdcField:ListFieldHelp>
+					</mdc:dependents>
+				</mdc:Field>
+				<m:Label text="using the same ListFieldHelp"></m:Label>
+				<mdc:Field id="F2-4a" value="22134T" display="Description" change="handleChange" liveChange="handleLiveChange" fieldHelp="F2-4-H"></mdc:Field>
+
+				<c:Title text="table help"></c:Title>
+				<m:Label text="default implementation of FieldValueHelp without dialog"></m:Label>
+				<mdc:Field id="F2-6" value="870394932" display="Description" change="handleChange" liveChange="handleLiveChange" fieldHelp="F2-6-H">
+					<mdc:dependents>
+						<mdcField:FieldValueHelp id="F2-6-H"
+							noDialog="true"
+							filterFields="*ProductId,Name*"
+							keyPath="ProductId"
+							descriptionPath="Name">
+							<mdcField:FieldValueHelpMTableWrapper id="F2-6-H-W">
+								<m:Table items="{path: '/ProductCollection'}" width="30rem">
+									<m:columns>
+										<m:Column>
+											<m:Label text="Product ID"></m:Label>
+										</m:Column>
+										<m:Column width="10rem">
+											<m:Label text="Product Name"></m:Label>
+										</m:Column>
+										<m:Column width="10rem">
+											<m:Label text="Description"></m:Label>
+										</m:Column>
+									</m:columns>
+									<m:items>
+										<m:ColumnListItem type="Active">
+											<m:Text text="{ProductId}"></m:Text>
+											<m:Text text="{Name}"></m:Text>
+											<m:Text text="{Description}"></m:Text>
+										</m:ColumnListItem>
+									</m:items>
+								</m:Table>
+							</mdcField:FieldValueHelpMTableWrapper>
+						</mdcField:FieldValueHelp>
+					</mdc:dependents>
+				</mdc:Field>
+
+				<m:Label text="using the same FieldValueHelp"></m:Label>
+				<mdc:Field id="F2-6a" value="22134T" display="Description" change="handleChange" liveChange="handleLiveChange" fieldHelp="F2-6-H"></mdc:Field>
+
+				<c:Title text="ValueHelp"></c:Title>
+				<m:Label text="using FieldValueHelp"></m:Label>
+				<mdc:Field
+					id="F2-7"
+					value="870394932"
+					display="Description"
+					change="handleChange"
+					liveChange="handleLiveChange"
+					fieldHelp="FVH1">
+					<mdc:dependents>
+							<mdcField:FieldValueHelp id="FVH1"
+								title="Product"
+								filterFields="*ProductId,Name*"
+								keyPath="ProductId"
+								descriptionPath="Name">
+								<mdcField:FieldValueHelpMTableWrapper id="FVH1-W">
+									<m:Table items="{path: '/ProductCollection'}" width="26rem">
+										<m:columns>
+											<m:Column>
+												<m:Label text="Product Id"></m:Label>
+											</m:Column>
+											<m:Column width="10rem">
+												<m:Label text="Product Name"></m:Label>
+											</m:Column>
+											<m:Column width="2rem">
+												<m:Label text="Icon"></m:Label>
+											</m:Column>
+										</m:columns>
+										<m:items>
+											<m:ColumnListItem type="Active">
+												<m:Text text="{ProductId}"></m:Text>
+												<m:Text text="{Name}"></m:Text>
+												<m:Image src="{= '../../../../../../../' + ${ProductPicUrl}}" height="1rem"></m:Image>
+											</m:ColumnListItem>
+										</m:items>
+									</m:Table>
+								</mdcField:FieldValueHelpMTableWrapper>
+							</mdcField:FieldValueHelp>
+					</mdc:dependents>
+				</mdc:Field>
+				<m:Label text="using the same FieldValueHelp"></m:Label>
+				<mdc:Field
+					id="F2-7a"
+					value="22134T"
+					display="Description"
+					change="handleChange"
+					liveChange="handleLiveChange"
+					fieldHelp="FVH1">
+				</mdc:Field>
+
+				<c:Title text="Fields with unit"></c:Title>
+
+				<m:Label text="currency field"></m:Label>
+				<mdc:Field
+					id="F2-8"
+					value="{parts: [{path: 'Price'}, {path: 'CurrencyCode'}], type: 'sap.ui.model.type.Currency'}"
+					dataType="sap.ui.model.type.Currency"
+					placeholder="Price"
+					display="Value" change="handleChange"
+					liveChange="handleLiveChange"
+					fieldHelp="FVH-Currency">
+					<mdc:dependents>
+						<mdcField:ListFieldHelp id="FVH-Currency"
+								items="{view>/currencies}" >
+							<c:ListItem key="{view>id}" text="{view>unit}" additionalText="{view>text}"/>
+						</mdcField:ListFieldHelp>
+					</mdc:dependents>
+				</mdc:Field>
+
+				<m:Label text="currency field in display mode"></m:Label>
+				<mdc:Field id="F2-9" value="{parts: [{path: 'Price'}, {path: 'CurrencyCode'}], type: 'sap.ui.model.type.Currency'}" dataType="sap.ui.model.type.Currency" display="Value" editMode="Display" change="handleChange"></mdc:Field>
+
+				<m:Label text="unit field"></m:Label>
+				<mdc:Field
+					id="F2-10"
+					value="{parts: [{path: 'WeightMeasure'}, {path: 'WeightUnit'}], type: 'sap.ui.model.type.Unit'}"
+					dataType="sap.ui.model.type.Unit"
+					placeholder="Weight"
+					display="Value" change="handleChange"
+					liveChange="handleLiveChange"
+					fieldHelp="FVH-WeightUnit">
+					<mdc:dependents>
+						<mdcField:ListFieldHelp id="FVH-WeightUnit"
+								items="{view>/weightUnits}" >
+							<c:ListItem key="{view>id}" text="{view>unit}" additionalText="{view>text}"/>
+						</mdcField:ListFieldHelp>
+					</mdc:dependents>
+				</mdc:Field>
+
+				<m:Label text="unit field in display mode"></m:Label>
+				<mdc:Field id="F2-11" value="{parts: [{path: 'WeightMeasure'}, {path: 'WeightUnit'}], type: 'sap.ui.model.type.Unit'}" dataType="sap.ui.model.type.Unit" display="Value" editMode="Display" change="handleChange"></mdc:Field>
+
+				<c:Title text="In/Out Example"></c:Title>
+				<m:Label text="Country"></m:Label>
+				<mdc:Field
+					id="IOFCountry"
+					value="{countryId}"
+					display="ValueDescription"
+					change="handleChange"
+					liveChange="handleLiveChange"
+					fieldHelp="IOFVHCountry">
+					<mdc:dependents>
+							<mdcField:FieldValueHelp id="IOFVHCountry"
+								title="Countries"
+								filterFields="*countryId,text*"
+								keyPath="countryId"
+								descriptionPath="text">
+								<mdcField:FieldValueHelpMTableWrapper>
+									<m:Table items="{path: '/CountryCollection'}" width="26rem">
+										<m:columns>
+											<m:Column>
+												<m:Label text="Country"></m:Label>
+											</m:Column>
+											<m:Column>
+												<m:Label text="Name"></m:Label>
+											</m:Column>
+										</m:columns>
+										<m:items>
+											<m:ColumnListItem type="Active">
+												<m:Text text="{countryId}"></m:Text>
+												<m:Text text="{text}"></m:Text>
+											</m:ColumnListItem>
+										</m:items>
+									</m:Table>
+								</mdcField:FieldValueHelpMTableWrapper>
+							</mdcField:FieldValueHelp>
+					</mdc:dependents>
+				</mdc:Field>
+
+				<m:Label text="Region"></m:Label>
+				<mdc:Field
+					id="IOFRegion"
+					value="{regionId}"
+					display="ValueDescription"
+					change="handleChange"
+					liveChange="handleLiveChange"
+					fieldHelp="IOFVHRegion">
+					<mdc:dependents>
+							<mdcField:FieldValueHelp id="IOFVHRegion"
+								title="Regions"
+								filterFields="*regionId,countryId,text*"
+								keyPath="regionId"
+								descriptionPath="text">
+								<mdcField:inParameters>
+									<mdcField:InParameter value="{CountryId}" helpPath="countryId"/>
+								</mdcField:inParameters>
+								<mdcField:outParameters>
+									<mdcField:OutParameter value="{CountryId}" helpPath="countryId"/>
+									<mdcField:OutParameter value="{CityId}" fixedValue=""/>
+								</mdcField:outParameters>
+								<mdcField:filterBar>
+									<mdc:FilterBar
+										liveMode= "true">
+										<mdc:FilterField
+											id="VHFBTextFFCountry"
+											label= "Country"
+											editMode= "Editable"
+											display= "ValueDescription"
+											dataType="sap.ui.model.type.String"
+											width="100%"
+											conditions="{$filters>/conditions/countryId}">
+										</mdc:FilterField>
+									</mdc:FilterBar>
+								</mdcField:filterBar>
+								<mdcField:FieldValueHelpMTableWrapper>
+									<m:Table items="{path: '/RegionCollection'}" width="26rem">
+										<m:columns>
+											<m:Column>
+												<m:Label text="Region"></m:Label>
+											</m:Column>
+											<m:Column>
+												<m:Label text="Name"></m:Label>
+											</m:Column>
+											<m:Column>
+												<m:Label text="Country"></m:Label>
+											</m:Column>
+										</m:columns>
+										<m:items>
+											<m:ColumnListItem type="Active">
+												<m:Text text="{regionId}"></m:Text>
+												<m:Text text="{text}"></m:Text>
+												<m:Text text="{countryId}"></m:Text>
+											</m:ColumnListItem>
+										</m:items>
+									</m:Table>
+								</mdcField:FieldValueHelpMTableWrapper>
+							</mdcField:FieldValueHelp>
+					</mdc:dependents>
+				</mdc:Field>
+
+				<m:Label text="City"></m:Label>
+				<mdc:Field
+					id="IOFCity"
+					value="{cityId}"
+					display="ValueDescription"
+					change="handleChange"
+					liveChange="handleLiveChange"
+					fieldHelp="IOFVHCity">
+					<mdc:dependents>
+							<mdcField:FieldValueHelp id="IOFVHCity"
+								title="Cities"
+								filterFields="*countryId,regionId,cityId,text*"
+								keyPath="cityId"
+								descriptionPath="text">
+								<mdcField:inParameters>
+									<mdcField:InParameter value="{CountryId}" helpPath="countryId"/>
+									<mdcField:InParameter value="{RegionId}" helpPath="regionId"/>
+								</mdcField:inParameters>
+								<mdcField:outParameters>
+									<mdcField:OutParameter value="{CountryId}" helpPath="countryId" mode="Always"/>
+									<mdcField:OutParameter value="{RegionId}" helpPath="regionId" mode="Always"/>
+								</mdcField:outParameters>
+								<mdcField:filterBar>
+									<mdc:FilterBar
+										liveMode= "true">
+										<mdc:FilterField
+											id="VHFBTextFFCountry2"
+											label= "Country"
+											editMode= "Editable"
+											display= "ValueDescription"
+											dataType="sap.ui.model.type.String"
+											width="100%"
+											conditions="{$filters>/conditions/countryId}">
+										</mdc:FilterField>
+										<mdc:FilterField
+											id="VHFBTextFFRegion2"
+											label= "Region"
+											editMode= "Editable"
+											display= "ValueDescription"
+											dataType="sap.ui.model.type.String"
+											width="100%"
+											conditions="{$filters>/conditions/regionId}">
+										</mdc:FilterField>
+									</mdc:FilterBar>
+								</mdcField:filterBar>
+								<mdcField:FieldValueHelpMTableWrapper>
+									<m:Table items="{path: '/CityCollection'}" width="26rem">
+										<m:columns>
+											<m:Column>
+												<m:Label text="City"></m:Label>
+											</m:Column>
+											<m:Column>
+												<m:Label text="Name"></m:Label>
+											</m:Column>
+											<m:Column>
+												<m:Label text="Country"></m:Label>
+											</m:Column>
+											<m:Column>
+												<m:Label text="Region"></m:Label>
+											</m:Column>
+										</m:columns>
+										<m:items>
+											<m:ColumnListItem type="Active">
+												<m:Text text="{cityId}"></m:Text>
+												<m:Text text="{text}"></m:Text>
+												<m:Text text="{countryId}"></m:Text>
+												<m:Text text="{regionId}"></m:Text>
+											</m:ColumnListItem>
+										</m:items>
+									</m:Table>
+								</mdcField:FieldValueHelpMTableWrapper>
+							</mdcField:FieldValueHelp>
+					</mdc:dependents>
+				</mdc:Field>
+			</form:SimpleForm>
+		</m:Page>
+		<m:Page id="P2" title="Fields with FiledInfo" titleLevel="H1">
+ 			<form:SimpleForm layout="ResponsiveGridLayout" editable="true"
+				labelSpanXL="5" labelSpanL="5" labelSpanM="4" columnsXL="3" columnsL="2" columnsM="1"
+				singleContainerFullSize="false" adjustLabelSpan="false">
+<!--	 			<c:Title text="FieldInfoBase"></c:Title>
+				<m:Label text="FieldInfoBase"></m:Label>
+				<mdc:Field id="F3-1" value="Info" editMode="Display" change="handleChange" liveChange="handleLiveChange" press="handlePress">
+					<mdc:fieldInfo>
+						<mdcField:FieldInfoBase id="F3-1-I" ></mdcField:FieldInfoBase>
+					</mdc:fieldInfo>
+				</mdc:Field>
+ -->
+				<!--<c:Title text="ActionPanel"></c:Title>-->
+				<!--<m:Label text="empty ActionPanel"></m:Label>-->
+				<!--<mdc:Field id="F3-2" value="Info" editMode="Display" change="handleChange" liveChange="handleLiveChange" press="handlePress">-->
+					<!--<mdc:fieldInfo>-->
+						<!--<mdc:ActionPanel id="F3-2-I" ></mdc:ActionPanel>-->
+					<!--</mdc:fieldInfo>-->
+				<!--</mdc:Field>-->
+
+				<c:Title text="CustomFieldInfo"></c:Title>
+				<m:Label text="CustomFieldInfo with Content"></m:Label>
+				<mdc:Field id="F3-3" value="{ProductId}" additionalValue="{Name}" display="ValueDescription" editMode="Display" change="handleChange" liveChange="handleLiveChange" press="handlePress">
+					<mdc:fieldInfo>
+						<mdcField:CustomFieldInfo id="F3-3-I" >
+							<form:SimpleForm layout="ResponsiveGridLayout" editable="false"
+								title="Product details">
+							<m:Label text="Product Id"></m:Label>
+							<m:Text text="{ProductId}"></m:Text>
+							<m:Label text="Product Name"></m:Label>
+							<m:Text text="{Name}"></m:Text>
+							<m:Label text="Description"></m:Label>
+							<m:Text text="{Description}"></m:Text>
+							<m:Label text="Image"></m:Label>
+							<m:Image src="{= '../../../../../../../' + ${ProductPicUrl}}" height="3rem"/>
+							</form:SimpleForm>
+						</mdcField:CustomFieldInfo>
+					</mdc:fieldInfo>
+				</mdc:Field>
+
+				<m:Label text="CustomFieldInfo without Content"></m:Label>
+				<mdc:Field id="F3-4" value="{ProductId}" editMode="Display" change="handleChange" liveChange="handleLiveChange" press="handlePress">
+					<mdc:fieldInfo>
+						<mdcField:CustomFieldInfo id="F3-4-I" >
+						</mdcField:CustomFieldInfo>
+					</mdc:fieldInfo>
+				</mdc:Field>
+			</form:SimpleForm>
+		</m:Page>
+
+		<m:Page id="P3" title="Fields in Table" titleLevel="H1">
+			<m:Table items="{path: '/ProductCollection'}" width="100%">
+				<m:headerToolbar>
+					<m:Toolbar>
+						<m:ToolbarSpacer></m:ToolbarSpacer>
+						<m:ToggleButton text="Edit" pressed="{view>/editMode}"></m:ToggleButton>
+					</m:Toolbar>
+				</m:headerToolbar>
+				<m:columns>
+					<m:Column width="8rem">
+						<m:Label text="{ProductId}"></m:Label>
+					</m:Column>
+					<m:Column width="12rem">
+						<m:Label text="Product Name"></m:Label>
+					</m:Column>
+					<m:Column minScreenWidth="Desktop" demandPopin="true">
+						<m:Label text="Description"></m:Label>
+					</m:Column>
+					<m:Column width="2rem" minScreenWidth="Tablet" demandPopin="true">
+						<m:Label text="Icon"></m:Label>
+					</m:Column>
+					<m:Column width="12rem" minScreenWidth="Desktop" demandPopin="true">
+						<m:Label text="Time"></m:Label>
+					</m:Column>
+					<m:Column width="8rem" minScreenWidth="Desktop" demandPopin="true">
+						<m:Label text="Status"></m:Label>
+					</m:Column>
+				</m:columns>
+				<m:items>
+					<m:ColumnListItem type="Active">
+						<mdc:Field id="T-F1" value="{ProductId}" editMode="Display" change="handleChange" liveChange="handleLiveChange">
+							<mdc:fieldInfo>
+								<mdcField:CustomFieldInfo id="T-F1-I" >
+									<form:SimpleForm layout="ResponsiveGridLayout" editable="false"
+										title="Product details">
+									<m:Label text="{ProductId}"></m:Label>
+									<m:Text text="{ProductId}"></m:Text>
+									<m:Label text="Product Name"></m:Label>
+									<m:Text text="{Name}"></m:Text>
+									<m:Label text="Description"></m:Label>
+									<m:Text text="{Description}"></m:Text>
+									<m:Label text="Image"></m:Label>
+									<m:Image src="{= '../../../../../../../' + ${ProductPicUrl}}" height="3rem"/>
+									</form:SimpleForm>
+								</mdcField:CustomFieldInfo>
+							</mdc:fieldInfo>
+						</mdc:Field>
+						<mdc:Field id="T-F2" value="{Name}" editMode="{= ${view>/editMode} ? 'Editable' : 'Display' }" change="handleChange" liveChange="handleLiveChange" width="100%"></mdc:Field>
+						<mdc:Field id="T-F3" value="{Description}" multipleLines="true" editMode="{= ${view>/editMode} ? 'Editable' : 'Display' }" change="handleChange" liveChange="handleLiveChange" width="100%"></mdc:Field>
+						<mdc:Field id="T-F4" value="{= '../../../../../../../' + ${ProductPicUrl}}" change="handleChange" liveChange="handleLiveChange" width="100%">
+							<m:Image src="{path: '$field>/conditions', type: 'sap.ui.mdc.field.ConditionsType'}" height="1rem"/>
+						</mdc:Field>
+						<mdc:Field id="T-F5" value="{DateTime}" dataType="Edm.DateTimeOffset" editMode="{= ${view>/editMode} ? 'Editable' : 'Display' }" change="handleChange" liveChange="handleLiveChange" width="100%"></mdc:Field>
+						<mdc:Field id="T-F6" value="{Status}" display="Description" fieldHelp="T-F6-H" editMode="{= ${view>/editMode} ? 'Editable' : 'Display' }" change="handleChange" liveChange="handleLiveChange" width="100%"></mdc:Field>
+					</m:ColumnListItem>
+				</m:items>
+				<m:dependents>
+					<mdcField:ListFieldHelp id="T-F6-H"
+							items="{path: '/StatusCollection'}" >
+						<c:ListItem text="{Name}" key="{StatusId}"/>
+					</mdcField:ListFieldHelp>
+				</m:dependents>
+			</m:Table>
+		</m:Page>
+	</m:App>
+
+</mvc:View>

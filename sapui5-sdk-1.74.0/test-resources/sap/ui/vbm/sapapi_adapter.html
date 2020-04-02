@@ -1,0 +1,244 @@
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<script src="../../../../resources/sap-ui-core.js"
+			id="Script1"
+			data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm"
+			data-sap-ui-theme="sap_bluecrystal"
+			data-sap-ui-xx-bindingSyntax="complex">
+		</script>
+	<style type="text/css">
+
+		#leftPanel {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0% 0% 0% 1%;
+			float: left;
+			width: 48.5%;
+			height: 100%;
+			overflow-y: auto;
+		}
+
+		#rightPanel {
+			margin: 0% 0% 0% 1%;
+			float: left;
+			width: 48.5%;
+			height: 100%;
+			overflow-y: auto;
+		}
+		i {
+				color: blue
+		}
+	</style>
+
+	<script>
+		var loadToAdapter = true;
+		var initialLoad = false;
+		var oAdapter = new sap.ui.vbm.Adapter('adapter');
+
+		function onReset() {
+			$("#input").css("color", "black");
+		}
+
+		function loadData(url)
+		{
+			$("#loadSwitch").prop("disabled", true);
+			$.ajax({
+				url: url,
+				dataType: "json",
+				success: function(data, status, xhr) {
+					try
+					{
+						$("#input").css("color", "black");
+						$("#input").val(JSON.stringify(data, null, '  '));
+					}
+					catch(ex)
+					{
+						$("#input").css("color", "red");
+						alert(ex);
+					}
+				}
+			});
+		}
+
+		function onMapConfiguration() {
+			loadData("media/adapter/map_configuration.json");
+		}
+
+		function onResourceHandling() {
+			loadData("media/adapter/resources.json");
+		}
+
+		function onInitialLoad() {
+			initialLoad = true;
+			loadData("media/adapter/initial_load.json");
+		}
+
+		function onCreateSpots() {
+			loadData("media/adapter/create_spots.json");
+		}
+
+		function onUpdateSpots() {
+			loadData("media/adapter/modify_spots.json");
+		}
+
+		function onDeleteSpots() {
+			loadData("media/adapter/delete_spots.json");
+		}
+
+		function onLoadContextMenu() {
+			loadData("media/adapter/context_menu.json");
+		}
+
+		function onKeyboardEventsSubscrube() {
+			loadData("media/adapter/keyboard_events.json");
+		}
+
+		function onDetailRequest() {
+			loadData("media/adapter/detail_request.json");
+		}
+
+		function onDetailRequest2() {
+			loadData("media/adapter/detail_request2.json");
+		}
+
+		function onClusterDistance() {
+			loadData("media/adapter/cluster_distance.json");
+		}
+
+		function onClusterGrid() {
+			loadData("media/adapter/cluster_grid.json");
+		}
+
+		function onClusterTree() {
+			loadData("media/adapter/cluster_tree.json");
+		}
+
+		function onClusterDisable() {
+			loadData("media/adapter/cluster_disable.json");
+		}
+
+		function onClusterEvents() {
+			loadData("media/adapter/cluster_events.json");
+		}
+
+		function onChangeMapLayerStack() {
+			loadData("media/adapter/refMapLayerStack.json")
+		}
+
+		function onSwitchLoad() {
+			loadToAdapter = !loadToAdapter;
+			$("#loadSwitch").text(loadToAdapter ? "Load -> Adapter" : "Load -> VBI");
+			$("#load").text(loadToAdapter ? "Load into Adapter" : "Load into VBI");
+
+		}
+
+		function onLoad() {
+			var input = $("#input").val();
+			if(input != null) {
+				try {
+					if (initialLoad) {
+						if (loadToAdapter) {
+							var map = new sap.ui.vbm.GeoMap('vbi', {
+								width : "100%",
+								height: "100%",
+								scaleVisible: true,
+								resources: [ new sap.ui.vbm.Resource({ name: "smiley", src: "demokit/media/images/smiley.png"})],
+							});
+							oAdapter.setMap(map.getId());
+							oAdapter.attachEvent("submit", function(payload) {
+								$("#output").val(JSON.stringify(JSON.parse(payload.mParameters.data), null, 2));
+							});
+							oAdapter.load(input).then(function() { map.placeAt("content"); });
+						} else {
+							var map = new sap.ui.vbm.VBI('vbi', {
+								width : "100%",
+								height: "100%"
+							});
+							map.attachEvent("submit", function(payload) {
+								$("#output").val(JSON.stringify(JSON.parse(payload.mParameters.data), null, 2));
+							});
+							map.placeAt("content");
+							map.load(input);
+						}
+						initialLoad = false;
+					} else {
+						if(loadToAdapter) {
+							oAdapter.load(input);
+						} else {
+							sap.ui.getCore().byId("vbi").load(input);
+						}
+					}
+
+					$("#input").css("color", "green");
+				}
+				catch(ex) {
+					$("#input").css("color", "red");
+					alert(ex);
+				}
+			}
+		}
+
+	</script>
+	<body class="sapUiBody" style="height:90%">
+	  <h1 style="margin-left:1%;margin-top:1%">VBI to GeoMap Adapter Sample</h1>
+		<h3 style="margin-left:1%;margin-top:1%"> The aim: </h3>
+			<p style="margin-left:1%"> To test loading of VBI JSON into Geomap and delta handling of various sections of VBI JSON</p>
+		<h3 style="margin-left:1%;margin-top:1%"> To test: </h3>
+				<ol>
+					<li> Click on "Initial Load" button. <i>Check that JSON is populated in the text area.</i> <br>
+					&nbsp;&nbsp;&nbsp;&nbsp;Now click on "Load into Adapter".<i>There will be no visual change but initial VBI JSON containing data types, VOs, actions etc. are loaded.</i></li><br>
+					<li> Click on "Create Spots" button. <i>VBI JSON to create three spots is shown.</i> <br>
+					&nbsp;&nbsp;&nbsp;&nbsp;Now click on "Load into Adapter". <i>This should add three spots to the map and the map should zoom in (fly in) to those three spots.<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;It should be possible to drag any spot and drop to any other spot. </i></li><br>
+					<li> Click on "Modify Spots" button. <i>VBI JSON to modify a spot, create a new spot and a link is shown</i> <br>
+					&nbsp;&nbsp;&nbsp;&nbsp;Now click on "Load into Adapter". <i>This should change the type of one spot and add an extra spot along with a link.<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;It should be possible to drag any spot or route and drop to any other spot or route.</i></li><br></i></li><br>
+					<li> Click on "Delete Spots" button. <i>VBI JSON to delete a spot is shown.</i><br>
+					&nbsp;&nbsp;&nbsp;&nbsp;Now click on "Load into Adapter". <i>This should delete the extra spot that was added in the previous step.</i></li><br>
+					<li> Right click on the spot that is the target of the link. <i>VBI Submit event (with name 'contextMenu') is raised and the event data is shown.</i></li><br>
+					<li> Click on "Context menu" button. <i>VBI JSON for context menu Automation and Menu is shown</i><br>
+					&nbsp;&nbsp;&nbsp;&nbsp;Now click on "Load into Adapter". <i>This should display a context menu for the spot upon which step 5 performed.</i></li><br>
+					<li> Select an option from Context Menu. <i>VBI submit event is raised with name as specified in the VBI JSON in step 6 (FCODE_SELECT)</i></li><br>
+					<li> Perform negative testing by trying steps 2, 3, 4 and 6 without performing step 1 first. <i>None of the buttons should work and you should get respective error message in alert box.</i><br>
+					&nbsp;&nbsp;&nbsp;&nbsp; Perform step 1 and click Delete Spots. <i>Should get respective error message in alert box.</i><br>
+					&nbsp;&nbsp;&nbsp;&nbsp; Perform step 1 and click Modify Spots and Context Menu. <i>You should be able to modify spots and see the context menu without creating spots.</i></li><br>
+					<li>Perform testing of clustering support.<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;Click on "Initial Load" then click on "Load into Adapter".<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;Click on "Create Spots" then click on "Load into Adapter".<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;Spots must be present on the map in order to test clustering.<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;Three types of clustering can now be tested by press buttons "Clustering (distance)", "Clustering (grid)" or "Clustering (tree)".<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;Removing clusters can be done via "Clustering (disable)" button.<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;When any of the clustering type is activated then spots visible on the map must be clustered (depending on clustering type and zoom level).<br>
+					</li>
+				</ol>
+		<div id="leftPanel">
+			<div id="content"></div>
+		</div>
+		<div id="rightPanel">
+			<!--<button style="width:150px;margin-bottom:5px" onClick="onMapConfiguration()">Map Configuration</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onResourceHandling()">Resources Handling</button>-->
+			<button id="loadSwitch" style="width:150px;margin-bottom:5px" onClick="onSwitchLoad()">Load -> Adapter</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onInitialLoad()">Initial Load</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onCreateSpots()">Create Spots</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onUpdateSpots()">Modify Spots</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onDeleteSpots()">Delete Spots</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onLoadContextMenu()">Context Menu</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onKeyboardEventsSubscrube()">Keyboard Events</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onDetailRequest()">Detail Window 1</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onDetailRequest2()">Detail Window 2</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onClusterDistance()">Clustering (distance)</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onClusterGrid()">Clustering (grid)</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onClusterTree()">Clustering (tree)</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onClusterDisable()">Clustering (disable)</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onClusterEvents()">Clustering (enable events)</button>
+			<button style="width:150px;margin-bottom:5px" onClick="onChangeMapLayerStack()">Change Map Layer Stack</button>
+
+			<textarea id="input" onkeyup="onReset()" style="width:100%;height:40%;padding:1%" placeholder="Input VBI JSON"></textarea>
+			<br/><br/>
+			<button id="load" onClick="onLoad()">Load into Adapter</button>
+			<br/><br/>
+			<textarea id="output" style="width:100%;height:40%;padding:1%" placeholder="Output VBI JSON"></textarea>
+			</div>
+		</body>
+		</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+	<script src="../../../../resources/sap-ui-core.js" id="Script1" data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+
+	<script>
+		// have some data
+		var oData = {
+			regionProperties: [{
+				"code": "DE",
+				"region": "Germany",
+				"color": "rgb(92,186,230)",
+				"tooltip": "Germany\r\nBIP: 3.577 Mrd. USD\r\nPopulation: 80,716 Mio",
+				"kpi": 4.50,
+				"semanticType": sap.ui.vbm.SemanticType.Error
+			}, {
+				"code": "FR",
+				"region": "France",
+				"color": "rgb(182,217,87)",
+				"kpi": 2.80,
+				"semanticType": sap.ui.vbm.SemanticType.Warning
+			}, {
+				"code": "ES",
+				"region": "Spain",
+				"color": "rgb(255,0,100)",
+				"kpi": 0.67,
+				"semanticType": sap.ui.vbm.SemanticType.Success
+			}, {
+				"code": "CH",
+				"region": "Switzerland",
+				"color": "rgb(100,50,100)",
+				"kpi": 0.7,
+				"semanticType": sap.ui.vbm.SemanticType.Default
+			}]
+
+		};
+
+		// create model and set the data
+		var oModel = new sap.ui.model.json.JSONModel();
+		oModel.setData(oData);
+
+		// change the L0 geojson location to internal folder, due it is not......//
+		// allowed for us to deliver it..........................................//
+		jQuery.sap.require("sap.ui.vbm.AnalyticMap");
+		sap.ui.vbm.AnalyticMap.GeoJSONURL = "media/analyticmap/L0.json";
+
+		// create analytic map and bind to model
+		var oVBI = new sap.ui.vbm.AnalyticMap('vbi', {
+			width: "500px",
+			height: "500px",
+			plugin: false,
+			initialZoom: 5,
+			initialPosition: "5;45;0",
+			regions: {
+				path: "/regionProperties",
+				template: new sap.ui.vbm.Region({
+					code: "{code}",
+					color: '{color}',
+					tooltip: '{tooltip}',
+					labelText: '{kpi}',
+					labelType: '{semanticType}'
+				})
+			}
+
+		});
+
+		oVBI.setModel(oModel);
+		oVBI.placeAt("content");
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business AnalyticMap with Labels Sample</h1>
+	<div id="description1">
+		<h3> To test: </h3>
+		<ul>
+			<li> Check that Germany, France and Spain are displaying some values as labels.</li>
+		</ul>
+	</div>
+	<div class="content" id="content"></div>
+</body>
+
+</html>

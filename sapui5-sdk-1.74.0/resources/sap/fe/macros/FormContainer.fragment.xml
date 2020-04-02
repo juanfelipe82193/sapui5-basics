@@ -1,0 +1,97 @@
+<!--
+/**
+ * OData v4 FormContainer
+ * mandatory parameters:
+ * @param metadataContext:entitySet mandatory context to the EntitySet.
+ * optional parameters:
+ * @param metadataContext:dataFieldCollection context to a collection of com.sap.vocabularies.UI.v1.DataFieldAbstract or a com.sap.vocabularies.UI.v1.DataPoint.
+ * @param [id] of the form container.
+ * @param [title] title for the form container that is to be rendered.
+ * @param [editMode] edit mode of the fields in the form container(Display,Editable,ReadOnly,Disabled) / Default: Display.
+ * @param [createMode] create mode of the fields in the form container(false, ture) / Default: false.
+ * @param [navigationPath] for binding the form container using a navigation path.
+ * @param [visibilityPath] for binding the visibility of the form container using a propertyPath.
+ */
+-->
+
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1" xmlns="sap.m"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:mdc="sap.ui.mdc"
+	xmlns:macro="sap.fe.macros"
+	xmlns:core="sap.ui.core"
+	xmlns:unittest="http://schemas.sap.com/sapui5/preprocessorextension/sap.fe.unittesting/1"
+	xmlns:log="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	template:require="{
+		MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+		ID: 'sap/fe/macros/StableIdHelper',
+		COMMON: 'sap/fe/macros/CommonHelper',
+		FORM: 'sap/fe/macros/form/FormHelper'
+	}">
+
+		<f:FormContainer
+			unittest:id="formC"
+			id="{= ${this>id} || undefined}"
+			title="{this>title}"
+			binding="{= ${this>navigationPath} ? ('{ path : \'' + ${this>navigationPath} + '\' }') : ''}"
+			visible="{= ${this>visibilityPath} ? ('{= !${' + ${this>visibilityPath} + '} }') : true }">
+			<f:dependents>
+				<!-- Create the value help dialogs for fields inside form container -->
+				<template:repeat list="{path:'dataFieldCollection>'}" var="dataField">
+					<!-- <template:if test="{= ${dataField>$Type} !== 'com.sap.vocabularies.UI.v1.DataFieldForAction' &amp;&amp; !${formElements>Target}}"> -->
+					<template:with path="dataField>Value" var="item">
+						<template:if test="{this>id}">
+							<macro:ValueHelp idPrefix="{= COMMON.getStableId([${this>id}, 'FormVH']) }" metadataContexts="{model: 'entitySet', path:'',  name: 'entitySet'},{model: 'item', path:'',  name: 'property'}"/>
+						</template:if>
+					</template:with>
+					<!-- </template:if> -->
+				</template:repeat>
+			</f:dependents>
+			<f:formElements>
+				<template:with path="dataFieldCollection>" var="formElements">
+					<template:if test="{= ${formElements>./@sapui.name}.indexOf('com.sap.vocabularies.UI.v1.DataPoint') > -1 }">
+						<template:then>
+							<f:FormElement
+								label="{formElements>Title@@MODEL.value}">
+								<f:fields>
+									<macro:Field
+										idPrefix="{= ${this>id} ? COMMON.getStableId([${this>id}, 'FormF']) : ''}"
+										vhIdPrefix="{= ${this>id} ? COMMON.getStableId([${this>id}, 'FormVH']) : ''}"
+										metadataContexts="{ model: 'entitySet', path:'',  name: 'entitySet'},{ model: 'formElements', path:'',  name: 'dataField'}"
+										editMode="{= ${this>editMode} || 'Display'}"
+										createMode="{this>createMode}"
+										parentControl="Form"
+										onChange="{= ${this>onChange} }"
+									/>
+								</f:fields>
+							</f:FormElement>
+						</template:then>
+						<template:else>
+							<template:repeat list="{formElements>}" var="dataField">
+								<template:if test="{= ${dataField>$Type} !== 'com.sap.vocabularies.UI.v1.DataFieldForAction'&amp;&amp; ${dataField>$Type} !== 'com.sap.vocabularies.UI.v1.DataFieldForIntentBasedNavigation' }">
+									<template:then>
+										<template:if test="{= !(${dataField>./@com.sap.vocabularies.UI.v1.Hidden} === true)}">
+											<f:FormElement label="{dataField>@@.MODEL.label}"
+												visible="{= ${dataField>@@.FIELD.isNotAlwaysHidden}}">
+													<f:fields>
+														<macro:Field editMode="{= ${this>editMode} ? ${this>editMode} : 'Display'}"
+															createMode="{this>createMode}"
+															idPrefix="{= ${this>id} ? COMMON.getStableId([${this>id}, 'FormF']) : '' }"
+															vhIdPrefix="{= ${this>id} ? COMMON.getStableId([${this>id}, 'FormVH']) : '' }"
+															metadataContexts="{ model: 'entitySet', path:'',  name: 'entitySet'},{ model: 'dataField', path:'',  name: 'dataField'}"
+															onCallAction="{= ${this>onCallAction} ? ${this>onCallAction} : null}"
+															parentControl="Form"
+															onChange="{= ${this>onChange} }"
+														/>
+													</f:fields>
+											</f:FormElement>
+										</template:if>
+									</template:then>
+								</template:if>
+							</template:repeat>
+						</template:else>
+					</template:if>
+				</template:with>
+			</f:formElements>
+		</f:FormContainer>
+
+</core:FragmentDefinition>

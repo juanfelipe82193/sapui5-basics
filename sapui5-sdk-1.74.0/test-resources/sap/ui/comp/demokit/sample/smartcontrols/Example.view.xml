@@ -1,0 +1,149 @@
+<mvc:View
+	height="100%"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:variants="sap.ui.comp.smartvariants"
+	xmlns:smartForm="sap.ui.comp.smartform"
+	xmlns:smartField="sap.ui.comp.smartfield"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+	xmlns:smartChart="sap.ui.comp.smartchart"
+	xmlns:smartTable="sap.ui.comp.smarttable"
+	xmlns:nav="sap.ui.comp.navpopover"
+	controllerName="sap.ui.comp.sample.smartcontrols.Example"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+
+	<Page showHeader="false">
+
+		<variants:SmartVariantManagement id="PageVariant"
+			persistencyKey="PageVariant" showShare="true" showExecuteOnSelection="true" />
+		<smartFilterBar:SmartFilterBar id="smartFilterBar"
+			entityType="Product" basicSearchFieldName="Name" enableBasicSearch="true"
+			smartVariant="PageVariant" persistencyKey="PKeyFilterbar">
+			<smartFilterBar:customData>
+				<core:CustomData key="dateFormatSettings" value='\{"UTC":true,"style":"short"\}' />
+			</smartFilterBar:customData>
+			<smartFilterBar:controlConfiguration>
+				<smartFilterBar:ControlConfiguration
+					key="Category" visibleInAdvancedArea="true">
+					<smartFilterBar:defaultFilterValues>
+						<smartFilterBar:SelectOption low="Projector">
+						</smartFilterBar:SelectOption>
+					</smartFilterBar:defaultFilterValues>
+				</smartFilterBar:ControlConfiguration>
+				<smartFilterBar:ControlConfiguration
+					key="Date" visibleInAdvancedArea="true"
+					conditionType="sap.ui.comp.config.condition.DateRangeType">
+				</smartFilterBar:ControlConfiguration>
+				<smartFilterBar:ControlConfiguration
+					key="Availability" visibleInAdvancedArea="true"
+					conditionType="{module: 'sap.ui.comp.sample.smartcontrols.custom.MyAvailabilityRange', operations: { filter: {path: 'category', contains: 'WEEK', exclude:true}}}">
+				</smartFilterBar:ControlConfiguration>
+			</smartFilterBar:controlConfiguration>
+		</smartFilterBar:SmartFilterBar>
+
+		<smartChart:SmartChart smartFilterId="smartFilterBar"
+			height="300px"
+			enableAutoBinding="true" entitySet="ProductCollection" smartVariant="PageVariant"
+			useVariantManagement="true" persistencyKey="PKeyChart"
+			useChartPersonalisation="true" header="Products" showFullScreenButton="true"
+			selectionMode="Multi">
+			<smartChart:semanticObjectController>
+				<nav:SemanticObjectController
+					navigationTargetsObtained="onNavigationTargetsObtained" navigate="onNavigate" />
+			</smartChart:semanticObjectController>
+			<!-- layout data used to make the table growing but the filter bar fixed -->
+			<smartChart:layoutData>
+				<FlexItemData growFactor="1"/>
+			</smartChart:layoutData>
+		</smartChart:SmartChart>
+
+		<smartTable:SmartTable id="smartTable"
+			height="300px"
+			initialise="onTableInitialized" enableAutoBinding="true" entitySet="ProductCollection"
+			smartFilterId="smartFilterBar" tableType="Table" useExportToExcel="true"
+			smartVariant="PageVariant" persistencyKey="PKeyTable"
+			useVariantManagement="true" useTablePersonalisation="true" header="Products"
+			showRowCount="true">
+			<smartTable:semanticObjectController>
+				<nav:SemanticObjectController
+					navigationTargetsObtained="onNavigationTargetsObtained" navigate="onNavigate" />
+			</smartTable:semanticObjectController>
+		</smartTable:SmartTable>
+
+		<smartForm:SmartForm id="smartForm"
+			app:defaultCheckBoxDisplayBehaviour="OnOff"
+			app:defaultDropDownDisplayBehaviour="idAndDescription" editTogglable="true"
+			title="{Name}" visible="false">
+			<smartForm:Group label="Product">
+				<smartForm:GroupElement>
+					<smartField:SmartField value="{ProductId}" />
+				</smartForm:GroupElement>
+				<smartForm:GroupElement tooltip="{i18n>CAT_TOOLTIP}"
+					label="{i18n>CAT_LABEL}">
+					<smartField:SmartField value="{Category}">
+						<smartField:configuration>
+							<smartField:Configuration
+								preventInitialDataFetchInValueHelpDialog="false" />
+						</smartField:configuration>
+					</smartField:SmartField>
+				</smartForm:GroupElement>
+				<smartForm:GroupElement>
+					<smartField:SmartField value="{Description}" />
+				</smartForm:GroupElement>
+				<smartForm:GroupElement>
+					<smartField:SmartField value="{Price}" />
+				</smartForm:GroupElement>
+			</smartForm:Group>
+			<smartForm:Group label="Supplier">
+				<smartForm:GroupElement>
+					<smartField:SmartField value="{SupplierName}" />
+				</smartForm:GroupElement>
+			</smartForm:Group>
+			<smartForm:Group label="Stock">
+				<smartForm:GroupElement>
+					<smartField:SmartField value="{Status}" />
+				</smartForm:GroupElement>
+				<smartForm:GroupElement>
+					<smartField:SmartField value="{Quantity}" />
+				</smartForm:GroupElement>
+			</smartForm:Group>
+			<smartForm:Group label="Specification">
+				<smartForm:GroupElement>
+					<smartField:SmartField value="{Width}" />
+				</smartForm:GroupElement>
+				<smartForm:GroupElement>
+					<smartField:SmartField value="{Depth}" />
+				</smartForm:GroupElement>
+				<smartForm:GroupElement>
+					<smartField:SmartField value="{Height}" />
+				</smartForm:GroupElement>
+				<smartForm:GroupElement>
+					<smartField:SmartField value="{WeightMeasure}" />
+				</smartForm:GroupElement>
+				<smartForm:GroupElement>
+					<smartField:SmartField value="{MyBoolean}">
+						<smartField:configuration>
+							<smartField:Configuration
+								displayBehaviour="TrueFalse" />
+						</smartField:configuration>
+					</smartField:SmartField>
+				</smartForm:GroupElement>
+				<smartForm:GroupElement>
+					<smartField:SmartField value="{YourBoolean}">
+					</smartField:SmartField>
+				</smartForm:GroupElement>
+			</smartForm:Group>
+			<smartForm:Group label="Picture">
+				<smartForm:GroupElement>
+					<Image src="{ProductPicUrl}" />
+				</smartForm:GroupElement>
+			</smartForm:Group>
+			<smartForm:semanticObjectController>
+				<nav:SemanticObjectController
+					navigationTargetsObtained="onNavigationTargetsObtained" navigate="onNavigate" />
+			</smartForm:semanticObjectController>
+		</smartForm:SmartForm>
+
+	</Page>
+</mvc:View>

@@ -1,0 +1,72 @@
+<!-- * 	 @param idPrefix default 'F' Prefix for the id
+* 	 @param vhIdPrefix default 'FVH' Prefix for the value help id -->
+<core:FragmentDefinition
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:mdc="sap.ui.mdc"
+	xmlns:mdcField="sap.ui.mdc.field"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:unittest="http://schemas.sap.com/sapui5/preprocessorextension/sap.fe.unittesting/1"
+	template:require="{
+		MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+		COMMON: 'sap/fe/macros/CommonHelper',
+		FIELD: 'sap/fe/macros/field/FieldHelper',
+		FEHelper: 'sap/fe/core/FEHelper'
+	}">
+	<template:with path="entitySet>" helper="FEHelper.getTargetCollection" var="esName">
+		<form:SimpleForm binding="{$Parameter}">
+			<template:repeat list="{action>$Parameter}" var="parameter">
+				<template:with path="parameter>" helper="COMMON.gotoActionParameter" var="actionParameter">
+				<!-- In case of bound actions the first parameter shall be ignored -->
+					<template:if test="{= !${action>$IsBound} || ${parameter>$Name} !== ${action>$Parameter/0/$Name} }">
+						<Label
+						unittest:id="ActionParameterDialogLabelExpressionTest"
+						text="{actionParameter>@com.sap.vocabularies.Common.v1.Label}"
+						/>
+				<!-- TODOs:
+							edit mode, can there be also field control?
+                            value help
+                            additional value? (= text annotation)
+                            text arrangement?
+                            multipleLines?
+                -->
+				<!-- TODO: use new value helper -->
+						<mdc:Field
+							unittest:id="ActionParameterDialogFieldExpressionTest"
+							id="{= COMMON.getStableId(['APD_', ${parameter>$Name}]) }"
+							value="{parameter>@@MODEL.format}"
+							display="{= FIELD.displayMode(${actionParameter>@},${entitySet>./@})}"
+							editMode="{actionParameter>@@COMMON.getParameterEditMode}"
+							width="100%"
+							required="{= FIELD.isRequired(${actionParameter>@@FIELD.fieldControl}, 'Editable')}"
+							change="{= '.handleChange($event, \'' + ${parameter>$Name} + '\')' }"
+							valueState="{= '{paramsModel>/$valueState/' + ${parameter>$Name} + '}' }"
+							valueStateText="{= '{paramsModel>/$valueStateText/' + ${parameter>$Name} + '}' }"
+							fieldHelp="{= (${actionParameter>@com.sap.vocabularies.Common.v1.ValueListReferences} || ${actionParameter>@com.sap.vocabularies.Common.v1.ValueListMapping} || ${actionParameter>@com.sap.vocabularies.Common.v1.ValueList}) ? COMMON.getStableId([${actionName>@sapui.name},${parameter>$Name}]) : undefined }"
+  						    visible="{actionParameter>@@COMMON.isVisible}"
+						>
+							<template:if test="{= ${actionParameter>@com.sap.vocabularies.Common.v1.ValueListReferences} || ${actionParameter>@com.sap.vocabularies.Common.v1.ValueListMapping} || ${actionParameter>@com.sap.vocabularies.Common.v1.ValueList} }">
+								<template:then>
+									<mdc:dependents>
+										<mdcField:FieldValueHelp
+											unittest:id="ActionParameterDialogValuehelpExpressionTest"
+											id="{= COMMON.getStableId([${actionName>@sapui.name},${parameter>$Name}]) }"
+											showConditionPanel="true"
+											noDialog="{= ${actionParameter>@com.sap.vocabularies.Common.v1.ValueListWithFixedValues} ? (${actionParameter>@com.sap.vocabularies.Common.v1.ValueListWithFixedValues} !== false) : false}"
+											open="sap.fe.core.FEHelper.launchValueHelpFromActionParameterDialog('/{esName>@sapui.name}/{actionName>@sapui.name}/{parameter>$Name}',$\{$source>\},$\{$parameters>/suggestion\}, $\{paramsModel>\})"
+											dataRequested="sap.fe.core.FEHelper.launchValueHelpFromActionParameterDialog('/{esName>@sapui.name}/{actionName>@sapui.name}/{parameter>$Name}',$\{$source>\},$\{$parameters>/suggestion\}, $\{paramsModel>\})"
+											validateInput="false"
+										>
+										<mdcField:FieldValueHelpMTableWrapper />
+										</mdcField:FieldValueHelp>
+									</mdc:dependents>
+								</template:then>
+							</template:if>
+						</mdc:Field>
+					</template:if>
+				</template:with>
+			</template:repeat>
+		</form:SimpleForm>
+	</template:with>
+</core:FragmentDefinition>

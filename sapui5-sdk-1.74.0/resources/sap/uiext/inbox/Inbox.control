@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>Inbox</name>
+    <derived/>
+    <documentation>A comprehensive UI design approach with graphical and functional elements for search tasks, filter tasks, and take actions on the tasks
+("Inbox Pattern").</documentation>
+    <developmentState state="experimental" since="1.5.2">API is not yet finished and might change completely</developmentState>
+    <baseType>sap.ui.core/Control</baseType>
+    <properties>
+        <property name="taskExecutionURLThemeValue" type="sap.ui.core/string" group="Misc">
+            <documentation>set the theme URL parameter string to be appended to the task Execution URL. In case of a function callback set for Task Execution PopUp, this string will not be appended.</documentation>
+        </property>
+        <property name="handleBindings" type="sap.ui.core/boolean" defaultValue="true" group="Misc">
+            <documentation>set this as true for oData Model. If set as false, the user will need to handle task Actions, search and Task Execution URL population. See function call back methods.</documentation>
+        </property>
+        <property name="openCompletedTasks" type="sap.ui.core/boolean" defaultValue="false" group="Misc">
+            <documentation>set this to true to enable opening of completed tasks.</documentation>
+        </property>
+    </properties>
+    <events>
+        <event name="oDataRequestCompleted" allowPreventDefault="false">
+            <documentation>If handleBindings property is set to true , the control assumes an oData model is set and handles the complete logic within. In this case once the oData request is complete, this event is fired with additional parameters.</documentation>
+        </event>
+        <event name="refresh" allowPreventDefault="false">
+            <documentation>this event is fires to handle refresh Action, when the handleBindings property is set to false.</documentation>
+        </event>
+        <event name="taskAction" allowPreventDefault="false">
+            <documentation>this event is fires to handle task Actions - Claim, Release, when the handleBindings property is set to false.</documentation>
+        </event>
+        <event name="taskSelectionChange" allowPreventDefault="false">
+            <documentation>This event is fired when table row selection is changed in the list view of Inbox control</documentation>
+        </event>
+    </events>
+    <methods>
+        <method name="addAction" type="sap.uiext.inbox/Inbox">
+            <documentation>Adds an additional action to inbox</documentation>
+            <parameters>
+                <parameter name="actionID" type="sap.ui.core/string">
+                    <documentation>ID of the new action.</documentation>
+                </parameter>
+                <parameter name="displayText" type="sap.ui.core/string">
+                    <documentation>The Label Text for the new action.</documentation>
+                </parameter>
+                <parameter name="toolTip" type="sap.ui.core/string">
+                    <documentation>Tooltip for the added action.</documentation>
+                </parameter>
+                <parameter name="actionHandler" type="sap.ui.core/any">
+                    <documentation>Function to be called when the action is executed</documentation>
+                </parameter>
+                <parameter name="massEnabled" type="sap.ui.core/boolean">
+                    <documentation>Flag indicating if the action is mass enabled.Default value is true.</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="setSubstitutionEnabled" type="sap.ui.core/void">
+            <documentation>Setter for property isSubstitutionEnabled.
+
+Boolean property to enable the sap.uiext.inbox.SubstitutionRulesManager control (default is false). If set to true, 'Manage Substitution Rules' is visible in settings button, else if set to false the option will not be visible under settings.
+
+Default value is false</documentation>
+            <parameters>
+                <parameter name="isSubstitutionEnabled" type="sap.ui.core/boolean">
+                    <documentation>isSubstitutionEnabled</documentation>
+                </parameter>
+                <parameter name="path" type="sap.ui.core/string">
+                    <documentation>the path</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="getSubstitutionEnabled" type="sap.ui.core/boolean">
+            <documentation>Getter for property isSubstitutionEnabled.
+
+Boolean property to enable the sap.uiext.inbox.SubstitutionRulesManager control (default is false). If is true, 'Manage Substitution Rules' is visible in settings button, else if it is false the option will not be visible under settings.
+
+Default value is false</documentation>
+        </method>
+        <method name="clearDrillDownFilter" type="sap.ui.core/void">
+            <documentation>Clears all the filters applied in Drill Down. (Status, Priority, Date/Time and TaskType).</documentation>
+        </method>
+        <method name="getTaskTableBinding" type="sap.ui.core/object">
+            <documentation>returns the binding for the Task Table</documentation>
+        </method>
+        <method name="bindTaskExecutionURL" type="sap.uiext.inbox/Inbox">
+            <documentation>Registers a callback function to be invoked to populate the Task Execution PopUp.</documentation>
+            <parameters>
+                <parameter name="taskExecURLfnCallBack" type="sap.ui.core/any">
+                    <documentation>callback function for getting the execution URL, will be supplied with the task ID and should return the URL to be displayed with the Task Execution PopUp.</documentation>
+                </parameter>
+                <parameter name="taskExecURLStatusCallBack" type="sap.ui.core/any">
+                    <documentation>callback function for getting the status of the task, will be supplied with the task ID and should return the Task Status.</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="bindTaskTypeDynamicFilter" type="sap.uiext.inbox/Inbox">
+            <documentation>Registers a callback function to be invoked to populate the TaskType Drill Down.
+This should return the array of Values to be populated in the Task Type Drill Down.</documentation>
+            <parameters>
+                <parameter name="taskTypeDynamicFilterCallBack" type="sap.ui.core/any">
+                    <documentation>callback function that populates the TaskType Drill Down</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="bindSearch" type="sap.uiext.inbox/Inbox">
+            <documentation>Registers a callback function to be invoked to search on the Task Table.</documentation>
+            <parameters>
+                <parameter name="searchCallBack" type="sap.ui.core/any">
+                    <documentation>callback function to be called to execute a search</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="bindTaskTable" type="sap.uiext.inbox/Inbox">
+            <documentation>Binds the Task Table Rows to the given path.</documentation>
+            <parameters>
+                <parameter name="path" type="sap.ui.core/string">
+                    <documentation>Binding path for the rows of the Task Table</documentation>
+                </parameter>
+                <parameter name="taskFilters" type="sap.ui.core/object">
+                    <documentation>Predefined filter for the Task Table (sap.uiext.inbox.TaskInitialFilters)</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="bindTasks" type="sap.uiext.inbox/Inbox">
+            <documentation>Bind the Inbox Task Collection</documentation>
+            <parameters>
+                <parameter name="path" type="sap.ui.core/string">
+                    <documentation>Binding path for the element displaying the tasks within the Inbox. This path is the Task Collection according to the TCM (Task Consumption Model)</documentation>
+                </parameter>
+                <parameter name="filter" type="sap.ui.core/object">
+                    <documentation>Predefined filter that is applied to the Task Collection before displaying the tasks in the Inbox. (sap.uiext.inbox.InboxFilters)</documentation>
+                </parameter>
+                <parameter name="sorter" type="any">
+                    <documentation>{}Predefined sorter that is applied to the Task Collection before displaying the tasks in the Inbox. By default the tasks are sorted on 'CreatedOn' , descending, according to TCM.</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="refresh" type="sap.ui.core/void">
+            <documentation>Inbox is refreshed if task is completed</documentation>
+            <parameters>
+                <parameter name="taskUniqueIdentifiers" type="sap.ui.core/object[]">
+                    <documentation>Array of Json objects containing TaskInstanceID and SAP__Origin</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="setConfiguration" type="sap.uiext.inbox/Inbox">
+            <documentation>Set configuration on Inbox. See APIs in InboxConfiguration</documentation>
+            <parameters>
+                <parameter name="configuration" type="sap.ui.core/object">
+                    <documentation>Configuration object to set the configuration on Inbox. See APIs in InboxConfiguration</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="setOpenTaskUIInNewTab" type="sap.ui.core/void">
+            <documentation>Setter for property bOpenTaskUIInNewTab.
+If set to true, Task UI will opene in a new tab.
+Default value is false.</documentation>
+        </method>
+        <method name="clearRowSettings" type="sap.ui.core/void">
+            <documentation>Row Settings applied using the Settings button shall be cleared. &lt;TO be Implemented&gt;</documentation>
+        </method>
+    </methods>
+</control>

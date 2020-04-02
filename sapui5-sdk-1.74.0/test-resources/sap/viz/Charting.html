@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>UI5 CVOM HTML5 Charts - sap.viz.ui5</title>
+
+<script id="sap-ui-bootstrap" type="text/javascript"
+  src="../../../resources/sap-ui-core.js"
+  data-sap-ui-theme="sap_bluecrystal" data-sap-ui-libs="sap.viz"></script>
+<script>
+  try {
+    sap.ui.getCore().loadLibrary("sap.ui.commons");
+  } catch (e) {
+    alert("This test page requires the library 'sap.ui.commons' which is not available.");
+    throw (e);
+  }
+  try {
+    sap.ui.getCore().loadLibrary("sap.ui.ux3");
+  } catch (e) {
+    alert("This test page requires the library 'sap.ui.ux3' which is not available.");
+    throw (e);
+  }
+
+  sap.ui.getCore().attachInitEvent(
+      function() {
+
+        // Create the ux3 Shell
+        var oShell = new sap.ui.ux3.Shell("myShell", {
+          appTitle : "UI5 VIZ HTML5 Demo", // give a title
+          worksetItems : [ // add some items to the top navigation
+          new sap.ui.ux3.NavigationItem({
+        	id: "wi_home",
+            key : "wi_home",
+            text : "Home",
+            subItems : [ // the "Home" workcenter also gets three sub-items
+            new sap.ui.ux3.NavigationItem({
+              id: "wi_home_line",
+              key : "wi_home_line",
+              text : "Line"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_pie",
+              key : "wi_home_pie",
+              text : "Pie"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_donut",
+              key : "wi_home_donut",
+              text : "Donut"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_bar",
+              key : "wi_home_bar",
+              text : "Bar"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_column",
+              key : "wi_home_column",
+              text : "Column"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_combination",
+              key : "wi_home_combination",
+              text : "Combination"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_bubble",
+              key : "wi_home_bubble",
+              text : "Bubble"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_scatter",
+              key : "wi_home_scatter",
+              text : "Scatter"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_timeBubble",
+              key : "wi_home_timeBubble",
+              text : "Time Bubble"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_stvbar",
+              key : "wi_home_stvbar",
+              text : "Stacked VBar"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_pstvbar",
+              key : "wi_home_pstvbar",
+              text : "Stacked VBar(%)"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_custstvbar",
+              key : "wi_home_custstvbar",
+              text : "Stacked VBar (customized)"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_dualbar",
+              key : "wi_home_dualbar",
+              text : "Dual Bar"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_dualline",
+              key : "wi_home_dualline",
+              text : "Dual line"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_dualcombination",
+              key : "wi_home_dualcombination",
+              text : "Dual Combination"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_dualvbar",
+              key : "wi_home_dualvbar",
+              text : "Dual VBar"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_dualstvbar",
+              key : "wi_home_dualstvbar",
+              text : "Dual Stacked VBar"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_dualpstvbar",
+              key : "wi_home_dualpstvbar",
+              text : "Dual Stacked VBar(%)"
+            }),, new sap.ui.ux3.NavigationItem({
+              id: "wi_home_heatmap",
+              key : "wi_home_heatmap",
+              text : "Heatmap"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_treemap",
+              key : "wi_home_treemap",
+              text : "Treemap"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_area",
+              key : "wi_home_area",
+              text : "Area"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_horizontalarea",
+              key : "wi_home_horizontalarea",
+              text : "Horizontal Area"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_parea",
+              key : "wi_home_parea",
+              text : "Area(%)"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_phorizontalarea",
+              key : "wi_home_phorizontalarea",
+              text : "Horizontal Area(%)"
+            }), new sap.ui.ux3.NavigationItem({
+              id: "wi_home_bullet",
+              key : "wi_home_bullet",
+              text : "Bullet"
+            }) ]
+          }) ],
+          paneBarItems : [ // add also one item to the right-side PaneBar
+          new sap.ui.core.Item({
+            key : "pb_people",
+            text : "People"
+          }) ],
+          logout : function() { // create a handler function and attach it to the "logout" event
+            alert("User wants to log out...");
+          }
+        });
+
+        // also set some content for the side pane
+        oShell.setPaneContent(new sap.ui.commons.Button({
+          text : "This Button is in the Pane"
+        }));
+
+        var oBusinessData = [ {
+          Country : "Canada",
+          revenue : 410.87,
+          profit : -141.25,
+          population : 34789000
+        }, {
+          Country : "China",
+          revenue : 338.29,
+          profit : 133.82,
+          population : 1339724852
+        }, {
+          Country : "France",
+          revenue : 487.66,
+          profit : 348.76,
+          population : 65350000
+        }, {
+          Country : "Germany",
+          revenue : 470.23,
+          profit : 217.29,
+          population : 81799600
+        }, {
+          Country : "India",
+          revenue : 170.93,
+          profit : 117.00,
+          population : 1210193422
+        }, {
+          Country : "United States",
+          revenue : 905.08,
+          profit : 609.16,
+          population : 313490000
+        } ];
+
+        oModel = new sap.ui.model.json.JSONModel();
+
+        setTimeout(function() {
+          oModel.setData({
+            businessData : oBusinessData
+          });
+        }, 4000);
+
+        var oModel2D = new sap.ui.model.json.JSONModel({
+          data : [ {
+            country : 'China',
+            year : '2001',
+            product : 'Car',
+            profit : 10
+          }, {
+            country : 'China',
+            year : '2002',
+            product : 'Car',
+            profit : 32
+          }, {
+            country : 'France',
+            year : '2001',
+            product : 'Car',
+            profit : 23
+          }, {
+            country : 'France',
+            year : '2002',
+            product : 'Car',
+            profit : 43
+          }, {
+            country : 'Germany',
+            year : '2001',
+            product : 'Car',
+            profit : 123
+          }, {
+            country : 'Germany',
+            year : '2002',
+            product : 'Car',
+            profit : 34
+          }, {
+            country : 'USA',
+            year : '2001',
+            product : 'Car',
+            profit : 14
+          }, {
+            country : 'USA',
+            year : '2002',
+            product : 'Car',
+            profit : 25
+          }, {
+            country : 'China',
+            year : '2001',
+            product : 'Truck',
+            profit : 12
+          }, {
+            country : 'China',
+            year : '2002',
+            product : 'Truck',
+            profit : 78
+          }, {
+            country : 'France',
+            year : '2001',
+            product : 'Truck',
+            profit : 45
+          }, {
+            country : 'France',
+            year : '2002',
+            product : 'Truck',
+            profit : 86
+          }, {
+            country : 'Germany',
+            year : '2001',
+            product : 'Truck',
+            profit : 34
+          }, {
+            country : 'Germany',
+            year : '2002',
+            product : 'Truck',
+            profit : 56
+          }, {
+            country : 'USA',
+            year : '2001',
+            product : 'Truck',
+            profit : 23
+          }, {
+            country : 'USA',
+            year : '2002',
+            product : 'Truck',
+            profit : 76
+          }, {
+            country : 'China',
+            year : '2001',
+            product : 'Motorcycle',
+            profit : 12
+          }, {
+            country : 'China',
+            year : '2002',
+            product : 'Motorcycle',
+            profit : 78
+          }, {
+            country : 'France',
+            year : '2001',
+            product : 'Motorcycle',
+            profit : 45
+          }, {
+            country : 'France',
+            year : '2002',
+            product : 'Motorcycle',
+            profit : 86
+          }, {
+            country : 'Germany',
+            year : '2001',
+            product : 'Motorcycle',
+            profit : 34
+          }, {
+            country : 'Germany',
+            year : '2002',
+            product : 'Motorcycle',
+            profit : 56
+          }, {
+            country : 'USA',
+            year : '2001',
+            product : 'Motorcycle',
+            profit : 23
+          }, {
+            country : 'USA',
+            year : '2002',
+            product : 'Motorcycle',
+            profit : 76
+          }, {
+            country : 'China',
+            year : '2001',
+            product : 'Bicycle',
+            profit : 12
+          }, {
+            country : 'China',
+            year : '2002',
+            product : 'Bicycle',
+            profit : 78
+          }, {
+            country : 'France',
+            year : '2001',
+            product : 'Bicycle',
+            profit : 45
+          }, {
+            country : 'France',
+            year : '2002',
+            product : 'Bicycle',
+            profit : 86
+          }, {
+            country : 'Germany',
+            year : '2001',
+            product : 'Bicycle',
+            profit : 34
+          }, {
+            country : 'Germany',
+            year : '2002',
+            product : 'Bicycle',
+            profit : 56
+          }, {
+            country : 'USA',
+            year : '2001',
+            product : 'Bicycle',
+            profit : 23
+          }, {
+            country : 'USA',
+            year : '2002',
+            product : 'Bicycle',
+            profit : 76
+          } ]
+        });
+
+        var oMassData = [];
+        /*
+        for ( var c = 0; c < 1000; c++) {
+          oMassData.push({
+            Country : "Country" + c,
+            population : Math.random() * 10000000 + 1000000,
+            profit : 200 * Math.random()
+          });
+        }*/
+        oMassData = [{"Country":"Country0","population":7457419.374492019,"profit":22.18239577487111},{"Country":"Country1","population":7959302.194882184,"profit":170.08033329620957},{"Country":"Country2","population":8397022.538352758,"profit":172.55974342115223},{"Country":"Country3","population":6054224.121849984,"profit":119.13506332784891},{"Country":"Country4","population":3270642.062649131,"profit":13.007298111915588},{"Country":"Country5","population":10923479.615245014,"profit":31.828020606189966},{"Country":"Country6","population":10912832.980044186,"profit":8.07463307864964},{"Country":"Country7","population":6564101.517666131,"profit":141.55385419726372},{"Country":"Country8","population":1630879.8701502383,"profit":31.62126108072698},{"Country":"Country9","population":7327018.151059747,"profit":139.26228526979685},{"Country":"Country10","population":10664926.575496793,"profit":34.222837118431926},{"Country":"Country11","population":2637206.415180117,"profit":184.29979900829494},{"Country":"Country12","population":2196024.9789990485,"profit":154.42255339585245},{"Country":"Country13","population":10096910.49484536,"profit":193.5002056416124},{"Country":"Country14","population":2209039.4645929337,"profit":22.473119571805},{"Country":"Country15","population":4863845.632877201,"profit":17.842686688527465},{"Country":"Country16","population":1423126.1438690126,"profit":73.39713969267905},{"Country":"Country17","population":10178157.567512244,"profit":9.881851635873318},{"Country":"Country18","population":6995956.149417907,"profit":179.42100134678185},{"Country":"Country19","population":2926820.1664090157,"profit":52.377336006611586},{"Country":"Country20","population":5907440.319657326,"profit":173.56496714055538},{"Country":"Country21","population":8964087.466243654,"profit":103.591622505337},{"Country":"Country22","population":10794915.444217622,"profit":89.2091921530664},{"Country":"Country23","population":3534544.5470884442,"profit":144.07277083955705},{"Country":"Country24","population":10385899.62432161,"profit":125.44732978567481},{"Country":"Country25","population":2191239.6480329335,"profit":37.19438402913511},{"Country":"Country26","population":5321690.578944981,"profit":60.5033244471997},{"Country":"Country27","population":7471903.524361551,"profit":123.85044815018773},{"Country":"Country28","population":5221220.975741744,"profit":135.68013370968401},{"Country":"Country29","population":1806014.6123170853,"profit":103.70274935849011},{"Country":"Country30","population":10569779.322482646,"profit":22.26458555087447},{"Country":"Country31","population":9686388.328205794,"profit":23.949267389252782},{"Country":"Country32","population":7850223.341025412,"profit":154.52271969988942},{"Country":"Country33","population":9503300.461452454,"profit":157.04456232488155},{"Country":"Country34","population":10958012.686111033,"profit":191.18326716125011},{"Country":"Country35","population":4782235.637772828,"profit":49.50272124260664},{"Country":"Country36","population":2404446.945525706,"profit":77.57325419224799},{"Country":"Country37","population":1732400.6804265082,"profit":64.65568547137082},{"Country":"Country38","population":1264168.055728078,"profit":21.371577214449644},{"Country":"Country39","population":7108024.795539677,"profit":113.96036734804511},{"Country":"Country40","population":3318217.3329405487,"profit":70.75641811825335},{"Country":"Country41","population":4456507.00153783,"profit":153.3190114889294},{"Country":"Country42","population":5111400.8612930775,"profit":90.84119703620672},{"Country":"Country43","population":5051466.304808855,"profit":157.87765234708786},{"Country":"Country44","population":9511953.388806432,"profit":52.91701043024659},{"Country":"Country45","population":5444321.98535651,"profit":30.05285430699587},{"Country":"Country46","population":4538527.14644745,"profit":143.41606595553458},{"Country":"Country47","population":9103469.209745526,"profit":36.30750896409154},{"Country":"Country48","population":5871426.951140165,"profit":22.53862004727125},{"Country":"Country49","population":2105655.711144209,"profit":63.871920481324196},{"Country":"Country50","population":3155418.4146225452,"profit":81.26133605837822},{"Country":"Country51","population":3163804.031442851,"profit":55.57626695372164},{"Country":"Country52","population":10835676.741786301,"profit":165.01462841406465},{"Country":"Country53","population":7693652.267567813,"profit":137.37897323444486},{"Country":"Country54","population":7635638.845618814,"profit":41.477355966344476},{"Country":"Country55","population":6647429.637610912,"profit":26.31656783632934},{"Country":"Country56","population":5796840.860508382,"profit":67.13063232600689},{"Country":"Country57","population":2720499.135553837,"profit":68.9230174291879},{"Country":"Country58","population":4376352.33765468,"profit":192.64947064220905},{"Country":"Country59","population":4089795.8227433264,"profit":17.25783064030111},{"Country":"Country60","population":8653627.616818994,"profit":192.65038487501442},{"Country":"Country61","population":10403148.468118161,"profit":114.93289219215512},{"Country":"Country62","population":2290853.307582438,"profit":192.88779124617577},{"Country":"Country63","population":3779206.4007371664,"profit":66.31210050545633},{"Country":"Country64","population":3515909.660141915,"profit":92.55842664279044},{"Country":"Country65","population":10899820.36408037,"profit":85.00939644873142},{"Country":"Country66","population":7885923.927184194,"profit":67.15195467695594},{"Country":"Country67","population":5850340.23411572,"profit":140.4285383876413},{"Country":"Country68","population":3268628.051970154,"profit":66.11516200937331},{"Country":"Country69","population":3532525.130081922,"profit":73.28296769410372},{"Country":"Country70","population":2722276.4785401523,"profit":42.22669331356883},{"Country":"Country71","population":3274944.9987895787,"profit":139.03722232207656},{"Country":"Country72","population":9719916.83728993,"profit":152.64123198576272},{"Country":"Country73","population":7590031.960513443,"profit":55.7105119805783},{"Country":"Country74","population":10570119.08525601,"profit":78.58815276995301},{"Country":"Country75","population":6916278.928052634,"profit":47.5392600055784},{"Country":"Country76","population":10859042.819589376,"profit":25.0794748775661},{"Country":"Country77","population":1917044.8663644493,"profit":172.032477427274},{"Country":"Country78","population":6064348.827581853,"profit":55.23803178220987},{"Country":"Country79","population":7270971.500780433,"profit":112.88067335262895},{"Country":"Country80","population":7023762.687109411,"profit":143.37830590084195},{"Country":"Country81","population":2610948.9323571324,"profit":78.95949590019882},{"Country":"Country82","population":4165334.577206522,"profit":58.83568087592721},{"Country":"Country83","population":4074618.1425638497,"profit":45.29477651230991},{"Country":"Country84","population":2105514.101218432,"profit":75.04097451455891},{"Country":"Country85","population":6714428.094215691,"profit":158.2266241312027},{"Country":"Country86","population":5502196.563407779,"profit":22.14633715339005},{"Country":"Country87","population":10229167.788289487,"profit":165.26614730246365},{"Country":"Country88","population":1977880.4960660636,"profit":61.25644058920443},{"Country":"Country89","population":5690740.604419261,"profit":92.48663033358753},{"Country":"Country90","population":1103295.9716394544,"profit":155.48091460950673},{"Country":"Country91","population":3825813.856907189,"profit":3.556603891775012},{"Country":"Country92","population":1721514.3973007798,"profit":103.47590507008135},{"Country":"Country93","population":2125388.0569711328,"profit":52.21274485811591},{"Country":"Country94","population":9301550.94852671,"profit":77.19580195844173},{"Country":"Country95","population":3731691.8154247105,"profit":58.50409739650786},{"Country":"Country96","population":9794200.67416504,"profit":171.2829413358122},{"Country":"Country97","population":6080574.518069625,"profit":193.9704949501902},{"Country":"Country98","population":9780827.322043478,"profit":59.9241410382092},{"Country":"Country99","population":3132458.675187081,"profit":73.61219003796577},{"Country":"Country100","population":2104999.2218613625,"profit":171.40644644387066},{"Country":"Country101","population":6619536.9199849665,"profit":1.8182622268795967},{"Country":"Country102","population":2266119.657084346,"profit":155.33804381266236},{"Country":"Country103","population":7285438.337363303,"profit":24.510114267468452},{"Country":"Country104","population":8125506.266020238,"profit":154.32897442951798},{"Country":"Country105","population":8344620.630610734,"profit":129.3180180247873},{"Country":"Country106","population":4776153.55886519,"profit":71.36107375845313},{"Country":"Country107","population":7631448.022089899,"profit":173.18723774515092},{"Country":"Country108","population":6035762.791521847,"profit":88.12690102495253}];
+
+        oMassDataModel = new sap.ui.model.json.JSONModel({
+          businessData : oMassData
+        });
+
+        // all charts and the table share the same model, so we set it to a common parent, the shell
+        oShell.setModel(oModel);
+
+        // Page content creation - for each workset the content is defined here 
+        // For demo purposes there is just one button on each page
+        var mContent = {}; // a map to remember page content once it is created
+        function getContent(key) {
+          if (mContent[key])
+            return mContent[key]; // if content is already created, return it directly
+
+          if (key == "wi_home_pie") {
+
+            var dataset = new sap.viz.ui5.data.FlattenedDataset({
+
+              dimensions : [ {
+                axis : 1,
+                name : 'Country',
+                value : "{Country}"
+              } ],
+
+              measures : [ {
+                name : 'Revenue',
+                value : { path : 'revenue', formatter : function($) { return 2*$; }}
+              } ],
+
+              data : {
+                path : "/businessData",
+                factory : function() {
+                }
+              }
+
+            });
+
+            var pie = new sap.viz.ui5.Pie({
+              id:"pie",
+              width : "80%",
+              height : "400px",
+              plotArea : {
+              //'colorPalette' : d3.scale.category20().range()
+              },
+              toolTip :{
+                preRender : function(tooltipDomNode){
+                  //Called before render tooltip.
+                  tooltipDomNode.append('div').text('Append more information in default tooltip.').style({'font-weight': 'bold'});
+                },
+                postRender : function(tooltipDomNode){
+                  //Called after tooltip is renderred. 
+                  //tooltipDomNode.selectAll('.v-body-measure-value').style({'color': 'red'});
+                  tooltipDomNode.selectAll('.v-body-measure-value').attr('style', 'color: red;');
+                }
+              },
+              /*
+              title : {
+                visible : true,
+                text : 'Revenue By Country'
+              },*/
+              dataset : dataset
+            });
+
+            // alternative way of setting configuration 
+            pie.getTitle().setVisible(true).setText("Revenue By Country");
+
+            mContent[key] = pie;
+
+          } else if (key == "wi_home_donut") {
+
+            var dataset = new sap.viz.ui5.data.FlattenedDataset({
+
+              dimensions : [ {
+                axis : 1,
+                name : 'Country',
+                value : "{Country}"
+              } ],
+
+              measures : [ {
+                name : 'Profit',
+                value : '{profit}'
+              } ],
+
+              data : {
+                path : "/businessData"
+              }
+
+            });
+
+            var donut = new sap.viz.ui5.Donut({
+              id:"donut",
+              width : "80%",
+              height : "400px",
+              plotArea : {
+              //'colorPalette' : d3.scale.category20().range()
+              },
+              title : {
+                visible : true,
+                text : 'Profit By Country'
+              },
+              dataset : dataset
+            });
+            mContent[key] = donut;
+
+          } else if (key == "wi_home_bar") {
+
+            var panel = new sap.ui.commons.Panel({
+              text : "Additional Screen Content",
+              content : [],
+              collapsed : true
+            });
+
+            var dataset = new sap.viz.ui5.data.FlattenedDataset({
+
+              dimensions : [ {
+                axis : 1,
+                name : 'Country',
+                value : "{Country}"
+              } ],
+
+              measures : [ {
+                name : 'Profit',
+                value : '{profit}'
+              }, {
+                name : 'Revenue',
+                value : '{revenue}'
+              } ],
+
+              data : {
+                path : "/businessData"
+              }
+
+            });
+
+            var oCallout = new sap.ui.commons.Callout({
+              content : new sap.ui.commons.TextView({
+                text : "Hello Chart World!"
+              })
+            });
+
+            var bar = new sap.viz.ui5.Bar({
+              id : "bar",
+              width : "80%",
+              height : "400px",
+              plotArea : {
+              //'colorPalette' : d3.scale.category20().range()
+              },
+              interaction : {
+                selectability : {
+                  mode : 'single'
+                },
+                decorations : [{
+                  name : 'showDetail',
+                  fn : function(options){
+                    var _rootNode = $("#myTooltip");
+                    var _mode = options.mode;
+                    //update content
+                    _rootNode.find(".summary .number").text(options.selectedNumber);
+                    //_rootNode.find(".mode").text(options.mode);
+                    var dataNode = _rootNode.find(".data");
+                    dataNode.find(".datum").remove();
+                    if (options.data && options.data.length) {
+                        for (var i = -1; ++i < options.data.length; ) {
+                            var item = options.data[i];
+                            var itemNode = $("<div class='datum'><span class='key'>" + item.name + "</span><span class='value'>" + item.value + "</span></div").appendTo(dataNode);
+                            if (item.type === 'measure') {
+                                itemNode.find('.value').css("text-decoration", "underline");
+                            }
+                        }
+                    }
+                    //show it
+                    _rootNode.css({
+                        "display": "block",
+                        "left": options.position.x + 4,
+                        "bottom": $(document).height() - options.position.y + 4 //let tooltip showing above mouse point
+                    });
+                  }
+                }, {
+                  name : 'hideDetail',
+                  fn : function(options){
+                    var _rootNode = $("#myTooltip");
+                    if(_rootNode){
+                      _rootNode.css("display", "none");
+                    }
+                    return true;
+                  }
+                }]
+              },
+              title : {
+                visible : true,
+                text : 'Profit and Revenue By Country'
+              },
+              noData : new sap.ui.commons.Button({
+                text : "No data!"
+              }),
+              dataset : dataset,
+              tooltip : oCallout, // Note: this is the UI5 tooltip
+              selectData : function(e) {
+                // event data as provided by the VIZ library
+                var aSelectData = e.getParameter("data");
+                // the FlattenedDataset used by this chart 
+                var oDataset = this.getDataset(); 
+                for(var i=0; i<aSelectData.length; i++) {
+                  var oDataPoint = aSelectData[i];
+                  for(var j=0; j<oDataPoint.data.length; j++) {
+                    var oPath = oDataPoint.data[j].ctx.path;
+                    var oContext = oDataset.findContext(oPath);
+                    panel.setBindingContext(oContext);
+                  }
+                }
+              },
+              
+              /* 
+              showTooltip and hideTooltip will be deprected. Please use interaction.decorations to override tooltip
+              showTooltip : function(o) {
+                oCallout.setProperty("offset", o.getParameter("data").point.x + " "
+                    + o.getParameter("data").point.y, true);
+                oCallout.openPopup(bar);
+                oCallout.adjustPosition();
+                jQuery.sap.log.info("showTooltip:" + o.getParameters());
+              },
+              hideTooltip : function(o) {
+                oCallout.closePopup();
+                jQuery.sap.log.info("hideTooltip:" + o.getParameters());
+              } */
+            });
+
+            var change = 0;
+            var button = new sap.ui.commons.Button({
+              text : "Modify Dataset",
+              press : function() {
+                change++;
+                if ( change === 1 ) {
+                  dataset.addMeasure(new sap.viz.ui5.data.MeasureDefinition({
+                    name : 'Populuation',
+                    value : '{population}'
+                  }));
+                } else if ( change === 2 ) {
+                  dataset.getMeasures()[2].bindProperty('value', { 
+                    path : 'population', 
+                    formatter : function($) { 
+                      return (Math.round($ / 1E4) / 100); 
+                    } 
+                  });
+                } else if ( change === 3 ) {
+                  dataset.removeMeasure(0).destroy();
+                }
+              }
+            });
+            
+            var label1 = new sap.ui.commons.Label({
+              text: "Population",
+              labelFor: "tfBarPopulation"
+            });
+            var field1 = new sap.ui.commons.TextField({
+              id: "tfBarPopulation",
+              value: "{population}"
+            });
+            var label2 = new sap.ui.commons.Label({
+              text: "Profit",
+              labelFor: "tfBarProfit"
+            });
+            var field2 = new sap.ui.commons.TextField({
+              id: "tfBarProfit",
+              value: "{profit}"
+            });
+            var label3 = new sap.ui.commons.Label({
+              text: "Revenue",
+              labelFor: "tfBarRevenue"
+            });
+            var field3 = new sap.ui.commons.TextField({
+              id: "tfBarRevenue",
+              value: "{revenue}"
+            });
+            panel.addContent(label1);
+            panel.addContent(field1);
+            panel.addContent(label2);
+            panel.addContent(field2);
+            panel.addContent(label3);
+            panel.addContent(field3);
+            mContent[key] = [ panel, bar, button ];
+
+          } else if (key == "wi_home_line") {
+
+            var dataset = new sap.viz.ui5.data.FlattenedDataset({
+
+              dimensions : [ {
+                axis : 1,
+                name : 'Country',
+                value : "{Country}"
+              } ],
+
+              measures : [ {
+                name : 'Profit',
+                value : '{profit}'
+              }, {
+                name : 'Revenue',
+                value : '{revenue}'
+              } ],
+
+              data : {
+                path : "/businessData"
+              }
+
+            });
+
+            var line = new sap.viz.ui5.Line({
+              id : "line",
+              width : "80%",
+              height : "400px",
+              plotArea : {
+              //'colorPalette' : d3.scale.category20().range()
+              },
+              title : {
+                visible : true,
+                text : 'Profit and Revenue By Country'
+              },
+              xAxis : {
+                title : {
+                  visible : true
+                }
+              },
+              dataset : dataset
+            });
+
+            mContent[key] = line;
+
+          } else if (key == "wi_home_combination") {
+
+            var dataset = new sap.viz.ui5.data.FlattenedDataset({
+
+              dimensions : [ {
+                axis : 1,
+                name : 'Country',
+                value : "{Country}"
+              } ],
+
+              measures : [ {
+                name : 'Profit',
+                value : '{profit}'
+              }, {
+                name : 'Revenue',
+                value : '{revenue}'
+              } ],
+
+              data : {
+                path : "/businessData"
+              }
+
+            });
+
+            var combination = new sap.viz.ui5.Combination({
+              id: "combination",
+              width : "80%",
+              height : "400px",
+              plotArea : {
+              //'colorPalette' : d3.scale.category20().range()
+              },
+              title : {
+                visible : true,
+                text : 'Profit and Revenue By Country'
+              },
+              bar : {
+
+              },
+              line : {
+
+              },
+              dataset : dataset
+            });
+
+            mContent[key] = combination;
+
+          } else if (key == "wi_home_column") {
+
+            var dataset = new sap.viz.ui5.data.FlattenedDataset({
+
+              dimensions : [ {
+                axis : 1,
+                name : 'Country',
+                value : "{Country}"
+              } ],
+
+              measures : [ {
+                name : 'Profit',
+                value : '{profit}'
+              }, {
+                name : 'Revenue',
+                value : '{revenue}'
+              } ],
+
+              data : {
+                path : "/businessData"
+              }
+
+            });
+
+            var column = new sap.viz.ui5.Column({
+              id : "column",
+              width : "80%",
+              height : "400px",
+              plotArea : {
+              //'colorPalette' : d3.scale.category20().range()
+              },
+              title : {
+                visible : true,
+                text : 'Profit and Revenue By Country'
+              },
+              dataset : dataset
+            });
+
+            mContent[key] = column;
+
+          } else if (key == "wi_home_bubble") {
+
+            var dataset = new sap.viz.ui5.data.FlattenedDataset({
+
+              dimensions : [ {
+                axis : 1,
+                name : 'Country',
+                value : "{Country}"
+              } ],
+
+              measures : [ {
+                group : 1,
+                name : 'Population',
+                value : '{population}'
+              }, {
+                group : 2,
+                name : 'Profit',
+                value : '{profit}'
+              }, {
+                group : 3,
+                name : 'Revenue',
+                value : '{revenue}'
+              } ],
+
+              data : {
+                path : "/businessData",
+                factory : function() {
+                }
+              }
+
+            });
+
+            var bubble = new sap.viz.ui5.Bubble({
+              id : "bubble",
+              width : "80%",
+              height : "400px",
+              plotArea : {
+              //'colorPalette' : d3.scale.category20().range()
+              },
+              title : {
+                visible : true,
+                text : 'Profit and Revenue By Country'
+              },
+              dataset : dataset
+            });
+
+            mContent[key] = bubble;
+
+          } else if (key == "wi_home_bar") {
+
+            var dataset = new sap.viz.ui5.data.FlattenedDataset({
+
+              dimensions : [ {
+                axis : 1,
+                name : 'Country',
+                value : "{Country}"
+              } ],
+
+              measures : [ {
+                name : 'Profit',
+                value : '{profit}'
+              }, {
+                name : 'Revenue',
+                value : '{revenue}'
+              } ],
+
+              data : {
+                path : "/businessData"
+              }
+
+            });
+
+            var bar = new sap.viz.ui5.Bar({
+              id : "bar",
+              width : "80%",
+              height : "400px",
+              bar : {
+              //'colorPalette' : d3.scale.category20().range()
+              },
+              title : {
+                visible : true,
+                text : 'Profit and Revenue By Country'
+              },
+              dataset : dataset
+            });
+
+            mContent[key] = bar;
+
+          } else if (key == "wi_home_scatter") {
+
+            var dataset = new sap.viz.ui5.data.FlattenedDataset({
+
+              dimensions : [ {
+                axis : 1,
+                name : 'Country',
+                value : "{Country}"
+              } ],
+
+              measures : [ {
+                group : 1,
+                name : 'Population',
+                value : '{population}'
+              }, {
+                group : 2,
+                name : 'Profit',
+                value : '{profit}'
+              }, ],
+
+              data : {
+                path : "/businessData"
+              }
+
+            });
+
+            var scatter = new sap.viz.ui5.Scatter({
+              id : "scatter",
+              width : "80%",
+              height : "400px",
+              plotArea : {
+              //'colorPalette' : d3.scale.category20().range()
+                animation: {
+                  dataLoading : false,
+                  dataUpdating : false,
+                  resizing : false
+                }
+              },
+              title : {
+                visible : true,
+                text : 'Profit By Country & Population'
+              },
+              legend: {
+                isScrollable: true
+              },
+              dataset : dataset
+            });
+            scatter.setModel(oMassDataModel);
+            mContent[key] = scatter;
+
+          } else if(key == "wi_home_timeBubble"){
+            var values = [ 
+              { Country : "USA", Revenue : 100, Measure : 80 },
+              { Country : "Canada", Revenue : 110, Measure : 50 },
+              { Country : "South Africa", Revenue : 180, Measure : 20 },
+              { Country : "France", Revenue : 210, Measure : 110 },
+              { Country : "China", Revenue : 190, Measure : 150 },
+              { Country : "India", Revenue : 90, Measure : 50 },
+              { Country : "Japan", Revenue : 120, Measure : 120 },
+              { Country : "Spain", Revenue : 150, Measure : 200 }
+            ];
+            var start = new Date();
+            start.setFullYear(2013);
+            start.setMonth(0);
+            start.setDate(1);
+            start.setHours(22);
+            start.setMinutes(51);
+            start.setSeconds(10);
+
+            var end = new Date();
+            end.setFullYear(2013);
+            end.setMonth(10);
+            end.setDate(20);
+            end.setHours(16);
+            end.setMinutes(39);
+            end.setSeconds(31);
+
+            var range = end.getTime() - start.getTime();
+            var timeArr = [];
+            for (var i = 0; i < values.length; i++) {
+              var t = parseInt(range * i * 0.1) + start.getTime();
+              values[i]['Time'] = t;
+            }
+
+            var oModel = new sap.ui.model.json.JSONModel({
+              data : values
+            });   
+
+
+            var oDataset = new sap.viz.ui5.data.FlattenedDataset({
+              dimensions : [ 
+                 { axis : 1, name : "Country", value : "{Country}" }
+              ],
+              measures : [ 
+                 { group : 2, name : "Revenue", value : "{Revenue}" }, 
+                 { group : 3, name : "Measure", value : "{Measure}" }, 
+                 { group : 1, name : "Time", value : "{Time}"}
+               ],
+              data : {
+                path : "/data"
+              }
+            });
+            oDataset.setModel(oModel);
+            var timeBubbleChart = new sap.viz.ui5.TimeBubble({
+              id : "timeBubble",
+              width : "80%",
+              height : "400px",
+              dataset: oDataset
+            });
+            mContent[key] = timeBubbleChart;
+          } else if (key == "wi_home_stvbar" || key == "wi_home_custstvbar") {
+
+            var dataset = new sap.viz.ui5.data.FlattenedDataset({
+
+              dimensions : [ {
+                axis : 1,
+                name : 'Country',
+                value : "{country}"
+              }, {
+                axis : 1,
+                name : 'Year',
+                value : "{year}"
+              }, {
+                axis : 2,
+                name : 'Product',
+                value : "{product}"
+              } ],
+
+              measures : [ {
+                name : 'Profit',
+                value : '{profit}'
+              } ],
+
+              data : {
+                path : "/data",
+                factory : function() {
+                }
+              }
+
+            });
+
+            var column;
+            // for the customized vertical stack bar, we attach a listener to "createViz" and modify some options
+            if (key == "wi_home_custstvbar") {
+              column = new sap.viz.ui5.StackedColumn({
+                id: "custstvbar",
+                width : "80%",
+                height : "400px",
+                plotArea : {
+                //'colorPalette' : d3.scale.category20().range()
+                },
+                title : {
+                  visible : true,
+                  text : 'Profit By Country & Population'
+                },
+                xAxis:{
+                title:{visible:true} ,
+                 label:{hideSubLevels:true},
+                },
+                yAxis:{
+                  title:{visible:true},
+                  label:{visible:false},
+                },
+                dataset : dataset
+              });
+              
+              column.attachBeforeCreateViz(function(e) {
+
+                var usrOptions = e.getParameter("usrOptions");
+                // make the vertical stacked bar a horizontal stacked bar
+                usrOptions.type = "viz/stacked_bar";
+                // add a feeding definition to show MND
+                usrOptions.feeding = [ {
+                  "feedId" : "axisLabels",
+                  "binding" : [ {
+                    "type" : "measureNamesDimension"
+                  }, {
+                    "type" : "analysisAxis",
+                    "index" : 1
+                  } ]
+                }, {
+                  "feedId" : "regionColor",
+                  "binding" : [ {
+                    "type" : "analysisAxis",
+                    "index" : 2
+                  } ]
+                }, {
+                  "feedId" : "primaryValues",
+                  "binding" : [ {
+                    "type" : "measureValuesGroup",
+                    "index" : 1
+                  } ]
+                } ];
+
+              });
+            }else{
+              column = new sap.viz.ui5.StackedColumn({
+                id: "stvbar",
+                width : "80%",
+                height : "400px",
+                plotArea : {
+                //'colorPalette' : d3.scale.category20().range()
+                },
+                title : {
+                  visible : true,
+                  text : 'Profit By Country & Population'
+                },
+                xAxis:{
+                title:{visible:true} ,
+                 label:{hideSubLevels:true},
+                },
+                yAxis:{
+                  title:{visible:true},
+                  label:{visible:false},
+                },
+                dataset : dataset
+              });
+            }
+            column.setModel(oModel2D);
+
+            mContent[key] = column;
+
+          } else if (key == "wi_home_pstvbar") {
+
+            var dataset = new sap.viz.ui5.data.FlattenedDataset({
+
+              dimensions : [ {
+                axis : 1,
+                name : 'Country',
+                value : "{country}"
+              }, {
+                axis : 1,
+                name : 'Year',
+                value : "{year}"
+              }, {
+                axis : 2,
+                name : 'Product',
+                value : "{product}"
+              } ],
+
+              measures : [ {
+                name : 'Profit',
+                value : '{profit}'
+              } ],
+
+              data : {
+                path : "/data"
+              }
+
+            });
+
+            var vbar = new sap.viz.ui5.StackedColumn100({
+              id: "pstvbar",
+              width : "80%",
+              height : "400px",
+              plotArea : {
+              //'colorPalette' : d3.scale.category20().range()
+              },
+              title : {
+                visible : true,
+                text : 'Profit By Country & Population'
+              },
+              dataset : dataset
+            });
+
+            vbar.setModel(oModel2D);
+            mContent[key] = vbar;
+
+          }else if(key === 'wi_home_heatmap'){
+            var dataset = new sap.viz.ui5.data.FlattenedDataset({
+
+              dimensions : [ {
+                axis : 1,
+                name : 'Country',
+                value : "{Country}"
+              } ],
+
+              measures : [ {
+                group : 1,
+                name : 'Population',
+                value : '{population}'
+              }, {
+                group : 2,
+                name : 'Profit',
+                value : '{profit}'
+              }, ],
+
+              data : {
+                path : "/businessData"
+              }
+
+            });
+
+            var vbar = new sap.viz.ui5.Heatmap({
+              id: "heatmap",
+              width : "80%",
+              height : "400px",
+              plotArea : {
+              //'colorPalette' : d3.scale.category20().range()
+              },
+              title : {
+                visible : true,
+                text : 'Profit By Country & Population'
+              },
+              dataset : dataset
+            });
+            vbar.setModel(oMassDataModel);
+            mContent[key] = vbar;
+            
+          } else if(key === 'wi_home_treemap'){
+            var generateUI5data = function(){
+              var rs = [],item = {};
+              var iNum = 90;
+              for(var i = 1; i<=iNum; i++){
+                item = {
+                  'R1': "N + 10, N <= 90",
+                  'R2': i*10 +"",
+                  'Size': i*10,
+                  'Color': i*10
+                };
+                rs.push(item);
+              }
+              for(var i = 1; i<=iNum; i++){
+                item = {
+                  'R1' : "N ^ 1.1, N <= 90",
+                  'R2' : Math.pow(1.1,i)+"",
+                  'Size' : Math.pow(1.1,i),
+                  'Color' : Math.pow(1.1,i)
+                };
+                rs.push(item);
+              }
+              return rs;
+            };
+            var treeDS = generateUI5data();
+            var treeModel = new sap.ui.model.json.JSONModel({
+              data: treeDS 
+            });
+            var treeDataset = new sap.viz.ui5.data.FlattenedDataset({
+              dimensions : [ {
+                axis : 1,
+                name : 'R1',
+                value : "{R1}"
+              },{
+                axis : 1,
+                name : 'R2',
+                value : "{R2}"
+              }  ],
+
+              measures : [ {
+                group : 1,
+                name : 'Size',
+                value : '{Size}'
+              },{
+                group : 2,
+                name : 'Color',
+                value : '{Color}'
+              } ],
+
+              data : {
+                path : "/data"
+              }
+            });
+            
+            var vbar = new sap.viz.ui5.Treemap({
+              id : "treemap",
+              width : "80%",
+              height : "400px",
+              plotArea : {
+                "endColor":"#3300c0", 
+                "startColor":"#a9f0ff"
+              },
+              title : {
+                visible : true,
+                text : 'Profit By Country & Population'
+              },
+              dataset : treeDataset
+            });
+            vbar.setModel(treeModel);
+            mContent[key] = vbar;
+          }else if(key === 'wi_home_dualbar' || key === 'wi_home_dualline' || key=== 'wi_home_dualvbar'
+              || key === 'wi_home_dualcolumn' || key === 'wi_home_dualcombination' 
+              || key === 'wi_home_dualstvbar' || key === 'wi_home_dualpstvbar'
+              || key === 'wi_home_area' || key === 'wi_home_parea'
+              || key === 'wi_home_horizontalarea' || key === 'wi_home_phorizontalarea'){
+            var a1a2m1m2m3Model = {
+                data:[
+                    {Region: "Asia", Company: "FJ", Revenue: 10, Measure: 110, Population: 1200},
+                    {Region: "Asia", Company: "KI", Revenue: 5, Measure: 180, Population: 1900},
+                    {Region: "Asia", Company: "LA", Revenue: 17, Measure: 105, Population: 1680},
+                    {Region: "Europe", Company: "FJ", Revenue: 2, Measure: 130, Population: 1003},
+                    {Region: "Europe", Company: "KI", Revenue: 22, Measure: 80, Population: 1312},
+                    {Region: "Europe", Company: "LA", Revenue: 24, Measure: 40, Population: 1453},
+                    {Region: "Africa", Company: "FJ", Revenue: 37, Measure:88, Population: 1335},
+                    {Region: "Africa", Company: "KI", Revenue: 15, Measure: 55, Population: 1859},
+                    {Region: "Africa", Company: "LA", Revenue: 44, Measure:140, Population: 1879}
+                ]
+              };
+              
+              var a1a2m1m2Data = {
+                  dimensions : [
+                      {axis : 1, name: "Region", value: "{Region}"},
+                      {axis : 2, name: "Company", value: "{Company}"},
+                  ],
+                  measures : [
+                      {group: 1, name : "Revenue", value : "{Revenue}"},
+                      {group: 2, name : "Measure", value : "{Measure}"}
+                  ],
+                  data : {
+                    path : "/data"
+                  }
+                };
+            var oDataset = new sap.viz.core.FlattenedDataset(a1a2m1m2Data);
+            var oModel = new sap.ui.model.json.JSONModel(a1a2m1m2m3Model);
+            oDataset.setModel(oModel);
+         //   var oProperties = {
+         //     width : "80%",
+         //     height : "400px",
+         //     title: {
+         //       visible : true,
+         //       text : 'Profit & Measure By Region & Company'
+         //     },
+         //     dataset: oDataset
+         //   };
+            var oDualChart;
+            switch(key){
+            case 'wi_home_dualbar':
+              oDualChart = new sap.viz.ui5.DualBar(
+            		  {
+                          id: "dualbar",
+            			  width : "80%",
+                          height : "400px",
+                          title: {
+                            visible : true,
+                            text : 'Profit & Measure By Region & Company'
+                          },
+                          dataset: oDataset
+                        }	  
+              );
+              break;
+            case 'wi_home_dualline':
+              oDualChart = new sap.viz.ui5.DualLine(
+            		  {
+                          id: "dualline",
+            			  width : "80%",
+                          height : "400px",
+                          title: {
+                            visible : true,
+                            text : 'Profit & Measure By Region & Company'
+                          },
+                          dataset: oDataset
+                        }
+              
+              );
+              break;
+            case 'wi_home_dualcombination':
+              oDualChart = new sap.viz.ui5.DualCombination(
+            		  {
+                          id: "dualcombination",
+            			  width : "80%",
+                          height : "400px",
+                          title: {
+                            visible : true,
+                            text : 'Profit & Measure By Region & Company'
+                          },
+                          dataset: oDataset
+                        }	  
+              );
+              break;
+            case 'wi_home_dualstvbar':
+              oDualChart = new sap.viz.ui5.DualStackedColumn(
+            		  {
+                          id: "dualstvbar",
+            			  width : "80%",
+                          height : "400px",
+                          title: {
+                            visible : true,
+                            text : 'Profit & Measure By Region & Company'
+                          },
+                          dataset: oDataset
+                        }	  
+              );
+              break;
+            case 'wi_home_dualpstvbar':
+              oDualChart = new sap.viz.ui5.DualStackedColumn100(
+            		  {
+                          id: "dualpstvbar",
+            			  width : "80%",
+                          height : "400px",
+                          title: {
+                            visible : true,
+                            text : 'Profit & Measure By Region & Company'
+                          },
+                          dataset: oDataset
+                        }	  
+              );
+              break;
+            case 'wi_home_dualvbar':
+              oDualChart = new sap.viz.ui5.DualColumn(
+            		  {
+                          id: "dualvbar",
+            			  width : "80%",
+                          height : "400px",
+                          title: {
+                            visible : true,
+                            text : 'Profit & Measure By Region & Company'
+                          },
+                          dataset: oDataset
+                        }	  
+              );
+              break;
+            case 'wi_home_area':
+              oDualChart = new sap.viz.ui5.Area(
+            		  {
+                          id: "area",
+            			  width : "80%",
+                          height : "400px",
+                          title: {
+                            visible : true,
+                            text : 'Profit & Measure By Region & Company'
+                          },
+                          dataset: oDataset
+                        }	  
+              );
+              break;
+            case 'wi_home_parea':
+              oDualChart = new sap.viz.ui5.Area100(
+            		  {
+                          id: "parea",
+            			  width : "80%",
+                          height : "400px",
+                          title: {
+                            visible : true,
+                            text : 'Profit & Measure By Region & Company'
+                          },
+                          dataset: oDataset
+                        }	  
+              );
+              break;
+            case 'wi_home_horizontalarea':
+              oDualChart = new sap.viz.ui5.HorizontalArea(
+            		  {
+                          id: "horizontalarea",
+            			  width : "80%",
+                          height : "400px",
+                          title: {
+                            visible : true,
+                            text : 'Profit & Measure By Region & Company'
+                          },
+                          dataset: oDataset
+                        }	  
+              );
+              break;
+            case 'wi_home_phorizontalarea':
+              oDualChart = new sap.viz.ui5.HorizontalArea100(
+            		  {
+                          id: "phorizontalarea",
+            			  width : "80%",
+                          height : "400px",
+                          title: {
+                            visible : true,
+                            text : 'Profit & Measure By Region & Company'
+                          },
+                          dataset: oDataset
+                        }	  
+              );
+              break;
+            }
+            mContent[key] = oDualChart;
+          } else if(key == 'wi_home_bullet'){
+            var oModel = new sap.ui.model.json.JSONModel({
+              data:[
+									{ Country : "Canada", profit: 10, forecast: 13, target: 10, refer1: 5, refer2: 8, refer3: 10},
+									{ Country : "China",profit: 18, forecast: 25, target: 8, refer1: 3, refer2: 4, refer3: 5},
+									{ Country : "France",profit: 13, forecast: 16, target: 15, refer1: 6, refer2: 8, refer3:  15},
+									{ Country : "Germany",profit: 14, forecast: 20, target: 20, refer1: 6, refer2: 8, refer3: 15},
+									{ Country : "India",profit: 8, forecast: 13, target: 16, refer1: 4, refer2: 8, refer3: 16},
+									{ Country : "United States", profit: 20, forecast: 23, target: 22, refer1: 8, refer2: 12, refer3: 20}
+               ]
+            });   
+            var oDataset = new sap.viz.ui5.data.FlattenedDataset({
+              dimensions : [ 
+                  { axis : 1, name : 'Country', value : "{Country}"}
+              ],
+              measures : [ 
+                  { group: 1, name : 'Profit', value : '{profit}' },
+                  { group: 1, name: 'Forecast', value: '{forecast}' },
+                  { group: 2, name: 'Target', value: '{target}' },
+                  { group: 3, name: 'Refer1', value: '{refer1}'},
+                  { group: 3, name: 'Refer2', value: '{refer2}'},
+                  { group: 3, name: 'Refer3', value: '{refer3}'}
+              ],
+             data : { path : "/data" }
+            });
+            var oBulletChart = new sap.viz.ui5.Bullet("bullet", {
+            	      id: "bullet",
+		              width : "80%",
+		              height : "500px",
+                  css : '.v-m-yAxis2 .viz-axis-label.v-label{fill: #3778c7; font-size: 18px; font-weight : bold;}',
+                  dataset : oDataset
+            });            
+            oBulletChart.setModel(oModel);
+            mContent[key] = oBulletChart;
+          } 
+          return mContent[key];
+        }
+
+        // when the user selects a workset, put the respective content into the shell's main area
+        oShell.attachWorksetItemSelected(function(oEvent) {
+          var key = oEvent.getParameter("key");
+          oShell.setContent(getContent(key));
+        });
+
+        // set the initial content of the Shell - the line chart is selected initially
+        oShell.addContent(getContent("wi_home_line"));
+
+        // place the Shell into the <div> element defined below
+        oShell.placeAt("shellArea");
+      });
+</script>
+
+</head>
+<body class="sapUiBody">
+  <style>
+	  .sapUiUx3ShellContent{
+	    /*overflow: visible;*/
+	  }
+	  #myTooltip {
+        position: absolute;
+        display: none;
+        border: #007dc0 solid 2px;
+        background: #f2f2f2;
+        padding: 8px;
+        z-index: 1000;
+        border-radius: 8px;
+        color : #000000;
+    }
+    #myTooltip .summary {
+        border-bottom: gray solid 1px;
+        margin-bottom: 5px;
+        padding-bottom: 5px;
+    }
+    #myTooltip .summary .number {
+        font-weight: bold;
+    }
+    #myTooltip .summary .mode {
+        font-style: italic;
+    }
+    #myTooltip .title {
+        font-weight: bold;
+    }
+    #myTooltip .key {
+        display: inline-block;
+        font-weight: bold;
+        width: 100px;
+    }
+	#deprecatedBanner {
+		position: absolute;
+		margin-top: 10px;
+		margin-left: 170px;
+		margin-right: 50px;
+		height: 40px;
+		padding: 10px;
+		border: 3px solid red;
+		border-radius: 10px;
+		opacity: 0.75;
+		color: red;
+		font-weight: bold;
+		font-size: 0.7rem;
+		z-index: 99999;
+		background-color: white;
+		overflow-y: hidden;
+	}
+	@media screen and (max-width: 1400px) {
+		#deprecatedBanner{
+			font-size: 0.6rem;
+		}
+	}
+	@media screen and (max-width: 1200px) {
+		#deprecatedBanner{
+			font-size: 0.55rem;
+		}
+	}
+  </style>
+  <!-- This is where the Shell will live -->
+
+<div>
+	<span id="deprecatedBanner" title="The chart controls in the <code>sap.viz.ui5</code> package (which were always marked as <i>experimental</i>) have been deprecated since 1.32.0. They are no longer actively developed and won't receive new features or improvements, only important bug fixes. They will only remain in the SAPUI5 distribution for backward compatibility. <b>SAP strongly recommends that existing consumers of those controls migrate to the new VizFrame control to benefit from new charting enhancements and timely support. </b><b>Note</b>: As the feature set, design and API usage of VizFrame might differ from the old chart controls, make sure you evaluate it thoroughly before migration.">
+		<span style ="color: red;">IMPORTANT NOTICE: viz-chart deprecated since version 1.32.0<br/></span>
+		<span style="text-align: left;">The chart controls in the <code>sap.viz.ui5</code> package (which were always marked as <i>experimental</i>) have been deprecated since 1.32.0. They are no longer actively developed and won't receive new features or improvements, only important bug fixes. They will only remain in the SAPUI5 distribution for backward compatibility. <b>SAP strongly recommends that existing consumers of those controls migrate to the new VizFrame control to benefit from new charting enhancements and timely support. </b><b>Note</b>: As the feature set, design and API usage of VizFrame might differ from the old chart controls, make sure you evaluate it thoroughly before migration.</span>
+	</span>
+</div>
+  <div id="shellArea"></div>
+  <div id="myTooltip">
+    <div style='font-weight:bold; color: #007dc0; padding-bottom: 5px;'>This is a override Tooltip.</div>
+     <div class="summary"><span class="number"></span> Bars Selected.</div>
+     <div class="data">
+         <div class="datum">
+             <span class="key">key</span>: <span class="value">value</span>
+         </div>
+     </div>
+    </div>
+  </div>
+</body>
+</html>

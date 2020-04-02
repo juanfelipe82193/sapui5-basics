@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="./style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm,sap.m"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+
+	<script>
+	
+	// have some data
+	var oData = 
+		{
+				Spots :
+				[
+					{ "key" : "1", "pos": "8.645038604736328;49.29220020589785;0",  "tooltip": "Spot1" },
+					{ "key":  "2", "pos": "174.7705078125;-36.851207444160224;0", "tooltip": "Spot2", },
+					{ "key":  "3", "pos": "-122.16384887695312;37.4424261329046;0", "tooltip": "Spot3" }
+				],
+				Circles :
+					[
+						{ "key" : "1", "pos": "-47.8125;-15.668006245888888;0",  "tooltip": "Brasilia", "pix": "19" },
+						{ "key":  "2", "pos": "-77.16796875;-11.999030807687063;0", "tooltip": "Lima", "pix": "42" },
+						{ "key":  "3", "pos": "-70.6640625;-33.470413703303336;0", "tooltip": "Santiago", "pix": "26" }
+					],
+			
+				PieSeries :
+					[
+						{ "key":  "7", "value": "10",  	"tooltip": "10 Items" 	},
+						{ "key":  "8", "value": "20", 	"tooltip": "20 Items"	},
+						{ "key":  "9", "value": "30", 	"tooltip": "30 Items" 	}
+					]
+		};
+	
+	// create model and set the data
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+	//sap.ui.getCore().setModel( oModel );
+	
+	// sample event handlers
+	function onClickSpot( evt )
+	{
+	   	// click on spot 
+		sap.m.MessageToast.show( "Click spot " + this.getText() );
+	};
+
+	function onContextMenuSpot( evt )
+	{
+	   	// click on spot 
+		sap.m.MessageToast.show( "ContextMenu spot " + this.getText() );
+	};
+
+	function onClickItem( evt )
+	{
+	   	// click on item 
+		sap.m.MessageToast.show( "Click " + this );
+	};
+
+	function onContextMenuItem( evt )
+	{
+	   	// context menu on item 
+		sap.m.MessageToast.show( "ContextMenu " + this );
+	};
+	
+	// create analytic map and bind to model
+	var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+	   width : "1024px",
+    	height: "600px",
+    	vos: [
+    	  	new sap.ui.vbm.Spots( "spots1", {
+            // bind to an array in the model
+            items: { 
+             	path : "/Spots",
+              	template: new sap.ui.vbm.Spot(  { text: '{key}', position: '{pos}', tooltip: '{tooltip}', type: 'Default', click: onClickSpot, contextMenu: onContextMenuSpot }  )
+           	} } ),
+	       	new sap.ui.vbm.Circles( "circles", {
+	       	    // bind to an array in the model
+	      	    items: { 
+	               	path : "/Circles",
+	                  template: new sap.ui.vbm.Circle(  { position: '{pos}', tooltip: '{tooltip}', color: 'rgba(92, 185, 229, 0.8)', colorBorder: 'rgb(255,255,255)', radius: '{pix}', click: onClickItem.bind( "Circle"),  contextMenu: onContextMenuItem.bind( "Circle" ) } )
+	      	    } } ),
+	       	new sap.ui.vbm.GeoCircles( "geocircles", { } ), // start empty
+	   	 	new sap.ui.vbm.Routes( "routes", { }), // start empty
+	   	 	new sap.ui.vbm.Areas("areas", {	click: onClickItem.bind("Areas"),
+	   	 	    						 }), // start empty
+	   	 	new sap.ui.vbm.Boxes("boxes", { }), // start empty  	 	
+   	   	new sap.ui.vbm.Pies("pies", {  }) // start empty
+    	]
+	});
+
+
+	oVBI.setModel( oModel );
+	oVBI.placeAt("content");
+	
+	
+	// modification of the context
+	function onCreateSpot() {
+		//trigger interactive creation mode
+		oVBI.getPositionInteractive( false, function(pos) {
+			oData = oModel.getData();
+			oData.Spots.push({"key" : "N", "pos": pos,  "tooltip": "NewSpot"});
+			oModel.setData(oData);				
+		} );
+	};
+	
+	function onCreateRoute() {
+		//trigger interactive creation mode
+		oVBI.getPositionInteractive( true, function(pos) {
+			var oRoutes = sap.ui.getCore().getElementById( "routes" );
+         oRoutes.addItem( new sap.ui.vbm.Route({ position: pos, 
+                                                 tooltip: 'This is a New Route', 
+                                                 end: "1", start: "0", 
+                                                 color: 'rgba(131, 142, 147, 1)',
+                                                 changeable: true,             
+                                                 click: onClickItem.bind("NewRoute"),
+                                                 contextMenu: function(oEvent) {
+                                                     var activeRoute = this.getId();
+                                                     var oMenu = oEvent.mParameters.menu;
+                                                     oMenu.addItem(new sap.ui.unified.MenuItem({
+                                                        text: "Context menu for " + activeRoute
+                                                     }));
+                                                     this.openContextMenu(oMenu);
+                                                 }                                                 
+                                       		})			
+		  );
+		});         
+	};	
+	
+	function onCreateArea() {
+		//trigger interactive creation mode
+		oVBI.getPositionInteractive( true, function(pos) {
+			var oAggr = sap.ui.getCore().getElementById( "areas" );
+         oAggr.addItem( new sap.ui.vbm.Area({ position: pos, 
+                                              tooltip: 'This is a New Area', 
+                                              color: 'rgba(166, 25, 38, 0.8)',
+                                              colorBorder: 'rgb(255,255,255)',
+                                              changeable: true,
+                                              click: onClickItem.bind("NewArea"),
+                                              contextMenu: function(oEvent) {
+                                                  var activeArea = this.getId();
+                                                  var oMenu = oEvent.mParameters.menu;
+                                                  oMenu.addItem(new sap.ui.unified.MenuItem({
+                                                     text: "Context menu for " + activeArea
+                                                  }));
+                                                  this.openContextMenu(oMenu);
+                                              }
+                                       	})
+		  );
+		});
+	};	
+	
+	function onCreateCircle() {
+		//trigger interactive creation mode
+		oVBI.getPositionInteractive( false, function(pos) {
+			oData = oModel.getData();
+			oData.Circles.push({ "key":  "4", "pos": pos, "tooltip": "New Circle", "pix": "20" });
+			oModel.setData(oData);				
+		} );
+	};	
+	
+	function onCreateGeoCircle() {
+		//trigger interactive creation mode
+		oVBI.getPositionInteractive( false, function(pos) {
+			var oCircles = sap.ui.getCore().getElementById( "geocircles" );
+         oCircles.addItem( new sap.ui.vbm.GeoCircle( { radius: "1000000",  
+													 slices: "40", position: pos, 
+													 tooltip: 'This is a New GeoCircle', 
+													 color: 'rgba(181, 216, 87, 0.8)', colorBorder: 'rgb(255, 255, 255)', 
+													 changeable: true,
+													 click: onClickItem.bind( "New GeoCircle"),  
+													 contextMenu: onContextMenuItem.bind( "New GeoCircle" ) } )			
+		  );
+		});
+	};
+	
+	function onCreateBox() {
+		//trigger interactive creation mode
+		oVBI.getPositionInteractive( false, function(pos) {
+			var oAggr = sap.ui.getCore().getElementById( "boxes" );
+         oAggr.addItem( new sap.ui.vbm.Box( { scale: '0.1;0.1;0.1', position: pos,  
+                                              tooltip: 'This is a New Box', 
+                                              color: 'rgba(249, 194, 100, 0.8)', 
+                                              colorBorder: 'rgb(255,255,255)',
+                                              changeable: true,
+                                              click: onClickItem.bind("New Box"), 
+                                              contextMenu: onContextMenuItem.bind("New Box") } )			
+		  );
+		});
+	};	
+	
+	function onCreatePie() {
+		//trigger interactive creation mode
+		oVBI.getPositionInteractive( false, function(pos) {
+			var oAggr = sap.ui.getCore().getElementById( "pies" );
+         oAggr.addItem( new sap.ui.vbm.Pie( { scale: '1;1;1', position: pos,  
+                                              tooltip: 'This is a New Pie', 
+                                              changeable: true,
+                                              click: onClickItem.bind("New Pie"), contextMenu: onContextMenuItem.bind("New Pie"), 
+                    	                         items: { path : "/PieSeries",
+                    	                               	   template: new sap.ui.vbm.PieItem(  { value: '{value}', tooltip: '{tooltip}' }  )
+                    	                       } } ) 		
+		  );
+		});
+	};		
+	
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business GeoMap Sample</h1>
+			<ul>
+				<li> This sample shows the Visual Business GeoMap Control with the possibility to create other VOs. </li>
+				<li> Use the buttons below to create new VOs interactively. </li>			
+			</ul>
+		 <div id="content"></div>
+		 <br />
+		 <button id="CreateSpot" onClick="onCreateSpot()">Create a Spot</button>
+		 <button id="CreateRoute" onClick="onCreateRoute()">Create a Route</button>
+		 <button id="CreateArea" onClick="onCreateArea()">Create an Area</button>
+		 <button id="CreateCircle" onClick="onCreateCircle()">Create a Circle</button>
+		 <button id="CreateGeoCircle" onClick="onCreateGeoCircle()">Create a GeoCircle</button> 
+		 <button id="CreateBox" onClick="onCreateBox()">Create a Box</button>
+		 <button id="CreatePie" onClick="onCreatePie()">Create a Pie</button>
+	</body>
+</html>

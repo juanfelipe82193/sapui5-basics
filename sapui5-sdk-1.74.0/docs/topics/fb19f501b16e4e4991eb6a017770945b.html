@@ -1,0 +1,236 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Enabling Routing in Nested Components</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Every SAPUI5 component can define routing configuration in its manifest and a UI5 router instance will be created automatically after the component is instantiated."><meta name="description" content="Every SAPUI5 component can define routing configuration in its manifest and a UI5 router instance will be created automatically after the component is instantiated."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"8e9d6e4df5464eb5a6e40696c4d2ccd6.html","previousTopicHref":"1238d706b130433c9bd6b85cfb77cece.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loiofb19f501b16e4e4991eb6a017770945b"><h1 class="title topictitle1" hidden>Enabling Routing in Nested Components</h1><div class="body conbody"><p class="shortdesc" hidden>Every <span class="ph"><span class="ph pname">SAPUI5</span></span> component can
+define routing configuration in its manifest and a UI5 router instance will be created
+automatically after the component is instantiated.</p>
+<p class="p">Using components as targets in routing presents another challenge: When multiple components
+with their own routing configuration are used in an application, their router instances
+listen to the browser&apos;s <samp class="ph codeph">hashChange</samp> event simultaneously and may do
+concurrent changes to the hash. This can lead to conflicts, hence, the hash access has
+to be coordinated. Therefore, some additional configuration has to be made for these
+nested components to ensure everything is running stable.</p>
+<div class="section" id="loiofb19f501b16e4e4991eb6a017770945b__section_ovn_4cl_ngb"><section class="section" type="Configure a Component as Routing Target"><h2 class="section_title" style="font-size: 1.15em;">Configure a Component as Routing Target</h2>
+
+<p class="p">A target in <span class="ph"><span class="ph pname">SAPUI5</span></span> routing can
+load either a view, or a component. To load a component, you need to define the
+component in the <samp class="ph codeph">componentUsages</samp> section of the owner component&apos;s
+<samp class="ph codeph">manifest.json</samp>, see <a class="xref" href="../../#/topic/346599f0890d4dfaaa11c6b4ffa96312.html" title="You can use a ComponentContainer to wrap a UIComponent and reuse it anywhere within the SAPUI5 control tree. With the ComponentContainer you can nest components inside other components." target="_top">Using and Nesting Components</a>.</p>
+<p class="p">Loading a child component with a type <samp class="ph codeph">Component</samp> target in a router
+builds up a hierarchy between this router and the router in the child component.</p>
+<pre class="pre codeblock prettyprint lang-json">{
+    &quot;sap.ui5&quot;: {
+        &quot;componentUsages&quot;: {
+            &quot;myreuse&quot;: {
+                &quot;name&quot;: &quot;reuse.component&quot;,
+                &quot;settings&quot;: {},
+                &quot;componentData&quot;: {},
+                &quot;lazy&quot;: false
+            }
+        }
+    }
+}</pre>
+<p class="p">Use the following configuration to load the component from the target:</p>
+<ul class="ul" id="loiofb19f501b16e4e4991eb6a017770945b__ul_pv3_cjl_ngb">
+<li class="li">
+<p class="p"><samp class="ph codeph">type</samp>: Set the <samp class="ph codeph">type</samp> to &quot;Component&quot;; this loads and
+instantiates the <samp class="ph codeph">Component.js</samp> that is available under
+<samp class="ph codeph">componentUsages</samp>.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">usage</samp>: Use the key of the component usage as used in the the
+<samp class="ph codeph">componentUsages</samp> section of the parent component&apos;s
+<samp class="ph codeph">manifest.json</samp>.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">options</samp> (optional): Add additional options that are merged with the options
+defined in the <samp class="ph codeph">componentUsage</samp> section, see <span class="ph"><a class="xref" href="../../#/api/sap.ui.core.UIComponent" target="_top" alt="#/api/sap.ui.core.UIComponent" title="#/api/sap.ui.core.UIComponent">sap.ui.core.UIComponent</a>.</span></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">containerOptions</samp> (optional): Add additional options that are passed to the
+constructor of the component container where the component is rendered, see
+<span class="ph"><a class="xref" href="../../#/api/sap.ui.core.ComponentContainer" target="_top" alt="#/api/sap.ui.core.ComponentContainer" title="#/api/sap.ui.core.ComponentContainer">sap.ui.core.ComponentContainer</a>.</span></p>
+</li>
+</ul>
+<pre class="pre codeblock prettyprint lang-js">{
+    &quot;sap.ui5&quot;: {
+        &quot;componentUsages&quot;: {
+<span class="ph emphasis emphasis">            &quot;myreuse&quot;: {
+                &quot;name&quot;: &quot;reuse.component&quot;,
+                &quot;settings&quot;: {},
+                &quot;componentData&quot;: {},
+                &quot;lazy&quot;: false
+            }
+</span>
+        },
+        &quot;routing&quot;: {
+            &quot;config&quot;: {
+                ...
+            },
+            &quot;routes&quot;: [
+                ...
+            ],
+            &quot;targets&quot;: {
+                &quot;attachment&quot;: {
+                    &quot;type&quot;: &quot;Component&quot;,
+<span class="ph emphasis emphasis">                    &quot;usage&quot;: &quot;myresue&quot;,
+</span>
+                    &quot;options&quot;: {
+                        // optional
+                        // define the additional parameter for
+                        // instatiating the component instance
+                    },
+                    &quot;containerOptions&quot;: {
+                        // optional
+                        // define the additional parameter for
+                        // instantiating the component container
+                        // which enables the component to be rendered
+                        // in the parent control
+                    },
+                    &quot;controlId&quot;: &quot;page&quot;,
+                    &quot;controlAggregation&quot;: &quot;content&quot;
+                }
+            }
+        }
+    }
+}</pre>
+</section></div>
+<div class="section" id="loiofb19f501b16e4e4991eb6a017770945b__section_htm_scl_ngb"><section class="section" type="Configure Hash Prefix for the Nested Component"><h2 class="section_title" style="font-size: 1.15em;">Configure Hash Prefix for the Nested Component</h2>
+
+<p class="p">The hash from every router needs to be persisted in the browser hash. To identify the
+ownership of the hash segments from the browser hash, a prefix needs to be assigned
+to the component which is loaded by a <samp class="ph codeph">Target</samp>. The prefix can be
+defined in the <samp class="ph codeph">Route</samp> where the <samp class="ph codeph">Target</samp> is used.</p>
+<p class="p">Instead of assigning the &quot;target&quot; option in a route with the name of a target which is going
+to be displayed once the route&apos;s pattern is matched, an object is assigned which
+also contains the prefix of the hash for this component besides the name of the
+target. The loaded component from the target has its own hash segment which begins
+with the given prefix and can change the hash by using method <samp class="ph codeph">navTo</samp>
+on <samp class="ph codeph">Router</samp> in the same way as it is done in the top level
+component.</p>
+<pre class="pre codeblock prettyprint lang-json">{
+    &quot;sap.ui5&quot;: {
+        &quot;componentUsages&quot;: {
+            &quot;myreuse&quot;: {
+                &quot;name&quot;: &quot;reuse.component&quot;,
+                &quot;settings&quot;: {},
+                &quot;componentData&quot;: {},
+                &quot;lazy&quot;: false
+            }
+        },
+        &quot;routing&quot;: {
+            &quot;config&quot;: {
+                ...
+            },
+            &quot;routes&quot;: [{
+                &quot;name&quot;: &quot;home&quot;,
+                &quot;pattern&quot;: &quot;&quot;,
+                &quot;target&quot;: {
+                    &quot;name&quot;: &quot;attachment&quot;,
+<span class="ph emphasis emphasis">                    &quot;prefix&quot;: &quot;atch&quot;
+</span>
+                }
+            }],
+            &quot;targets&quot;: {
+                &quot;attachment&quot;: {
+                    &quot;type&quot;: &quot;Component&quot;,
+                    &quot;usage&quot;: &quot;myreuse&quot;,
+                    &quot;options&quot;: {
+                        // optional
+                        // define the additional parameter for
+                        // instatiating the component instance
+                    },
+                    &quot;containerOptions&quot;: {
+                        // optional
+                        // define the additional parameter for
+                        // instantiating the component container
+                        // which enables the component to be rendered
+                        // in the parent control
+                    },
+                    &quot;controlId&quot;: &quot;page&quot;,
+                    &quot;controlAggregation&quot;: &quot;content&quot;
+                }
+        }
+    }
+}</pre>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

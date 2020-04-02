@@ -1,0 +1,741 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class com.sap.ip.bi.FormattedTextView extends Component {
+  /**
+  Sets the HTML text.
+  */
+  void setHtmlText(
+    /** HTML text */
+    String htmlText) {*
+    this.htmlText = htmlText;
+  *}
+
+  /**
+  Returns the HTML text.
+
+  <returns>
+  It contains the HTML text.
+  </returns>
+  */
+  String getHtmlText() {*
+    return this.htmlText;
+  *}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class com.sap.ip.bi.FragmentGallery extends Component {
+  /**
+  Returns the ID of the selected item in the component.
+
+  <returns>
+  It contains the ID of the selected item.
+  </returns>
+  */
+  String getSelectedId() {*
+    return this.selectedId;
+  *}
+
+  /**
+  Sets a selected item in the component by ID. The operation is ignored if no such ID exists in the
+  component.
+  */
+  void setSelectedId(
+    /** ID of the selected item. The operation is ignored if no such ID exists in the component. */
+    String id) {*
+    this.selectedId = id;
+  *}
+
+  /**
+  Adds a PortableFragmentBookmark to the component.
+  */
+  void addItem(
+    /** Object representing an existing PortableFragmentBookmark. The operation is ignored if no
+        such bookmark exists. */
+    PortableFragmentBookmarkInfo info) {*
+    if (info != undefined && info != null) {
+      var key = info.id;
+      var text = info.title;
+      var image = info.imageUrl;
+      var description = info.description;
+
+      var itemDef = "{\"key\": \"" + key + "\", \"text\" : \"" + text + "\", \"image\" : \"" + image + "\", \"description\" : \"" + description + "\"}";
+      var itemArray = JSON.parse("[" + itemDef + "]");
+      var found = false;
+      if (this.items === undefined || this.items === "") {
+        this.items = JSON.stringify(itemArray);
+      } else {
+        var itemsArray = JSON.parse(this.items);
+        for (var i = 0; i < itemsArray.length; i++) {
+          if (itemsArray[i].key == key) {
+            found = true;
+          }
+        }
+        if (!found) {
+          this.items = JSON.stringify(itemsArray.concat(itemArray));
+        }
+      }
+    }
+  *}
+
+  /**
+  Adds each PortableFragmentBookmark in a PortableFragmentArray to the component.
+  */
+  void addItems(
+    /** Object representing an existing PortableFragmentArray. The operation is ignored if no such
+        collection exists. */
+    PortableFragmentBookmarkInfoArray array) {*
+    for (var i = 0; i < array.length; i++) {
+      addItem(array[i]);
+    }
+  *}
+
+  /**
+  Removes an item from the component.
+  */
+  void removeItem(
+    /** ID of the item to be removed. The operation is ignored if no such ID exists in the
+        component. */
+    String id) {*
+    var itemArray = JSON.parse(this.items);
+    var index = -1;
+    for (var i = 0; i < itemArray.length; i++) {
+      if (id != null && id != undefined) {
+        if (itemArray[i].key == id){
+          index = i;
+        }
+      } else {
+        if (itemArray[i].id == this.selectedId) {
+          index = i;
+        }
+      }
+    }
+
+    if (index > -1) {
+      itemArray.splice(index, 1);
+    }
+
+    this.items = JSON.stringify(itemArray);
+  *}
+
+  /**
+  Removes all items from the component.
+  */
+  void removeAllItems() {*
+    var itemArray = [];
+    this.items = JSON.stringify(itemArray);
+  *}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class com.sap.ip.bi.DataSourceBrowser {
+  @Visibility(private)
+  DataSourceDescriptorArray getRootFolders(
+    /** Browse type */
+    String browseType) {*
+      return COMPONENTS[this.owner].getRootFolders(browseType);
+  *}
+
+  @Visibility(private)
+  DataSourceDescriptorArray getChildren(
+    /** Data source descriptor containing child elements */
+    DataSourceDescriptor parent) {*
+      return COMPONENTS[this.owner].getChildren(parent);
+  *}
+
+  @Visibility(private)
+  DataSourceDescriptorArray searchDataSources(
+    /** String pattern to search for */
+    String searchPattern) {*
+      return COMPONENTS[this.owner].searchDataSources(searchPattern);
+  *}
+
+  @Visibility(private)
+  void close(
+    String arg) {*
+      COMPONENTS[this.owner].dialogClosed(arg);
+  *}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class com.sap.ip.bi.SelectionTable extends DataBoundComponent {
+  /**
+  Sets the result set displayed in the Simple Crosstab.
+  */
+  void setDataSelection(
+    /** Selection specifying the result set from a data source */
+    ResultSetSelection selection) {*
+    this.data = this.stringifySelection(selection);
+  *}
+
+  /**
+  Returns a specification of the selected data cells in the Simple Crosstab.
+
+  <returns>
+  It contains the specification of the selected data cells in the Simple Crosstab.
+  </returns>
+  */
+  String getVisualSelection() {*
+    return this.visSelection;
+  *}
+
+  /**
+  Specifies the selected data cells in the Simple Crosstab.
+  */
+  void setVisualSelection(
+    /** Selection specifying the selected data cells in the Simple Crosstab */
+    ResultSetSelection selection) {*
+    this.visSelection = this.stringifySelection(selection);
+  *}
+
+  /**
+  Returns the selected member.
+
+  <returns>
+  It contains the selected member.
+  </returns>
+  */
+  Member getSelectedMember(
+    /** Dimension of the selected member */
+    Dimension dimension) {*
+    var jsonVisSelection = {};
+    if (this.visSelection) {
+      jsonVisSelection= JSON.parse(this.visSelection);
+    }
+    var member = jsonVisSelection[dimension];
+    return this.createMember(dimension, member);
+  *}
+
+  /**
+  Sets the selection shape.
+  */
+  void setSelectionShape(
+    /** Selection shape */
+    int shape) {*
+    this.selectionShape = shape;
+  *}
+
+  /**
+  Returns the selection shape.
+
+  <returns>
+  It contains the selection shape.
+  </returns>
+  */
+  int getCurrentSelectionShape() {*
+    return this.currrentSelectionShape;
+  *}
+
+  /**
+  Returns data source names.
+
+  <returns>
+  It contains the data source names.
+  </returns>
+  */
+  StringArray getDataSourceNames() {*
+     var dss= APPLICATION.getDataSources();
+     return dss.map(function(val) {
+       return val.get_VariableName();
+     });
+  *}
+
+  /**
+  Returns a data source alias by name.
+
+  <returns>
+  It contains a data source alias.
+  </returns>
+  */
+  DataSourceAlias getDataSourceByName(
+    /** Data source name */
+    String name) {*
+     var dataSource = COMPONENTS[name];
+     if (dataSource.loadDataSource) {
+       dataSource.loadDataSource();
+     }
+     return dataSource;
+  *}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class IconBackgroundShapeEnumfield extends Enumfield {
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+A set of constants to specify the background of the icon.
+*/
+class IconBackgroundShape extends Enum {
+  /**
+  Rectangular background
+  */
+  IconBackgroundShapeEnumfield RECTANGLE;
+
+  /**
+  Elliptical background
+  */
+  IconBackgroundShapeEnumfield ELLIPSIS;
+
+  /**
+  No background (transparent)
+  */
+  IconBackgroundShapeEnumfield NONE;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class com.sap.ip.bi.Icon extends Component {
+  /**
+  Returns the background color of the icon.
+
+  <returns>
+  It contains the background color of the icon.
+  </returns>
+  */
+  String getBackgroundColor() {*
+    return this.backgroundColor;
+  *}
+
+  /**
+  Sets the background color of the icon.
+  */
+  void setBackgroundColor(
+    /** Background color */
+    String backgroundColor) {*
+      this.backgroundColor = backgroundColor;
+  *}
+
+  /**
+  Returns the color of the icon.
+
+  <returns>
+  It contains the color of the icon.
+  </returns>
+  */
+  String getColor() {*
+    return this.color;
+  *}
+
+  /**
+  Sets the color of the icon.
+  */
+  void setColor(
+    /** Color */
+    String color) {*
+      this.color = color;
+  *}
+
+  /**
+  Returns the icon URI of the icon.
+
+  <returns>
+  It contains the icon URI of the icon.
+  </returns>
+  */
+  String getIconUri() {*
+    return this.iconUri;
+  *}
+
+  /**
+  Sets the icon URI of the icon.
+  */
+  void setIconUri(
+    /** Icon URI */
+    String iconUri) {*
+    this.iconUri = iconUri;
+  *}
+
+  /**
+  Returns the size factor of the icon.
+
+  <returns>
+  It contains the size factor of the icon. This is a float value between 0 and 1, which indicates
+  how much the icon image is scaled in the icon component's area. For example, a value of 1.0 scales
+  the icon image to fill all of the icon component's area, a value of 0.5 scales the icon image to
+  fill half of the icon component's area.
+  </returns>
+  */
+  float getSizeFactor() {*
+    return this.sizeFactor;
+  *}
+
+  /**
+  Sets the size factor of the icon.
+  */
+  void setSizeFactor(
+    /** Size factor of the icon. This is a float value between 0 and 1, which indicates how much the
+        icon image is scaled in the icon component's area. For example, a value of 1.0 scales the
+        icon image to fill all of the icon component's area, a value of 0.5 scales the icon image to
+        fill half of the icon component's area. */
+    float sizeFactor) {*
+    this.sizeFactor = sizeFactor;
+  *}
+
+  /**
+  Returns the shape of the icon.
+
+  <returns>
+  It contains the shape of the icon.
+  </returns>
+  */
+  IconBackgroundShapeEnumfield getBackgroundShape() {*
+    return this.backgroundShape;
+  *}
+
+  /**
+  Sets the shape of the icon.
+  */
+  void setBackgroundShape(
+    /** Shape */
+    IconBackgroundShapeEnumfield backgroundShape) {*
+    this.backgroundShape = backgroundShape;
+  *}
+
+  /**
+  Returns the tooltip of the icon.
+
+  <returns>
+  It contains the tooltip text of the icon.
+  </returns>
+  */
+  String getTooltip() {*
+    return this.tooltip;
+  *}
+
+  /**
+  Sets the tooltip of the icon.
+  */
+  void setTooltip(
+    /** Tooltip text */
+    String tooltip) {*
+    this.tooltip = tooltip;
+  *}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+class SwitchModeEnumfield extends Enumfield {
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+class SwitchMode extends Enum {
+	SwitchModeEnumfield OnOff;
+	SwitchModeEnumfield Blank;
+	SwitchModeEnumfield AcceptReject;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class com.sap.ip.bi.Switch extends Component {
+
+	/* Returns the current enabled state of the Switch. */
+	boolean isEnabled() {*
+		return this.enabled;
+	*}
+
+	/* Sets the enabled state of the Switch. */
+	void setEnabled(/* New enabled */ boolean newEnabled) {*
+		this.enabled = newEnabled;
+	*}
+
+	/* Returns the tooltip state of the Switch. */
+	String getTooltip() {*
+		return this.tooltip;
+	*}
+
+	/* Sets the tooltip of the Switch. */
+	void setTooltip(/* New tooltip */ String newTooltip) {*
+		this.tooltip = newTooltip;
+	*}
+
+	/* Returns the mode of the Switch. */
+	SwitchModeEnumfield getMode() {*
+		return this.mode;
+	*}
+
+	/* Sets the mode of the Switch. */
+	void setMode(/* New mode */ SwitchModeEnumfield newMode) {*
+		this.mode = newMode;
+	*}
+
+	/* Returns the state of the Switch. */
+	boolean isOn() {*
+		return this.state;
+	*}
+
+	/* Sets the state of the Switch. */
+	void setOn(/* New state */ boolean newState) {*
+		this.state = newState;
+	*}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+class LinkStyleEnumfield extends Enumfield {
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+class LinkStyle extends Enum {
+	LinkStyleEnumfield Normal;
+	LinkStyleEnumfield Subtle;
+	LinkStyleEnumfield Emphasized;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class com.sap.ip.bi.Link extends Component {
+
+	/* Sets the display text of the link */
+	void setText(/* The new text. */ String text) {*
+		this.text = text;
+	*}
+
+	/* Returns the display text of the link */
+	String getText() {*
+		return this.text;
+	*}
+
+	/* Sets the enablement of the link */
+	void setEnabled(/* The new enablement value. */ boolean enabled) {*
+		this.enabled = enabled;
+	*}
+
+	/* Returns the enablement of the link */
+	boolean isEnabled() {*
+		return this.enabled;
+	*}
+
+	/* Sets the current tooltip of the link */
+	void setTooltip(/* The new tooltip. */ String value) {*
+		this.tooltip = value;
+	*}
+
+	/* Returns the current tooltip of the link */
+	String getTooltip() {*
+		return this.tooltip;
+	*}
+
+	/* Sets the current url of the link */
+	void setUrl(/* The new url. */ String url) {*
+		this.url = url;
+	*}
+
+	/* Returns the current url of the link */
+	String getUrl() {*
+		return this.url;
+	*}
+
+	/* Sets the current style of the link */	
+	void setStyle (/* The new style for the link. */ LinkStyleEnumfield val) {*
+		this.style = val;
+	*}
+	
+	/* Returns the current style of the link - one of Normal, Subtle, Emphasized */
+	LinkStyleEnumfield getStyle() {*
+		return this.style;
+	*}	
+}
+////////////////////////////////////////////////
+class ProgressIndicatorStateEnumfield extends Enumfield {
+}
+////////////////////////////////////////////////
+class ProgressIndicatorState extends Enum {
+	ProgressIndicatorStateEnumfield None;
+	ProgressIndicatorStateEnumfield Error;
+	ProgressIndicatorStateEnumfield Warning;
+	ProgressIndicatorStateEnumfield Success;
+}
+////////////////////////////////////////////////
+class com.sap.ip.bi.ProgressIndicator extends Component {
+	/* Returns the text currently displayed inside the progress bar */
+	String getText(){*
+		return this.text;
+	*}
+	
+	/* Sets the text to be displayed inside the progress bar */
+	void setText(/*the new text*/String val){*
+		this.text = val;
+	*}
+	
+	/* Returns the current state of the progress bar - one of Error,Warning,Success,None */
+	ProgressIndicatorStateEnumfield getState(){*
+		return this.state;
+	*}
+	
+	/* Sets the state of the progress bar - change is reflected with change in color of the bar */
+	void setState(/*the new state*/ProgressIndicatorStateEnumfield val){*
+		this.state = val;
+	*}
+	
+	/* Returns the current percent value indicated by the progress bar */
+	float getPercentValue(){*
+		return this.percentValue;
+	*}
+	
+	/* Sets the percent value to be indicated by the progress bar */
+	void setPercentValue(/*the new value to set*/float val){*
+		this.percentValue = val;
+	*}
+	
+	/* Returns the current tooltip of the progress bar UI element */
+	String getTooltip(){*
+		return this.tooltip;
+	*}
+	
+	/* Sets the tooltip of progress bar UI element to the new value */
+	void setTooltip(/*the new tooltip*/String val){*
+		this.tooltip = val;
+	*}
+	
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+class com.sap.ip.bi.TextArea extends Component {
+	/* Sets the value of the text area */
+	void setValue(/* The new value. */ String value) {*
+		this.value = value;
+	*}
+
+	/* Returns the value of the text area */
+	String getValue() {*
+		return this.value;
+	*}
+
+	/* Sets the enabled state of the text area */
+	void setEnabled(/* The new enablement value. */ boolean enabled) {*
+		this.enabled = enabled;
+	*}
+
+	/* Returns the current enabled state of the text area */
+	boolean isEnabled() {*
+		return this.enabled;
+	*}
+
+	/* Sets the editablity of the text area */
+	void setEditable(/* The new editable value. */ boolean editable) {*
+		this.editable = editable;
+	*}
+
+	/* Returns the editability of the text area */
+	boolean isEditable() {*
+		return this.editable;
+	*}
+
+	/* Sets the current tooltip of the text area */
+	void setTooltip(/* The new tooltip. */ String value) {*
+		this.tooltip = value;
+	*}
+
+	/* Returns the current tooltip of the text area */
+	String getTooltip() {*
+		return this.tooltip;
+	*}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class com.sap.ip.bi.SegmentedButton extends Component {
+	/**
+	  <returns>
+	  Returns the selected text.
+	  </returns>
+	 */
+	String getSelectedText() {*
+		return this.selectedText;
+	*}
+
+	/**
+	  <returns>
+	  Returns the selected value.
+	  </returns>
+	 */
+	String getSelectedValue() {*
+		return this.selectedValue;
+	*}
+
+	/**
+	 * Sets the selected value  
+	 */
+	void setSelectedValue(String value) {*
+		this.selectedValue = value;
+	*}
+
+	/**
+	  Removes all buttons.
+	 */
+	@Platform(BOE, NW, LOCAL)
+	void removeAllItems(){*
+		this.ButtonItems = [];
+	*}
+
+	/**
+	  Removes item with specific value.
+	 */
+	@Platform(BOE, NW, LOCAL)
+	void removeItem(String value){*
+		var arr = this.ButtonItems;
+
+		for(var i = arr.length-1; i > 0; i--) {
+			if(arr[i].value == value) {  
+				arr.splice(i, 1);
+			}	
+		}
+		this.ButtonItems = arr;
+	*}
+
+	/**
+	  Sets a given button to be enabled
+	 */
+	void setItemEnabled(String value, boolean enabled){*
+		var arr = this.ButtonItems;
+
+		for(var i = 0; i< arr.length; i++) {
+			if(arr[i].value == value) {  
+				arr[i] = {
+						value: arr[i].value,
+						text: arr[i].text,
+						image: arr[i].icon ,
+						disabled : !enabled
+				};
+			}
+		}
+		this.ButtonItems = arr;
+	*}
+
+	/**
+	  Returns the enabled state of an item
+	 */
+	boolean isItemEnabled(String value){*
+		var arr = this.ButtonItems;
+
+		for(var i = 0; i< arr.length; i++) {
+			if(arr[i].value == value) {  
+				return !arr[i].disabled;
+			}
+		}
+	*}
+
+	/**
+	  Add a button to the list of buttons.
+	 */
+	@Platform(BOE, NW, LOCAL)
+	void addItem(String value, optional String text, optional String icon, optional int index){*
+		var arr = this.ButtonItems  || [];
+
+		if(index == null || index == undefined ) {
+			arr.push({
+				value: value,
+				text: text == null|| text == undefined ? "": text,
+						image: icon == null|| icon == undefined? "": icon ,
+								enabled : true
+			});
+		} else {
+			arr.splice(index,0,{
+				value: value,
+				text: text == null|| text == undefined ? "": text,
+						image: icon == null|| icon == undefined? "": icon ,
+								enabled : true
+			});
+		}
+		this.ButtonItems = arr;
+	*}
+}

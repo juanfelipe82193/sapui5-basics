@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+	<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>
+	
+	<title>Test Gantt Chart Axis Time Zoom Strategy</title>
+
+	<script id="sap-ui-bootstrap"
+			data-sap-ui-libs="sap.gantt, sap.m"
+			data-sap-ui-theme="sap_bluecrystal" 
+			data-sap-ui-xx-bindingSyntax="complex"
+			src="../../../../resources/sap-ui-core.js"
+			data-sap-ui-resourceroots='{
+					"test.sap.gantt.axistime" : "./"
+				}'>
+	</script>
+	
+	<script id="view1" type="sapui5/xmlview">
+		<mvc:View controllerName="test.sap.gantt.axistime.AxisTimeZoomStrategy"
+			xmlns="sap.m"
+			xmlns:layout="sap.ui.layout"
+			xmlns:mvc="sap.ui.core.mvc"
+			xmlns:core="sap.ui.core"
+			xmlns:gantt="sap.gantt"
+			xmlns:table="sap.ui.table"
+			height="100%">
+			<layout:FixFlex id='chartFixFlex' minFlexSize="250">
+				<!--Below is the setting panel -->
+				<layout:fixContent>
+					<Panel id='settingsPanel' class="panelStyle" expandable="true" expanded="true" headerText="Settings" width="auto">
+						<content>
+							<HBox class='settingsHBox'>
+							<VBox width="300px">
+								<HBox>
+								<Label text = '{/zoomStrategyType/name}' design="Bold"></Label>
+								<core:Icon src="sap-icon://sys-help" press="showTypeHelpPopover" class="sapUiTinyMarginBeginEnd"></core:Icon>
+								</HBox>
+								<Select id='zoomStrategyTypeSelect' class='settingsSelect' selectedKey='{/zoomStrategyType/defaultSelected}' maxWidth="250px" change='onZoomStrategyChanged' 
+									items="{path: '/zoomStrategyType/values'}">
+									<items>
+										<core:Item text="{name}" key="{key}" />
+									</items>
+								</Select>
+							</VBox>
+							<VBox width="200px">
+								<HBox>
+								<Label text = '{/zoomStrategyType/controlTypeLabel}' design="Bold"></Label>
+								<core:Icon src="sap-icon://sys-help" press="showControlTypeHelpPopover" class="sapUiTinyMarginBeginEnd"></core:Icon>
+								</HBox>
+								<Select id='zoomControlTypeSelect' class='settingsSelect' maxWidth="200px" change='onZoomControlChanged'></Select>
+							</VBox>
+							<VBox class="sapUiSmallMarginBeginEnd">
+								<Label text="{/zoomStrategyType/visibleHorizonStartTimeLabel}" design="Bold"></Label>
+								<DateTimePicker id="visibleHorizonStartTime" change="onVisibleHorizonStartTimeChange" minDate="{/zoomStrategyType/totalHorizonStartTime}" maxDate="{/zoomStrategyType/totalHorizonEndTime}"
+									dateValue="{/zoomStrategyType/visibleHorizonStartTime}" />
+							</VBox>
+							<VBox>
+								<Label text='{/calendarTypes/label}' design="Bold" class="sapUiSmallMarginBegin"></Label>
+								<HBox>
+								<RadioButtonGroup id='calendarTypeRadioGroup' columns="4"
+									buttons="{path: '/calendarTypes/values'}" select='onCalendarTypeSelected' >
+									<buttons>
+										<RadioButton class='settingsRadio' text="{name}" />
+									</buttons>
+								</RadioButtonGroup>
+								</HBox>
+							</VBox>
+							</HBox>
+						</content>
+					</Panel>
+				</layout:fixContent>
+				<layout:flexContent>
+					<gantt:GanttChartContainer id="GanttChartContainer" height="500px">
+						<gantt:ganttCharts>
+							<gantt:GanttChartWithTable id="ganttView" shapeDragEnd="handleShapeDragEnd">
+								<gantt:columns>
+									<table:Column id="nameColumn" label="Name" width="220px">
+										<table:template>
+												<Label text="{test>name}"/>
+										</table:template>
+									</table:Column>
+				
+									<table:Column id="startDateColumn" label="Start Date" width="160px">
+										<table:template>
+											<DatePicker placeholder=" " value="{test>order/0/startTime}" valueFormat="yyyyMMddHHmmss" change="handleDateChange"/>
+										</table:template>
+									</table:Column>
+				
+									<table:Column id="endDateColumn" label="End Date" width="160px">
+										<table:template>
+											<DatePicker placeholder=" " value="{test>order/0/endTime}" valueFormat="yyyyMMddHHmmss" change="handleDateChange"/>
+										</table:template>
+									</table:Column>
+								</gantt:columns>
+							</gantt:GanttChartWithTable>
+						</gantt:ganttCharts>
+					</gantt:GanttChartContainer>
+					
+				</layout:flexContent>
+			</layout:FixFlex>
+		</mvc:View>
+	</script>	
+	<script id="fragment1" type="text/xmldata">
+						<Popover xmlns="sap.m" showHeader="false" contentWidth="300px">
+							<content>
+								<VBox class="sapUiSmallMargin">
+								<Text text="{/zoomStrategyType/typeHelpText}"></Text>
+								</VBox>
+							</content>
+						</Popover>
+	</script>
+	<script id="fragment2" type="text/xmldata">
+						<Popover xmlns="sap.m" showHeader="false" contentWidth="300px">
+							<content>
+								<VBox class="sapUiSmallMargin">
+								<Text text="{/zoomStrategyType/controlTypeHelpText}"></Text>
+								</VBox>
+							</content>
+						</Popover>
+	</script>
+	<script type="text/javascript">
+		jQuery.sap.declare("sap.gantt.axistime.AxisTimeStrategyBase.Component");
+		sap.ui.core.UIComponent.extend("sap.gantt.axistime.AxisTimeStrategyBase.Component", {
+			/**
+			 * Initialize the application
+			 * 
+			 * @returns {sap.ui.core.Control} the content
+			 */
+			createContent: function() {
+		
+				var app = new sap.m.App({
+					initialPage: "idView"
+				});
+				 var oView = sap.ui.xmlview("idView", { viewContent: jQuery("#view1").html() });			 
+				app.addPage(oView);
+		
+				return app;
+			}
+		});
+		
+		new sap.ui.core.ComponentContainer({
+			name : "sap.gantt.axistime.AxisTimeStrategyBase"
+		}).placeAt("content")
+		
+		
+	</script>
+	
+	</head>
+	<body class='sapUiBody'>
+		<div id='content'></div>
+	</body>
+</html>

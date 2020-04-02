@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.suite.ui.microchart.AreaMicroChart</title>
+
+<base href="../../../../../">
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout, sap.m, sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize"
+	src="resources/sap-ui-core.js">
+</script>
+
+<script type="text/javascript">
+	jQuery.sap.initMobile();
+
+	var oConfMACData = {
+		width: "164px",
+		height: "74px",
+		chart: {
+			data: [
+				{day: 0, balance: 0},
+				{day: 30, balance: 20},
+				{day: 60, balance: 20},
+				{day: 100, balance: 80}
+			]
+		},
+		target: {
+			data: [
+				{day: 0, balance: 0},
+				{day: 30, balance: 30},
+				{day: 60, balance: 40},
+				{day: 100, balance: 90}
+			]
+		},
+		maxThreshold: {
+			color: "Good",
+			data: [
+				{day: 0, balance: 0},
+				{day: 30, balance: 40},
+				{day: 60, balance: 50},
+				{day: 100, balance: 100}
+			]
+		},
+		innerMaxThreshold: {
+			color: "Good",
+			data: [
+			]
+		},
+		innerMinThreshold: {
+			color: "Good",
+			data: [
+			]
+		},
+		minThreshold: {
+			color: "Error",
+			data: [
+				{day: 0, balance: 0},
+				{day: 30, balance: 20},
+				{day: 60, balance: 30},
+				{day: 100, balance: 70}
+			]
+		},
+		minXValue: 0,
+		maxXValue: 100,
+		minYValue: 0,
+		maxYValue: 100,
+		firstXLabel: { label: "June 1", color: "Good"	},
+		lastXLabel: { label: "June 30", color: "Critical" },
+		firstYLabel: { label: "0M", color: "Good" },
+		lastYLabel: { label: "80M", color: "Critical" },
+		minLabel: { label: "0M", color: "Good" },
+		maxLabel: { label: "80M", color: "Critical" },
+		tooltip: "Cumulative Totals\n((AltText))\ncalculated in EURO",
+		view: "Normal",
+		lines: []
+	};
+	var oConfModel = new sap.ui.model.json.JSONModel();
+	oConfModel.setData(oConfMACData);
+	sap.ui.getCore().setModel(oConfModel);
+
+	var oMACDataTmpl = sap.suite.ui.microchart.AreaMicroChartPoint({
+		x: "{day}",
+		y: "{balance}"
+	});
+
+	var buildChartItem = function(sName) {
+		return new sap.suite.ui.microchart.AreaMicroChartItem({
+			color: "{/"+sName+"/color}",
+			title: "{/"+sName+"/title}",
+			points: {
+				path: "/"+sName+"/data",
+				template: oMACDataTmpl
+			}
+		});
+	};
+
+	var buildMACLabel = function(sName) {
+		return new sap.suite.ui.microchart.AreaMicroChartLabel({
+			label: "{/"+sName+"/label}",
+			color: "{/"+sName+"/color}"
+		});
+	};
+
+	var fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The chart is pressed.");
+	};
+
+	var oLineTempl = new sap.suite.ui.microchart.AreaMicroChartItem({
+		color: "{color}",
+		title: "{title}",
+		points: {
+			path: "data",
+		template: oMACDataTmpl
+		}
+	});
+
+	var buildChart = function(sView) {
+		return new sap.suite.ui.microchart.AreaMicroChart({
+			width: "inherit",
+			height: "inherit",
+			isResponsive: true,
+			target: buildChartItem("target"),
+			innerMinThreshold: buildChartItem("innerMinThreshold"),
+			innerMaxThreshold: buildChartItem("innerMaxThreshold"),
+			minThreshold: buildChartItem("minThreshold"),
+			maxThreshold: buildChartItem("maxThreshold"),
+			chart: buildChartItem("chart"),
+			minXValue: "{/minXValue}",
+			maxXValue: "{/maxXValue}",
+			minYValue: "{/minYValue}",
+			maxYValue: "{/maxYValue}",
+			firstXLabel: buildMACLabel("firstXLabel"),
+			lastXLabel: buildMACLabel("lastXLabel"),
+			firstYLabel: buildMACLabel("firstYLabel"),
+			lastYLabel: buildMACLabel("lastYLabel"),
+			minLabel: buildMACLabel("minLabel"),
+			maxLabel: buildMACLabel("maxLabel"),
+			tooltip: "{/tooltip}",
+			view: sView,
+			colorPalette: "{/colorPalette}",
+			press: fnPress,
+			lines: {
+				path: "/lines",
+				template: oLineTempl
+			}
+		});
+	};
+
+	oMicroChart = buildChart("Normal");
+	oMicroChart.placeAt("content");
+
+	oMicroChartWideMode = buildChart("Wide");
+	oMicroChartWideMode.placeAt("content");
+
+	oHeightSlider = new sap.m.Slider({
+		value : 172,
+		step : 1,
+		min : 10,
+		max : 800,
+		liveChange : function(oControlEvent) {
+			var fHeight = oControlEvent.getParameter("value");
+			jQuery("#content").css("height", fHeight + "px");
+			oMicroChart.invalidate();
+			oMicroChartWideMode.invalidate();
+		}
+	});
+
+	oWidthSlider = new sap.m.Slider({
+		value : 368,
+		step : 1,
+		min : 10,
+		max : 800,
+		liveChange : function(oControlEvent) {
+			var fWidth = oControlEvent.getParameter("value");
+			jQuery("#content").css("width", fWidth + "px");
+			oMicroChart.invalidate();
+			oMicroChartWideMode.invalidate();
+		}
+	});
+
+	var oCCSimpleForm = new sap.ui.layout.form.SimpleForm("controls-cc", {
+		maxContainerCols : 4,
+		editable : true,
+		content : [ oHeightSlider, oWidthSlider ]
+	});
+
+	oCCSimpleForm.placeAt("modifiers");
+
+	window.setTimeout(function(){
+		oMicroChart.invalidate();
+		oMicroChartWideMode.invalidate();
+	}, 300);
+
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+	<script>
+		//set the contrast class for belize plus
+		if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+			jQuery("body").addClass("sapContrastPlus");
+		}
+	</script>
+	<div id="modifiers"></div>
+	<div id="content" style="height: 172px; width: 368px; border-color: black; border: 1px; border-style:solid;"></div>
+</body>
+</html>

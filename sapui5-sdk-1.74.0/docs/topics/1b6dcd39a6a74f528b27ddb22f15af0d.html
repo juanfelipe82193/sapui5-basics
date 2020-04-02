@@ -1,0 +1,142 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Navigation and Routing</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="SAPUI5 comes with a powerful routing API that helps you control the state of your application efficiently. This tutorial will illustrate all major features and APIs related to navigation and routing in SAPUI5 apps by creating a simple and easy to understand mobile app. It represents a set of best practices for applying the navigation and routing features of SAPUI5 to your applications."><meta name="description" content="SAPUI5 comes with a powerful routing API that helps you control the state of your application efficiently. This tutorial will illustrate all major features and APIs related to navigation and routing in SAPUI5 apps by creating a simple and easy to understand mobile app. It represents a set of best practices for applying the navigation and routing features of SAPUI5 to your applications."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"df245bd449a7470c8c2a0926ca8d78de.html","previousTopicHref":"a3e7cb6f671b4b839f37eb5f88429e41.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio1b6dcd39a6a74f528b27ddb22f15af0d"><h1 class="title topictitle1" hidden>Navigation and Routing</h1><div class="body conbody"><p class="shortdesc" hidden><span class="ph"><span class="ph pname">SAPUI5</span></span> comes with a powerful routing API that helps you control the state of your
+application efficiently. This tutorial will illustrate all major features and APIs related to navigation and routing in <span class="ph"><span class="ph pname">SAPUI5</span></span> apps by creating a simple and easy to understand mobile app. It represents a set of
+best practices for applying the navigation and routing features of <span class="ph"><span class="ph pname">SAPUI5</span></span> to your
+applications.</p>
+<p class="p">In classical Web applications, the server determines which resource is requested based on the URL pattern of the request and serves it accordingly. The
+server-side logic controls how the requested resource or page is displayed in an appropriate way.</p>
+<p class="p">In single-page applications, only one page is initially requested from the server and
+additional resources are dynamically loaded using client-side logic. The user only
+navigates within this page. The navigation is persisted in the hash instead of the
+server path or URL parameters.</p>
+<p class="p"> For example, a classical Web application might display the employee&#x2019;s resume page when URL
+<samp class="ph codeph">http://&lt;your-host&gt;/&lt;some-path-to-the-app&gt;/employees/resume.html?id=3</samp>
+or
+<samp class="ph codeph">http://&lt;your-host&gt;/&lt;some-path-to-the-app&gt;/employees/3/resume</samp>
+is called. A single-page application instead would do the same thing by using a
+hash-based URL like
+<samp class="ph codeph">http://&lt;your-host&gt;/&lt;some-path-to-the-app&gt;/#/employees/3/resume</samp>. </p>
+<p class="p">The information in the hash, namely everything that is following the <samp class="ph codeph">#</samp> character, is interpreted by the router. </p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">This tutorial does not handle cross-app navigation with the <span class="ph pname">SAP Fiori launchpad</span>. However, the concepts described in this tutorial are also fundamental for
+navigation and routing between apps in the <span class="ph pname">SAP Fiori launchpad</span>.</p></aside>
+<div class="p">We will create a simple app displaying the data of a company&#x2019;s employees to show typical
+navigation patterns and routing features. The complete flow of the application can be
+seen in the figure below. We&apos;ll start with the home page which lets users do the
+following:<ul class="ul" id="loio1b6dcd39a6a74f528b27ddb22f15af0d__ul_z4g_yx4_ls">
+<li class="li">
+<p class="p">Display a <span class="ph uicontrol">Not Found</span> page</p>
+</li>
+<li class="li">
+<p class="p">Navigate to a list of employees and drill further down to see a
+<span class="ph uicontrol">Details</span> page for each employee</p>
+</li>
+<li class="li">
+<p class="p">Show an <span class="ph uicontrol">Employee Overview</span> that they can search and
+sort</p>
+</li>
+</ul></div>
+<div class="fig fignone" id="loio1b6dcd39a6a74f528b27ddb22f15af0d__fig_uzp_dcp_ls"><div class="figbody">
+
+<img class="inline  " id="loio1b6dcd39a6a74f528b27ddb22f15af0d__image_zlc_2cp_ls" src="loio92cdce7bddc44e27a66990708ce4b09f_LowRes.png">
+</div><span class="figcap">Page flow of the final app</span></div>
+<p class="p">Throughout this tutorial we will add features for navigating to pages and bookmarking them. We
+will add backward and forward navigation with common transition animations (slide, show,
+flip, etc.). We will add more pages to the app and navigate between them to show typical
+use cases. We will even learn how to implement features for bookmarking a specific
+search, table sorting via filters, and dialogs.</p>
+<aside class="note tip" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Tip</strong></div>
+<p class="p">You don&apos;t have to do all tutorial steps sequentially, you can also jump directly to any step
+you want. Just download the code from the previous step, and start there.</p><p class="p">You can view and download the files for all steps in the Demo Kit <span class="ph">at <a class="xref" href="../../#/entity/sap.ui.core.tutorial.navigation" target="_top" alt="#/entity/sap.ui.core.tutorial.navigation" title="#/entity/sap.ui.core.tutorial.navigation">Navigation and Routing</a></span>. Copy the code to your workspace and make sure that
+the application runs by calling the <samp class="ph codeph">webapp/index.html</samp> file.
+Depending on your development environment you might have to adjust resource paths
+and configuration entries.</p><div class="p">For more information check the following sections of the tutorials overview page (see <a class="xref" href="../../#/topic/8b49fc198bf04b2d9800fc37fecbb218.html" title="Set up your development environment and go through our tutorials. They introduce you to all major development paradigms of SAPUI5 using practical examples in an interactive format." target="_top">Get Started: Setup and Tutorials</a>):<ul class="ul" id="loio1b6dcd39a6a74f528b27ddb22f15af0d__ul_uxg_vmr_xs">
+<li class="li">
+<p class="p"><a class="xref" href="../../#/topic/8b49fc198bf04b2d9800fc37fecbb218.html#loio8b49fc198bf04b2d9800fc37fecbb218__tutorials_download" target="_top">Downloading Code for a Tutorial Step</a></p>
+</li>
+<li class="li">
+<p class="p"><a class="xref" href="../../#/topic/8b49fc198bf04b2d9800fc37fecbb218.html#loio8b49fc198bf04b2d9800fc37fecbb218__tutorials_adaptation" target="_top">Adapting Code to Your Development Environment</a></p>
+</li>
+</ul></div></aside>
+</div><div class="related-links"> <ol><li><strong><a class="link" href="../../#/topic/df245bd449a7470c8c2a0926ca8d78de.html" title="We start by setting up a simple app for this tutorial. The app displays mock data only and mimics real OData back-end calls with the mock server as you have seen in the Walkthrough tutorial." target="_top">Step 1: Set Up the Initial App</a></strong><br></li><li><strong><a class="link" href="../../#/topic/cf3c57c89ef0491793d1ce327ab4f9b2.html" title="In this step we will modify the app and introduce routing. Instead of having the home page of the app hard coded we will configure a router to wire multiple views together when our app is called. The routing configuration controls the application flow when the user triggers a navigation action or opens a link to the application directly." target="_top">Step 2: Enable Routing</a></strong><br></li><li><strong><a class="link" href="../../#/topic/e047e0596e8a4a1db50f4a53c11f4276.html" title="Sometimes it is important to display an indication that the requested resource was not found. To give you an example: If a user tries to access an invalid pattern which does not match any of the configured routes, the user is notified that something went wrong. You might also know this as a &#x201C;404&#x201D; or Not Found Page from traditional web pages. In this step, we will implement a feature that detects invalid hashes and visualizes this in a nice way." target="_top">Step 3: Catch Invalid Hashes</a></strong><br></li><li><strong><a class="link" href="../../#/topic/66670b0aab3948469d5cc8276113e9ea.html" title="When we are on the Not Found page because of an invalid hash, we want to get back to our app to select another page. Therefore, we will add a Back button to the Not Found view and make sure that the user gets redirected to either the previous page or the overview page when the Back button is pressed." target="_top">Step 4: Add a Back Button to Not Found Page</a></strong><br></li><li><strong><a class="link" href="../../#/topic/d9efab307ecc42b180b12cc8956e22d7.html" title="In this step, you will learn more about targets and how to display a target from the routing configuration manually." target="_top">Step 5: Display a Target Without Changing the Hash</a></strong><br></li><li><strong><a class="link" href="../../#/topic/782aac08f2de4003a2fcbdd39d27f374.html" title="In this step, we&apos;ll create a second button on the home page, with which we can navigate to a simple list of employees. This example illustrates how to navigate to a route that has a hard-coded pattern." target="_top">Step 6: Navigate to Routes with Hard-Coded Patterns</a></strong><br></li><li><strong><a class="link" href="../../#/topic/f96d2522a5ca4382a274ae3c6d002ca0.html" title="In this step, we implement a feature that allows the user to click on an employee in the list to see additional details of the employee. A route pattern can have one or more mandatory parameters to identify objects in an app." target="_top">Step 7: Navigate to Routes with Mandatory Parameters</a></strong><br></li><li><strong><a class="link" href="../../#/topic/3e5f6f3e163f46ecaef376950258e5e4.html" title="In this step, we want to illustrate how to navigate to a page with a custom transition animation. Both forward and backward navigation will use the &#x201C;flip&#x201D; transition but with a different direction. We will create a simple link on the Employee view that triggers a flip navigation to a page that displays the resume data of a certain employee. Pressing the Back button will navigate back to the Employee view with a reversed flip transition." target="_top">Step 8: Navigate with Flip Transition</a></strong><br></li><li><strong><a class="link" href="../../#/topic/b8561ff6f4c34c85a91ed06d20814cd3.html" title="The resume view contains four tabs as we have seen in the previous steps. However, when the user navigates to the resume page, only the first tab is displayed initially. Navigating directly to a specific tab or bookmarking a tab is not yet supported in our current app." target="_top">Step 9: Allow Bookmarkable Tabs with Optional Query Parameters</a></strong><br></li><li><strong><a class="link" href="../../#/topic/cdab0a1123514cc08cf2c8deb22f312e.html" title="In the previous steps, we have implemented a Resume view that uses tabs to display data. The complete content of the tabs is loaded once, no matter which tab is currently displayed. We can increase the performance of our app by avoiding to load content that is not visible. Therefore, we implement a &#x201C;lazy loading&#x201D; feature that only loads the view and data when requested by the user." target="_top">Step 10: Implement Lazy Loading</a></strong><br></li><li><strong><a class="link" href="../../#/topic/b01840ec42ef48e6bfd2bc12612f501f.html" title="In this step, we will add a new button to the home page to illustrate the usage of multiple targets for a route. When the button is pressed, a new page opens that contains two parts: a header part at the top and a content part. The content part displays a table of employees that can be sorted and searched. We will use the array notation in the routing configuration to assign multiple targets to a route - a feature that we have not yet introduced." target="_top">Step 11: Assign Multiple Targets</a></strong><br></li><li><strong><a class="link" href="../../#/topic/e85da535ea19430a90c381f3c2bd748e.html" title="In this step we will make the search bookmarkable. This allows users to search for employees in the Employees table and they can bookmark their search query or share the URL." target="_top">Step 12: Make a Search Bookmarkable</a></strong><br></li><li><strong><a class="link" href="../../#/topic/39759878ae4f48dcad0cf34da1d299f0.html" title="In this step, we will create a button at the top of the table which will change the sorting of the table. When the current sorting state of the table is changed, the sorting state will be reflected in the URL. This illustrates how to make the table sorting bookmarkable." target="_top">Step 13: Make Table Sorting Bookmarkable</a></strong><br></li><li><strong><a class="link" href="../../#/topic/5cc3147afc8d4854b5d3c5fc20923f77.html" title="In this step, we want to allow bookmarking of the dialog box that is opened when the user clicks the Sort button. The dialog should automatically open when the URL contains the query parameter showDialog." target="_top">Step 14: Make Dialogs Bookmarkable</a></strong><br></li><li><strong><a class="link" href="../../#/topic/877d57e3b5654b19a2d2e5190dc43b0d.html" title="The Employees table displays employee data. However, the resumes of the employees are not accessible from this view yet. We could create a new route and a new view to visualize the resume again, but we could also simply reuse an existing route to cross-link the resume of a certain employee. In this step, we will add a feature that allows users to directly navigate to the resume of a certain employee. We will reuse the Resume page that we have created in an earlier step. This example illustrates that there can be multiple navigation paths that direct to the same page." target="_top">Step 15: Reuse an Existing Route</a></strong><br></li><li><strong><a class="link" href="../../#/topic/a7932a791adc4a58ae4693400801ea5f.html" title="So far we have created many useful routes in our app. In the very early steps we have also made sure that a Not Found page is displayed in case the app was called with an invalid hash. Now, we proceed further and track invalid hashes to be able to detect and correct any invalid links or add new URL patterns that are often requested but not found. Therefore, we simply listen to the bypassed events" target="_top">Step 16: Handle Invalid Hashes by Listening to Bypassed Events</a></strong><br></li><li><strong><a class="link" href="../../#/topic/4a063b8250f24d0cbf7c689821df7199.html" title="In the previous step, we have listened for bypassed events to detect possible technical issues with our app. In this step, we want to improve the analysis use case even more by listening to any matched event of the route. We could use this information to measure how the app is used and how frequently the pages are called. Many Web analytic tools track page hits this way. The collected information can be used, for example to improve our app and its usability." target="_top">Step 17: Listen to Matched Events of Any Route</a></strong><br></li></ol></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,472 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+		<script src="../../../../resources/sap-ui-core.js"
+				id="Script1"
+				data-sap-ui-libs="sap.ui.vbm"
+				data-sap-ui-theme="sap_bluecrystal" >
+		</script>
+		   	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+
+		h4 {
+			margin: 1em 0;
+		}
+
+		i {
+			color: blue
+		}
+
+
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+
+		<script >
+				var app = {
+						"SAPVB": {
+							"version": "2.0",
+							"xmlns:VB": "VB",
+							"Windows": {
+								"Set": {
+									"Window": {
+										"id": "W1",
+										"type": "geo",
+										"refScene": "S1",
+									}
+								}
+							},
+							"MapProviders": {
+								"Set": {
+									"MapProvider": [
+									 {
+										"name": "MAPQUEST",
+										"type": "",
+										"description": "",
+										"tileX": "256",
+										"tileY": "256",
+										"maxLOD": "19",
+										"copyright": "Tiles Courtesy of MapQuest © OpenStreetMap under ODbL v1.0",
+										"Source": [
+											{
+												"id": "s1",
+												"url": "http://otile1.mqcdn.com/tiles/1.0.0/map/{LOD}/{X}/{Y}.png"
+											},
+											{
+												"id": "s2",
+												"url": "http://otile2.mqcdn.com/tiles/1.0.0/map/{LOD}/{X}/{Y}.png"
+											},
+											{
+												"id": "s3",
+												"url": "http://otile3.mqcdn.com/tiles/1.0.0/map/{LOD}/{X}/{Y}.png"
+											},
+											{
+												"id": "s4",
+												"url": "http://otile4.mqcdn.com/tiles/1.0.0/osm/{LOD}/{X}/{Y}.png"
+											}
+										]
+									 },
+			                            {
+			                              "name": "MAPQUESTSAT",
+			                              "type": "",
+			                              "description": "",
+			                              "tileX": "256",
+			                              "tileY": "256",
+			                              "maxLOD": "11",
+			                              "copyright": "Satellite Tiles Courtesy of MapQuest using OpenStreetMap under ODbL (1.0)",
+			                              "Source": [
+			                                 {
+			                                    "id": "s1",
+			                                    "url": "http://otile1.mqcdn.com/tiles/1.0.0/vy/sat/{LOD}/{X}/{Y}.png"
+			                                 },
+			                                 {
+			                                    "id": "s2",
+			                                    "url": "http://otile2.mqcdn.com/tiles/1.0.0/vy/sat/{LOD}/{X}/{Y}.png"
+			                                 },
+			                                 {
+			                                    "id": "s3",
+			                                    "url": "http://otile3.mqcdn.com/tiles/1.0.0/vy/sat/{LOD}/{X}/{Y}.png"
+			                                 },
+			                                 {
+			                                    "id": "s4",
+			                                    "url": "http://otile4.mqcdn.com/tiles/1.0.0/vy/sat/{LOD}/{X}/{Y}.png"
+			                                 }
+			                              ]
+			                            }
+									]
+								}
+							},
+							"MapLayerStacks": {
+								"Set": {
+									"MapLayerStack": [ {
+										"name": "lsMapQuest",
+										"MapLayer": {
+											"name": "layer1",
+											"refMapProvider": "MAPQUEST",
+											"opacity": "1.0",
+											"colBkgnd": "RGB(255,255,255)"
+										            }
+									   },
+										{
+				                              "name": "lsMapQuestSat",
+				                              "MapLayer": {
+				                                 "name": "layer1",
+				                                 "refMapProvider": "MAPQUESTSAT",
+				                                 "opacity": "1.0",
+				                                 "colBkgnd": "RGB(255,255,255)"
+				                                          }
+									   } ]
+								}
+							},
+							"Windows": {
+								"Set": {
+									"Window": {
+										"id": "W1",
+										"type": "geo",
+										"refScene": "S1",
+									}
+								}
+							},
+							"Scenes": {
+								"Set": {
+									"SceneGeo": {
+										"id": "S1",
+										"refMapLayerStack": "lsMapQuest",
+										"VO": {
+											"id": "Spot",
+											"type": "{00100000-2012-0004-B001-64592B8DB964}",
+											"datasource": "Spots",
+											"pos.bind": "Spots.GeoPosition",
+											"scale": "1.0;1.0;1.0",
+											"fxdir": "true",
+											"fxsize": "true"
+										}
+									}
+								}
+							},
+							"Data": {
+								"Set": {
+									"N":
+										{
+											"name": "Spots",
+											"E": [ ]
+										}
+
+								}
+							},
+							"DataTypes": {
+								"Set": {
+									"N": [
+										{
+											"name": "Spots",
+											"key": "Key",
+											"A": [
+												{
+													"name": "Key",
+													"alias": "A",
+													"type": "string"
+												},
+												{
+													"name": "GeoPosition",
+													"alias": "B",
+													"type": "vector"
+												},
+												{
+													"name": "Name",
+													"alias": "C",
+													"type": "string"
+												},
+												{
+													"name": "Selected",
+													"alias": "D",
+													"type": "boolean"
+												}
+											]
+										}
+									]
+								}
+							},
+							"Actions": {
+								"Set": {
+									"Action": [
+										{
+											"id": "1",
+											"name": "CONTEXT_MENU_REQUEST",
+											"refScene": "S1",
+											"refVO": "Spot",
+											"refEvent": "ContextMenu"
+										},
+										{
+											"id": "2",
+											"name": "CONTEXT_MENU_REQUEST",
+											"refScene": "S1",
+											"refVO": "Map",
+											"refEvent": "ContextMenu",
+											"AddActionProperty": [
+												{
+													"name": "zoom"
+												},
+												{
+													"name": "centerpoint"
+												},
+												{
+													"name": "pos"
+												},
+												{
+													"name": "pitch"
+												},
+												{
+													"name": "yaw"
+												}
+											]
+										},
+										{
+											"id": "3",
+											"name": "ZOOM_EVENT",
+											"refScene": "S1",
+											"refVO": "Map",
+											"refEvent": "ZoomChanged",
+											"AddActionProperty": [
+												{
+													"name": "zoom"
+												},
+												{
+													"name": "centerpoint"
+												},
+												{
+													"name": "pos"
+												}
+											]
+										},
+										{
+											"id": "4",
+											"name": "CENTERCHANGED_EVENT",
+											"refScene": "S1",
+											"refVO": "Map",
+											"refEvent": "CenterChanged",
+											"AddActionProperty": [
+												{
+													"name": "zoom"
+												},
+												{
+													"name": "centerpoint"
+												},
+												{
+													"name": "pos"
+												}
+											]
+										},
+										{
+											"id": "5",
+											"name": "DETAIL_REQUEST",
+											"refScene": "S1",
+											"refVO": "Map",
+											"refEvent": "Click",
+											"AddActionProperty": [
+																	{
+																		"name": "pos"
+																	}
+																]
+										}
+									]
+								}
+							}
+						}
+					};
+		</script>
+		<script>
+			// creation of visual business......................................//
+			sap.ui.localResources("vbitestapp");
+
+			// with the callback it is possible to do actions before............//
+			// and after the control is rendered................................//
+
+			function onZoom( e )
+			{
+			// gives you info that a zoom was done..............................//
+			};
+
+			function onSubmit( e )
+			{
+				var x,y;
+				var datEvent = JSON.parse( e.mParameters.data );
+				switch (datEvent.Action.name){
+				    case "DETAIL_REQUEST":
+					case "ZOOM_EVENT":
+					case "CENTERCHANGED_EVENT":
+						// zoom and centerchange events are subscribed...............//
+							if( evtoutput.innerText !== undefined )
+								evtoutput.innerText = e.getParameter( "data" );
+							else
+						  if( evtoutput.textContent !== undefined )
+								evtoutput.textContent = e.getParameter( "data" );	// due to ff
+						break;
+					case "CONTEXT_MENU_REQUEST":
+						for (var ii = 0; ii < datEvent.Action.Params.Param.length; ++ii){
+							var para = datEvent.Action.Params.Param[ii];
+							if ( para.name == "x" ) x = para["#"];
+							if ( para.name == "y" ) y = para["#"];
+						}
+
+						var fileName = (datEvent.Action.object == "Map" ? "automated_cm.json" : "automated_cm_spot.json" );
+						var datAutomat= $.getJSON("media/vbzoom/"+fileName, function( datAutomat )
+								{
+									 var Params = datAutomat.SAPVB.Automation.Call.Param;
+									 datAutomat.SAPVB.Automation.Call.instance = datEvent.Action.instance;
+									 datAutomat.SAPVB.Automation.Call.object = datEvent.Action.object;
+									 for (var ii = 0; ii < Params.length; ++ii){
+										 var para = Params[ii];
+										 if ( para.name == "x" ) para["#"] = x;
+										 if ( para.name == "y" ) para["#"] = y;
+									 }
+									 oVBI1.load( datAutomat );
+								});
+						 break;
+					 case "FCODE_SELECT":
+						 if (( datEvent.Action.instance != undefined ) && ( datEvent.Action.instance != "" ))
+							 alert( "you selected "+datEvent.Action.id+" on instance "+datEvent.Action.instance+" of object "+datEvent.Action.object);
+						 else
+							 alert( "you selected "+datEvent.Action.id+" on object "+datEvent.Action.object);
+						 break;
+				}
+			};
+
+			var oCallback =
+			{
+				onAfterRendering : function()
+				{
+					oVBI1.zoomToGeoPosition( 8.643494, 49.303412, 5 );
+				}
+			};
+
+			// create the visual business control...............................//
+			var oVBI1 = new sap.ui.vbm.VBI('vbiWrap',{
+				width : "100%",
+				height:  400,
+				submit: onSubmit,        	// set the event handler for submit
+				zoom: onZoom,        		// set the event handler for zoom
+				config : app
+
+			});
+
+			var bSatMapShown = false;
+
+			// subscribe to callbacks...........................................//
+			oVBI1.addDelegate( oCallback );
+
+			// place the control in the dom.....................................//
+			oVBI1.placeAt("content");
+
+			// for this demo we load a hard coded context menu directly at startup
+			var datcm = $.getJSON("media/vbzoom/contextmenu.json", function( datcm )
+					{
+							  oVBI1.load( datcm );
+					});
+			// and we do the same for the other context menu for the spot
+			var datcm2 = $.getJSON("media/vbzoom/cm_spot.json", function( datcm2 )
+					{
+							  oVBI1.load( datcm2 );
+					});
+
+			function onBtnZoomIn()
+			{
+				oVBI1.zoomToGeoPosition( 8.643494, 49.303412, 15 );
+			};
+
+			function onBtnAutoZoom()
+			{
+				var dat = $.getJSON("media/vbzoom/automated_zoom.json", function( dat )
+						{
+								  oVBI1.load( dat );
+						});
+			};
+
+			function onBtnContextMenu()
+			{
+				var datauto = $.getJSON("media/vbzoom/automated_cm.json", function( datauto )
+						{
+								  oVBI1.load( datauto );
+						});
+			};
+			function onBtnAdd3Spots()
+			{
+				var datspots = $.getJSON("media/vbzoom/addspots.json", function( datspots )
+						{
+								  oVBI1.load( datspots );
+						});
+			};
+			function onBtnSwitchMap()
+			{
+				 if (bSatMapShown)
+					 var datmapo = $.getJSON("media/vbzoom/Map2osm.json", function( datmapo )   {  oVBI1.load( datmapo );      });
+				 else
+                var datmaps = $.getJSON("media/vbzoom/Map2sat.json", function( datmaps )   {  oVBI1.load( datmaps );      });
+             bSatMapShown = !bSatMapShown;
+			};
+
+		</script>
+</head>
+	<body class="sapUiBody" role="application">
+		<h1> SAP UI5 Visual Business: zoomToGeoPosition Test </h1>
+		<div id="description1">
+		   <h3> The aim: </h3>
+		<p> To test if on page load the GeoMap control is already zoomed in on a particular area; in this case, the area around Munich.</p>
+		<br>
+		<h3> To test: </h3>
+			<ol>
+			<li> Click on "Add 3 Spots" button. Check that 3 spots are added to the GeoMap control.</li>
+				<li> Click the "Zoom Test" button. This will apply zoomToGeoPosition. The GeoMap should be zoomed into Waldorf.</li>
+				<li> Click the "Automated Zoom Test" button.</li>
+				<li> Click the "Automated Context Menu Test" button, and check that a Context menu appears.</li>
+				<li> Click the "Switch Map" button, and check that the map switches.</li>
+				<p></p>
+			</ol>
+		</div>
+			<div id="description2">
+				<br>
+				<br>
+		<button id="btnAdd3Spots"  onClick="onBtnAdd3Spots()"> Add 3 Spots </button>
+		<button id="btnZoomIn"   onClick="onBtnZoomIn()"> Zoom Test </button>
+		<button id="btnAutoZoom" onClick="onBtnAutoZoom()"> Automated Zoom Test </button>
+		<button id="btnAutoCM" onClick="onBtnContextMenu()"> Automated Context Menu Test </button>
+		<button id="btnSwitchMap" onClick="onBtnSwitchMap()"> Switch Map </button>
+				<br>
+				<br>
+		<div id="content"></div>
+			<br>
+				<br>
+		<textarea style="width:100%;box-sizing:border-box" id="evtoutput" rows="25" ></textarea>
+
+		<div id="content2"></div>
+				<br>
+				<br>
+		</div>
+	</body>
+</html>

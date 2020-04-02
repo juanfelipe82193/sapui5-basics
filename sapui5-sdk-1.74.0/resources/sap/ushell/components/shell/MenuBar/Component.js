@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define(["sap/ui/core/UIComponent","sap/ui/model/json/JSONModel"],function(U,J){"use strict";return U.extend("sap.ushell.components.shell.MenuBar.Component",{init:function(){U.prototype.init.apply(this,arguments);var m=new J();this.setModel(m,"menu");sap.ushell.Container.getServiceAsync("Menu").then(function(M){return M.getMenuEntries();}).then(function(M){m.setProperty("/",M);});}});});

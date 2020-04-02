@@ -1,0 +1,285 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 19: Reuse Dialogs</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In this step, we expand our reuse concept and invoke the dialog at component level."><meta name="description" content="In this step, we expand our reuse concept and invoke the dialog at component level."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"bf71375454654b44af01379a3c3a6273.html","previousTopicHref":"776f7352807e4f82b18176c8fbdc0c56.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/776f7352807e4f82b18176c8fbdc0c56.html" title="Our dialog is still pretty much empty. Since SAPUI5 is shipped with a large icon font that contains more than 500 icons, we will add an icon to greet our users when the dialog is opened." target="_top">Step 18: Icons</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/bf71375454654b44af01379a3c3a6273.html" title="Now that we have established a good structure for our app, it&apos;s time to add some more functionality. We start exploring more features of data binding by adding some invoice data in JSON format that we display in a list below the panel." target="_top">Step 20: Aggregation Binding</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loio19453962b8074b7399372c65cbe05370"><h1 class="title topictitle1" hidden>Step 19: Reuse Dialogs</h1><div class="body conbody"><p class="shortdesc" hidden>In this step, we expand our reuse concept and invoke the dialog at component
+level.</p>
+<p class="p">In step 16, we created a dialog as fragment, to make it reusable across views or across our whole app. But we placed the logic for retrieving the dialog instance and for opening and closing it respectively in the controller of the <samp class="ph codeph">HelloPanel</samp> view. Sticking to this approach would require copying and pasting the code to the controller of each view that needs our dialog. This would cause an undesired code redundancy which we want to avoid.</p><p class="p">In this step, we implement the solution to this problem: We expand our reuse concept and invoke the dialog at component level. </p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loio19453962b8074b7399372c65cbe05370__fig_r1j_pst_mr"><div class="figbody">
+
+<img class="inline  " id="loio19453962b8074b7399372c65cbe05370__image_dbs_v3j_3s" src="loio6fbc14686a044570be0b7654e683cd56_HiRes.png">
+</div><span class="figcap">The dialog is now opened by the component (no visual changes to last
+step)</span></div>
+</section></div>
+<div class="section"><section class="section" type="Coding"><h2 class="section_title" style="font-size: 1.15em;">Coding</h2>
+
+<p class="p">You can view and download all files <span class="ph">at <a class="xref" href="../../#/sample/sap.m.tutorial.walkthrough.19/preview" target="_top" alt="#/sample/sap.m.tutorial.walkthrough.19/preview" title="#/sample/sap.m.tutorial.walkthrough.19/preview">Walkthrough - Step 19</a></span>.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/Component.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/Component.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/core/UIComponent&quot;,
+	&quot;sap/ui/model/json/JSONModel&quot;<span class="ph emphasis emphasis">,
+	&quot;./controller/HelloDialog&quot;
+</span>
+], function (UIComponent, JSONModel<span class="ph emphasis emphasis">, HelloDialog</span>) {
+	&quot;use strict&quot;;
+	return UIComponent.extend(&quot;sap.ui.demo.walkthrough.Component&quot;, {
+		metadata : {
+			manifest : &quot;json&quot;
+		},
+		init : function () {
+			// call the init function of the parent
+			UIComponent.prototype.init.apply(this, arguments);
+			// set data model
+			var oData = {
+				recipient : {
+					name : &quot;World&quot;
+				}
+			};
+			var oModel = new JSONModel(oData);
+			this.setModel(oModel);
+
+			<span class="ph emphasis emphasis">// set dialog
+			this._helloDialog = new HelloDialog(this.getRootControl());
+		},
+
+
+		exit : function() {
+			this._helloDialog.destroy();
+			delete this._helloDialog;
+		},
+
+		openHelloDialog : function () {
+			this._helloDialog.open();</span>
+		}
+	});
+});</pre>
+<p class="p">The dialog instantiation is refactored to a new helper object which is stored in a private property of the component. For instantiation of the
+helper object, we have to pass the view instance to which the dialog is added (see method call <samp class="ph codeph">addDependent</samp> in the
+implementation of the helper object <samp class="ph codeph">HelloDialog.js</samp> below).</p>
+<p class="p">We want to connect the reuse dialog to the lifecycle of the root view of the app, so we pass an instance of the root view on to the constructor. It can be retrieved by calling the <samp class="ph codeph">getRootControl</samp> method of the component.</p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">As defined in parameter <samp class="ph codeph">rootView</samp> in the <span class="ph filepath">manifest.json</span> file, our root view is
+<samp class="ph codeph">sap.ui.demo.walkthrough.view.App</samp>. From the component, the root view can be retrieved at runtime by accessing the
+<samp class="ph codeph">rootControl</samp> aggregation.</p></aside>
+<p class="p">To be able to open the dialog from other controllers as well, we implement a reuse function <samp class="ph codeph">openHelloDialog</samp> which calls the
+<samp class="ph codeph">open</samp> method of our helper object. By doing so, we also decouple the implementation details of the reuse dialog from the
+application coding.</p><p class="p">Up to this point we added the new property <samp class="ph codeph">_helloDialog</samp> to the component and assigned an instance of the <samp class="ph codeph">HelloDialog</samp> object to it. We want to make sure that the memory allocated for this helper object is freed up when the component is destroyed. Otherwise our application may cause memory leaks.</p><p class="p">To do so, we use the <samp class="ph codeph">exit</samp> hook. The <span class="ph"><span class="ph pname">SAPUI5</span></span> framework calls the function assigned to <samp class="ph codeph">exit</samp> when destroying the component. We call the destroy function of <samp class="ph codeph">HelloDialog</samp> to clean up the helper class and end its lifecycle. Nevertheless, the instance itself would still exist in the browser memory. Therefore we delete our reference to the <samp class="ph codeph">HelloDialog</samp> instance by calling <samp class="ph codeph">delete this._helloDialog</samp> and the garbage collection of the browser can clean up its memory.</p><aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">We don&apos;t have to destroy the instance of <samp class="ph codeph">JSONModel</samp> that we created, because we assigned it to the component with the <samp class="ph codeph">setModel</samp> function. The <span class="ph"><span class="ph pname">SAPUI5</span></span> framework will destroy it together with the component.</p></aside>
+</section></div>
+<div class="section"><section class="section" type="webapp/controller/HelloDialog.js (New)"><h2 class="section_title" style="font-size: 1.15em;">webapp/controller/HelloDialog.js (New)</h2>
+
+<pre class="pre codeblock prettyprint lang-js"><span class="ph emphasis emphasis">sap.ui.define([
+	&quot;sap/ui/base/ManagedObject&quot;,
+	&quot;sap/ui/core/Fragment&quot;
+], function (ManagedObject, Fragment) {
+	&quot;use strict&quot;;
+
+	return ManagedObject.extend(&quot;sap.ui.demo.walkthrough.controller.HelloDialog&quot;, {
+
+		constructor : function (oView) {
+			this._oView = oView;
+		},
+
+		exit : function () {
+			delete this._oView;
+		},
+
+		open : function () {
+			var oView = this._oView;
+
+			// create dialog lazily
+			if (!oView.byId(&quot;helloDialog&quot;)) {
+				var oFragmentController = {
+					onCloseDialog : function () {
+						oView.byId(&quot;helloDialog&quot;).close();
+					}
+				};
+				// load asynchronous XML fragment
+				Fragment.load({
+					id: oView.getId(),
+					name: &quot;sap.ui.demo.walkthrough.view.HelloDialog&quot;,
+					controller: oFragmentController
+				}).then(function (oDialog) {
+					// connect dialog to the root view of this component (models, lifecycle)
+					oView.addDependent(oDialog);
+					oDialog.open();
+				});
+			} else {
+				oView.byId(&quot;helloDialog&quot;).open();
+			}
+		}
+
+	});
+
+});
+</span></pre>
+<p class="p">The implementation of the <samp class="ph codeph">HelloDialog</samp> reuse object extends an <samp class="ph codeph">sap.ui.base.ManagedObject</samp> object to
+inherit some of the core functionality of <span class="ph"><span class="ph pname">SAPUI5</span></span>.</p>
+<p class="p">Our <samp class="ph codeph">open</samp> method is refactored from the <samp class="ph codeph">HelloPanel</samp> controller and instantiates our dialog fragment as
+in the previous steps.</p>
+<aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p class="p">We do not pass a controller as third parameter to function <samp class="ph codeph">sap.ui.xmlfragment</samp> but a local helper object
+<samp class="ph codeph">oFragmentContoller</samp> which included the needed event handler function <samp class="ph codeph">onCloseDialog</samp> for the
+fragment.</p></aside>
+<p class="p">The <samp class="ph codeph">open</samp> method now contains our dialog instantiation. The first time the <samp class="ph codeph">open</samp> method is called, the
+dialog is instantiated. The <samp class="ph codeph">oView</samp> argument of this method is used to connect the current view to the dialog. We will
+call the <samp class="ph codeph">open</samp> method of this object later in the controller.</p>
+<p class="p">The <samp class="ph codeph">onCloseDialog</samp> event handler is simply moved from the <samp class="ph codeph">HelloPanel</samp> controller to the reuse
+object.</p>
+<p class="p">We also add an <samp class="ph codeph">exit</samp> function, just like we did in the component, that will be called automatically when the object is
+being destroyed. To free up all allocated memory in the helper object, we delete the property that holds the reference to the view.
+The view itself will be destroyed by the component, so we don&apos;t need to take care for that.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/controller/HelloPanel.controller.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/controller/HelloPanel.controller.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/core/mvc/Controller&quot;,
+	&quot;sap/m/MessageToast&quot;
+], function (Controller, MessageToast) {
+	&quot;use strict&quot;;
+	return Controller.extend(&quot;sap.ui.demo.walkthrough.controller.HelloPanel&quot;, {
+		onShowHello : function () {
+			// read msg from i18n model
+			var oBundle = this.getView().getModel(&quot;i18n&quot;).getResourceBundle();
+			var sRecipient = this.getView().getModel().getProperty(&quot;/recipient/name&quot;);
+			var sMsg = oBundle.getText(&quot;helloMsg&quot;, [sRecipient]);
+			// show message
+			MessageToast.show(sMsg);
+		},
+		<span class="ph emphasis emphasis">onOpenDialog : function () {
+			this.getOwnerComponent().openHelloDialog();
+		}</span>
+	});
+});</pre>
+<p class="p">The <samp class="ph codeph">onOpenDialog</samp> method now accesses its component by calling the
+helper method <samp class="ph codeph">getOwnerComponent</samp>. When calling the open method of
+the reuse object we pass in the current view to connect it to the dialog.</p>
+</section></div>
+<div class="section"><div class="section_title">webapp/view/App.view.xml</div><pre class="pre codeblock prettyprint lang-js">&lt;mvc:View
+	controllerName=&quot;sap.ui.demo.walkthrough.controller.App&quot;
+	xmlns=&quot;sap.m&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;
+	displayBlock=&quot;true&quot;&gt;
+	&lt;Shell&gt;
+		&lt;App class=&quot;myAppDemoWT&quot;&gt;
+			&lt;pages&gt;
+				&lt;Page title=&quot;{i18n&gt;homePageTitle}&quot;&gt;
+<span class="ph emphasis emphasis">					&lt;headerContent&gt;
+						&lt;Button
+							icon=&quot;sap-icon://hello-world&quot;
+							press=&quot;.onOpenDialog&quot;/&gt;
+					&lt;/headerContent&gt;
+</span>
+					&lt;content&gt;
+						&lt;mvc:XMLView viewName=&quot;sap.ui.demo.walkthrough.view.HelloPanel&quot;/&gt;
+					&lt;/content&gt;
+				&lt;/Page&gt;
+			&lt;/pages&gt;
+		&lt;/App&gt;
+	&lt;/Shell&gt;
+&lt;/mvc:View&gt;
+</pre>We
+add a button to the header area of the app view to show the reuse of the hello world dialog. When pressing the button the dialog will be
+opened as with the button that we previously created in the
+panel.<div class="section_title">webapp/controller/App.controller.js</div><pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/core/mvc/Controller&quot;
+], function (Controller) {
+	&quot;use strict&quot;;
+
+	return Controller.extend(&quot;sap.ui.demo.walkthrough.controller.App&quot;, {
+
+<span class="ph emphasis emphasis">		onOpenDialog : function () {
+			this.getOwnerComponent().openHelloDialog();
+		}</span>
+	});
+
+});</pre><p class="p">We
+add the method <samp class="ph codeph">onOpenDialog</samp> also to the app controller so that the dialog will open with a reference to the current
+view.</p><div class="section_title"> Conventions</div><ul class="ul" id="loio19453962b8074b7399372c65cbe05370__ul_nh5_ybb_nr">
+<li class="li">
+<p class="p">Put all assets that are used across multiple controllers in separate modules.</p>
+</li>
+</ul></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/776f7352807e4f82b18176c8fbdc0c56.html" title="Our dialog is still pretty much empty. Since SAPUI5 is shipped with a large icon font that contains more than 500 icons, we will add an icon to greet our users when the dialog is opened." target="_top">Step 18: Icons</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/bf71375454654b44af01379a3c3a6273.html" title="Now that we have established a good structure for our app, it&apos;s time to add some more functionality. We start exploring more features of data binding by adding some invoice data in JSON format that we display in a list below the panel." target="_top">Step 20: Aggregation Binding</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="extlink" href="http://help.sap.com/disclaimer?site=https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_Management" target="_blank" alt="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_Management" title="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_Management">Memory Management on https://developer.mozilla.org<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></div><div><a class="link" href="../../#/api/sap.ui.base.ManagedObject" target="_top" alt="#/api/sap.ui.base.ManagedObject" title="#/api/sap.ui.base.ManagedObject">API Reference: <samp class="ph codeph">sap.ui.base.ManagedObject</samp></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

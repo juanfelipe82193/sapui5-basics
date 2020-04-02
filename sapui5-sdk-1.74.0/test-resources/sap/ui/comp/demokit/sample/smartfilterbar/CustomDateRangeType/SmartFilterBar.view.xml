@@ -1,0 +1,50 @@
+<mvc:View
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+	xmlns:smartTable="sap.ui.comp.smarttable"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	controllerName="sap.ui.comp.sample.smartfilterbar.CustomDateRangeType.SmartFilterBar"
+	height="100%">
+
+	<!-- use this to make the table occupy the available screen height -->
+	<VBox fitContainer="true">
+		<smartFilterBar:SmartFilterBar id="smartFilterBar" persistencyKey="UniqueAndStablePersistencyKey"
+			considerSelectionVariants="true" entitySet="LineItemsSet">
+			<smartFilterBar:controlConfiguration>
+				<smartFilterBar:ControlConfiguration key="BLDAT" visibleInAdvancedArea="true"
+					conditionType="{
+						module: 'sap.ui.comp.sample.smartfilterbar.CustomDateRangeType.custom.MyTodayDateRange',
+						ignoreTime: false,
+						operations: {
+							filter: [
+								{path: 'category', contains: 'DYNAMIC', exclude:true},
+								{path: 'category', contains: 'YEAR', exclude:true},
+								{path: 'category', contains: 'QUARTER', exclude:true},
+								{path: 'category', contains: 'MONTH', exclude:true},
+								{path: 'category', contains: 'WEEK', exclude:true},
+								{path: 'category', contains: 'DAY', exclude:true}
+							]
+						}
+					}"
+				>
+				</smartFilterBar:ControlConfiguration>
+
+			</smartFilterBar:controlConfiguration>
+			<!-- layout data used to make the table growing but the filter bar fixed -->
+			<smartFilterBar:layoutData>
+				<FlexItemData shrinkFactor="0" />
+			</smartFilterBar:layoutData>
+		</smartFilterBar:SmartFilterBar>
+
+		<smartTable:SmartTable id="LineItemsSmartTable" entitySet="LineItemsSet" smartFilterId="smartFilterBar" tableType="Table" useExportToExcel="true" useVariantManagement="false" useTablePersonalisation="true" header="Line Items" showRowCount="true" persistencyKey="UniqueAndStablePersistencyKey"
+			enableAutoBinding="true" app:useSmartField="true">
+			<!-- layout data used to make the table growing but the filter bar fixed -->
+			<smartTable:layoutData>
+				<FlexItemData growFactor="1" baseSize="0%" />
+			</smartTable:layoutData>
+		</smartTable:SmartTable>
+
+	</VBox>
+
+</mvc:View>

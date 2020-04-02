@@ -1,0 +1,2687 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>GanttChartContainer Complex</title>
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.gantt, sap.m"
+	src="../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize"
+	data-sap-ui-resourceroots='{ "sap.gantt.test.shape": "./shape", "sap.gantt.test.data": "./qunit/data" }'>
+</script>
+
+<script src="./test.js"></script>
+
+<script>
+	sap.ui.loader.config({async:true});
+	sap.ui.require([
+		"sap/gantt/legend/LegendContainer",
+		"sap/gantt/legend/DimensionLegend",
+		"sap/gantt/def/cal/CalendarDefs",
+		"sap/gantt/def/cal/Calendar",
+		"sap/gantt/def/cal/TimeInterval",
+		"sap/gantt/legend/ListLegend",
+		"sap/gantt/def/pattern/SlashPattern",
+		"sap/gantt/def/pattern/BackSlashPattern",
+		"sap/gantt/test/data/DataProducer",
+		"sap/gantt/test/shape/LegendOrderShape",
+		"sap/gantt/test/shape/RectangleGroup",
+		"sap/gantt/test/shape/CustomSelectedShape",
+		"sap/gantt/test/shape/ResizeShadowPath",
+		"sap/gantt/test/shape/TopIndicator",
+		"sap/gantt/test/shape/OverlapRectangle",
+		"sap/gantt/test/shape/OverlapProjectionPath",
+		"sap/gantt/test/shape/ResizePhaseShadow",
+		"sap/gantt/shape/ext/ubc/UtilizationBarChart",
+		"sap/gantt/shape/ext/ubc/UbcOverCapacityZonePolygon",
+		"sap/gantt/shape/ext/ubc/UbcUnderCapacityZonePolygon",
+		"sap/gantt/shape/ext/ubc/UbcShortageCapacityPolygon",
+		"sap/gantt/shape/ext/ubc/UbcUsedPolygon",
+		"sap/gantt/shape/ext/ubc/UbcBorderPath",
+		"sap/gantt/shape/ext/ubc/UbcTooltipRectangle",
+		"sap/gantt/shape/ext/ulc/UtilizationLineChart",
+		"sap/gantt/shape/ext/ulc/UlcMiddleLine",
+		"sap/gantt/shape/ext/ulc/UlcOverCapacityZoneRectangle",
+		"sap/gantt/shape/ext/ulc/UlcDimension",
+		"sap/gantt/shape/ext/ulc/UlcClipPath",
+		"sap/gantt/shape/ext/ulc/UlcClipingPath",
+		"sap/gantt/shape/ext/ulc/UlcOverClipRectangle",
+		"sap/gantt/shape/ext/ulc/UlcOverClipRectangle",
+		"sap/gantt/shape/ext/ulc/UlcUnderClipRectangle",
+		"sap/gantt/shape/ext/ulc/UlcBorderPath",
+		"sap/gantt/shape/ext/ulc/UlcTooltipRectangle",
+		"sap/gantt/shape/Path",
+		"sap/gantt/shape/Text",
+		"sap/gantt/shape/ext/Chevron"
+
+	], function(LegendContainer, DimensionLegend, CalendarDefs, Calendar, TimeInterval, ListLegend, SlashPattern, BackSlashPattern, DataProducer) {
+		createPage("Test Page for sap.gantt.GanttChartContainer Complex", true);
+
+		//Toolbar generator
+		function ToolbarItemGenerator () {};
+		ToolbarItemGenerator.customToolbarItemType = {
+			BUTTON : "1",
+			DIVIDER : "2",
+			DROPDOWNBOX : "3",
+			GROUP_BUTTON: "4",
+			SEGMENTED_BUTTON : "5",
+			SIGNED_BUTTON: "6",
+			MENU_BUTTON : "7",
+			ACTION_SHEET_BUTTON : "8"
+		};
+
+		ToolbarItemGenerator.generateCustomButtons = function (sId, oContext) {
+			var oButtonData = oContext.getObject();
+			var oControl = this._createItem(oButtonData);
+
+			return oControl;
+		};
+
+		ToolbarItemGenerator._createItem = function (oScheme) {
+			switch (oScheme.type) {
+				case this.customToolbarItemType.BUTTON:
+					return this._createButton(oScheme);
+				case this.customToolbarItemType.SEGMENTED_BUTTON:
+					return this._createSegmentedButton(oScheme);
+				case this.customToolbarItemType.MENU_BUTTON:
+					return this._createMenuButton(oScheme);
+				case this.customToolbarItemType.SIGNED_BUTTON:
+					return this._createSignedButton(oScheme);
+				case this.customToolbarItemType.ACTION_SHEET_BUTTON:
+					return this._createActionSheetButton(oScheme);
+			}
+		};
+
+		ToolbarItemGenerator._createButton = function (oScheme) {
+			var oRetVal = new sap.m.Button({
+				id: oScheme.id ? oScheme.id : undefined,
+				text: oScheme.text,
+				icon: oScheme.icon,
+				tooltip: oScheme.tooltip,
+				press: handleCustomToolbarItem
+			});
+
+			oRetVal.data("config", oScheme);
+			return oRetVal;
+		};
+
+		ToolbarItemGenerator._createSignedButton = function (oScheme) {
+			var oRetVal = new sap.m.ToggleButton({
+				id: oScheme.id ? oScheme.id : undefined,
+				text: oScheme.text,
+				icon: oScheme.icon,
+				tooltip: oScheme.tooltip,
+				press: handleCustomToolbarItem
+			});
+
+			oRetVal.data("config", oScheme);
+			return oRetVal;
+		};
+
+		ToolbarItemGenerator._createSegmentedButton = function (oScheme) {
+
+			var aButtons = oScheme.buttons.map(function(oItem){
+				var oRetVal = new sap.m.Button({
+					id: oItem.id ? oItem.id : undefined,
+					icon: oItem["icon"],
+					text: oItem["text"],
+					tooltip: oItem["tooltip"]
+				});
+				oRetVal.data("config", oItem);
+				return oRetVal;
+			});
+
+			var oSegmentedButton = new sap.m.SegmentedButton({
+				buttons: aButtons,
+				select: handleCustomToolbarItem
+			});
+
+			oSegmentedButton.data("config", oScheme);
+
+			return oSegmentedButton;
+		};
+
+		ToolbarItemGenerator._createActionSheetButton = function (oScheme) {
+			var oActionSheet = new sap.m.ActionSheet();
+			for (var i =0; i < oScheme.menuItems.length; i++) {
+				var oItem = new sap.m.Button({
+					id: oScheme.menuItems[i].id ? oScheme.menuItems[i].id : undefined,
+					text: oScheme.menuItems[i].text,
+					press : function (oEvent) {
+						onJumpToPosition(oEvent.getSource().getText());
+					}
+				});
+				oActionSheet.addButton(oItem);
+			}
+
+			var oRetVal = new sap.m.Button({
+				id: oScheme.id ? oScheme.id : undefined,
+				text: oScheme.text,
+				icon: oScheme.icon,
+				tooltip: oScheme.tooltip,
+				press: function (oEvent) {
+					var oButton = oEvent.getSource();
+					if (oActionSheet) {
+						oActionSheet.openBy(oButton);
+					}
+				}
+			});
+			oRetVal.data("config", oScheme);
+			return oRetVal;
+		};
+
+		// create legend
+		var checkboxError = new sap.m.CheckBox({
+			selected: true,
+			name: "Error",
+			select: onCheckboxSelect
+		});
+		var labelError = new sap.m.Label({
+			text: "Error"
+		});
+		checkboxError.removeAllAriaLabelledBy();
+		checkboxError.addAriaLabelledBy(labelError.getIdForLabel());
+
+		var checkBoxWarn = new sap.m.CheckBox({
+			selected: true,
+			name: "Warning",
+			select: onCheckboxSelect
+		});
+		var labelWarn = new sap.m.Label({
+			text: "Warning"
+		});
+		checkBoxWarn.removeAllAriaLabelledBy();
+		checkBoxWarn.addAriaLabelledBy(labelWarn.getIdForLabel());
+
+		var checkboxInfo = new sap.m.CheckBox({
+			selected: true,
+			name: "Information",
+			select: onCheckboxSelect
+		});
+		var labelInfo = new sap.m.Label({
+			text: "Information"
+		});
+		checkboxInfo.removeAllAriaLabelledBy();
+		checkboxInfo.addAriaLabelledBy(labelInfo.getIdForLabel());
+
+		function onCheckboxSelect (oEvent) {
+			var oParameters = oEvent.getParameters();
+			var sValue = oParameters.value ? "checked" : "unchecked";
+			sap.m.MessageToast.show("The checkbox of " + oParameters.legendType + " is " + sValue + "\n", {width: "50em", my: "center center", at: "center center", duration: 2000 });
+		};
+
+		var oLegendContainer = new LegendContainer();
+
+		// create paintServeDef
+		var oSvgDefs = new sap.gantt.def.SvgDefs({
+			defs: [new BackSlashPattern("pattern_backslashFilled_gray", {
+				stroke: "@sapUiChart8",
+				strokeWidth:1,
+				backgroundColor: "none"
+			}), new BackSlashPattern("pattern_backslash_grey", {
+				stroke: "@sapUiChart8",
+				backgroundColor: "@sapUiChartNeutral"
+			}), new SlashPattern("pattern_slash_grey", {
+				stroke: "@sapUiChartPaletteSemanticNeutralDark2"
+			}), new SlashPattern("pattern_slash_blue", {
+				stroke: "@sapUiChart1"
+			}), new SlashPattern("pattern_slash_green", {
+				stroke: "@sapUiChart2"
+			}), new SlashPattern("pattern_slash_orange", {
+				stroke: "@sapUiChart3"
+			}), new SlashPattern("pattern_slash_lightblue", {
+				stroke: "@sapUiChart4"
+			})]
+		});
+
+
+		var oDocumentShape = new sap.gantt.config.Shape({
+			key: "Order",
+			shapeClassName: "sap.gantt.test.shape.LegendOrderShape",
+			shapeProperties: {
+				key: "Order",
+				width: 15,
+				height: 15,
+				isDuration: true,
+				strokeWidth: 2
+			}
+		});
+		var oDimensionLegend = new sap.gantt.legend.DimensionLegend({
+			legendWidth: 15,
+			legendHeight: 15,
+			fontSize: 15,
+			shape: oDocumentShape,
+			xDimension: "status",
+			yDimension: "type",
+			xDomain: [0, 1, 2],
+			yDomain: [5]
+		});
+		oLegendContainer.addLegendSection(new sap.m.Page({
+			title :'DOCUMENT',
+			content : oDimensionLegend
+		}));
+
+		var oActivityShape = new sap.gantt.config.Shape({
+			key: "Activity",
+			shapeClassName: "sap.gantt.test.shape.LegendOrderShape",
+			shapeProperties: {
+				key:"Activity",
+				width: 15,
+				height: 15,
+				isDuration: true,
+				strokeWidth: 2
+			}
+		})
+		var oDimensionLegend2 = new sap.gantt.legend.DimensionLegend({
+			legendWidth: 15,
+			legendHeight: 15,
+			fontSize: 15,
+			shape: oActivityShape,
+			xDimension: "status",
+			yDimension: "type",
+			xDomain: [0, 1, 2],
+			yDomain: [0, 1, 2, 3, 4]
+		});
+		oLegendContainer.addLegendSection(new sap.m.Page({
+			title :'ACTIVITIES',
+			content : oDimensionLegend2
+		}));
+
+		// test data path
+		var sPath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf("/")) + "/qunit/data/";
+		var oData = {};
+
+		var oDataProducer = new DataProducer();
+		var oHRHierarchy = oDataProducer.produceData("HR");
+		var oRESOURCESHierarchy = oDataProducer.produceData("RESOURCES");
+		var oTRUCKHierarchy = oDataProducer.produceData("TRUCK");
+		var oTOLHierarchy = oDataProducer.produceData("TOL");
+		var oTRUCK_ULCHierarchy = oDataProducer.produceData("TRUCK_ULC");
+		var oRELHierarchy = oDataProducer.produceData("REL");
+		var oTRUCK_WITHOUT_TOOLBARHierarchy = oDataProducer.produceData("TRUCK_WITHOUT_TOOLBAR");
+		var aAdhocLines = [{
+			stroke: "#DC143C",
+			strokeWidth: 4,
+			timeStamp: "20141011180000",
+			description: "Product Release."
+		}, {
+			stroke: "#4B0082",
+			strokeWidth: 4,
+			strokeOpacity: 0.4,
+			timeStamp: "20141015180000",
+			description: "Product 2 Release."
+		},{
+			stroke: "#0000FF",
+			strokeWidth: 3,
+			strokeDasharray: "6,4",
+			timeStamp: "20141102120000",
+			description: "First Customer."
+		}];
+
+		// load test data
+		oData.data = {
+			containerLayoutKey: "d2",
+			view: [oDataProducer.getData("RESOURCES"), oDataProducer.getData("TOL")],
+			toolbarScheme: jQuery.sap.sjax({
+				url : "qunit/data/custom_toolbar_items_complex.json", 
+				dataType:"json"
+			}).data["d2"].toolbarScheme,
+			calendar: oDataProducer.getData("RESOURCES").calendar,
+			adhocLines: aAdhocLines
+		};
+
+		// create model
+		var oModel = new sap.ui.model.json.JSONModel();
+		oModel.setData(oData);
+
+		//for mode keep
+		var oModeManager = [{"RESOURCES":"D"},{"TOL":"A"}];
+
+		// create configuration objects
+		var oTimeAxisConfig = new sap.gantt.config.TimeAxis({
+			planHorizon: new sap.gantt.config.TimeHorizon({
+				startTime: "20140101000000",
+				endTime: "20161027060610"
+			}),
+			initHorizon: new sap.gantt.config.TimeHorizon({
+				startTime: "20140920120000",
+				endTime: "20141027000000"
+			}),
+			granularity: "1week",
+			finestGranularity: "1min"
+		});
+
+		var aModesConfig = [
+	 		sap.gantt.config.DEFAULT_MODE,
+			new sap.gantt.config.Mode({
+				key: "D",
+				text: "Activity Mode",
+				icon: "sap-icon://activity-items"
+			}), new sap.gantt.config.Mode({
+				key: "A",
+				text: "Document Mode",
+				icon: "sap-icon://document"
+			})
+		];
+
+		var aToolbarSchemesConfig = [
+			new sap.gantt.config.ToolbarScheme({
+				key: "GLOBAL_TOOLBAR",
+				sourceSelect: new sap.gantt.config.ToolbarGroup({
+					position: "L1",
+					overflowPriority: sap.m.OverflowToolbarPriority.High
+				}),
+				layout: new sap.gantt.config.LayoutGroup({
+					position: "L2",
+					overflowPriority: sap.m.OverflowToolbarPriority.Low,
+					enableRichStyle: false
+				}),
+				customToolbarItems: new sap.gantt.config.ToolbarGroup({
+					position: "L4",
+					overflowPriority: sap.m.OverflowToolbarPriority.High
+				}),
+				expandChart: new sap.gantt.config.ExpandChartGroup({
+					position: "L5",
+					overflowPriority: sap.m.OverflowToolbarPriority.Low,
+					showArrowText: true,
+					expandCharts: [
+						new sap.gantt.config.ExpandChart({
+							isExpand: true,
+							icon: "sap-icon://line-charts",//"sap-icon://expand",
+							tooltip: "Show Utilization.",
+							chartSchemeKeys: ["ulc_main"]
+						}),
+						new sap.gantt.config.ExpandChart({
+							isExpand: false,
+							icon: "sap-icon://line-charts",//"sap-icon://collapse",
+							tooltip: "Hide Utilization.",
+							chartSchemeKeys: ["ulc_main"]
+						}),
+						new sap.gantt.config.ExpandChart({
+							isExpand: true,
+							icon: "sap-icon://along-stacked-chart", //"sap-icon://arrow-bottom",
+							tooltip: "Show Detail.",
+							chartSchemeKeys: ["ac_expand_overlap", "ubc_expand_hr"]
+						}),
+						new sap.gantt.config.ExpandChart({
+							isExpand: false,
+							icon: "sap-icon://along-stacked-chart", //"sap-icon://arrow-top",
+							tooltip: "Hide Detail.",
+							chartSchemeKeys: ["ac_expand_overlap", "ubc_expand_hr"]
+						})
+					],
+				}),
+				birdEye: new sap.gantt.config.BirdEyeGroup({
+					position: "R4",
+					overflowPriority: sap.m.OverflowToolbarPriority.NeverOverflow
+				}),
+				timeZoom: new sap.gantt.config.TimeZoomGroup({
+					position: "R3",
+					//showZoomSlider: false,
+					overflowPriority: sap.m.OverflowToolbarPriority.NeverOverflow,
+					//zoomControlType: sap.gantt.config.ZoomControlType.ButtonsOnly,
+					buttonType: sap.m.ButtonType.Transparent
+				}),
+				legend: new sap.gantt.config.ToolbarGroup({
+					position: "R2",
+					overflowPriority: sap.m.OverflowToolbarPriority.NeverOverflow,
+					buttonType: sap.m.ButtonType.Transparent
+				}),
+				settings: new sap.gantt.config.SettingGroup({
+					position: "R1",
+					overflowPriority: sap.m.OverflowToolbarPriority.NeverOverflow,
+					items: sap.gantt.config.DEFAULT_TOOLBAR_SETTING_ITEMS.concat(new sap.gantt.config.SettingItem({
+						key: "CUST_SETTING1",
+						checked: true,
+						displayText: "Customized Setting 1",
+						tooltip: "Narrow Down"
+					}))
+				}),
+				toolbarDesign: sap.m.ToolbarDesign.Solid
+			}),
+			new sap.gantt.config.ToolbarScheme({
+				key: "LOCAL_TOOLBAR",
+				sourceSelect: new sap.gantt.config.ToolbarGroup({
+					position: "L1",
+					overflowPriority: sap.m.OverflowToolbarPriority.High
+				}),
+				customToolbarItems: new sap.gantt.config.ToolbarGroup({
+					position: "L3",
+					overflowPriority: sap.m.OverflowToolbarPriority.High
+				}),
+				expandTree: new sap.gantt.config.ToolbarGroup({
+					position: "L4",
+					overflowPriority: sap.m.OverflowToolbarPriority.Low
+				}),
+				mode: new sap.gantt.config.ModeGroup({
+					position: "R1",
+					overflowPriority: sap.m.OverflowToolbarPriority.Low,
+					modeKeys: ["A", "D"]
+				})
+			}),
+			new sap.gantt.config.ToolbarScheme({
+				key: "LOCAL_TOOLBAR_Fiori",
+				sourceSelect: new sap.gantt.config.ToolbarGroup({
+					position: "L1",
+					overflowPriority: sap.m.OverflowToolbarPriority.High
+				}),
+				customToolbarItems: new sap.gantt.config.ToolbarGroup({
+					position: "L2",
+					overflowPriority: sap.m.OverflowToolbarPriority.High
+				}),
+				expandTree: new sap.gantt.config.ToolbarGroup({
+					position: "L3",
+					overflowPriority: sap.m.OverflowToolbarPriority.Low
+				}),
+				mode: new sap.gantt.config.ModeGroup({
+					position: "R1",
+					overflowPriority: sap.m.OverflowToolbarPriority.Low,
+					modeKeys: ["A", "D"]
+				})
+			})
+		];
+
+		var aHierarchiesConfig = [];
+
+
+		// Hierarchy for TOL orders
+		aHierarchiesConfig.push(new sap.gantt.config.Hierarchy({
+			key: "TOL",
+			text: "Freight Order",
+			toolbarSchemeKey: "LOCAL_TOOLBAR",
+			activeModeKey: "A",
+			columns: [new sap.gantt.config.HierarchyColumn({
+				key: "h1",
+				title: "Unique ID",
+				contentType: "1",
+				sortAttribute: "uuid",
+				filterAttribute: "uuid",
+				attribute: "uuid"
+			}), new sap.gantt.config.HierarchyColumn({
+				key: "h2",
+				title: "Status",
+				contentType: "1",
+				sortAttribute: "status",
+				filterAttribute: "status",
+				attribute: "status"
+			}), new sap.gantt.config.HierarchyColumn({
+				key: "h3",
+				title: "Start Location",
+				contentType: "1",
+				sortAttribute: "start_loc_id",
+				filterAttribute: "start_loc_id",
+				attribute: "start_loc_id"
+			}), new sap.gantt.config.HierarchyColumn({
+				key: "h4",
+				title: "End Location",
+				contentType: "1",
+				sortAttribute: "end_loc_id",
+				filterAttribute: "end_loc_id",
+				attribute: "end_loc_id"
+			})]
+		}));
+
+		// Columns for truck
+		var aTruckColumn =  [new sap.gantt.config.HierarchyColumn({
+			key: "h1",
+			title: "Text",
+			contentType: "1",
+			sortAttribute: "text",
+			filterAttribute: "text",
+			attribute: "text"
+		}), new sap.gantt.config.HierarchyColumn({
+			key: "h2",
+			title: "Plate",
+			contentType: "1",
+			sortAttribute: "plate",
+			filterAttribute: "plate",
+			attribute: "plate"
+		}), new sap.gantt.config.HierarchyColumn({
+			key: "h3",
+			title: "Plate Expire Time",
+			contentType: "5",
+			sortAttribute: "plate_expire",
+			filterAttribute: "plate_expire",
+			attribute: "plate_expire"
+		})];
+
+		// Normal Truck hierarchy
+		aHierarchiesConfig.push(new sap.gantt.config.Hierarchy({
+			key: "TRUCK",
+			text: "Truck",
+			toolbarSchemeKey: "LOCAL_TOOLBAR",
+			activeModeKey: "D",
+			columns: aTruckColumn
+		}));
+
+		// Truck hierarchy without local toolbar
+		aHierarchiesConfig.push(new sap.gantt.config.Hierarchy({
+			key: "TRUCK_WITHOUT_TOOLBAR",
+			text: "Truck without Toolbar",
+			toolbarSchemeKey: null,
+			activeModeKey: "D",
+			columns: [new sap.gantt.config.HierarchyColumn({
+				key: "h1",
+				title: "Unique ID",
+				contentType: "MASTER",
+				sortAttribute: "uuid",
+				filterAttribute: "uuid",
+				attribute: "uuid"
+			}), new sap.gantt.config.HierarchyColumn({
+				key: "h2",
+				title: "Plate / Name",
+				contentType: "2",
+				sortAttribute: "plate",
+				filterAttribute: "plate",
+				attributes: [new sap.gantt.config.ColumnAttribute({
+					objectTypeKey: "01",
+					attribute: "plate"
+				}), new sap.gantt.config.ColumnAttribute({
+					objectTypeKey: "02",
+					attribute: "plate"
+				}), new sap.gantt.config.ColumnAttribute({
+					objectTypeKey: "04",
+					attribute: "name"
+				})]
+			}), new sap.gantt.config.HierarchyColumn({
+				key: "h3",
+				title: "type",
+				contentType: "2",
+				sortAttribute: "type",
+				filterAttribute: "type",
+				attribute: "type"
+			})],
+			expandedLevels: [["01"], ["04"]]
+		}));
+
+		// ULC Truck hierarchy
+		aHierarchiesConfig.push(new sap.gantt.config.Hierarchy({
+			key: "TRUCK_ULC",
+			text: "Utilization Line Chart",
+			toolbarSchemeKey: "LOCAL_TOOLBAR",
+			activeModeKey: "U",
+			columns: aTruckColumn
+		}));
+
+		aHierarchiesConfig.push(new sap.gantt.config.Hierarchy({
+			key: "RESOURCES",
+			text: "Resources",
+			toolbarSchemeKey: "LOCAL_TOOLBAR",
+			activeModeKey: "D",
+			columns: [new sap.gantt.config.HierarchyColumn({
+				key: "h1",
+				title: "Unique ID",
+				contentType: "MASTER",
+				sortAttribute: "uuid",
+				filterAttribute: "uuid",
+				attribute: "uuid"
+			}), new sap.gantt.config.HierarchyColumn({
+				key: "h2",
+				title: "Plate / Name",
+				contentType: "2",
+				sortAttribute: "plate",
+				filterAttribute: "plate",
+				attributes: [new sap.gantt.config.ColumnAttribute({
+					objectTypeKey: "01",
+					attribute: "plate"
+				}), new sap.gantt.config.ColumnAttribute({
+					objectTypeKey: "02",
+					attribute: "plate"
+				}), new sap.gantt.config.ColumnAttribute({
+					objectTypeKey: "04",
+					attribute: "name"
+				})]
+			}), new sap.gantt.config.HierarchyColumn({
+				key: "h3",
+				title: "type",
+				contentType: "2",
+				sortAttribute: "type",
+				filterAttribute: "type",
+				attribute: "type"
+			})],
+			expandedLevels: [["01"], ["04"]]
+		}));
+
+		aHierarchiesConfig.push(new sap.gantt.config.Hierarchy({
+			key: "HR",
+			text: "Handling Resource",
+			toolbarSchemeKey: "LOCAL_TOOLBAR",
+			activeModeKey: "C",
+			columns: [new sap.gantt.config.HierarchyColumn({
+				key: "h1",
+				title: "Name",
+				contentType: "1",
+				sortAttribute: "text",
+				filterAttribute: "text",
+				attribute: "text"
+			}), new sap.gantt.config.HierarchyColumn({
+				key: "h2",
+				title: "Location",
+				contentType: "1",
+				sortAttribute: "location",
+				filterAttribute: "location",
+				attribute: "location"
+			})]
+		}));
+		//Relationship push
+		aHierarchiesConfig.push(new sap.gantt.config.Hierarchy({
+			key: "REL",
+			text: "Relationship",
+			//toolbarSchemeKey: "LOCAL_TOOLBAR",
+			toolbarSchemeKey: "LOCAL_TOOLBAR_Fiori",
+			activeModeKey: "D",
+			columns: [new sap.gantt.config.HierarchyColumn({
+				key: "h1",
+				title: "Text",
+				contentType: "1",
+				sortAttribute: "text",
+				filterAttribute: "text",
+				attribute: "text"
+			}), new sap.gantt.config.HierarchyColumn({
+				key: "h2",
+				title: "Status",
+				contentType: "1",
+				sortAttribute: "status",
+				filterAttribute: "status",
+				attribute: "status"
+			}), new sap.gantt.config.HierarchyColumn({
+				key: "h3",
+				title: "Start Date",
+				contentType: "1",
+				sortAttribute: "startTime",
+				filterAttribute: "startTime",
+				attribute: "startTime"
+			}), new sap.gantt.config.HierarchyColumn({
+				key: "h4",
+				title: "End Date",
+				contentType: "1",
+				sortAttribute: "endTime",
+				filterAttribute: "endTime",
+				attribute: "endTime"
+			}), new sap.gantt.config.HierarchyColumn({
+				key: "h5",
+				title: "Id",
+				contentType: "1",
+				sortAttribute: "id",
+				filterAttribute: "id",
+				attribute: "id"
+			})
+			]
+		}));
+
+		var aContainerLayouts = [
+			new sap.gantt.config.ContainerLayout({
+				key: "d1",
+				text: "Single: Resources",
+				toolbarSchemeKey: "GLOBAL_TOOLBAR",
+				ganttChartLayouts: [new sap.gantt.config.GanttChartLayout({
+					activeModeKey: "A",
+					hierarchyKey: "RESOURCES"
+				})]
+			}), new sap.gantt.config.ContainerLayout({
+				key: "d2",
+				text: "Dual: Resources & Orders",
+				toolbarSchemeKey: "GLOBAL_TOOLBAR",
+				ganttChartLayouts: [new sap.gantt.config.GanttChartLayout({
+					activeModeKey: "A",
+					hierarchyKey: "RESOURCES"
+				}), new sap.gantt.config.GanttChartLayout({
+					activeModeKey: "D",
+					hierarchyKey: "TOL"
+				})]
+			}), new sap.gantt.config.ContainerLayout({
+				key: "d3",
+				text: "Single: Freight Order",
+				toolbarSchemeKey: "GLOBAL_TOOLBAR",
+				ganttChartLayouts: [new sap.gantt.config.GanttChartLayout({
+					activeModeKey: "A",
+					hierarchyKey: "TOL"
+				})]
+			}), new sap.gantt.config.ContainerLayout({
+				key: "d4",
+				text: "Single: Utilization Line Chart",
+				toolbarSchemeKey: "GLOBAL_TOOLBAR",
+				ganttChartLayouts: [new sap.gantt.config.GanttChartLayout({
+					activeModeKey: "U",
+					hierarchyKey: "TRUCK_ULC"
+				})]
+			}), new sap.gantt.config.ContainerLayout({
+				key: "d5",
+				text: "Single: Utilization Bar Chart",
+				toolbarSchemeKey: "GLOBAL_TOOLBAR",
+				ganttChartLayouts: [new sap.gantt.config.GanttChartLayout({
+					activeModeKey: "C",
+					hierarchyKey: "HR"
+				})]
+			}), new sap.gantt.config.ContainerLayout({
+				key: "d6",
+				text: "Single: Gantt Relationship",
+				toolbarSchemeKey: "GLOBAL_TOOLBAR",
+				ganttChartLayouts: [new sap.gantt.config.GanttChartLayout({
+					activeModeKey: "D",
+					hierarchyKey: "REL"
+				})]
+			}), new sap.gantt.config.ContainerLayout({
+				key: "d7",
+				text: "Dual: Truck & Orders(Skip Toolbar. Be Careful!)",
+				toolbarSchemeKey: null,
+				ganttChartLayouts: [new sap.gantt.config.GanttChartLayout({
+					activeModeKey: "A",
+					hierarchyKey: "TRUCK_WITHOUT_TOOLBAR"
+				}), new sap.gantt.config.GanttChartLayout({
+					activeModeKey: "D",
+					hierarchyKey: "TOL"
+				})]
+			})
+		];
+
+		var aChartSchemesConfig = [
+			new sap.gantt.config.ChartScheme({
+				key: "ac_main",
+				rowSpan: 1,
+				shapeKeys: ["order", "order_overlap_shortage", "order_overlap_meet", "order_overlap_surplus", "ActivityKey", "activity_overlap", "phase", "task", "calendar"] //, "dt", "warning"
+			}), new sap.gantt.config.ChartScheme({
+				key: "ubc_hr",
+				rowSpan: 2,
+				modeKey: "C",
+				shapeKeys: ["ubc"]
+			}), new sap.gantt.config.ChartScheme({
+				key: "ulc_main",
+				name: "Utilization",
+				icon: "./image/utilization.png",
+				rowSpan: 2,
+				modeKey: "U",
+				haveBackground: true,
+				shapeKeys: ["ulc"]
+			}),
+			new sap.gantt.config.ChartScheme({
+				key: "ac_expand_overlap",
+				name: "Overlaps",
+				icon: "./image/overlap.png",
+				rowSpan: 1,
+				shapeKeys: ["order_greedy", "activity_greedy"]
+			}),
+			new sap.gantt.config.ChartScheme({
+				key: "ubc_expand_hr",
+				name: "Details",
+				icon: "./image/overlap.png",
+				rowSpan: 1,
+				modeKey: "C",
+				shapeKeys: ["activity_greedy", "ubc_overcapacity_projection"]
+			})
+		];
+
+		var aObjectTypesConfig = [
+			new sap.gantt.config.ObjectType({
+				key: "01",
+				description: "Truck",
+				mainChartSchemeKey: "ac_main",
+				expandedChartSchemeKeys: ["ulc_main", "ac_expand_overlap"]
+			}), new sap.gantt.config.ObjectType({
+				key: "02",
+				description: "Trailer",
+				mainChartSchemeKey: "ac_main",
+				expandedChartSchemeKeys: ["ulc_main", "ac_expand_overlap"]
+			}), new sap.gantt.config.ObjectType({
+				key: "04",
+				description: "Driver",
+				mainChartSchemeKey: "ac_main",
+				expandedChartSchemeKeys: ["ac_expand_overlap"]
+			}), new sap.gantt.config.ObjectType({
+				key: "TOL",
+				description: "Freight Order",
+				mainChartSchemeKey: "ac_main",
+				expandedChartSchemeKeys: ["ulc_main", "ac_expand_overlap"]
+			}), new sap.gantt.config.ObjectType({
+				key: "05", // "03"
+				description: "Handling Resource",
+				mainChartSchemeKey: "ubc_hr",
+				expandedChartSchemeKeys: ["ubc_expand_hr"]
+			}), new sap.gantt.config.ObjectType({
+				key: "06",
+				description: "Truck 2",
+				mainChartSchemeKey: "ulc_main"
+			}), new sap.gantt.config.ObjectType({
+				key: "REL",
+				description: "Relationship",
+				mainChartSchemeKey: "ac_main",
+				expandedChartSchemeKeys: ["ulc_main", "ac_expand_overlap"]
+			})
+		];
+
+		var aShapeDataNames = ["activity", "activity_overlap", "activity_greedy", "order", "order_greedy", "order_overlap_shortage", "ubc", "ulc", "relationship", "phase", "task", "ubc_overcapacity", "nwt"];
+
+		//Relationship config
+		var oRelConfig = new sap.gantt.config.Shape({
+			key: "relationship",
+			shapeDataName: "relationship",
+			modeKeys: ["D"],
+			level: 30,
+			shapeClassName: "sap.gantt.shape.ext.rls.Relationship",
+			shapeProperties: {
+				isDuration: false,
+				lShapeforTypeFS: true,
+				showStart: false,
+				showEnd: true,
+				stroke: "{stroke}",
+				strokeWidth: 1,
+				type: "{relation_type}",
+				fromObjectPath:"{fromObjectPath}",
+				toObjectPath:"{toObjectPath}",
+				fromDataId:"{fromDataId}",
+				toDataId:"{toDataId}",
+				fromShapeId:"{fromShapeId}",
+				toShapeId:"{toShapeId}",
+				title: "{tooltip}",
+				fromExpandRowIndex: "{fromExpandRowIndex}",
+				toExpandRowIndex: "{toExpandRowIndex}"
+			}
+		});
+
+		var aShapeConfig = [new sap.gantt.config.Shape({
+			key: "calendar",
+			shapeClassName: "sap.gantt.shape.cal.Calendar",
+			shapeDataName: "nwt",
+			level: 30,
+			shapeProperties: {
+				calendarName: "{id}",
+				height: 33,
+				isDuration: false
+			}
+		}), new sap.gantt.config.Shape({
+			key: "order",
+			shapeDataName: "order",
+			modeKeys: ["A"],
+			level: 20,
+			shapeClassName: "sap.gantt.test.shape.RectangleGroup",
+			shapeProperties: {
+				time: "{startTime}",
+				endTime: "{endTime}",
+				title: "{tooltip}",
+				rx: 0,
+				ry: 0,
+				isDuration: true
+			},
+			selectedClassName: "sap.gantt.test.shape.CustomSelectedShape",
+			resizeShadowClassName: "sap.gantt.test.shape.ResizeShadowPath",
+			groupAggregation: [new sap.gantt.config.Shape({
+				shapeClassName: "sap.gantt.test.shape.OrderShape",
+				countInBirdEye: true,
+				shapeProperties: {
+					time: "{startTime}",
+					endTime: "{endTime}",
+					title: "{tooltip}",
+					rx: 0,
+					ry: 0,
+					isDuration: true,
+					strokeWidth: 2
+				}
+			}),new sap.gantt.config.Shape({
+				shapeClassName: "sap.gantt.shape.Text",
+				shapeProperties: {
+					time: "{endTime}",
+					text: "{description}",
+					yBias: 20,
+					textAnchor: "end",
+					fill:"black",
+					isDuration: false
+				}
+			})]
+		}), new sap.gantt.config.Shape({
+			key: "order_greedy",
+			shapeDataName: "order_greedy",
+			modeKeys: ["A"],
+			level: 20,
+			shapeClassName: "sap.gantt.test.shape.OrderShape",
+			shapeProperties: {
+				time: "{startTime}",
+				endTime: "{endTime}",
+				title: "{tooltip}",
+				rx: 0,
+				ry: 0,
+				isDuration: true,
+				strokeWidth: 2
+			}
+		}), new sap.gantt.config.Shape({
+			key: "ActivityKey",
+			shapeDataName: "activity",
+			modeKeys: ["D"],
+			level: 10,
+			shapeClassName: "sap.gantt.test.shape.RectangleGroup",
+			shapeProperties: {
+				time: "{startTime}",
+				endTime: "{endTime}",
+				rx: 0,
+				ry: 0,
+				isDuration: true,
+				enableDnD: true,
+				enableResize: true,
+				enableHover: true
+			},
+			selectedClassName: "sap.gantt.test.shape.CustomSelectedShape",
+			resizeShadowClassName: "sap.gantt.test.shape.ResizeShadowPath",
+			groupAggregation: [new sap.gantt.config.Shape({
+				shapeClassName: "sap.gantt.test.shape.OrderShape",
+				countInBirdEye: true,
+				shapeProperties: {
+					time: "{startTime}",
+					endTime: "{endTime}",
+					title: "{tooltip}",
+					rx: 0,
+					ry: 0,
+					isDuration: true,
+					strokeWidth: 2
+				}
+			}),new sap.gantt.config.Shape({
+				shapeClassName: "sap.gantt.test.shape.TopIndicator",
+				level: 8,
+				shapeProperties: {
+					time: "{startTime}",
+					endTime: "{endTime}",
+					yBias: 9,
+					isDuration: true,
+					height: 3,
+					strokeWidth: 1,
+					title: "{tooltip}"
+				}
+			}),new sap.gantt.config.Shape({
+				shapeClassName: "sap.gantt.shape.Text",
+				shapeProperties: {
+					time: "{endTime}",
+					text: "{description}",
+					yBias: 10,
+					textAnchor: "end",
+					fill:"black",
+					isDuration: false
+				}
+			})]
+		}),new sap.gantt.config.Shape({
+			key: "activity_greedy",
+			shapeDataName: "activity_greedy",
+			modeKeys: ["D", "C"],
+			level: 10,
+			shapeClassName: "sap.gantt.test.shape.RectangleGroup",
+			shapeProperties: {
+				time: "{startTime}",
+				endTime: "{endTime}",
+				title: "{tooltip}",
+				rx: 0,
+				ry: 0,
+				isDuration: true,
+				enableDnD: true,
+				enableResize: true,
+				enableHover: true
+			},
+			groupAggregation: [new sap.gantt.config.Shape({
+				shapeClassName: "sap.gantt.test.shape.OrderShape",
+				shapeProperties: {
+					time: "{startTime}",
+					endTime: "{endTime}",
+					title: "{tooltip}",
+					isDuration: true
+				}
+			})]
+		}), new sap.gantt.config.Shape({
+			key: "order_overlap_shortage",
+			shapeDataName: "order_overlap_shortage",
+			modeKeys: ["A", "D"],
+			level: 9,
+			shapeClassName: "sap.gantt.test.shape.OverlapRectangle",
+			shapeProperties: {
+				time: "{startTime}",
+				endTime: "{endTime}",
+				rx: 0,
+				ry: 0,
+				isDuration: true,
+				yBias: 7,
+				strokeWidth: 1,
+				fill:"red",
+				stroke:"#FFF",
+				height: 3
+			}
+		}), new sap.gantt.config.Shape({
+			key: "activity_overlap",
+			shapeDataName: "activity_overlap",
+			modeKeys: ["A", "D"],
+			level: 9,
+			shapeClassName: "sap.gantt.test.shape.OverlapRectangle",
+			shapeProperties: {
+				time: "{startTime}",
+				endTime: "{endTime}",
+				rx: 0,
+				ry: 0,
+				isDuration: true,
+				enableDnD: true,
+				enableResize: true,
+				enableHover: true
+			}
+		}), new sap.gantt.config.Shape({
+			key: "ubc_overcapacity_projection",
+			shapeDataName: "ubc_overcapacity",
+			modeKeys: ["C"],
+			level: 8,
+			shapeClassName: "sap.gantt.test.shape.OverlapProjectionPath",
+			shapeProperties: {
+				time: "{startTime}",
+				endTime: "{endTime}",
+				rx: 0,
+				ry: 0,
+				isDuration: true,
+				fillOpacity: 0.1
+			}
+		}), new sap.gantt.config.Shape({
+			key: "task",
+			shapeDataName: "task",
+			modeKeys: ["D"],
+			level: 10,
+			shapeClassName: "sap.gantt.test.shape.RectangleGroup",
+			shapeProperties: {
+				time: "{startTime}",
+				endTime: "{endTime}"
+			},
+			groupAggregation: [new sap.gantt.config.Shape({
+				shapeClassName: "sap.gantt.test.shape.OrderShape",
+				shapeProperties: {
+					time: "{startTime}",
+					endTime: "{endTime}",
+					title: "{tooltip}",
+					isDuration: true
+				}
+			})]
+		}),new sap.gantt.config.Shape({
+			key: "ubc",
+			shapeDataName: "ubc",
+			modeKeys: ["C"],
+			level: 10,
+			shapeClassName: "sap.gantt.shape.ext.ubc.UtilizationBarChart",
+			shapeProperties: {
+				isBulk: true,
+				arrayAttribute: "period",
+				timeFilterAttribute: "start_date",
+				endTimeFilterAttribute: "end_date"
+			},
+			groupAggregation: [new sap.gantt.config.Shape({
+				shapeDataName: "ubc_capacity",
+				shapeClassName: "sap.gantt.shape.ext.ubc.UbcOverCapacityZonePolygon",
+				shapeProperties: {
+					isBulk: true,
+					fill: "url('#pattern_backslashFilled_gray')",
+					stroke: "#CAC7BA",
+					strokeWidth: 0.5
+				}
+			}), new sap.gantt.config.Shape({
+				shapeDataName: "ubc_capacity",
+				shapeClassName: "sap.gantt.shape.ext.ubc.UbcUnderCapacityZonePolygon",
+				shapeProperties: {
+					isBulk: true,
+					fill: "#40d44c"
+				}
+			}), new sap.gantt.config.Shape({
+				shapeDataName: "ubc_capacity",
+				shapeClassName: "sap.gantt.shape.ext.ubc.UbcShortageCapacityPolygon",
+				shapeProperties: {
+					isBulk: true,
+					fill: "#FF0000",
+					stroke: "#CAC7BA"
+				}
+			}), new sap.gantt.config.Shape({
+				shapeDataName: "ubc_capacity",
+				shapeClassName: "sap.gantt.shape.ext.ubc.UbcUsedPolygon",
+				shapeProperties: {
+					isBulk: true,
+					fill: "#CAC7BA"
+				}
+			}), new sap.gantt.config.Shape({
+				shapeDataName: "ubc_capacity",
+				shapeClassName: "sap.gantt.shape.ext.ubc.UbcBorderPath",
+				shapeProperties: {
+					isBulk: true,
+					stroke: "blue",
+					strokeWidth: 0.5
+				}
+			}), new sap.gantt.config.Shape({
+				shapeDataName: "ubc_tooltip",
+				shapeClassName: "sap.gantt.shape.ext.ubc.UbcTooltipRectangle",
+				shapeProperties: {
+					isBulk: true
+				}
+			})]
+		}), new sap.gantt.config.Shape({
+			key: "ulc",
+			shapeDataName: "ulc",
+			modeKeys: ["U"],
+			level: 10,
+			shapeClassName: "sap.gantt.shape.ext.ulc.UtilizationLineChart",
+			shapeProperties: {
+				isBulk: true
+			},
+			groupAggregation: [new sap.gantt.config.Shape({
+				shapeClassName: "sap.gantt.shape.ext.ulc.UlcMiddleLine",
+				shapeProperties: {
+					isBulk: true
+				}
+			}), new sap.gantt.config.Shape({
+				shapeClassName: "sap.gantt.shape.ext.ulc.UlcOverCapacityZoneRectangle",
+				shapeProperties: {
+					isBulk: true,
+					fill: "url('#pattern_backslash_grey')"
+				}
+			}), new sap.gantt.config.Shape({
+				shapeDataName: "order",
+				shapeClassName: "sap.gantt.shape.Group",
+				shapeProperties: {
+					isBulk: true
+				},
+				groupAggregation: [new sap.gantt.config.Shape({
+					shapeDataName: "util",
+					shapeClassName: "sap.gantt.shape.ext.ulc.UlcDimension",
+					shapeProperties: {
+						isBulk: true
+					},
+					groupAggregation: [new sap.gantt.config.Shape({
+						shapeClassName: "sap.gantt.shape.ext.ulc.UlcClipPath",
+						shapeProperties: {
+							isBulk: true
+						},
+						clippathAggregation: [new sap.gantt.config.Shape({
+							shapeClassName: "sap.gantt.shape.ext.ulc.UlcClipingPath",
+							shapeProperties: {
+								isBulk: true
+							}
+						})]
+					}), new sap.gantt.config.Shape({
+						shapeClassName: "sap.gantt.shape.ext.ulc.UlcOverClipRectangle",
+						shapeProperties: {
+							isBulk: true
+						}
+					}), new sap.gantt.config.Shape({
+						shapeClassName: "sap.gantt.shape.ext.ulc.UlcUnderClipRectangle",
+						shapeProperties: {
+							isBulk: true
+						}
+					}), new sap.gantt.config.Shape({
+						shapeClassName: "sap.gantt.shape.ext.ulc.UlcBorderPath",
+						shapeProperties: {
+							isBulk: true,
+							utilizationCurves: {
+								util_volume: {
+									name: "Volume",
+									color: "#30920D",
+									ratioAttibute: "util_volume"
+								},
+								util_mass: {
+									name: "Weight",
+									color: "#30920D",
+									ratioAttribute: "util_mass"
+								}
+							}
+						}
+					})]
+				})]
+			}), new sap.gantt.config.Shape({
+				shapeDataName: "tooltip",
+				shapeClassName: "sap.gantt.shape.ext.ulc.UlcTooltipRectangle",
+				shapeProperties: {
+					isBulk: true,
+					time: "{from}",
+					endTime: "{to}",
+					utilizationCurves: {
+						util_volume: {
+							name: "Volume",
+							ratioAttribute: "util_volume"
+						},
+						util_mass: {
+							name: "Weight",
+							ratioAttribute: "util_mass"
+						}
+					}
+				}
+			})]
+		}), new sap.gantt.config.Shape({
+			key: "phase",
+			shapeDataName: "phase",
+			modeKeys: ["D"],
+			level: 30,
+			shapeClassName: "sap.gantt.shape.ext.Chevron",
+			resizeShadowClassName: "sap.gantt.test.shape.ResizePhaseShadow",
+			shapeProperties: {
+				time: "{startTime}",
+				endTime: "{endTime}",
+				title: "{tooltip}",
+				fill: "#B6D957",
+				isDuration: true,
+				enableResize: true,
+				enableHover: true
+			}
+		}), oRelConfig];
+		// create cell callback
+		var CellCallback = function () {};
+		CellCallback.prototype.createCellContent = function (oColumnConfig) {
+			switch (oColumnConfig.getContentType()) {
+			case "MASTER":
+				return new sap.m.FlexBox({
+					direction: sap.m.FlexDirection.Row,
+					alignItems: sap.m.FlexAlignItems.Start,
+					justifyContent: sap.m.FlexJustifyContent.Start,
+					items: [(new sap.m.Image({densityAware: false})).addStyleClass("sapUiSmallMarginEnd"), new sap.m.Label()]
+				});
+			default:
+				return new sap.m.Label({});
+			}
+		};
+		CellCallback.prototype.updateCellContent = function (oCellContent, oContext, sAttributeName, sObjectType, oColumnConfig) {
+			switch (oColumnConfig.getContentType()) {
+			case "MASTER":
+				var aItems = oCellContent.getItems();
+				var sSrc;
+				switch(sObjectType){
+				case "01":
+					sSrc = oContext.getProperty("subType") == "01" ? "./image/truck.png" : "./image/tractor.png";
+					break;
+				case "02":
+					sSrc = "./image/trailer.png";
+					break;
+				case "03":
+					sSrc = "./image/warehouse.png";
+					break;
+				case "04":
+					sSrc = "./image/supplier.png";
+					break;
+				default:
+					sSrc = null;
+				}
+				aItems[0].setSrc(sSrc);
+				aItems[1].setText(oContext.getProperty(sAttributeName));
+				break;
+			default:
+				if (sAttributeName !== undefined) {
+					oCellContent.setText(oContext.getProperty(sAttributeName));
+				}
+			}
+		};
+
+		var aShapeConfListLegend = [new sap.gantt.config.Shape({
+			key: "order_greedy",
+			shapeDataName: "order_greedy",
+			modeKeys: ["A"],
+			level: 20,
+			shapeClassName: "sap.gantt.test.shape.OrderShape",
+			switchOfCheckBox: "checked",
+			shapeProperties: {
+				legend: "Order greedy",
+				title: "Order greedy",
+				rx: 0,
+				ry: 0,
+				isDuration: true,
+				fill: "@sapUiChartCritical"
+			}
+		}), new sap.gantt.config.Shape({
+			key: "ActivityKey",
+			shapeDataName: "activity",
+			modeKeys: ["D"],
+			level: 10,
+			shapeClassName: "sap.gantt.test.shape.RectangleGroup",
+			switchOfCheckBox: "unchecked",
+			shapeProperties: {
+				legend: "Activity",
+				title: "Activity",
+				rx: 0,
+				ry: 0,
+				isDuration: true,
+				enableDnD: true,
+				enableResize: true,
+				enableHover: true
+			},
+			selectedClassName: "sap.gantt.test.shape.RectPath",
+			resizeShadowClassName: "sap.gantt.test.shape.ResizeShadowPath",
+			groupAggregation: [new sap.gantt.config.Shape({
+				shapeClassName: "sap.gantt.test.shape.OrderShape",
+				shapeProperties: {
+					rx: 0,
+					ry: 0,
+					isDuration: true,
+					strokeWidth: 1,
+					fill: "@sapUiChartPaletteSequentialNeutralLight1",
+					stroke: "@sapUiChartPaletteSequentialNeutralLight1"
+				}
+			}),new sap.gantt.config.Shape({
+				shapeClassName: "sap.gantt.test.shape.TopIndicator",
+				level: 8,
+				shapeProperties: {
+					y: 7.5,
+					yBias: 9,
+					isDuration: true,
+					height: 3,
+					strokeWidth: 1,
+					title: "{tooltip}",
+					fill: "@sapUiChartPaletteSemanticBad"
+				}
+			})]
+		}),new sap.gantt.config.Shape({
+			key: "activity_greedy",
+			shapeDataName: "activity_greedy",
+			modeKeys: ["D", "C"],
+			level: 10,
+			shapeClassName: "sap.gantt.test.shape.RectangleGroup",
+			shapeProperties: {
+				legend: "Activity greedy",
+				title: "Activity greedy",
+				rx: 0,
+				ry: 0,
+				isDuration: true,
+				fill: "@sapUiChartSequence1",
+				stroke: "@sapUiChartSequence1"
+			},
+			groupAggregation: [new sap.gantt.config.Shape({
+				shapeClassName: "sap.gantt.test.shape.OrderShape",
+				shapeProperties: {
+					time: "{startTime}",
+					endTime: "{endTime}",
+					title: "{tooltip}",
+					isDuration: true
+				}
+			})]
+		}), new sap.gantt.config.Shape({
+			key: "order_overlap_shortage",
+			shapeDataName: "order_overlap_shortage",
+			modeKeys: ["A", "D"],
+			level: 9,
+			shapeClassName: "sap.gantt.shape.Rectangle",
+			switchOfCheckBox: "checked",
+			shapeProperties: {
+				legend: "order overlap shortage",
+				title: "order overlap shortage",
+				rx: 0,
+				ry: 0,
+				isDuration: true,
+				yBias: 7,
+				strokeWidth: 1,
+				fill:"red",
+				stroke:"#FFF",
+				height: 3
+			}
+		}), new sap.gantt.config.Shape({
+			key: "ubc_overcapacity_projection",
+			shapeDataName: "ubc_overcapacity",
+			modeKeys: ["C"],
+			level: 8,
+			shapeClassName: "sap.gantt.shape.Path",
+			shapeProperties: {
+				legend: "ubc overcapacity projection",
+				title: "ubc overcapacity projection",
+				time: "{startTime}",
+				endTime: "{endTime}",
+				rx: 0,
+				ry: 0,
+				isDuration: true,
+				fillOpacity: 0.1,
+				stroke: "@sapUiChartBad",
+				fill: "@sapUiChartBad"
+			}
+		}), new sap.gantt.config.Shape({
+			key: "task",
+			shapeDataName: "task",
+			modeKeys: ["D"],
+			level: 10,
+			shapeClassName: "sap.gantt.test.shape.RectangleGroup",
+			switchOfCheckBox: "checked",
+			shapeProperties: {
+				legend: "task",
+				title: "task",
+				time: "{startTime}",
+				endTime: "{endTime}"
+			},
+			groupAggregation: [new sap.gantt.config.Shape({
+				shapeClassName: "sap.gantt.test.shape.OrderShape",
+				shapeProperties: {
+					time: "{startTime}",
+					endTime: "{endTime}",
+					title: "{tooltip}",
+					isDuration: true,
+					fill: "white"
+				}
+			})]
+		}), new sap.gantt.config.Shape({
+			key: "phase",
+			shapeDataName: "phase",
+			modeKeys: ["D"],
+			level: 30,
+			shapeClassName: "sap.gantt.shape.ext.Chevron",
+			shapeProperties: {
+				legend: "phase",
+				title: "phase",
+				time: "{startTime}",
+				endTime: "{endTime}",
+				title: "{tooltip}",
+				fill: "#B6D957",
+				isDuration: true
+			}
+		})];
+
+		var oListLegend = new sap.gantt.legend.ListLegend({
+				fontSize: 15,
+				shapes: aShapeConfListLegend
+		});
+		oListLegend.attachCheckBoxChange(onCheckboxSelect, this);
+
+		oLegendContainer.addLegendSection(new sap.m.Page({
+			title : 'Shapes',
+			content : oListLegend
+		}));
+
+		// instantiate GanttChartContainer
+		var oGantt = new sap.gantt.GanttChartContainer({
+			svgDefs: oSvgDefs,
+			legendContainer: oLegendContainer,
+			modes: aModesConfig,
+			toolbarSchemes: aToolbarSchemesConfig,
+			// sliderStep: 15,
+			hierarchies: aHierarchiesConfig,
+			containerLayouts: aContainerLayouts,
+			containerLayoutKey: "{test>/data/containerLayoutKey}",
+			customToolbarItems: {
+				path: "test>/data/toolbarScheme",
+				factory: ToolbarItemGenerator.generateCustomButtons.bind(ToolbarItemGenerator)
+			},
+			ganttCharts: {
+				path: "test>/data/view",
+				template: new sap.gantt.GanttChartWithTable({
+					timeAxis: oTimeAxisConfig,
+					modes: aModesConfig,
+					toolbarSchemes: aToolbarSchemesConfig,
+					hierarchies: aHierarchiesConfig,
+					chartSchemes: aChartSchemesConfig,
+					objectTypes: aObjectTypesConfig,
+					locale: sap.gantt.config.DEFAULT_LOCALE_CET,
+					shapeDataNames: aShapeDataNames,
+					shapes: aShapeConfig,
+					adhocLineLayer: "{test>adhocLineLayer}",
+					//adhocLines: aAdhocLines.slice(0),
+					adhocLines: {
+						path: "test>/data/adhocLines",
+						templateShareable: true,
+						template: new sap.gantt.AdhocLine({
+							stroke: "{test>stroke}",
+							strokeWidth: "{test>strokeWidth}",
+							strokeDasharray: "{test>strokeDasharray}",
+							strokeOpacity: "{test>strokeOpacity}",
+							timeStamp: "{test>timeStamp}",
+							description: "{test>description}"
+						})
+					},
+					hierarchyKey: "{test>hierarchyKey}",
+					customToolbarItems: {
+						path: "test>toolbarScheme",
+						factory: ToolbarItemGenerator.generateCustomButtons.bind(ToolbarItemGenerator)
+					},
+					cellCallback: new CellCallback(),
+					rows: {
+						path: "test>root",
+						parameters: {
+							arrayNames: ["children"]
+						}
+					},
+					relationships:{
+						path: "test>root/relationships"
+					},
+					// event handlers
+					chartMouseOver: pushEventToMsgStack,
+					chartClick: onSVGEvents,
+					chartDoubleClick: onSVGEvents,
+					chartRightClick: onSVGEvents,
+					relationshipSelectionChange: onRelationshipSelectionChange,
+					shapeSelectionChange: onShapeSelectionChange,
+					rowSelectionChange: onRowSelectionChange,
+					shapeDragEnd: onShapeDragEnd,
+					shapeResizeEnd: onShapeResizeEnd,
+					shapeMouseEnter: onShapeMouseEnter,
+					shapeMouseLeave: onShapeMouseLeave,
+					//baseRowHeight: 27,
+					calendarDef: new CalendarDefs({
+						defs: {
+							path: "test>/data/calendar",
+							template: new Calendar({
+								key: "{test>id}",
+								timeIntervals: {
+									path: "test>data",
+									templateShareable: true,
+									template: new TimeInterval({
+										startTime: "{test>startTime}",
+										endTime: "{test>endTime}"
+									})
+								}
+							})
+						}
+					})
+				})
+			},
+			// event handlers
+			ganttChartChangeRequested: onGanttChartChangeRequested,
+			customSettingChange: printEventInMsgToast,
+			treeTableToggleEvent: onTreeTableToggle
+		});
+
+		oGantt.addEventDelegate({
+			onBeforeRendering: function() {
+				var aGanttChartWithTable = oGantt.getGanttCharts();
+				for (var i = 0; i < aGanttChartWithTable.length; i++) {
+					aGanttChartWithTable[i].attachEvent("_shapesUpdated", function() {
+						// 'this' here refers to ganttChartWithTable
+						if (this._iCountShapesUpdated == undefined) {
+							this._iCountShapesUpdated = 0;
+						}
+						this._iCountShapesUpdated++;
+						console.log("_shapesUpdated",this.getId()+"___"+this._iCountShapesUpdated);
+					});
+				}
+			}
+		});
+
+		oGantt.setModel(oModel, "test");
+		//oGantt.selectShapes(0, ["9"], true);
+
+		//To avoid a bug in treeTable: the default selectionMode is MultiToggle,
+		//even though we set it to 'Multi' in GanttChartWithTable._oTT by default for Gantt control
+		var aViews = oGantt.getGanttCharts();
+		for (var i in aViews) {
+			aViews[i]._oTT.setSelectionMode("Multi");
+		}
+
+		window.oPage.addContent(oGantt);
+
+		//for layoutchange pair
+		var layoutpair = {
+				"d1":{"layoutid":"d1",
+					"hierarchyKey":["RESOURCES"]},
+				"d2":{"layoutid":"d2",
+					"hierarchyKey":["RESOURCES","TOL"]},
+				"d3":{"layoutid":"d3",
+					"hierarchyKey":["TOL"]},
+				"d4":{"layoutid":"d4",
+					"hierarchyKey":["TRUCK_ULC"]},
+				"d5":{"layoudid":"d5",
+					"hierarchyKey":["HR"]
+				},
+				"d6":{"layoutid":"d6",
+					"hierarchyKey":["REL"]},
+				"d7":{"layoutid":"d7",
+					"hierarchyKey":["TRUCK_WITHOUT_TOOLBAR","TOL"]}
+		}
+
+		// Handler of text truncation
+		function textTruncationHandler (oGanttChartWithTable) {
+			d3.selectAll("text.sapGanttShapeSvgText").text(function (d) {
+				var pData = this.parentNode.__data__;
+				if (pData) {
+					var startTextLength = 0;
+					var endTextLength = 0;
+					var middleTextLength = 0;
+					var ellipsisLength = pData.ellipsisLength ? pData.ellipsisLength : 0;
+					var textAnchor = this.attributes["text-anchor"].value;
+					var textContent;
+					if (textAnchor == "start") {
+						textContent = pData.lTextContent;
+						startTextLength = this.getComputedTextLength();
+					} else if (textAnchor == "end") {
+						textContent = pData.rTextContent;
+						endTextLength = this.getComputedTextLength();
+					} else if (textAnchor == "middle") {
+						textContent = pData.mTextContent;
+						middleTextLength = this.getComputedTextLength();
+					}
+					if (!textContent || this.__data__.isHide) {
+						return "";
+					}
+					var maxRatioFull = 0.8;
+					var maxRatioHalf = 0.4;
+					var ellipsis = "...";
+					var truncatedLen;
+					var xAxis = oGanttChartWithTable.getAxisTime();
+					var startX = xAxis.timeToView(sap.gantt.misc.Format.abapTimestampToDate(d.startTime));
+					var endX = xAxis.timeToView(sap.gantt.misc.Format.abapTimestampToDate(d.endTime));
+					var width = endX - startX;
+					if (!startX || !endX) {
+						width = 1;
+					}
+					pData.rectWidth = width;
+					switch (textAnchor) {
+						case "start":
+							if (startTextLength < maxRatioFull * width) {
+								return textContent;
+							} else if (ellipsisLength > maxRatioFull * width) {
+								return textContent.substr(0, maxRatioFull * width * textContent.length / startTextLength);
+							} else {
+								var truncLen = (maxRatioFull * width - ellipsisLength) * textContent.length / startTextLength;
+								if (truncLen >= 1 && truncLen < (textContent.length - 1)) {
+									return textContent.substr(0, truncLen) + ellipsis;
+								}
+							}
+						case "end":
+							if (startTextLength + endTextLength < maxRatioFull * width + ellipsisLength) {
+								if (this.innerHTML == undefined) {//internet explorer
+									return this.textContent;
+								} else {
+									return this.innerHTML;
+								}
+							} else {
+								if (startTextLength + ellipsisLength < maxRatioFull * width) {
+									truncatedLen = (maxRatioFull * width - startTextLength - ellipsisLength) * textContent.length / endTextLength;
+									if (truncatedLen >= 1 && truncatedLen < (textContent.length - 1)) {
+										return textContent.substr(0, truncatedLen) + ellipsis;
+									}
+								} else if (startTextLength < maxRatioFull * width) {
+									truncatedLen = (maxRatioFull * width - startTextLength) * textContent.length / endTextLength;
+									return textContent.substr(0, truncatedLen);
+								}
+							}
+						case "middle":
+							//only when left text and right text has been written and give enough space to middle
+							if ((startTextLength + middleTextLength + endTextLength < maxRatioFull * width) &&
+								(startTextLength + middleTextLength / 2 < maxRatioHalf * width) &&
+								(endTextLength + middleTextLength / 2 < maxRatioHalf * width)) {
+								return textContent;
+							}
+							if (middleTextLength == 0) {
+								middleTextLength = 1;
+							}
+							if ((startTextLength + endTextLength < maxRatioFull * width) &&
+								(startTextLength < maxRatioHalf * width) && (endTextLength < maxRatioHalf * width)) {
+								if (startTextLength + endTextLength + ellipsisLength > maxRatioFull * width) {
+									truncatedLen = (maxRatioFull * width - startTextLength - endTextLength) * textContent.length / middleTextLength;
+									return textContent.substr(0, truncatedLen);
+								} else {
+									truncatedLen = (maxRatioFull * width - startTextLength - endTextLength - ellipsisLength) * textContent.length / middleTextLength;
+									if (truncatedLen >= 1 && truncatedLen < (textContent.length - 1)) {
+										return textContent.substr(0, truncatedLen) + ellipsis;
+									}
+								}
+							}
+					}
+
+				}
+			});
+		}
+
+		//handle viewchange event
+		function onGanttChartChangeRequested (oEvent) {
+			var oParam = oEvent.getParameters();
+			switch(oParam.action){
+				case "switchContainerLayout":
+					updateDataModel(oParam.action, oParam.containerLayoutKey);
+					if (oParam.containerLayoutKey === "d6") {
+						oGantt.getGanttCharts()[0].setSelectionMode("Multiple");
+					}else {
+						oGantt.getGanttCharts()[0].setSelectionMode("MultiWithKeyboard");
+					}
+					break;
+				default: // "addGanttChart", "lessGanttChart", "switchGanttChart"
+					updateDataModel(oParam.action, oParam.hierarchyKey, oParam.oldHierarchyKey, oParam.oldMode, oParam.ganttChartIndex);
+				if (oParam.ganttChartIndex !== undefined) {
+					if (oParam.hierarchyKey === "REL") {
+							oGantt.getGanttCharts()[oParam.ganttChartIndex].setSelectionMode("Multiple");
+						}else if (oParam.oldHierarchyKey === "REL") {
+							oGantt.getGanttCharts()[oParam.ganttChartIndex].setSelectionMode("MultiWithKeyboard");
+						}
+				}
+			}
+		};
+
+		//update datamodel
+		function updateDataModel (sAction, sSourceId, oldHierarchy, oldMode, iGanttChartIndex) {
+			var oGanttData, oViewData, aViewData;
+
+			switch(sAction){
+				case "switchContainerLayout":
+					oModeManager = [];
+					var views = [];
+					var aview = {};
+					var hierarchies = layoutpair[sSourceId].hierarchyKey;
+					for (var i = 0; i < hierarchies.length; i++) {
+						views.push(oDataProducer.getData(hierarchies[i]));
+						var oMode = {};
+						oMode[hierarchies[i]] = oGantt._oHierarchyConfigMap[hierarchies[i]].getActiveModeKey();
+						oModeManager.push(oMode);
+						if (oGantt.getGanttCharts()[i]) {
+							oGantt.getGanttCharts()[i].setMode(oMode[hierarchies[i]]);
+						}
+					}
+					oData.data.view = views;
+					if (jQuery.sap.sjax({
+						url : "qunit/data/custom_toolbar_items_complex.json",
+						dataType:"json"
+					}).data[oData.data.containerLayoutKey]) {
+						oData.data.toolbarScheme = jQuery.sap.sjax({
+							url : "qunit/data/custom_toolbar_items_complex.json",
+							dataType:"json"
+						}).data[oData.data.containerLayoutKey].toolbarScheme;
+					}
+					for (var i = 0; i < views.length; i++) {
+						resetSorterAndFilter(i);
+					}
+					oModel.setData(oData);
+					break;
+				case "addGanttChart":
+					viewadded = oDataProducer.getData(sSourceId);
+					oData.data.view.push(viewadded);
+					var oMode = {};
+					oMode[sSourceId] = oGantt._oHierarchyConfigMap[sSourceId].getActiveModeKey();
+					oModeManager.push(oMode);
+					oModel.setData(oData);
+					break;
+				case "lessGanttChart":
+					oData.data.view.splice(iGanttChartIndex, 1);
+					oModeManager.splice(iGanttChartIndex, 1);
+					backupSorterAndFilter(iGanttChartIndex);
+					oModel.setData(oData);
+					restoreSorterAndFilter();
+					break;
+				case "switchGanttChart":
+					var viewswitched = {};
+					oModeManager[iGanttChartIndex][oldHierarchy] = oldMode;
+					viewswitched = oDataProducer.getData(sSourceId);
+					oModel.setProperty("/data/view/" + iGanttChartIndex, viewswitched);
+					if (oModeManager[iGanttChartIndex][sSourceId]) {
+						oGantt.getGanttCharts()[iGanttChartIndex].setMode(oModeManager[iGanttChartIndex][sSourceId]);
+					} else {
+						oModeManager[iGanttChartIndex][sSourceId] = oGantt.getGanttCharts()[iGanttChartIndex]._oHierarchyConfigMap[sSourceId].getActiveModeKey();
+						oGantt.getGanttCharts()[iGanttChartIndex].setMode(oModeManager[iGanttChartIndex][sSourceId]);
+					}
+					resetSorterAndFilter(iGanttChartIndex);
+					break;
+				case "updateRawData":
+					// TODO
+					break;
+			}
+		};
+
+		//unbind and rebind rows to reset sorter and filter
+		//ganttchart bind same rows for selection
+		function resetSorterAndFilter (iGanttChartIndex) {
+			if (oGantt.getGanttCharts()[iGanttChartIndex]) {
+				var oGanttChartWithTable = oGantt.getGanttCharts()[iGanttChartIndex];
+				var aRows = oGanttChartWithTable.getBindingInfo("rows");
+				oGanttChartWithTable.unbindRows();
+				oGanttChartWithTable.bindRows(aRows);
+				var aColumns = oGanttChartWithTable.getColumns();
+				for (var i = 0; i < aColumns.length; i++) {
+					aColumns[i].setFiltered(false);
+					aColumns[i].setFilterValue(null);
+					aColumns[i].setSorted(false);
+				}
+			}
+		};
+
+		var oGanttChartHistoryMap = new Map();
+		var oGanttChartBindingRowsHistoryMap = new Map();
+
+		//backup sorter, filter and rows of ganttChart
+		function backupSorterAndFilter(iGanttChartIndex) {
+			for (var i = 0; i < oGantt.getGanttCharts().length; i++) {
+				if (i!==iGanttChartIndex) {
+					var oGanttChart = oGantt.getGanttCharts()[i];
+					var oColumnsHistoryMap = new Map();
+					for (var j = 0; j < oGanttChart.getColumns().length; j++) {
+						var oColumn = oGanttChart.getColumns()[j];
+						oColumnsHistoryMap.set(oColumn.getFilterProperty(), {
+							filterValue : oColumn.getFilterValue(),
+							filtered : oColumn.getFiltered(),
+							sortOrder : oColumn.getSortOrder(),
+							sortProperty : oColumn.getSortProperty(),
+							sorted : oColumn.getSorted(),
+							width : oColumn.getWidth()
+						});
+					}
+					oGanttChartHistoryMap.set(oGanttChart.getHierarchyKey(), oColumnsHistoryMap);
+					oGanttChartBindingRowsHistoryMap.set(oGanttChart.getHierarchyKey(), oGanttChart.getBindingInfo("rows"));
+				}
+			}
+		}
+
+		//restore sorter, filter and rows
+		function restoreSorterAndFilter() {
+			for (var i = 0; i < oGantt.getGanttCharts().length; i++) {
+				var oGanttChart = oGantt.getGanttCharts()[i];
+				var oColumnsHistoryMap = oGanttChartHistoryMap.get(oGanttChart.getHierarchyKey());
+				var aRowsHistory = oGanttChartBindingRowsHistoryMap.get(oGanttChart.getHierarchyKey());
+				oGanttChart.getBinding("rows").filter(aRowsHistory.binding.aFilters);
+				oGanttChart.getBinding("rows").sort(aRowsHistory.binding.aSorters);
+				for (var j = 0; j < oGanttChart.getColumns().length; j++) {
+					var oColumn = oGanttChart.getColumns()[j];
+					var oColumnHistory = oColumnsHistoryMap.get(oColumn.getFilterProperty());
+					oColumn.setFilterValue(oColumnHistory.filterValue);
+					oColumn.setFiltered(oColumnHistory.filtered);
+					oColumn.setSortOrder(oColumnHistory.sortOrder);
+					oColumn.setSortProperty(oColumnHistory.sortProperty);
+					oColumn.setSorted(oColumnHistory.sorted);
+					oColumn.setWidth(oColumnHistory.width);
+				}
+			}
+		}
+
+		function onJumpToPosition (sAction) {
+			var oJumpDate;
+			var aGanttCharts = oGantt.getGanttCharts();
+			var aSelectedRows = [];
+			for (var i = 0; i < aGanttCharts.length; i++) {
+				aSelectedRows = aSelectedRows.concat(aGanttCharts[i].getSelectedRows());
+			}
+			if (aSelectedRows.length > 1 || aSelectedRows.length == 0){
+				return;
+			}
+			var sBindingPath = aSelectedRows[0].contextObj.getPath();
+			var iStartIndex = parseInt(sBindingPath.indexOf("view"), 10) + 5;
+			var iGanttChartIndex = sBindingPath.substring(iStartIndex, iStartIndex + 1);
+
+			var aTimeStamps;
+			switch (sAction) {
+				case "Jump to First" :
+					aTimeStamps = _getTimeForJump(aSelectedRows[0], "order");
+					oJumpDate = sap.gantt.misc.Format.abapTimestampToDate(Math.min.apply(Math, aTimeStamps).toString());
+					break;
+				case "Jump to Current" :
+					oJumpDate = new Date();
+					break;
+				case "Jump to Last" :
+					aTimeStamps = _getTimeForJump(aSelectedRows[0], "activity");
+					oJumpDate = sap.gantt.misc.Format.abapTimestampToDate(Math.max.apply(Math, aTimeStamps).toString());
+					break;
+			}
+			if (oJumpDate) {
+				aGanttCharts[iGanttChartIndex].jumpToPosition(oJumpDate);
+			}
+		};
+
+		function _getTimeForJump (oRowData, sDataType) {
+			var aTimeStamps = [];
+			var aDatas = oRowData.data[sDataType];
+			if (aDatas && aDatas.length > 0) {
+				for (var i = 0; i < aDatas.length; i++) {
+					if (aDatas[i].startTime) {
+						aTimeStamps.push(aDatas[i].startTime);
+					}
+				}
+			}
+
+			return aTimeStamps;
+		};
+
+		//for application to capture the toggle event of the tree table original toggle event
+		function onTreeTableToggle (oEvent) {
+			var oParam = oEvent.getParameters();
+			if (oParam.rowIndex !== undefined && oParam.rowContext !== undefined && oParam.expanded !== undefined) {
+				var sMessage = "Event: " + oEvent.sId + " is Fired on tree table of the selection panel, toggled row index : " + oParam.rowIndex
+								+ "; toggled row context path : " + oParam.rowContext.sPath + "; expanded flag : " + oParam.expanded + ";";
+				pushEventToMsgStack(oEvent, sMessage);
+			}
+		};
+
+		function onShapeDragEnd (oEvent) {
+			var oGanttChart = oEvent.getSource();
+			var iGanttChartIndex = oGantt.getGanttCharts().indexOf(oGanttChart);
+			var oParam = oEvent.getParameters();
+			if (oParam.sourceShapeData !== undefined && oParam.targetData !== undefined && oParam.sourceShapeData[0] !== undefined && oParam.targetData !== undefined) {
+				var sSourceShapes = JSON.stringify(oParam.sourceShapeData[0].shapeData.uid)
+									+ " from row " + JSON.stringify(oParam.sourceShapeData[0].objectInfo.data.uuid);
+				for(var i = 1; i < oParam.sourceShapeData.length; i++) {
+					sSourceShapes += ", " + JSON.stringify(oParam.sourceShapeData[i].shapeData.uid)
+									+ " from row " + JSON.stringify(oParam.sourceShapeData[i].objectInfo.data.uuid);
+				}
+				var sTargetRow = oParam.targetData.objectInfo ? oParam.targetData.objectInfo.data.uuid : "invalid row";
+				var sTargetView = JSON.stringify(oParam.targetSvgId ? oParam.targetSvgId : ("view " + iGanttChartIndex));
+				var sMessage = "Event: " + oEvent.sId + " is Fired on: " + sTargetView
+							+ "; Dragging Shape " + sSourceShapes + " on " + JSON.stringify(oParam.sourceSvgId)
+							+ " to row " + JSON.stringify(sTargetRow) + " on " + sTargetView + ";";
+				pushEventToMsgStack(oEvent, sMessage);
+
+				var oModel = oGanttChart.getModel("test");
+				oModel.setProperty("/data/view/" + iGanttChartIndex +"/root", oDataProducer.getData(this.getHierarchyKey()).root);
+			}
+		};
+
+		var oPlaceHolder = new sap.m.Label();
+		var oPopup = new sap.ui.core.Popup(oPlaceHolder, false, true, false);
+		var oQuickViewModel = new sap.ui.model.json.JSONModel();
+		var oPopover = new sap.m.ResponsivePopover({
+			title: "Quick View",
+			placement: sap.m.PlacementType.HorizontalPreferedRight,
+			content: [
+				new sap.m.Panel({
+					width: "100%",
+					content: [
+						new sap.m.FlexBox({
+							direction: "Column",
+							alignItems: "Start",
+							justifyContent: "Start",
+							items: [
+								new sap.m.Label({
+									text: "Shape ID:"
+								}),
+								new sap.m.Text({
+									text: "{/id}"
+								}),
+								new sap.m.Label({
+									text: "Start Time:"
+								}),
+								new sap.m.Text({
+									text: "{/startTime}"
+								}),
+								new sap.m.Label({
+									text: "End Time:"
+								}),
+								new sap.m.Text({
+									text: "{/endTime}"
+								})
+							]
+						})
+					]
+				})
+			]
+		});
+		oPopover.setModel(oQuickViewModel);
+
+		function onShapeMouseEnter (oEvent){
+			var oParam = oEvent.getParameters();
+			var oShapeData = oParam.shapeData;
+			var oGanttChart = oEvent.getSource();
+
+			oQuickViewModel.setData({id: oShapeData.id, startTime: oShapeData.startTime, endTime: oShapeData.endTime});
+			var eDock = sap.ui.core.Popup.Dock;
+			var sOffset = (parseInt(oParam.pageX) + 1) + " " + (parseInt(oParam.pageY) + 1);
+			oPopup.open(0, eDock.BeginTop, eDock.LeftTop, null , sOffset);
+			oPopover.openBy(oPlaceHolder);
+		};
+
+		function onShapeMouseLeave (oEvent){
+			if (oPopup !== undefined){
+				oPopover.close()
+				oPopup.close(0);
+			}
+		};
+
+		function onShapeResizeEnd (oEvent) {
+			var iGanttIndex = oGantt.getGanttCharts().indexOf(oEvent.getSource());
+			var oParam = oEvent.getParameters();
+			if (oParam.shapeUid && oParam.oldTime && oParam.newTime) {
+				//resized shape uid
+				var shapeUid = oParam.shapeUid;
+				var sOldStartTime = oParam.oldTime[0];
+				var sOldEndTime = oParam.oldTime[1];
+				var sNewStartTime = oParam.newTime[0];
+				var sNewEndTime = oParam.newTime[1];
+				//row data where resizing happened
+				var rowObjInfo = oParam.rowObject;
+				var sMessage = "Event: " + oEvent.sId + " is fired on row " + rowObjInfo.rowIndex + " in view " + iGanttIndex
+				+ "; the origin start time: " + sOldStartTime + ", the origin end time: " + sOldEndTime
+				+ ", the new start time: " + sNewStartTime + ", the new end time: " + sNewEndTime + ";";
+				pushEventToMsgStack(oEvent, sMessage);
+			}
+		};
+
+		function onShapeSelectionChange (oEvent) {
+			var iGanttChartIndex = oGantt.getGanttCharts().indexOf(oEvent.getSource());
+			var aParaShapes = oGantt.getSelectedShapes(iGanttChartIndex);
+			var sShapes = "No Shape selected";
+			var oTarget = oEvent.getParameter("originEvent").target;
+			var currentShape = d3.select(oTarget).data()[0] ? d3.select(oTarget).data()[0].uid : "Not a shape";
+			var iCount = 0;
+			if (aParaShapes) {
+				sShapes = "";
+				for (var iGanttChart in aParaShapes) {
+					var oShape = aParaShapes[iGanttChart].selectedShapes;
+					for (var sShapeId in oShape) {
+						var aShapeData = oShape[sShapeId];
+						for (var i = 0; i < aShapeData.length; i++) {
+							sShapes = sShapes + " in Row: '" + (aShapeData[i].objectInfoRef.data.uuid ? aShapeData[i].objectInfoRef.data.uuid : aShapeData[i].objectInfoRef.id) + "' -- ";
+							sShapes = sShapes + aShapeData[i].shapeUid + ", ";
+							iCount++;
+							sShapes = sShapes;
+						}
+					}
+				}
+			}
+			var sMessage = "Event: " + oEvent.sId + " is Fired on View: " + JSON.stringify(iGanttChartIndex) + ";" + iCount + " Selected Shapes:" + sShapes + " Clicking shape:" + currentShape;
+			pushEventToMsgStack(oEvent, sMessage);
+		};
+
+		function onRelationshipSelectionChange (oEvent) {
+			var iGanttChartIndex = oGantt.getGanttCharts().indexOf(oEvent.getSource());
+			var aParaShapes = oGantt.getSelectedRelationships(iGanttChartIndex);
+			var sShapes = "No Relationship selected";
+			var oTarget = oEvent.getParameter("originEvent").target;
+			var currentShape = d3.select(oTarget).data()[0] ? d3.select(oTarget).data()[0].uid : "Not a relationship";
+			var iCount = 0;
+			if (aParaShapes && aParaShapes[0]) {
+				sShapes = "";
+				var aShapes = aParaShapes[0].selectedRelationships;
+				for (var i = 0; i < aShapes.length; i++) {
+					sShapes = sShapes + aShapes[i].uid + "; ";
+					iCount++;
+				}
+			}
+			var sMessage = "Event: " + oEvent.sId + " is Fired on View: " + JSON.stringify(iGanttChartIndex) + ";" + iCount + " Selected Relationships:" + sShapes + " Clicking relationship:" + currentShape;
+			pushEventToMsgStack(oEvent, sMessage);
+		};
+
+		function onRowSelectionChange (oEvent) {
+			//console.log('onRowSelectionChange event is fired.');
+			var iGanttChartIndex = oGantt.getGanttCharts().indexOf(oEvent.getSource());
+			var aViewRows = oGantt.getSelectedRows(iGanttChartIndex);
+			var sShapes = "No Row selected";
+			var iCount = 0;
+			if (aViewRows && aViewRows.length > 0) {
+				var aRows = aViewRows[0]["selectedRows"];
+				sShapes = "";
+				if (aRows !== undefined && aRows.length > 0)
+				for (var i = 0; i < aRows.length; i++) {
+					sShapes = sShapes + (aRows[i].data.uuid ? aRows[i].data.uuid : aRows[i].id) + "; ";
+					iCount++;
+				}
+			}
+			var sMessage = "Event: " + oEvent.sId + " is Fired on View: " + JSON.stringify(iGanttChartIndex) + ";" + iCount + " Selected Rows:" + sShapes;
+			pushEventToMsgStack(oEvent, sMessage);
+		};
+
+		function onSVGEvents (oEvent) {
+			var iGanttChartIndex = oGantt.getGanttCharts().indexOf(oEvent.getSource());
+			var oParam = oEvent.getParameters();
+			var oShapeData = d3.select(oParam.originEvent.target).data()[0];
+			var rowId = "dummy row";
+			if (oParam.objectInfo !== undefined) {
+				rowId = oParam.objectInfo.data.uuid;
+			}else if (oParam.leadingRowInfo !== undefined) {
+				rowId = oParam.leadingRowInfo.data.id;
+			}
+			var sMessage = "Event: " + oEvent.sId + " is Fired on View: " + JSON.stringify(iGanttChartIndex)
+					+ "; Selected data:" + JSON.stringify(oShapeData ? oShapeData.uid : "none")
+					+ "; Selected line: " + JSON.stringify(rowId)
+					+ "; Mouse Point:" + JSON.stringify(oParam.svgCoordinate);
+			pushEventToMsgStack(oEvent, sMessage);
+		}
+
+		//get all the selected shape on view 0 and view 1
+		function onGetShapes () {
+			var iCount = 0;
+			var sMessage = "Selected　Shapes: ";
+			for (var iGanttChartIndex = 0; iGanttChartIndex < 2; iGanttChartIndex++) {
+				var aSelectedShapes = oGantt.getSelectedShapes(iGanttChartIndex);
+				for (var iGanttChart in aSelectedShapes) {
+					var oShapes = aSelectedShapes[iGanttChart]["selectedShapes"];
+					for (var sShapeId in oShapes) {
+						var aShapes = oShapes[sShapeId];
+						for (var i = 0; i < aShapes.length; i++) {
+							sMessage = sMessage + aShapes[i].shapeUid + "; ";
+							iCount++;
+						}
+					}
+				}
+			}
+			if (iCount > 0) {
+				sMessage = iCount + " " + sMessage;
+			}
+			pushEventToMsgStack(null, sMessage, "Get Selected Shapes");
+		};
+
+		//deselect all shape selection in view 0
+		function onResetShapes () {
+			var sMessage = "";
+			var aIds;
+			var bSeletionUpdated = oGantt.selectShapes(0, aIds, true);
+			if (bSeletionUpdated) {
+				sMessage = "Shape Selection on first view has been reset!";
+			}else {
+				sMessage = "No Shape Seletion Reset happened on first view!";
+			}
+			pushEventToMsgStack(null, sMessage, "Reset Shapes");
+		};
+
+		//Select a shape on first view
+		function onSelectShapes () {
+			var sShapeId = "order1";
+			var aList = [];
+			//aList.push(sShapeUid);
+			aList.push(sShapeId);
+			var bSelectionUpdated = oGantt.selectShapes(0, aList, false);
+			if (bSelectionUpdated) {
+				var sMessage = "Shape in first row in first view is selected!";
+				pushEventToMsgStack(null, sMessage, "Select Shapes");
+			}
+		};
+
+		//select all shapes in a row on first view
+		function onSelectShapeInRow () {
+			var sRowId = "0001";
+			var aList = [];
+			aList.push(sRowId);
+			var bSelectionUpdated = oGantt.selectRowsAndShapes(1, aList, false);
+			if (bSelectionUpdated) {
+				var sMessage = "Shapes in second row in second view are selected!";
+				pushEventToMsgStack(null, sMessage, "Select Shapes");
+			}
+		};
+
+		//get all the selected relationships on view 1
+		function onGetRelationships () {
+			var iCount = 0;
+			var sMessage = "Selected　Relationships: ";
+			var aSelectedRelationships = oGantt.getSelectedRelationships(1);
+			if (aSelectedRelationships && aSelectedRelationships[0] && aSelectedRelationships[0].selectedRelationships.length > 0) {
+				var aShapes = aSelectedRelationships[0].selectedRelationships;
+				for (var i = 0; i < aShapes.length; i++) {
+					var oShape = aShapes[i];
+					sMessage = sMessage + oShape.uid + "; ";
+					iCount++;
+				}
+			}
+			if (iCount > 0) {
+				sMessage = iCount + " " + sMessage;
+			}
+			pushEventToMsgStack(null, sMessage, "Select Relationships");
+		};
+
+		//get all the selected rows on view 0
+		function onGetRows() {
+			var iCount = 0;
+			var sMessage = "Selected　Rows: ";
+			if (oGantt.getSelectedRows(0)[0] !== undefined) {
+				var aSelectedRows = oGantt.getSelectedRows(0)[0].selectedRows;
+				for (var i = 0; i < aSelectedRows.length; i++) {
+					var oShape = aSelectedRows[i];
+					sMessage = sMessage + (oShape.data.uuid ? oShape.data.uuid : oShape.id) + "; ";
+					iCount++;
+				}
+				if (iCount > 0) {
+					sMessage = iCount + " " + sMessage;
+				}
+				pushEventToMsgStack(null, sMessage, "Get Selected Rows");
+			}
+		};
+
+		//Select a relationship
+		function onSelectRelationships() {
+			var sId = "rls002";
+			var aList = [];
+			//aList.push(sShapeUid);
+			aList.push(sId);
+			var bSelectionUpdated = oGantt.selectRelationships(1, aList, true);
+			if (bSelectionUpdated) {
+				var sMessage = "A Relationships in second view is selected!";
+				pushEventToMsgStack(null, sMessage, "Select Relationships");
+			}
+		};
+
+		function onSelectRows () {
+			var aIds = ["0000", "0001"];
+			var bSelectionUpdated = oGantt.selectRows(0, aIds, false);
+			if (bSelectionUpdated) {
+				var sMessage = "Two Rows(1st&2nd) in first view is selected!";
+				pushEventToMsgStack(null, sMessage, "Select Rows");
+			}
+		};
+
+		function onResetRows () {
+			var bSelectionUpdated = oGantt.selectRows(0, [], true);
+			var sMessage = "All selected rows in first view is deselected!";
+			if (!bSelectionUpdated) {
+				sMessage = "No rows need to be deselected!";
+			}
+			pushEventToMsgStack(null, sMessage, "Reset Row Selections");
+		};
+
+		function onSetSelectionMode (oEvent) {
+			var bButton = oEvent.getSource();
+			var aGanttCharts = oGantt.getGanttCharts();
+			for (var iView in aGanttCharts) {
+				var oView = aGanttCharts[iView];
+				if (oView.getProperty("hierarchyKey") === "REL") {
+				if (bButton.getText() === "SingleMode") {
+					oView.setSelectionMode("Single");
+					bButton.setText("MultiMode");
+				}else {
+					oView.setSelectionMode("Multiple");
+					bButton.setText("SingleMode");
+				}
+					break;
+			}
+			}
+		};
+
+		//Create a relationship
+		function onCreateRelationships() {
+			var oModelData = oGantt.getModel('test').getData();
+			var oData = oModelData.data;
+			var aRelationship = oData.view[0].root.relationships;
+
+				aRelationship.push({
+				fromDataId: "0049",
+				fromObjectPath: "0049",
+				fromShapeId: "ActivityKey",
+				relation_type: 0,
+				stroke: "#FF0000",
+				style: 0,
+				toDataId: "0056",
+				toObjectPath: "0056",
+				toShapeId: "task",
+				tooltip: "Finish-to-Finish",
+				id: "rls009"
+			});
+			aRelationship.push({
+				fromDataId: "0055",
+				fromObjectPath: "0055",
+				fromShapeId: "ActivityKey",
+				relation_type: 1,
+					stroke: "#FF0000",
+					style: 0,
+				toDataId: "0056",
+				toObjectPath: "0056",
+				toShapeId: "ActivityKey",
+					tooltip: "Finish-to-Start",
+				id: "rls010"
+			});
+			aRelationship.push({
+				fromDataId: "0051-2",
+				fromObjectPath: "0051",
+				fromShapeId: "ActivityKey",
+				relation_type: 2,
+				stroke: "#FF0000",
+				style: 0,
+				toDataId: "0052",
+				toObjectPath: "0052",
+				toShapeId: "ActivityKey",
+				tooltip: "Start-to-Finish",
+				id: "rls011"
+			});
+			aRelationship.push({
+				fromDataId: "0049",
+				fromObjectPath: "0049",
+				fromShapeId: "ActivityKey",
+				relation_type: 3,
+				stroke: "#FF0000",
+				style: 0,
+				toDataId: "0056",
+				toObjectPath: "0056",
+				toShapeId: "ActivityKey",
+				tooltip: "Start-to-Start",
+				id: "rls012"
+			});
+			oGantt.getModel('test').setData(oModelData);
+			oGantt.rerender();
+		}
+
+		//Remove relationsips
+		function onRemoveRelationships() {
+			var oModelData = oGantt.getModel('test').getData();
+			var oData = oModelData.data;
+			var aRelationship = oData.view[0].root.relationships;
+			var aRelationshipSet = [];
+
+			var oChart = oGantt.getGanttCharts()[0].getAggregation("_chart");
+			var oShapeSelection = oChart._oShapeSelection;
+
+			aRelationship.forEach(function (oRls) {
+				if (oRls.id === "rls009" || oRls.id === "rls010" || oRls.id === "rls011" || oRls.id === "rls012") {
+					if (oShapeSelection.isRelationshipSelected(oRls.uid)) {
+						oShapeSelection.deselectRelationship(oRls.uid);
+					}
+				}
+				else {
+					aRelationshipSet.push(oRls);
+				}
+			});
+
+			oData.view[0].root.relationships = aRelationshipSet;
+			oGantt.getModel('test').setData(oModelData);
+			oGantt.rerender();
+		}
+
+		//Reset relationship styles
+		function onStylesReset() {
+			var oConfig = oRelConfig;
+			var oModelData = oGantt.getModel('test').getData();
+			var oData = oModelData.data;
+			var aRelationship = oData.view[0].root.relationships;
+			if (oConfig.hasShapeProperty("stroke")) {
+				for (i = 0; i < aRelationship.length; i++) {
+					if (aRelationship[i].stroke == "#0000FF") {
+						aRelationship[i].stroke = "#000000";
+					} else if (aRelationship[i].stroke == "#FF0000") {
+						aRelationship[i].stroke = "#FF0000";
+					}
+				}
+				oGantt.getModel('test').setData(oModelData);
+			}
+			if (oConfig.hasShapeProperty("showStart")) {
+				oConfig.getShapeProperties().showStart = false;
+			}
+			if (oConfig.hasShapeProperty("showEnd")) {
+				oConfig.getShapeProperties().showEnd = true;
+			}
+			if (oConfig.hasShapeProperty("lShapeforTypeFS")) {
+				oConfig.getShapeProperties().lShapeforTypeFS = true;
+			}
+			oGantt.rerender();
+		}
+
+		function onColorConfig() {
+			var oModelData = oGantt.getModel('test').getData();
+			var oData = oModelData.data;
+			var aRelationship = oData.view[0].root.relationships;
+			for (i = 0; i < aRelationship.length; i++) {
+				if (aRelationship[i].stroke == "#0000FF") {
+					aRelationship[i].stroke = "#000000";
+				} else if (aRelationship[i].stroke == "#FF0000") {
+					aRelationship[i].stroke = "#FF0000";
+				} else {
+					aRelationship[i].stroke = "#0000FF";
+				}
+			}
+			oGantt.getModel('test').setData(oModelData);
+			oGantt.rerender();
+		}
+		function onShapeConfig() {
+			var oConfig = oRelConfig;
+			if (oConfig.hasShapeProperty("lShapeforTypeFS")) {
+				if (oConfig.getShapeProperties().lShapeforTypeFS) {
+					oConfig.getShapeProperties().lShapeforTypeFS = false;
+				} else {
+					oConfig.getShapeProperties().lShapeforTypeFS = true;
+				}
+			}
+			oGantt.rerender();
+		}
+		function onStartSquare() {
+			var oConfig = oRelConfig;
+			if (oConfig.hasShapeProperty("showStart")) {
+				if (oConfig.getShapeProperties().showStart) {
+					oConfig.getShapeProperties().showStart = false;
+				} else {
+					oConfig.getShapeProperties().showStart = true;
+				}
+			}
+			oGantt.rerender();
+		}
+		function onEndArrow() {
+			var oConfig = oRelConfig;
+			if (oConfig.hasShapeProperty("showEnd")) {
+				if (oConfig.getShapeProperties().showEnd) {
+					oConfig.getShapeProperties().showEnd = false;
+				} else {
+					oConfig.getShapeProperties().showEnd = true;
+				}
+			}
+			oGantt.rerender();
+		}
+
+		function handleCustomToolbarItem(oEvent) {
+			var oParam = oEvent.getParameters();
+			var sType = oEvent.getSource().data("config").type;
+			switch (sType) {
+			case "5":
+				handleSegmentedButton(oEvent);
+				break;
+			default:
+				handleButton(oEvent);
+			}
+		}
+
+		function handleSegmentedButton(oEvent) {
+			var oParam = oEvent.getParameters();
+			var oSegConfig = oEvent.getSource().data("config");
+			var oButtonConfig = oParam.button.data("config");
+
+			switch (oSegConfig.eventId) {
+			case "TOGGLE_CSS_MODE":
+				onToggleCompactCozyMode(oButtonConfig.eventId);
+				break;
+			case "RELATIONSHIPS":
+				onRelationshipsAction(oButtonConfig.eventId);
+				break;
+			case "STYLES_CONFIG":
+				onStyleConfig(oButtonConfig.eventId);
+			case "Selections":
+				onSelectionActions(oButtonConfig.eventId);
+			}
+		}
+
+		function handleButton(oEvent) {
+			var oConfig = oEvent.getSource().data("config");
+
+			switch (oConfig.eventId) {
+			case "MODEL_SORT":
+				onModelSort(oEvent);
+				break;
+			case "SET_MODE":
+				onSetSelectionMode(oEvent);
+				break;
+			case "SEL_RLS":
+				onSelectRelationships();
+				break;
+			case "GET_SEL_RLS":
+				onGetRelationships();
+				break;
+			case "RESET_RSL_SEL":
+				onResetRelationships();
+				break;
+			case "SWITCH_LOCALE":
+				onSwitchLocale(oEvent);
+				break;
+			case "TIME_POPOVER":
+				onSwitchTimePopover(oEvent);
+				break;
+
+			}
+		}
+
+		function onSwitchTimePopover(oEvent){
+			var bEnable, oButton = oEvent.getSource();
+			var aGanttChartWithTable = oGantt.getGanttCharts();
+
+			if (oButton.getText() == "TimeDisplayOff"){
+				bEnable = true;
+				oButton.setText("TimeDisplayOn");
+			} else if (oButton.getText() == "TimeDisplayOn") {
+				bEnable = false;
+				oButton.setText("TimeDisplayOff");
+			}
+
+			for(var i = 0; i < aGanttChartWithTable.length; i++) {
+				aGanttChartWithTable[i].setEnableShapeTimeDisplay(bEnable);
+			}
+		}
+
+		function onSwitchLocale (oEvent) {
+			var i = 0;
+			var oButton = oEvent.getSource();
+			var aGanttChartWithTable = oGantt.getGanttCharts()
+			if(!oButton.getPressed()) {
+				oButton.setText("GoToDaylightSaving");
+				for(i = 0; i < aGanttChartWithTable.length; i++) {
+					aGanttChartWithTable[i].setLocale(sap.gantt.config.DEFAULT_LOCALE_CET);
+				}
+			} else {
+				oButton.setText("GoBackInitLocale");
+				for(i = 0; i < aGanttChartWithTable.length; i++) {
+					var locale = new sap.gantt.config.Locale({
+						timeZone:"CET",
+						utcdiff:"050000",
+						utcsign:"+",
+						dstHorizons:[
+							new sap.gantt.config.TimeHorizon({
+								startTime: "20140330020000",
+								endTime: "20141026030000"
+							}),
+							new sap.gantt.config.TimeHorizon({
+								startTime: "20150329020000",
+								endTime: "20151025030000"
+							}),
+							new sap.gantt.config.TimeHorizon({
+								startTime: "20160327020000",
+								endTime: "20161030030000"
+							})
+						]
+					})
+					aGanttChartWithTable[i].setLocale(locale);
+				}
+				if (aGanttChartWithTable.length > 0) {
+					var oJumpDate = sap.gantt.misc.Format.abapTimestampToDate("20150328193000");
+					aGanttChartWithTable[0].jumpToPosition(oJumpDate);
+				}
+			}
+		}
+
+		function onModelSort(oEvent) {
+			var oGanttChart = oEvent.getSource().getParent().getParent().getParent();
+			var oSorter = new sap.ui.model.Sorter("text");
+			oSorter.fnCompare = function(v1, v2) {
+				if (v1 < v2)
+					return -1;
+				if (v1 == v2)
+					return 0;
+				if (v1 > v2)
+					return 1;
+			};
+			oGanttChart.getBinding("rows").sort(oSorter);
+		}
+
+		function onResetRelationships(oEvent) {
+			var aIds;
+			var bSeletionUpdated = oGantt.selectRelationships(1, aIds, true);
+			if (bSeletionUpdated) {
+				pushEventToMsgStack(null, "Relationships Selection on second view has been reset!", "Reset Relationship Selections");
+			} else {
+				pushEventToMsgStack(null, "No Relationships Seletion Reset happened on second view!", "Reset Relationship Selections");
+			}
+		};
+
+		function onToggleCompactCozyMode(sMode) {
+			var $content = $('body');
+			var iBaseRowHeight = null;
+			var sCondensedClass = "sapUiSizeCondensed";
+			//Remove all set size class names
+			$content.removeClass('sapUiSizeCompact sapUiSizeCozy condensedClassForTT');
+			switch (sMode) {
+				case "TOGGLE_COZY":
+					$content.addClass('sapUiSizeCozy');
+					break;
+				case "TOGGLE_COMPACT":
+					$content.addClass('sapUiSizeCompact');
+					break;
+				case "TOGGLE_CONDENSED":
+					$content.addClass('sapUiSizeCompact condensedClassForTT');
+					break;
+				case "TOGGLE_WEBDYNPRO":
+					$content.addClass('sapUiSizeCompact');
+					iBaseRowHeight = 27;
+					break;
+				default:
+			}
+			// set base row height
+			var aGanttCharts = oGantt.getGanttCharts();
+			var oDelegate = {
+				onAfterRendering: function (oEvent){
+					var oSourceTable = oEvent.srcControl;
+					//set condensedClass to tree tables in gantt
+					if ($content.hasClass("condensedClassForTT")) {
+						oSourceTable.$().addClass(sCondensedClass);
+					}else{
+						oSourceTable.$().removeClass(sCondensedClass);
+					}
+				}
+			};
+			for (var i = 0; i < aGanttCharts.length; i++) {
+				//reload css classes after tree table rerendering
+				aGanttCharts[i]._oTT.removeEventDelegate(oDelegate);
+				aGanttCharts[i]._oTT.addEventDelegate(oDelegate);
+				aGanttCharts[i]._oTC.removeEventDelegate(oDelegate);
+				aGanttCharts[i]._oTC.addEventDelegate(oDelegate);
+				aGanttCharts[i].setBaseRowHeight(iBaseRowHeight);
+				// for dynamically change the display mode, this internal properties need to be reset
+				aGanttCharts[i]._oGanttChart._iInferedBaseRowHeight = undefined;
+				aGanttCharts[i]._oGanttChart._iInferedBaseRowHeightOnTT = undefined;
+			}
+			window.oPage.invalidate();
+			sap.ui.getCore().applyChanges();
+		}
+
+		function onRelationshipsAction(sMode) {
+			var $content = $('#content');
+			switch (sMode) {
+			case "ADD_RELS":
+				onCreateRelationships();
+				break;
+			case "DEL_RELS":
+				onRemoveRelationships();
+			default:
+
+			}
+		}
+		function onSelectionActions(sEventId) {
+			switch (sEventId) {
+			case "SEL_SHAPES":
+				onSelectShapes();
+				break;
+			case "SEL_SHAPES_ROW":
+				onSelectShapeInRow();
+				break;
+			case "GET_SEL_SHAPES":
+				onGetShapes();
+				break;
+			case "RESET_SHAPE_SEL":
+				onResetShapes();
+				break;
+			case "SEL_RLS":
+				onSelectRelationships();
+				break;
+			case "GET_SEL_RLS":
+				onGetRelationships();
+				break;
+			case "RESET_RSL_SEL":
+				onResetRelationships();
+				break;
+			case "SEL_ROWS":
+				onSelectRows();
+				break;
+			case "GET_SEL_ROWS":
+				onGetRows();
+				break;
+			case "RES_ROW_SEL":
+				onResetRows();
+				break;
+			default:
+				break;
+			}
+		}
+		function onStyleConfig(sMode) {
+			var $content = $('#content');
+			switch (sMode) {
+			case "STYLES_RESET":
+				onStylesReset();
+				break;
+			case "COLOR_CONFIG":
+				onColorConfig();
+				break;
+			case "SHAPE-CONFIG":
+				onShapeConfig();
+				break;
+			case "START-SQUARE":
+				onStartSquare();
+				break;
+			case "END_ARROW":
+				onEndArrow();
+			default:
+			}
+		}
+
+	});
+
+
+
+
+</script>
+</head>
+<body id="body" class="sapUiBody sapUiSizeCompact">
+	<div id="content" style="width: 100%; height: 100vh;"></div>
+</body>
+</html>

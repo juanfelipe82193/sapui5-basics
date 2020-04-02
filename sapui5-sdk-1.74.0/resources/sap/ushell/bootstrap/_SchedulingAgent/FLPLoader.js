@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define(["sap/ushell/EventHub","sap/ui/core/Component"],function(E,C){"use strict";var F={loadComponentByEvent:function(c){E.emit(c.eventName,c.eventData);},loadComponentByComponentCreate:function(c){return C.create(c);},loadComponentByRequire:function(p){return new Promise(function(r,R){sap.ui.require([p],function(d){r(d);});});},waitInMs:function(w){setTimeout(function(){E.emit("StepDone",w.sStepName);},w.iWaitingTime);},directLoading:function(){}};return F;},false);

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+	xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+	xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+	xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:Reference Uri="https://mydomain.com/catalogService/ui/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI" />
+	</edmx:Reference>
+	<edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml">
+		<edmx:Include Alias="MEASURES" Namespace="Org.OData.Measures.V1" />
+	</edmx:Reference>
+	<edmx:Reference Uri="https://mydomain.com/catalogService/common/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Alias="COMMON" Namespace="com.sap.vocabularies.Common.v1" />
+	</edmx:Reference>
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="SmartMicroChart" xml:lang="en" sap:schema-version="0" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="ProductType" sap:label="Product Sales Data" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="Product" />
+				</Key>
+				<Property Name="Product" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Product ID" />
+				<Property Name="Revenue" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="Currency" />
+				<Property Name="TargetRevenue" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="Currency" />
+				<Property Name="ForecastRevenue" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="Currency" />
+				<Property Name="Criticality" Type="Edm.String" />
+				<Property Name="Currency" Type="Edm.String" />
+				<Property Name="ProductTitle" Type="Edm.String" />
+				<Property Name="ProductDescription" Type="Edm.String" />
+				<Property Name="Sold" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="Unit" />
+				<Property Name="Produced" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="Unit" />
+			</EntityType>
+			<EntityType Name="StockPrice">
+				<Key>
+					<PropertyRef Name="Day" />
+				</Key>
+				<Property Name="Day" Type="Edm.Int32" />
+				<Property Name="Price" Type="Edm.Int32" />
+				<Property Name="PriceTarget" Type="Edm.Int32" />
+				<Property Name="PriceDeviationLowerBound" Type="Edm.Int32" />
+				<Property Name="PriceToleranceLowerBound" Type="Edm.Int32" />
+				<Property Name="PriceToleranceUpperBound" Type="Edm.Int32" />
+				<Property Name="PriceDeviationUpperBound" Type="Edm.Int32" />
+				<Property Name="StockPriceTitle" Type="Edm.String" />
+				<Property Name="StockPriceDescription" Type="Edm.String" />
+				<Property Name="Currency" Type="Edm.String" />
+			</EntityType>
+			<EntityType Name="SalesType">
+				<Key>
+					<PropertyRef Name="Product" />
+				</Key>
+				<Property Name="Product" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Product ID" />
+				<Property Name="Sold" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="Unit" />
+				<Property Name="Produced" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="Unit" />
+				<Property Name="Criticality" Type="Edm.String" />
+				<Property Name="Unit" Type="Edm.String" />
+			</EntityType>
+			<EntityType Name="RevenueType">
+				<Key>
+					<PropertyRef Name="Month" />
+				</Key>
+				<Property Name="Month" Type="Edm.Int32"/>
+				<Property Name="Revenue" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="Currency" />
+			</EntityType>
+			<EntityType Name="StockPrice2">
+				<Key>
+					<PropertyRef Name="Date"/>
+				</Key>
+				<Property Name="Date" Type="Edm.String" />
+				<Property Name="Price" Type="Edm.Int32" />
+				<Property Name="PriceTarget" Type="Edm.Int32" />
+				<Property Name="ChartTitle" Type="Edm.String" />
+				<Property Name="ChartDescription" Type="Edm.String" />
+				<Property Name="Criticality" Type="Edm.String" />
+			</EntityType>
+			<EntityContainer Name="SmartMicroChart_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+				<EntitySet Name="Products" EntityType="SmartMicroChart.ProductType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1" />
+				<EntitySet Name="Series" EntityType="SmartMicroChart.StockPrice" sap:content-version="1" />
+				<EntitySet Name="Sales" EntityType="SmartMicroChart.SalesType" sap:content-version="1" />
+				<EntitySet Name="Revenues" EntityType="SmartMicroChart.RevenueType" sap:content-version="1" />
+				<EntitySet Name="StockPrices" EntityType="SmartMicroChart.StockPrice2" sap:content-version="1" />
+			</EntityContainer>
+
+			<Annotations Target="SmartMicroChart.ProductType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="UI.Chart" Qualifier="BulletChartQualifier">
+					<Record>
+						<PropertyValue EnumMember="UI.ChartType/Bullet" Property="ChartType" />
+						<PropertyValue Property="Title" Path="ProductTitle" />
+						<PropertyValue Property="Description" Path="ProductDescription" />
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Revenue</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="UI.ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="Revenue" />
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#BulletChartDataPoint" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="BulletChartDataPoint">
+					<Record>
+						<PropertyValue Path="Revenue" Property="Value" />
+						<PropertyValue Path="TargetRevenue" Property="TargetValue" />
+						<PropertyValue Path="ForecastRevenue" Property="ForecastValue" />
+						<PropertyValue Decimal="0" Property="MinimumValue" />
+						<PropertyValue Decimal="150" Property="MaximumValue" />
+						<PropertyValue Path="Criticality" Property="Criticality" />
+					</Record>
+				</Annotation>
+			</Annotations>
+
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="SmartMicroChart.ProductType/Revenue">
+				<Annotation Term="MEASURES.ISOCurrency" Path="Currency" />
+			</Annotations>
+
+			<Annotations Target="SmartMicroChart.SalesType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="UI.Chart" Qualifier="DonutChartQualifier">
+					<Record>
+						<PropertyValue Property="ChartType" EnumMember="UI.ChartType/Donut" />
+						<PropertyValue Property="Title" String="Units sold vs. produced" />
+						<PropertyValue Property="Description" String="This chart shows the percentage of units sold." />
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Sold</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="Sold" />
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#DonutChartDataPoint" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="DonutChartDataPoint">
+					<Record>
+						<PropertyValue Property="Value" Path="Sold" />
+						<PropertyValue Property="TargetValue" Path="Produced" />
+						<PropertyValue Property="Criticality" Path="Criticality" />
+					</Record>
+				</Annotation>
+			</Annotations>
+
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="SmartMicroChart.SalesType/Sold">
+				<Annotation Term="MEASURES.ISOCurrency" Path="Unit" />
+				<Annotation Term="COMMON.Label" String="This additional text is awesome." />
+			</Annotations>
+
+			<Annotations Target="SmartMicroChart.ProductType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="UI.Chart" Qualifier="PieChartQualifier">>
+					<Record>
+						<PropertyValue Property="ChartType" EnumMember="UI.ChartType/Pie" />
+						<PropertyValue Property="Title" String="Harvey Ball micro chart" />
+						<PropertyValue Property="Description" String="This is a radiant, lovely, circly HarveyBallMicroChart." />
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Sold</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="UI.ChartMeasureAttributeType">
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint">
+					<Record>
+						<PropertyValue Path="Sold" Property="Value" />
+						<PropertyValue Path="Produced" Property="MaximumValue" />
+						<PropertyValue Path="Criticality" Property="Criticality" />
+					</Record>
+				</Annotation>
+			</Annotations>
+
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="SmartMicroChart.ProductType/Sold">
+				<Annotation Term="MEASURES.ISOCurrency" Path="Unit"></Annotation>
+			</Annotations>
+
+			<Annotations Target="SmartMicroChart.StockPrice" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="UI.Chart">
+					<Record>
+						<PropertyValue Property="ChartType" EnumMember="UI.ChartType/Area" />
+						<PropertyValue Property="Title" Path="StockPriceTitle" />
+						<PropertyValue Property="Description" Path="StockPriceDescription" />
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>Day</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Price</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="Price" />
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#AreaChartDataPoint" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="AreaChartDataPoint">
+					<Record>
+						<PropertyValue Property="Value" Path="Price" />
+						<PropertyValue Property="TargetValue" Path="PriceTarget" />
+						<PropertyValue Property="CriticalityCalculation">
+							<Record Type="UI.CriticalityCalculationType">
+								<PropertyValue Property="ImprovementDirection" EnumMember="UI.ImprovementDirectionType/Target" />
+								<PropertyValue Property="DeviationRangeLowValue" Path="PriceDeviationLowerBound" />
+								<PropertyValue Property="ToleranceRangeLowValue" Path="PriceToleranceLowerBound" />
+								<PropertyValue Property="ToleranceRangeHighValue" Path="PriceToleranceUpperBound" />
+								<PropertyValue Property="DeviationRangeHighValue" Path="PriceDeviationUpperBound" />
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="SmartMicroChart.StockPrice/Price">
+				<Annotation Term="MEASURES.ISOCurrency" Path="Currency" />
+			</Annotations>
+
+			<Annotations Target="SmartMicroChart.RevenueType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="UI.Chart">
+					<Record>
+						<PropertyValue Property="ChartType" EnumMember="UI.ChartType/BarStacked" />
+						<PropertyValue Property="Title" Path="Title" />
+						<PropertyValue Property="Description" Path="Description" />
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>Month</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Revenue</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="Revenue" />
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#StackedBarChartQualifier" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="StackedBarChartQualifier">
+					<Record>
+						<PropertyValue Property="Value" Path="Revenue" />
+						<PropertyValue Property="Criticality" Path="Criticality" />
+					</Record>
+				</Annotation>
+			</Annotations>
+
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="SmartMicroChart.RevenueType/Revenue">
+				<Annotation Term="MEASURES.ISOCurrency" Path="Currency" />
+				<Annotation Term="COMMON.Text" Path="DisplayValue" />
+			</Annotations>
+
+			<Annotations Target="SmartMicroChart.StockPrice2" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="UI.Chart">
+					<Record>
+						<PropertyValue Property="ChartType" EnumMember="UI.ChartType/Line" />
+						<PropertyValue Property="Title" Path="ChartTitle" />
+						<PropertyValue Property="Description" Path="ChartDescription" />
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>Date</PropertyPath>
+								<PropertyPath>Date</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Price</PropertyPath>
+								<PropertyPath>PriceTarget</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="Price" />
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#LineChartPrice" />
+								</Record>
+								<Record Type="ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="PriceTarget" />
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#LineChartPriceTarget" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="LineChartPrice">
+					<Record>
+						<PropertyValue Property="Value" Path="Price" />
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="LineChartPriceTarget">
+					<Record>
+						<PropertyValue Property="Value" Path="PriceTarget" />
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="SmartMicroChart.StockPrice2/Price">
+				<Annotation Term="MEASURES.ISOCurrency" Path="Currency"></Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="SmartMicroChart.StockPrice2/Date">
+				<Annotation Term="COMMON.IsCalendarYear"></Annotation>
+			</Annotations>
+
+			<atom:link rel="self" href="https://mydomain.com/myService/$metadata" xmlns:atom="http://www.w3.org/2005/Atom" />
+			<atom:link rel="latest-version" href="https://mydomain.com/myService/$metadata" xmlns:atom="http://www.w3.org/2005/Atom" />
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,103 @@
+<sap.ui.core:View controllerName="AppScflTest.view.S3" xmlns="sap.m" xmlns:sap.ui.core="sap.ui.core">
+	<Page id="PODetailPage">
+		<content>
+			<ObjectHeader titlePress="showSupplierBusinessCard" title="{SupplierName}" number="{path: 'Value', formatter: 'AppScflTest.util.Conversions.formatNumber'}" numberUnit="{Currency}" introActive="false" titleActive="true"
+				iconActive="false">
+				<attributes>
+					<ObjectAttribute text="{PONumber}" active="false"></ObjectAttribute>
+				</attributes>
+				<firstStatus>
+					<ObjectStatus text="{Status}" state="Success"></ObjectStatus>
+				</firstStatus>
+			</ObjectHeader>
+			<IconTabBar id="IconizedFilter" select="btnIconTabBar">
+				<items>
+					<IconTabFilter id="btnOrdered" text="{i18n>XCAP_Ordered}" count="{NumberOfItemsOrdered}" icon="sap-icon://product"></IconTabFilter>
+					<IconTabSeparator icon="sap-icon://process"></IconTabSeparator>
+					<IconTabFilter id="btnDelivered" text="{i18n>XCAP_Delivered}" count="{NumberOfItemsDelivered}" icon="sap-icon://customer-and-supplier"></IconTabFilter>
+					<IconTabSeparator icon="sap-icon://process"></IconTabSeparator>
+					<IconTabFilter id="btnInvoiced" text="{i18n>XCAP_Invoiced}" count="{NumberOfItemsInvoiced}" icon="sap-icon://sales-document"></IconTabFilter>
+					<IconTabSeparator icon="sap-icon://process"></IconTabSeparator>
+					<IconTabFilter id="btnPaid" text="{i18n>XCAP_Paid}" count="{NumberOfItemsPaid}" icon="sap-icon://paid-leave"></IconTabFilter>
+				</items>
+				<content>
+					<Label id="TableHeader" text="{i18n>XCAP_OrderedItems}" design="Bold"></Label>
+				</content>
+			</IconTabBar>
+			<Table id="Items" items="{POItems}">
+				<items>
+					<ColumnListItem tap="goToItemDetail" type="Navigation" counter="0">
+						<cells>
+							<VBox direction="Column">
+								<items>
+									<ObjectIdentifier title="{Description}" text="{MaterialID}" badgeNotes="false" badgePeople="false" badgeAttachments="false"></ObjectIdentifier>
+									<ObjectStatus text="{Status}" state="{path: 'ConfErrorIndicator', formatter: 'AppScflTest.util.Conversions.itemStatusState'}"></ObjectStatus>
+									<Label text="{path: 'PricePerUnit', formatter: 'AppScflTest.util.Conversions.formatNumber'} {CurrencyForPPU} /"></Label>
+									<Text text="{path: 'QuantityForPPU', formatter: 'AppScflTest.util.Conversions.formatNumber'} {UnitForPPU}" maxLines="0"></Text>
+									<ObjectStatus text="{ConfErrorIndicator}" state="Error"></ObjectStatus>
+								</items>
+							</VBox>
+							<VBox direction="Column" alignItems="End">
+								<items>
+									<Text text="{path: 'QuantityOrdered', formatter: 'AppScflTest.util.Conversions.formatNumber'} {UnitOrdered}" maxLines="0"></Text>
+									<Text text="{path: 'ValueOrdered', formatter: 'AppScflTest.util.Conversions.formatNumber'} {Currency}" maxLines="0"></Text>
+									<Label text="{path : 'OrderedDate', formatter : 'AppScflTest.util.Conversions.formatDate'}"></Label>
+									<ObjectStatus text="{path : 'DeliveryDate', formatter : 'AppScflTest.util.Conversions.formatDate'}" state="{path : 'DeliveryErrorIndicator', formatter : 'AppScflTest.util.Conversions.deliveryErrorIndicator'}"
+										icon="sap-icon://time-entry-request"></ObjectStatus>
+									<ObjectStatus text="{DeliveryErrorIndicator}" state="Error"></ObjectStatus>
+								</items>
+							</VBox>
+							<VBox direction="Column" alignItems="End">
+								<items>
+									<Text text="{parts:[{path : 'DeliveredDate'},{path : 'QuantityDelivered'},{path : 'UnitDelivered'}], formatter : 'AppScflTest.util.Conversions.isEmptyValue'}" maxLines="0"></Text>
+									<Text text="{parts:[{path : 'DeliveredDate'},{path : 'ValueDelivered'},{path : 'Currency'}], formatter : 'AppScflTest.util.Conversions.isEmptyValue'}" maxLines="0"></Text>
+									<Label class="deliveredDate" text="{path : 'DeliveredDate', formatter : 'AppScflTest.util.Conversions.formatDate'}"></Label>
+									<ObjectStatus text="{PlantName}" state="None" icon="{path : 'PlantName', formatter : 'AppScflTest.util.Conversions.plantIcon'}"></ObjectStatus>
+								</items>
+							</VBox>
+							<VBox visible="{path : 'InvoicedDate', formatter : 'AppScflTest.util.Conversions.isVisible'}" direction="Column" alignItems="End">
+								<items>
+									<Text text="{path: 'QuantityInvoiced', formatter: 'AppScflTest.util.Conversions.formatNumber'} {UnitInvoiced}" maxLines="0"></Text>
+									<Text text="{path: 'ValueInvoiced', formatter: 'AppScflTest.util.Conversions.formatNumber'} {CurrencyInvoiced}" maxLines="0"></Text>
+									<Label text="{path : 'InvoicedDate', formatter : 'AppScflTest.util.Conversions.formatDate'}"></Label>
+								</items>
+							</VBox>
+							<VBox direction="Column" alignItems="End">
+								<items>
+									<Text text="{SplCondPaidMessage}" textAlign="Right" maxLines="0"></Text>
+								</items>
+							</VBox>
+						</cells>
+					</ColumnListItem>
+				</items>
+				<columns>
+					<Column>
+						<header>
+							<Label text="{i18n>XCAP_Material}" width="100%"></Label>
+						</header>
+					</Column>
+					<Column hAlign="Right">
+						<header>
+							<Label text="{i18n>XCAP_Ordered}" textAlign="Right" width="100%"></Label>
+						</header>
+					</Column>
+					<Column hAlign="Right">
+						<header>
+							<Label text="{i18n>XCAP_Delivered}" textAlign="Right" width="100%"></Label>
+						</header>
+					</Column>
+					<Column hAlign="Right">
+						<header>
+							<Label text="{i18n>XCAP_Invoiced}" textAlign="Right" width="100%"></Label>
+						</header>
+					</Column>
+					<Column hAlign="Right">
+						<header>
+							<Label text="{i18n>XCAP_Paid}" textAlign="Right" width="100%"></Label>
+						</header>
+					</Column>
+				</columns>
+			</Table>
+		</content>
+	</Page>
+</sap.ui.core:View>

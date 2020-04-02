@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js" id="sap-ui-bootstrap" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		.col {
+			color: red;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+		function renderCanvas(canvas) {
+			iRenderingtime.value = canvas.m_Scene.m_nLastRenderingTime;
+			if (canvas.m_Scene.m_PreassembledData != undefined) {
+				var nMode = canvas.m_Scene.m_PreassembledData.config.m_calcMode;
+				if (nMode == 1)
+					iClusteringtime1.value = canvas.m_Scene.m_nLastClusteringTime;
+				if (nMode == 2)
+					iClusteringtime2.value = canvas.m_Scene.m_nLastClusteringTime;
+			}
+		};
+		// creation of visual business vos.......................//
+		sap.ui.localResources("vbitestapp");
+		//var view = sap.ui.view({id:"idVBITestView1", viewName:"vbitestapp.VBITestView", type:sap.ui.core.mvc.ViewType.JS});
+		var oVBI1 = new sap.ui.vbm.VBI('vbiWrap', {
+			width: 870,
+			height: 600,
+			submit: onSubmit
+		});
+		oVBI1.placeAt("content");
+		oVBI1.attachRender(function(evt) {
+			renderCanvas(evt.mParameters.canvas);
+		});
+		var bDataSetIsOriginal = true;
+
+		function onSubmit(e) {
+			var clusterOutput;
+			var rawData = e.getParameter("data");
+			var action = JSON.parse(rawData).Action
+			var ident = action.instance;
+			if (ident.substring(0, 1) === "[") {
+				var nodeInfo = oVBI1.getInfoForCluster(ident, sap.ui.vbm.ClusterInfoType.NodeInfo);
+				clusterOutput = "Identity: " + ident + " (Cluster with " + nodeInfo.cnt + " entries)\n\n<cntrl>.getInfoForCluster(id,'ParentNode') returns the parent node:\n";
+				var voList = oVBI1.getInfoForCluster(ident, sap.ui.vbm.ClusterInfoType.ParentNode);
+				if (voList.length)
+					clusterOutput += '\n"' + voList[0] + '"';
+				else
+					clusterOutput += '\n-';
+				clusterOutput += "\n\n<cntrl>.getInfoForCluster(id,'ChildCluster') returns following sub-nodes:\n";
+				voList = oVBI1.getInfoForCluster(ident, sap.ui.vbm.ClusterInfoType.ChildCluster);
+				for (var i = 0; i < voList.length; ++i)
+					clusterOutput += '\n"' + voList[i] + '"';
+				clusterOutput += "\n\n<cntrl>.getInfoForCluster(id,'ContainedVOs') returns following VOs:\n";
+				voList = oVBI1.getInfoForCluster(ident, sap.ui.vbm.ClusterInfoType.ContainedVOs);
+				for (var i = 0; i < voList.length; ++i)
+					clusterOutput += '\n"' + voList[i] + '"';
+				clusterOutput += "\n\n<cntrl>.getInfoForCluster(id,'NodeInfo') returns information on the node:\n";
+				clusterOutput += '\nCluster Type: ' + getClusterType(nodeInfo.type);
+				clusterOutput += '\nPosition: ' + nodeInfo.pos[0] + ";" + nodeInfo.pos[1] + ";0.0";
+				clusterOutput += '\nBounding Box: ' + nodeInfo.bb;
+				clusterOutput += '\nImage: ' + nodeInfo.image;
+				clusterOutput += '\nLOD: ' + nodeInfo.lod;
+				clusterOutput += '\nnext LOD upwards in tree: ' + nodeInfo.ulod;
+				clusterOutput += '\n#VOs: ' + nodeInfo.cnt;
+				clusterOutput += '\n#Subclusters: ' + nodeInfo.subs;
+				clusterOutput += "\n\n<cntrl>.getInfoForCluster(id,'Edges') returns edges of the voronoi region (tree only):\n";
+				var edges = oVBI1.getInfoForCluster(ident, sap.ui.vbm.ClusterInfoType.Edges);
+				for (var i = 0; i < edges.length; ++i)
+					clusterOutput += "\n" + (edges[i])[0] + ";" + (edges[i])[1] + ";0.0";
+			}
+			if (evtoutput.innerText !== undefined) {
+				evtoutput.innerText = e.getParameter("data");
+				clustervos.innerText = clusterOutput;
+			} else if (evtoutput.textContent !== undefined) {
+				evtoutput.textContent = e.getParameter("data"); // due to ff
+				clustervos.textContent = clusterOutput;
+
+			}
+		};
+
+		function getClusterType(type) {
+			switch (type) {
+				case 1:
+					return "Grid Cluster";
+				case 3:
+					return "Distance Cluster";
+				case 4:
+					return "Tree Cluster";
+				default:
+					return "No Cluster";
+			}
+		};
+
+		var dat = $.getJSON("media/vbmass2000/main2.json", function(dat) {
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array) {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(dat);
+		})
+
+		function onGridClustering() {
+			var datclust = $.getJSON("media/vbmass2000/gridclustering.json", function(datclust) {
+				oVBI1.load(datclust);
+			});
+		};
+
+		function onGridClusteringHot() {
+			var datclust = $.getJSON("media/vbmass2000/gridclusteringHot.json", function(datclust) {
+				oVBI1.load(datclust);
+			});
+		};
+
+		function onGridClustering2() {
+			var datclust = $.getJSON("media/vbmass2000/gridclustering2.json", function(datclust) {
+				oVBI1.load(datclust);
+			});
+		};
+
+		function onDistClustering() {
+			var datclust = $.getJSON("media/vbmass2000/distclustering.json", function(datclust) {
+				oVBI1.load(datclust);
+			});
+		};
+
+		function onMixedClustering() {
+			var datclust = $.getJSON("media/vbmass2000/mixedclustering.json", function(datclust) {
+				oVBI1.load(datclust);
+			});
+		};
+
+		function onTreeClustering() {
+			var datclust = $.getJSON("media/vbmass2000/treeclustering.json", function(datclust) {
+				oVBI1.load(datclust);
+			});
+		};
+
+		function onTreeClusteringWithSubs() {
+			var datclust = $.getJSON("media/vbmass2000/treeclusteringWSub.json", function(datclust) {
+				oVBI1.load(datclust);
+			});
+		};
+
+		function onTreeClusteringWithSuper() {
+			var datclust = $.getJSON("media/vbmass2000/treeclusteringWSuper.json", function(datclust) {
+				oVBI1.load(datclust);
+			});
+		};
+
+		function onNoClustering() {
+			var datclust = $.getJSON("media/vbmass2000/noclustering.json", function(datclust) {
+				oVBI1.load(datclust);
+			});
+		};
+
+		function onSwitchVOs() {
+			setTimeout(SwitchVOs, 2000);
+		};
+
+		function SwitchVOs() {
+			var jsonfile = bDataSetIsOriginal ? "media/vbmass2000/mainVOData2.json" : "media/vbmass2000/mainVOData1.json";
+			var datclust = $.getJSON(jsonfile, function(datclust) {
+				oVBI1.load(datclust);
+			});
+			bDataSetIsOriginal = !bDataSetIsOriginal;
+
+		};
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: Clustering Test</h1>
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test different clustering modes.</p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+			<li>Check that the map loads without any clustering modes.</li>
+			<img src="img/clustering1.jpg" alt="snippix" style="width:700px;height:500px;">
+			<li>Click "Enable Grid Clustering (show grid)" and check that clusters are added.
+				<br>
+				<i>* Visual objects are clustered based on a grid. It is possible to have multiple grid based clusters.The visualization object is placed in the center of the grid cell plus a given offset.</i></li>
+			<img src="img/clustering2.jpg" alt="snippix" style="width:700px;height:500px;">
+			<li>Click "Enable Grid Clustering (hot grid)" and check that there is clustering.
+				<br>
+				<i> * grid Cells are hidden </i></li>
+			<img src="img/clustering3.jpg" alt="snippix" style="width:700px;height:500px;">
+			<li>Click "Enable Grid Clustering with 2 different grids" and check that two grids are created displaying clusters.</li>
+			<img src="img/clustering4.jpg" alt="snippix" style="width:700px;height:500px;">
+			<li>Click "Enable Distance Clustering " and check that distance clusters are created.
+				<br>
+				<i> * Visual objects are clustered based on the visible distance between them. Objects get aggregated to a cluster object as long as they are inside the given distance range to the start object. The start object for a cluster is not specifically defined, just the next object not belonging to a cluster is taken. The visualization objects are placed in the center of gravity of the covered objects. Thus the actual distance between them may vary.</i></li>
+			<img src="img/clustering5.jpg" alt="snippix" style="width:700px;height:500px;">
+			<li> Click " Enable Mixed Clustering" and check that there is more than one type of clustering.
+				<br><img src="img/clustering6.jpg" alt="snippix" style="width:700px;height:500px;"> </li>
+			<li>Click "Enable Tree Clustering " and check that tree clusters are created.
+				<br>
+				<i> Zoom in on the cluster and see if the cluster has tree branches.<br></i> <i>Complex clustering based on Voronoi diagrams. The actual clustering is based on the areas in the Voronoi diagram and cluster objects get aggregated to a hierarchy over several levels of detail.</i>
+			<img src="img/clustering7.jpg" alt="snippix" style="width:700px;height:500px;"></li>
+			<li> Click "Enable Tree Clustering with Sub Areas" and check that the clusters have sub areas.<img src="img/clustering8.jpg" alt="snippix" style="width:700px;height:500px;"></li>
+			<li>Click "Enable Tree Clustering with Super Area" and check that the clusters have super areas.<img src="img/clustering9.jpg" alt="snippix" style="width:700px;height:500px;"></li>
+			<li> Click on any of the clustering types from above (Tree, grid, distance) and then click "Dsiable Clustering". Check that the clusters are removed and you get the same result as the initial load of the sample.</li>
+			<li> Click on any of the clustering types from above (Tree, grid, distance) and then click "Switch VO Data". This will change the visual object data.
+				<br> <i>* When you click the button wait a few seconds for the data to change. It is a little slow.</i> </li>
+		</ol>
+		<p> You can view the Clustering time, Cluster Adaption time and rendering time as you pick each cluster mode.</p>
+		<br>
+		<p> Refer to the input boxes to view more information about the VO as you click each cluster mode.</p><br>
+	</div>
+
+	<div id="description2">
+		<br>
+
+		<button id="btnGridClustering" onClick="onGridClustering()"> Enable Grid Clustering (show grid)</button>
+		<button id="btnGridClusteringHot" onClick="onGridClusteringHot()"> Enable Grid Clustering (hot grid)</button>
+		<button id="btnGridClustering2" onClick="onGridClustering2()"> Enable Grid Clustering with 2 different grids </button>
+		<button id="btnDistClustering" onClick="onDistClustering()"> Enable Distance Clustering </button>
+		<button id="btnMixedClustering" onClick="onMixedClustering()"> Enable Mixed Clustering </button>
+		<br>
+		<button id="btnTreeClustering" onClick="onTreeClustering()"> Enable Tree Clustering </button>
+		<button id="btnTreeClustering2" onClick="onTreeClusteringWithSubs()"> Enable Tree Clustering with Sub Areas</button>
+		<button id="btnTreeClustering3" onClick="onTreeClusteringWithSuper()"> Enable Tree Clustering with Super Area</button>
+
+		<br>
+		<button id="btnNoClustering" onClick="onNoClustering()"> Disable Clustering </button>
+		<button id="btnSwitchVOs" onClick="onSwitchVOs()"> Switch VO Data </button>
+		<br>
+		<br>
+		<label for="iClusteringtime2">Clustering Time .......... (ms):</label>
+		<input id="iClusteringtime2" type="number" size="3" value="0" disabled="true"></input>
+		<br>
+		<label for="iClusteringtime1">Cluster Adaption Time (ms):</label>
+		<input id="iClusteringtime1" type="number" size="3" value="0" disabled="true"></input>
+		<br>
+		<label for="iRenderingtime">Rendering Time ......... (ms):</label>
+		<input id="iRenderingtime" type="number" size="3" value=0 disabled="true"></input>
+		<div id="content"></div>
+<br>
+		<textarea style="width:399px;box-sizing:border-box" id="evtoutput" rows="10"></textarea>
+		<textarea style="width:699px;box-sizing:border-box" id="clustervos" rows="10"></textarea>
+		<br>
+	</div>
+</body>
+
+</html>

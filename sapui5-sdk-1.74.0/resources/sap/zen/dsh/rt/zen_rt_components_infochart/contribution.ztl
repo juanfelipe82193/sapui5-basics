@@ -1,0 +1,337 @@
+class com.sap.ip.bi.InfoChart extends DataBoundComponent {
+  /**
+  Returns the member that is contained in the current selection of the chart.
+
+  <returns>
+  It contains the member that has been selected in the chart.
+  </returns>
+  */
+  Member getSelectedMember(
+    /** Dimension of the selected member */
+    Dimension dimension) {*
+        //This function can be passed either a dimension object or a string
+        if (typeof(dimension) !== "string") {
+            dimension = dimension.name;
+        }
+        var jsonChartSelection = {};
+
+        if (this.dataSelected) {
+            jsonChartSelection = JSON.parse(this.dataSelected);
+        }
+        var member;
+        if (jsonChartSelection){
+            var membersArr = jsonChartSelection[dimension];
+            if (membersArr && membersArr.length != 0){
+                member = membersArr[0];
+            }
+        }
+        return this.createMember(dimension, member);
+  *}
+
+  /**
+  Returns the members that are contained in the current selection of the chart.
+
+  <returns>
+  It contains the members that have been selected in the chart.
+  </returns>
+  */
+  MemberArray getSelectedMembers(
+    /** Dimension of the selected members */
+    Dimension dimension) {*
+        //This function can be passed either a dimension object or a string
+        if (typeof(dimension) !== "string") {
+            dimension = dimension.name;
+        }
+
+        var result = [];
+
+        var jsonChartSelection = {};
+        if (this.dataSelected) {
+            jsonChartSelection = JSON.parse(this.dataSelected);
+        }
+
+
+
+        var membersArr = jsonChartSelection[dimension];
+        if (membersArr){
+            for(var x = 0; x < membersArr.length; x++) {
+                var memberVal = membersArr[x];
+                var member = this.createMember(dimension, memberVal);
+                result.push(member);
+            }
+        }
+
+        return result;
+  *}
+
+  /**
+  Specifies whether to show or hide totals and subtotals.
+  */
+  void showTotals(
+    /** Specifies whether to show or hide totals and subtotals */
+    boolean isVisible) {*
+        this.showTotals = isVisible;
+  *}
+
+  /**
+  Shows or hides the data labels.
+  */
+  void showDataLabels(
+    /** Specifies whether to show or hide the data labels */
+    boolean isVisible) {*
+        this.updateChartPropertyByPath("plotArea.dataLabel.visible", isVisible);
+  *}
+  
+   /**
+  Shows or hides the scaling factors.
+  */
+  void showScalingFactors(
+    /** Specifies whether to show or hide the scaling factors */
+    boolean isVisible) {*
+       this.showScaling = isVisible;;
+      
+  *}
+
+  /**
+  Returns the name of the chart type.
+
+  <returns>
+  It contains the name of chart type.
+  </returns>
+  */
+  InfoChartTypeEnumfield getChartType() {*
+      var charttype = this.charttype;
+      var externalChartType = charttype.__value__ || charttype;
+      externalChartType = externalChartType.replace("info/", "INFO_").toUpperCase();
+      return externalChartType;
+  *}
+
+  void setChartType(
+     InfoChartTypeEnumfield newType) {*
+     		var oldType = undefined;
+        var charttype = this.charttype;
+        
+        if (!charttype.__value__) {
+        		oldType = charttype;
+            charttype = {};
+        }else{
+		        oldType = charttype.__value__;
+        }
+        
+        newType = newType.replace("INFO_", "info/").toLowerCase();
+        
+        charttype.__value__ = newType;
+        /** There is a bug where empty object get removed*/
+        charttype[newType] = charttype[oldType] || { "properties": {} };
+        
+        this.charttype = charttype;
+  *}
+
+  /**
+  Sets the subset of the data of the source to be shown by the chart.
+  */
+  void setDataSelection(
+    /** Data selection to show by the chart */
+    ResultSetSelectionByString selection) {*
+        this.data = selection;
+  *}
+
+  /**
+  Returns the position of the chart legend.
+
+  <returns>
+  It contains the position of the chart legend.
+  </returns>
+  */
+  LegendPositionEnumfield getLegendPosition() {*
+        return this.getChartPropertyByPath("legendGroup.layout.position", "right");
+  *}
+
+  /**
+  Sets the position of the chart legend.
+  */
+  void setLegendPosition(
+    /** Position of chart legend */
+    LegendPositionEnumfield legendPosition) {*
+        this.updateChartPropertyByPath("legendGroup.layout.position", legendPosition.toLowerCase());
+  *}
+
+  /**
+  Clears the selection from the chart.
+  */
+  void clearSelection() {*
+        this.chartSelection = "CLEAR";
+        this.dataSelected = "{}";
+  *}
+
+  /**
+  Gets the minimum value for an axis.
+
+  <returns>
+  It contains the minimum value of the specified axis.
+  </returns>
+  */
+  float getAxisScalingMin(
+    /** Property axis number */
+    InfoChartAxisScalingEnumfield axis) {*
+        return this.getChartPropertyByPath("plotArea." + this.getAxisFromEnum(axis) + ".minValue", 0.0);
+  *}
+
+  /**
+  Gets the maximum value for an axis.
+
+  <returns>
+  It contains the maximum value of the specified axis.
+  </returns>
+  */
+  float getAxisScalingMax(
+    /** Property axis number */
+    InfoChartAxisScalingEnumfield axis) {*
+        return this.getChartPropertyByPath("plotArea." + this.getAxisFromEnum(axis) + ".maxValue", 0.0);
+  *}
+
+  /**
+  Sets a minimum and maximum value for an axis.
+  */
+  void setAxisScaling(
+    /** Property axis number */
+    InfoChartAxisScalingEnumfield axis,
+    /** Property min value */
+    float minValue,
+    /** Property max value */
+    float maxValue) {*
+        var plotAreaAxisID = this.getAxisFromEnum(axis);
+        this.updateChartPropertyByPath("plotArea." + plotAreaAxisID + ".fixedRange", true);
+        this.updateChartPropertyByPath("plotArea." + plotAreaAxisID + ".minValue", minValue);
+        this.updateChartPropertyByPath("plotArea." + plotAreaAxisID + ".maxValue", maxValue);
+  *}
+
+  /**
+  Disables axis scaling for an axis.
+  */
+  void removeAxisScaling(
+    /** Property axis number */
+    InfoChartAxisScalingEnumfield axis) {*
+        var path = "plotArea." + this.getAxisFromEnum(axis);
+        var axisScaling = this.getChartPropertyByPath(path);
+
+        if (axisScaling) {
+            this.updateChartPropertyByPath(path + ".fixedRange", false);
+            this.updateChartPropertyByPath(path + ".minValue", "");
+            this.updateChartPropertyByPath(path + ".maxValue", "");
+        }
+  *}
+
+  @Visibility(private)
+  String setCvomBinding(
+    String bindingValue) {*
+        return this.cvombinding = bindingValue;
+  *}
+
+  @Visibility(private)
+  String getChartPropertyByPath(
+    String path,
+    String defaultValue) {*
+        var chart = this.charttype[this.charttype.__value__];
+        return this.getPropertyByPath(chart, path) || defaultValue;
+  *}
+
+  @Visibility(private)
+  String getPropertyByPath(
+    String obj,
+    String propPath) {*
+        propPath = "properties." + propPath;
+        var propPathArray = propPath.split(".");
+        var val = obj
+        for (var i=0; i<propPathArray.length; i++) {
+            if (val) {
+                val = val[propPathArray[i]];
+            } else {
+                break;
+            }
+        }
+        return val;
+  *}
+
+  @Visibility(private)
+  void updateChartPropertyByPath(
+    String path,
+    String value) {*
+        this.setChartType(this.getChartType());    
+        var charttype = this.charttype;  
+        var chartProperties = charttype[charttype.__value__];
+        if (!chartProperties) {
+          /** There is a bug where empty object get removed*/
+          chartProperties = { "properties": {} };
+          charttype[charttype.__value__] = chartProperties;
+        }  
+        chartProperties = this.setPropertyByPath(chartProperties, path, value);
+        this.charttype = charttype;
+  *}
+
+  @Visibility(private)
+  String setPropertyByPath(
+    String obj,
+    String propPath,
+    String val) {*
+        var localObj = obj;
+        propPath = "properties." + propPath;
+        var propPathArray = propPath.split(".");
+        var currentProp = localObj;
+        for (var i=0; i < propPathArray.length - 1; i++) {
+            currentProp[propPathArray[i]] = currentProp[propPathArray[i]] || {};
+            currentProp = currentProp[propPathArray[i]];
+        }
+        currentProp[propPathArray[propPathArray.length - 1]] = val;
+        return localObj;
+  *}
+
+  @Visibility(private)
+  String getAllPropertiesAsJSON() {*
+        return JSON.stringify(this.charttype);
+  *}
+
+  @Visibility(private)
+  String getDataSelectionString() {*
+        return JSON.stringify(this.data);
+  *}
+
+  @Visibility(private)
+  String getAxisFromEnum(
+    InfoChartAxisScalingEnumfield axis) {*
+        var plotAreaAxisId = "primaryScale";
+        if (axis == "AXIS_2") {
+            plotAreaAxisId = "secondaryScale";
+        }
+        return plotAreaAxisId;
+  *}
+}
+
+class InfoChartAxisScalingEnumfield extends Enumfield {
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class InfoChartAxisScaling extends Enum {
+  /**
+  Scale Primary Axis
+  */
+  InfoChartAxisScalingEnumfield AXIS_1;
+
+  /**
+  Scale Secondary Axis
+  */
+  InfoChartAxisScalingEnumfield AXIS_2;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class InfoChartTypeEnumfield extends Enumfield {
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class InfoChartType extends MetadataEnum {
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////

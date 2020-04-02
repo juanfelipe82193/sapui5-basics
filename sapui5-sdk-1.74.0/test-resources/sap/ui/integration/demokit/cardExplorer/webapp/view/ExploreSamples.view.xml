@@ -1,0 +1,132 @@
+<mvc:View
+	controllerName="sap.ui.demo.cardExplorer.controller.ExploreSamples"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.f"
+	xmlns:core="sap.ui.core"
+	xmlns:editor="sap.ui.codeeditor"
+	xmlns:w="sap.ui.integration.widgets"
+	xmlns:cardEditor="sap.ui.integration.designtime.cardEditor"
+>
+	<l:ResponsiveSplitter id="splitView">
+		<l:PaneContainer orientation="Horizontal">
+			<l:SplitPane id="cardPane" requiredParentWidth="1">
+				<Page>
+					<customHeader>
+						<Bar>
+							<contentLeft>
+								<Title class="sapUiSmallMarginBegin" text="{/sample/title}"></Title>
+							</contentLeft>
+							<contentRight>
+								<ComboBox
+									id="subSample"
+									selectedKey="{/subSample/key}"
+									items="{/sample/subSamples}"
+									visible="{= ${/sample/subSamples} ? true : false }"
+									selectionChange="onSubSampleChange">
+									<core:Item key="{key}" text="{title}" />
+								</ComboBox>
+							</contentRight>
+						</Bar>
+					</customHeader>
+					<MessageStrip
+						text="This type of card is in a beta state - incompatible API changes in the manifest may be done before its official public release."
+						visible="{= !!${/sample/experimental}}"
+						showIcon="true"
+						type="Warning"
+						class="sapUiSmallMargin"/>
+					<f:GridContainer id="cardContainer" visible="{= !${settings>/useIFrame} }">
+						<w:Card id="cardSample" action="._onCardAction"/>
+					</f:GridContainer>
+					<core:HTML
+						id="iframeWrapper"
+						visible="{= ${settings>/useIFrame} }"
+						preferDOM="false"
+						content='&lt;div style="height:100%; overflow-y: hidden; overflow-x:auto;"&gt;
+								 &lt;/div&gt;'></core:HTML>
+				</Page>
+			</l:SplitPane>
+			<l:SplitPane requiredParentWidth="1">
+				<Page >
+					<customHeader>
+						<Bar>
+							<contentLeft>
+								<Button
+									class="sapUiSmallMarginBegin"
+									text="Run"
+									type="Emphasized"
+									icon="sap-icon://media-play"
+									press="onRunPressed"
+									enabled="{settings>/editable}"
+								/>
+								<CheckBox
+									text="Auto Run"
+									selected="{settings>/autoRun}"
+									enabled="{settings>/editable}"
+								/>
+							</contentLeft>
+							<contentRight>
+								<MenuButton
+									id="downloadSampleButton"
+									icon="sap-icon://download"
+									enabled="true"
+									tooltip="Download"
+									text="Download"
+									type="Transparent"
+									visible="true"
+								>
+									<menu>
+										<Menu>
+											<MenuItem text="Manifest File" icon="sap-icon://document-text" press="onDownloadManifestFile" />
+											<MenuItem text="Bundle as card.zip" icon="sap-icon://attachment-zip-file" press="onDownloadZip" />
+										</Menu>
+									</menu>
+								</MenuButton>
+								<Button
+									press="onChangeEditorClick"
+									icon="sap-icon://developer-settings"
+									enabled="{settings>/editable}"
+									type="Transparent"
+									visible="{= ${settings>/editable} &amp;&amp; ${settings>/designtime} }"
+								/>
+								<Button
+									class="orientationBtn"
+									press="onChangeSplitterOrientation"
+									icon="sap-icon://header"
+									type="Transparent"
+								/>
+							</contentRight>
+						</Bar>
+					</customHeader>
+					<MessageStrip id="errorMessageStrip" visible="false" type="Error" showIcon="true" />
+					<MessageStrip visible="{= !${settings>/editable} }" showIcon="true" type="Warning" text="Only manifest.json file is editable." />
+					<IconTabHeader
+							selectedKey="{extendedFileEditor>/selectedFileKey}"
+							select="onFileSwitch"
+							visible="{= ${settings>/useExtendedFileEditor} }"
+							items="{path: 'extendedFileEditor>/files', templateShareable: false}">
+						<items>
+							<IconTabFilter text="{extendedFileEditor>name}" key="{extendedFileEditor>key}"/>
+						</items>
+					</IconTabHeader>
+					<editor:CodeEditor
+						id="editor"
+						visible="{= ${settings>/editorType} === 'text' }"
+						type="{settings>/codeEditorType}"
+						syntaxHints="false"
+						class="sapUiSmallMarginBegin"
+						height="100%"
+						editable="{settings>/editable}"
+						liveChange="onCodeEditorChange"
+					/>
+					<cardEditor:CardEditor
+						id="cardEditor"
+						visible="{= ${settings>/editorType} === 'card' }"
+						jsonChange="onCardEditorChange"
+					/>
+				</Page>
+			</l:SplitPane>
+		</l:PaneContainer>
+	</l:ResponsiveSplitter>
+</mvc:View>

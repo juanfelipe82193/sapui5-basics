@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+	</script>
+		   	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+			margin-right: 30px;
+		}
+			h3 {
+				margin-right: 30px;
+			}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 100%;
+			height: 370px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 100%;
+			height: 1000px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+
+	// query for charts library, the microchart is positioned in a container vo
+    jQuery.sap.require( "sap.suite.ui.microchart.ColumnMicroChart" );
+	
+	// have some data
+	var oData = 
+		{
+				Spots :
+				[
+					{ "key" : "1", "pos": "0;0;0",  "tooltip": "Spot1", "type":sap.ui.vbm.SemanticType.Default },
+					{ "key":  "2", "pos": "0;30;0", "tooltip": "Spot2", "type":sap.ui.vbm.SemanticType.Default },
+					{ "key":  "3", "pos": "0;60;0", "tooltip": "Spot3", "type":sap.ui.vbm.SemanticType.Default }
+				],
+
+
+				Containers :
+					[
+						{ "key":  "10", "pos": "40;0;0",
+						  ChartCols: [ { "value": 60, "color": "Neutral" },
+						               { "value": 10, "color": "Error" },
+						               { "value": 20, "color": "Error" } ]
+						},
+						{ "key":  "11", "pos": "40;30;0",
+						  ChartCols: [ { "value": 50, "color": "Neutral" },
+							           { "value": 8, "color": "Error" },
+							           { "value": 16, "color": "Error" },
+							           { "value": 24, "color": "Error" } ]
+						},
+						{ "key":  "12", "pos": "40;60;0",
+						  ChartCols: [ { "value": 70, "color": "Neutral" },
+							           { "value": 5, "color": "Error" },
+							           { "value": 20, "color": "Error" },
+							           { "value": 45, "color": "Error" } ]
+						}
+					]	
+		};
+	
+	// create model and set the data
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+	//sap.ui.getCore().setModel( oModel );
+	
+	// named model for i18n
+	var oTexts = {
+			Label1: "Label",
+			Label2: "Blub"
+	};
+	var oNamedModel = new sap.ui.model.json.JSONModel();
+	oNamedModel.setData( oTexts );
+	//sap.ui.getCore().setModel( oNamedModel, "i18n" );
+	
+	
+	// sample event handlers
+	function onClickSpot( evt )
+	{
+	   	// click on spot 
+		alert( "onClickSpot " + this );
+	};
+
+	function onContextMenuSpot( evt )
+	{
+	   	// click on spot 
+		alert( "onContextMenuSpot" + this );
+	};
+	
+	function onClickSpots( evt )
+	{
+	   	// click on spot 
+		alert( "onClickSpots" );
+	};
+
+	function onContextMenuSpots( evt )
+	{
+	   	// click on spot 
+		alert( "onContextMenuSpots" );
+	};
+
+	function onClickItem( evt )
+	{
+	   	// click on item 
+		alert( "onClick" + this );
+	};
+
+	function onContextMenuItem( evt )
+	{
+	   	// context menu on item  
+		alert( "onContextMenu" + this );
+	};
+	
+	// create analytic map and bind to model
+	var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+	   width : "100%",
+    	height: "100%",
+    	resources: 
+    	   [
+ 		],
+    	vos: [
+ 	         new sap.ui.vbm.Containers( "containers", {
+	               click: onClickItem.bind("Container onClickItem"),
+	               contextMenu: onContextMenuItem.bind("Container onContextMenuItem"),
+		            // bind to an array in the model
+	         	    items: { 
+	                   	path : "/Containers",
+	                    template: new sap.ui.vbm.Container( { 
+	                    	 position: '{pos}', tooltip: '{tooltip}', alignment: '{alignment}',
+	                    	 click: onClickItem.bind( "Container"),  
+	                    	 contextMenu: onContextMenuItem.bind( "Container" ),
+	                    	 item: new sap.suite.ui.microchart.ColumnMicroChart( { 
+	                             	 size : "S",
+	                             	 columns: { path: "ChartCols",
+	                             	            template: new sap.suite.ui.microchart.ColumnMicroChartData( { value: '{value}', color: '{color}' } )         
+	                             	 },
+	                    	         rightTopLabel: new sap.suite.ui.microchart.ColumnMicroChartLabel( { label: '{i18n>/Label1}' } )   
+	                          	   }).addStyleClass("chart-bg")
+	                    } )
+	          	    }
+	         } ),
+    	  	new sap.ui.vbm.Spots( "spots1", {
+            click: onClickSpots,
+            contextMenu: onContextMenuSpot,
+            // bind to an array in the model
+            items: { 
+             	path : "/Spots",
+              	template: new sap.ui.vbm.Spot(  { text: '{key}', position: '{pos}', labelText: '{tooltip}', labelPos: '1', type: '{type}', alignment:'{alignment}', click: onClickSpot, contextMenu: onContextMenuSpot }  )
+           	} } )
+    	]
+	});
+	oVBI.setMapConfiguration(JSON.parse(localStorage.getItem('map')));
+
+	oVBI.setModel( oModel );
+	oVBI.setModel( oNamedModel, "i18n" );
+	oVBI.placeAt("content");
+	
+	
+	// modification of the context
+	function onAlign(algn)
+	{
+	  var newAlignment =  algn.toString();
+      if( oData.Containers.length )
+      {
+         for ( var nJ = 0; nJ < oData.Containers.length; ++nJ )
+            oData.Containers[nJ].alignment = newAlignment;
+      }
+      for ( var nJ = 0; nJ< oData.Spots.length; ++nJ )
+         oData.Spots[nJ].alignment = newAlignment;
+	       
+		oModel.setData( oData );
+	};
+	
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business GeoMap Sample</h1>
+		<div id="description1">
+					  <h3> The aim: </h3>
+		<p> To test the Prototype Visual Business GeoMap Control with Configurable Alignment of Spots and Containers.</p>
+		<br>
+		<h3> To test: </h3>
+			<ol>
+				<li> Check that on initial screen the default alignment is shown: Spots aligned Bottom Center (5)/ Containers Middle Center (0).</li>
+				<li> Click on "Align Center (0)". Check that the spots are aligned in the center in comparison to the containers.</li>
+				<li> Click on "Align Top(1)". Check that the spots are aligned to the top of the cotnainers.</li>
+				<li> Click on "Align Top Right(2)". Check that the spots are aligned to the top right.</li>
+				<li> Click on "Align Right". Check that the spots are aligned to the right.</li>
+				<li> Click on "Align Bottom Right(4)". Check that the spots are alignd to the bottom right of the container.</li>
+				<li> Click "Align Bottom (5). Check that the spot is aligned to the bottom of the container.</li>
+				<li> Click "Align Bottom Left (6). Check that the spot is aligned to the bottom left of the container.</li>
+				<li> Click "Align Left(7)". Check that the spot is aligned to the left.</li>
+				<li> Click "Align Top Left (8).Check that the spot is aligned to the top left of the control. </li>
+			</ol>
+			</div>
+<div id="description2">
+	<br>
+		 <button onClick="onAlign(0)">Align Center (0)</button>
+		 <button onClick="onAlign(1)">Align Top (1)</button>
+		 <button onClick="onAlign(2)">Align Top Right (2)</button>
+		 <button onClick="onAlign(3)">Align Right (3)</button>
+		 <button onClick="onAlign(4)">Align Bottom Right (4)</button>
+		 <button onClick="onAlign(5)">Align Bottom (5)</button>
+		 <button onClick="onAlign(6)">Align Bottom Left (6)</button>
+		 <button onClick="onAlign(7)">Align Left (7)</button>
+		 <button onClick="onAlign(8)">Align Top Left (8)</button>
+		<br>
+	<br>
+		 <div class="ratio_box">
+		 	  <div class="content" id="content"></div>
+		 </div>
+		</div>
+	</body>
+</html>

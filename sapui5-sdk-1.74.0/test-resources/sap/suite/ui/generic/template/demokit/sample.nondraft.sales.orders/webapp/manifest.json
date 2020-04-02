@@ -1,0 +1,193 @@
+{
+	"_version": "1.2.0",
+	"sap.app": {
+		"_version": "1.2.0",
+		"id": "sap.suite.ui.generic.template",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"applicationVersion": {
+			"version": "1.74.0"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"tags": {
+			"keywords": []
+		},
+		"ach": "ah",
+		"resources": "resources.json",
+		"dataSources": {
+			"mainService": {
+				"uri": "/sap/opu/odata/sap/AIS_EXISTING_RDS_SRV/",
+				"type": "OData",
+				"settings": {
+					"localUri": "localService/metadata.xml",
+					"annotations": [
+						"annotation"
+					]
+				}
+			},
+			"annotation": {
+				"uri": "annotations/annotation.xml",
+				"type": "ODataAnnotation",
+				"settings": {
+					"localUri": "annotations/annotation.xml"
+				}
+			}
+		},
+		"offline": false,
+		"sourceTemplate": {
+			"id": "ui5template.smarttemplate",
+			"version": "1.0.0"
+		}
+	},
+	"sap.ui": {
+		"_version": "1.2.0",
+		"technology": "UI5",
+		"icons": {
+			"icon": "",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		},
+		"supportedThemes": [
+			"sap_hcb",
+			"sap_bluecrystal"
+		]
+	},
+	"sap.ui5": {
+		"_version": "1.1.0",
+		"resources": {
+			"js": [],
+			"css": []
+		},
+		"componentUsages": {
+    		"theReference": {
+    			"name": "reuselib.referencecomponent",
+    			"settings": {},
+    			"componentData": {}
+    		}
+		},
+		"dependencies": {
+			"minUI5Version": "${sap.ui5.dist.version}",
+			"libs": {
+				"sap.ui.core": {},
+				"sap.m": {},
+				"sap.ui.comp": {},
+				"sap.uxap": {}
+			},
+			"components": {}
+		},
+		
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/i18n.properties"
+			},
+			"@i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/i18n.properties"
+			}, 
+			"i18n|sap.suite.ui.generic.template.ListReport|I_AIS_E_SalesOrder_A": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/ListReport/I_AIS_E_SalesOrder_A/i18n.properties"
+			},
+			"i18n|sap.suite.ui.generic.template.ObjectPage|I_AIS_E_SalesOrder_A": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/ObjectPage/I_AIS_E_SalesOrder_A/i18n.properties"
+			},
+			"i18n|sap.suite.ui.generic.template.ObjectPage|to_Item": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/ObjectPage//i18n.properties"
+			},
+			"": {
+				"dataSource": "mainService",
+				"settings": {
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Inline",
+					"refreshAfterChange": false
+				}
+			}
+		},
+		"extends": {
+			"extensions": {}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		}
+	},
+	"sap.ui.generic.app": {
+		"_version": "1.1.0",
+		"pages": [
+			{
+				"entitySet": "I_AIS_E_SalesOrder_A",
+				"component": {
+					"name": "sap.suite.ui.generic.template.ListReport",
+					"list": true
+				},
+				"pages": [
+					{
+						"entitySet": "I_AIS_E_SalesOrder_A",
+						"component": {
+							"name": "sap.suite.ui.generic.template.ObjectPage"
+						},
+						"pages": [
+							{
+								"navigationProperty": "to_Item",
+								"entitySet": "I_AIS_E_SalesOrderItem_A",
+								"component": {
+									"name": "sap.suite.ui.generic.template.ObjectPage"
+								}
+							}
+						],
+						"embeddedComponents": {
+							"first": {
+								"id": "first",
+								"componentName": "reuselib.referencecomponent",
+								"title": "{{reuseComponentTitleRoot}}",
+								"settings": {
+									"demoPropertyString": "{path:'BusinessPartnerID'}"
+								},
+								"groupTitle":"Reuse Group"
+							},
+							"second": {
+								"id": "second",
+								"componentUsage": "theReference",
+								"title": "{{reuseComponentTitleRoot}} 2",
+								"settings": {
+									"demoPropertyString": "{OpportunityID}"
+								},
+								"leadingSectionIdOrPath":"@com.sap.vocabularies.UI.v1.Identification"
+							},
+							"third": {
+								"id": "third",
+								"componentName": "reuselib.referencecomponent",
+								"title": "{{reuseComponentTitleRoot}} 3",
+								"settings": {
+									"demoPropertyString": "{path:'BusinessPartnerID'}"
+								},
+								"leadingSectionIdOrPath":"first"
+							}						
+						}
+					}
+				]
+			}
+		]
+	},
+	"sap.fiori": {
+		"_version": "1.1.0",
+		"registrationIds": [],
+		"archeType": "transactional"
+	},
+	"sap.platform.hcp": {
+		"_version": "1.2.0",
+		"uri": "webapp"
+	}
+}

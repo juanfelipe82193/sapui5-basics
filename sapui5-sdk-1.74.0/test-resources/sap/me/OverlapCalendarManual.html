@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <title>OverlapCalendar Manual Testing - sap.me</title>
+
+    <script src="../../../resources/sap-ui-core.js" type="text/javascript"
+            id="sap-ui-bootstrap" data-sap-ui-libs="sap.m, sap.me"
+            data-sap-ui-theme="sap_bluecrystal">
+    </script>
+
+    <script type="text/javascript">
+        jQuery.sap.require("sap.m.MessageToast");
+
+        var testEvents = {
+			"events": [{
+				"EmployeeName": "Eric Emerald",
+				"StartDate": "2015-10-05",
+				"EndDate": "2015-10-05",
+				"AbsenceText": "Vacation",
+				"LegendType": "01",
+				"AllDayFlag": true,
+				"Row": 2
+			}, {
+				"EmployeeName": "Ernie Emerson",
+				"StartDate": "2015-10-05T00:00:00.000",
+				"EndDate": "2015-10-05T23:59:00.000",
+				"AbsenceText": "Vacation",
+				"LegendType": "01",
+				"AllDayFlag": true,
+				"Row": 3
+			}, {
+				"EmployeeName": "Andrew Gate",
+				"StartDate": "2015-10-06T00:00:00.000Z",
+				"EndDate": "2015-10-06T00:00:00.000Z",
+				"AbsenceText": "Leave 1/2 day",
+				"LegendType": "04",
+				"AllDayFlag": false,
+				"Row": 1
+			}, {
+				"EmployeeName": "Fiona Taylor",
+				"StartDate": "2015-05-02T00:00:00.000Z",
+				"EndDate": "2015-05-03T00:00:00.000Z",
+				"AbsenceText": "Vacation",
+				"LegendType": "01",
+				"AllDayFlag": true,
+				"Row": 4
+			}, {
+				"EmployeeName": "Andrew Gate",
+				"StartDate": "2015-10-06T00:00:00.000Z",
+				"EndDate": "2015-10-06T00:00:00.000Z",
+				"AbsenceText": "Leave 1/2 day",
+				"LegendType": "06",
+				"AllDayFlag": false,
+				"Row": 1
+			}, {
+				"EmployeeName": "Fiona Taylor",
+				"StartDate": "2015-05-15T00:00:00.000Z",
+				"EndDate": "2015-05-17T00:00:00.000Z",
+				"AbsenceText": "Vacation",
+				"LegendType": "04",
+				"AllDayFlag": true,
+				"Row": 4
+			}, {
+				"EmployeeName": "Fiona Taylor",
+				"StartDate": "2015-05-22T00:00:00.000Z",
+				"EndDate": "2015-05-24T00:00:00.000Z",
+				"AbsenceText": "Vacation",
+				"LegendType": "01",
+				"AllDayFlag": true,
+				"Row": 4
+			}]
+		};
+
+        var strTextEvents = JSON.stringify(testEvents);
+
+        var oModel = new sap.ui.model.json.JSONModel(testEvents);
+        var eventTemplate = new sap.me.OverlapCalendarEvent({
+            startDay: "{StartDate}",
+            endDay: "{EndDate}",
+            row: "{Row}",
+            type: "{LegendType}",
+            typeName: "{AbsenceText}",
+            name: "{EmployeeName}"
+        });
+        eventTemplate.bindProperty("halfDay", "AllDayFlag", function (bValue) {
+            return !bValue;
+        });
+
+        var calendar = new sap.me.OverlapCalendar({
+            showOverlapIndicator: false,
+            startDate: "2015-09-29T12:00:00"
+        });
+        calendar.setModel(oModel);
+        calendar.bindAggregation("calendarEvents", "/events", eventTemplate);
+
+        var legend = new sap.me.CalendarLegend("c_legend", {
+            legendForType00: "Type 00", legendForType01: "Type 01", legendForType04: "Type04", legendForType06: "Type 06", legendForType07: "Type 07",
+            legendForToday: "Today", legendForSelected: "Selected", legendForSelected00: "Selected Type 00", legendForNormal: "Normal day",
+            design: "Approval", expanded: true, expandable : false
+        });
+
+        var textarea = new sap.m.TextArea({width: "100%", height: "256px"});
+        textarea.setValue(strTextEvents);
+        var updateModel = new sap.m.Button({
+            text: "Update Model",
+            press: function() {
+                var json;
+                try {
+                    json = JSON.parse(textarea.getValue());
+                    oModel.setData(json);
+                    calendar.setModel(oModel);
+                    sap.m.MessageToast.show("Model updated");
+                } catch(error) {
+                    sap.m.MessageToast.show("Error!");
+                }
+            }
+        });
+
+        var defaultButton = new sap.m.Button({
+            text: "Default Data",
+            press: function() {
+                textarea.setValue(strTextEvents);
+            }
+        });
+
+        var hbox1 = new sap.m.HBox();
+        hbox1.addItem(updateModel);
+        hbox1.addItem(defaultButton);
+        var changeDateHB = new sap.m.HBox();
+        changeDateHB.addItem(new sap.m.Label({text: "Choose new calendar start date:"}));
+        changeDateHB.addItem(new sap.m.DatePicker({
+            valueFormat: "yyyy-MM-dd",
+            change: function(oEvent) {
+                debugger;
+                var newDate = oEvent.getParameter("newValue");
+                newDate += "T00:00:00.000Z";
+                calendar.setStartDate(newDate);
+            }
+        }));
+
+        var app = new sap.m.App();
+        var page = new sap.m.Page({enableScrolling: false,
+            content: [
+                legend,
+                calendar,
+                hbox1,
+                textarea,
+                changeDateHB
+            ]
+        });
+        app.addPage(page);
+        app.placeAt('body');
+    </script>
+
+</head>
+<body id="body" class="sapUiBody">
+</body>
+</html>

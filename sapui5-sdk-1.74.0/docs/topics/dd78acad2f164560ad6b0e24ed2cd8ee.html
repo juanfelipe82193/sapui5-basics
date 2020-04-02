@@ -1,0 +1,222 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Display of Actions Added Using Extension Points</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="You can control the display of actions added using extension points in the list report and object page through certain settings in the manifest.json file."><meta name="description" content="You can control the display of actions added using extension points in the list report and object page through certain settings in the manifest.json file."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"5fb9f57fcf12401bbe39a635e9a32a4e.html","previousTopicHref":"7619517a92414e27b71f02094bd08d06.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loiodd78acad2f164560ad6b0e24ed2cd8ee"><h1 class="title topictitle1" hidden>Display of Actions Added Using Extension Points</h1><div class="body conbody"><p class="shortdesc" hidden>You can control the display of actions added using extension points in the list report
+and object page through certain settings in the <span class="ph filepath">manifest.json</span>
+file.</p>
+<aside class="note caution" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Caution</strong></div>
+<p>Use app extensions with caution and only if you
+cannot produce the required behavior by other means, such as manifest settings or
+annotations. To correctly integrate your app extension coding with SAP Fiori elements,
+use only the extensionAPI of SAP Fiori elements. For more information, see <a class="xref" href="../../#/topic/bd2994b69ef542998becbc69ab093f7e.html" title="This API consists of several elements that are described below. It can be used for the analytical list page, list report, and object page." target="_top">Using the ExtensionAPI</a>. </p><p class="p">After you&apos;ve created an app
+extension, its display (for example, control placing, CSS) and system behavior (for
+example, model and binding usage, busy handling) of the app extension lies within
+the application&apos;s responsibility. SAP Fiori elements provides support only for the
+official extensionAPI functions. Don&apos;t access or manipulate SAP Fiori elements&apos;
+internal coding.</p></aside>
+<p class="p">In the list report and in tables on the object page, you can specify that a user must make a
+selection before an action button is enabled. In addition, you can use the
+<samp class="ph codeph">applicablePath</samp> setting for the action, which will then use data
+from the back-end system to determine whether the action is valid for the selection, and
+thus whether the button should be enabled or disabled.</p>
+<p class="p">If more than one row is selected in the list report or table, or if one
+<samp class="ph codeph">applicablePath</samp> setting from a selection evaluates to
+<samp class="ph codeph">true</samp>, the action button will be enabled. The back-end system must
+then return the appropriate message for cases in which the action cannot be
+performed.</p>
+<p class="p">When an action is placed in the header or footer of the object page, it is enabled by
+default. In this case, the actions consider only the <samp class="ph codeph">applicablePath</samp>
+setting for the product represented by the object page, as in this instance the object
+page itself is considered the selection. Therefore, when the
+<samp class="ph codeph">applicablePath</samp> for the product evaluates to <samp class="ph codeph">false</samp>,
+the action button is hidden (not visible) on the object page.</p>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p>Using the <samp class="ph codeph">applicablePath</samp> setting is optional. If you do not use it, the
+action is always enabled. </p></aside>
+<div class="section"><section class="section" type="Code Samples"><h2 class="section_title" style="font-size: 1.15em;">Code Samples</h2><p class="p">To set up and control the display of your actions, in
+the <span class="ph filepath">manifest.json</span> file, use the properties
+<samp class="ph codeph">requiresSelection</samp> and <samp class="ph codeph">applicablePath</samp>.</p><div class="sectiondiv subsection">
+<p class="p subsectiontitle">List Report (Action in Table Header)</p>
+<p class="p">The following code sample shows an example of how to set up your
+<span class="ph filepath">manifest.json</span> file to determine whether to enable or
+disable an action in the list report:</p>
+<pre class="pre codeblock prettyprint lang-xml">
+&quot;sap.ui5&quot;: {
+   &quot;extends&quot;: {
+      &quot;extensions&quot;: {
+         &quot;sap.ui.controllerExtensions&quot;: {
+            &quot;sap.suite.ui.generic.template.ListReport.view.ListReport&quot;: {
+               &quot;controllerName&quot;: &quot;my_app.ext.controller.ListReportExtension&quot;,
+               &quot;sap.ui.generic.app&quot;: {
+                  &quot;&lt;entity set&gt;&quot;: {
+                     &quot;EntitySet&quot;: &quot;&lt;entity set&gt;&quot;,
+                     &quot;Actions&quot;: {
+                        &quot;&lt;Action 1&gt;&quot;: {
+                           &quot;id&quot;: &quot;&lt;id&gt;&quot;,
+                           &quot;text&quot;: &quot;&lt;button text&gt;&quot;,
+                           &quot;press&quot;: &quot;&lt;handler function&gt;&quot;,
+                           &quot;requiresSelection&quot;: true,
+                           &quot;applicablePath&quot;: &quot;&lt;entity type property&gt;&quot;
+                        },
+                        &quot;&lt;Action 2&gt;&quot;: {
+                           &quot;id&quot;: &quot;&lt;id&gt;&quot;,
+                           &quot;text&quot;: &quot;&lt;button text&gt;&quot;,
+                           &quot;press&quot;: &quot;&lt;handler function&gt;&quot;,
+                           &quot;requiresSelection&quot;: true
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+
+</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Object Page (Action in Header or Footer)</p>
+<div class="p">The following code sample shows an example of how to set up your
+<span class="ph filepath">manifest.json</span> file to determine whether an action is visible
+in the header or footer of the object
+page:<pre class="pre codeblock prettyprint lang-xml">
+&quot;sap.ui5&quot;: {
+   &quot;extends&quot;: {
+      &quot;extensions&quot;: {
+         &quot;sap.ui.controllerExtensions&quot;: {
+            &quot;sap.suite.ui.generic.template.ObjectPage.view.Details&quot;: {
+               &quot;controllerName&quot;: &quot;my_app.ext.controller.DetailsExtension&quot;,
+               &quot;sap.ui.generic.app&quot;: {
+                  &quot;&lt;entity set&gt;&quot;: {
+                     &quot;EntitySet&quot;: &quot;&lt;entity set&gt;&quot;,
+                     &quot;Header&quot;: {
+                        &quot;Actions&quot;: {
+                           &quot;&lt;Action 1&gt;&quot;: {
+                              &quot;id&quot;: &quot;&lt;id&gt;&quot;,
+                              &quot;text&quot;: &quot;&lt;button text&gt;&quot;,
+                              &quot;press&quot;: &quot;&lt;handler function&gt;&quot;,
+                              &quot;applicablePath&quot;: &quot;&lt;entity type property&gt;&quot;
+                           }
+                        }
+                     },
+                     &quot;Sections&quot;: {
+                        &quot;&lt;entity type association&gt;::com.sap.vocabularies.UI.v1.LineItem&quot;: {
+                        &quot;id&quot;: &quot;&lt;SmartTable Facet ID&gt;&quot;,
+                           &quot;Actions&quot;: {
+                              &quot;&lt;Action 2&gt;&quot;: {
+                                 &quot;id&quot;: &quot;&lt;id&gt;&quot;,
+                                 &quot;text&quot;: &quot;&lt;button text&gt;&quot;,
+                                 &quot;press&quot;: &quot;&lt;handler function&gt;&quot;,
+                                 &quot;requiresSelection&quot;: true,
+                                 &quot;applicablePath&quot;: &quot;&lt;entity type property&gt;&quot;
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+</pre></div>
+</div></section></div>
+<div class="section" id="loiodd78acad2f164560ad6b0e24ed2cd8ee__section_stk_2l1_cgb"><section class="section" type="Displaying Custom Action Buttons Depending on the Mode"><h2 class="section_title" style="font-size: 1.15em;">Displaying Custom Action Buttons Depending on the Mode</h2>
+
+<p class="p">In case of draft-enabled applications, if the draft information of the object page needs
+to be found out in the controller / view extension (if the object page is an own draft
+version or an active version with an existing own draft), you can use the
+<samp class="ph codeph">DraftAdministrativeData</samp> navigation property. For example, you might
+want to show a custom action button on the object page only in edit mode.</p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">
+onAfterRendering: function(oEvent) {
+    var oButton = sap.ui.getCore().byId(&quot;STTA_MP::sap.suite.ui.generic.template.ObjectPage.view.Details::STTA_C_MP_Product--action::ObjectPageCustomAction&quot;);
+    oButton.bindElement(&quot;DraftAdministrativeData&quot;);
+    oButton.bindProperty(&quot;visible&quot;, {
+        path: &quot;DraftIsCreatedByMe&quot;
+    });
+},
+</pre></aside>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+	<meta http-equiv='Content-Type' content='text/html;charset=UTF-8' />
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+	<title>Process Flow Node as Container Test Suite</title>
+
+	<!-- UI5 Bootstrap -->
+	<script src="../../../../../resources/sap-ui-core.js"
+		type="text/javascript"
+		id="sap-ui-bootstrap"
+		data-sap-ui-libs="sap.m, sap.suite.ui.commons"
+		data-sap-ui-theme="sap_belize">
+	</script>
+
+	<script type="text/javascript">
+		var oApp = new sap.m.App();
+
+		var oPage = new sap.m.Page();
+		var oPF;
+
+		oPage.setModel(new sap.ui.model.json.JSONModel({
+			lanes: [
+				{
+					id: "0",
+					icon: "sap-icon://text",
+					text: "Texts 1",
+					position: 0
+				},
+				{
+					id: "1",
+					icon: "sap-icon://text",
+					text: "Texts 2",
+					position: 1
+				},
+				{
+					id: "2",
+					icon: "sap-icon://card",
+					text: "Images",
+					position: 2
+				}
+			],
+			nodes: [
+				{
+					id: "0",
+					lane: "0",
+					contentType: "label",
+					state: sap.suite.ui.commons.ProcessFlowNodeState.Critical,
+					children: [2]
+				},
+				{
+					id: "1",
+					lane: "0",
+					title: "Title of the Node",
+					stateText: "State is Negative",
+					texts: ["Text1Text1Text1", "Text2Text2Text2Text2Text2Text2Text2"],
+					state: sap.suite.ui.commons.ProcessFlowNodeState.Negative,
+					children: [3]
+				},
+				{
+					id: "2",
+					lane: "1",
+					contentType: "onlyText",
+					type: sap.suite.ui.commons.ProcessFlowNodeType.Aggregated,
+					state: sap.suite.ui.commons.ProcessFlowNodeState.Critical,
+					children: [5, 6]
+				},
+				{
+					id: "3",
+					lane: "1",
+					contentType: "longText",
+					state: sap.suite.ui.commons.ProcessFlowNodeState.Neutral,
+					children: [6, 7]
+				},
+				{
+					id:"4",
+					lane: "1",
+					contentType: "button",
+					state: sap.suite.ui.commons.ProcessFlowNodeState.Neutral,
+					children: [7]
+				},
+				{
+					id: "5",
+					lane: "2",
+					contentType: "icon",
+					focused: true,
+					state: sap.suite.ui.commons.ProcessFlowNodeState.Planned
+				},
+				{
+					id: "6",
+					lane: "2",
+					contentType: "image",
+					image: "./images/balloons.jpg",
+					alt: "balloons",
+					type: sap.suite.ui.commons.ProcessFlowNodeType.Aggregated,
+					state: sap.suite.ui.commons.ProcessFlowNodeState.Positive
+				},
+				{
+					id: "7",
+					lane: "2",
+					contentType: "fullImage",
+					image: "./images/grass.jpg",
+					alt: "grass"
+				}
+			]
+		}));
+
+		var oToolbar = new sap.m.Toolbar({
+			content: [
+				new sap.m.ToolbarSpacer(),
+				new sap.m.Text({
+					text: "ProcessFlowNode as Container"
+				}),
+				new sap.m.ToolbarSpacer(),
+				new sap.m.ToggleButton({
+					text: "Folded Corners",
+					press: function(event) {
+						oPF.setFoldedCorners(event.getParameter("pressed"));
+					}
+				}),
+				new sap.m.Button({
+					icon: "sap-icon://zoom-in",
+					press: function() {
+						oPF.zoomIn();
+					}
+				}),
+				new sap.m.Button({
+					icon: "sap-icon://zoom-out",
+					press: function() {
+						oPF.zoomOut();
+					}
+				})
+			]
+		});
+
+		oPF = new sap.suite.ui.commons.ProcessFlow({
+			lanes: {
+				path: "/lanes",
+				template: new sap.suite.ui.commons.ProcessFlowLaneHeader({
+					laneId: "{id}",
+					iconSrc: "{icon}",
+					text: "{text}",
+					position: "{position}"
+				})
+			},
+			nodes: {
+				path: "/nodes",
+				factory: function(id, context) {
+					var oNode = new sap.suite.ui.commons.ProcessFlowNode(id, {
+						nodeId: "{id}",
+						laneId: "{lane}",
+						title: "{title}",
+						stateText: "{stateText}",
+						texts: "{texts}",
+						state: "{state}",
+						type: "{type}",
+						highlighted: "{highlighted}",
+						focused: "{focused}",
+						children: "{children}"
+					});
+
+					var sType = context.getProperty("contentType");
+					var fnSetter;
+					var oContainer = new sap.m.VBox({
+						alignItems: "Center",
+						justifyContent: "Center",
+						fitContainer: true
+					});
+
+					for (var k in sap.suite.ui.commons.ProcessFlowZoomLevel) {
+						fnSetter = oNode["setZoomLevel" + k + "Content"];
+
+						if (fnSetter && typeof fnSetter === "function") {
+							if (sType === "image") {
+								fnSetter.call(oNode, new sap.m.Image({
+									src: "{image}",
+									alt: "{alt}",
+									width: "100%",
+									height: "100%",
+									decorative: true,
+									mode: "Background",
+									densityAware: false
+								}));
+							} else if (sType === "fullImage") {
+								fnSetter.call(oNode, new sap.m.Image({
+									src: "{image}",
+									alt: "{alt}",
+									densityAware: false
+								}));
+							} else if (sType === "icon") {
+								fnSetter.call(oNode, oContainer.clone().addItem(new sap.ui.core.Icon({
+									src: "sap-icon://cloud",
+									size: k === "Four" ? "1.5rem" : "2.0rem",
+									color: "Positive"
+								})).addItem(new sap.m.Label({
+									text: "Cloud"
+								})));
+							} else if (sType === "label") {
+								fnSetter.call(oNode, oContainer.clone().addItem(new sap.m.Label({
+									text: "Test1"
+								})).addItem(new sap.m.Title({
+									text: "Test2"
+								})));
+							} else if (sType === "longText") {
+								if (k !== "Four") {
+									fnSetter.call(oNode, oContainer.clone().addItem(new sap.m.Text({
+										text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo."
+									})).setJustifyContent("Start"));
+								} else {
+									fnSetter.call(oNode, oContainer.clone().addItem(new sap.ui.core.Icon({
+										src: "sap-icon://process",
+										size: "1.375rem",
+										color: "Positive"
+									})));
+								}
+							} else if (sType === "onlyText") {
+								fnSetter.call(oNode, new sap.m.Text({
+									text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo."
+								}));
+							} else if (sType === "button") {
+								fnSetter.call(oNode, oContainer.clone().addItem(new sap.m.Button({
+									text: "My button",
+									press: function(oEvent) {
+										sap.m.MessageToast.show("Button is pressed");
+									}
+								})).addItem(new sap.m.Link({
+									text: "My link",
+									press: function(oEvent) {
+										sap.m.MessageToast.show("Link is pressed");
+									}
+								})));
+							}
+						}
+					}
+
+					return oNode;
+				}
+			},
+			wheelZoomable: false
+		});
+		oPF.setZoomLevel(sap.suite.ui.commons.ProcessFlowZoomLevel.One);
+
+		oPage.addContent(oPF);
+		oPage.setCustomHeader(oToolbar);
+
+		oPF.optimizeLayout(true);
+
+		oApp.addPage(oPage);
+		oApp.placeAt("content");
+	</script>
+</head>
+<body class="sapUiBody">
+	<div id="content"></div>
+</body>
+</html>

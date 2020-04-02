@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Paging Problem Tests</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="../testutils/TestUtils.js"></script>
+<script type="text/javascript" src="../json/PAGING_PROBLEM/TESTDATA_PAGING_PROBLEM_0_0.js"></script>
+<script type="text/javascript" src="../json/PAGING_PROBLEM/TESTDATA_PAGING_PROBLEM_0_1.js"></script>
+<script type="text/javascript" src="../json/PAGING_PROBLEM/TESTDATA_PAGING_PROBLEM_0_7.js"></script>
+<script type="text/javascript" src="../json/PAGING_PROBLEM/TESTDATA_PAGING_PROBLEM_0_10.js"></script>
+<script type="text/javascript" src="../json/PAGING_PROBLEM/TESTDATA_PAGING_PROBLEM_0_13.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Paging Problem Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Paging Problem Tests", {
+			setup : function() {
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.PAGING_PROBLEM_0_0.control;
+				this.oCrosstab.setWidth("2500px");
+				this.oCrosstab.setHeight("150px");
+				this.iRequestCounter = 0;
+				var that = this;
+
+				this.oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+				this.oDataArea = this.oCrosstab.getDataArea();
+				this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+				this.oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+
+				this.oCrosstab.registerPageRequestHandler(function(iRow, iCol) {
+					var sPageString = iRow + "_" + iCol;
+					var oData = sapzen.crosstab.test.jsonTestData["PAGING_PROBLEM_" + sPageString].control;
+
+					// setTimeout(sendResponse, 2000);
+					that.iRequestCounter++;
+					sendResponse();
+
+					function sendResponse() {
+						that.oCrosstab.updateControlProperties(oData);
+						sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(that.oCrosstab);
+					}
+				});
+
+
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+
+				setTimeout(function() {
+					start();
+				}, 2000);
+				stop();
+			},
+
+			teardown : function() {
+				this.oCrosstab = null;
+				this.oTableControl = null;
+			}
+		});
+		
+		test("", function() {
+			var oDomColHeaderArea = $('#' + this.oColumnHeaderArea.getId());
+			var iCellsInFirstRow = $(oDomColHeaderArea.find("tr")[0]).children().length;
+			
+			ok(iCellsInFirstRow === 2, "First row of column header area contains 2 cells");
+		});
+
+	</script>
+
+</body>
+
+</html>

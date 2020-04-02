@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+	xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+	xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+	xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="com.sap.GL.zrha" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="Product" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="ID"/>
+				</Key>
+				<Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="20" sap:label="Product ID" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+				<Property Name="CategoryID" Type="Edm.String" Nullable="true" MaxLength="3" sap:label="Category" sap:creatable="false" sap:updatable="true" sap:sortable="false"/>
+				<Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Name" sap:creatable="false" sap:quickinfo="Property annotation DataFieldWithUrl" sap:updatable="true" sap:sortable="false"/>
+				<NavigationProperty Name="to_ProductCategories" Relationship="com.sap.GL.zrha.ProductCategory" FromRole="FromRole_ProductCategory" ToRole="ToRole_ProductCategory"/>
+			</EntityType>
+			<EntityType Name="Category" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="ID"/>
+				</Key>
+				<Property Name="ID" Type="Edm.String" Nullable="true" MaxLength="3" sap:label="Category" sap:creatable="false" sap:updatable="true" sap:sortable="false"/>
+				<Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Category Description" sap:creatable="false" sap:updatable="true" sap:sortable="false"/>
+			</EntityType>
+
+			<EntityType Name="VL_SH_H_CATEGORY" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="CATC"/>
+				</Key>
+				<Property Name="CATC" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Category"/>
+				<Property Name="LTXT" Type="Edm.String" Nullable="false" sap:label="Category Description"/>
+			</EntityType>
+
+			<Association Name="ProductCategory" sap:content-version="1">
+				<End Type="com.sap.GL.zrha.Product" Multiplicity="*" Role="FromRole_ProductCategory"/>
+				<End Type="com.sap.GL.zrha.Category" Multiplicity="1" Role="ToRole_ProductCategory"/>
+				<ReferentialConstraint>
+					<Principal Role="ToRole_ProductCategory">
+						<PropertyRef Name="ID"/>
+					</Principal>
+					<Dependent Role="FromRole_ProductCategory">
+						<PropertyRef Name="CategoryID"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+
+			<EntityContainer Name="com.sap.GL.zrha_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+				<EntitySet Name="Products" EntityType="com.sap.GL.zrha.Product" sap:creatable="false" sap:updatable="true" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+				<EntitySet Name="Categories" EntityType="com.sap.GL.zrha.Category" sap:creatable="false" sap:updatable="true" sap:deletable="false" sap:pageable="false" sap:content-version="1" />
+				<EntitySet Name="VL_SH_H_CATEGORY" EntityType="com.sap.GL.zrha.VL_SH_H_CATEGORY" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1" sap:countable="false"/>
+				<AssociationSet Name="ProductCategoriesSet" Association="com.sap.GL.zrha.ProductCategory" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+					<End EntitySet="Products" Role="FromRole_ProductCategory"/>
+					<End EntitySet="Categories" Role="ToRole_ProductCategory"/>
+				</AssociationSet>
+			</EntityContainer>
+
+			<Annotations Target="com.sap.GL.zrha.VL_SH_H_CATEGORY/CATC" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Text" Path="LTXT">
+					<Annotation Term="com.sap.vocabularies.UI.v1.TextArrangement" EnumMember="com.sap.vocabularies.UI.v1.TextArrangementType/TextLast"/>
+				</Annotation>
+			</Annotations>
+
+			<Annotations Target="com.sap.GL.zrha.Product/CategoryID" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Text" Path="to_ProductCategories/Description">
+					<Annotation Term="com.sap.vocabularies.UI.v1.TextArrangement" EnumMember="com.sap.vocabularies.UI.v1.TextArrangementType/TextLast"/>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+					<Record>
+						<PropertyValue Property="Label" String="Categories"/>
+						<PropertyValue Property="CollectionPath" String="VL_SH_H_CATEGORY"/>
+						<PropertyValue Property="SearchSupported" Bool="true"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="CategoryID"/>
+									<PropertyValue Property="ValueListProperty" String="CATC"/>
+								</Record>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="LTXT"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

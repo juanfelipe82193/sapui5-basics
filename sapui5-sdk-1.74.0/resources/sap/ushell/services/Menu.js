@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define(["sap/ushell/utils"],function(U){"use strict";function M(){this._init.apply(this,arguments);}M.prototype._init=function(a){this.oAdapter=a;};M.prototype.isMenuEnabled=function(){return this.oAdapter.isMenuEnabled();};M.prototype.getMenuEntries=function(){return this.oAdapter.getMenuEntries().then(function(m){return m.map(function(o){o.uid=U.generateUniqueId([]);return o;}).sort(function(e,E){return e.title.localeCompare(E.title);});});};M.hasNoAdapter=false;return M;});

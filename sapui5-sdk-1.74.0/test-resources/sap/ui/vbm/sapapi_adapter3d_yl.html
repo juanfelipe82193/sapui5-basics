@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SAP Yard Logistics with vbm.Adapter3d</title>
+    <script src="../../../../resources/sap-ui-core.js"
+        id="sap-ui-bootstrap"
+        type="text/javascript"
+        data-sap-ui-theme="sap_belize"
+        data-sap-ui-libs="sap.ui.vbm,sap.m"
+        data-sap-ui-xx-bindingSyntax="complex">
+    </script>
+    <style>
+        html {
+            height: 100%;
+        }
+    </style>
+    <script>
+        sap.ui.require([
+            "sap/ui/model/json/JSONModel",
+            "sap/m/Page",
+            "sap/m/Switch",
+            "sap/m/OverflowToolbar",
+            "sap/m/ToolbarSpacer",
+            "sap/m/Button",
+            "sap/m/Dialog",
+            "sap/m/TextArea",
+            "sap/ui/vbm/Viewport",
+            "sap/ui/vbm/Adapter3D",
+            "sap/m/MessageToast",
+            "sap/m/Text"
+        ], function(JSONModel, Page, Switch, OverflowToolbar, ToolbarSpacer, Button, Dialog, TextArea, Viewport, Adapter3D, MessageToast, Text) {
+            var onCustomPayload = function() {
+                if (!this.payloadDialog) {
+                    this.payloadDialog = new Dialog({
+                        title: "Custom Payload",
+                        stretch: true,
+                        contentWidth: "100%",
+                        contentHeight: "100%",
+                        content: [
+                            new TextArea("customPayload", {
+                                rows: 35,
+                                width: "100%"
+                            })
+                        ],
+                        beginButton: new Button({
+                            icon: "sap-icon://complete",
+                            press: function() {
+                                adapter.load(sap.ui.getCore().byId("customPayload").getValue());
+                                this.payloadDialog.close();
+                            }.bind(this),
+                        }),
+                        endButton: new Button({
+                            icon: "sap-icon://inspect-down",
+                            press: function() {
+                                this.payloadDialog.close();
+                            }.bind(this)
+                        })
+                    })
+                };
+
+                this.payloadDialog.open();
+            };
+
+            var oModel = new JSONModel({
+                toolbarVisible: true
+            });
+
+            var viewport = new Viewport({
+                width: "100%",
+                height: "100%"
+            });
+            
+            var adapter = new Adapter3D({
+                viewport: viewport.getId(),
+                submit: function(e) { MessageToast.show(e.getParameters().data); } 
+            });
+
+            sap.ui.getCore().setModel(oModel);
+
+            var loadVbiJson = function(path) {
+                $.getJSON(
+                    path,
+                    function(data, status) {
+                        adapter.load(data);
+                    }
+                )
+            };
+
+            var page = new Page({
+                // title: "SAP YL with Adapter3D",
+                showHeader: false,
+                showFooter: "{/toolbarVisible}",
+                floatingFooter: true,
+                content: [
+                    viewport
+                ],
+                footer: new OverflowToolbar({
+                    content: [
+                        new Switch({
+                            state: "{/toolbarVisible}",
+                            customTextOn: "Hide",
+                            customTextOff: "Show",
+                        }),
+                        new Text({
+                            text: "TM"
+                        }),
+                        new Button({
+                            icon: "sap-icon://bar-code",
+                            tooltip: "Initial Load",
+                            press: loadVbiJson.bind(null, "media/threejs/Initial.json")
+
+                        }),
+                        new Button({
+                            icon: "sap-icon://shipping-status",
+                            tooltip: "Truck Europe",
+                            press: loadVbiJson.bind(null, "media/threejs/Truck_Europe.json")
+                        }),
+                        new ToolbarSpacer(),
+                        new Text({
+                            text: "YL"
+                        }),
+                        new Button({
+                            icon: "sap-icon://bar-code",
+                            tooltip: "Initial Load",
+                            press: loadVbiJson.bind(null, "media/threejs/yl/initial.json")
+
+                        }),
+                        new Button({
+                            icon: "sap-icon://factory",
+                            tooltip: "Yard CR01",
+                            press: loadVbiJson.bind(null, "media/threejs/yl/cr01.json")
+                        }),
+                        new Button({
+                            icon: "sap-icon://cargo-train",
+                            // tooltip: "Yard CR01",
+                            // press: loadVbiJson.bind(null, "media/threejs/yl/cr01.json")
+                        }),
+                        new ToolbarSpacer(),
+                        new Button({
+                            icon: "sap-icon://syntax",
+                            press: onCustomPayload,
+                            tooltip: "Custom Payload"
+                        })
+                    ]
+                })
+            });
+            
+            page.placeAt("content");
+        });
+    </script>
+</head>
+<body class="sapUiBody" id="content">
+</body>
+</html>

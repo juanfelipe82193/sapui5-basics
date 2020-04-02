@@ -1,0 +1,241 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.vbm,sap.ui.commons"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+		   	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+			margin-right: 30px;
+		}
+			h3 {
+				margin-right: 30px;
+			}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 750px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 750px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+
+	// query for charts library, the microchart is positioned in a container vo
+    jQuery.sap.require( "sap.suite.ui.microchart.ColumnMicroChart" );
+	
+	// have some data
+	var oData = 
+		{
+				Containers :
+					[
+						{ "key":  "10", "pos": "70;0;0",  "tooltip": "Container1",
+						  ChartCols: [ { "value": 60, "color": "Neutral" },
+						               { "value": 10, "color": "Error" },
+						               { "value": 20, "color": "Error" } ]
+						},
+						{ "key":  "11", "pos": "70;30;0", "tooltip": "Container2",
+						  ChartCols: [ { "value": 50, "color": "Neutral" },
+							           { "value": 8, "color": "Error" },
+							           { "value": 16, "color": "Error" },
+							           { "value": 24, "color": "Error" } ]
+						},
+						{ "key":  "12", "pos": "70;60;0", "tooltip": "Container3",
+						  ChartCols: [ { "value": 70, "color": "Neutral" },
+							           { "value": 5, "color": "Error" },
+							           { "value": 20, "color": "Error" },
+							           { "value": 45, "color": "Error" } ]
+						}	    
+					]	
+		};
+	
+	// create model and set the data
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+	//sap.ui.getCore().setModel( oModel );
+	
+	// named model for i18n
+	var oTexts = {
+			Label1: "Label",
+			Label2: "Blub"
+	};
+	var oNamedModel = new sap.ui.model.json.JSONModel();
+	oNamedModel.setData( oTexts );
+	
+	
+	// sample event handlers
+	function onClickItem( evt )
+	{
+	   // click on item 
+		evt.oSource.openDetailWindow("Details");
+		//register openWindow event with the VO as context
+		var oMap = evt.oSource.getParent().getParent(); 
+		oMap.attachEventOnce("openWindow", onOpenDetail, this);
+	};
+	
+	var oForm;
+	
+	function onOpenDetail( oEvent ) {
+		   //create some window content
+		   if (!oForm) {
+		      oForm = new  sap.ui.commons.form.SimpleForm({
+		         maxContainerCols: 1,
+		         width: "200px",
+		         labelMinWidth: 50,
+		         content: [
+		            new sap.m.Label({
+		               text:"Position"
+		            }),
+		            new sap.m.Text({
+		               text:this.getPosition()
+		            })
+		         ]
+		      });
+		   }
+		   //place the window content
+		   oForm.placeAt(oEvent.getParameter("contentarea").id,'only');
+		};	
+
+	function onContextMenuItem( evt )
+	{
+	   // context menu on item 
+		var oMenu = evt.getParameter("menu");
+		oMenu.addItem( new sap.ui.unified.MenuItem( { text : "Any function" } ) );
+		evt.oSource.openContextMenu(oMenu);
+	};
+	
+	// create analytic map and bind to model
+	var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+	    width : "1024px",
+    	height: "600px",
+    	resources: [ new sap.ui.vbm.Resource({ name: "smiley", src: "demokit/media/images/smiley.png"})
+ 		],
+    	vos: [
+ 	         new sap.ui.vbm.Containers( "containers", {
+		            // bind to an array in the model
+	         	    items: { 
+	                    path : "/Containers",
+	                    template: new sap.ui.vbm.Container( { 
+	                    	 position: '{pos}', tooltip: '{tooltip}', 
+	                    	 click: onClickItem,  
+	                    	 contextMenu: onContextMenuItem,
+	                    	 item: new sap.suite.ui.microchart.ColumnMicroChart( { 
+	                             	 size : "S",
+	                             	 columns: { path: "ChartCols",
+	                             	            template: new sap.suite.ui.microchart.ColumnMicroChartData( { value: '{value}', color: '{color}' } )         
+	                             	 },
+	                    	         rightTopLabel: new sap.suite.ui.microchart.ColumnMicroChartLabel( { label: '{i18n>/Label1}' } )   
+	                          	   }).addStyleClass("chart-bg")
+	                    } )
+	          	    }
+	         } )
+    	]
+	});
+	oVBI.setMapConfiguration(JSON.parse(localStorage.getItem('map')));
+
+	oVBI.setModel( oModel );
+	oVBI.setModel( oNamedModel, "i18n" );
+	oVBI.placeAt("content");
+
+
+	// modification of the context
+	function onRemoveChart()
+	{
+      if( oData.Containers.length )
+          oData.Containers = oData.Containers.splice( 0, oData.Containers.length - 1 );
+	       
+		oModel.setData( oData );
+	};
+	
+	function onRemoveChart2()
+	{
+      if( oData.Containers.length )
+          oData.Containers = oData.Containers.splice( 0, oData.Containers.length - 1 );
+	       
+  	  var oNewModel = new sap.ui.model.json.JSONModel();
+	  oNewModel.setData( oData );
+	  oVBI.setModel( oNewModel );	
+	  oModel = oNewModel;
+	};
+	
+	function onRemoveCharts()
+	{
+		cont = oVBI.removeVo("containers");
+	};
+	
+	function onAddCharts()
+	{
+       if (cont)
+	      oVBI.addVo(cont);	
+	};
+	
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business GeoMap Container Interaction Sample</h1>
+				<div id="description1">
+				  <h3> The aim: </h3>
+		<p> To test the Visual Business GeoMap Control with Container VOs hosting charts.</p>
+		<br>
+		<h3> To test: </h3>
+			<ol>
+				<li> Click on "Remove a Chart(change Model data)" and test option to remove a chart by changing model data (control needs to keep state). <i> Each click should remove a container (data) from the map.</i></li>
+<!--
+				<li> Click on "Remove a Chart(replace Model)" and test option to remove a chart by replacing the model (control needs to keep state). </li>
+-->
+				<li> Click on "Remove Charts (remove VO)" and test option to remove all charts by removing the VO aggregation (control needs to keep state).<i>All container should be removed from the map</i></li>
+				<li> Option to add charts again by adding a VO aggregation (control needs to keep state). </i></li>
+				<li> Left click on the containers to test the option to open a Detail window for a container on click event. </li>
+				<li> Right click on the containers to test the option to open a context menu for a container on right click event. </li>
+		<li>Click on "Remove Charts (remove VO)" and checkt that all containers are removed from the map. After the containers have been removed then click on "Add Charts (add VO)" and check that the container that were removed have been added back on the map. </li>
+			</ol>
+		<i><p><b>Remarks:</b> Model changes can only be undone by reloading the page. Removing and Adding VOs should be repeatable!</p></i>
+
+		</div>
+		<div id="description2">
+		 <br>
+		 <br />
+		 <button id="onRemoveChart" onClick="onRemoveChart()">Remove a Chart (change Model data)</button>
+<!--
+		 <button id="onRemoveChart2" onClick="onRemoveChart2()">Remove a Chart (replace Model)</button>
+-->
+		 <button id="onRemoveCharts" onClick="onRemoveCharts()">Remove Charts (remove VO)</button>
+		 <button id="onAddCharts" onClick="onAddCharts()">Add Charts (add VO)</button>	 <br><br>
+			<div id="content"></div>
+			<br>
+			</div>
+	</body>
+</html>

@@ -1,0 +1,155 @@
+{
+    "_version": "1.17.0",
+    "sap.app": {
+        "i18n": "i18n/i18n.properties",
+        "id": "sap.ushell.applications.SpaceDesigner",
+        "type": "component",
+        "embeddedBy": "",
+        "title": "{{SpaceDesigner.AppTitle}}",
+        "ach": "CA-FLP-FE-COR",
+        "dataSources": {
+            "SpaceRepositoryService": {
+                "uri": "/sap/opu/odata/UI2/FDM_SPACE_REPOSITORY_SRV/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "localUri": "localService/space/metadata.xml"
+                }
+            }
+        },
+        "cdsViews": [],
+        "offline": false
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": false,
+            "phone": false
+        },
+        "fullWidth": true
+    },
+    "sap.ui5": {
+        "resources": {
+            "js": [],
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "autoPrefixId": true,
+        "componentUsages": {
+            "transportInformation": {
+                "name": "sap.ushell_abap.transport",
+                "lazy": true,
+                "componentData": {
+                    "supported": true
+                }
+            }
+        },
+        "dependencies": {
+            "minUI5Version": "1.72.0",
+            "libs": {
+                "sap.ui.core": {
+                    "lazy": false
+                },
+                "sap.f": {
+                    "lazy": false
+                },
+                "sap.m": {
+                    "lazy": false
+                },
+                "sap.ui.layout": {
+                    "lazy": false
+                },
+                "sap.ushell": {
+                    "lazy": false
+                }
+            },
+            "components": {
+                "sap.ushell_abap.transport": {
+                    "lazy": true,
+                    "manifest" : true
+                }
+            }
+        },
+        "models": {
+            "SpaceRepository": {
+                "dataSource": "SpaceRepositoryService",
+                "preload": true,
+                "settings": {
+                    "defaultCountMode": "None",
+                    "skipMetadataAnnotationParsing": true,
+                    "useBatch": true
+                }
+            },
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            }
+        },
+        "rootView": {
+            "viewName": "sap.ushell.applications.SpaceDesigner.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "SpaceDesigner"
+        },
+        "handleValidation": false,
+        "config": {
+            "fullWidth": true,
+            "sapFiori2Adaptation": true,
+            "enableCreate": true,
+            "enablePreview": false,
+            "checkLanguageMismatch": true
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "viewPath": "sap.ushell.applications.SpaceDesigner.view",
+                "controlId": "spaceDesigner",
+                "controlAggregation": "pages",
+                "async": true,
+                "fullWidth" : true
+            },
+            "routes": [
+                {
+                    "pattern": "",
+                    "name": "overview",
+                    "target": "overview"
+                },
+                {
+                    "pattern": "view/{spaceId}:?query:",
+                    "name": "view",
+                    "target": "view"
+                },
+                {
+                    "pattern": "edit/{spaceId}:?query:",
+                    "name": "edit",
+                    "target": "edit"
+                },
+                {
+                    "pattern": "error/{spaceId}",
+                    "name": "error",
+                    "target": "error"
+                }
+            ],
+            "targets": {
+                "overview": {
+                    "viewId": "spaceOverview",
+                    "viewName": "SpaceOverview"
+                },
+                "view": {
+                    "viewId": "view",
+                    "viewName": "SpaceDetail"
+                },
+                "error": {
+                    "viewId": "error",
+                    "viewName": "ErrorPage"
+                }
+            }
+        },
+        "contentDensities": { "compact": true, "cozy": true }
+    }
+}

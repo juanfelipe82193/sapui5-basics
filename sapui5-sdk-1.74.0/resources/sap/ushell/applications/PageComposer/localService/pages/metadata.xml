@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace=".UI2.FDM_PAGE_REPOSITORY_SRV" xml:lang="en" sap:schema-version="1"
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="Page" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="id" />
+                </Key>
+                <Property Name="createdByFullname" Type="Edm.String" Nullable="false" MaxLength="80" sap:label="Full Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="designTime" Type="Edm.String" MaxLength="1" sap:label="Single-Character Flag" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="devclass" Type="Edm.String" MaxLength="30" sap:label="Package" sap:sortable="false" sap:filterable="false" />
+                <Property Name="modifiedByFullname" Type="Edm.String" Nullable="false" MaxLength="80" sap:label="Full Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="id" Type="Edm.String" Nullable="false" MaxLength="35" sap:label="Page ID" sap:updatable="false" />
+                <Property Name="title" Type="Edm.String" MaxLength="100" sap:label="Page Description" />
+                <Property Name="transportId" Type="Edm.String" MaxLength="20" sap:label="Request/Task" sap:sortable="false" sap:filterable="false" />
+                <Property Name="description" Type="Edm.String" MaxLength="100" sap:label="Page Description" />
+                <Property Name="createdBy" Type="Edm.String" MaxLength="12" sap:label="Created by" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="createdOn" Type="Edm.DateTime" Precision="0" sap:label="Created On" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="12" sap:label="Last modified by" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="modifiedOn" Type="Edm.DateTime" Precision="0" ConcurrencyMode="Fixed" sap:label="Last modified on" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="owner" Type="Edm.String" MaxLength="12" sap:label="Pers.Responsib." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="masterLanguage" Type="Edm.String" MaxLength="2" sap:label="Original Language" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <NavigationProperty Name="sections" Relationship=".UI2.FDM_PAGE_REPOSITORY_SRV.Page_Section" FromRole="FromRole_Page_Section" ToRole="ToRole_Page_Section" />
+                <NavigationProperty Name="roles" Relationship=".UI2.FDM_PAGE_REPOSITORY_SRV.Page_Role" FromRole="FromRole_Page_Role" ToRole="ToRole_Page_Role" />
+            </EntityType>
+            <EntityType Name="Section" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="id" />
+                    <PropertyRef Name="pageId" />
+                </Key>
+                <Property Name="designTime" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Single-Character Flag" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="pageModifiedOn" Type="Edm.DateTime" Nullable="false" Precision="0" ConcurrencyMode="Fixed" sap:label="Last modified on" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="id" Type="Edm.String" Nullable="false" MaxLength="35" sap:label="Page Section ID" sap:updatable="false" />
+                <Property Name="pageId" Type="Edm.String" Nullable="false" MaxLength="35" sap:label="Page ID" />
+                <Property Name="transportId" Type="Edm.String" MaxLength="20" sap:label="Request/Task" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="parentSectionId" Type="Edm.String" MaxLength="35" sap:label="Page Section ID" sap:filterable="false" />
+                <Property Name="title" Type="Edm.String" MaxLength="100" sap:label="Page Description" sap:filterable="false" />
+                <Property Name="sectionIndex" Type="Edm.Int16" Nullable="false" sap:label="Page Section Index" sap:filterable="false" />
+                <NavigationProperty Name="tiles" Relationship=".UI2.FDM_PAGE_REPOSITORY_SRV.Section_Tile" FromRole="FromRole_Section_Tile" ToRole="ToRole_Section_Tile" />
+                <NavigationProperty Name="subsections" Relationship=".UI2.FDM_PAGE_REPOSITORY_SRV.Section_Subsection" FromRole="FromRole_Section_Subsection" ToRole="ToRole_Section_Subsection" />
+            </EntityType>
+            <EntityType Name="Tile" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="id" />
+                    <PropertyRef Name="pageId" />
+                    <PropertyRef Name="sectionId" />
+                </Key>
+                <Property Name="appType" Type="Edm.String" Nullable="false" MaxLength="6" sap:label="Application Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="catalogTile" Type="Edm.String" sap:label="Catalog Tile Compound String" />
+                <Property Name="appDetail" Type="Edm.String" Nullable="false" sap:label="Target Application" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="tileType" Type="Edm.String" Nullable="false" sap:label="Tile Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="fioriId" Type="Edm.String" Nullable="false" sap:label="SAP Fiori ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="title" Type="Edm.String" Nullable="false" sap:label="Tile Title" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="pageModifiedOn" Type="Edm.DateTime" Nullable="false" Precision="0" ConcurrencyMode="Fixed" sap:label="Last modified on" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="subTitle" Type="Edm.String" Nullable="false" sap:label="Tile Subtitle" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="iconUrl" Type="Edm.String" Nullable="false" sap:label="Tile Icon URL" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="id" Type="Edm.String" Nullable="false" MaxLength="35" sap:label="Assignment Item ID" sap:updatable="false" />
+                <Property Name="pageId" Type="Edm.String" Nullable="false" MaxLength="35" sap:label="Page ID" sap:updatable="false" />
+                <Property Name="semanticObject" Type="Edm.String" Nullable="false" sap:label="Semantic Object" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="sectionId" Type="Edm.String" Nullable="false" MaxLength="35" sap:label="Page Section ID" sap:updatable="false" />
+                <Property Name="semanticAction" Type="Edm.String" Nullable="false" sap:label="Action" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="itemIndex" Type="Edm.Int16" Nullable="false" sap:label="Assignment Index" />
+                <Property Name="keywords" Type="Edm.String" Nullable="false" sap:label="Tile Keywords" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="deviceDesktop" Type="Edm.Boolean" Nullable="false" sap:label="Device Type Desktop" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="targetMapping" Type="Edm.String" sap:label="Target Mapping" />
+                <Property Name="deviceTablet" Type="Edm.Boolean" Nullable="false" sap:label="Device Type Tablet" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="transportId" Type="Edm.String" MaxLength="20" sap:label="Request/Task" />
+                <Property Name="devicePhone" Type="Edm.Boolean" Nullable="false" sap:label="Device Type Phone" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            </EntityType>
+            <EntityType Name="Role" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="name" />
+                </Key>
+                <Property Name="name" Type="Edm.String" Nullable="false" MaxLength="30" sap:label="Role Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="title" Type="Edm.String" Nullable="false" MaxLength="80" sap:label="Role Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <NavigationProperty Name="catalogs" Relationship=".UI2.FDM_PAGE_REPOSITORY_SRV.Role_Catalog" FromRole="FromRole_Role_Catalog" ToRole="ToRole_Role_Catalog" />
+            </EntityType>
+            <EntityType Name="Catalog" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" sap:label="Catalog ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="title" Type="Edm.String" Nullable="false" sap:label="Target Mapping Title" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <NavigationProperty Name="roles" Relationship=".UI2.FDM_PAGE_REPOSITORY_SRV.Role_Catalog" FromRole="ToRole_Role_Catalog" ToRole="FromRole_Role_Catalog" />
+                <NavigationProperty Name="visualizations" Relationship=".UI2.FDM_PAGE_REPOSITORY_SRV.Catalog_Visualization" FromRole="FromRole_Catalog_Visualization" ToRole="ToRole_Catalog_Visualization" />
+            </EntityType>
+            <EntityType Name="Visualization" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="tileId" />
+                </Key>
+                <Property Name="deviceDesktop" Type="Edm.Boolean" Nullable="false" sap:label="Device Type Desktop" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="appType" Type="Edm.String" Nullable="false" MaxLength="6" sap:label="Application Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="inboundPermanentKey" Type="Edm.String" Nullable="false" sap:label="Compound Target Mapping Key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="appDetail" Type="Edm.String" Nullable="false" sap:label="Target Application" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="devicePhone" Type="Edm.Boolean" Nullable="false" sap:label="Device Type Phone" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="tileId" Type="Edm.String" Nullable="false" MaxLength="50" sap:label="Item ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="deviceTablet" Type="Edm.Boolean" Nullable="false" sap:label="Device Type Tablet" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="tileType" Type="Edm.String" Nullable="false" sap:label="Tile Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="vizId" Type="Edm.String" Nullable="false" sap:label="Visualization ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="title" Type="Edm.String" Nullable="false" sap:label="Tile Title" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="subTitle" Type="Edm.String" Nullable="false" sap:label="Tile Subtitle" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="iconUrl" Type="Edm.String" Nullable="false" sap:label="Tile Icon URL" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="tmId" Type="Edm.String" Nullable="false" MaxLength="50" sap:label="Item ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="fioriId" Type="Edm.String" Nullable="false" sap:label="SAP Fiori ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="semanticObject" Type="Edm.String" Nullable="false" sap:label="Semantic Object" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="semanticAction" Type="Edm.String" Nullable="false" sap:label="Action" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+                <Property Name="keywords" Type="Edm.String" Nullable="false" sap:label="Tile Keywords" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+            </EntityType>
+            <Association Name="Catalog_Visualization" sap:content-version="1">
+                <End Type=".UI2.FDM_PAGE_REPOSITORY_SRV.Catalog" Multiplicity="*" Role="FromRole_Catalog_Visualization" />
+                <End Type=".UI2.FDM_PAGE_REPOSITORY_SRV.Visualization" Multiplicity="*" Role="ToRole_Catalog_Visualization" />
+            </Association>
+            <Association Name="Page_Role" sap:content-version="1">
+                <End Type=".UI2.FDM_PAGE_REPOSITORY_SRV.Page" Multiplicity="*" Role="FromRole_Page_Role" />
+                <End Type=".UI2.FDM_PAGE_REPOSITORY_SRV.Role" Multiplicity="*" Role="ToRole_Page_Role" />
+            </Association>
+            <Association Name="Page_Section" sap:content-version="1">
+                <End Type=".UI2.FDM_PAGE_REPOSITORY_SRV.Page" Multiplicity="1" Role="FromRole_Page_Section" />
+                <End Type=".UI2.FDM_PAGE_REPOSITORY_SRV.Section" Multiplicity="*" Role="ToRole_Page_Section" />
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_Page_Section">
+                        <PropertyRef Name="id" />
+                    </Principal>
+                    <Dependent Role="ToRole_Page_Section">
+                        <PropertyRef Name="pageId" />
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Section_Tile" sap:content-version="1">
+                <End Type=".UI2.FDM_PAGE_REPOSITORY_SRV.Section" Multiplicity="1" Role="FromRole_Section_Tile" />
+                <End Type=".UI2.FDM_PAGE_REPOSITORY_SRV.Tile" Multiplicity="*" Role="ToRole_Section_Tile" />
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_Section_Tile">
+                        <PropertyRef Name="pageId" />
+                        <PropertyRef Name="id" />
+                    </Principal>
+                    <Dependent Role="ToRole_Section_Tile">
+                        <PropertyRef Name="pageId" />
+                        <PropertyRef Name="sectionId" />
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Section_Subsection" sap:content-version="1">
+                <End Type=".UI2.FDM_PAGE_REPOSITORY_SRV.Section" Multiplicity="1" Role="FromRole_Section_Subsection" />
+                <End Type=".UI2.FDM_PAGE_REPOSITORY_SRV.Section" Multiplicity="*" Role="ToRole_Section_Subsection" />
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_Section_Subsection">
+                        <PropertyRef Name="id" />
+                        <PropertyRef Name="pageId" />
+                    </Principal>
+                    <Dependent Role="ToRole_Section_Subsection">
+                        <PropertyRef Name="parentSectionId" />
+                        <PropertyRef Name="pageId" />
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Role_Catalog" sap:content-version="1">
+                <End Type=".UI2.FDM_PAGE_REPOSITORY_SRV.Role" Multiplicity="*" Role="FromRole_Role_Catalog" />
+                <End Type=".UI2.FDM_PAGE_REPOSITORY_SRV.Catalog" Multiplicity="*" Role="ToRole_Role_Catalog" />
+            </Association>
+            <EntityContainer Name="_UI2_FDM_PAGE_REPOSITORY_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="pageSet" EntityType=".UI2.FDM_PAGE_REPOSITORY_SRV.Page" sap:searchable="true" sap:content-version="1" />
+                <EntitySet Name="sectionSet" EntityType=".UI2.FDM_PAGE_REPOSITORY_SRV.Section" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1" />
+                <EntitySet Name="tileSet" EntityType=".UI2.FDM_PAGE_REPOSITORY_SRV.Tile" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+                <EntitySet Name="roleSet" EntityType=".UI2.FDM_PAGE_REPOSITORY_SRV.Role" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+                <EntitySet Name="catalogSet" EntityType=".UI2.FDM_PAGE_REPOSITORY_SRV.Catalog" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1" />
+                <EntitySet Name="visualizationSet" EntityType=".UI2.FDM_PAGE_REPOSITORY_SRV.Visualization" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1" />
+                <AssociationSet Name="Page_SectionSet" Association=".UI2.FDM_PAGE_REPOSITORY_SRV.Page_Section" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="pageSet" Role="FromRole_Page_Section" />
+                    <End EntitySet="sectionSet" Role="ToRole_Page_Section" />
+                </AssociationSet>
+                <AssociationSet Name="Section_SubsectionSet" Association=".UI2.FDM_PAGE_REPOSITORY_SRV.Section_Subsection" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="sectionSet" Role="FromRole_Section_Subsection" />
+                    <End EntitySet="sectionSet" Role="ToRole_Section_Subsection" />
+                </AssociationSet>
+                <AssociationSet Name="Page_RoleSet" Association=".UI2.FDM_PAGE_REPOSITORY_SRV.Page_Role" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="pageSet" Role="FromRole_Page_Role" />
+                    <End EntitySet="roleSet" Role="ToRole_Page_Role" />
+                </AssociationSet>
+                <AssociationSet Name="Section_TileSet" Association=".UI2.FDM_PAGE_REPOSITORY_SRV.Section_Tile" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="sectionSet" Role="FromRole_Section_Tile" />
+                    <End EntitySet="tileSet" Role="ToRole_Section_Tile" />
+                </AssociationSet>
+                <AssociationSet Name="Role_CatalogSet" Association=".UI2.FDM_PAGE_REPOSITORY_SRV.Role_Catalog" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="roleSet" Role="FromRole_Role_Catalog" />
+                    <End EntitySet="catalogSet" Role="ToRole_Role_Catalog" />
+                </AssociationSet>
+                <AssociationSet Name="Catalog_VisualizationSet" Association=".UI2.FDM_PAGE_REPOSITORY_SRV.Catalog_Visualization" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="catalogSet" Role="FromRole_Catalog_Visualization" />
+                    <End EntitySet="visualizationSet" Role="ToRole_Catalog_Visualization" />
+                </AssociationSet>
+                <FunctionImport Name="copyPage" ReturnType=".UI2.FDM_PAGE_REPOSITORY_SRV.Page" EntitySet="pageSet" m:HttpMethod="POST" sap:label="Copy Page" sap:action-for=".UI2.FDM_PAGE_REPOSITORY_SRV.Page">
+                    <Parameter Name="title" Type="Edm.String" Mode="In" MaxLength="100" />
+                    <Parameter Name="targetId" Type="Edm.String" Mode="In" MaxLength="35" />
+                    <Parameter Name="transportId" Type="Edm.String" Mode="In" MaxLength="20" />
+                    <Parameter Name="sourceId" Type="Edm.String" Mode="In" MaxLength="35" />
+                    <Parameter Name="devclass" Type="Edm.String" Mode="In" MaxLength="30" />
+                </FunctionImport>
+                <FunctionImport Name="deletePage" ReturnType=".UI2.FDM_PAGE_REPOSITORY_SRV.Page" EntitySet="pageSet" m:HttpMethod="POST" sap:label="Delete Page" sap:action-for=".UI2.FDM_PAGE_REPOSITORY_SRV.Page">
+                    <Parameter Name="transportId" Type="Edm.String" Mode="In" MaxLength="20" />
+                    <Parameter Name="pageId" Type="Edm.String" Mode="In" MaxLength="35" />
+                    <Parameter Name="modifiedOn" Type="Edm.DateTime" Mode="In" Precision="0" />
+                </FunctionImport>
+            </EntityContainer>
+            <atom:link rel="self" href="https://host:port/sap/opu/odata/UI2/FDM_PAGE_REPOSITORY_SRV/$metadata"
+                xmlns:atom="http://www.w3.org/2005/Atom" />
+            <atom:link rel="latest-version" href="https://host:port/sap/opu/odata/UI2/FDM_PAGE_REPOSITORY_SRV/$metadata"
+                xmlns:atom="http://www.w3.org/2005/Atom" />
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

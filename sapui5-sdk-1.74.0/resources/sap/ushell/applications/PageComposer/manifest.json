@@ -1,0 +1,151 @@
+{
+    "_version": "1.17.0",
+    "sap.app": {
+        "i18n": "i18n/i18n.properties",
+        "id": "sap.ushell.applications.PageComposer",
+        "type": "component",
+        "embeddedBy": "",
+        "title": "{{PageComposer.AppTitle}}",
+        "ach": "CA-FLP-FE-COR",
+        "dataSources": {
+            "PageRepositoryService": {
+                "uri": "/sap/opu/odata/UI2/FDM_PAGE_REPOSITORY_SRV/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "localUri": "localService/pages/metadata.xml"
+                }
+            }
+        },
+        "cdsViews": [],
+        "offline": false
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": false,
+            "phone": false
+        },
+        "fullWidth": true
+    },
+    "sap.ui5": {
+        "autoPrefixId": true,
+        "componentUsages": {
+            "transportInformation": {
+                "name": "sap.ushell_abap.transport",
+                "lazy": true,
+                "componentData": {
+                    "supported": true
+                }
+            }
+        },
+        "dependencies": {
+            "minUI5Version": "1.72.0",
+            "libs": {
+                "sap.ui.core": {
+                    "lazy": false
+                },
+                "sap.f": {
+                    "lazy": false
+                },
+                "sap.m": {
+                    "lazy": false
+                },
+                "sap.ui.layout": {
+                    "lazy": false
+                },
+                "sap.ushell": {
+                    "lazy": false
+                }
+            },
+            "components": {
+                "sap.ushell_abap.transport": {
+                    "lazy": true,
+                    "manifest" : true
+                }
+            }
+        },
+        "models": {
+            "PageRepository": {
+                "dataSource": "PageRepositoryService",
+                "preload": true,
+                "settings": {
+                    "defaultCountMode": "None",
+                    "skipMetadataAnnotationParsing": true,
+                    "useBatch": true
+                }
+            },
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            }
+        },
+        "rootView": {
+            "viewName": "sap.ushell.applications.PageComposer.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "pageComposer"
+        },
+        "handleValidation": false,
+        "config": {
+            "fullWidth": true,
+            "sapFiori2Adaptation": true,
+            "enableCreate": true,
+            "enablePreview": true,
+            "checkLanguageMismatch": true
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "viewPath": "sap.ushell.applications.PageComposer.view",
+                "controlId": "pageComposer",
+                "controlAggregation": "pages",
+                "async": true,
+                "fullWidth" : true
+            },
+            "routes": [
+                {
+                    "pattern": "",
+                    "name": "overview",
+                    "target": "overview"
+                },
+                {
+                    "pattern": "view/{pageId}:?query:",
+                    "name": "view",
+                    "target": "view"
+                },
+                {
+                    "pattern": "edit/{pageId}:?query:",
+                    "name": "edit",
+                    "target": "edit"
+                },
+                {
+                    "pattern": "error/{pageId}",
+                    "name": "error",
+                    "target": "error"
+                }
+            ],
+            "targets": {
+                "overview": {
+                    "viewId": "pageOverview",
+                    "viewName": "PageOverview"
+                },
+                "view": {
+                    "viewId": "view",
+                    "viewName": "PageDetail"
+                },
+                "edit": {
+                    "viewId": "edit",
+                    "viewName": "PageDetailEdit"
+                },
+                "error": {
+                    "viewId": "error",
+                    "viewName": "ErrorPage"
+                }
+            }
+        },
+        "contentDensities": { "compact": true, "cozy": true }
+    }
+}

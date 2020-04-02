@@ -1,0 +1,370 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>XML Templating</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The XML templating concept enables you to use an XML view as a template. This template is transformed by an XML preprocessor on the source level, the XML DOM, at runtime just before an SAPUI5 control tree is created from the XML source."><meta name="description" content="The XML templating concept enables you to use an XML view as a template. This template is transformed by an XML preprocessor on the source level, the XML DOM, at runtime just before an SAPUI5 control tree is created from the XML source."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"c27d49caa48e424eb75391ae85da2134.html","previousTopicHref":"23b9c779c2274213a281c1fc46b4962b.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio5ee619fc1370463ea674ee04b65ed83b"><h1 class="title topictitle1" hidden>XML Templating</h1><div class="body conbody"><p class="shortdesc" hidden>The XML templating concept enables you to use an XML view as a template. This
+template is transformed by an XML preprocessor on the source level, the XML DOM, at runtime
+just before an <span class="ph"><span class="ph pname">SAPUI5</span></span> control
+tree is created from the XML source.</p>
+<p class="p">The label texts and binding paths in the example below come from SAP Annotations for
+OData Version 2.0 (<a class="xref" href="http://www.sap.com/Protocols/SAPData" target="_blank" alt="http://www.sap.com/Protocols/SAPData" title="http://www.sap.com/Protocols/SAPData">http://www.sap.com/Protocols/SAPData</a>) such as <samp class="ph codeph">sap:semantics</samp>, and from
+OData Version 4.0 annotations such as <samp class="ph codeph">com.sap.vocabularies.UI.v1.Badge</samp>.
+Much more complex tasks than shown in this simple example are possible.</p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">HTML templating is no longer supported as of version 1.56.</p></aside>
+<p class="p">The transformation happens if a preprocessor for XML is called when the view is created, see
+lines 4 and 5 in the <em class="ph i">Calling the XML Preprocessor</em> example. This preprocessor can
+be given one or more models along with a corresponding binding context, see lines 6 and
+9; this concept exists for any <span class="ph"><span class="ph pname">SAPUI5</span></span> control&apos;s
+constructor. Typically, an OData model&apos;s meta model is given, along with the meta
+context corresponding to a data path. XML templating operates on meta data. If the data
+changes, the XML templating can <span class="ph emphasis emphasis">not</span> be executed again. This is due
+to the processing time. Only the resulting bindings are evaluated again.</p>
+<p class="p">If the view is loaded asynchronously, fragments and required modules are loaded
+asynchronously, too.</p>
+<aside class="note restriction" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Restriction</strong></div>
+<p class="p">XML templating is not directly supported with routing, that is, there is no way to declare
+that the XML Preprocessor should run on the target view of a route. Instead, you
+should define a JavaScript view as the route&apos;s target and use that view&apos;s
+<samp class="ph codeph">createContent</samp> method to create an XML view with templating. In
+case you need access to models (which are not yet available in that hook), you
+should return some dummy content first (for instance sap.m.HBox), register to the
+view&apos;s modelContextChange event and create the inner view in that event&apos;s handler,
+finally adding it to the dummy content.</p><p class="p">JavaScript Target View For Routing</p><pre class="pre codeblock prettyprint">sap.ui.jsview(&quot;some.package.RouteTargetView&quot;, {
+    createContent : function () {
+        return sap.ui.view({
+            async : true,
+            preprocessors : {
+                xml : {
+                    // ...
+                }
+            },
+            type : sap.ui.core.mvc.ViewType.XML,
+            viewName : &quot;some.package.TemplateView&quot;
+        });
+    }
+});</pre></aside>
+<p class="p">In the example, <samp class="ph codeph">sPath = &quot;/ProductSet(&apos;HT-1021&apos;)/ToSupplier&quot;</samp> and the
+corresponding meta context point to
+<samp class="ph codeph">&quot;/dataServices/schema/0/entityType/0&quot;</samp> (the entity type
+<samp class="ph codeph">BusinessPartner</samp>). The resulting view is bound to the data path
+within the OData model in order to display the supplier of that product.</p>
+<section class="example"><h2 class="insertiontitle exampletitle example_title">Example: <div class="title authorexampletitle">Calling the XML Preprocessor</div></h2>
+
+<pre class="pre codeblock prettyprint lang-js">1   View.create({
+2      async : true,
+3      models : oModel,
+4      preprocessors : {
+5         xml : {
+6            bindingContexts : {
+7               meta : oMetaModel.getMetaContext(sPath)
+8            },
+9            models : {
+10              meta : oMetaModel
+11           }
+12        }
+13     },
+14     type : ViewType.XML,
+15     viewName : &quot;sap.ui.core.sample.ViewTemplate.tiny.Template&quot;
+16  }).then(function (oTemplateView) {
+17     oTemplateView.bindElement(sPath);
+18     ...
+19  }</pre>
+</section>
+<div class="section">
+<div class="p">The XML preprocessor traverses the view&apos;s XML DOM in a depth-first,
+parent-before-child manner and does the following:<ul class="ul" id="loio5ee619fc1370463ea674ee04b65ed83b__ul_cxf_css_hr">
+<li class="li">
+<p class="p">All XML attributes which represent an available binding, that is, a
+binding based only on models available to the preprocessor, are replaced
+by the result of that binding. Formatters and so on can be used as with
+any SAPUI5 binding.</p>
+</li>
+<li class="li">
+<p class="p">XML fragments are inlined; that is, the reference is replaced by the
+fragment&apos;s XML DOM and preprocessing takes place on that DOM as
+well.</p>
+</li>
+<li class="li">
+<p class="p">The preprocessing instructions <samp class="ph codeph">&lt;template:with&gt;</samp>,
+<samp class="ph codeph">&lt;template:if&gt;</samp> and
+<samp class="ph codeph">&lt;template:repeat&gt;</samp> are processed.</p>
+</li>
+</ul></div>
+</div>
+<section class="example"><h2 class="insertiontitle exampletitle example_title">Example: <div class="title authorexampletitle">Component.js</div></h2>
+<p class="p">
+<span class="ph">See sample
+<a class="xref" href="../../#/sample/sap.ui.core.sample.ViewTemplate.tiny/preview" target="_top" alt="#/sample/sap.ui.core.sample.ViewTemplate.tiny/preview" title="#/sample/sap.ui.core.sample.ViewTemplate.tiny/preview">sap.ui.core.sample.ViewTemplate.tiny</a>.</span> This sample is based on OData
+Version 4.0 annotations. It consists of the following three pieces:</p>
+<ul class="ul" id="loio5ee619fc1370463ea674ee04b65ed83b__ul_dpb_b5s_hr">
+<li class="li">
+<p class="p">A component controller that creates an OData model (line 17), waits for the
+meta model to be loaded (line 28) and then creates a template view (line 29)
+as its content. A preprocessor for XML is requested (line 31) and settings
+are passed to it, namely the meta model and the binding context that
+identifies the starting point within that model. The resulting view is bound
+to the actual data (model and path).</p>
+</li>
+<li class="li">
+<p class="p">A template view that includes a fragment twice (line 20 and 25) to
+demonstrate how to reuse code.</p>
+</li>
+<li class="li">
+<p class="p">An XML fragment that demonstrates a simple test (line 10), using expression
+binding.</p>
+</li>
+</ul>
+<aside class="note tip" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Tip</strong></div>
+<p class="p"><span class="ph">You can
+find more elaborate XML templating samples here: <a class="xref" href="../../#/entity/sap.ui.core.mvc.XMLView" target="_top" alt="#/entity/sap.ui.core.mvc.XMLView" title="#/entity/sap.ui.core.mvc.XMLView">XMLView</a>.</span>
+</p><p class="p">Take a look at the demo scenario for a complete overview of all OData v4
+notations.</p></aside>
+<aside class="note caution" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Caution</strong></div>
+<p class="p">The OData model is based on <samp class="ph codeph">GWSAMPLE_BASIC</samp> and will not work
+unless a suitable proxy for back-end access is used. For simplicity, no mock
+data is included in this example.</p><p class="p">For more information, see the Help topic, <a class="xref" href="http://help.sap.com/saphelp_nw74/helpdata/en/59/283fc4528f486b83b1a58a4f1063c0/frameset.htm" target="_blank" alt="http://help.sap.com/saphelp_nw74/helpdata/en/59/283fc4528f486b83b1a58a4f1063c0/frameset.htm" title="http://help.sap.com/saphelp_nw74/helpdata/en/59/283fc4528f486b83b1a58a4f1063c0/frameset.htm">Sample Service - Basic</a>.</p></aside>
+
+<pre class="pre codeblock prettyprint lang-js">1   /*!
+2    * ${copyright}
+3    */
+4
+5   /**
+6    * @fileOverview Application component to display supplier of &quot;/ProductSet(&apos;HT-1021&apos;)&quot;
+7    *   from GWSAMPLE_BASIC via XML Templating.
+8    * @version @version@
+9    */
+10  sap.ui.define([
+11     &apos;sap/m/VBox&apos;,
+12     &apos;sap/ui/core/UIComponent&apos;,
+13     &apos;sap/ui/core/mvc/View&apos;,
+14     &apos;sap/ui/core/mvc/ViewType&apos;,
+15     &apos;sap/ui/model/odata/v2/ODataModel&apos;
+16  ], function (VBox, UIComponent, View, ViewType, ODataModel) {
+17     &quot;use strict&quot;;
+18
+19     return UIComponent.extend(&quot;sap.ui.core.sample.ViewTemplate.tiny.Component&quot;, {
+20        metadata : &quot;json&quot;,
+21
+22        createContent : function () {
+23           var oModel = new ODataModel(
+24              &quot;proxy/sap/opu/odata/IWBEP/GWSAMPLE_BASIC/&quot;, {
+25                 annotationURI : &quot;proxy/sap/opu/odata/IWFND/CATALOGSERVICE;v=2&quot;
+26                 + &quot;/Annotations(TechnicalName=&apos;ZANNO4SAMPLE_ANNO_MDL&apos;,Version=&apos;0001&apos;)/$value&quot;,
+27                 json : true,
+28                 loadMetadataAsync : true
+29              }),
+30              oMetaModel = oModel.getMetaModel(),
+31              sPath = &quot;/ProductSet(&apos;HT-1021&apos;)/ToSupplier&quot;,
+32              oViewContainer = new VBox();
+33
+34           oMetaModel.loaded().then(function () {
+35              View.create({
+36                 async : true,
+37                 models : oModel,
+38                 preprocessors : {
+39                    xml : {
+40                       bindingContexts : {
+41                          meta : oMetaModel.getMetaContext(sPath)
+42                       },
+43                       models : {
+44                          meta : oMetaModel
+45                       }
+46                    }
+47                 },
+48                 type : ViewType.XML,
+49                 viewName : &quot;sap.ui.core.sample.ViewTemplate.tiny.Template&quot;
+50              }).then(function (oTemplateView) {
+51                 oTemplateView.bindElement(sPath);
+52                 oViewContainer.addItem(oTemplateView);
+53              });
+54           });
+55 
+56           // Note: synchronously return s.th. here and add content to it later on
+57           return oViewContainer;
+58        }
+59     });
+60  });</pre>
+
+<pre class="pre codeblock prettyprint lang-xml">1   &lt;mvc:View
+2       xmlns=&quot;sap.m&quot;
+3       xmlns:core=&quot;sap.ui.core&quot;
+4       xmlns:form=&quot;sap.ui.layout.form&quot;
+5       xmlns:mvc=&quot;sap.ui.core.mvc&quot;
+6       xmlns:template=&quot;http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1&quot;&gt;
+7    
+8       &lt;!-- &quot;meta&quot; model&apos;s binding context MUST point to an entity type --&gt;
+9       &lt;template:with path=&quot;meta&gt;com.sap.vocabularies.UI.v1.Badge&quot; var=&quot;badge&quot;&gt;
+10          &lt;form:SimpleForm&gt;
+11              &lt;form:title&gt;
+12                  &lt;core:Title text=&quot;{path: &apos;badge&gt;HeadLine&apos;, formatter: &apos;sap.ui.model.odata.AnnotationHelper.format&apos;}&quot;/&gt;
+13              &lt;/form:title&gt;
+14   
+15              &lt;Label text=&quot;{path: &apos;badge&gt;Title/Label&apos;, formatter: &apos;sap.ui.model.odata.AnnotationHelper.format&apos;}&quot;/&gt;
+16              &lt;Text text=&quot;{path: &apos;badge&gt;Title/Value&apos;, formatter: &apos;sap.ui.model.odata.AnnotationHelper.format&apos;}&quot;/&gt;
+17   
+18              &lt;Label text=&quot;{path: &apos;badge&gt;MainInfo/Label&apos;, formatter: &apos;sap.ui.model.odata.AnnotationHelper.format&apos;}&quot;/&gt;
+19              &lt;template:with path=&quot;badge&gt;MainInfo&quot; var=&quot;field&quot;&gt;
+20                  &lt;core:Fragment fragmentName=&quot;sap.ui.core.sample.ViewTemplate.tiny.Field&quot; type=&quot;XML&quot;/&gt;
+21              &lt;/template:with&gt;
+22   
+23              &lt;Label text=&quot;{path: &apos;badge&gt;SecondaryInfo/Label&apos;, formatter: &apos;sap.ui.model.odata.AnnotationHelper.format&apos;}&quot;/&gt;
+24              &lt;template:with path=&quot;badge&gt;SecondaryInfo&quot; var=&quot;field&quot;&gt;
+25                  &lt;core:Fragment fragmentName=&quot;sap.ui.core.sample.ViewTemplate.tiny.Field&quot; type=&quot;XML&quot;/&gt;
+26              &lt;/template:with&gt;
+27          &lt;/form:SimpleForm&gt;
+28      &lt;/template:with&gt;
+29  &lt;/mvc:View&gt;</pre>
+
+<pre class="pre codeblock prettyprint lang-xml">1   &lt;core:FragmentDefinition
+2       xmlns=&quot;sap.m&quot;
+3       xmlns:core=&quot;sap.ui.core&quot;
+4       xmlns:template=&quot;http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1&quot;&gt;
+5    
+6       &lt;!-- &quot;field&quot; MUST point to a com.sap.vocabularies.Communication.v1.DataField --&gt;
+7       &lt;HBox&gt;
+8           &lt;template:with path=&quot;field&gt;Value&quot; helper=&quot;sap.ui.model.odata.AnnotationHelper.resolvePath&quot; var=&quot;target&quot;&gt;
+9               &lt;!-- go to entity type&apos;s property and check SAP Annotations for OData Version 2.0 --&gt;
+10              &lt;template:if test=&quot;{= ${target&gt;sap:semantics} === &apos;tel&apos;}&quot; &gt;
+11                  &lt;core:Icon src=&quot;sap-icon://phone&quot; width=&quot;2em&quot;/&gt;
+12              &lt;/template:if&gt;
+13          &lt;/template:with&gt;
+14          &lt;Text text=&quot;{path: &apos;field&gt;Value&apos;, formatter: &apos;sap.ui.model.odata.AnnotationHelper.format&apos;}&quot;/&gt;
+15      &lt;/HBox&gt;
+16  &lt;/core:FragmentDefinition&gt;</pre>
+<p class="p">The result is equivalent to the following handwritten XML view. Any references to the
+meta model are gone. Type information has been inserted into the bindings and an
+<samp class="ph codeph">&quot;odata.concat&quot;</samp> expression for
+<samp class="ph codeph">badge&gt;MainInfo/Value</samp> has been processed by
+<samp class="ph codeph">sap.ui.model.odata.AnnotationHelper.format</samp>, concatenating the
+company name and legal form.</p>
+
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View xmlns=&quot;sap.m&quot; xmlns:core=&quot;sap.ui.core&quot; xmlns:form=&quot;sap.ui.layout.form&quot; xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+  &lt;form:SimpleForm&gt;
+    &lt;form:title&gt;
+      &lt;core:Title text=&quot;{path : &apos;BusinessPartnerID&apos;, type : &apos;sap.ui.model.odata.type.String&apos;, constraints : {&apos;maxLength&apos;:&apos;10&apos;,&apos;nullable&apos;:&apos;false&apos;}}&quot;/&gt;
+    &lt;/form:title&gt;
+    &lt;Label text=&quot;Name&quot;/&gt;
+    &lt;Text text=&quot;{path : &apos;CompanyName&apos;, type : &apos;sap.ui.model.odata.type.String&apos;, constraints : {&apos;maxLength&apos;:&apos;80&apos;}} {path : &apos;LegalForm&apos;, type : &apos;sap.ui.model.odata.type.String&apos;, constraints : {&apos;maxLength&apos;:&apos;10&apos;}}&quot;/&gt;
+    &lt;Label text=&quot;Phone&quot;/&gt;
+    &lt;HBox&gt;
+      &lt;core:Icon src=&quot;sap-icon://phone&quot; width=&quot;2em&quot;/&gt;
+      &lt;Text text=&quot;{path : &apos;PhoneNumber&apos;, type : &apos;sap.ui.model.odata.type.String&apos;, constraints : {&apos;maxLength&apos;:&apos;30&apos;}}&quot;/&gt;
+    &lt;/HBox&gt;
+    &lt;Label text=&quot;Web&quot;/&gt;
+    &lt;HBox&gt;
+      &lt;Text text=&quot;{path : &apos;WebAddress&apos;, type : &apos;sap.ui.model.odata.type.String&apos;, constraints : {}}&quot;/&gt;
+    &lt;/HBox&gt;
+  &lt;/form:SimpleForm&gt;
+&lt;/mvc:View&gt;</pre>
+</section>
+<div class="section"><section class="section" type="Summary"><h2 class="section_title" style="font-size: 1.15em;">Summary</h2>
+
+<div class="p">Overall, XML templating is based on:<ul class="ul" id="loio5ee619fc1370463ea674ee04b65ed83b__ul_cm3_2vs_hr">
+<li class="li">
+<p class="p">Preprocessing instructions such as <samp class="ph codeph">&lt;template:if&gt;</samp>,
+which can be used inside XML views</p>
+</li>
+<li class="li">
+<p class="p">An OData meta model which offers a unified access to both, OData V2
+metadata and OData V4 annotations</p>
+</li>
+<li class="li">
+<p class="p">A set of OData type implementations which add knowledge of OData types to
+<span class="ph"><span class="ph pname">SAPUI5</span></span></p>
+</li>
+<li class="li">
+<p class="p">Expression binding which facilitates the use of expressions instead of
+custom formatter functions</p>
+</li>
+<li class="li">
+<p class="p">The helper class <samp class="ph codeph">sap.ui.model.odata.AnnotationHelper</samp>
+that offers formatter and helper functions to be used inside XML
+template views. It knows about the OData meta model and helps with
+standard tasks like accessing a label or providing a runtime binding
+path. It brings in the OData types, along with their facets. Its output
+uses expression binding, if needed.</p>
+</li>
+</ul><aside class="note" aria-labelledby="note_4_title"><div class="title" id="note_4_title"><strong>Note</strong></div>
+<p>XML Templating works almost the same for OData V4 as for OData V2; for
+the differences see the <em class="ph i">Annotations</em> section in <a class="xref" href="../../#/topic/7f29fb3ce5964d8090038a9d3cdf5060.html" title="Each OData V4 model offers access via getMetaModel to a corresponding metadata model sap.ui.model.odata.v4.ODataMetaModel, which is read-only and offers access to OData V4 metadata in a streamlined JSON format (see links under Related Information for more details). Only one-time bindings are supported by this model because the metadata is immutable." target="_top">Meta Model for OData V4</a>.</p></aside></div>
+</section></div>
+</div><div class="related-links"> <br><div class="childtopics"><strong>In this section:</strong></div><ul class="ullinks"><div><strong><a class="link" href="../../#/topic/c27d49caa48e424eb75391ae85da2134.html" title="Preprocessing intructions are processed by the XML preprocessor when it traverses the view&apos;s XML DOM." target="_top">Preprocessing Instructions</a></strong><br></div><div><strong><a class="link" href="../../#/topic/dbec058964f545e4bb3b7e9fbaa0602d.html" title="A collection of methods which help to consume OData Version 4.0 annotations in XML template views." target="_top">Annotation Helper</a></strong><br></div><div><strong><a class="link" href="../../#/topic/153b357ccff14715af9973de9a045e38.html" title="For the debug levels DEBUG and ALL, the XML preprocessor writes a trace for what it exactly does." target="_top">Debugging</a></strong><br></div></ul><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/6c47b2b39db9404582994070ec3d57a2.html#loio341823349ed04df1813197f2a0d71db2" title="The implementation sap.ui.model.odata.ODataMetaModel offers a unified access to both OData Version 2.0 metadata and Version 4.0 annotations." target="_top">Meta Model for OData V2</a></div><div><a class="link" href="../../#/topic/daf6852a04b44d118963968a1239d2c0.html" title="Expression binding is an enhancement of the SAPUI5 binding syntax, which allows for providing expressions instead of custom formatter functions." target="_top">Expression Binding</a></div><div><a class="link" href="http://www.sap.com/Protocols/SAPData" target="_blank" alt="http://www.sap.com/Protocols/SAPData" title="http://www.sap.com/Protocols/SAPData">SAP Annotations for OData Version 2.0</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.AnnotationHelper" target="_top" alt="#/api/sap.ui.model.odata.AnnotationHelper" title="#/api/sap.ui.model.odata.AnnotationHelper"><samp class="ph codeph">sap.ui.model.odata.AnnotationHelper</samp></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

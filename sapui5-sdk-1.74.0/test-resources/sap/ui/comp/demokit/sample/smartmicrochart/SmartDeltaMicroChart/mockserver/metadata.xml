@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+	xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+	xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+	xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:Reference Uri="https://mydomain.com/catalogService/ui/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI" />
+	</edmx:Reference>
+	<edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml">
+		<edmx:Include Alias="MEASURES" Namespace="Org.OData.Measures.V1" />
+	</edmx:Reference>
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="DmcNamespace" xml:lang="en" sap:schema-version="0" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="ProductType" sap:label="Product Sales Data" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="Product" />
+				</Key>
+				<Property Name="Product" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Product ID" />
+				<Property Name="Revenue" Type="Edm.Decimal" Precision="16" Scale="3" />
+				<Property Name="Title1" Type="Edm.String"/>
+				<Property Name="TargetRevenue" Type="Edm.Decimal" Precision="16" Scale="3" />
+				<Property Name="Title2" Type="Edm.String"/>
+				<Property Name="Currency" Type="Edm.String" />
+			</EntityType>
+			<EntityContainer Name="DmcNamespace_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+				<EntitySet Name="Products" EntityType="DmcNamespace.ProductType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1" />
+			</EntityContainer>
+
+			<Annotations Target="DmcNamespace.ProductType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="UI.Chart">
+					<Record>
+						<PropertyValue Property="Title" String="Chart Title" />
+						<PropertyValue Property="Description" String="Chart Description" />
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Revenue</PropertyPath>
+								<PropertyPath>TargetRevenue</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="UI.ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="Revenue" />
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#DataPoint1" />
+								</Record>
+								<Record Type="UI.ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="TargetRevenue" />
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#DataPoint2" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="DataPoint1">
+					<Record>
+						<PropertyValue Path="Title1" Property="Title" />
+						<PropertyValue Path="Revenue" Property="Value" />
+						<PropertyValue Path="Criticality" Property="Criticality" />
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="DataPoint2">
+					<Record>
+						<PropertyValue Path="Title2" Property="Title" />
+						<PropertyValue Path="TargetRevenue" Property="Value" />
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="DmcNamespace.ProductType/Revenue">
+				<Annotation Term="MEASURES.ISOCurrency" Path="Currency"></Annotation>
+			</Annotations>
+			<atom:link rel="self" href="https://mydomain.com/myService/$metadata" xmlns:atom="http://www.w3.org/2005/Atom" />
+			<atom:link rel="latest-version" href="https://mydomain.com/myService/$metadata" xmlns:atom="http://www.w3.org/2005/Atom" />
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

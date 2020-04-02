@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="UTF-8">
+
+		<title>Testpage - Adapter3D Decals</title>
+
+		<!-- This is to test internal camera save/restore state functionality only, so private objects/methods used 
+        Needs html2canvas. To run local you will need to get this from vk
+            data-sap-ui-resourceroots='{
+					"sap.ui.vk": "???/sapui5-sdk-internal/resources/sap/ui/vk/"
+				}' -->
+
+		<script id="sap-ui-bootstrap"
+				data-sap-ui-libs="sap.ui.vbm, sap.ui.unified, sap.m, sap.ui.layout"
+				data-sap-ui-theme="sap_belize"
+				src="../../../../resources/sap-ui-core.js">
+		</script>
+
+		<script>
+			sap.ui.getCore().attachInit(function() {
+				sap.ui.require([
+					"sap/ui/vbm/Viewport", "sap/ui/vbm/Adapter3D",
+					"sap/ui/layout/Splitter", "sap/ui/layout/SplitterLayoutData",
+					"sap/ui/layout/form/GridLayout", "sap/ui/layout/form/FormElement",
+					"sap/ui/layout/form/GridElementData", "sap/ui/layout/form/FormContainer",
+					"sap/ui/layout/form/Form", "sap/m/Button", "sap/m/Input",
+					"sap/m/Label", "sap/m/Page", "sap/m/App", "sap/m/MessageToast", "sap/m/TextArea",
+					"sap/ui/model/json/JSONModel"
+				], function(
+					Viewport, Adapter3D,
+					Splitter, SplitterLayoutData,
+					GridLayout, FormElement,
+					GridElementData, FormContainer,
+					Form, Button, Input, Label, Page, App, MessageToast, TextArea, JSONModel
+				) {
+					var viewport = new Viewport({
+						id: "lso-viewport",
+						height: "512px",
+						layoutData: new SplitterLayoutData({
+							size: "100%"
+						})
+					});
+
+					var payloads = {
+						templatePayload: undefined,
+						eventPayload: undefined
+					};
+					var model = new JSONModel(payloads);
+					sap.ui.getCore().setModel(model, "source");
+
+					var adapter3D = new Adapter3D("adapter3d", {
+						viewport: viewport,
+						submit: function(oPayload) {
+							payloads.eventPayload = oPayload.getParameters().data;
+							var jsonEvent = JSON.parse(payloads.eventPayload);
+							var sourceData = oPayload.oSource._context
+								.data[jsonEvent.Data.Merge.N[0].name]
+								.find(function(element) {
+									return element.Key == jsonEvent.Data.Merge.N[0].E[0].K;
+								});
+
+							var payloadTemplate = 
+							{ 
+								"SAPVB": {
+										"version": "2.0",
+										"xmlns:VB": "VB",
+										"Data": {
+											"Remove": {
+												"name": jsonEvent.Data.Merge.N[0].name,
+												"type": "E",
+												"N": {
+													"name": jsonEvent.Data.Merge.N[0].name
+												}
+											},
+											"Set": [{
+												"name": jsonEvent.Data.Merge.N[0].name,
+												"type": "N",
+												"N": {
+													"name": jsonEvent.Data.Merge.N[0].name,
+													"E": [
+														{
+															"A": sourceData.GeoPosition,
+															"C": sourceData.Color,
+															"I": sourceData.Texture,
+															"IC": sourceData.TextureCap,
+															"O": sourceData.IsOpen,
+															"B": sourceData.Tooltip,
+															"K": sourceData.Key,
+															"R": sourceData.DisplayRole,
+															"VB:s": sourceData["VB:s"],
+															"VB:c": sourceData["VB:c"],
+															"HC": sourceData.HotColor,
+															"SC": sourceData.SelectColor,
+															"L": sourceData.L,
+															"S": sourceData.Scale,
+															"Y": sourceData.Rotation,
+															"E": sourceData.FixDir,
+															"F": sourceData.FixSize,
+															"Z": sourceData.ZSorting,
+															"D": sourceData.BorderColor,
+															"DD": sourceData.DragData
+														}
+													]
+												}
+											}]
+										}
+									}
+								};
+								var payloadTemplate = JSON.stringify(payloadTemplate, null, 2);
+								payloads.templatePayload = payloadTemplate;
+								model.setData(payloads);
+						}
+					});
+
+					function load(url) {
+						$.ajax({
+							url: url,
+							dataType: "json",
+							success: function(data, status, xhr) {
+								try
+								{
+									adapter3D.load(JSON.stringify(data));
+								} catch(ex) {
+									alert(ex);
+								}
+							}
+						});
+					}
+
+					var oLayout = new GridLayout();
+
+					var page = new Page({
+						title: "Adapter3D Cylinder Visual Objects",
+						content: [
+							new Form({
+								editable: true,
+								layout: oLayout,
+								formContainers: [
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Initial payload",
+														textAlign: "Center"
+													})
+												]
+											})
+										]
+									}),
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+												new Button({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Truck",
+														press: function() {
+															load("media/threejs/Cylinder_Truck_Initial.json");
+														}
+													})
+												]
+											})
+										]
+									}),
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+													new Splitter({
+														layoutData: new GridElementData({ vCells: 4 }),
+														height: "512px",
+														width: "100%",
+														contentAreas: [
+															viewport
+														]
+													})
+												]
+											})
+										]
+									}),
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+													new TextArea("customPayload",{
+														layoutData: new GridElementData({ vCells: 2 }),
+														placeholder: "Custom Payload",
+														value: "{source>/templatePayload}",
+														height: "300px"
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "2" }),
+														text: "Custom Load",
+														press: function(event) {
+															var payload = sap.ui.getCore().byId("customPayload").getValue();
+															//payload = JSON.stringify(parsedpayload);
+															sap.ui.getCore().byId("adapter3d").load(payload).then(function() {
+																MessageToast.show("Succeeded");
+															}).catch(function(){
+																MessageToast.show("Failed");
+															});
+														}
+													})
+												]
+											})
+										]
+									})
+								]
+							})
+						]
+					});
+
+					var app = new App();
+					app.addPage(page);
+					app.placeAt("body");
+				});
+			});
+		</script>
+	</head>
+	<body id="body" class="sapUiBody">
+	</body>
+</html>

@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define([],function(){"use strict";return function HttpClient(g,r,b,c){if(!/String/.test(Object.prototype.toString.call(b))){throw"IllegalArgumentError: `sBaseUrl` should be a string";}return Object.create(null,{post:{value:g("POST",r,b,c)},get:{value:g("GET",r,b,c)},put:{value:g("PUT",r,b,c)},delete:{value:g("DELETE",r,b,c)},options:{value:g("OPTIONS",r,b,c)}});};});

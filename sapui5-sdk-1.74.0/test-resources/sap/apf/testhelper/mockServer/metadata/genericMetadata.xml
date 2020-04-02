@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:DataServices m:DataServiceVersion="2.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+        <Schema Namespace="dummy" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="firstEntityQueryResultsType" sap:semantics="aggregate">
+                <Key>
+                    <PropertyRef Name="GenID"/>
+                </Key>
+                <Property Name="GenID" Type="Edm.String" Nullable="false" MaxLength="2147483647" sap:filterable="false"/>  
+                <Property Name="firstProperty" Type="Edm.String" MaxLength="3" sap:aggregation-role="dimension"/>            
+                <Property Name="nonFilterableProperty" Type="Edm.String" MaxLength="4" sap:aggregation-role="dimension" sap:filterable="false"/>   
+            </EntityType>
+            <EntityType Name="firstEntityQueryType" sap:semantics="parameters">
+                <Key>
+                    <PropertyRef Name="P_SecondParameter"/>
+                </Key>
+                <Property Name="P_FirstParameter" Type="Edm.Int32" Nullable="false"  sap:parameter="mandatory"/>
+                <Property Name="P_SecondParameter" Type="Edm.String" Nullable="false" MaxLength="5"/>   
+                <NavigationProperty Name="Results" Relationship="dummy.firstEntityQuery_firstEntityQueryResultsType" FromRole="firstEntityQueryPrincipal" ToRole="firstEntityQueryResultsDependent"/>
+            </EntityType>
+               <EntityType Name="secondEntityQueryResultsType" sap:semantics="aggregate">
+                <Key>
+                    <PropertyRef Name="GenID"/>
+                </Key>
+                <Property Name="GenID" Type="Edm.String" Nullable="false" MaxLength="2147483647" sap:filterable="false"/>  
+                <Property Name="firstProperty" Type="Edm.String" MaxLength="3" sap:aggregation-role="dimension"/>
+                <Property Name="secondProperty" Type="Edm.String" MaxLength="123" sap:aggregation-role="dimension"/>              
+                <Property Name="nonFilterableProperty" Type="Edm.String" MaxLength="4" sap:aggregation-role="dimension" sap:filterable="false"/>   
+            </EntityType>
+            <EntityType Name="secondEntityQueryType" sap:semantics="parameters">
+                <Key>
+                     <PropertyRef Name="P_FirstParameter"/>
+                    <PropertyRef Name="P_SecondParameter"/>
+                </Key>
+                <Property Name="P_FirstParameter" Type="Edm.Int32" Nullable="false"  sap:parameter="mandatory"/>
+                <Property Name="P_SecondParameter" Type="Edm.String" Nullable="false" MaxLength="5"/>   
+                <NavigationProperty Name="ResultsSecond" Relationship="dummy.secondEntityQuery_secondEntityQueryResultsType" FromRole="secondEntityQueryPrincipal" ToRole="secondEntityQueryResultsDependent"/>
+                <NavigationProperty Name="ResultsFirst"  Relationship="dummy.secondEntityQuery_firstEntityQueryResultsType" FromRole="secondEntityQueryPrincipal" ToRole="firstEntityQueryResultsDependent"/>
+            </EntityType>
+            <EntityType Name="thirdEntityDirectlyAddressableQueryResultsType" sap:semantics="aggregate">
+                <Key>
+                     <PropertyRef Name="PropertyOneForThird"/>
+                </Key>
+                <Property Name="PropertyOneForThird" Type="Edm.String" Nullable="false" MaxLength="5"/>
+                <Property Name="PropertyTwoForThird" Type="Edm.String" Nullable="false" MaxLength="15"/>   
+            </EntityType>
+			<EntityType Name="fourthEntityWithoutSapSemanticsType">
+                <Key>
+                     <PropertyRef Name="PropertyOneForFourth"/>
+                </Key>
+                <Property Name="PropertyOneForFourth" Type="Edm.String" Nullable="false" MaxLength="5"/>
+                <Property Name="PropertyTwoForFourth" Type="Edm.String" Nullable="false" MaxLength="15"/>   
+            </EntityType>
+            
+            <Association Name="firstEntityQuery_firstEntityQueryResultsType">
+                <End Type="dummy.firstEntityQueryType" Role="firstEntityQueryPrincipal" Multiplicity="*"/>
+                <End Type="dummy.firstEntityQueryResultsType" Role="firstEntityQueryResultsDependent" Multiplicity="*"/>
+            </Association>
+            <Association Name="secondEntityQuery_secondEntityQueryResultsType">
+                <End Type="dummy.secondEntityQueryType" Role="secondEntityQueryPrincipal" Multiplicity="*"/>
+                <End Type="dummy.secondEntityQueryResultsType" Role="secondEntityQueryResultsDependent" Multiplicity="*"/>
+            </Association>
+            <Association Name="secondEntityQuery_firstEntityQueryResultsType">
+                <End Type="dummy.firstEntityQueryResultsType" Role="firstEntityQueryResultsDependent" Multiplicity="*"/>
+                <End Type="dummy.secondEntityQueryType" Role="secondEntityQueryPrincipal" Multiplicity="*"/>
+            </Association>
+            <EntityContainer Name="testMetadata" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="firstEntityQueryResults" EntityType="dummy.firstEntityQueryResultsType" sap:addressable="false"/>
+                <EntitySet Name="firstEntityQuery" EntityType="dummy.firstEntityQueryType" sap:addressable="false"/>
+                <EntitySet Name="secondEntityQueryResults" EntityType="dummy.secondEntityQueryResultsType" sap:addressable="false"/>
+                <EntitySet Name="secondEntityQuery" EntityType="dummy.secondEntityQueryType" sap:addressable="false"/>
+                <EntitySet Name="thirdEntityDirectlyAddressableQueryResults" EntityType="dummy.thirdEntityDirectlyAddressableQueryResultsType"/>
+                <EntitySet Name="fourthEntityWithoutSapSemantics" EntityType="dummy.fourthEntityWithoutSapSemanticsType"/>
+                <AssociationSet Name="firstEntityQuery_firstEntityQueryResults" Association="dummy.firstEntityQuery_firstEntityQueryResultsType">
+                    <End Role="firstEntityQueryPrincipal" EntitySet="firstEntityQuery"/>
+                    <End Role="firstEntityQueryResultsDependent" EntitySet="firstEntityQueryResults"/>
+                </AssociationSet>
+                <AssociationSet Name="secondEntityQuery_secondEntityQueryResults" Association="dummy.secondEntityQuery_secondEntityQueryResultsType">
+                    <End Role="secondEntityQueryPrincipal" EntitySet="secondEntityQuery"/>
+                    <End Role="secondEntityQueryResultsDependent" EntitySet="secondEntityQueryResults"/>
+                </AssociationSet>
+                <AssociationSet Name="secondEntityQuery_firstEntityQueryResults" Association="dummy.secondEntityQuery_firstEntityQueryResultsType">
+                    <End Role="secondEntityQueryPrincipal" EntitySet="secondEntityQuery"/>
+                    <End Role="firstEntityQueryResultsDependent" EntitySet="firstEntityQueryResults"/>
+                </AssociationSet>
+                 <AssociationSet Name="firstEntityQueryResults_thirdEntityDirectlyAddressableQueryResults" Association="dummy.secondEntityQuery_firstEntityQueryResultsType">
+                    <End Role="firstEntityQueryResultsPrincipal" EntitySet="firstEntityQueryResults"/>
+                    <End Role="thirdEntityDirectlyAddressableQueryResultsDependent" EntitySet="thirdEntityDirectlyAddressableQueryResults"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
+
+

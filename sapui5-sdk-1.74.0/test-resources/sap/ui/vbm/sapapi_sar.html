@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+         <style>
+            .DesignItem 
+            {
+               width: 32px;
+               height: 32px;
+               position: relative;
+               display: inline-block;
+               vertical-align: middle;
+               -moz-user-select: none;
+               -khtml-user-select: none;
+               user-select: none;
+            }
+            .DesignToolbar
+            {
+               width: 1024px;
+               height: 36px;
+               padding: 2px 2px 2px 2px;
+               vertical-align: middle;
+               border-style: none;
+               background-color: rgba(182,182,182,0.45);
+               background: -moz-linear-gradient(top,rgba(182,182,182,0.45),rgba(182,182,182,0.45) 80%,rgba(182,182,182,0)); 		/* Firefox */
+               background: -webkit-linear-gradient(top,rgba(182,182,182,0.45),rgba(182,182,182,0.45) 80%,rgba(182,182,182,0));	/* Chrome, Safari */
+               background: -ms-linear-gradient(top,rgba(182,182,182,0.45),rgba(182,182,182,0.45) 80%,rgba(182,182,182,0));		   /* MS */
+            }
+         </style>
+
+
+        <script src="../../../../resources/sap-ui-core.js"
+                id="sap-ui-bootstrap"
+                data-sap-ui-libs="sap.ui.vbm"
+                data-sap-ui-theme="sap_bluecrystal" >
+        </script>
+        <!-- add sap.ui.table,sap.ui.ux3 and/or other libraries to 'data-sap-ui-libs' if required -->
+
+        <script>
+            // creation of visual business...................................//
+            sap.ui.localResources("vbitestapp");
+
+            var gIndex = 0;
+			   var dataNewSpot;
+            
+            function onSubmit( e )
+            {
+                if( evtoutput.innerText !== undefined )
+                   evtoutput.innerText = e.getParameter( "data" );
+                else
+	   			if( evtoutput.textContent !== undefined )
+                   evtoutput.textContent = e.getParameter( "data" );	// due to ff
+            };
+            
+            var oVBI1 = new sap.ui.vbm.VBI('vbiWrap2',
+            {
+                width : 1024,
+                height: 640,
+                submit: onSubmit        // set the event handler                
+            });
+            oVBI1.placeAt("content");
+
+         // load the json for the application................................//
+         var dat = $.getJSON("media/vbsar/design.json", function( dat ) 
+         {
+            oVBI1.load( dat );
+         });
+          
+         // get the command data.............................................//
+         var oInsertCmd = {};
+         var aCmd = [ 'spot', 'area', 'geocircle', 'circle', 'route', 'box', 'piechart' ];
+
+         // currently get the insert command information from files..........//
+         function GetInsertCommand( name, oInsertCmd )
+         { 
+            $.ajax( {   url: "media/vbsar/new_" + name + ".json",                
+                        dataType: "json", 
+                        success: function( data, textStatus, jqXHR )
+                        { 
+                           oInsertCmd[ name ] = JSON.stringify( data, null, '  ' );  
+                        } 
+                     } 
+                  );
+         };
+
+         // collect the insert commands......................................//            
+         for( var nJ = 0; nJ < aCmd.length; ++nJ )
+            GetInsertCommand( aCmd[nJ], oInsertCmd );
+            
+        </script>
+       </head>
+    
+   <body class="sapUiBody" >
+      <h1>Visual Business UI5: This sample should show some design mode capabilities.</h1>
+      <ul>
+         <li> Press 'D' on the map, drag the symbols and drop them on the map.
+      </ul> 
+     
+
+      <div  class="DesignToolbar" id="Toolbar"  draggable="false" >
+         <div class="DesignItem" id="spot"      draggable="true" ><img src="media/vbdesign/spot.png"/></div>
+         <div class="DesignItem" id="area"      draggable="true" ><img src="media/vbdesign/area.png"/></div>
+         <div class="DesignItem" id="geocircle" draggable="true" ><img src="media/vbdesign/geocircle.png"/></div>
+         <div class="DesignItem" id="circle"    draggable="true" ><img src="media/vbdesign/circle.png"/></div>
+         <div class="DesignItem" id="route"     draggable="true" ><img src="media/vbdesign/route.png"/></div>
+         <div class="DesignItem" id="box"       draggable="true" ><img src="media/vbdesign/box.png"/></div>
+         <div class="DesignItem" id="piechart"  draggable="true" ><img src="media/vbdesign/pie.png"/></div>
+      </div>
+
+      <table>
+         <tr>
+               <td><div id="content"></div></td>
+         </tr>
+         <tr>
+               <td><h6>Event:</h6><br><textarea style="width:100%;box-sizing:border-box" id="evtoutput" rows="8" ></textarea></td>
+         </tr>
+      </table>
+
+      <script>
+	      //..................................................................//
+	      // do some drag and drop code.......................................//
+	         
+	      // for getting this running in IE we apply the select impl..........//
+	
+	      function selectstart( e ) 
+	      { 
+	         if( e.target.dragDrop )
+	            e.target.dragDrop();
+	         e.preventDefault();
+	         return true;
+	      };
+	 
+	      function dragstart( e )
+	      {
+	         // try to load the json that is requested for this action........//
+	         var id = e.target.id;				
+	         if( id == "" )
+	            id = e.target.parentElement.id;
+	
+	         // get the insertcommand from the ajax loaded object.............//
+	         if( oInsertCmd[ id ] )				
+	            e.dataTransfer.setData( "text", oInsertCmd[ id ].replace(/{KEY}/g, VBI.MathLib.CreateGUID() ) );
+	         else
+	            e.dataTransfer.setData( 'text', "unknown" );
+	
+	         e.dataTransfer.effectAllowed='move';
+	         return true; 
+	      };
+	
+	      // apply selectstart and dragstart functionality and dragstart......//
+	      for( var nJ = 0; nJ < Toolbar.childNodes.length; nJ++ )
+	      {
+	         Toolbar.childNodes[nJ].onselectstart = selectstart;
+	         Toolbar.childNodes[nJ].ondragstart = dragstart;
+	      }
+      </script>
+   </body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Using OpaBuilder</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Write tests by leveraging the builder pattern to create OPA5 descriptors."><meta name="description" content="Write tests by leveraging the builder pattern to create OPA5 descriptors."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"698f8c0a889f48d3a8b7fbcd26779be2.html","previousTopicHref":"8615a0b9088645ae936dbb8bbce5d01d.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio952e2c7458e14d6581cdfc510fbb272a"><h1 class="title topictitle1" hidden>Using <samp class="ph codeph">OpaBuilder</samp></h1><div class="body conbody"><p class="shortdesc" hidden>Write tests by leveraging the builder pattern to create OPA5 descriptors.</p>
+<p class="p"><samp class="ph codeph">sap.ui.test.OpaBuilder</samp> is available as of version 1.74.</p>
+<p class="p">The main benefit for developers is having a function-driven API at hand, which supports and
+promotes a clean test definition and execution.</p>
+<p class="p">In <a class="xref" href="../../#/topic/8615a0b9088645ae936dbb8bbce5d01d.html" title="OPA5 has a built-in actions parameter that can be used for simulating events. If you use an action, OPA5 will make sure that the UI is in a state that allows the action to be executed." target="_top">Simulating User Interactions on Controls</a>, we provided some examples on
+how to interact with controls. Let&apos;s have a look at some by implementing them using
+<samp class="ph codeph">OpaBuilder</samp>.</p>
+<div class="section" id="loio952e2c7458e14d6581cdfc510fbb272a__section_zys_cq4_xjb"><section class="section" type="Simulating a press Event"><h2 class="section_title" style="font-size: 1.15em;">Simulating a <samp class="ph codeph">press</samp> Event</h2><p class="p">The <samp class="ph codeph">waitFor</samp> options for this straightforward example are as follows:</p><pre class="pre codeblock prettyprint lang-js">return oOpa.waitFor({
+    id: &quot;myButton&quot;,
+    actions: new Press()
+});</pre><p class="p">When you use <samp class="ph codeph">OpaBuilder</samp>, it looks like this:</p><pre class="pre codeblock prettyprint lang-js">return oOpa.waitFor(
+    new OpaBuilder()
+        .hasId(&quot;myButton&quot;)
+        .doPress()
+        .build()
+);</pre><p class="p">The result of the <samp class="ph codeph">OpaBuilder.build</samp> method is the configuration object for the
+<samp class="ph codeph">Opa5.waitFor</samp> method. Because it&apos;s commonly used just as such,
+<samp class="ph codeph">OpaBuilder</samp> comes with a convenient
+<samp class="ph codeph">OpaBuilder.execute()</samp> method. The required <samp class="ph codeph">Opa5</samp>
+instance can be provided as a parameter to the <samp class="ph codeph">execute</samp> function, or
+you can use the <samp class="ph codeph">constructor</samp> or <samp class="ph codeph">create</samp> method.
+Taking this into account, the previous example can also be written like this:</p><pre class="pre codeblock prettyprint lang-js">return OpaBuilder.create(oOpa)
+    .hasId(&quot;myButton&quot;)
+    .doPress()
+    .execute();</pre><p class="p">For more information, see
+<a class="xref" href="../../#/api/sap.ui.test.OpaBuilder/methods/build" target="_top" alt="#/api/sap.ui.test.OpaBuilder/methods/build" title="#/api/sap.ui.test.OpaBuilder/methods/build"><samp class="ph codeph">OpaBuilder.build</samp></a>, <a class="xref" href="../../#/api/sap.ui.test.OpaBuilder/methods/execute" target="_top" alt="#/api/sap.ui.test.OpaBuilder/methods/execute" title="#/api/sap.ui.test.OpaBuilder/methods/execute"><samp class="ph codeph">OpaBuilder.execute</samp></a>, and
+<a class="xref" href="../../#/api/sap.ui.test.OpaBuilder/methods/sap.ui.test.OpaBuilder.create" target="_top" alt="#/api/sap.ui.test.OpaBuilder/methods/sap.ui.test.OpaBuilder.create" title="#/api/sap.ui.test.OpaBuilder/methods/sap.ui.test.OpaBuilder.create"><samp class="ph codeph">OpaBuilder.create</samp></a>.</p></section></div>
+<div class="section" id="loio952e2c7458e14d6581cdfc510fbb272a__section_lvr_tt4_xjb"><section class="section" type="Complex Interaction with Child Elements"><h2 class="section_title" style="font-size: 1.15em;">Complex Interaction with Child Elements</h2><p class="p">Let&apos;s
+assume we want to show the suggestion list with a filter for &quot;Jo&quot;. The
+<samp class="ph codeph">waitFor</samp> definition could look like
+this:</p><pre class="pre codeblock prettyprint lang-js">oOpa.waitFor({
+    id: &quot;formInput&quot;,
+    actions: [
+        new EnterText({
+            text: &quot;Jo&quot;,
+            keepFocus: true
+        }),
+        function (oInput) {
+            this.waitFor({
+                controlType: &quot;sap.m.StandardListItem&quot;,
+                matchers: [
+                    new Ancestor(oInput),
+                    new Properties({ title: &quot;John&quot; })
+                ],
+                actions: new Press()
+            });
+        }
+    ]
+});</pre><p class="p"><samp class="ph codeph">OpaBuilder</samp>
+comes with convenient functions to operate on aggregations and child elements:
+<samp class="ph codeph">OpaBuilder.doOnAggregation</samp> and
+<samp class="ph codeph">OpaBuilder.doOnChildren</samp>.</p><p class="p">While
+<samp class="ph codeph">doOnAggregation</samp> requires the aggregation name of the defined
+control and only operates on those <span class="ph"><span class="ph pname">SAPUI5</span></span> aggregation
+items, <samp class="ph codeph">doOnChildren</samp> addresses any control that is a child within
+the control hierarchy. Internally, the
+<samp class="ph codeph">sap.ui.test.Matchers.Ancestor</samp> matcher is used as well, but the
+definition is
+simplified:</p><pre class="pre codeblock prettyprint lang-js">OpaBuilder.create(oOpa)
+    .hasId(&quot;formInput&quot;)
+    .doEnterText(&quot;Jo&quot;, false, true),
+    .doOnChildren(
+        OpaBuilder.create(oOpa)
+            .hasType(&quot;sap.m.StandardListItem&quot;)
+            .hasProperties({ title: &quot;John&quot; })
+            .doPress()
+    )
+    .execute();</pre><span class="ph">For more
+information, see <a class="xref" href="../../#/api/sap.ui.test.OpaBuilder/methods/doOnAggregation" target="_top" alt="#/api/sap.ui.test.OpaBuilder/methods/doOnAggregation" title="#/api/sap.ui.test.OpaBuilder/methods/doOnAggregation"><samp class="ph codeph">OpaBuilder.doOnAggregation</samp></a> and <a class="xref" href="../../#/api/sap.ui.test.OpaBuilder/methods/doOnChildren" target="_top" alt="#/api/sap.ui.test.OpaBuilder/methods/doOnChildren" title="#/api/sap.ui.test.OpaBuilder/methods/doOnChildren"><samp class="ph codeph">OpaBuilder.doOnChildren</samp></a>.</span></section></div>
+<div class="section" id="loio952e2c7458e14d6581cdfc510fbb272a__section_nyd_yv4_xjb"><section class="section" type="Custom Functions and Chaining"><h2 class="section_title" style="font-size: 1.15em;">Custom Functions and Chaining</h2>
+
+<p class="p">Let&apos;s have a look at an example including a custom matcher and an action:</p>
+<pre class="pre codeblock prettyprint lang-js">When.waitFor({
+    id: &quot;entryList&quot;,
+    matchers: [
+        new Properties({ mode: &quot;MultiSelect&quot; }),
+        function (oList) {
+            return oList.getItems().length &gt; 0;
+        }
+    ],
+    actions: function (oList) {
+        for (var i = 0; i &lt; oList.getItems().length; ++i) {
+            oList.setSelectedItem(oList.getItems()[i], true);
+        }
+    },
+    errorMessage: &quot;Could not select all items&quot;
+});</pre>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">This example showcases the usage of a custom action. The best practice that we recommend is
+to use only <samp class="ph codeph">Press</samp> and <samp class="ph codeph">EnterText</samp> actions when
+simulating user interactions.</p></aside>
+<p class="p">Besides user-defined functions, the example also contains two matchers. As the parameter of
+the <samp class="ph codeph">has</samp> method accepts the same types as the
+<samp class="ph codeph">matchers</samp> property, this part could directly be rewritten
+as:</p>
+<pre class="pre codeblock prettyprint lang-js">...
+    .has([
+        new Properties({ mode: &quot;MultiSelect&quot; }),
+        function (oList) {
+            return oList.getItems().length &gt; 0;
+        }
+    ])
+...</pre>
+<p class="p">However, by leveraging the builder pattern, the <samp class="ph codeph">.has</samp> methods can easily be
+chained. The resulting <samp class="ph codeph">matchers</samp> options are an array consisting of
+all defined single matchers in the order of definition. This is similar to the
+<samp class="ph codeph">.do</samp> method and the <samp class="ph codeph">actions</samp> property.</p>
+<pre class="pre codeblock prettyprint lang-js">OpaBuilder.create(When)
+    .hasId(&quot;entryList&quot;)
+    .hasProperties({ mode: &quot;MultiSelect&quot; })
+    .has(function (oList) {
+        return oList.getItems().length &gt; 0;
+    })
+    .do(function (oList) {
+        for (var i = 0; i &lt; oList.getItems().length; ++i) {
+            oList.setSelectedItem(oList.getItems()[i], true);
+        }
+    })
+    .error(&quot;Could not select all items&quot;)
+    .execute();</pre>
+<p class="p">While <samp class="ph codeph">matchers</samp> and <samp class="ph codeph">actions</samp> can be an array of functions, the
+more seldom used <samp class="ph codeph">check</samp> and <samp class="ph codeph">success</samp> properties must
+be a single function. Nevertheless, due to the builder pattern, those functions can
+be chained as well:</p>
+<pre class="pre codeblock prettyprint lang-js">OpaBuilder.create()
+    .check(fnCheck1)
+    .check(fnCheck2)
+    .check(fnCheck3)
+    .success(fnAssert1)
+    .success(fnAssert2)
+    .build();</pre>
+<p class="p"><samp class="ph codeph">OpaBuilder</samp> chains those functions, which results in the following
+<samp class="ph codeph">waitFor</samp> options:</p>
+<pre class="pre codeblock prettyprint lang-js">{
+    check: function (vInput) {
+        return function(vInput) {
+            return fnCheck1(vInput) &amp;&amp; fnCheck2(vInput);
+       ) &amp;&amp; fnCheck3(vInput);
+    },
+    success: function (vInput) {
+        fnAssert1(vInput);
+        fnAssert2(vInput);
+    }
+}</pre>
+</section></div>
+<div class="section" id="loio952e2c7458e14d6581cdfc510fbb272a__section_dlk_2z4_xjb"><section class="section" type="Additional Features"><h2 class="section_title" style="font-size: 1.15em;">Additional Features</h2><p class="p">While
+<samp class="ph codeph">OpaBuilder</samp> itself cannot extend the features provided by
+<samp class="ph codeph">Opa5.waitFor</samp>, it comes with some convenient methods to support
+test definition. Besides the already mentioned child element support, method
+chaining, and most commonly used matchers and actions as predefined functions, there
+are some less obvious features.</p><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Generated Error Message</p>
+<p class="p">If no error message is explicitly defined, <samp class="ph codeph">OpaBuilder</samp> generates
+an error message when calling <samp class="ph codeph">build()</samp>. The message consists of
+the <samp class="ph codeph">controlType</samp> and <samp class="ph codeph">id</samp> properties as well as
+the number of any additional matchers. A generated
+<samp class="ph codeph">errorMessage</samp> can look like this:</p>
+<pre class="pre codeblock prettyprint lang-js">sap.m.Button#myButton with 1 additional matcher(s) not found</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Success Message and Description</p>
+<p class="p">When defining an OPA5 test without an assertion, there&apos;s no output on success.
+Most often, such an output is useful for longer journeys, so the
+<samp class="ph codeph">OpaBuilder.success</samp> method also accepts a string argument.
+This generates a simple truthy assertion with the provided message as a success
+function:</p>
+<pre class="pre codeblock prettyprint lang-js">success: function (vControls) {
+    Opa5.assert.ok(true, sSuccessMessage);
+}</pre>
+<p class="p">The <samp class="ph codeph">OpaBuilder.description</samp> function can be used for even better
+logging. The provided message is set as <samp class="ph codeph">errorMessage</samp> and
+assertion on success:</p>
+<pre class="pre codeblock prettyprint lang-js">OpaBuilder.description(&quot;Pressing &apos;Cancel&apos; button&quot;)
+
+// Output message...
+// ...in case of success
+Pressing &apos;Cancel&apos; button - OK
+
+// ...in case of failure
+Pressing &apos;Cancel&apos; button - FAILURE</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Aggregation Matcher</p>
+<p class="p">A common use case of tests is finding and operating on a control with one or more
+aggregation items that fulfill certain conditions. While there are already some
+predefined matchers for aggregations in place, <samp class="ph codeph">OpaBuilder</samp> comes
+with the generic <samp class="ph codeph">hasAggregation</samp> and the most commonly used
+<samp class="ph codeph">hasAggregationProperties</samp> methods. The
+<samp class="ph codeph">vMatchers</samp> parameter of <samp class="ph codeph">hasAggregation</samp> can
+be any matcher method (or matcher chain) that is executed against the items of
+the defined aggregation of the matching control.</p>
+<pre class="pre codeblock prettyprint lang-js">OpaBuilder.create(oOpa)
+    .hasType(&quot;sap.m.CustomListItem&quot;)
+    .hasAggregation(&quot;content&quot;, [
+        function(oContentItem) {
+            return oContentItem instanceof sap.m.Title;
+        },
+        { 
+            properties: {
+                text: sMatchingTitle
+            }
+        }
+    ])
+    .press()
+    .description(&quot;Pressing list item with title: &quot; + sMatchingTitle)
+    .execute();</pre>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">Defining two <samp class="ph codeph">hasAggregation</samp> matchers can also match two
+different aggregation items. To ensure that one item fulfills all criteria,
+an
+all-criteria-matcher
+should be defined in the same <samp class="ph codeph">hasAggregation</samp> call.</p></aside>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Conditional Actions</p>
+<p class="p">When defining journeys, reusable functions in the page can speed up writing tests
+and their quality. Sometimes, the generic approach of those functions has its
+limitations. One limitation is that a test fails if no control is found that
+matches the conditions. This could be a challenge
+if
+the control being tested is not
+guaranteed to exist.</p>
+<p class="p"><span class="ph emphasis emphasis">Example</span>:</p>
+<p class="p">Let&apos;s have an interaction that selects all items of a list that aren&apos;t selected
+yet.</p>
+<pre class="pre codeblock prettyprint lang-js">OpaBuilder.create(oOpa)
+    .hasType(&quot;sap.m.CustomListItem&quot;)
+    .hasProperties({ selected: false })
+    .doPress()
+    .description(&quot;Selecting unselected items&quot;)
+    .execute();</pre>
+<p class="p">This is fine as long as there is at least one unselected list item. When all
+items are already selected,
+the
+test fails, which is not what we want. Here, the
+<samp class="ph codeph">doConditional</samp> function comes in handy:</p>
+<pre class="pre codeblock prettyprint lang-js">OpaBuilder.create(oOpa)
+    .hasType(&quot;sap.m.CustomListItem&quot;)
+    .doConditional(
+        OpaBuilder.Matchers.properties({ selected: false }), 
+        OpaBuilder.Actions.press()
+    )
+    .description(&quot;Selecting unselected items&quot;)
+    .execute();</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Commonly Used Matchers and Actions</p>
+<p class="p">As already seen in the last example, <samp class="ph codeph">OpaBuilder</samp> has two static
+members: <samp class="ph codeph">OpaBuilder.Matchers</samp> and
+<samp class="ph codeph">OpaBuilder.Actions</samp>. While there&apos;s no issue in using any
+matchers from <samp class="ph codeph">sap.ui.test.Matchers</samp> in the
+<samp class="ph codeph">OpaBuilder</samp> definition, the goal of the two members is to
+provide the most commonly used matchers and actions to be directly accessed when
+working with <samp class="ph codeph">OpaBuilder</samp> without explicitly requiring them in
+the test class.</p>
+<p class="p"><samp class="ph codeph">OpaBuilder.Actions</samp> contains both
+<samp class="ph codeph">sap.ui.test.Actions.Press</samp> and
+<samp class="ph codeph">sap.ui.test.Actions.EnterText</samp>, while
+<samp class="ph codeph">OpaBuilder.Matchers</samp> does <span class="ph emphasis emphasis">not</span> contain every
+predefined matcher in <samp class="ph codeph">sap.ui.test.Matchers</samp>, but still provides
+some additional ones as described in the API.</p>
+</div></section></div>
+<div class="section"></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/api/sap.ui.test.OpaBuilder" target="_top" alt="#/api/sap.ui.test.OpaBuilder" title="#/api/sap.ui.test.OpaBuilder">API Reference: <samp class="ph codeph">sap.ui.test.OpaBuilder</samp></a></div><div><a class="link" href="../../#/api/sap.ui.test.OpaBuilder.Matchers" target="_top" alt="#/api/sap.ui.test.OpaBuilder.Matchers" title="#/api/sap.ui.test.OpaBuilder.Matchers">API Reference: <samp class="ph codeph">sap.ui.test.OpaBuilder.Matchers</samp></a></div><div><a class="link" href="../../#/api/sap.ui.test.OpaBuilder.Actions" target="_top" alt="#/api/sap.ui.test.OpaBuilder.Actions" title="#/api/sap.ui.test.OpaBuilder.Actions">API Reference: <samp class="ph codeph">sap.ui.test.OpaBuilder.Actions</samp></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

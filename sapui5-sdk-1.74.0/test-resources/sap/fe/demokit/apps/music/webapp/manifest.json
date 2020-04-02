@@ -1,0 +1,229 @@
+{
+    "_version": "1.1.0",
+    "sap.app": {
+        "id": "music",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "1.74.0"
+        },
+        "title": "{{title}}",
+        "description": "{{description}}",
+        "tags": {
+            "keywords": []
+        },
+        "ach": "CA-UI5-ST",
+        "dataSources": {
+            "mainService": {
+                "uri": "/sap/opu/odata4/sap/sadl_gw_appmusic_draft/srvd/sap/sadl_gw_appmusicdr_definition/0001/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [
+
+                    ],
+                    "odataVersion": "4.0",
+                    "localUri": "localService/draft/metadata.xml"
+                }
+            },
+            "localAnnotations": {
+                "uri": "annotations/annotations.xml",
+                "type": "ODataAnnotation",
+                "settings": {
+                    "localUri": "annotations/annotations.xml"
+                }
+            }
+        },
+        "offline": false,
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "ui5template.fiorielements.v4",
+            "version": "1.0.0"
+        },
+        "crossNavigation": {
+            "inbounds": {
+             },
+            "outbounds": {
+                "musicV2Display": {
+                    "semanticObject": "aivs_music_db_uuid",
+                    "action": "aivs_music_db_uuid",
+                    "parameters": {
+                        "Name": {
+                            "value": {
+                                "value": "Name",
+                                "format": "binding"
+                            },
+                            "required": false
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "resources": {
+            "js": [],
+            "css": []
+        },
+        "dependencies": {
+            "minUI5Version": "${sap.ui5.dist.version}",
+            "libs": {
+                "sap.fe": {}
+            }
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            },
+            "": {
+                "dataSource": "mainService",
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect" : true,
+                    "earlyRequests": true
+                }
+            }
+        },
+		"routing": {
+			"routes": [
+			{
+				"pattern": ":?query:",
+				"name": "ArtistList",
+				"target": "ArtistList"
+			},
+			{
+				"pattern": "Artists({key}):?query:",
+				"name": "ArtistObjectPage",
+				"target": "ArtistObjectPage"
+			},
+			{
+				"pattern": "Artists({key}/_Publication({key2}):?query:",
+				"name": "PublicationObjectPage",
+				"target": "PublicationObjectPage"
+			},
+			{
+				"pattern": "_Publication({key}):?query:",
+				"name": "PublicationObjectPageDirect",
+				"target": "PublicationObjectPage"
+			},
+			{
+				"pattern": "Artists({key}/_Publication({key2}/_Title({key3}):?query:",
+				"name": "TitleObjectPage",
+				"target": "TitleObjectPage"
+			},
+			{
+				"pattern": "Artists({key}/_Publication({key2}/_Title({key3}/_Contribution({key4}):?query:",
+				"name": "ContributionObjectPage",
+				"target": "ContributionObjectPage"
+			}
+			],
+			"targets": {
+				"ArtistList": {
+					"type": "Component",
+					"id": "ArtistList",
+					"name": "sap.fe.templates.ListReport",
+					"options": {
+						"settings" : {
+							"entitySet" : "Artists",
+							"variantManagement": "None",
+							"navigation" : {
+								"Artists" : {
+									"detail" : {
+										"route" : "ArtistObjectPage"
+										}
+								}
+							}
+						}
+					}
+				},
+				"ArtistObjectPage": {
+					"type": "Component",
+					"id":  "ArtistObjectPage",
+					"name": "sap.fe.templates.ObjectPage",
+					"options": {
+						"settings" : {
+							"entitySet" : "Artists",
+							"navigation" : {
+								"_Publication" : {
+									"detail" : {
+										"route" : "PublicationObjectPage"
+									}
+								}
+							}
+						}
+					}
+				},
+				"PublicationObjectPage": {
+					"type": "Component",
+					"id":  "PublicationObjectPage",
+					"name": "sap.fe.templates.ObjectPage",
+					"options": {
+						"settings" : {
+							"entitySet": "Publications",
+							"navigation" : {
+								"Title" : {
+									"detail" : {
+										"route" : "TitleObjectPage"
+									}
+								}
+							}
+						}
+					}
+				},
+				"TitleObjectPage": {
+					"type": "Component",
+					"id":  "TitleObjectPage",
+					"name": "sap.fe.templates.ObjectPage",
+					"options": {
+						"settings" : {
+							"entitySet": "Titles"
+						}
+					}
+				},
+				"ContributionObjectPage": {
+					"type": "Component",
+					"id":  "ContributionObjectPage",
+					"name": "sap.fe.templates.ObjectPage",
+					"options": {
+						"settings" : {
+							"entitySet": "Contributions"
+						}
+					}
+				}
+			}
+        },
+        "flexEnabled": false,
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        }
+    },
+
+    "sap.platform.abap": {
+        "uri": ""
+    },
+    "sap.platform.hcp": {
+        "uri": ""
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
+    }
+}

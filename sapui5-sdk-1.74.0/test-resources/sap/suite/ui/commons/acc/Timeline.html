@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>ACC Timeline - sap.suite.ui.commons</title>
+
+	<!-- UI5 Bootstrap -->
+	<script src="../../../../../../resources/sap-ui-core.js"
+	        type="text/javascript" id="sap-ui-bootstrap"
+	        data-sap-ui-libs="sap.suite.ui.commons,sap.m,sap.ui.commons"
+	        data-sap-ui-theme="sap_belize"></script>
+
+	<style type="text/css">
+	</style>
+	<script type="text/javascript">
+		sap.ui.getCore().attachInit(function () {
+			"use strict";
+			sap.ui.require([
+				"sap/ui/model/json/JSONModel",
+				"sap/suite/ui/commons/Timeline",
+				"sap/suite/ui/commons/TimelineItem",
+				"sap/m/FlexBox",
+				"sap/m/FlexItemData",
+				"sap/m/Title"
+			], function (JSONModel, Timeline, TimelineItem, FlexBox, FlexItemData, Title) {
+
+				function getDate(iMultiple) {
+					return new Date(new Date().getTime() - (1000 * 3600 * 24) * iMultiple).getTime();
+				}
+
+				var oModel = new JSONModel([
+					{
+						dateTime : getDate(4),
+						text :  "On his first day as sole CEO at SAP, Bill McDermott addresses employees with a video message and asks for their support to work together to achieve the company’s mission and transform SAP into the cloud company powered by SAP HANA",
+						userName : "Sarah Social",
+						title : "added a Note",
+						filterValue: "Note",
+						icon : "sap-icon://accept"
+					},
+					{
+						dateTime :  getDate(4),
+						text : "79% of consumers spend at least 50% of total shopping time researching products online 82% of consumers will substitute and switch brands due to an out-of-stock product",
+						userName : "Sarah Social",
+						title : "added a Note about retail reality",
+						filterValue: "Note",
+						icon : "sap-icon://accept"
+					},
+					{
+						dateTime : getDate(4),
+						text : "Comments on the retail reality",
+						userName : "John Smith",
+						title : "posted a Comment",
+						filterValue: "Comment",
+						icon : "sap-icon://activity-items"
+					},
+					{
+						dateTime :  getDate(1),
+						text : "Introducing the First  Collaborative SAP HANA",
+						userName : "Sam Sales",
+						title : "added a Note",
+						filterValue: "Note",
+						icon : "sap-icon://accept"
+					},
+
+					{
+						dateTime : getDate(6),
+						text : "A Call was made on this date. Left message to the customer to call back.",
+						userName : "Tony Stark",
+						title : "made the Call",
+						filterValue: "Call",
+						icon : "sap-icon://outgoing-call"
+					},
+					{
+						dateTime : getDate(5),
+						text : "Added a comment on the customer call back that the issue is resolved",
+						userName : "Tony Stark",
+						title : "posted a Comment",
+						filterValue: "Comment",
+						icon : "sap-icon://activity-items"
+					},
+					{
+						dateTime : getDate(2),
+						text : "A Call was made on this date. Need to follow up next week.",
+						userName : "Sarah Social",
+						title : "made a Call",
+						filterValue: "Call",
+						icon : "sap-icon://outgoing-call"
+					},
+					{
+						dateTime : getDate(1),
+						text : "This is my comments appearing in Comment type Item.",
+						userName : "Sam Sales",
+						title : "posted a Comment",
+						filterValue: "Comment",
+						icon : "sap-icon://activity-items"
+					},
+
+					{
+						dateTime : getDate(12),
+						text : "Commented on the issues of Commute",
+						userName : "Sarah Jones",
+						title : "posted a Comment",
+						filterValue: "Comment",
+						icon : "sap-icon://activity-items"
+					},
+
+					{
+						dateTime : getDate(10),
+						text : "Sample text for a Note type item",
+						userName : "John Smith",
+						title : "added a Note",
+						filterValue: "Note",
+						icon : "sap-icon://accept"
+					},
+					{
+						dateTime : getDate(40),
+						text : "Global Learning Center in Dublin, CA, SAP Academy has been hard at work transforming 148 high-potential Millennials (representing 38 countries) into SAP’s next generation of Sales and Presales leaders.",
+						userName : "Sarah Jones",
+						title : "added a Note",
+						filterValue: "Note",
+						icon : "sap-icon://accept"
+					},
+					{
+						dateTime : getDate(25),
+						text : "Made a Call to the IT group, reagrding the downtime of servers, need to hear back from them",
+						userName : "Sarah Jones",
+						title : "made a Call",
+						filterValue: "Call",
+						icon : "sap-icon://outgoing-call"
+					},
+					{
+						dateTime : getDate(30),
+						text : "Made a call to customer and discussed the Timeline changes",
+						userName : "Tony Stark",
+						title : "made a Call",
+						filterValue: "Call",
+						icon : "sap-icon://outgoing-call"
+					},
+					{
+						dateTime : getDate(5),
+						text : "A Call was made on this date. Need to follow up next week.",
+						userName : "Tony Stark",
+						title : "made a Call",
+						filterValue: "Call",
+						icon : "sap-icon://outgoing-call"
+					},
+					{
+						dateTime : new Date(),
+						text : "New Message - A Call was made on this date. Need to follow up next week.",
+						userName : "Tony Stark",
+						title : "made a Call",
+						filterValue: "Call",
+						icon : "sap-icon://outgoing-call"
+					}
+				]);
+
+				var oTimelineVertical = new Timeline({
+					id: "timelineVertical",
+					enableBusyIndicator: false,
+					enableScroll: false
+				});
+				oTimelineVertical.bindAggregation("content", {
+					path: "/",
+					template: new TimelineItem({
+						dateTime: "{dateTime}",
+						text: "{text}",
+						userName: "{userName}",
+						title: "{title}",
+						filterValue: "{filterValue}",
+						icon: "{icon}"
+					})
+				});
+
+				var oTimelineHorizontal = new Timeline({
+					id: "timelinHorizontal",
+					axisOrientation: "Horizontal",
+					enableBusyIndicator: false
+				});
+				oTimelineHorizontal.bindAggregation("content", {
+					path: "/",
+					template: new TimelineItem({
+						dateTime: "{dateTime}",
+						text: "{text}",
+						userName: "{userName}",
+						title: "{title}",
+						filterValue: "{filterValue}",
+						icon: "{icon}"
+					})
+				});
+
+				var oFlexBox = new FlexBox({
+					renderType: "Bare",
+					fitContainer: true,
+					wrap: "Wrap",
+					direction: "Column",
+					justifyContent: "SpaceBetween",
+					items: [
+						new Title({
+							text: "Vertical Timeline",
+							layoutData: new FlexItemData({
+								alignSelf: "Center"
+							})
+						}),
+						oTimelineVertical,
+						new Title({
+							text: "Horizontal Timeline",
+							layoutData: new FlexItemData({
+								alignSelf: "Center"
+							})
+						}),
+						oTimelineHorizontal
+					]
+				});
+				oFlexBox.setModel(oModel);
+
+				oFlexBox.placeAt("content");
+			});
+		});
+	</script>
+</head>
+
+<body class="sapUiBody">
+<div id="content"></div>
+</body>
+</html>

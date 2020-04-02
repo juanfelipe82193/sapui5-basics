@@ -1,0 +1,169 @@
+<core:View xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+		   xmlns:unittest="http://schemas.sap.com/sapui5/preprocessorextension/sap.fe.unittesting/1"
+		   xmlns:customdata="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+		   xmlns:core="sap.ui.core"
+		   xmlns:uxap="sap.uxap"
+		   xmlns="sap.m"
+		   xmlns:f="sap.f"
+		   xmlns:fe="sap.fe.templates.controls"
+		   xmlns:dt="sap.ui.dt"
+		   xmlns:fl="sap.ui.fl"
+		   controllerName="sap.fe.templates.ObjectPage.ObjectPageController"
+		   template:require="{
+		   		macroLibrary: 'sap/fe/macros/macroLibrary',
+				CORE: 'sap/fe/core/AnnotationHelper',
+				MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+				ID: 'sap/fe/macros/StableIdHelper'
+			}">
+	<template:if test="{= ${metaPath>/currentPath}.set(${entitySet>@sapui.name}) }"/>
+	<template:with path="entitySet>./" var="entityType">
+		<template:with path="entityType>@com.sap.vocabularies.UI.v1.HeaderInfo" var="headerInfo">
+			<template:with path="entitySet>./" var="entityType">
+				<!-- OPLayout binding contains explicit $select for SAP__Messages or the path from @Common.Messages until model provides an alternative.
+                    This is to enable side effects to request messages. -->
+				<uxap:ObjectPageLayout id="fe::op" flexEnabled="true"
+									   unittest:id="objectPageLayoutTest"
+									   fl:flexibility="sap/fe/templates/ObjectPage/flexibility/ObjectPage.flexibility"
+									   dt:designtime="sap/fe/templates/ObjectPage/designtime/ObjectPage.designtime"
+									   customdata:showRelatedApps="{viewData>/showRelatedApps}"
+									   customdata:ObjectPageTitle="{headerInfo>TypeName}"
+									   customdata:ObjectPageSubtitle="{headerInfo>Title/Value@@MODEL.value}"
+									   showHeaderContent="{= ${viewData>/editableHeaderContent} === false ? true : '{= !(${ui>/editable} === \'Editable\') }' }"
+									   showFooter="true"
+									   busy="{ui>/busy}"
+									   upperCaseAnchorBar="false"
+									   useIconTabBar="{= ${viewData>/sectionLayout} === 'Tabs'}"
+									   binding="{= ${entityType>@com.sap.vocabularies.Common.v1.Messages}
+											?	'{path:\'\', parameters:{$select:\'' + ${entityType>@com.sap.vocabularies.Common.v1.Messages/$Path} + '\', $$ownRequest:true,$$patchWithoutSideEffects:true},events : {dataRequested: \'.handlers.onDataRequested\', dataReceived : \'.handlers.onDataReceived\'}}'
+											:	'{path:\'\', parameters:{$$ownRequest:true,$$patchWithoutSideEffects:true},events : {dataRequested: \'.handlers.onDataRequested\', dataReceived : \'.handlers.onDataReceived\'}}'
+										}"
+									   enableLazyLoading="true">
+					<uxap:dependents>
+						<!--
+                        /**
+                        * CommandExecution Binding is evaluated once (cannot use model $cmd) -> Internal Incident: 1980475695
+                        * Workaround -> Use intermediate function to evaluate the context when keyboard shortcut is executed for
+                        *  - Edit
+                        */
+                        -->
+						<core:CommandExecution
+							execute="{= 'executeHeaderShortcut(\'' + ID.generate(['fe', 'edit', ${entitySet>@sapui.name}]) + '\')'}"
+							command="Edit"/>
+						<core:CommandExecution
+							execute="{= 'executeHeaderShortcut(\'' + ID.generate(['fe', 'delete', ${entitySet>@sapui.name}]) + '\')'}"
+							command="DeleteObject"/>
+						<core:CommandExecution
+							execute="{= 'executeFooterShortcut(\'' + ID.generate(['fe', 'save', ${entitySet>@sapui.name}])  + '\')'}"
+							command="Save"/>
+					</uxap:dependents>
+					<uxap:headerTitle>
+						<uxap:ObjectPageDynamicHeaderTitle
+							primaryArea="Begin"
+							binding="{path : ''}">
+
+							<uxap:expandedHeading>
+								<FlexBox>
+									<FlexBox
+										visible="{= ${viewData>/editableHeaderContent} ? '{= (${ui>/editable} === \'Editable\') }' : false}">
+										<core:Fragment
+											fragmentName="sap.fe.templates.ObjectPage.view.fragments.HeaderImage"
+											type="XML"/>
+									</FlexBox>
+									<core:Fragment
+										fragmentName="sap.fe.templates.ObjectPage.view.fragments.TitleAndSubtitle"
+										type="XML"/>
+								</FlexBox>
+							</uxap:expandedHeading>
+
+							<uxap:snappedHeading>
+								<FlexBox>
+									<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.HeaderImage"
+												   type="XML"/>
+									<core:Fragment
+										fragmentName="sap.fe.templates.ObjectPage.view.fragments.TitleAndSubtitle"
+										type="XML"/>
+								</FlexBox>
+							</uxap:snappedHeading>
+
+							<uxap:content>
+								<template:if test="{entitySet>@com.sap.vocabularies.Common.v1.DraftRoot}">
+									<core:Fragment
+										fragmentName="sap.fe.templates.ObjectPage.view.fragments.HeaderExpandedAndSnappedContent"
+										type="XML"/>
+								</template:if>
+							</uxap:content>
+
+							<uxap:navigationActions>
+								<template:if test="{= ${viewData>/viewLevel} > 1}">
+									<fe:Paginator id="fe::paginator"
+												  width="auto"
+												  navigate=".routing.navigateToContext(${$parameters>context} , { noHistoryEntry : true })">
+									</fe:Paginator>
+								</template:if>
+								<!-- Flexible column layout menu-->
+								<template:if test="{= ${viewData>/fclEnabled} }">
+									<OverflowToolbarButton type="Transparent" icon="sap-icon://full-screen"
+														   visible="{= ${fclhelper>/actionButtonsInfo/fullScreen} !== null }"
+														   press=".fcl.handleFullScreen"/>
+									<OverflowToolbarButton type="Transparent" icon="sap-icon://exit-full-screen"
+														   visible="{= ${fclhelper>/actionButtonsInfo/exitFullScreen} !== null }"
+														   press=".fcl.handleExitFullScreen"/>
+									<OverflowToolbarButton type="Transparent" icon="sap-icon://decline"
+														   visible="{= ${fclhelper>/actionButtonsInfo/closeColumn} !== null }"
+														   press=".fcl.handleClose"/>
+								</template:if>
+							</uxap:navigationActions>
+							<uxap:actions>
+								<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.Actions"
+											   type="XML"/>
+							</uxap:actions>
+							<uxap:breadcrumbs>
+								<!-- Breadcrumbs are not visible until we can handle the navigation without history.back -->
+								<Breadcrumbs visible="false"
+											 modelContextChange=".routing.setBreadcrumbLinks(${$source>/getBindingContext}, ${$source>/getLinks})">
+									<template:repeat list="{viewData>/links}" var="link">
+										<template:with path="link>context"
+													   helper="sap.fe.templates.ObjectPage.AnnotationHelper.getLinkEntityType"
+													   var="linkEntityType">
+											<Link
+												text="{parts : [{path: 'linkEntityType>@com.sap.vocabularies.UI.v1.HeaderInfo/Title/Value'}, {path: 'linkEntityType>@com.sap.vocabularies.UI.v1.HeaderInfo/TypeName'}] , formatter: 'sap.fe.templates.ObjectPage.AnnotationHelper.formatTextForBreadcrumbs'}"/>
+										</template:with>
+									</template:repeat>
+								</Breadcrumbs>
+							</uxap:breadcrumbs>
+						</uxap:ObjectPageDynamicHeaderTitle>
+					</uxap:headerTitle>
+					<uxap:headerContent>
+						<FlexBox wrap="Wrap" fitContainer="true" alignItems="Stretch">
+							<template:if test="{entityType>@com.sap.vocabularies.UI.v1.HeaderInfo/ImageUrl}">
+								<template:then>
+									<f:Avatar class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+											  src="{entityType>@com.sap.vocabularies.UI.v1.HeaderInfo/ImageUrl@@.MODEL.value}"
+											  displayShape="Square"
+											  displaySize="XL"/>
+								</template:then>
+								<template:elseif
+									test="{entityType>@com.sap.vocabularies.UI.v1.HeaderInfo/TypeImageUrl}">
+									<f:Avatar class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+											  src="{entityType>@com.sap.vocabularies.UI.v1.HeaderInfo/TypeImageUrl@@.MODEL.value}"
+											  displayShape="Square"
+											  displaySize="XL"/>
+								</template:elseif>
+							</template:if>
+							<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.HeaderContent"
+										   type="XML"/>
+						</FlexBox>
+					</uxap:headerContent>
+					<uxap:sections>
+						<template:if test="{= ${metaPath>/currentPath}.set('/') }"/>
+						<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.Section" type="XML"/>
+					</uxap:sections>
+					<uxap:footer>
+						<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.FooterContent"
+									   type="XML"/>
+					</uxap:footer>
+				</uxap:ObjectPageLayout>
+			</template:with>
+		</template:with>
+	</template:with>
+</core:View>

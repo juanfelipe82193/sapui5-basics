@@ -1,0 +1,7 @@
+/*!
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+
+		(c) Copyright 2009-2015 SAP SE. All rights reserved
+	
+ */
+sap.ui.define(["sap/suite/ui/generic/template/changeHandler/util/ChangeHandlerUtils","sap/suite/ui/generic/template/changeHandler/util/AnnotationChangeUtilsV2","sap/ui/fl/changeHandler/UnhideControl","sap/base/util/deepExtend"],function(U,A,a,d){"use strict";var R={};var S="com.sap.vocabularies.UI.v1.SelectionFields";R.applyChange=function(c,C,p){var P=c.getContent().customChanges[0].oParentSelector;var e=p.modifier.bySelector(P);a.applyChange(c,e,p);};R.revertChange=function(c,C,p){};R.completeChangeContent=function(c,s,p){var e=s.revealedElementId;var P=p.modifier.getSelector(e,p.appComponent);var m=U.getMetaModel(s,p);var v=p.modifier.bySelector(e,p.appComponent);var V=v.getParent().getAggregation("content");var E=v.getParent().getParent().getEntityType();var o=m.getODataEntityType(E);var b=o[S];var f=b.slice();var I=-1;V.some(function(k,i){if(k.getId()&&k.getId()===e){I=i;return true;}});var g=-1;var t=U.getTemplatingInfo(U.getSmartFilterBarControlConfiguration(v));if(t.annotation===S){if(I+1<V.length){I++;g=U.getRecordIndexForSelectionField(V[I]);}else{g=b.length;}}var C={};if(t.annotation===S&&g<0){g=0;}if(g>=0){var h={PropertyPath:t.value};b.splice(g,0,h);C=A.createCustomAnnotationTermChange(E,b,f,S);}a.completeChangeContent(c,s,p);C.revealedElementId=e;C.oParentSelector=P;var j=A.createCustomChanges(C);d(c.getContent(),j);U.isReveal=true;};return R;},true);

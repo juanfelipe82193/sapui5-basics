@@ -1,0 +1,29 @@
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1" xmlns="sap.m"
+	xmlns:macro="sap.fe.macros"
+	xmlns:core="sap.ui.core">
+	<VBox displayInline="true">
+		<template:if test="{headerForm>@@.MODEL.label}">
+			<Title text="{headerForm>@@.MODEL.label}" class="sapUiSmallMarginBottom"></Title>
+		</template:if>
+		<template:if test="{= ${headerForm>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.FieldGroup') > -1}">
+			<template:then>
+				<template:with path="headerForm>Target/$AnnotationPath/Data" var="formElements">
+					<template:repeat list="{formElements>}" var="dataField">
+						<template:if test="{= ${dataField>$Type} !== 'com.sap.vocabularies.UI.v1.DataFieldForAction' &amp;&amp; ${dataField>$Type} !== 'com.sap.vocabularies.UI.v1.DataFieldForIntentBasedNavigation' }">
+							<template:then>
+								<template:if test="{= !(${dataField>./@com.sap.vocabularies.UI.v1.Hidden} === true)}">
+									<HBox class="sapUiTinyMarginBottom"
+										visible="{= (${dataField>./@com.sap.vocabularies.UI.v1.Hidden} === false ? true : %{dataField>./@com.sap.vocabularies.UI.v1.Hidden@@MODEL.value} &amp;&amp;'{= !%' + %{dataField>./@com.sap.vocabularies.UI.v1.Hidden@@MODEL.value} + '}') }">
+										<Label text="{dataField>@@.MODEL.label}: " visible="{= ${dataField>@@.MODEL.label} ? 'true':'false'}" class="sapUiTinyMarginEnd" vAlign="{= ${dataField>Value/$Path@com.sap.vocabularies.UI.v1.MultiLineText} === true ? 'Middle' : 'Inherit' }"/>
+										<macro:Field editMode="Display"
+											metadataContexts="{ model: 'entitySet', path:'',  name: 'entitySet'},{ model: 'dataField', path:'',  name: 'dataField'}" />
+									</HBox>
+								</template:if>
+							</template:then>
+						</template:if>
+					</template:repeat>
+				</template:with>
+			</template:then>
+		</template:if>
+	</VBox>
+</core:FragmentDefinition>

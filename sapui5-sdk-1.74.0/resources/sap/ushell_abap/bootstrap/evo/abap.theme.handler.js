@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define(["sap/ui/thirdparty/URI","sap/base/Log","sap/ushell/bootstrap/common/common.read.metatags"],function(U,L,m){"use strict";var t={};function v(o){var a=m.readMetaTags("sap-allowedThemeOrigins",function(M){return M.trim();});var A="";if(a.length>0){A=a[0];}else{L.debug("no meta tag allowedThemeOrigins was found so theme-url was not applied.");}return o===A.trim();}t.isThemeRootSafe=function(a){var u=new U(a),o=u.origin().toString();if(o===""){return true;}return v(o);};return t;});

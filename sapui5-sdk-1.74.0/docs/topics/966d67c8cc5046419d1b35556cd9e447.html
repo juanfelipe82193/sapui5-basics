@@ -1,0 +1,175 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Performance Issues</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="This section lists some of the most important issues that should be avoided to improve performance in SAPUI5 applications."><meta name="description" content="This section lists some of the most important issues that should be avoided to improve performance in SAPUI5 applications."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"91f3d8706f4d1014b6dd926db0e91070.html","previousTopicHref":"9d87f925dfbb4e99b9e2963693aa00ef.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio966d67c8cc5046419d1b35556cd9e447"><h1 class="title topictitle1" hidden>Performance Issues</h1><div class="body conbody"><p class="shortdesc" hidden>This section lists some of the most important issues that should be avoided to improve
+performance in <span class="ph"><span class="ph pname">SAPUI5</span></span>
+applications.</p>
+<div class="section" id="loio966d67c8cc5046419d1b35556cd9e447__1"><section class="section" type="Don&apos;t use visibility for lazy instantiation"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t use visibility for lazy instantiation</h2>
+
+<p class="p">When an application has areas that are not visible initially, or if only one of multiple options is visible at a time, <span class="ph emphasis emphasis">do
+not</span> create all UI controls and set most of them to non-visible! If you do, <span class="ph"><span class="ph pname">SAPUI5</span></span> will instantiate and initialize all of those controls, which consumes
+unnecessary time and memory, even when they are not rendered. On top of this, the data binding will also be initialized, which may trigger
+back-end requests that are not needed at this stage. The impact is particularly big when the parts of the UI that are not visible initially are
+complex or numerous.</p>
+<p class="p">Please note that lazy loading of views can be achieved with routing. For more information, see <a class="xref" href="../../#/topic/3d18f20bd2294228acb6910d8e8a5fb5.html" title="SAPUI5 offers hash-based navigation, which allows you to build single-page apps where the navigation is done by changing the hash. In this way the browser does not have to reload the page; instead there is a callback to which the app and especially the affected view can react. A hash string is parsed and matched against patterns which will then inform the handlers." target="_top">Routing and Navigation</a> and <a class="xref" href="../../#/topic/cdab0a1123514cc08cf2c8deb22f312e.html" title="In the previous steps, we have implemented a Resume view that uses tabs to display data. The complete content of the tabs is loaded once, no matter which tab is currently displayed. We can increase the performance of our app by avoiding to load content that is not visible. Therefore, we implement a &#x201C;lazy loading&#x201D; feature that only loads the view and data when requested by the user." target="_top">Step 10: Implement &quot;Lazy Loading&quot;</a> of the Navigation and Routing
+tutorial.</p>
+<aside class="note example" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Example</strong></div>
+<p class="p">An application needs to display a <samp class="ph codeph">Panel</samp> containing a <samp class="ph codeph">Table</samp> in <span class="ph emphasis emphasis">display mode</span>, but the
+user can switch to <span class="ph emphasis emphasis">edit mode</span> to modify data, in which case a different <samp class="ph codeph">Panel</samp> needs to be shown.
+Especially when using XML views, it is tempting for application developers to specify two panels in the view XML and set the
+<samp class="ph codeph">Panel</samp> with the editable table to <samp class="ph codeph">visible=&quot;false&quot;</samp>. The <span class="ph uicontrol">Edit</span> button could then
+just toggle visibility of both panels.</p></aside>
+<p class="p">The following XML view is easy to handle, but leads to suboptimal performance when the <samp class="ph codeph">editPanel</samp> has a lot of content.</p>
+<p class="p">View:</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View xmlns:mvc=&quot;sap.ui.core.mvc&quot; xmlns=&quot;sap.m&quot; controllerName=&quot;my.own.controller&quot;&gt;
+	&lt;Page&gt;
+                        
+		&lt;Panel id=&quot;displayPanel&quot; headerText=&quot;Display Data&quot;&gt;
+			&lt;Table...&gt;
+		&lt;/Panel&gt;
+                        
+		&lt;!-- edit panel is initially hidden, but still instantiated --&gt;
+		&lt;Panel id=&quot;editPanel&quot; headerText=&quot;Edit Data&quot; visible=&quot;false&quot;&gt;
+			&lt;Table...&gt; 
+		&lt;/Panel&gt;
+                        
+		&lt;Button text=&quot;Edit&quot; press=&quot;toEditMode&quot;/&gt;
+	&lt;/Page&gt;
+&lt;/mvc:View&gt;</pre>
+<p class="p">Controller code:</p>
+<pre class="pre codeblock prettyprint lang-js">toEditMode: function() {
+	this.byId(&quot;displayPanel&quot;).setVisible(false);
+	this.byId(&quot;editPanel&quot;).setVisible(true);
+}</pre>
+<p class="p">The following code is better in terms of initial performance because the second table is created lazily when the user switches to edit mode.</p>
+<p class="p">View:</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View xmlns:mvc=&quot;sap.ui.core.mvc&quot; xmlns=&quot;sap.m&quot; controllerName=&quot;my.own.controller&quot;&gt;
+	&lt;Page&gt;
+            
+		&lt;!&#x2014;only the initially needed display panel --&gt;
+		&lt;Panel id=&quot;displayPanel&quot; headerText=&quot;Display Data&quot;&gt;
+			&lt;Table...&gt;
+		&lt;/Panel&gt;
+      
+		&lt;Button text=&quot;Edit&quot; press=&quot;toEditMode&quot;/&gt;
+	&lt;/Page&gt;
+&lt;/mvc:View&gt;</pre>
+<p class="p">Additional fragment named <samp class="ph codeph">EditPanel.fragment.xml</samp> for content that is initially hidden:</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;Panel xmlns=&quot;sap.m&quot; id=&quot;editPanel&quot; headerText=&quot;Edit Data&quot; visible=&quot;false&quot;&gt;
+	&lt;Table...&gt;
+&lt;/Panel&gt;</pre>
+<p class="p">Controller code:</p>
+<pre class="pre codeblock prettyprint lang-js">toEditMode: function() {
+	this.byId(&quot;displayPanel&quot;).setVisible(false);
+                  
+	var oEditPanel = this.byId(&quot;editPanel&quot;);
+	if (!oEditPanel) { // load and instantiate the edit panel lazily
+		// instantiate the Fragment:
+		// giving the View ID as ID will prefix the IDs in the Fragment and allows using this.byId(&#x2026;) in the Controller
+		// giving &#x201C;this&#x201D; (the Controller) allows using controller methods from within the Fragment
+		oEditPanel = sap.ui.xmlfragment(this.getView().getId(), &quot;myApp.EditPanel&quot;, this); 
+		this.byId(&quot;myPage&quot;).insertContent(oEditPanel, 0); // for sake of simplicity inserts at position 0
+	}
+	oEditPanel.setVisible(true);
+}</pre>
+<p class="p">In other scenarios, at the time of developing you may not know which UI part is displayed initially. In this case, you can define that the UI is
+empty (showing none of the panels) in the view definition, and the controller&#x2019;s <samp class="ph codeph">onInit()</samp> method decides which fragment to
+instantiate and display initially:</p>
+<pre class="pre codeblock prettyprint lang-js">onInit: function() {
+	var oPanel;
+	if (bEditMode) { 
+		oPanel = sap.ui.xmlfragment(&quot;myApp.EditPanel&quot;);
+	} else {
+		oPanel = sap.ui.xmlfragment(&quot;myApp.DisplayPanel&quot;);
+	}
+	this.byId(&quot;myPage&quot;).insertContent(oPanel, 0);
+}</pre>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">Although the example above shows an XML view and an XML fragment, the problem and the solution apply to all view types.</p><p class="p">Please also note that this guideline is not set in stone: If the hidden UI elements are just small or few in number, using fragments would
+not help but add additional overhead instead. Having said that, creating several big tables and displaying only one of them is
+<span class="ph emphasis emphasis">not</span> a good idea. There is no definite rule where to draw the line, it depends on many factors like application
+size, number of libraries being loaded, and additional data requested by those hidden controls. If in doubt, you can test the performance
+using the performance tracing tools in the browser&#x2019;s developer console with the controls in question being hidden, against them being
+removed.</p></aside>
+<p class="p">See also: <a class="xref" href="../../#/topic/36a5b130076e4b4aac2c27eebf324909.html" title="Fragments are light-weight UI parts (UI sub-trees) which can be reused, defined similar to views, but do not have any controller or other behavior code involved." target="_top">Reusing UI Parts: Fragments</a>.</p>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/408b40efed3c416681e1bd8cdd8910d4.html" title="If a web app has performance issues, finding the cause can be both a time-consuming and nerve-consuming task. To help you avoid and solve performance issues in your app, here are some good practices we&apos;ve discovered while dealing with SAPUI5 apps." target="_top">Performance: Speed Up Your App</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

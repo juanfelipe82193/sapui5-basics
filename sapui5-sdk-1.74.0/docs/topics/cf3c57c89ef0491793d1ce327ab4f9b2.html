@@ -1,0 +1,352 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 2: Enable Routing</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In this step we will modify the app and introduce routing. Instead of having the home page of the app hard coded we will configure a router to wire multiple views together when our app is called. The routing configuration controls the application flow when the user triggers a navigation action or opens a link to the application directly."><meta name="description" content="In this step we will modify the app and introduce routing. Instead of having the home page of the app hard coded we will configure a router to wire multiple views together when our app is called. The routing configuration controls the application flow when the user triggers a navigation action or opens a link to the application directly."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"e047e0596e8a4a1db50f4a53c11f4276.html","previousTopicHref":"df245bd449a7470c8c2a0926ca8d78de.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/1b6dcd39a6a74f528b27ddb22f15af0d.html" title="SAPUI5 comes with a powerful routing API that helps you control the state of your application efficiently. This tutorial will illustrate all major features and APIs related to navigation and routing in SAPUI5 apps by creating a simple and easy to understand mobile app. It represents a set of best practices for applying the navigation and routing features of SAPUI5 to your applications." target="_top">Navigation and Routing</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/df245bd449a7470c8c2a0926ca8d78de.html" title="We start by setting up a simple app for this tutorial. The app displays mock data only and mimics real OData back-end calls with the mock server as you have seen in the Walkthrough tutorial." target="_top">Step 1: Set Up the Initial App</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/e047e0596e8a4a1db50f4a53c11f4276.html" title="Sometimes it is important to display an indication that the requested resource was not found. To give you an example: If a user tries to access an invalid pattern which does not match any of the configured routes, the user is notified that something went wrong. You might also know this as a &#x201C;404&#x201D; or Not Found Page from traditional web pages. In this step, we will implement a feature that detects invalid hashes and visualizes this in a nice way." target="_top">Step 3: Catch Invalid Hashes</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loiocf3c57c89ef0491793d1ce327ab4f9b2"><h1 class="title topictitle1" hidden>Step 2: Enable Routing </h1><div class="body conbody"><p class="shortdesc" hidden>In this step we will modify the app and introduce routing. Instead of having the home
+page of the app hard coded we will configure a router to wire multiple views together when
+our app is called. The routing configuration controls the application flow when the user
+triggers a navigation action or opens a link to the application directly.</p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loiocf3c57c89ef0491793d1ce327ab4f9b2__fig_r1j_pst_mr"><div class="figbody">
+
+<img class="inline  " id="loiocf3c57c89ef0491793d1ce327ab4f9b2__image_acx_xnq_ls" src="loioce8dce11d04c470e86f02cd2ba4c57b4_LowRes.png">
+</div><span class="figcap">Views are wired together using the router</span></div>
+</section></div>
+<div class="section"><section class="section" type="Coding"><h2 class="section_title" style="font-size: 1.15em;">Coding</h2>
+
+<p class="p">You can view and download all files in the <span class="ph uicontrol">Samples</span> in the Demo
+Kit <span class="ph">at <a class="xref" href="../../#/sample/sap.ui.core.tutorial.navigation.02/preview" target="_top" alt="#/sample/sap.ui.core.tutorial.navigation.02/preview" title="#/sample/sap.ui.core.tutorial.navigation.02/preview">Routing and Navigation - Step
+2</a></span>.</p>
+<div class="fig fignone" id="loiocf3c57c89ef0491793d1ce327ab4f9b2__fig_chm_4jp_ls"><div class="figbody">
+
+<img class="inline  " id="loiocf3c57c89ef0491793d1ce327ab4f9b2__image_f5j_3ph_ns" src="loio93bd2dccd14a495eba521754a14d2c04_HiRes.png">
+</div><span class="figcap">Folder structure for this step</span></div>
+</section></div>
+<div class="section"><section class="section" type="webapp/manifest.json"><h2 class="section_title" style="font-size: 1.15em;">webapp/manifest.json</h2>
+
+<pre class="pre codeblock prettyprint lang-js">{
+   &quot;_version&quot;: &quot;1.12.0&quot;,
+   &quot;sap.app&quot;: {
+      ...
+   },
+   &quot;sap.ui&quot;: {
+      ...
+   },
+   &quot;sap.ui5&quot;: {
+
+      &quot;rootView&quot;: {
+          &quot;viewName&quot;: &quot;sap.ui.demo.nav.view.App&quot;,
+          &quot;type&quot;: &quot;XML&quot;,
+          &quot;async&quot;: true,
+          &quot;id&quot;: &quot;app&quot;
+      },
+      &quot;dependencies&quot;: {
+         ...
+      },
+      &quot;models&quot;: {
+         ...
+      }<span class="ph emphasis emphasis">,
+      &quot;routing&quot;: {
+         &quot;config&quot;: {
+            &quot;routerClass&quot;: &quot;sap.m.routing.Router&quot;,
+            &quot;viewType&quot;: &quot;XML&quot;,
+            &quot;viewPath&quot;: &quot;sap.ui.demo.nav.view&quot;,
+            &quot;controlId&quot;: &quot;app&quot;,
+            &quot;controlAggregation&quot;: &quot;pages&quot;,
+            &quot;transition&quot;: &quot;slide&quot;,
+            &quot;async&quot;: true
+         },
+         &quot;routes&quot;: [{
+            &quot;pattern&quot;: &quot;&quot;,
+            &quot;name&quot;: &quot;appHome&quot;,
+            &quot;target&quot;: &quot;home&quot;
+         }],
+         &quot;targets&quot;: {
+            &quot;home&quot;: {
+               &quot;viewId&quot;: &quot;home&quot;,
+               &quot;viewName&quot;: &quot;Home&quot;,
+               &quot;viewLevel&quot; : 1
+            }
+         }
+      }</span>
+   }
+}
+</pre>
+<div class="p">Single-page applications based on <span class="ph"><span class="ph pname">SAPUI5</span></span> can use a
+so-called <span class="q">&#x201C;router&#x201D;</span> to dispatch hash-based URLs to one or more views of the app.
+Therefore, the router needs to know how to address and show the views. In <span class="ph"><span class="ph pname">SAPUI5</span></span>, we can simply
+add a <samp class="ph codeph">routing</samp> section to our existing <samp class="ph codeph">sap.ui5</samp>
+section in the descriptor file to configure the router. There are three properties
+that can be used to configure the routing of your application:<ul class="ul" id="loiocf3c57c89ef0491793d1ce327ab4f9b2__ul_whx_4pq_ls">
+<li class="li">
+<p class="p"><samp class="ph codeph">config</samp></p>
+<div class="p">This section contains the global router configuration and default values that apply for all
+routes and targets. The property <samp class="ph codeph">routerClass</samp> is special
+as it determines the router implementation. The default value is
+<samp class="ph codeph">sap.ui.core.routing.Router</samp>. Here, we set the
+<samp class="ph codeph">routerClass</samp> to
+<samp class="ph codeph">sap.m.routing.Router</samp>, because we implement an app
+based on <samp class="ph codeph">sap.m</samp>. All other properties in
+<samp class="ph codeph">config</samp> are given to the router instance. For
+example, we define where our views are located in the app. To load and
+display views automatically, we also specify the
+<samp class="ph codeph">controlId</samp> of the control that is used to display
+the pages and the aggregation (<samp class="ph codeph">controlAggregation</samp>) that
+will be filled when a new page is displayed. We will create only
+XMLviews in this tutorial, so we can set the <samp class="ph codeph">viewType</samp>
+property to <samp class="ph codeph">XML</samp>. All our views will be available in the
+<samp class="ph codeph">view</samp> folder of the namespace
+<samp class="ph codeph">sap.ui.demo.nav</samp>, so we can set the
+<samp class="ph codeph">viewPath</samp> to <samp class="ph codeph">sap.ui.demo.nav.view</samp>.
+The <samp class="ph codeph">transition</samp> allows us to set a default value for how
+the transition should happen; you can choose between
+<samp class="ph codeph">slide</samp> (default), <samp class="ph codeph">flip</samp>,
+<samp class="ph codeph">fade</samp>, and <samp class="ph codeph">show</samp>. All parameters of
+the config section can be overruled in the individual route and target
+definitions if needed.<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">The possible values for <samp class="ph codeph">routerClass</samp> are
+<samp class="ph codeph">sap.ui.core.routing.Router</samp>,
+<samp class="ph codeph">sap.m.routing.Router</samp>, or any other
+subclasses of <samp class="ph codeph">sap.ui.core.routing.Router</samp>.
+Compared to <samp class="ph codeph">sap.ui.core.routing.Router</samp> the
+<samp class="ph codeph">sap.m.routing.Router</samp> is optimized for
+mobile apps and adds the properties <samp class="ph codeph">viewLevel</samp>,
+<samp class="ph codeph">transition</samp> and
+<samp class="ph codeph">transitionParameters</samp> which can be specified
+for each route or target created by the
+<samp class="ph codeph">sap.m.routing.Router</samp>. The
+<samp class="ph codeph">transitionParameters</samp> can also be used for
+custom transitions. Please check the <span class="ph uicontrol">API
+Reference</span> for more information.</p></aside></div>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">routes</samp></p>
+<p class="p">Each route defines a name, a pattern, and one or more targets to navigate
+to when the route has been hit. The pattern is basically the hash part
+of the URL that matches the route. The sequence of the routes is
+important because only the first matched route is used by the router. In
+our case, we have an empty pattern to match the empty hash. The
+<samp class="ph codeph">name</samp> property allows you to choose a unique route
+name that helps you to navigate a specific route or to determine the
+matched route in one of the matched handlers (we&apos;ll explain that in a
+later step). The target property references one or more targets from the
+section below that will be displayed when the route has been
+matched.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">targets</samp></p>
+<p class="p">A target defines the view that is displayed. It is associated with one or
+more routes or it can be displayed manually from within the app.
+Whenever a target is displayed, the corresponding view is loaded and
+added to the aggregation configured with the
+<samp class="ph codeph">controlAggregation</samp> option of the control. This
+option is configured using <samp class="ph codeph">controlId</samp>. Each target has a
+unique key (<samp class="ph codeph">home</samp>). The <samp class="ph codeph">viewName</samp>
+defines which view shall be loaded. In our little example, the absolute
+view path to be loaded for our <samp class="ph codeph">home</samp> target is
+determined by the default <samp class="ph codeph">&quot;viewPath&quot;:
+&quot;sap.ui.demo.nav.view&quot;</samp> and <samp class="ph codeph">&quot;viewName&quot;:
+&quot;Home&quot;</samp>. This leads to
+<samp class="ph codeph">&quot;sap.ui.demo.nav.view.Home&quot;</samp>. The
+<samp class="ph codeph">viewLevel</samp> is especially relevant for
+<samp class="ph codeph">flip</samp> and <samp class="ph codeph">slide</samp> transitions. It
+helps the router to determine the direction of the transition from one
+page to another. (This will also be explained later.) A target can be
+assigned to a route, but it&apos;s not necessary. Targets can be displayed
+directly in the app without hitting a route.</p>
+<p class="p">This basic routing configuration was easy enough. However, you can&#x2019;t see
+it in action until you have initialized the router.</p>
+</li>
+</ul><aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">As of <span class="ph"><span class="ph pname">SAPUI5</span></span>
+version 1.30, we recommend that you define the routing in the
+<samp class="ph codeph">manifest.json</samp> descriptor file using routes and targets.
+In older versions of <span class="ph"><span class="ph pname">SAPUI5</span></span>, the
+routing configuration had to be done directly in the metadata section of the
+component, and with different syntax.</p></aside></div>
+</section></div>
+<div class="section"><section class="section" type="webapp/Component.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/Component.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+    &quot;sap/ui/core/UIComponent&quot;
+], function (UIComponent) {
+    &quot;use strict&quot;;
+
+    return UIComponent.extend(&quot;sap.ui.demo.nav.Component&quot;, {
+
+        metadata: {
+            manifest: &quot;json&quot;
+        }<span class="ph emphasis emphasis">,
+
+        init: function () {
+            // call the init function of the parent
+            UIComponent.prototype.init.apply(this, arguments);
+
+            // create the views based on the url/hash
+            this.getRouter().initialize();
+        }</span>
+    });
+});</pre>
+<p class="p">We override the <samp class="ph codeph">init</samp> function and call the parent&#x2019;s
+<samp class="ph codeph">init</samp> function first. We get a reference to the router and call
+<samp class="ph codeph">initialize() </samp>on it. The router is instantiated automatically
+with the configuration loaded in the descriptor. The routing events and our
+configuration in the descriptor are now automatically enabled in the app. Running
+the app at this point would lead to an error, because the home view is not
+implemented yet.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/view/App.view.xml"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/App.view.xml</h2>
+
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+	controllerName=&quot;sap.ui.demo.nav.controller.App&quot;
+	xmlns=&quot;sap.m&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;
+	displayBlock=&quot;true&quot;&gt;
+	&lt;Shell&gt;
+		&lt;App id=&quot;app&quot;/&gt;
+	&lt;/Shell&gt;
+&lt;/mvc:View&gt;
+</pre>
+<p class="p">In the <samp class="ph codeph">App</samp> view, we remove the content of <samp class="ph codeph">App</samp>
+control. The pages will be added dynamically the way we have configured it in the
+descriptor. The view configured with the property <samp class="ph codeph">rootView</samp> is
+automatically instantiated when the app is called initially.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/view/Home.view.xml (New)"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/Home.view.xml (New)</h2>
+
+<pre class="pre codeblock prettyprint lang-xml"><span class="ph emphasis emphasis">&lt;mvc:View
+   controllerName=&quot;sap.ui.demo.nav.controller.Home&quot;
+   xmlns=&quot;sap.m&quot;
+   xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+   &lt;Page title=&quot;{i18n&gt;homePageTitle}&quot; class=&quot;sapUiResponsiveContentPadding&quot;&gt;
+      &lt;content&gt;
+         &lt;Button text=&quot;{i18n&gt;iWantToNavigate}&quot; class=&quot;sapUiTinyMarginEnd&quot;/&gt;
+      &lt;/content&gt;
+   &lt;/Page&gt;
+&lt;/mvc:View&gt;</span></pre>
+<p class="p">Create a file <samp class="ph codeph">Home.view.xml</samp> in the <samp class="ph codeph">webapp/view</samp>
+folder. The home view only contains a page control that displays a button. For
+illustration, we bind the title of the page to the
+<samp class="ph codeph">i18n&gt;homePageTitle</samp>, you can use data binding just the way
+you are used to it.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/controller/Home.controller.js (New)"><h2 class="section_title" style="font-size: 1.15em;">webapp/controller/Home.controller.js (New)</h2>
+
+<pre class="pre codeblock prettyprint lang-js"><span class="ph emphasis emphasis">sap.ui.define([
+   &quot;sap/ui/core/mvc/Controller&quot;
+], function (Controller) {
+   &quot;use strict&quot;;
+
+   return Controller.extend(&quot;sap.ui.demo.nav.controller.Home&quot;, {
+
+   });
+
+});</span></pre>
+<p class="p">Create a file <samp class="ph codeph">Home.controller.js</samp> in the
+<samp class="ph codeph">webapp/controller</samp> folder. The controller for the home view does
+not contain any custom logic in this step, but we will add some features to it soon.
+Finally, run the app by calling the <samp class="ph codeph">webapp/index.html</samp> file. This
+will be the entry point for our app in all the next steps. As you can see, the app
+is initially displaying the home view that we configured as the default pattern in
+the routing configuration. We have now successfully enabled routing in the app.</p>
+<aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p class="p">We think of routing as a set of features that dispatch hash-based URLs to an
+app&apos;s views and manage the views&apos; states. </p><p class="p">Based on the routing configuration, you define the navigation between pages and
+pass parameters to the target views.</p></aside>
+</section></div>
+<div class="section"><section class="section" type="Conventions"><h2 class="section_title" style="font-size: 1.15em;"> Conventions</h2>
+
+<ul class="ul" id="loiocf3c57c89ef0491793d1ce327ab4f9b2__ul_nh5_ybb_nr">
+<li class="li">
+<p class="p">Configure the router in the <samp class="ph codeph">manifest.json</samp> descriptor
+file</p>
+</li>
+<li class="li">
+<p class="p">Initialize the router exactly once</p>
+</li>
+<li class="li">
+<p class="p">Initialize the router in the component</p>
+</li>
+</ul>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/1b6dcd39a6a74f528b27ddb22f15af0d.html" title="SAPUI5 comes with a powerful routing API that helps you control the state of your application efficiently. This tutorial will illustrate all major features and APIs related to navigation and routing in SAPUI5 apps by creating a simple and easy to understand mobile app. It represents a set of best practices for applying the navigation and routing features of SAPUI5 to your applications." target="_top">Navigation and Routing</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/df245bd449a7470c8c2a0926ca8d78de.html" title="We start by setting up a simple app for this tutorial. The app displays mock data only and mimics real OData back-end calls with the mock server as you have seen in the Walkthrough tutorial." target="_top">Step 1: Set Up the Initial App</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/e047e0596e8a4a1db50f4a53c11f4276.html" title="Sometimes it is important to display an indication that the requested resource was not found. To give you an example: If a user tries to access an invalid pattern which does not match any of the configured routes, the user is notified that something went wrong. You might also know this as a &#x201C;404&#x201D; or Not Found Page from traditional web pages. In this step, we will implement a feature that detects invalid hashes and visualizes this in a nice way." target="_top">Step 3: Catch Invalid Hashes</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/3d18f20bd2294228acb6910d8e8a5fb5.html" title="SAPUI5 offers hash-based navigation, which allows you to build single-page apps where the navigation is done by changing the hash. In this way the browser does not have to reload the page; instead there is a callback to which the app and especially the affected view can react. A hash string is parsed and matched against patterns which will then inform the handlers." target="_top">Routing and Navigation</a></div><div><a class="link" href="../../#/api/sap.ui.core.routing" target="_top" alt="#/api/sap.ui.core.routing" title="#/api/sap.ui.core.routing">API Reference: <samp class="ph codeph">sap.ui.core.routing</samp></a></div><div><a class="link" href="../../#/api/sap.ui.core.routing.Route" target="_top" alt="#/api/sap.ui.core.routing.Route" title="#/api/sap.ui.core.routing.Route">API Reference: <samp class="ph codeph">sap.ui.core.routing.Route</samp></a></div><div><a class="link" href="../../#/api/sap.ui.core.routing.Route/constructor" target="_top" alt="#/api/sap.ui.core.routing.Route/constructor" title="#/api/sap.ui.core.routing.Route/constructor">API Reference: <samp class="ph codeph">sap.ui.core.routing.Route</samp>: Constructor
+Detail</a></div><div><a class="link" href="../../#/api/sap.m.routing.Router" target="_top" alt="#/api/sap.m.routing.Router" title="#/api/sap.m.routing.Router">API Reference: <samp class="ph codeph">sap.m.routing.Router</samp></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

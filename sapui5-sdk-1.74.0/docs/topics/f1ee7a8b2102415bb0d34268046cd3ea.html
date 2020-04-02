@@ -1,0 +1,369 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Using Data Binding for Data Export</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Data binding supports the export of data in a specific format so that the data can be used in other programs."><meta name="description" content="Data binding supports the export of data in a specific format so that the data can be used in other programs."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"36a5b130076e4b4aac2c27eebf324909.html","previousTopicHref":"1a08f70951a744b1a7962b09665cc92f.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loiof1ee7a8b2102415bb0d34268046cd3ea"><h1 class="title topictitle1" hidden>Using Data Binding for Data Export</h1><div class="body"><p class="shortdesc" hidden>Data binding supports the export of data in a specific format so that the data can be
+used in other programs.</p>
+<p class="p">To export data, load the necessary modules as shown in the following example:</p>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.require([&quot;sap/ui/core/util/Export&quot;, &quot;sap/ui/core/util/ExportTypeCSV&quot;], function(Export, ExportTypeCSV) {
+    // ...
+});</pre>
+<p class="p">The following code snippet uses a JSON model as basis for the export. You can also use
+other models, such as the OData model.</p>
+<pre class="pre codeblock prettyprint lang-js">
+// &quot;JSONModel&quot; required from module &quot;sap/ui/model/json/JSONModel&quot;
+var oModel = JSONModel([
+    {
+        firstname: &quot;Al&quot;,
+        lastname: &quot;Dente&quot;
+    },
+    {
+        firstname: &quot;Andy&quot;,
+        lastname: &quot;Friese&quot;
+    },
+    {
+        firstname: &quot;Anita&quot;,
+        lastname: &quot;Mann&quot;
+    },
+    {
+        firstname: &quot;Doris&quot;,
+        lastname: &quot;Schutt&quot;
+    },
+    {
+        firstname: &quot;Kenya&quot;,
+        lastname: &quot;Dewit&quot;
+    }
+]);
+</pre>
+<p class="p">In the next step, create the data export object and pass the required information for the
+export to the object:</p>
+<pre class="pre codeblock prettyprint lang-js">
+// &quot;Export&quot; required from module &quot;sap/ui/core/util/Export&quot;
+var oExport = new Export({
+
+    // &quot;ExportTypeCSV&quot; required from module &quot;sap/ui/core/util/ExportTypeCSV&quot;
+    // Type that will be used to generate the content. Own ExportType&apos;s can be created to support other formats
+    exportType: new ExportTypeCSV({
+        separatorChar: &quot;;&quot;
+    }),
+
+    // Pass in the model created above
+    models: oModel,
+
+    // binding information for the rows aggregation 
+    rows: {
+        path: &quot;/&quot; 
+    },
+
+    // column definitions with column name and binding info for the content
+    columns: [
+        {
+            name: &quot;First name&quot;,
+            template: {
+                content: {
+                    path: &quot;firstname&quot;
+                }
+            }
+        },
+        {
+            name: &quot;Last name&quot;,
+            template: {
+                content: {
+                    path: &quot;lastname&quot;
+                }
+            }
+        }
+    ]
+});
+</pre>
+<p class="p">The export class provides a generate method that triggers the generation process and
+returns a jQuery Promise object. The done handler is called when the generation process
+has finished. If you use the OData model, this happens asynchronously. The always
+handler is also called when the generation has failed. When the generation has finished
+and the export object is no longer needed, destroy the export object.</p>
+<pre class="pre codeblock prettyprint lang-js">
+oExport.generate().done(function(sContent) {
+    console.log(sContent);
+}).always(function() {
+    this.destroy();
+});
+</pre>
+<p class="p">The above example provides the following output:</p>
+<pre class="pre codeblock prettyprint">First name;Last name
+Al;Dente
+Andy;Friese
+Anita;Mann
+Doris;Schutt
+Kenya;Dewit</pre>
+<p class="p">You can directly save the file by triggering a download. This calls the generate method
+internally and uses the file util class (<samp class="ph codeph">sap/ui/core/util/File</samp>) to
+trigger the download.</p>
+<pre class="pre codeblock prettyprint lang-js">
+oExport.saveFile().always(function() {
+    this.destroy();
+});
+</pre>
+<div class="section"><section class="section" type="Export Types"><h2 class="section_title" style="font-size: 1.15em;">Export Types</h2>
+
+<p class="p">You can use the CSV export type out of the box, or define other export types. The
+concept is similar to custom notepad controls, see <a class="xref" href="../../#/topic/8dcab0011d274051808f959800cabf9f.html" title="You can create own content for SAPUI5. To develop controls in JavaScript, you can either extend existing controls or create new ones." target="_top">Developing Controls</a>. The generate method is called
+and should return the created file as a string.</p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">Make sure that all values are encoded or escaped properly.</p></aside>
+<pre class="pre codeblock prettyprint lang-js">
+// &quot;ExportType&quot; required from module &quot;sap/ui/core/util/ExportType&quot;
+// &quot;encodeXML&quot; required from module &quot;sap/base/security/encodeXML&quot;
+ExportType.extend(&quot;my.own.ExportType&quot;, {
+
+    init: function() {
+        // Set default values
+        this.setProperty(&quot;fileExtension&quot;, &quot;mytype&quot;, true);
+        this.setProperty(&quot;mimeType&quot;, &quot;text/mytype&quot;, true);
+        this.setProperty(&quot;charset&quot;, &quot;utf-8&quot;, true);
+    },
+
+    generate: function() {
+        var aBuffer = [];
+
+        var oColumns = this.columnGenerator(),
+            oColumn;
+
+        aBuffer.push(&quot;&lt;columns&gt;&quot;);
+
+        while (!(oColumn = oColumns.next()).done) {
+            aBuffer.push(&quot;&lt;column&gt;&quot; + encodeXML(oColumn.value.name) + &quot;&lt;/column&gt;&quot;);
+        }
+
+        aBuffer.push(&quot;&lt;/columns&gt;&quot;);
+        
+        var oRows = this.rowGenerator(),
+            oRow;
+
+        aBuffer.push(&quot;&lt;rows&gt;&quot;);
+
+        while (!(oRow = oRows.next()).done) {
+            var oCells = oRow.value.cells,
+                oCell;
+
+            aBuffer.push(&quot;&lt;row&gt;&quot;);
+            aBuffer.push(&quot;&lt;cells&gt;&quot;);
+
+            while (!(oCell = oCells.next()).done) {
+                aBuffer.push(&quot;&lt;cell&quot;);
+                if (oCell.value.customData.color) {
+                    aBuffer.push(&quot; color=\&quot;&quot; + encodeXML(oCell.value.customData.color) + &quot;\&quot;&quot;);
+                }
+                aBuffer.push(&quot;&gt;&quot;);
+                aBuffer.push(encodeXML(oCell.value.content));
+                aBuffer.push(&quot;&lt;/cell&gt;&quot;);
+            }
+
+
+        
+        aBuffer.push(&quot;&lt;/rows&gt;&quot;);
+        
+        return aBuffer.join(&quot;&quot;);
+    }
+});
+</pre>
+<p class="p"><span class="ph emphasis emphasis">Custom Data</span></p>
+<p class="p">It is also possible to pass <samp class="ph codeph">customData</samp> to the cell template. This
+can be used to provide additional metadata to the <samp class="ph codeph">ExportType</samp> (see
+example code above).</p>
+<pre class="pre codeblock prettyprint lang-js">
+// column definitions with column name, binding info for the content and additional custom data
+columns: [
+    {
+        name: &quot;First name&quot;,
+        template: {
+            content: {
+                path: &quot;firstname&quot;
+            },
+            customData: [
+                {
+                    &quot;key&quot;: &quot;color&quot;,
+                    &quot;value&quot;: {
+                        path: &quot;color&quot;
+                    }
+                }
+            ]
+        }
+    },
+    {
+        name: &quot;Last name&quot;,
+        template: {
+            content: {
+                path: &quot;lastname&quot;
+            }
+        }
+    }
+]
+</pre>
+<p class="p"><span class="ph emphasis emphasis">Model Data</span></p>
+<pre class="pre codeblock prettyprint lang-js">
+// &quot;JSONModel&quot; required from module &quot;sap/ui/model/json/JSONModel&quot;
+var oModel = new JSONModel([
+    {
+        firstname: &quot;Al&quot;,
+        lastname: &quot;Dente&quot;,
+        color: &quot;red&quot;
+    },
+    {
+        firstname: &quot;Andy&quot;,
+        lastname: &quot;Friese&quot;,
+        color: &quot;black&quot;
+    },
+    {
+        firstname: &quot;Anita&quot;,
+        lastname: &quot;Mann&quot;,
+        color: &quot;yellow&quot;
+    },
+    {
+        firstname: &quot;Doris&quot;,
+        lastname: &quot;Schutt&quot;,
+        color: &quot;green&quot;
+    },
+    {
+        firstname: &quot;Kenya&quot;,
+        lastname: &quot;Dewit&quot;,
+        color: &quot;blue&quot;
+    }
+]);
+</pre>
+<p class="p"><span class="ph emphasis emphasis">Output</span></p>
+<pre class="pre codeblock prettyprint lang-xml">
+&lt;columns&gt;
+    &lt;column&gt;First name&lt;/column&gt;
+    &lt;column&gt;Last name&lt;/column&gt;
+&lt;/columns&gt;
+&lt;rows&gt;
+    &lt;row&gt;
+        &lt;cells&gt;
+            &lt;cell color=&quot;red&quot;&gt;Al&lt;/cell&gt;
+            &lt;cell&gt;Dente&lt;/cell&gt;
+        &lt;/cells&gt;
+    &lt;/row&gt;
+    &lt;row&gt;
+        &lt;cells&gt;
+            &lt;cell color=&quot;black&quot;&gt;Andy&lt;/cell&gt;
+            &lt;cell&gt;Friese&lt;/cell&gt;
+        &lt;/cells&gt;
+    &lt;/row&gt;
+    &lt;row&gt;
+        &lt;cells&gt;
+            &lt;cell color=&quot;yellow&quot;&gt;Anita&lt;/cell&gt;
+            &lt;cell&gt;Mann&lt;/cell&gt;
+        &lt;/cells&gt;
+    &lt;/row&gt;
+    &lt;row&gt;
+        &lt;cells&gt;
+            &lt;cell color=&quot;green&quot;&gt;Doris&lt;/cell&gt;
+            &lt;cell&gt;Schutt&lt;/cell&gt;
+        &lt;/cells&gt;
+    &lt;/row&gt;
+    &lt;row&gt;
+        &lt;cells&gt;
+            &lt;cell color=&quot;blue&quot;&gt;Kenya&lt;/cell&gt;
+            &lt;cell&gt;Dewit&lt;/cell&gt;
+        &lt;/cells&gt;
+    &lt;/row&gt;
+&lt;/rows&gt;
+</pre>
+</section></div>
+<div class="section"><section class="section" type="Integration in Controls"><h2 class="section_title" style="font-size: 1.15em;">Integration in Controls</h2>
+
+<p class="p"><samp class="ph codeph">sap/ui/table/Table</samp></p>
+<p class="p">The <samp class="ph codeph">exportData</samp> method creates an export instance and fills the rows
+and columns with the table&apos;s rows/column definition, if not defined otherwise. This
+also includes filters and sorters that have been applied to the columns.</p>
+<pre class="pre codeblock prettyprint lang-js">
+// &quot;ExportTypeCSV&quot; required from module &quot;sap/ui/core/util/ExportTypeCSV&quot;
+
+oTable.exportData({
+    exportType: ExportTypeCSV()
+})
+.saveFile()
+.always(function() {
+    this.destroy();
+});
+</pre>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

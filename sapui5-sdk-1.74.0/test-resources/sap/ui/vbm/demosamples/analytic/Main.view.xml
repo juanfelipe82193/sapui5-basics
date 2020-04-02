@@ -1,0 +1,61 @@
+			<mvc:View
+	controllerName="sap.ui.vbdemos.analytic.Main"
+	xmlns:vbm="sap.ui.vbm" xmlns:m="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:mvc="sap.ui.core.mvc" xmlns="sap.ui.core"
+	xmlns:viz="sap.viz.ui5.controls"
+	xmlns:viz.data="sap.viz.ui5.data"
+	xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds">
+	<m:Page title="Visual Business Analytic Demo" showNavButton="true"
+		navButtonPress="onNavBack">
+		<m:content>
+			<l:Splitter>
+				<vbm:AnalyticMap
+					id="VBIAnalytic" 
+					regions="{/regionProperties}" 
+					width="100%" 
+					height="100%" 
+					centerPosition="10.350;48.431" 
+					zoomlevel="5" 
+					regionSelect="handleSelect" 
+					regionDeselect="handleDeselect">
+					<vbm:regions> 
+						<vbm:Region 
+						    code="{code}" 
+						    color="{color}" 
+						    tooltip="{region}">
+						</vbm:Region>
+					</vbm:regions>
+					<vbm:layoutData><l:SplitterLayoutData size="auto" resizable="false" /></vbm:layoutData>
+				</vbm:AnalyticMap>
+	            <viz:VizFrame 
+	            	id="ChartAnalytic" 
+	            	uiConfig="{applicationSet:'fiori'}"
+	                height='100%' width="100%" vizType='column'>
+	                <viz:dataset>
+	                    <viz.data:FlattenedDataset data="{/regionProperties}">
+	                        <viz.data:dimensions>
+	                            <viz.data:DimensionDefinition name="Region"
+	                                value="{region}" />
+	                        </viz.data:dimensions>
+	                        <viz.data:measures>
+	                            <viz.data:MeasureDefinition name="Revenue"
+	                                value="{Revenue}" />
+	                            <viz.data:MeasureDefinition name="Cost"
+	                                value="{Cost}" />
+	                        </viz.data:measures>
+	                    </viz.data:FlattenedDataset>
+	                </viz:dataset>
+	                <viz:feeds>
+	                    <viz.feeds:FeedItem uid="valueAxis" type="Measure"
+	                         values="Revenue" />
+	                    <viz.feeds:FeedItem uid="valueAxis" type="Measure"
+	                         values="Cost" />
+	                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension"
+	                        values="Region" />
+	                </viz:feeds>
+	            </viz:VizFrame>				
+			</l:Splitter>		
+		</m:content>
+	</m:Page>
+</mvc:View>

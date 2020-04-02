@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Basic Layout Tests</title>
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize"
+	data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet"
+	href="../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css"
+	media="screen" />
+<script type="text/javascript"
+	src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript"
+	src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Basic Layout Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Base Layout tests", {
+			setup : function() {
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				this.oDataArea = this.oCrosstab.getDataArea();
+				this.oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+				this.oColHeaderArea = this.oCrosstab.getColumnHeaderArea();
+				this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+
+			},
+			teardown : function() {
+				this.oCrosstab = null;
+				this.oDataArea = null;
+				this.oColHeaderArea = null;
+				this.oDimensionHeaderArea = null;
+				this.oRowHeaderArea = null;
+			}
+		});
+
+		test("Call rendering on all areas", function() {
+			ok($('#' + this.oDimensionHeaderArea.getId()),
+					"Dimension Header Area rendering must be called from Crosstab");
+			ok($('#' + this.oColHeaderArea.getId()),
+					"Column Header Area rendering must be called from Crosstab");
+			ok($('#' + this.oRowHeaderArea.getId()),
+					"Row Header Area rendering must be called from Crosstab");
+			ok($('#' + this.oDataArea.getId()), "Data Area rendering must be called from Crosstab");
+		});
+
+		// Layout tests
+		test("Areas in correct quadrants", function() {
+			var that = this;
+			$("#" + that.oCrosstab.getId() + " td").each(function() {
+				var cellId = $(this).attr("id");
+				var oRequiredArea = null;
+				switch (cellId) {
+				case that.oCrosstab.getId() + '_upperLeft':
+					oRequiredArea = $(this).find('#' + that.oDimensionHeaderArea.getId());
+					ok(oRequiredArea.length === 1, "Dimension Header Area must be in upper left quadrant");
+					break;
+				case that.oCrosstab.getId() + '_upperRight':
+					oRequiredArea = $(this).find('#' + that.oColHeaderArea.getId());
+					ok(oRequiredArea.length === 1, "Column Header Area must be in upper right quadrant");
+					break;
+				case that.oCrosstab.getId() + '_lowerLeft':
+					oRequiredArea = $(this).find('#' + that.oRowHeaderArea.getId());
+					ok(oRequiredArea.length === 1, "Row Header Area must be in lower left quadrant");
+					break;
+				case that.oCrosstab.getId() + '_lowerRight':
+					oRequiredArea = $(this).find('#' + that.oDataArea.getId()); 
+					ok(oRequiredArea.length === 1, "Data  Area must be in lower right quadrant");
+					break;
+				}
+			});
+		});
+	</script>
+</body>
+</html>

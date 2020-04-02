@@ -1,0 +1,1141 @@
+<edmx:Edmx
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="STTA_SALES_ORDER_WD_20_SRV" xml:lang="en" sap:schema-version="1">
+            <EntityType Name="C_STTA_BusinessPartnerType" sap:label="Business Partner" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="BusinessPartnerID"/>
+                </Key>
+                <Property Name="BusinessPartnerID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="CompanyName" sap:label="Business Partner ID" sap:quickinfo="EPM: Business Partner ID"/>
+                <Property Name="BusinessPartnerRole" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Role" sap:quickinfo="EPM: Business Partner Role"/>
+                <Property Name="MailAddress" Type="Edm.String" MaxLength="255" sap:label="Mail Address" sap:quickinfo="EPM: E-Mail Address"/>
+                <Property Name="PhoneNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Phone Number" sap:quickinfo="EPM: Phone Number"/>
+                <Property Name="FaxNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Fax Number" sap:quickinfo="EPM: Fax Number"/>
+                <Property Name="LegalForm" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Legal Form" sap:quickinfo="EPM: Legal Form of Business Partner"/>
+                <Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" sap:label="Currency Code" sap:quickinfo="EPM: Currency Code" sap:semantics="currency-code"/>
+                <Property Name="CompanyName" Type="Edm.String" MaxLength="80" sap:label="Company Name" sap:quickinfo="EPM: Company Name"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Created At" sap:quickinfo="EPM: Created At"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Created By" sap:quickinfo="User Name"/>
+                <Property Name="ChangedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Changed At" sap:quickinfo="EPM: Changed At"/>
+                <Property Name="ChangedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Changed By" sap:quickinfo="User Name"/>
+                <NavigationProperty Name="to_BusinessPartnerContacts" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_7B7E12E0A0C302A7D2979A95B2BDC1E7" FromRole="FromRole_assoc_7B7E12E0A0C302A7D2979A95B2BDC1E7" ToRole="ToRole_assoc_7B7E12E0A0C302A7D2979A95B2BDC1E7"/>
+            </EntityType>
+            <EntityType Name="C_STTA_SalesOrderItemSL_WD_20Type" sap:label="STTA Sales Order Item SL (Draft 2.0)" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="SalesOrder"/>
+                    <PropertyRef Name="SalesOrderItem"/>
+                    <PropertyRef Name="ScheduleLine"/>
+                    <PropertyRef Name="DraftUUID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="Preparation_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Validation_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SalesOrder" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Order ID" sap:quickinfo="EPM: Sales Order Number"/>
+                <Property Name="SalesOrderItem" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Item Position" sap:quickinfo="EPM: Sales Order Item Position"/>
+                <Property Name="ScheduleLine" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="NonNegative" sap:label="Schedule Line Number" sap:quickinfo="STTA: Schedule Line Number"/>
+                <Property Name="DeliveryDate" Type="Edm.DateTimeOffset" Precision="7" sap:label="Delivery Date" sap:quickinfo="EPM: Schedule Line Delivery Date"/>
+                <Property Name="Quantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="QuantityUnitCode" sap:label="Quantity" sap:quickinfo="EPM: Quantity"/>
+                <Property Name="QuantityUnitCode" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:quickinfo="EPM: Quantity Unit" sap:semantics="unit-of-measure"/>
+                <Property Name="ChangeDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date"/>
+                <Property Name="DraftUUID" Type="Edm.Guid" Nullable="false" sap:label="Key"/>
+                <Property Name="DraftEntityCreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft Created On"/>
+                <Property Name="DraftEntityLastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft Last Changed On"/>
+                <Property Name="ParentDraftUUID" Type="Edm.Guid" sap:label="Key" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RootDraftUUID" Type="Edm.Guid" sap:label="Key" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Has active" sap:sortable="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Has Draft" sap:sortable="false"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" sap:display-format="UpperCase" sap:label="Is active" sap:sortable="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_C5B92C62F2FA599DB40C903F26CA21C0" FromRole="FromRole_assoc_C5B92C62F2FA599DB40C903F26CA21C0" ToRole="ToRole_assoc_C5B92C62F2FA599DB40C903F26CA21C0"/>
+                <NavigationProperty Name="SiblingEntity" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_665B18A4CE4AD1FEA2D58C08859C2EC0" FromRole="FromRole_assoc_665B18A4CE4AD1FEA2D58C08859C2EC0" ToRole="ToRole_assoc_665B18A4CE4AD1FEA2D58C08859C2EC0"/>
+                <NavigationProperty Name="to_SalesOrder" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_6E82DB98A25BEC7631E139D4F326876B" FromRole="FromRole_assoc_6E82DB98A25BEC7631E139D4F326876B" ToRole="ToRole_assoc_6E82DB98A25BEC7631E139D4F326876B"/>
+                <NavigationProperty Name="to_SalesOrderItem" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_9304886E45A0056DD361085D82A2AE39" FromRole="ToRole_assoc_9304886E45A0056DD361085D82A2AE39" ToRole="FromRole_assoc_9304886E45A0056DD361085D82A2AE39"/>
+            </EntityType>
+            <EntityType Name="C_STTA_SalesOrderItem_WD_20Type" sap:label="STTA Sales Order Item Cons. (Draft 2.0)" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="SalesOrder"/>
+                    <PropertyRef Name="SalesOrderItem"/>
+                    <PropertyRef Name="DraftUUID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="Calcgrossamount_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Copyitem_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Multimsg_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Preparation_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Raiseamount_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Validation_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Delete_mc" Type="Edm.Boolean" sap:label="Dyn. Method Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Update_mc" Type="Edm.Boolean" sap:label="Dyn. Method Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SalesOrder" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Order ID" sap:quickinfo="EPM: Sales Order Number"/>
+                <Property Name="SalesOrderItem" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Item Position" sap:quickinfo="EPM: Sales Order Item Position"/>
+                <Property Name="GrossAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Total Gross Amount" sap:quickinfo="EPM: Total Gross Amount" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="NetAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Total Net Amount" sap:quickinfo="EPM: Total Net Amount"/>
+                <Property Name="TaxAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Total Tax Amount" sap:quickinfo="EPM: Total Tax Amount"/>
+                <Property Name="Product" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Product ID" sap:quickinfo="EPM: Product ID" sap:value-list="standard"/>
+                <Property Name="ProductPictureURL" Type="Edm.String" MaxLength="255" sap:display-format="UpperCase" sap:label="Image" sap:quickinfo="Image of the product"/>
+                <Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" sap:text="to_Currency/Currency_Code_Text" sap:label="ISO Currency Code" sap:quickinfo="EPM: Currency Code" sap:value-list="standard" sap:semantics="currency-code"/>
+                <Property Name="AvailableToPromiseStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="SO Item ATP Status" sap:quickinfo="EPM: Sales Order Item ATP Status"/>
+                <Property Name="OpportunityItemID" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Item Position" sap:quickinfo="EPM: Sales Order Item Position"/>
+                <Property Name="SalesOrder2" Type="Edm.String" MaxLength="10" sap:display-format="NonNegative"/>
+                <Property Name="DraftUUID" Type="Edm.Guid" Nullable="false" sap:label="Key"/>
+                <Property Name="DraftEntityCreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft Created On"/>
+                <Property Name="DraftEntityLastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft Last Changed On"/>
+                <Property Name="ParentDraftUUID" Type="Edm.Guid" sap:label="Key" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Has active" sap:sortable="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Has Draft" sap:sortable="false"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" sap:display-format="UpperCase" sap:label="Is active" sap:sortable="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_B152224EC5474B5ACAFC820A5E3767B8" FromRole="FromRole_assoc_B152224EC5474B5ACAFC820A5E3767B8" ToRole="ToRole_assoc_B152224EC5474B5ACAFC820A5E3767B8"/>
+                <NavigationProperty Name="SiblingEntity" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_E0A665A96187BFA68BCB90F48D4EA2DA" FromRole="FromRole_assoc_E0A665A96187BFA68BCB90F48D4EA2DA" ToRole="ToRole_assoc_E0A665A96187BFA68BCB90F48D4EA2DA"/>
+                <NavigationProperty Name="to_Currency" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_03320A655FF6FA1FBF691ED4D9F7322B" FromRole="FromRole_assoc_03320A655FF6FA1FBF691ED4D9F7322B" ToRole="ToRole_assoc_03320A655FF6FA1FBF691ED4D9F7322B"/>
+                <NavigationProperty Name="to_ItemScheduleLine" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_1AC56DAD21154C40970E26C19422A070" FromRole="FromRole_assoc_1AC56DAD21154C40970E26C19422A070" ToRole="ToRole_assoc_1AC56DAD21154C40970E26C19422A070"/>
+                <NavigationProperty Name="to_Product" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_CE39F158D1FEFB661E53BD21CD9D4718" FromRole="FromRole_assoc_CE39F158D1FEFB661E53BD21CD9D4718" ToRole="ToRole_assoc_CE39F158D1FEFB661E53BD21CD9D4718"/>
+                <NavigationProperty Name="to_SalesOrder2" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_632C5C94F13F2FAD709390C23011B79E" FromRole="FromRole_assoc_632C5C94F13F2FAD709390C23011B79E" ToRole="ToRole_assoc_632C5C94F13F2FAD709390C23011B79E"/>
+                <NavigationProperty Name="to_SalesOrder" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_2FD92D255FF625BE49D0382E8C83442F" FromRole="ToRole_assoc_2FD92D255FF625BE49D0382E8C83442F" ToRole="FromRole_assoc_2FD92D255FF625BE49D0382E8C83442F"/>
+            </EntityType>
+            <EntityType Name="C_STTA_SalesOrder_WD_20Type" sap:label="STTA Sales Order Consumption (Draft 2.0)" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="SalesOrder"/>
+                    <PropertyRef Name="DraftUUID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="Activation_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Edit_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Messageval_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Preparation_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Setapprovalstatus_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Setcurrency_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Setopportunityid_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Setoverallstatus_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Showsinglemsg_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Validation_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="OpportunityID_fc" Type="Edm.Byte" sap:label="Dyn. Field Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Delete_mc" Type="Edm.Boolean" sap:label="Dyn. Method Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Update_mc" Type="Edm.Boolean" sap:label="Dyn. Method Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SalesOrder" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Order ID" sap:quickinfo="EPM: Sales Order Number"/>
+                <Property Name="BusinessPartnerID" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:text="to_BusinessPartner/CompanyName" sap:label="Business Partner ID" sap:quickinfo="EPM: Business Partner ID" sap:value-list="standard"/>
+                <Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" sap:text="to_Currency/Currency_Code_Text" sap:label="ISO Currency Code" sap:quickinfo="EPM: Currency Code" sap:value-list="standard" sap:semantics="currency-code"/>
+                <Property Name="GrossAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Total Gross Amount" sap:quickinfo="EPM: Total Gross Amount" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="NetAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Total Net Amount" sap:quickinfo="EPM: Total Net Amount" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="TaxAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Total Tax Amount" sap:quickinfo="EPM: Total Tax Amount" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="LifecycleStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:text="to_LifecycleStatus/Status_Text" sap:label="SO Lifecycle Status" sap:quickinfo="EPM: Sales Order Lifecycle Status" sap:value-list="standard"/>
+                <Property Name="BillingStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:text="to_BillingStatus/Status_Text" sap:label="Confirmation Status" sap:quickinfo="EPM: Sales Order Confirmation Status" sap:value-list="standard"/>
+                <Property Name="DeliveryStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:text="to_DeliveryStatus/Status_Text" sap:label="SO Ordering Status" sap:quickinfo="EPM: Sales Order Ordering Status" sap:value-list="standard"/>
+                <Property Name="OpportunityID" Type="Edm.String" MaxLength="35" sap:display-format="UpperCase" sap:field-control="OpportunityID_fc" sap:label="Opportunity ID" sap:quickinfo="EPM: Opportunity ID for SoD IDoc processing"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Created At" sap:quickinfo="EPM: Created At" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CreationUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:text="to_CreatedBy/FormattedName" sap:label="Created By" sap:quickinfo="User Name" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
+                <Property Name="LastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Changed At" sap:quickinfo="EPM: Changed At" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="LastChangedUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:text="to_ChangedBy/FormattedName" sap:label="Changed By" sap:quickinfo="User Name" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
+                <Property Name="OverallStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Overall Status" sap:quickinfo="EPM: Sales Order Overall Status" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="ApprovalStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Approval Status"/>
+                <Property Name="SalesOrder_Form" Type="Edm.String" MaxLength="10" sap:display-format="NonNegative"/>
+                <Property Name="DraftUUID" Type="Edm.Guid" Nullable="false" sap:label="Key"/>
+                <Property Name="DraftEntityCreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft Created On"/>
+                <Property Name="DraftEntityLastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft Last Changed On"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Has active" sap:sortable="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Has Draft" sap:sortable="false"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" sap:display-format="UpperCase" sap:label="Is active" sap:sortable="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_C55FB1AC1FC366D6D054D7AECDF2F840" FromRole="FromRole_assoc_C55FB1AC1FC366D6D054D7AECDF2F840" ToRole="ToRole_assoc_C55FB1AC1FC366D6D054D7AECDF2F840"/>
+                <NavigationProperty Name="SiblingEntity" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_84C83307F820C46BE196675E371395DD" FromRole="FromRole_assoc_84C83307F820C46BE196675E371395DD" ToRole="ToRole_assoc_84C83307F820C46BE196675E371395DD"/>
+                <NavigationProperty Name="to_BillingStatus" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_3E1B3FFAFCE6372E0575D426A7553246" FromRole="FromRole_assoc_3E1B3FFAFCE6372E0575D426A7553246" ToRole="ToRole_assoc_3E1B3FFAFCE6372E0575D426A7553246"/>
+                <NavigationProperty Name="to_BPAContact" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_9DACBDC176DB3FF18902CE13612155B5" FromRole="FromRole_assoc_9DACBDC176DB3FF18902CE13612155B5" ToRole="ToRole_assoc_9DACBDC176DB3FF18902CE13612155B5"/>
+                <NavigationProperty Name="to_BusinessPartner" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_18818A5DE5D41830AC41F77E1D3C39C7" FromRole="FromRole_assoc_18818A5DE5D41830AC41F77E1D3C39C7" ToRole="ToRole_assoc_18818A5DE5D41830AC41F77E1D3C39C7"/>
+                <NavigationProperty Name="to_ChangedBy" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_95958CC4F12CBBB3FFA0B7C3AA1BD508" FromRole="FromRole_assoc_95958CC4F12CBBB3FFA0B7C3AA1BD508" ToRole="ToRole_assoc_95958CC4F12CBBB3FFA0B7C3AA1BD508"/>
+                <NavigationProperty Name="to_CreatedBy" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_CE0923EAC73B0E98B328B2969FA6C0A8" FromRole="FromRole_assoc_CE0923EAC73B0E98B328B2969FA6C0A8" ToRole="ToRole_assoc_CE0923EAC73B0E98B328B2969FA6C0A8"/>
+                <NavigationProperty Name="to_Currency" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_8F08D10A434F353809766DE2DD1F7B4E" FromRole="FromRole_assoc_8F08D10A434F353809766DE2DD1F7B4E" ToRole="ToRole_assoc_8F08D10A434F353809766DE2DD1F7B4E"/>
+                <NavigationProperty Name="to_DeliveryStatus" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_2F73AFF253B5CB73D8A3FCA463F50E8E" FromRole="FromRole_assoc_2F73AFF253B5CB73D8A3FCA463F50E8E" ToRole="ToRole_assoc_2F73AFF253B5CB73D8A3FCA463F50E8E"/>
+                <NavigationProperty Name="to_Item" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_2FD92D255FF625BE49D0382E8C83442F" FromRole="FromRole_assoc_2FD92D255FF625BE49D0382E8C83442F" ToRole="ToRole_assoc_2FD92D255FF625BE49D0382E8C83442F"/>
+                <NavigationProperty Name="to_LifecycleStatus" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_51CE2781F66FC98E25D1DD1C3ADD0265" FromRole="FromRole_assoc_51CE2781F66FC98E25D1DD1C3ADD0265" ToRole="ToRole_assoc_51CE2781F66FC98E25D1DD1C3ADD0265"/>
+                <NavigationProperty Name="to_SalesOrder" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_ECC1067803857BF82F0B5EF77568229C" FromRole="FromRole_assoc_ECC1067803857BF82F0B5EF77568229C" ToRole="ToRole_assoc_ECC1067803857BF82F0B5EF77568229C"/>
+            </EntityType>
+            <EntityType Name="C_STTA_SO_BPAContactType" sap:label="Sales Order Business Partner Contacts" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ContactID"/>
+                    <PropertyRef Name="BusinessPartnerID"/>
+                </Key>
+                <Property Name="ContactID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Contact ID" sap:quickinfo="EPM: Contact ID"/>
+                <Property Name="BusinessPartnerID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Business Partner ID" sap:quickinfo="EPM: Business Partner ID"/>
+                <Property Name="Title" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Title" sap:quickinfo="EPM: Title"/>
+                <Property Name="FirstName" Type="Edm.String" MaxLength="40" sap:label="First Name" sap:quickinfo="EPM: First Name"/>
+                <Property Name="MiddleName" Type="Edm.String" MaxLength="40" sap:label="Middle Name" sap:quickinfo="EPM: Middle Name"/>
+                <Property Name="LastName" Type="Edm.String" MaxLength="40" sap:label="Last Name" sap:quickinfo="EPM: Last Name"/>
+                <Property Name="NickName" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Nick Name" sap:quickinfo="EPM: Nickname"/>
+                <Property Name="Initials" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Initials" sap:quickinfo="EPM: Initials"/>
+                <Property Name="Sex" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Sex" sap:quickinfo="EPM: Gender"/>
+                <Property Name="PhoneNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Phone No." sap:quickinfo="EPM: Phone Number"/>
+                <Property Name="FaxNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Fax No." sap:quickinfo="EPM: Fax Number"/>
+                <Property Name="MobileNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Mobile No." sap:quickinfo="EPM: Mobile Phone Number"/>
+                <Property Name="EMailAddress" Type="Edm.String" MaxLength="255" sap:label="EMail" sap:quickinfo="EPM: E-Mail Address"/>
+                <Property Name="Language" Type="Edm.String" MaxLength="2" sap:label="Lng" sap:quickinfo="Language Key"/>
+                <Property Name="DateOfBirth" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date of Birth" sap:quickinfo="EPM: Date of Birth"/>
+                <Property Name="CompanyName" Type="Edm.String" MaxLength="80" sap:label="Company" sap:quickinfo="EPM: Company Name"/>
+            </EntityType>
+            <EntityType Name="I_AIVS_BusinessPartnerType" sap:label="Business Partner" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="BusinessPartnerID"/>
+                </Key>
+                <Property Name="BusinessPartnerID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="CompanyName" sap:label="Business Partner ID" sap:quickinfo="EPM: Business Partner ID"/>
+                <Property Name="BusinessPartnerRole" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Bus. Part. Role" sap:quickinfo="EPM: Business Partner Role"/>
+                <Property Name="MailAddress" Type="Edm.String" MaxLength="255" sap:label="Email" sap:quickinfo="EPM: E-Mail Address"/>
+                <Property Name="PhoneNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Phone" sap:quickinfo="EPM: Phone Number"/>
+                <Property Name="FaxNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Fax" sap:quickinfo="EPM: Fax Number"/>
+                <Property Name="LegalForm" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Legal Form" sap:quickinfo="EPM: Legal Form of Business Partner"/>
+                <Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" sap:label="ISO Currency Code" sap:quickinfo="EPM: Currency Code" sap:semantics="currency-code"/>
+                <Property Name="CompanyName" Type="Edm.String" MaxLength="80" sap:label="Company Name" sap:quickinfo="EPM: Company Name"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Created At" sap:quickinfo="EPM: Created At"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:text="to_CreatedBy/FormattedName" sap:label="Created By" sap:quickinfo="User Name" sap:value-list="standard"/>
+                <Property Name="ChangedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Changed At" sap:quickinfo="EPM: Changed At"/>
+                <Property Name="ChangedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:text="to_ChangedBy/FormattedName" sap:label="Changed By" sap:quickinfo="User Name" sap:value-list="standard"/>
+                <NavigationProperty Name="to_BusinessPartnerContacts" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_1AD912CEE94C555A82EA3383988BEEF1" FromRole="FromRole_assoc_1AD912CEE94C555A82EA3383988BEEF1" ToRole="ToRole_assoc_1AD912CEE94C555A82EA3383988BEEF1"/>
+                <NavigationProperty Name="to_ChangedBy" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_AA3193A8C95B4ABBB3E628012FD9BCC7" FromRole="FromRole_assoc_AA3193A8C95B4ABBB3E628012FD9BCC7" ToRole="ToRole_assoc_AA3193A8C95B4ABBB3E628012FD9BCC7"/>
+                <NavigationProperty Name="to_CreatedBy" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_1B3D7ADC7137888B8DDD644997F94E1C" FromRole="FromRole_assoc_1B3D7ADC7137888B8DDD644997F94E1C" ToRole="ToRole_assoc_1B3D7ADC7137888B8DDD644997F94E1C"/>
+            </EntityType>
+            <EntityType Name="I_AIVS_BusinessPartner_ContactType" sap:label="Business Partner Contact" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="BusinessPartnerID"/>
+                    <PropertyRef Name="ContactID"/>
+                </Key>
+                <Property Name="BusinessPartnerID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Business Partner ID" sap:quickinfo="EPM: Business Partner ID"/>
+                <Property Name="ContactID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Business Partner ID" sap:quickinfo="EPM: Business Partner ID"/>
+                <Property Name="Title" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Title" sap:quickinfo="EPM: Title"/>
+                <Property Name="FirstName" Type="Edm.String" MaxLength="40" sap:label="First Name" sap:quickinfo="EPM: First Name"/>
+                <Property Name="MiddleName" Type="Edm.String" MaxLength="40" sap:label="Middle Name" sap:quickinfo="EPM: Middle Name"/>
+                <Property Name="LastName" Type="Edm.String" MaxLength="40" sap:label="Last Name" sap:quickinfo="EPM: Last Name"/>
+                <Property Name="NickName" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Nickname" sap:quickinfo="EPM: Nickname"/>
+                <Property Name="LoginName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+                <Property Name="Initials" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Initials" sap:quickinfo="EPM: Initials"/>
+                <Property Name="Sex" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Gender" sap:quickinfo="EPM: Gender"/>
+                <Property Name="PhoneNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Phone" sap:quickinfo="EPM: Phone Number"/>
+                <Property Name="FaxNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Phone" sap:quickinfo="EPM: Phone Number"/>
+                <Property Name="MailAddress" Type="Edm.String" MaxLength="255" sap:label="Email" sap:quickinfo="EPM: E-Mail Address"/>
+                <Property Name="Language" Type="Edm.String" MaxLength="2" sap:label="Language Key"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)"/>
+                <Property Name="CreationUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+                <Property Name="LastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)"/>
+                <Property Name="LastChangedUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+            </EntityType>
+            <EntityType Name="I_AIVS_Confirm_StatusType" sap:label="Sales Order Confirmation Status" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Status"/>
+                </Key>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="Status_Text" sap:label="Lower Value" sap:quickinfo="Values for Domains: Single Value / Upper Limit"/>
+                <Property Name="Status_Text" Type="Edm.String" MaxLength="60" sap:label="Confirmation" sap:quickinfo="Short Text for Fixed Values" sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="I_AIVS_CurrencyCode_TextType" sap:label="Text for Currency Code" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Currency_Code"/>
+                    <PropertyRef Name="Language"/>
+                </Key>
+                <Property Name="Currency_Code" Type="Edm.String" Nullable="false" MaxLength="5" sap:text="Text" sap:label="Currency Code" sap:quickinfo="AIS: Currency Code" sap:semantics="currency-code"/>
+                <Property Name="Language" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key"/>
+                <Property Name="Text" Type="Edm.String" MaxLength="40" sap:label="Long Text"/>
+            </EntityType>
+            <EntityType Name="I_AIVS_Currency_CodeType" sap:label="Value Help for Currency Code" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Currency_Code"/>
+                </Key>
+                <Property Name="Currency_Code" Type="Edm.String" Nullable="false" MaxLength="5" sap:text="Currency_Code_Text" sap:label="Currency Code" sap:quickinfo="AIS: Currency Code" sap:semantics="currency-code"/>
+                <Property Name="Currency_Code_Text" Type="Edm.String" MaxLength="40" sap:label="Long Text" sap:creatable="false" sap:updatable="false"/>
+                <NavigationProperty Name="to_Text" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_70AB7C3ED924748157EA7AFC4A7BED5A" FromRole="FromRole_assoc_70AB7C3ED924748157EA7AFC4A7BED5A" ToRole="ToRole_assoc_70AB7C3ED924748157EA7AFC4A7BED5A"/>
+            </EntityType>
+            <EntityType Name="I_AIVS_Delivery_StatusType" sap:label="Sales Order Delivery Status" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Status"/>
+                </Key>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="Status_Text" sap:label="Lower Value" sap:quickinfo="Values for Domains: Single Value / Upper Limit"/>
+                <Property Name="Status_Text" Type="Edm.String" MaxLength="60" sap:label="Delivery Status" sap:quickinfo="Short Text for Fixed Values" sap:creatable="false" sap:updatable="false"/>
+                <NavigationProperty Name="to_Text" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_D84EE146966DA75A56B479B286251C03" FromRole="FromRole_assoc_D84EE146966DA75A56B479B286251C03" ToRole="ToRole_assoc_D84EE146966DA75A56B479B286251C03"/>
+            </EntityType>
+            <EntityType Name="I_AIVS_Delivery_Status_TextType" sap:label="Sales Order Delivery Status" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Status"/>
+                    <PropertyRef Name="Language"/>
+                </Key>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="Text" sap:label="Delivery Status" sap:quickinfo="Values for Domains: Single Value / Upper Limit"/>
+                <Property Name="Language" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Lang." sap:quickinfo="Language Key"/>
+                <Property Name="Text" Type="Edm.String" MaxLength="60" sap:label="Delivery Status" sap:quickinfo="Short Text for Fixed Values"/>
+            </EntityType>
+            <EntityType Name="I_AIVS_Lifecycle_StatusType" sap:label="Sales Order Lifecycle Status" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Status"/>
+                </Key>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="Status_Text" sap:label="Lower Value" sap:quickinfo="Values for Domains: Single Value / Upper Limit"/>
+                <Property Name="Status_Text" Type="Edm.String" MaxLength="60" sap:label="Lifecycle Status" sap:quickinfo="Short Text for Fixed Values" sap:creatable="false" sap:updatable="false"/>
+                <NavigationProperty Name="to_Text" Relationship="STTA_SALES_ORDER_WD_20_SRV.assoc_ACE31D11A06FAFF0BCFFC01AB47122B9" FromRole="FromRole_assoc_ACE31D11A06FAFF0BCFFC01AB47122B9" ToRole="ToRole_assoc_ACE31D11A06FAFF0BCFFC01AB47122B9"/>
+            </EntityType>
+            <EntityType Name="I_AIVS_Lifecycle_Status_TextType" sap:label="Sales Order Lifecycle Status" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Status"/>
+                    <PropertyRef Name="Language"/>
+                </Key>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="Text" sap:label="Lifecycle Status" sap:quickinfo="Values for Domains: Single Value / Upper Limit"/>
+                <Property Name="Language" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Lang." sap:quickinfo="Language Key"/>
+                <Property Name="Text" Type="Edm.String" MaxLength="60" sap:label="Lifecycle Status" sap:quickinfo="Short Text for Fixed Values"/>
+            </EntityType>
+            <EntityType Name="I_AIVS_ProductType" sap:label="Product" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ProductID"/>
+                </Key>
+                <Property Name="ProductID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Product ID" sap:quickinfo="EPM: Product ID"/>
+                <Property Name="TypeCode" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Product Type Code" sap:quickinfo="EPM: Product Type Code"/>
+                <Property Name="Category" Type="Edm.String" MaxLength="40" sap:label="Product Category" sap:quickinfo="EPM: Product Category"/>
+                <Property Name="TaxTarifCode" Type="Edm.Byte" sap:label="Tax Tariff Code" sap:quickinfo="EPM: Product Tax Tariff Code"/>
+                <Property Name="MeasureUnit" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:quickinfo="EPM: Quantity Unit" sap:semantics="unit-of-measure"/>
+                <Property Name="WeightMeasure" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="MeasureUnit" sap:label="Weight" sap:quickinfo="EPM: Weight Measure"/>
+                <Property Name="WeightUnit" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:quickinfo="EPM: Weight Unit" sap:semantics="unit-of-measure"/>
+                <Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" sap:label="ISO Currency Code" sap:quickinfo="EPM: Currency Code" sap:semantics="currency-code"/>
+                <Property Name="Price" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Product Unit Price" sap:quickinfo="EPM: Product Unit Price"/>
+                <Property Name="PictureURL" Type="Edm.String" MaxLength="255" sap:display-format="UpperCase" sap:label="Product Image URI" sap:quickinfo="EPM: URI of Product Image"/>
+                <Property Name="Width" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="DimensionUnit" sap:label="Product Width" sap:quickinfo="EPM: Width"/>
+                <Property Name="Depth" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="DimensionUnit" sap:label="Product Depth" sap:quickinfo="EPM: Depth"/>
+                <Property Name="Height" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="DimensionUnit" sap:label="Product Height" sap:quickinfo="EPM: Height"/>
+                <Property Name="DimensionUnit" Type="Edm.String" MaxLength="3" sap:label="Dimension Unit" sap:quickinfo="EPM: Dimension Unit" sap:semantics="unit-of-measure"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)"/>
+                <Property Name="CreationUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+                <Property Name="LastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)"/>
+                <Property Name="LastChangedUnserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+            </EntityType>
+            <EntityType Name="I_AIVS_UserType" sap:label="User Data" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="UserName"/>
+                </Key>
+                <Property Name="UserName" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="UpperCase" sap:text="FormattedName" sap:label="User" sap:quickinfo="User Name in User Master Record"/>
+                <Property Name="FirstName" Type="Edm.String" MaxLength="40" sap:label="First Name"/>
+                <Property Name="LastName" Type="Edm.String" MaxLength="40" sap:label="Last Name"/>
+                <Property Name="MiddleName" Type="Edm.String" MaxLength="40" sap:label="Second First Name" sap:quickinfo="Middle name or second forename of a person"/>
+                <Property Name="FormattedName" Type="Edm.String" MaxLength="80" sap:display-format="UpperCase" sap:label="Full Name"/>
+                <Property Name="WorkNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Telephone number" sap:quickinfo="Complete number: dialling code+number+extension"/>
+                <Property Name="EMailAddress" Type="Edm.String" MaxLength="241" sap:label="E-Mail Address"/>
+                <Property Name="PhotoUrl" Type="Edm.String" MaxLength="48" sap:display-format="UpperCase"/>
+            </EntityType>
+            <EntityType Name="I_DraftAdministrativeDataType" sap:label="Draft Administrative Data" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="DraftUUID"/>
+                </Key>
+                <Property Name="DraftUUID" Type="Edm.Guid" Nullable="false" sap:label="Draft (Technical ID)"/>
+                <Property Name="DraftEntityType" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Draft Entity ID"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft Created On"/>
+                <Property Name="CreatedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:text="CreatedByUserDescription" sap:label="Draft Created By"/>
+                <Property Name="LastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft Last Changed On"/>
+                <Property Name="LastChangedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:text="LastChangedByUserDescription" sap:label="Draft Last Changed By"/>
+                <Property Name="DraftAccessType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Draft Access Type"/>
+                <Property Name="ProcessingStartDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft In Process Since"/>
+                <Property Name="InProcessByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:text="InProcessByUserDescription" sap:label="Draft In Process By"/>
+                <Property Name="DraftIsKeptByUser" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Draft Is Kept By User"/>
+                <Property Name="EnqueueStartDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft Locked Since"/>
+                <Property Name="DraftIsCreatedByMe" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Draft Created By Me"/>
+                <Property Name="DraftIsLastChangedByMe" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Draft Last Changed By Me"/>
+                <Property Name="DraftIsProcessedByMe" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Draft In Process By Me"/>
+                <Property Name="CreatedByUserDescription" Type="Edm.String" MaxLength="80" sap:label="Draft Created By (Description)"/>
+                <Property Name="LastChangedByUserDescription" Type="Edm.String" MaxLength="80" sap:label="Draft Last Changed By (Description)"/>
+                <Property Name="InProcessByUserDescription" Type="Edm.String" MaxLength="80" sap:label="Draft In Process By (Description)"/>
+            </EntityType>
+            <EntityType Name="I_STTA_BusinessPartnerType" sap:label="Business Partner" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="BusinessPartnerID"/>
+                </Key>
+                <Property Name="BusinessPartnerID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="CompanyName" sap:label="Business Partner ID" sap:quickinfo="EPM: Business Partner ID"/>
+                <Property Name="BusinessPartnerRole" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Bus. Part. Role" sap:quickinfo="EPM: Business Partner Role"/>
+                <Property Name="MailAddress" Type="Edm.String" MaxLength="255" sap:label="Email" sap:quickinfo="EPM: E-Mail Address"/>
+                <Property Name="PhoneNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Phone" sap:quickinfo="EPM: Phone Number"/>
+                <Property Name="FaxNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Fax" sap:quickinfo="EPM: Fax Number"/>
+                <Property Name="LegalForm" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Legal Form" sap:quickinfo="EPM: Legal Form of Business Partner"/>
+                <Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" sap:label="ISO Currency Code" sap:quickinfo="EPM: Currency Code" sap:semantics="currency-code"/>
+                <Property Name="CompanyName" Type="Edm.String" MaxLength="80" sap:label="Company Name" sap:quickinfo="EPM: Company Name"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Created At" sap:quickinfo="EPM: Created At"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Created By" sap:quickinfo="User Name"/>
+                <Property Name="ChangedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Changed At" sap:quickinfo="EPM: Changed At"/>
+                <Property Name="ChangedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Changed By" sap:quickinfo="User Name"/>
+            </EntityType>
+            <ComplexType Name="ValidationFunctionResult">
+                <Property Name="IsValid" Type="Edm.Boolean" sap:label="Is valid"/>
+            </ComplexType>
+            <ComplexType Name="DummyFunctionImportResult">
+                <Property Name="IsInvalid" Type="Edm.Boolean" sap:label="TRUE"/>
+            </ComplexType>
+            <Association Name="assoc_70AB7C3ED924748157EA7AFC4A7BED5A" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Currency_CodeType" Multiplicity="1" Role="FromRole_assoc_70AB7C3ED924748157EA7AFC4A7BED5A"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_CurrencyCode_TextType" Multiplicity="0..1" Role="ToRole_assoc_70AB7C3ED924748157EA7AFC4A7BED5A"/>
+            </Association>
+            <Association Name="assoc_B152224EC5474B5ACAFC820A5E3767B8" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" Multiplicity="1" Role="FromRole_assoc_B152224EC5474B5ACAFC820A5E3767B8"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_DraftAdministrativeDataType" Multiplicity="0..1" Role="ToRole_assoc_B152224EC5474B5ACAFC820A5E3767B8"/>
+            </Association>
+            <Association Name="assoc_E0A665A96187BFA68BCB90F48D4EA2DA" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" Multiplicity="1" Role="FromRole_assoc_E0A665A96187BFA68BCB90F48D4EA2DA"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" Multiplicity="0..1" Role="ToRole_assoc_E0A665A96187BFA68BCB90F48D4EA2DA"/>
+            </Association>
+            <Association Name="assoc_03320A655FF6FA1FBF691ED4D9F7322B" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" Multiplicity="1" Role="FromRole_assoc_03320A655FF6FA1FBF691ED4D9F7322B"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Currency_CodeType" Multiplicity="0..1" Role="ToRole_assoc_03320A655FF6FA1FBF691ED4D9F7322B"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_03320A655FF6FA1FBF691ED4D9F7322B">
+                        <PropertyRef Name="Currency_Code"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_03320A655FF6FA1FBF691ED4D9F7322B">
+                        <PropertyRef Name="CurrencyCode"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_1AC56DAD21154C40970E26C19422A070" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" Multiplicity="1" Role="FromRole_assoc_1AC56DAD21154C40970E26C19422A070"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItemSL_WD_20Type" Multiplicity="*" Role="ToRole_assoc_1AC56DAD21154C40970E26C19422A070"/>
+			    <ReferentialConstraint>
+			        <Principal Role="FromRole_assoc_1AC56DAD21154C40970E26C19422A070">
+			            <PropertyRef Name="SalesOrder"/>
+			            <PropertyRef Name="SalesOrderItem"/>
+			        </Principal>
+			        <Dependent Role="ToRole_assoc_1AC56DAD21154C40970E26C19422A070">
+			            <PropertyRef Name="SalesOrder"/>
+			            <PropertyRef Name="SalesOrderItem"/>
+			       </Dependent>
+			   </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_CE39F158D1FEFB661E53BD21CD9D4718" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" Multiplicity="1" Role="FromRole_assoc_CE39F158D1FEFB661E53BD21CD9D4718"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_ProductType" Multiplicity="0..1" Role="ToRole_assoc_CE39F158D1FEFB661E53BD21CD9D4718"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_CE39F158D1FEFB661E53BD21CD9D4718">
+                        <PropertyRef Name="ProductID"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_CE39F158D1FEFB661E53BD21CD9D4718">
+                        <PropertyRef Name="Product"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_632C5C94F13F2FAD709390C23011B79E" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" Multiplicity="1" Role="FromRole_assoc_632C5C94F13F2FAD709390C23011B79E"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="0..1" Role="ToRole_assoc_632C5C94F13F2FAD709390C23011B79E"/>
+            </Association>
+            <Association Name="assoc_1AD912CEE94C555A82EA3383988BEEF1" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_BusinessPartnerType" Multiplicity="1" Role="FromRole_assoc_1AD912CEE94C555A82EA3383988BEEF1"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_BusinessPartner_ContactType" Multiplicity="*" Role="ToRole_assoc_1AD912CEE94C555A82EA3383988BEEF1"/>
+            </Association>
+            <Association Name="assoc_AA3193A8C95B4ABBB3E628012FD9BCC7" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_BusinessPartnerType" Multiplicity="1" Role="FromRole_assoc_AA3193A8C95B4ABBB3E628012FD9BCC7"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_UserType" Multiplicity="0..1" Role="ToRole_assoc_AA3193A8C95B4ABBB3E628012FD9BCC7"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_AA3193A8C95B4ABBB3E628012FD9BCC7">
+                        <PropertyRef Name="UserName"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_AA3193A8C95B4ABBB3E628012FD9BCC7">
+                        <PropertyRef Name="ChangedBy"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_1B3D7ADC7137888B8DDD644997F94E1C" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_BusinessPartnerType" Multiplicity="1" Role="FromRole_assoc_1B3D7ADC7137888B8DDD644997F94E1C"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_UserType" Multiplicity="0..1" Role="ToRole_assoc_1B3D7ADC7137888B8DDD644997F94E1C"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_1B3D7ADC7137888B8DDD644997F94E1C">
+                        <PropertyRef Name="UserName"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_1B3D7ADC7137888B8DDD644997F94E1C">
+                        <PropertyRef Name="CreatedBy"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_C55FB1AC1FC366D6D054D7AECDF2F840" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="1" Role="FromRole_assoc_C55FB1AC1FC366D6D054D7AECDF2F840"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_DraftAdministrativeDataType" Multiplicity="0..1" Role="ToRole_assoc_C55FB1AC1FC366D6D054D7AECDF2F840"/>
+            </Association>
+            <Association Name="assoc_84C83307F820C46BE196675E371395DD" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="1" Role="FromRole_assoc_84C83307F820C46BE196675E371395DD"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="0..1" Role="ToRole_assoc_84C83307F820C46BE196675E371395DD"/>
+            </Association>
+            <Association Name="assoc_3E1B3FFAFCE6372E0575D426A7553246" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="1" Role="FromRole_assoc_3E1B3FFAFCE6372E0575D426A7553246"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Confirm_StatusType" Multiplicity="0..1" Role="ToRole_assoc_3E1B3FFAFCE6372E0575D426A7553246"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_3E1B3FFAFCE6372E0575D426A7553246">
+                        <PropertyRef Name="Status"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_3E1B3FFAFCE6372E0575D426A7553246">
+                        <PropertyRef Name="BillingStatus"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_9DACBDC176DB3FF18902CE13612155B5" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="1" Role="FromRole_assoc_9DACBDC176DB3FF18902CE13612155B5"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SO_BPAContactType" Multiplicity="*" Role="ToRole_assoc_9DACBDC176DB3FF18902CE13612155B5"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_9DACBDC176DB3FF18902CE13612155B5">
+                        <PropertyRef Name="BusinessPartnerID"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_9DACBDC176DB3FF18902CE13612155B5">
+                        <PropertyRef Name="BusinessPartnerID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_18818A5DE5D41830AC41F77E1D3C39C7" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="1" Role="FromRole_assoc_18818A5DE5D41830AC41F77E1D3C39C7"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_STTA_BusinessPartnerType" Multiplicity="0..1" Role="ToRole_assoc_18818A5DE5D41830AC41F77E1D3C39C7"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_18818A5DE5D41830AC41F77E1D3C39C7">
+                        <PropertyRef Name="BusinessPartnerID"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_18818A5DE5D41830AC41F77E1D3C39C7">
+                        <PropertyRef Name="BusinessPartnerID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_95958CC4F12CBBB3FFA0B7C3AA1BD508" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="1" Role="FromRole_assoc_95958CC4F12CBBB3FFA0B7C3AA1BD508"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_UserType" Multiplicity="0..1" Role="ToRole_assoc_95958CC4F12CBBB3FFA0B7C3AA1BD508"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_95958CC4F12CBBB3FFA0B7C3AA1BD508">
+                        <PropertyRef Name="UserName"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_95958CC4F12CBBB3FFA0B7C3AA1BD508">
+                        <PropertyRef Name="LastChangedUserName"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_CE0923EAC73B0E98B328B2969FA6C0A8" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="1" Role="FromRole_assoc_CE0923EAC73B0E98B328B2969FA6C0A8"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_UserType" Multiplicity="0..1" Role="ToRole_assoc_CE0923EAC73B0E98B328B2969FA6C0A8"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_CE0923EAC73B0E98B328B2969FA6C0A8">
+                        <PropertyRef Name="UserName"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_CE0923EAC73B0E98B328B2969FA6C0A8">
+                        <PropertyRef Name="CreationUserName"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_8F08D10A434F353809766DE2DD1F7B4E" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="1" Role="FromRole_assoc_8F08D10A434F353809766DE2DD1F7B4E"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Currency_CodeType" Multiplicity="0..1" Role="ToRole_assoc_8F08D10A434F353809766DE2DD1F7B4E"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_8F08D10A434F353809766DE2DD1F7B4E">
+                        <PropertyRef Name="Currency_Code"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_8F08D10A434F353809766DE2DD1F7B4E">
+                        <PropertyRef Name="CurrencyCode"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_2F73AFF253B5CB73D8A3FCA463F50E8E" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="1" Role="FromRole_assoc_2F73AFF253B5CB73D8A3FCA463F50E8E"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Delivery_StatusType" Multiplicity="0..1" Role="ToRole_assoc_2F73AFF253B5CB73D8A3FCA463F50E8E"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_2F73AFF253B5CB73D8A3FCA463F50E8E">
+                        <PropertyRef Name="Status"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_2F73AFF253B5CB73D8A3FCA463F50E8E">
+                        <PropertyRef Name="DeliveryStatus"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_2FD92D255FF625BE49D0382E8C83442F" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="1" Role="FromRole_assoc_2FD92D255FF625BE49D0382E8C83442F"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" Multiplicity="*" Role="ToRole_assoc_2FD92D255FF625BE49D0382E8C83442F"/>
+			    <ReferentialConstraint>
+			        <Principal Role="FromRole_assoc_2FD92D255FF625BE49D0382E8C83442F">
+			            <PropertyRef Name="SalesOrder"/>
+			        </Principal>
+			        <Dependent Role="ToRole_assoc_2FD92D255FF625BE49D0382E8C83442F">
+			            <PropertyRef Name="SalesOrder"/>
+			       </Dependent>
+			   </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_51CE2781F66FC98E25D1DD1C3ADD0265" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="1" Role="FromRole_assoc_51CE2781F66FC98E25D1DD1C3ADD0265"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Lifecycle_StatusType" Multiplicity="0..1" Role="ToRole_assoc_51CE2781F66FC98E25D1DD1C3ADD0265"/>
+                <ReferentialConstraint>
+                    <Principal Role="ToRole_assoc_51CE2781F66FC98E25D1DD1C3ADD0265">
+                        <PropertyRef Name="Status"/>
+                    </Principal>
+                    <Dependent Role="FromRole_assoc_51CE2781F66FC98E25D1DD1C3ADD0265">
+                        <PropertyRef Name="LifecycleStatus"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_ECC1067803857BF82F0B5EF77568229C" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="1" Role="FromRole_assoc_ECC1067803857BF82F0B5EF77568229C"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="0..1" Role="ToRole_assoc_ECC1067803857BF82F0B5EF77568229C"/>
+            </Association>
+            <Association Name="assoc_D84EE146966DA75A56B479B286251C03" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Delivery_StatusType" Multiplicity="1" Role="FromRole_assoc_D84EE146966DA75A56B479B286251C03"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Delivery_Status_TextType" Multiplicity="*" Role="ToRole_assoc_D84EE146966DA75A56B479B286251C03"/>
+            </Association>
+            <Association Name="assoc_7B7E12E0A0C302A7D2979A95B2BDC1E7" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_BusinessPartnerType" Multiplicity="1" Role="FromRole_assoc_7B7E12E0A0C302A7D2979A95B2BDC1E7"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SO_BPAContactType" Multiplicity="*" Role="ToRole_assoc_7B7E12E0A0C302A7D2979A95B2BDC1E7"/>
+            </Association>
+            <Association Name="assoc_C5B92C62F2FA599DB40C903F26CA21C0" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItemSL_WD_20Type" Multiplicity="1" Role="FromRole_assoc_C5B92C62F2FA599DB40C903F26CA21C0"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_DraftAdministrativeDataType" Multiplicity="0..1" Role="ToRole_assoc_C5B92C62F2FA599DB40C903F26CA21C0"/>
+            </Association>
+            <Association Name="assoc_665B18A4CE4AD1FEA2D58C08859C2EC0" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItemSL_WD_20Type" Multiplicity="1" Role="FromRole_assoc_665B18A4CE4AD1FEA2D58C08859C2EC0"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItemSL_WD_20Type" Multiplicity="0..1" Role="ToRole_assoc_665B18A4CE4AD1FEA2D58C08859C2EC0"/>
+            </Association>
+            <Association Name="assoc_6E82DB98A25BEC7631E139D4F326876B" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItemSL_WD_20Type" Multiplicity="1" Role="FromRole_assoc_6E82DB98A25BEC7631E139D4F326876B"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" Multiplicity="1" Role="ToRole_assoc_6E82DB98A25BEC7631E139D4F326876B"/>
+            </Association>
+            <Association Name="assoc_9304886E45A0056DD361085D82A2AE39" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItemSL_WD_20Type" Multiplicity="1" Role="FromRole_assoc_9304886E45A0056DD361085D82A2AE39"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" Multiplicity="0..1" Role="ToRole_assoc_9304886E45A0056DD361085D82A2AE39"/>
+            </Association>
+            <Association Name="assoc_ACE31D11A06FAFF0BCFFC01AB47122B9" sap:content-version="1">
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Lifecycle_StatusType" Multiplicity="1" Role="FromRole_assoc_ACE31D11A06FAFF0BCFFC01AB47122B9"/>
+                <End Type="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Lifecycle_Status_TextType" Multiplicity="0..1" Role="ToRole_assoc_ACE31D11A06FAFF0BCFFC01AB47122B9"/>
+            </Association>
+            <EntityContainer Name="STTA_SALES_ORDER_WD_20_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="C_STTA_BusinessPartner" EntityType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_BusinessPartnerType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="C_STTA_SalesOrderItemSL_WD_20" EntityType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItemSL_WD_20Type" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="C_STTA_SalesOrderItem_WD_20" EntityType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" sap:searchable="true" sap:content-version="1" sap:deletable-path="Delete_mc" sap:updatable-path="Update_mc"/>
+                <EntitySet Name="C_STTA_SalesOrder_WD_20" EntityType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" sap:searchable="true" sap:content-version="1" sap:deletable-path="Delete_mc" sap:updatable-path="Update_mc"/>
+                <EntitySet Name="C_STTA_SO_BPAContact" EntityType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SO_BPAContactType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="I_AIVS_BusinessPartner" EntityType="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_BusinessPartnerType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIVS_BusinessPartner_Contact" EntityType="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_BusinessPartner_ContactType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="I_AIVS_Confirm_Status" EntityType="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Confirm_StatusType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIVS_CurrencyCode_Text" EntityType="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_CurrencyCode_TextType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIVS_Currency_Code" EntityType="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Currency_CodeType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIVS_Delivery_Status" EntityType="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Delivery_StatusType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIVS_Delivery_Status_Text" EntityType="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Delivery_Status_TextType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIVS_Lifecycle_Status" EntityType="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Lifecycle_StatusType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="I_AIVS_Lifecycle_Status_Text" EntityType="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_Lifecycle_Status_TextType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIVS_Product" EntityType="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_ProductType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIVS_User" EntityType="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_UserType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_DraftAdministrativeData" EntityType="STTA_SALES_ORDER_WD_20_SRV.I_DraftAdministrativeDataType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="I_STTA_BusinessPartner" EntityType="STTA_SALES_ORDER_WD_20_SRV.I_STTA_BusinessPartnerType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <AssociationSet Name="assoc_B152224EC5474B5ACAFC820A5E3767B8" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_B152224EC5474B5ACAFC820A5E3767B8" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrderItem_WD_20" Role="FromRole_assoc_B152224EC5474B5ACAFC820A5E3767B8"/>
+                    <End EntitySet="I_DraftAdministrativeData" Role="ToRole_assoc_B152224EC5474B5ACAFC820A5E3767B8"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_1AD912CEE94C555A82EA3383988BEEF1" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_1AD912CEE94C555A82EA3383988BEEF1" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIVS_BusinessPartner" Role="FromRole_assoc_1AD912CEE94C555A82EA3383988BEEF1"/>
+                    <End EntitySet="I_AIVS_BusinessPartner_Contact" Role="ToRole_assoc_1AD912CEE94C555A82EA3383988BEEF1"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_8F08D10A434F353809766DE2DD1F7B4E" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_8F08D10A434F353809766DE2DD1F7B4E" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="FromRole_assoc_8F08D10A434F353809766DE2DD1F7B4E"/>
+                    <End EntitySet="I_AIVS_Currency_Code" Role="ToRole_assoc_8F08D10A434F353809766DE2DD1F7B4E"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_ECC1067803857BF82F0B5EF77568229C" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_ECC1067803857BF82F0B5EF77568229C" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="FromRole_assoc_ECC1067803857BF82F0B5EF77568229C"/>
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="ToRole_assoc_ECC1067803857BF82F0B5EF77568229C"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_1B3D7ADC7137888B8DDD644997F94E1C" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_1B3D7ADC7137888B8DDD644997F94E1C" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIVS_BusinessPartner" Role="FromRole_assoc_1B3D7ADC7137888B8DDD644997F94E1C"/>
+                    <End EntitySet="I_AIVS_User" Role="ToRole_assoc_1B3D7ADC7137888B8DDD644997F94E1C"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_665B18A4CE4AD1FEA2D58C08859C2EC0" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_665B18A4CE4AD1FEA2D58C08859C2EC0" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrderItemSL_WD_20" Role="FromRole_assoc_665B18A4CE4AD1FEA2D58C08859C2EC0"/>
+                    <End EntitySet="C_STTA_SalesOrderItemSL_WD_20" Role="ToRole_assoc_665B18A4CE4AD1FEA2D58C08859C2EC0"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_D84EE146966DA75A56B479B286251C03" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_D84EE146966DA75A56B479B286251C03" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIVS_Delivery_Status" Role="FromRole_assoc_D84EE146966DA75A56B479B286251C03"/>
+                    <End EntitySet="I_AIVS_Delivery_Status_Text" Role="ToRole_assoc_D84EE146966DA75A56B479B286251C03"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_03320A655FF6FA1FBF691ED4D9F7322B" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_03320A655FF6FA1FBF691ED4D9F7322B" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrderItem_WD_20" Role="FromRole_assoc_03320A655FF6FA1FBF691ED4D9F7322B"/>
+                    <End EntitySet="I_AIVS_Currency_Code" Role="ToRole_assoc_03320A655FF6FA1FBF691ED4D9F7322B"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_7B7E12E0A0C302A7D2979A95B2BDC1E7" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_7B7E12E0A0C302A7D2979A95B2BDC1E7" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_BusinessPartner" Role="FromRole_assoc_7B7E12E0A0C302A7D2979A95B2BDC1E7"/>
+                    <End EntitySet="C_STTA_SO_BPAContact" Role="ToRole_assoc_7B7E12E0A0C302A7D2979A95B2BDC1E7"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_C55FB1AC1FC366D6D054D7AECDF2F840" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_C55FB1AC1FC366D6D054D7AECDF2F840" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="FromRole_assoc_C55FB1AC1FC366D6D054D7AECDF2F840"/>
+                    <End EntitySet="I_DraftAdministrativeData" Role="ToRole_assoc_C55FB1AC1FC366D6D054D7AECDF2F840"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_18818A5DE5D41830AC41F77E1D3C39C7" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_18818A5DE5D41830AC41F77E1D3C39C7" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="FromRole_assoc_18818A5DE5D41830AC41F77E1D3C39C7"/>
+                    <End EntitySet="I_STTA_BusinessPartner" Role="ToRole_assoc_18818A5DE5D41830AC41F77E1D3C39C7"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_ACE31D11A06FAFF0BCFFC01AB47122B9" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_ACE31D11A06FAFF0BCFFC01AB47122B9" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIVS_Lifecycle_Status" Role="FromRole_assoc_ACE31D11A06FAFF0BCFFC01AB47122B9"/>
+                    <End EntitySet="I_AIVS_Lifecycle_Status_Text" Role="ToRole_assoc_ACE31D11A06FAFF0BCFFC01AB47122B9"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_95958CC4F12CBBB3FFA0B7C3AA1BD508" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_95958CC4F12CBBB3FFA0B7C3AA1BD508" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="FromRole_assoc_95958CC4F12CBBB3FFA0B7C3AA1BD508"/>
+                    <End EntitySet="I_AIVS_User" Role="ToRole_assoc_95958CC4F12CBBB3FFA0B7C3AA1BD508"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_70AB7C3ED924748157EA7AFC4A7BED5A" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_70AB7C3ED924748157EA7AFC4A7BED5A" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIVS_Currency_Code" Role="FromRole_assoc_70AB7C3ED924748157EA7AFC4A7BED5A"/>
+                    <End EntitySet="I_AIVS_CurrencyCode_Text" Role="ToRole_assoc_70AB7C3ED924748157EA7AFC4A7BED5A"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_C5B92C62F2FA599DB40C903F26CA21C0" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_C5B92C62F2FA599DB40C903F26CA21C0" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrderItemSL_WD_20" Role="FromRole_assoc_C5B92C62F2FA599DB40C903F26CA21C0"/>
+                    <End EntitySet="I_DraftAdministrativeData" Role="ToRole_assoc_C5B92C62F2FA599DB40C903F26CA21C0"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_632C5C94F13F2FAD709390C23011B79E" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_632C5C94F13F2FAD709390C23011B79E" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrderItem_WD_20" Role="FromRole_assoc_632C5C94F13F2FAD709390C23011B79E"/>
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="ToRole_assoc_632C5C94F13F2FAD709390C23011B79E"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_AA3193A8C95B4ABBB3E628012FD9BCC7" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_AA3193A8C95B4ABBB3E628012FD9BCC7" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIVS_BusinessPartner" Role="FromRole_assoc_AA3193A8C95B4ABBB3E628012FD9BCC7"/>
+                    <End EntitySet="I_AIVS_User" Role="ToRole_assoc_AA3193A8C95B4ABBB3E628012FD9BCC7"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_CE0923EAC73B0E98B328B2969FA6C0A8" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_CE0923EAC73B0E98B328B2969FA6C0A8" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="FromRole_assoc_CE0923EAC73B0E98B328B2969FA6C0A8"/>
+                    <End EntitySet="I_AIVS_User" Role="ToRole_assoc_CE0923EAC73B0E98B328B2969FA6C0A8"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_51CE2781F66FC98E25D1DD1C3ADD0265" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_51CE2781F66FC98E25D1DD1C3ADD0265" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="FromRole_assoc_51CE2781F66FC98E25D1DD1C3ADD0265"/>
+                    <End EntitySet="I_AIVS_Lifecycle_Status" Role="ToRole_assoc_51CE2781F66FC98E25D1DD1C3ADD0265"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_1AC56DAD21154C40970E26C19422A070" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_1AC56DAD21154C40970E26C19422A070" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrderItem_WD_20" Role="FromRole_assoc_1AC56DAD21154C40970E26C19422A070"/>
+                    <End EntitySet="C_STTA_SalesOrderItemSL_WD_20" Role="ToRole_assoc_1AC56DAD21154C40970E26C19422A070"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_2F73AFF253B5CB73D8A3FCA463F50E8E" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_2F73AFF253B5CB73D8A3FCA463F50E8E" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="FromRole_assoc_2F73AFF253B5CB73D8A3FCA463F50E8E"/>
+                    <End EntitySet="I_AIVS_Delivery_Status" Role="ToRole_assoc_2F73AFF253B5CB73D8A3FCA463F50E8E"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_CE39F158D1FEFB661E53BD21CD9D4718" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_CE39F158D1FEFB661E53BD21CD9D4718" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrderItem_WD_20" Role="FromRole_assoc_CE39F158D1FEFB661E53BD21CD9D4718"/>
+                    <End EntitySet="I_AIVS_Product" Role="ToRole_assoc_CE39F158D1FEFB661E53BD21CD9D4718"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_9DACBDC176DB3FF18902CE13612155B5" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_9DACBDC176DB3FF18902CE13612155B5" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="FromRole_assoc_9DACBDC176DB3FF18902CE13612155B5"/>
+                    <End EntitySet="C_STTA_SO_BPAContact" Role="ToRole_assoc_9DACBDC176DB3FF18902CE13612155B5"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_E0A665A96187BFA68BCB90F48D4EA2DA" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_E0A665A96187BFA68BCB90F48D4EA2DA" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrderItem_WD_20" Role="FromRole_assoc_E0A665A96187BFA68BCB90F48D4EA2DA"/>
+                    <End EntitySet="C_STTA_SalesOrderItem_WD_20" Role="ToRole_assoc_E0A665A96187BFA68BCB90F48D4EA2DA"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_6E82DB98A25BEC7631E139D4F326876B" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_6E82DB98A25BEC7631E139D4F326876B" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrderItemSL_WD_20" Role="FromRole_assoc_6E82DB98A25BEC7631E139D4F326876B"/>
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="ToRole_assoc_6E82DB98A25BEC7631E139D4F326876B"/>
+                </AssociationSet>
+				<AssociationSet Name="assoc_9304886E45A0056DD361085D82A2AE39" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_9304886E45A0056DD361085D82A2AE39" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+					<End EntitySet="C_STTA_SalesOrderItemSL_WD_20" Role="FromRole_assoc_9304886E45A0056DD361085D82A2AE39" />
+					<End EntitySet="C_STTA_SalesOrderItem_WD_20" Role="ToRole_assoc_9304886E45A0056DD361085D82A2AE39" />
+				</AssociationSet>
+                <AssociationSet Name="assoc_84C83307F820C46BE196675E371395DD" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_84C83307F820C46BE196675E371395DD" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="FromRole_assoc_84C83307F820C46BE196675E371395DD"/>
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="ToRole_assoc_84C83307F820C46BE196675E371395DD"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_3E1B3FFAFCE6372E0575D426A7553246" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_3E1B3FFAFCE6372E0575D426A7553246" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="FromRole_assoc_3E1B3FFAFCE6372E0575D426A7553246"/>
+                    <End EntitySet="I_AIVS_Confirm_Status" Role="ToRole_assoc_3E1B3FFAFCE6372E0575D426A7553246"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_2FD92D255FF625BE49D0382E8C83442F" Association="STTA_SALES_ORDER_WD_20_SRV.assoc_2FD92D255FF625BE49D0382E8C83442F" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="C_STTA_SalesOrder_WD_20" Role="FromRole_assoc_2FD92D255FF625BE49D0382E8C83442F"/>
+                    <End EntitySet="C_STTA_SalesOrderItem_WD_20" Role="ToRole_assoc_2FD92D255FF625BE49D0382E8C83442F"/>
+                </AssociationSet>
+                <FunctionImport Name="C_STTA_SalesOrderItemSL_WD_20Preparation" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItemSL_WD_20Type" EntitySet="C_STTA_SalesOrderItemSL_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItemSL_WD_20Type" sap:applicable-path="Preparation_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="SalesOrderItem" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="ScheduleLine" Type="Edm.String" Mode="In" MaxLength="4"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                    <Parameter Name="SideEffectsQualifier" Type="Edm.String" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrderItemSL_WD_20Validation" ReturnType="STTA_SALES_ORDER_WD_20_SRV.ValidationFunctionResult" m:HttpMethod="GET" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItemSL_WD_20Type" sap:applicable-path="Validation_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="SalesOrderItem" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="ScheduleLine" Type="Edm.String" Mode="In" MaxLength="4"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                    <Parameter Name="SideEffectsQualifier" Type="Edm.String" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="A43022CD16CDC403048E09063Calcgrossamount" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" EntitySet="C_STTA_SalesOrderItem_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" sap:applicable-path="Calcgrossamount_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="SalesOrderItem" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrderItem_WD_20Copyitem" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" EntitySet="C_STTA_SalesOrderItem_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" sap:applicable-path="Copyitem_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="SalesOrderItem" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrderItem_WD_20Multimsg" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" EntitySet="C_STTA_SalesOrderItem_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" sap:applicable-path="Multimsg_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="SalesOrderItem" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrderItem_WD_20Preparation" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" EntitySet="C_STTA_SalesOrderItem_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" sap:applicable-path="Preparation_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="SalesOrderItem" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                    <Parameter Name="SideEffectsQualifier" Type="Edm.String" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrderItem_WD_20Raiseamount" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" EntitySet="C_STTA_SalesOrderItem_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" sap:applicable-path="Raiseamount_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="SalesOrderItem" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrderItem_WD_20Validation" ReturnType="STTA_SALES_ORDER_WD_20_SRV.ValidationFunctionResult" m:HttpMethod="GET" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type" sap:applicable-path="Validation_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="SalesOrderItem" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                    <Parameter Name="SideEffectsQualifier" Type="Edm.String" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrder_WD_20Activation" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" EntitySet="C_STTA_SalesOrder_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" sap:applicable-path="Activation_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrder_WD_20Edit" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" EntitySet="C_STTA_SalesOrder_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" sap:applicable-path="Edit_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                    <Parameter Name="PreserveChanges" Type="Edm.Boolean" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrder_WD_20Messageval" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" EntitySet="C_STTA_SalesOrder_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" sap:applicable-path="Messageval_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrder_WD_20Preparation" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" EntitySet="C_STTA_SalesOrder_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" sap:applicable-path="Preparation_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                    <Parameter Name="SideEffectsQualifier" Type="Edm.String" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrder_WD_20Setapprovalstatus" ReturnType="STTA_SALES_ORDER_WD_20_SRV.DummyFunctionImportResult" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" sap:applicable-path="Setapprovalstatus_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrder_WD_20Setcurrency" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" EntitySet="C_STTA_SalesOrder_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" sap:applicable-path="Setcurrency_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrder_WD_20Setopportunityid" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" EntitySet="C_STTA_SalesOrder_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" sap:applicable-path="Setopportunityid_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                    <Parameter Name="Opportunity" Type="Edm.String" Mode="In" MaxLength="35"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrder_WD_20Setoverallstatus" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" EntitySet="C_STTA_SalesOrder_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" sap:applicable-path="Setoverallstatus_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrder_WD_20Showsinglemsg" ReturnType="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" EntitySet="C_STTA_SalesOrder_WD_20" m:HttpMethod="POST" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" sap:applicable-path="Showsinglemsg_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="C_STTA_SalesOrder_WD_20Validation" ReturnType="STTA_SALES_ORDER_WD_20_SRV.ValidationFunctionResult" m:HttpMethod="GET" sap:action-for="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type" sap:applicable-path="Validation_ac">
+                    <Parameter Name="SalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="DraftUUID" Type="Edm.Guid" Mode="In"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In"/>
+                    <Parameter Name="SideEffectsQualifier" Type="Edm.String" Mode="In" Nullable="true"/>
+                </FunctionImport>
+            </EntityContainer>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type/CurrencyCode">
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Value Help for Currency Code"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIVS_Currency_Code"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="CurrencyCode"/>
+                                    <PropertyValue Property="ValueListProperty" String="Currency_Code"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Currency_Code_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type/CurrencyCode">
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Value Help for Currency Code"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIVS_Currency_Code"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="CurrencyCode"/>
+                                    <PropertyValue Property="ValueListProperty" String="Currency_Code"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Currency_Code_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.STTA_SALES_ORDER_WD_20_SRV_Entities/C_STTA_SalesOrder_WD_20">
+                <Annotation Term="Common.DraftRoot">
+                    <Record>
+                        <PropertyValue Property="ActivationAction" String="STTA_SALES_ORDER_WD_20_SRV.STTA_SALES_ORDER_WD_20_SRV_Entities/C_STTA_SalesOrder_WD_20Activation"/>
+                        <PropertyValue Property="EditAction" String="STTA_SALES_ORDER_WD_20_SRV.STTA_SALES_ORDER_WD_20_SRV_Entities/C_STTA_SalesOrder_WD_20Edit"/>
+                        <PropertyValue Property="PreparationAction" String="STTA_SALES_ORDER_WD_20_SRV.STTA_SALES_ORDER_WD_20_SRV_Entities/C_STTA_SalesOrder_WD_20Preparation"/>
+                        <PropertyValue Property="ValidationFunction" String="STTA_SALES_ORDER_WD_20_SRV.STTA_SALES_ORDER_WD_20_SRV_Entities/C_STTA_SalesOrder_WD_20Validation"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.STTA_SALES_ORDER_WD_20_SRV_Entities/C_STTA_SalesOrderItemSL_WD_20">
+                <Annotation Term="Common.DraftNode">
+                    <Record>
+                        <PropertyValue Property="PreparationAction" String="STTA_SALES_ORDER_WD_20_SRV.STTA_SALES_ORDER_WD_20_SRV_Entities/C_STTA_SalesOrderItemSL_WD_20Preparation"/>
+                        <PropertyValue Property="ValidationFunction" String="STTA_SALES_ORDER_WD_20_SRV.STTA_SALES_ORDER_WD_20_SRV_Entities/C_STTA_SalesOrderItemSL_WD_20Validation"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.DraftActivationVia">
+                    <Collection>
+                        <String>STTA_SALES_ORDER_WD_20_SRV.STTA_SALES_ORDER_WD_20_SRV_Entities/C_STTA_SalesOrder_WD_20</String>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.STTA_SALES_ORDER_WD_20_SRV_Entities/C_STTA_SalesOrderItem_WD_20">
+                <Annotation Term="Common.DraftNode">
+                    <Record>
+                        <PropertyValue Property="PreparationAction" String="STTA_SALES_ORDER_WD_20_SRV.STTA_SALES_ORDER_WD_20_SRV_Entities/C_STTA_SalesOrderItem_WD_20Preparation"/>
+                        <PropertyValue Property="ValidationFunction" String="STTA_SALES_ORDER_WD_20_SRV.STTA_SALES_ORDER_WD_20_SRV_Entities/C_STTA_SalesOrderItem_WD_20Validation"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.DraftActivationVia">
+                    <Collection>
+                        <String>STTA_SALES_ORDER_WD_20_SRV.STTA_SALES_ORDER_WD_20_SRV_Entities/C_STTA_SalesOrder_WD_20</String>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type/Product">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Product"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIVS_Product"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="Product"/>
+                                    <PropertyValue Property="ValueListProperty" String="ProductID"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type/BusinessPartnerID">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Business Partner"/>
+                        <PropertyValue Property="CollectionPath" String="I_STTA_BusinessPartner"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="BusinessPartnerID"/>
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerID"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CompanyName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type/LifecycleStatus">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Sales Order Lifecycle Status"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIVS_Lifecycle_Status"/>
+                        <PropertyValue Property="SearchSupported" Bool="false"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="LifecycleStatus"/>
+                                    <PropertyValue Property="ValueListProperty" String="Status"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Status_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type/BillingStatus">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Sales Order Confirmation Status"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIVS_Confirm_Status"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="BillingStatus"/>
+                                    <PropertyValue Property="ValueListProperty" String="Status"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Status_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type/DeliveryStatus">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Sales Order Delivery Status"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIVS_Delivery_Status"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="DeliveryStatus"/>
+                                    <PropertyValue Property="ValueListProperty" String="Status"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Status_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type/CreationUserName">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="User Data"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIVS_User"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="CreationUserName"/>
+                                    <PropertyValue Property="ValueListProperty" String="UserName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="FormattedName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type/LastChangedUserName">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="User Data"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIVS_User"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="LastChangedUserName"/>
+                                    <PropertyValue Property="ValueListProperty" String="UserName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="FormattedName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_BusinessPartnerType/CreatedBy">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="User Data"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIVS_User"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="CreatedBy"/>
+                                    <PropertyValue Property="ValueListProperty" String="UserName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="FormattedName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.I_AIVS_BusinessPartnerType/ChangedBy">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="User Data"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIVS_User"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="ChangedBy"/>
+                                    <PropertyValue Property="ValueListProperty" String="UserName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="FormattedName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItemSL_WD_20Type">
+                <Annotation Term="Common.SemanticKey">
+                    <Collection>
+                        <PropertyPath>ScheduleLine</PropertyPath>
+                        <PropertyPath>SalesOrderItem</PropertyPath>
+                        <PropertyPath>SalesOrder</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type">
+                <Annotation Term="Common.SemanticKey">
+                    <Collection>
+                        <PropertyPath>SalesOrderItem</PropertyPath>
+                        <PropertyPath>SalesOrder</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type">
+                <Annotation Term="Common.SemanticKey">
+                    <Collection>
+                        <PropertyPath>SalesOrder</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <atom:link
+                xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="./sap/STTA_SALES_ORDER_WD_20_SRV/$metadata"/>
+                <atom:link
+                    xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="./sap/STTA_SALES_ORDER_WD_20_SRV/$metadata"/>
+                </Schema>
+            </edmx:DataServices>
+        </edmx:Edmx>

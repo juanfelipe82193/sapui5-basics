@@ -1,0 +1,125 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Right-to-Left Support Guidelines for Control Development</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="SAPUI5 developers have to consider the text directionality when implementing new controls. The following guidelines explain how this can be done and highlight what you need to focus on."><meta name="description" content="SAPUI5 developers have to consider the text directionality when implementing new controls. The following guidelines explain how this can be done and highlight what you need to focus on."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"8bb4723002ef4dc19a065b2e30c5498f.html","previousTopicHref":"91f2c24b6f4d1014b6dd926db0e91070.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loioc69c61d7c9bc4514b9479b3998f61ef6"><h1 class="title topictitle1" hidden>Right-to-Left Support Guidelines for Control Development</h1><div class="body conbody"><p class="shortdesc" hidden><span class="ph"><span class="ph pname">SAPUI5</span></span> developers have to
+consider the text directionality when implementing new controls. The following guidelines
+explain how this can be done and highlight what you need to focus on. </p>
+<div class="section"><section class="section" type="General Guidelines"><h2 class="section_title" style="font-size: 1.15em;">General Guidelines</h2>
+
+<p class="p">You should develop the control as usual, with only left-to-right (LTR) direction in mind.</p>
+<ul class="ul" id="loioc69c61d7c9bc4514b9479b3998f61ef6__ul_yfk_hp3_ns">
+<li class="li">
+<p class="p">You don&apos;t need any RTL-specific CSS classes and you shouldn&apos;t write RTL-specific styles into
+a CSS file. </p>
+</li>
+<li class="li">
+<p class="p">You shouldn&apos;t use CSS properties related to RTL. </p>
+</li>
+<li class="li">
+<p class="p">You need to consider the semantics of the control properties. Controls that have directional
+properties like <samp class="ph codeph">left</samp> or <samp class="ph codeph">right</samp> need to be
+changed to <samp class="ph codeph">begin</samp> or <samp class="ph codeph">end</samp> respectively.</p>
+</li>
+<li class="li">
+<p class="p">Think about the RTL behavior according to the items below when writing
+JavaScript code that relates to positions.</p>
+</li>
+</ul>
+<p class="p">You can find more detailed guidelines and specifics in the <span class="keyword">Related
+Information</span> section. </p>
+</section></div>
+<div class="section"><section class="section" type="Turning on RTL Mode with the URL Parameter"><h2 class="section_title" style="font-size: 1.15em;">Turning on RTL Mode with the URL Parameter </h2>
+
+<p class="p">You can test your control by setting the URL parameter <samp class="ph codeph">sap-ui-rtl</samp> to
+<samp class="ph codeph">true</samp>. This will display your control in RTL mode. The
+automatically converted stylesheets and mirrored images are used, and
+<samp class="ph codeph">dir=rtl</samp> is set on the <samp class="ph codeph">&lt;html&gt;</samp> tag. </p>
+</section></div>
+<div class="section"><section class="section" type="RTL Mode in Text-Displaying Controls"><h2 class="section_title" style="font-size: 1.15em;">RTL Mode in Text-Displaying Controls</h2>
+
+<p class="p">Languages that have RTL text directionality keep the default directionality of numeric values
+and texts in LTR mode. In order to handle these cases, <span class="ph"><span class="ph pname">SAPUI5</span></span> uses two
+additional API properties - <samp class="ph codeph">textDirection</samp> and
+<samp class="ph codeph">textAlign</samp>. You can find detailed information on how to use
+these properties in the section <span class="keyword">Related Information</span>. </p>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/7e7cd0aed8bd469cbdd9b46035046dd8.html" title="Languages with right-to-left (RTL) text directionality keep the default directionality of numeric values and texts in left-to-right (LTR) mode. To ensure correct handling, two API properties have been introduced - textDirection and textAlign." target="_top">API Properties for Right-to-Left Support in Text-Displaying Controls</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

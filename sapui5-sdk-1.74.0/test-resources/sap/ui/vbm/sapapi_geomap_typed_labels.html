@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#btnZoomIn{
+			margin-right: 10px;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 40.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#margin {
+			margin-right: 50px;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 55.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+	
+	// have some data
+	var oData = 
+		{
+				Spots :
+				[
+					{ "key" : "1", "pos": "-30;-40;0", "labeltext" : "Warning", "labeltype" : "Warning", "labelarrow" : true, "labelpos" : "7"  },
+					{ "key":  "2", "pos": "-30;-20;0", "labeltext" : "Error", "labeltype" : "Error"    },
+					{ "key":  "3", "pos": "-30;0;0", "labeltext" : "Inactive", "labeltype" : "Inactive"  },
+					{ "key":  "4", "pos": "-30;20;0", "labeltext" : "Success", "labeltype" : "Success" },
+					{ "key":  "5", "pos": "-30;40;0", "labeltext" : "Default", "labeltype" : "Default"  }
+				],
+				OtherSpots :
+					[
+						{ "key":  "1", "pos": "-70;0;0", "labeltext" : "One" },
+						{ "key":  "2", "pos": "-70;20;0", "labeltext" : "Two" },
+						{ "key":  "3", "pos": "-70;40;0", "labeltext" : "Three" }
+					]				
+		};
+	
+	// create model and set the data
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+	sap.ui.getCore().setModel( oModel );
+
+	
+	
+	// sample event handlers
+	
+	// create analytic map and bind to model
+	var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+	    width : "1024px",
+    	height: "600px",
+    	vos: [
+    	  	new sap.ui.vbm.Spots( "spots1", {
+            // bind to an array in the model
+            items: { 
+             	path : "/Spots",
+              	template: new sap.ui.vbm.Spot(  { position: '{pos}', labelType: '{labeltype}', labelText : '{labeltext}', labelArrow : '{labelarrow}', labelPos : '{labelpos}' } )
+           	} } ),
+    	  	new sap.ui.vbm.Spots( {
+                // bind to an array in the model, but with static label type
+                items: { 
+                 	path : "/OtherSpots",
+                  	template: new sap.ui.vbm.Spot(  { position: '{pos}', type: "Success", labelType: "Success", labelText : '{labeltext}', labelArrow : true, labelPos : "5" } )
+               	} } ),         
+           	new sap.ui.vbm.Spots( "spots_fix", {
+                items: [ new sap.ui.vbm.Spot(  { position: "20;0;0", labelText: "Inactive", labelType: sap.ui.vbm.SemanticType.Inactive }  ),
+                         new sap.ui.vbm.Spot(  { position: "40;0;0", labelText: "no Type" }  ),
+                         new sap.ui.vbm.Spot(  { position: "60;0;0", labelText: "Error", labelType: sap.ui.vbm.SemanticType.Error  }  ),
+                         new sap.ui.vbm.Spot(  { position: "80;0;0", labelText: "configured", labelPos:"1", labelArrow:true, labelBgColor:"rgba(150,245,162,0.8)", labelBorderColor:"RGB(64,238,86)"  }  ),
+                         new sap.ui.vbm.Spot(  { position: "100;0;0" }  ),
+                         new sap.ui.vbm.Spot(  { position: "82.932925;55.023150;0", type: sap.ui.vbm.SemanticType.Hidden, labelText: "Novosibirsk\r\nHidden Spot", labelPos:"1", labelArrow:true, labelBgColor:"rgba(150,245,162,0.8)", labelBorderColor:"RGB(64,238,86)"  }  )
+               	] } )
+	   	 	]
+	});
+	oVBI.placeAt("content");
+	oVBI.setMapConfiguration(JSON.parse(localStorage.getItem('map')));
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business GeoMap Sample</h1>
+			<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test GeoMap Control with typed Labels. </p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+			<li> Check that the GeoMap control loads with labels.</li>
+			<li> Check that you can see the different label types <i>i.e. Success, Warning, Error, information and Default</i></li>
+		</ol>
+		</div>
+		<div id="description2">
+			<br>
+			<br>
+		 <div id="content"></div>	
+			</div>
+	</body>
+</html>

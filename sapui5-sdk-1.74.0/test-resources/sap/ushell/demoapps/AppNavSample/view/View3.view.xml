@@ -1,0 +1,121 @@
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc"
+		   xmlns="sap.m" controllerName="sap.ushell.demo.AppNavSample.view.View3"
+		   xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page title="Cross App Link Lists">
+		<content>
+			<Panel class="">
+				<headerToolbar>
+					<Toolbar>
+						<Title text="Links to WDA"/>
+						<ToolbarSpacer/>
+						<Button icon="sap-icon://refresh" press="handleWDARefresh"/>
+					</Toolbar>
+				</headerToolbar>
+				<content>
+					<VBox>
+						<Label text="on View 3"/>
+						<Label text="Navigation to other technologies ... (requires Action-tosu01 / Action-tosu01html to be configured)"/>
+						<Link href="{/toView1_href}" text="to View 1 (via link)"
+							  tooltip="to View 1 (via link, note the href generation!)"/>
+						<Link href="{/toSU01html_href}" text="to SU01 SAPGui 4 HTML (via link)"
+							  tooltip="to SU01 SAPGui 4 HTML (via link)"/>
+						<Link href="{/toSU01_href}" text="to SU01 SAPGui (Win)"
+							  tooltip="to SU01 SAPGui 4 Windows (via link)"/>
+						<Link href="{/towdapp_href}" text="to WebDynpro application"
+							  tooltip="to webdynpro application (via link)"/>
+						<Link href="{/WDANavSource_display}" text="to WebDynpro application"
+							  tooltip="to webdynpro NavSource application (may required systeam alias pointing e.g. to U1Y)"/>
+						<Link href="{/WDANavTarget_display}" text="to WebDynpro display application"
+							  tooltip="to webdynpro WDANavTarget application (may required systeam alias pointing e.g. to U1Y)"/>
+						<Label text="Navigation with renaming"/>
+						<Link href="{/Action_parameterRename1}" text="parameter renaming case 1"
+							  tooltip="to webdynpro application (via link)"/>
+						<Link href="{/Action_parameterRename2}" text="parameter renaming case 2"
+							  tooltip="rename Parameters case 2"/>
+						<Link href="{/Action_parameterRename3}" text="parameter renaming case 3"
+							  tooltip="rename Parameters case 3"/>
+						<Link href="{/Action_parameterRename4}" text="parameter renaming case 4"
+							  tooltip="rename Parameters case 4"/>
+						<Link href="{/Action_parameterRename5}" text="parameter renaming case 5"
+							  tooltip="rename Parameters case 5 (to WDA!)"/>
+						<Link href="{/WDANavTarget_display_X}" text="to WebDynpro display application"
+							  tooltip="to webdynpro WDANavTarget application (may required systeam alias pointing e.g. to U1Y)"/>
+					</VBox>
+				</content>
+			</Panel>
+			<Panel>
+				<headerToolbar>
+					<Toolbar>
+						<Title text="Generated Links from CrossAppService"/>
+						<ToolbarSpacer/>
+						<Button icon="sap-icon://refresh" press="generateLinks"/>
+					</Toolbar>
+				</headerToolbar>
+				<content>
+					<VBox>
+						<Link href="{/DefaultApp_display_href}" text="cross app link (Default App)"
+							  tooltip="Back to Fiori Sandbox Default Application (note href is generated!)"/>
+						<Link href="{/AppNavSample_display_args_href}" text="our app other startup!"
+							  tooltip="Same application, differen}t startup parameter ( new date), this triggers and application reload! (note href is generated!)"/>
+						<Link href="{/AppNavSample_urlparamescaping_href}"
+							  text="our app weird parameter name (encoding of parameters)!"
+							  tooltip="Same application, different startup parameter (/UI2/PAR=...), this triggers and application reload! (note href is generated!)"/>
+						<Link href="{/AppNavSample_urlparamescaping2_href}"
+							  text="our app weird parameter name (encoding of parameters 2x)!"
+							  tooltip="Same application, different startup parameter (/UI2/PAR=...&amp;/UI2/ZPAR=XXX ), this triggers and application reload! (note href is generated!)"/>
+						<Link href="{/AppNavSample_toourupWithView1AsStartup}"
+							  text="our app with explicit View Selection via Startup parameter! (View1 is selected)!"
+							  tooltip="Same application, explicit View selection (View=View1) this triggers an application reload"/>
+						<Link href="{/AppNavSample_longurl}" text="our app long URL parameters (URL Shortening)"
+							  tooltip="Same application, different startup parameter with url shortening, trigger app reload"/>
+						<Link href="{/toWdaIntentNavigationTest}" text="wda with appstate"
+							  tooltip="WDA navigation with appstate"/>
+						<Link href="{/toWDANavTarget_display}" text="other wda with appstate"
+							  tooltip="#WDANavTarget-display with appstate and url shortening"/>
+						<Link href="{/toWDANavTarget_displayCompressed}"
+							  text="wda with appstate, compacted parameters"
+							  tooltip="#WDANavTarget-display with appstate and url shortening"/>
+						<Link href="{/toNonExistentApp}" text="non existent app -&gt; error dialog"
+							  tooltip="Application does not exists"/>
+						<Link href="{/AppNavSample_crashing}" text="our app, crash on startup"
+							  tooltip="Same application, different parameter CRASHME triggers exception in startup"/>
+						<Link href="{/toView1_href}" text="to View1" tooltip="to View2 (href generated!)"/>
+						<Link href="{/toView2_href}" text="to View2" tooltip="to View2 (href generated!)"/>
+						<Link href="{/toView3_href}" text="to View3" tooltip="to View3 (href generated!)"/>
+						<Link href="{/toHome}" text="to Home" tooltip="to home (&quot;#&quot;)"/>
+						<Link href="{/toShellHome}"
+							  text="to Shell-home (bad way, not recommended, only for testing!)"
+							  tooltip="to Shell-home"/>
+						<Link href="{/anIsUrlSupportedUrl1}" text="a supported URL"
+							  tooltip="a supported URL (FLP assigned to user)"
+							  enabled="{/anIsUrlSupportedUrl1Enabled}"/>
+						<Link href="{/anIsUrlSupportedUrl2}"
+							  text="a not supported URL (intent Action-notexisting not configured for user)"
+							  tooltip="a not supported URL" enabled="{/anIsUrlSupportedUrl2Enabled}"/>
+						<Link href="{/anIsUrlSupportedUrl3}" text="a supported (foreign) URL"
+							  tooltip="a supported (foreign) URL" enabled="{/anIsUrlSupportedUrl3Enabled}"/>
+						<Link href="{/anIsUrlSupportedUrl4}" text="a supported URL (weird hash)"
+							  tooltip="a weird hash, (supported!)" enabled="{/anIsUrlSupportedUrl4Enabled}"/>
+						<Link href="{/AppNavSample_urlWrongEscaping}" text="link to some app, wrong escaped"
+							  tooltip="result of getSemanticObject Link direclty in link, flawed usage"/>
+						<Link href="{/AppNavSample_urlCorrectEscaping}" text="link to some app, correct escaped"
+							  tooltip="result of getSemanticObjectLink transformed via hrefToExternal , correct pattern"/>
+						<Link href="{/appNavSample2WithInnerRoute}"
+							  text="link to another app with an inner-app route (only for testing, do not copy this pattern!)"
+							  tooltip="for testing that the own component's router is stopped before the new component is initialized"/>
+						<Link href="{/toRedirectURL}" text="link to redirect url (WDA)"
+							  tooltip="to redirect url, new window"/>
+						<Link href="{/toRedirectURL2}" text="link to redirect url"
+							  tooltip="to redirect url, same window"/>
+						<Link href="{/toRedirectURL3}" text="link to redirect url (WDA)"
+							  tooltip="to redirect url, new window"/>
+						<Link href="{/toRedirectURL4}" text="link to redirect url (same window, crashing)"
+							  tooltip="to redirect url, same window, crashing"/>
+						<Link href="{/toRedirectURL5}" text="link to redirect url (same window, no target)"
+							  tooltip="to redirect url, same window, no target"/>
+					</VBox>
+				</content>
+			</Panel>
+		</content>
+	</Page>
+</core:View>

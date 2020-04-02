@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>GanttChartContainer</name>
+    <derived/>
+    <author>SAP SE</author>
+    <documentation>A container that holds one or more &lt;code&gt;GanttChartBase&lt;/code&gt; instances.
+
+&lt;p&gt; This class has several built-in several controls to support &lt;code&gt;GanttChartBase&lt;/code&gt; instances:
+ &lt;ul&gt;
+		&lt;li&gt;A toolbar above all Gantt Charts. Many built-in controls can be enabled or disabled using configuration property &lt;code&gt;toolbarScheme&lt;/code&gt;. Built-in functions include:
+		&lt;ul&gt;
+			&lt;li&gt;ComboBox for container selection&lt;/li&gt;
+			&lt;li&gt;Buttons for Add View, Delete View, and Switch Splitter Orientation&lt;/li&gt;
+			&lt;li&gt;Expand/Collapse groups for expandable charts&lt;/li&gt;
+			&lt;li&gt;A zooming slider&lt;/li&gt;
+			&lt;li&gt;A legend button&lt;/li&gt;
+			&lt;li&gt;A Settings button&lt;/li&gt;
+		&lt;/ul&gt;
+		If nothing is added to the toolbar, the toolbar is hidden automatically. For more information about the functions and configuration,
+		see the API documentation of &lt;code&gt;sap.gantt.config.ToolbarScheme.&lt;/code&gt;
+	&lt;/li&gt;
+	&lt;li&gt;A Splitter containing aggregation &lt;code&gt;ganttCharts&lt;/code&gt;&lt;/li&gt;
+ &lt;/ul&gt;
+&lt;/p&gt;</documentation>
+    <deprecation since="1.64">{@link sap.gantt.simple.GanttChartContainer} should be used instead.</deprecation>
+    <baseType>sap.ui.core/Control</baseType>
+    <properties>
+        <property name="width" type="sap.ui.core/CSSSize" defaultValue="100%">
+            <documentation>Width of the control</documentation>
+        </property>
+        <property name="height" type="sap.ui.core/CSSSize" defaultValue="100%">
+            <documentation>Height of the control</documentation>
+        </property>
+        <property name="enableTimeScrollSync" type="sap.ui.core/boolean" defaultValue="true">
+            <documentation>Switch to enable and disable scroll synchronization by time on instances of aggregation &lt;code&gt;ganttCharts&lt;/code&gt;.</documentation>
+        </property>
+        <property name="enableCursorLine" type="sap.ui.core/boolean" defaultValue="true">
+            <documentation>Switch to enable and disable the cursor line that follows the cursor.
+
+When this value is set, it overrides the corresponding value on instances of aggregation &lt;code&gt;ganttCharts&lt;/code&gt;.</documentation>
+        </property>
+        <property name="enableNowLine" type="sap.ui.core/boolean" defaultValue="true">
+            <documentation>Switch to enable and disable the present time indicator.
+
+When this value is set, it overrides the corresponding value on instances of aggregation &lt;code&gt;ganttCharts&lt;/code&gt;.</documentation>
+        </property>
+        <property name="enableVerticalLine" type="sap.ui.core/boolean" defaultValue="true">
+            <documentation>Switch to enable and disable vertical lines representing intervals along the time axis.
+
+When this value is set, it overrides the corresponding value on instances of aggregation &lt;code&gt;ganttCharts&lt;/code&gt;.</documentation>
+        </property>
+        <property name="enableAdhocLine" type="sap.ui.core/boolean" defaultValue="true">
+            <documentation>Switch to enable and disable adhoc lines representing milestones and events along the time axis.
+
+When this value is set, it overrides the corresponding value on instances of aggregation &lt;code&gt;ganttCharts&lt;/code&gt;.</documentation>
+        </property>
+        <property name="svgDefs" type="sap.ui.core/object">
+            <documentation>Definitions of paint servers used for advanced shape features around SVG fill, stroke, and filter attributes.
+
+If this property is provided, the paint server definition of the SVG is rendered. Method &lt;code&gt;getDefString()&lt;/code&gt; should be
+implemented by all paint server classes that are passed in in this property. It is easier to assign a common paint server definition
+in this class instead of in separate instances of &lt;code&gt;sap.gantt.GanttChartBase&lt;/code&gt;. Then the definition is
+rendered only once.
+We recommend that you set the type of this argument to &lt;code&gt;sap.gantt.def.SvgDefs&lt;/code&gt;. Otherwise some properties you set may not function properly.
+
+Limitation: It's defined as a property thus can not be used in XML View</documentation>
+        </property>
+        <property name="modes" type="sap.ui.core/object[]" defaultValue="sap.gantt.config.DEFAULT_MODES">
+            <documentation>List of available modes. To apply modes to the toolbar and shapes, further configuration is needed. (specifically,
+in property &lt;code&gt;toolbarSchemes&lt;/code&gt;, and properties &lt;code&gt;toolbarSchemes&lt;/code&gt; and &lt;code&gt;shapes&lt;/code&gt; in
+the &lt;code&gt;GanttChartBase&lt;/code&gt; class)If not provided, a default configuration is provided.
+We recommend that you set the type of this argument to &lt;code&gt;sap.gantt.config.Mode[]&lt;/code&gt;. Otherwise some properties you set may not function properly.
+
+Limitation: It's defined as a property thus can not be used in XML View</documentation>
+        </property>
+        <property name="toolbarSchemes" type="sap.ui.core/object[]" defaultValue="sap.gantt.config.DEFAULT_CONTAINER_TOOLBAR_SCHEMES">
+            <documentation>List of available toolbar schemes. If not provided, a default configuration is provided.
+We recommend that you set the type of this argument to &lt;code&gt;sap.gantt.config.ToolbarScheme[]&lt;/code&gt;. Otherwise some properties you set may not function properly.
+
+Limitation: It's defined as a property thus can not be used in XML View</documentation>
+        </property>
+        <property name="hierarchies" type="sap.ui.core/object[]" defaultValue="sap.gantt.config.DEFAULT_HIERARCHYS">
+            <documentation>List of available hierarchies. If not provided, a default configuration is provided.
+We recommend that you set the type of this argument to &lt;code&gt;sap.gantt.config.Hierarchy[]&lt;/code&gt;. Otherwise some properties you set may not function properly.
+
+Limitation: It's defined as a property thus can not be used in XML View</documentation>
+        </property>
+        <property name="containerLayouts" type="sap.ui.core/object[]" defaultValue="sap.gantt.config.DEFAULT_CONTAINER_LAYOUTS">
+            <documentation>Configuration of container layouts.
+
+This configuration affects the data source selection ComboBox in the Container Toolbar. When the selection
+changes, the &lt;code&gt;ganttChartChangeRequested&lt;/code&gt; event that is triggered includes the corresponding layout key.
+We recommend that you set the type of this argument to &lt;code&gt;sap.gantt.config.ContainerLayout[]&lt;/code&gt;. Otherwise some properties you set may not function properly.
+
+Limitation: It's defined as a property thus can not be used in XML View</documentation>
+        </property>
+        <property name="containerLayoutKey" type="sap.ui.core/string" defaultValue="sap.gantt.config.DEFAULT_CONTAINER_SINGLE_LAYOUT_KEY">
+            <documentation>Current container layout key.
+
+This is a key configured in configuration property &lt;code&gt;containerLayouts&lt;/code&gt;.</documentation>
+        </property>
+        <property name="sliderStep" type="sap.ui.core/int">
+            <documentation>Define the amount of units to change the time zoom slider.
+
+See {@link sap.m.Slider#setStep}</documentation>
+            <deprecation since="1.44">please set the property 'stepCountOfSlider' in sap.gantt.config.TimeZoomGroup.</deprecation>
+        </property>
+        <property name="maxNumOfGanttCharts" type="sap.ui.core/int" defaultValue="3">
+            <documentation>Define the maximum number of Gantt charts to be displayed on the same screen.
+When this number is reached, the "Add Gantt Chart" button is grayed out.</documentation>
+        </property>
+    </properties>
+    <events>
+        <event name="ganttChartChangeRequested" allowPreventDefault="false">
+            <documentation>Event fired when any change occurs in the toolbar that requests the application to change aggregation &lt;code&gt;ganttCharts&lt;/code&gt;.
+
+&lt;p&gt;Possible triggers are:
+&lt;ul&gt;
+	&lt;li&gt;The source selection group changes in the container toolbar.&lt;/li&gt;
+	&lt;li&gt;The layout group button is clicked in the container toolbar.&lt;/li&gt;
+	&lt;li&gt;The source selection group changes in the Gantt chart toolbar.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;</documentation>
+            <parameters>
+                <parameter name="action" type="sap.ui.core/string">
+                    <documentation>Action that caused the change.
+
+&lt;p&gt;Possible action values are:
+&lt;ul&gt;
+	&lt;li&gt;&lt;code&gt;'switchGanttChart'&lt;/code&gt;: The source selection group of one Gantt chart toolbar is changed.&lt;/li&gt;
+	&lt;li&gt;&lt;code&gt;'addGanttChart'&lt;/code&gt;: The Add Gantt chart dropdown menu is selected.&lt;/li&gt;
+ &lt;li&gt;&lt;code&gt;'lessGanttChart'&lt;/code&gt;: The Less Gantt chart dropdown menu is selected.&lt;/li&gt;
+ &lt;li&gt;&lt;code&gt;'switchContainerLayout'&lt;/code&gt;: The source selection group of the Container toolbar is changed.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;</documentation>
+                </parameter>
+                <parameter name="ganttChartIndex" type="sap.ui.core/int">
+                    <documentation>Provided for actions &lt;code&gt;'switchGanttChart'&lt;/code&gt; and &lt;code&gt;'lessGanttChart'&lt;/code&gt;.</documentation>
+                </parameter>
+                <parameter name="hierarchyKey" type="sap.ui.core/string">
+                    <documentation>Provided for actions &lt;code&gt;'switchGanttChart'&lt;/code&gt;, &lt;code&gt;'addGanttChart'&lt;/code&gt; and &lt;code&gt;'lessGanttChart'&lt;/code&gt;.</documentation>
+                </parameter>
+                <parameter name="oldHierarchyKey" type="sap.ui.core/string">
+                    <documentation>Provided for action &lt;code&gt;'switchGanttChart'&lt;/code&gt;.</documentation>
+                </parameter>
+                <parameter name="containerLayoutKey" type="sap.ui.core/string">
+                    <documentation>Provided for action &lt;code&gt;'switchContainerLayout'&lt;/code&gt;.</documentation>
+                </parameter>
+            </parameters>
+        </event>
+        <event name="customSettingChange" allowPreventDefault="false">
+            <documentation>Event fired when the custom settings are changed.
+
+The Custom settings are application-injected settings that can be configured in the Settings dialog box. This event allows the application to handle these settings.
+Only check boxes are supported.</documentation>
+            <parameters>
+                <parameter name="id" type="sap.ui.core/string">
+                    <documentation>ID of the custom setting</documentation>
+                </parameter>
+                <parameter name="value" type="sap.ui.core/boolean">
+                    <documentation>The value of the custom setting</documentation>
+                </parameter>
+            </parameters>
+        </event>
+        <event name="treeTableToggleEvent" allowPreventDefault="false">
+            <documentation>Event fired when toggle node of the tree table.</documentation>
+            <parameters>
+                <parameter name="rowIndex" type="sap.ui.core/int">
+                    <documentation>The index of the expanded/collapsed row.</documentation>
+                </parameter>
+                <parameter name="rowContext" type="sap.ui.core/object">
+                    <documentation>The binding context of the selected row.</documentation>
+                </parameter>
+                <parameter name="expanded" type="sap.ui.core/boolean">
+                    <documentation>flag whether the node has been expanded or collapsed.</documentation>
+                </parameter>
+            </parameters>
+        </event>
+    </events>
+    <aggregations>
+        <aggregation name="legendContainer" type="sap.gantt/legend/LegendContainer" cardinality="0..1" visibility="public">
+            <documentation>Legend shown when the legend button is clicked.
+
+This aggregation is used only when the Legend button is configured to be shown in the container toolbar.</documentation>
+        </aggregation>
+        <aggregation name="customToolbarItems" type="sap.ui.core/Control" cardinality="0..n" visibility="public" bindable="bindable">
+            <documentation>Controls to be placed in the container toolbar.
+
+&lt;p&gt;This aggregation is used only when the custom toolbar item group is configured to be shown in the container toolbar.
+Different from the built-in buttons that are configured to be shown or hidden, these controls are free controls created
+by the application, but are only placed in the container toolbar by &lt;code&gt;sap.gantt.GanttChartContainer&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;If the source selection group is enabled and you want your application to use a container layout pre-configured
+for a specific source, you can implement your custom toolbar items in the event handler of event &lt;code&gt;ganttChartChangeRequested&lt;/code&gt;.&lt;/p&gt;</documentation>
+        </aggregation>
+        <aggregation name="ganttCharts" type="sap.gantt/GanttChartBase" cardinality="0..n" visibility="public" bindable="bindable">
+            <documentation>Gantt chart instances.
+
+&lt;p&gt;If the source selection group is enabled and you want your application to use a container layout pre-configured
+for a specific source, you can implement your custom toolbar items in the event handler of event &lt;code&gt;ganttChartChangeRequested&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Provide a Gantt chart in compliance with the container layout setting.
+GanttChartContainer is designed to support Gantt chart layouts that include multiple views.&lt;/p&gt;</documentation>
+        </aggregation>
+        <aggregation name="_toolbar" type="sap.gantt/control/Toolbar" cardinality="0..1" visibility="hidden"/>
+    </aggregations>
+    <methods>
+        <method name="switchOrientation" type="sap.ui.core/object">
+            <documentation>Switches the splitter orientation.</documentation>
+            <parameters>
+                <parameter name="orientation" type="sap.ui.core/string">
+                    <documentation>Target orientation. If not provided, this method inverts the orientation.</documentation>
+                </parameter>
+                <parameter name="readConfig" type="sap.ui.core/boolean">
+                    <documentation>If this value is provided, it overrides the target orientation from the current configuration indicated by property &lt;code&gt;containerLayoutKey&lt;/code&gt;.</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="getToolbarSchemeKey" type="sap.ui.core/string">
+            <documentation>Returns the current effective toolbar scheme key.</documentation>
+        </method>
+        <method name="selectShapes" type="sap.ui.core/boolean">
+            <documentation>Selects in-row shapes and returns a success code.</documentation>
+            <parameters>
+                <parameter name="ganttChart" type="sap.ui.core/int">
+                    <documentation>Index of the Gantt chart containing the shapes that you want to select</documentation>
+                </parameter>
+                <parameter name="ids" type="any">
+                    <documentation>L of the shape IDs that you want to select</documentation>
+                </parameter>
+                <parameter name="isExclusive" type="sap.ui.core/boolean">
+                    <documentation>Whether all other selected shapes are to be deselected</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="deselectShapes" type="sap.ui.core/boolean">
+            <documentation>Deselects in-row shapes and returns a success code.</documentation>
+            <parameters>
+                <parameter name="ganttChartIndex" type="sap.ui.core/int">
+                    <documentation>Index of the Gantt chart containing the shapes that you want to deselect</documentation>
+                </parameter>
+                <parameter name="ids" type="any">
+                    <documentation>List of the shapes that you want to deselect</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="selectRelationships" type="sap.ui.core/boolean">
+            <documentation>Selects relationships and returns a success code.</documentation>
+            <parameters>
+                <parameter name="ganttChartIndex" type="sap.ui.core/int">
+                    <documentation>Index of the Gantt chart containing the relationships that you want to select</documentation>
+                </parameter>
+                <parameter name="ids" type="any">
+                    <documentation>List of the relationships that you want to select</documentation>
+                </parameter>
+                <parameter name="isExclusive" type="sap.ui.core/boolean">
+                    <documentation>Whether all other selected relationships are to be deselected</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="deselectRelationships" type="sap.ui.core/boolean">
+            <documentation>Deselects relationships and returns a success code.</documentation>
+            <parameters>
+                <parameter name="ganttChartIndex" type="sap.ui.core/int">
+                    <documentation>Index of the Gantt chart containing the relationships that you want to deselect</documentation>
+                </parameter>
+                <parameter name="ids" type="any">
+                    <documentation>List of the relationships that you want to deselect</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="selectRows" type="sap.ui.core/boolean">
+            <documentation>Selects rows and returns a success code.</documentation>
+            <parameters>
+                <parameter name="ganttChartIndex" type="sap.ui.core/int">
+                    <documentation>Index of the Gantt chart containing the rows that you want to select</documentation>
+                </parameter>
+                <parameter name="ids" type="any">
+                    <documentation>List of the rows that you want to select</documentation>
+                </parameter>
+                <parameter name="isExclusive" type="sap.ui.core/boolean">
+                    <documentation>Whether all other selected rows are to be deselected</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="deselectRows" type="sap.ui.core/boolean">
+            <documentation>Deselects rows and returns a success code.</documentation>
+            <parameters>
+                <parameter name="ganttChartIndex" type="sap.ui.core/int">
+                    <documentation>Index of the Gantt chart containing the rows that you want to deselect</documentation>
+                </parameter>
+                <parameter name="ids" type="any">
+                    <documentation>List of the rows that you want to deselect</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="selectRowsAndShapes" type="sap.ui.core/boolean">
+            <documentation>Selects rows and all shapes contained in these rows.</documentation>
+            <parameters>
+                <parameter name="ganttChartIndex" type="sap.ui.core/int">
+                    <documentation>Index of the Gantt chart containing the rows and shapes that you want to select</documentation>
+                </parameter>
+                <parameter name="ids" type="any">
+                    <documentation>Row UIDs</documentation>
+                </parameter>
+                <parameter name="isExclusive" type="sap.ui.core/boolean">
+                    <documentation>Whether reset all other selected rows and shapes are to be reset</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="getSelectedShapes" type="any">
+            <documentation>Gets the selected in-row shapes.</documentation>
+            <parameters>
+                <parameter name="ganttChartIndex" type="sap.ui.core/int">
+                    <documentation>Index of the Gantt chart containing the selected shapes that you want to get</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="getSelectedRows" type="any">
+            <documentation>Gets the selected rows.</documentation>
+            <parameters>
+                <parameter name="ganttChartIndex" type="sap.ui.core/int">
+                    <documentation>Index of the Gantt chart containing the selected rows that you want to get</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="getSelectedRelationships" type="any">
+            <documentation>Gets the selected relationships.</documentation>
+            <parameters>
+                <parameter name="ganttChartIndex" type="sap.ui.core/int">
+                    <documentation>Index of the Gantt chart containing the selected relationships that you want to get</documentation>
+                </parameter>
+            </parameters>
+        </method>
+        <method name="getAllSelections" type="sap.ui.core/object">
+            <documentation>Gets all selected rows and shapes, including relationships.</documentation>
+            <parameters>
+                <parameter name="ganttChartIndex" type="sap.ui.core/int">
+                    <documentation>Index of the Gantt chart containing that you want to get</documentation>
+                </parameter>
+            </parameters>
+        </method>
+    </methods>
+</control>

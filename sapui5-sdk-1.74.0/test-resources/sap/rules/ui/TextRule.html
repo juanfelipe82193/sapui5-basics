@@ -1,0 +1,418 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <title>TextRule - sap.rules.ui</title>
+    <script id="sap-ui-bootstrap" type="text/javascript" data-sap-ui-theme="sap_fiori_3"
+            src="../../../../resources/sap-ui-core.js"
+            data-sap-ui-libs="sap.m, sap.rules.ui"
+            data-sap-ui-resourceroots='{
+               "test.sap.rules.ui": "./",
+               "sap.rules.ui": "/src/sap/rules/ui"
+            }'
+    >
+    </script>
+
+    <script type="text/javascript">
+
+        sap.ui.define(
+            [
+                "jquery.sap.global",
+                "test/sap/rules/ui/TestUtils",
+                "sap/ui/core/util/MockServer",
+                "test/sap/rules/ui/localService/requestRecorder/MockRecorderHandler"
+            ],
+            function (jQuery, Utils, MockServer, MockRecorderHandler)
+            {
+                this.sRuleId = "";
+                var that = this;
+
+                var recordRequests = Utils.getURLParams("recordRequests");
+                if (recordRequests === "true") { // case record
+                    jQuery.sap.includeStyleSheet("css/style.css");
+
+                    var handler = new MockRecorderHandler();
+                    handler.onStart();
+
+                    $(window).load(function(){
+                        $('.mockBtn').removeClass('mockInvisible');
+                    });
+
+                    window.button_click = function() {
+                        if (!handler.isRecording) {
+                            handler.onStart();
+                            $('.mockBtn').text("stop");
+                            $('.mockBtn').addClass('mockBtnActive');
+                        } else {
+                            handler.onStop();
+                            $('.mockBtn').text("start");
+                            $('.mockBtn').removeClass('mockBtnActive');
+                        };
+                    };
+                };
+
+                //create models
+                var oModel = new sap.ui.model.odata.v2.ODataModel({
+                    serviceUrl: "/rules-service/rule_srv/",
+                    defaultBindingMode: sap.ui.model.BindingMode.TwoWay
+                });
+                var vocabularyModel = new sap.ui.model.odata.v2.ODataModel("/rules-service/vocabulary_srv/");
+
+                oModel.attachRequestCompleted(function(oControlEvent){
+                    var sErrorMessage = "";
+                    var aMessage = [];
+                    var oMessages = oControlEvent.getSource().mMessages;
+                    for (var prop in oMessages) {
+                        oMessages[prop].forEach(function(oMessage) {
+                            if (oMessage.type === "Error") {
+                                aMessage.push({
+                                    type: oMessage.type,
+                                    code: oMessage.code,
+                                    message: oMessage.message
+                                });
+                                sErrorMessage = sErrorMessage + oMessage.code + "  " + oMessage.message + "\n";
+                            }
+                        });
+                    }
+                    if (sErrorMessage) {
+                        sap.m.MessageBox.error(sErrorMessage);
+                    }
+                });
+                var oExpressionLanguage;
+
+                //Some handlers
+                var readErrorHandler = function(oError) {
+                    alert("read error" + JSON.stringify(oError));
+                };
+
+                var sRulePath = "";
+
+                var setBindingContext = function(sRuleId){
+
+                    /* 	sRuleIds examples
+                     "0050569181751ED683EFEEC6AA2B73C5"
+                     "0050569181751EE684BA290FDA89F546"
+                     "0050569181751EE68487892974280E6D"
+                     "005056912EC51ED686D707811518E9CD"
+                     */
+
+                    var  callback = function (valueHelpInfo){
+                        var i;
+                        var serviceInfo;
+                        for(i=0 ; i< valueHelpInfo.length ; i++){
+                            serviceInfo = valueHelpInfo[i].metadata;
+                            valueHelpInfo[i].model = new sap.ui.model.odata.v2.ODataModel({
+                                serviceUrl: serviceInfo.serviceURL,
+                                defaultBindingMode: sap.ui.model.BindingMode.OneWay
+                            });
+                            // Uncomment the next line to test valuehelp error handling - V2 oData model isn't returned;
+                            //valueHelpInfo[i].model = new sap.m.Input();
+                        }
+                    }
+                    // Uncomment the next line to test valuehelp error handling - callback is not a function
+                    //callback = {"stam":false};
+                    oExpressionLanguage.setValueHelpCallback(callback);
+
+                    oExpressionLanguage.setModel(vocabularyModel);
+                    oExpressionLanguage.setBindingContextPath("/Vocabularies(Id=\'" + sRuleId + "\')");
+
+                    var oProjectId;
+                    oModel.read("/Rules", {
+                        filters: [
+                            new sap.ui.model.Filter("Id", "EQ", sRuleId),
+                            new sap.ui.model.Filter("ValidTo", "EQ", null)
+                        ],
+                        urlParameters: {
+                            "$select": "Id,Version,ProjectId"
+                        },
+                        success: function(data) {
+
+                            for(var entryCount = 0; entryCount < data.results.length; entryCount++ ) {
+                                if(data.results[entryCount].Id === sRuleId){
+                                    oProjectId = data.results[entryCount].ProjectId;
+                                    var sRulePath = "/Projects(Id=\'"+ oProjectId + "\',Version=\'" + data.results[entryCount].Version + "\')/Rules(Id=\'" + sRuleId + "\',Version=\'"+ data.results[entryCount].Version +"\')";
+                                    oRuleBuilder.setBindingContextPath(sRulePath);
+                                    oExpressionLanguage.setBindingContextPath("/Vocabularies(\'" + oProjectId + "\')");
+                                    enableSettingsCheckBox.setSelected(false);
+
+                                    break;
+                                }
+                            }
+
+                        },
+                        error: readErrorHandler
+                    });
+                };
+
+                //Create App
+                var oApp = new sap.m.App("myApp", {initialPage:"myPage1"});
+
+                //Create Page
+                var oPage = new sap.m.Page("myPage1", { title: "Rule Builder (Text Rule Mode) Control"});
+
+
+                //indicator for on which device we running
+                if (!sap.ui.Device.support.touch) {
+                    oPage.addStyleClass("sapUiSizeCompact");
+                } else {
+                    oPage.addStyleClass("sapUiSizeCozy");
+                }
+
+                var oRuleBuilder = null;
+                var oTRConfig = null;
+
+                var hasErrors = function(oResponseData) {
+                    var sError;
+                    if (oResponseData.__batchResponses) {
+                        oResponseData.__batchResponses.forEach(function(oResponse) {
+                            if (oResponse.response) {
+                                var oJsonMessage = JSON.parse(oResponse.response.body);
+                                if (oJsonMessage.error) {
+                                    sError = sError + oJsonMessage.error.message.value + " (" + oJsonMessage.error.code + ")" + "\n";
+                                }
+                            }
+                        });
+                    }
+                    return sError;
+                };
+
+                var onEditSuccess = function(oRuleModel, oResponseData) {
+                    if (!hasErrors(oResponseData)) {
+                        oRuleBuilder.setEditable(true);
+                        oRuleModel.refresh(true);
+                    } else {
+                        var sText = oResponseData.toString();
+                        sap.m.MessageBox.error(sText);
+                    }
+                };
+
+                var onCancelSuccess = function(oRuleModel, oResponseData) {
+                    if (!hasErrors(oResponseData)) {
+                        oRuleBuilder.setEditable(false);
+                        oRuleModel.resetChanges();
+                        oRuleModel.refresh(true);
+                    } else {
+                        var sText = oResponseData.toString();
+                        sap.m.MessageBox.error(sText);
+                    }
+                };
+
+                var editPress = function(sRuleId) {
+                    if (sRuleId){
+                        oModel.callFunction("/EditRule", {
+                            method: "POST",
+                            urlParameters: {
+                                "RuleId": sRuleId
+                            },
+                            success: function(oResponseData) {
+                                return onEditSuccess(oModel, oResponseData);
+                            }
+                        });
+                    }
+                };
+
+                var cancelPress = function(sRuleId) {
+                    if (sRuleId){
+                        oModel.callFunction("/DeleteRuleDraft", {
+                            method: "POST",
+                            urlParameters: {
+                                "RuleId": sRuleId
+                            },
+                            success: function(oResponseData) {
+                                return onCancelSuccess(oModel, oResponseData);
+                            }
+                        });
+                    }
+                };
+
+                var _handleRuleBuilderCreation = function(sRuleId){
+                    if (sRuleId){
+                        if (!oRuleBuilder){
+                            //create dt configuration
+                            oTRConfig =  new sap.rules.ui.TextRuleConfiguration();
+
+                            //Create Decision Table
+                            oRuleBuilder = new sap.rules.ui.RuleBuilder({
+                                types: [sap.rules.ui.RuleType.TextRule],
+                                textRuleConfiguration: oTRConfig
+                            });
+                            oRuleBuilder.setModel(oModel);
+
+                            oPage.addContent(oRuleBuilder);
+                        }
+
+                        if (!oExpressionLanguage){
+                            oExpressionLanguage = new sap.rules.ui.services.ExpressionLanguage();
+                            oRuleBuilder.setExpressionLanguage(oExpressionLanguage);
+                        }
+
+                        setBindingContext(sRuleId);
+                    }
+                };
+
+                //Create empty rule checkbox
+                //var emptyRuleCheckBox =  new sap.m.Input({
+                var oRuleInput =  new sap.m.Input({
+                    //description : "Rule ID",
+                    placeholder: "Enter Rule ID",
+                    width: "300px",
+                    change: function(oControlEvent) {
+                        that.sRuleId = oControlEvent.getParameter("value");
+                        _handleRuleBuilderCreation(that.sRuleId);
+                    }
+                });
+
+                //Create disable checkbox
+                var disableCheckBox =  new sap.m.CheckBox({
+                    text : "disable",
+                    select: function(oControlEvent) {
+                        var isSelected = oControlEvent.getParameter("selected");
+                        oRuleBuilder.setEditable(!isSelected);
+                    }
+                });
+
+                //Create disable settings checkbox
+                var enableSettingsCheckBox =  new sap.m.CheckBox({
+                    text : "enable settings",
+                    select: function(oControlEvent) {
+                        var isSelected = oControlEvent.getParameter("selected");
+                        oTRConfig.setEnableSettings(isSelected);
+                    }
+                });
+
+                var cozyCompact =  new sap.m.CheckBox({
+                    text : "Cozy/Compact",
+                    select: function(oControlEvent) {
+                        var isSelected = oControlEvent.getParameter("selected");
+                        var oPage = oControlEvent.getSource().getParent().getParent();
+                        if(isSelected) {
+                            $('body').removeClass("sapUiSizeCozy");
+                            $('body').addClass("sapUiSizeCompact");
+                            // oPage.removeStyleClass("sapUiSizeCozy");
+                            // oPage.addStyleClass("sapUiSizeCompact");
+                        } else {
+                            $('body').removeClass("sapUiSizeCompact");
+                            $('body').addClass("sapUiSizeCozy");
+                            // oPage.removeStyleClass("sapUiSizeCompact");
+                            // oPage.addStyleClass("sapUiSizeCozy");
+                        }
+
+                    }
+                });
+
+                var oSelectCellFormat = new sap.m.Select({
+                    items: [
+                        new sap.ui.core.Item({
+                            id: "TEXT",
+                            key: "0",
+                            text: "TEXT"
+                        }),
+                        new sap.ui.core.Item({
+                            id: "BOTH",
+                            key: "1",
+                            text: "BOTH"
+                        }),
+                        new sap.ui.core.Item({
+                            id: "GUIDED",
+                            key: "2",
+                            text: "GUIDED"
+                        })
+                    ],
+                    change: function(oEvent) {
+                        var sSelectedValue = oEvent.getSource().getSelectedItem().getText();
+                        oRuleBuilder.getDecisionTableConfiguration().setCellFormat(sSelectedValue);
+                    }.bind(this)
+                });
+
+                var editButton = new sap.m.Button({
+                    text: "Edit",
+                    press: function() {
+                        //	var sRuleId = oRuleBuilder.getAggregation("_rule").getBindingContext().getProperty("Id");
+                        editPress(that.sRuleId);
+                    },
+                    enabled: true
+                });
+
+                var cancelButton = new sap.m.Button({
+                    text: "Cancel",
+                    press: function() {
+                        //var sRuleId = oRuleBuilder.getAggregation("_rule").getBindingContext().getProperty("Id");
+                        cancelPress(that.sRuleId);
+                    },
+                    enabled: true
+                });
+
+                var onSubmitChangesSuccess = function(oRuleModel, oResponseData, sRuleId, followupAction) {
+                    if (!oResponseData || !hasErrors(oResponseData)) {
+                        oRuleModel.callFunction("/" + followupAction.name, {
+                            method: "POST",
+                            urlParameters: {
+                                "RuleId": sRuleId
+                            },
+                            success: function(oRuleModel2, oResponseData2) {
+                                sap.m.MessageBox.success(followupAction.successMsg);
+                                _handleRuleBuilderCreation(sRuleId);
+                            },
+                            error: function(oError) {
+                                sap.m.MessageBox.error(oError);
+                            }
+                        });
+
+                    }
+                };
+
+                var onSavePress = function() {
+                    //var sRuleId = oRuleBuilder.getAggregation("_rule").getBindingContext().getProperty("Id");
+                    if (oModel.hasPendingChanges()) {
+                        oModel.submitChanges({
+                            success: function(oResponseData) {
+                                return onSubmitChangesSuccess(oModel, oResponseData, that.sRuleId, {
+                                    name: "SaveRule",
+                                    successMsg: "Object(s) saved successfully"
+                                });
+                            }
+                            // 	error: this.handleErrorMessageBox
+                        });
+                    } else {
+                        return onSubmitChangesSuccess(oModel, null, that.sRuleId, {
+                            name: "SaveRule",
+                            successMsg: "Object(s) saved successfully"
+                        });
+                    }
+                };
+
+                var saveButton = new sap.m.Button({
+                    text: "Save",
+                    press: onSavePress
+                });
+
+                ///////////////////////////////////////////////////////////////////////////////
+
+                var toolBarSpacer1 =	new sap.m.ToolbarSpacer({width: "1em"});
+                var toolBarSpacer2 =	new sap.m.ToolbarSpacer({width: "1em"});
+                var toolBarSpacer3 =	new sap.m.ToolbarSpacer({width: "1em"});
+                var toolBarSpacer4 =	new sap.m.ToolbarSpacer({width: "1em"});
+                var toolBarSpacer5 =	new sap.m.ToolbarSpacer({width: "1em"});
+                var toolBarSpacer6 =	new sap.m.ToolbarSpacer({width: "1em"});
+
+                var oFlexBox = new sap.m.FlexBox({
+                    height: "50px",
+                    items: [toolBarSpacer1, oRuleInput, disableCheckBox, enableSettingsCheckBox, toolBarSpacer2,
+                        cozyCompact, toolBarSpacer5, editButton, toolBarSpacer4, cancelButton, toolBarSpacer3, saveButton, toolBarSpacer6, oSelectCellFormat]
+                });
+
+                oPage.addContent(new sap.ui.core.HTML({content: "<h2 class='TableSpace'></h1>"}))
+                    .addContent(oFlexBox)
+                    .addContent(oRuleBuilder);
+                oApp.addPage(oPage);
+                oApp.placeAt("content");
+            });
+    </script>
+</head>
+<body class="sapUiBody" role="application">
+<h1 id="header">Test Page for <code> sap.rules.ui.RuleBuilder</code></h1>
+<div id="content"></div>
+<button type="button" class ="mockBtn mockInvisible mockBtnActive" onclick="button_click(this)">stop</button>
+</body>
+</html>

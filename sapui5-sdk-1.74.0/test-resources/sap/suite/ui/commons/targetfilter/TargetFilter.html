@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Target Filter - sap.suite.ui.commons</title>
+
+<!-- UI5 Bootstrap -->
+<script src="../../../../../../resources/sap-ui-core.js"
+        type="text/javascript"
+        id="sap-ui-bootstrap"
+        data-sap-ui-libs="sap.suite.ui.commons, sap.m, sap.ui.comp"
+        data-sap-ui-theme="sap_bluecrystal"></script>
+
+<script src="../locationColor.js" ></script>
+<script type="text/javascript">
+    jQuery.sap.initMobile();
+    
+    var oColumn1 = new sap.suite.ui.commons.TargetFilterColumn({
+    	path: "CUSTOMER_NAME",
+    	title: "Customer",
+    	length: 18
+    });
+    var oColumn2 = new sap.suite.ui.commons.TargetFilterColumn({path: "PRODUCT_NAME", title: "Product", length: 22});
+    var oColumn3 = new sap.suite.ui.commons.TargetFilterColumn({path: "COUNTRY_NAME", title: "Country", length: 16});
+    var oColumn4 = new sap.suite.ui.commons.TargetFilterColumn({path: "SALE_AMOUNT", title: "Amount", length: 30,
+    	type: new sap.ui.model.type.Float({minFractionDigits: 2, groupingEnabled: true})
+    });
+    var oColumn5 = new sap.suite.ui.commons.TargetFilterColumn({path: "SALE_DATE", title: "Date",
+    	type: new sap.ui.model.type.Date({UTC: true, pattern: "dd.MM.yyyy"})
+    });
+    
+    var oColumn6 = new sap.suite.ui.commons.TargetFilterColumn({path: "SALE_QTY", title: "Quantity", length: 40,
+    	type: new sap.ui.model.type.Integer({groupingEnabled: true})
+    });
+    var oColumn7 = new sap.suite.ui.commons.TargetFilterColumn({path: "CUSTOMER_CITY", title: "Customer City", length: 18});
+    var oColumn8 = new sap.suite.ui.commons.TargetFilterColumn({path: "CUSTOMER_PHONE_NUMBER", title: "Customer Phone Number", length: 20});
+    var oColumn9 = new sap.suite.ui.commons.TargetFilterColumn({path: "COUNTRY_CODE", title: "Country Code", length: 20});
+    var oColumn10 = new sap.suite.ui.commons.TargetFilterColumn({path: "VENDOR_NAME", title: "Vendor"});
+    var oColumn11 = new sap.suite.ui.commons.TargetFilterColumn({path: "SALE_CURRENCY", title: "Currency", length: 20});
+    
+    var oTargetFilter = new sap.suite.ui.commons.TargetFilter("tf", {
+    	entitySet: "Sales1",
+    	columns: [oColumn1, oColumn2, oColumn3, oColumn4, oColumn5, oColumn6, oColumn7, oColumn8, oColumn9, oColumn10, oColumn11],
+    	selectedColumns:[oColumn1, oColumn2, oColumn3, oColumn5],
+    	measureColumn: new sap.suite.ui.commons.TargetFilterMeasureColumn({path: "CNT"})
+    });
+    
+ /*   
+    var oSmartFilter = new sap.ui.comp.smartfilterbar.SmartFilterBar("smartFilterBar", {
+    	entityType: "LineItems",
+    	persistencyKey: "SmartFilter_Explored",
+    	controlConfiguration: [
+    	    new sap.ui.comp.smartfilterbar.ControlConfiguration({
+	    		key: "Bukrs",
+	    		defaultFilterValues: [new sap.ui.comp.smartfilterbar.SelectOption({low: "0001"})]
+	    	}),
+    	    new sap.ui.comp.smartfilterbar.ControlConfiguration({
+	    		key: "Gjahr",
+	    		defaultFilterValues: [new sap.ui.comp.smartfilterbar.SelectOption({low: "2014"})]
+	    	})
+    	]
+    });
+  */
+    var oParams = {
+        annotationURI: "annotations.xml",
+    	loadAnnotationsJoined: true,
+    	user: "display",
+    	password: "Welcome1"
+    };
+
+    var sUrl = "../../../../../../proxy/http/mydomain.com/myService";
+	var oModel = new sap.ui.model.odata.v2.ODataModel(sUrl, oParams);
+	oModel.setDefaultCountMode(sap.ui.model.odata.CountMode.Inline);
+	
+    var oSmartTable = new sap.ui.comp.smarttable.SmartTable("st", {
+    	    	smartFilterId: "tf",
+    	    	entitySet: "Sales1",
+    	    	tableType: "Table",
+    	    	useVariantManagement: false,
+    	    	useTablePersonalisation: true,
+    	    	header: "Sales",
+    	    	showRowCount: true,
+    	    	enableAutoBinding: true
+    	    });
+    oSmartTable.data("sap-ui-fastnavgroup", "true", true); // Define group for F6 handling
+
+    var oModeSwitch = new sap.m.Switch({ 
+		id: "mode", 
+		state: false,
+		customTextOn: "Cmp",
+		customTextOff: "Coz",
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			if(bState) {
+				jQuery("body").addClass("sapUISizeCompact").removeClass("sapUISizeCozy");
+			} else {
+				jQuery("body").addClass("sapUISizeCozy").removeClass("sapUISizeCompact");
+			}
+			oTargetFilter.rerender();
+		}
+	});
+    oModeSwitch.data("sap-ui-fastnavgroup", "true", true); // Define group for F6 handling
+
+    
+   	var oPage = new sap.m.Page("initial-page", {
+        showHeader: false,
+        content: new sap.m.VBox({items: [oTargetFilter, oModeSwitch, oSmartTable] })
+    });
+   	oPage.setModel(oModel);
+   	setBackgroundColor(oPage);
+	oPage.placeAt("content");
+</script>
+</head>
+
+<body class="sapUiBody">
+<div id="content" style="height:100%;"></div>
+</body>
+</html>

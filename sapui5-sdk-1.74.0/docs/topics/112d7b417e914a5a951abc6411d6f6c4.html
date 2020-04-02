@@ -1,0 +1,357 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 3: 3D Viewer Using the Viewport Control</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In this step, you will be creating a 3D Viewer application using the sap.ui.vk.Viewport control."><meta name="description" content="In this step, you will be creating a 3D Viewer application using the sap.ui.vk.Viewport control."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"773a0088c5a54d0cbeb985c347cb643f.html","previousTopicHref":"80b0b57480e54a50a08daf468453aa33.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio112d7b417e914a5a951abc6411d6f6c4"><h1 class="title topictitle1" hidden>Step 3: 3D Viewer Using the Viewport Control</h1><div class="body conbody"><p class="shortdesc" hidden>In this step, you will be creating a 3D Viewer application using the
+<samp class="ph codeph">sap.ui.vk.Viewport</samp> control.</p>
+<aside class="note caution" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Caution</strong></div>
+<p>The controls in the <samp class="ph codeph">sap.ui.vk</samp> library are currently
+flagged as experimental. For more information, see <a class="xref" href="../../#/topic/91f087396f4d1014b6dd926db0e91070.html" title="The following sections describe what SAP can change in major, minor, and patch releases. Always consider these rules when developing apps, features, or controls with or for SAPUI5." target="_top">Compatibility Rules</a>.</p></aside>
+<div class="p">In previous steps, we utilized the <samp class="ph codeph">sap.ui.vk.Viewer</samp> composite control to
+create a Viewer application capable of loading a 2D or 3D resource. Now, we will create
+a Viewer application with a pre-loaded resource without using the composite
+<samp class="ph codeph">sap.ui.vk.Viewer</samp> control. Instead, we will use the following
+controls and library in <samp class="ph codeph">sap.ui.vk</samp>, which are what you&apos;ll need at a
+minimum to display a 3D model in your application. <ul class="ul" id="loio112d7b417e914a5a951abc6411d6f6c4__ul_kxm_nkq_yt">
+<li class="li"><samp class="ph codeph">Viewport</samp> control</li>
+<li class="li"><samp class="ph codeph">ContentResource</samp> control</li>
+<li class="li"><samp class="ph codeph">GraphicsCore</samp> library</li>
+</ul></div>
+<p class="p">We will build on this sample application in later steps of the 3D Viewer tutorial by
+introducing the other non-composite <samp class="ph codeph">sap.ui.vk</samp> controls to create more
+complex Viewer applications.</p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loio112d7b417e914a5a951abc6411d6f6c4__fig_mpz_5pw_15"><div class="figbody">
+
+<img class="inline  " id="loio112d7b417e914a5a951abc6411d6f6c4__image_mlf_vqq_15" src="loio2864ebcea6924cdb9813434157f6b3f6_LowRes.png">
+</div><span class="figcap">Viewer application that consists solely of a Viewport</span></div>
+</section></div>
+<div class="section"><section class="section" type="Coding"><h2 class="section_title" style="font-size: 1.15em;">Coding</h2><p class="p">You can view and download all files <span class="ph">at <a class="xref" href="../../#/sample/sap.ui.vk.tutorial.VIT.03/preview" target="_top" alt="#/sample/sap.ui.vk.tutorial.VIT.03/preview" title="#/sample/sap.ui.vk.tutorial.VIT.03/preview">3D Viewer - Step 3 - Standalone Viewport</a></span>.</p><div class="sectiondiv subsection">
+<p class="p subsectiontitle">index.html</p>
+<p class="p">Update the <samp class="ph codeph">index.html</samp> file to reference the
+<samp class="ph codeph">standaloneViewport</samp> namespace, which will be the namespace
+we&apos;ll use for the sample application in this step.</p>
+<pre class="pre codeblock prettyprint lang-html">&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+        &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html;charset=UTF-8&quot;/&gt;
+        &lt;script id=&quot;sap-ui-bootstrap&quot;
+            src=&quot;../../../../../../../../../resources/sap-ui-core.js&quot;
+            data-sap-ui-libs=&quot;sap.ui.vk&quot;
+            data-sap-ui-theme=&quot;sap_belize&quot;
+            data-sap-ui-bindingSyntax=&quot;complex&quot;
+            data-sap-ui-resourceroots=&apos;{
+                <span class="ph emphasis emphasis">&quot;standaloneViewport&quot;: &quot;./&quot;</span>
+            }&apos;&gt;
+        &lt;/script&gt;
+        &lt;script&gt;
+        sap.ui.getCore().attachInit(function(){
+            new sap.m.Shell({
+                app: new sap.ui.core.ComponentContainer({
+                    <span class="ph emphasis emphasis">name : &quot;standaloneViewport&quot;</span>
+                })
+            }).placeAt(&quot;content&quot;);
+        });
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body id=&quot;content&quot; class=&quot;sapUiBody&quot;&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Component.js</p>
+<p class="p">Update the <samp class="ph codeph">Component.js</samp> file to reference the namespace
+specified for this application.</p>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+        &quot;sap/ui/core/UIComponent&quot;
+], function (UIComponent) {
+        &quot;use strict&quot;;
+        <span class="ph emphasis emphasis">return UIComponent.extend(&quot;standaloneViewport.Component&quot;,</span> {
+        metadata: {
+            manifest: &quot;json&quot;
+        },
+        init: function () {
+            // call the init function of the parent
+            UIComponent.prototype.init.apply(this, arguments);
+        }
+    });
+});</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">i18n.properties</p>
+<p class="p">Because we are not creating any fields that a user can interact with, we only
+have one line of code which specifies what the label for the page title is.</p>
+<pre class="pre codeblock prettyprint lang-prefs"># Page Descriptor
+<span class="ph emphasis emphasis">pageTitle=Standalone Viewport</span></pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">manifest.json</p>
+<p class="p">Update the <samp class="ph codeph">manifest.json</samp> file so that it references the correct
+files.</p>
+<pre class="pre codeblock prettyprint lang-js">{
+    &quot;_version&quot;: &quot;1.8.0&quot;,
+    &quot;sap.app&quot;: {
+        <span class="ph emphasis emphasis">&quot;id&quot;: &quot;standaloneViewport&quot;,</span>
+        &quot;type&quot;: &quot;application&quot;,
+        &quot;i18n&quot;: &quot;i18n/i18n.properties&quot;,
+        &quot;title&quot;: &quot;{{appTitle}}&quot;,
+        &quot;description&quot;: &quot;{{appDescription}}&quot;,
+        &quot;applicationVersion&quot;: {
+            &quot;version&quot;: &quot;1.0.0&quot;
+        }
+    },
+    &quot;sap.ui&quot;: {
+        &quot;technology&quot;: &quot;UI5&quot;,
+        &quot;deviceTypes&quot;: {
+            &quot;desktop&quot;: true,
+            &quot;tablet&quot;: true,
+            &quot;phone&quot;: true
+        }
+    },
+    &quot;sap.ui5&quot;: {
+        <span class="ph emphasis emphasis">&quot;rootView&quot;: &quot;standaloneViewport.view.App&quot;,</span>
+        &quot;dependencies&quot;: {
+            &quot;minUI5Version&quot;: &quot;1.30&quot;,
+            &quot;libs&quot;: {
+                &quot;sap.m&quot;: {}
+            }
+        },
+        &quot;models&quot;: {
+            &quot;i18n&quot;: {
+                &quot;type&quot;: &quot;sap.ui.model.resource.ResourceModel&quot;,
+                &quot;settings&quot;: {
+                    <span class="ph emphasis emphasis">&quot;bundleName&quot;: &quot;standaloneViewport.i18n.i18n&quot;</span>
+                }
+            }
+        }
+    }
+}</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">App.view.xml</p>
+<p class="p">Because the Viewport is the only item that we need to display on the application
+screen, we only need to have the <samp class="ph codeph">&lt;vk:Viewport&gt;</samp> element
+added to this file. In the element&apos;s attributes, we specify the Viewport&apos;s width
+and height on the screen, and also give it an arbitrary identifier value.</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+        <span class="ph emphasis emphasis">controllerName=&quot;standaloneViewport.controller.App&quot;</span>
+        xmlns=&quot;sap.m&quot;
+        xmlns:mvc=&quot;sap.ui.core.mvc&quot;
+        xmlns:vk=&quot;sap.ui.vk&quot;
+        xmlns:l=&quot;sap.ui.layout&quot;
+        xmlns:f=&quot;sap.ui.layout.form&quot;
+        xmlns:u=&quot;sap.ui.unified&quot;
+        displayBlock=&quot;true&quot;&gt;
+<span class="ph emphasis emphasis">    &lt;App id=&quot;standaloneViewport&quot;&gt;
+        &lt;Page
+            title=&quot;{i18n&gt;pageTitle}&quot;&gt;
+            &lt;vk:Viewport
+                    id=&quot;viewport&quot;
+                    width=&quot;100%&quot;
+                    height=&quot;50%&quot;/&gt;
+        &lt;/Page&gt;
+    &lt;/App&gt;</span>
+&lt;/mvc:View&gt;</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">App.controller.js</p>
+<div class="p">The logic in this <samp class="ph codeph">App.controller.js</samp> file can be summarized as
+follows:<ol class="ol" id="loio112d7b417e914a5a951abc6411d6f6c4__ol_mvg_llq_yt">
+<li class="li">Create a Content Resource that stores a pre-specified model</li>
+<li class="li">Initiate a scene in our application in the following order:<ol class="ol" type="a" id="loio112d7b417e914a5a951abc6411d6f6c4__ol_rnt_nlq_yt">
+<li class="li">Create a Graphics Core instance</li>
+<li class="li">Create a Viewport that is bound to the Graphics Core
+instance</li>
+<li class="li">Load the Content Resource to the Graphics Core for rendering on
+the Viewport</li>
+</ol></li>
+</ol></div>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+    &quot;sap/ui/core/mvc/Controller&quot;,
+    &quot;sap/ui/model/json/JSONModel&quot;,
+    &quot;sap/ui/vk/ContentResource&quot;,
+], <span class="ph emphasis emphasis">function (Controller, JSONModel, ContentResource) {
+    &quot;use strict&quot;;
+
+    var contentResource = new sap.ui.vk.ContentResource({
+        source: &quot;/models/boxTestModel.vds&quot;,
+        sourceType: &quot;vds&quot;,
+        id: &quot;abc123&quot;
+    });
+
+    return Controller.extend(&quot;standaloneViewport.controller.App&quot;,{
+        onInit: function() {
+
+            var mainScene;
+
+            jQuery.sap.require(&quot;sap.ui.vk.GraphicsCore&quot;);
+            var graphicsCore = new sap.ui.vk.GraphicsCore({},{
+                antialias: true,
+                alpha: true,
+                premultipliedAlpha: false
+            });
+
+            var view = this.getView();
+            var viewport = view.byId(&quot;viewport&quot;);
+            
+            viewport.setGraphicsCore(graphicsCore);
+            graphicsCore.loadContentResourcesAsync([contentResource], function(sourcesFailedToLoad){
+                if (sourcesFailedToLoad){
+                    jQuery.sap.log.error(&quot;Some of content resources cannot be loaded.&quot;);
+                } else {
+                    var scene = graphicsCore.buildSceneTree([contentResource]);
+                    if (scene){
+                        mainScene = scene;
+                        viewport.setScene(mainScene);
+                    } else {
+                        jQuery.sap.log.error(&quot;Failed to load viewport&quot;);
+                    }
+                }
+            });
+        }
+    });</span>
+});</pre>
+<p class="p">We&apos;ll now break the code down to look at each part in more detail.</p>
+<span class="ph emphasis emphasis">Create a New Content Resource</span>
+<div class="p">Create a <samp class="ph codeph">contentResource</samp> object that specifies the resource to
+load. In this case, we&apos;re pre-loading the <samp class="ph codeph">boxTestModel.vds</samp>
+model into the application. This occurs before the scene in our Viewer
+application is
+initiated.<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+    &quot;sap/ui/core/mvc/Controller&quot;,
+    &quot;sap/ui/model/json/JSONModel&quot;,
+    &quot;sap/ui/vk/ContentResource&quot;,
+], function (Controller, JSONModel, ContentResource) {
+    &quot;use strict&quot;;
+
+    var contentResource = new sap.ui.vk.ContentResource({
+        source: &quot;/models/boxTestModel.vds&quot;,
+        sourceType: &quot;vds&quot;,
+        id: &quot;abc123&quot;
+</pre></div>
+<span class="ph emphasis emphasis">Create a New Graphics Core Instance</span>
+<div class="p">Create a new Graphics Core instance. We&apos;re only specifying one input parameter,
+which is for the WebGL context attributes. We then get the current viewport, and
+attach it to the Graphics Core instance so the model we&apos;ve loaded can be
+rendered.<pre class="pre codeblock prettyprint lang-js">return Controller.extend(&quot;standaloneViewport.controller.App&quot;,{
+    onInit: function() {
+ 
+    var mainScene;
+        jQuery.sap.require(&quot;sap.ui.vk.GraphicsCore&quot;);
+        var graphicsCore = new sap.ui.vk.GraphicsCore({},{
+            antialias: true,
+            alpha: true,
+            premultipliedAlpha: false
+        });
+
+        var view = this.getView();
+        var viewport = view.byId(&quot;viewport&quot;);
+         
+        viewport.setGraphicsCore(graphicsCore);</pre></div>
+<span class="ph emphasis emphasis">Load the Content Resource for Rendering</span>
+<div class="p">Now that we&apos;ve associated the viewport with the Graphics Core, we can load our
+model to be displayed on the Viewport. In the following code block, we have
+specified some checks to make sure that the model loads correctly. If no
+resource is loaded, or if there is an error loading the resource, we throw the
+following error on the screen &quot;Some of content resources cannot be loaded&quot;.
+Otherwise, we build a scene with the loaded resource, and then display this
+scene on the viewport. If the scene itself does not load into the Viewport, we
+throw an error saying the scene could not be built &quot;Failed to build the
+scene.&quot;<pre class="pre codeblock prettyprint lang-js">graphicsCore.loadContentResourcesAsync([contentResource], function(sourcesFailedToLoad){
+    if (sourcesFailedToLoad){
+        jQuery.sap.log.error(&quot;Some of content resources cannot be loaded.&quot;);
+    } else {
+        var scene = graphicsCore.buildSceneTree([contentResource]);
+            if (scene){
+                mainScene = scene;
+                viewport.setScene(mainScene);
+            } else {
+                jQuery.sap.log.error(&quot;Failed to load viewport&quot;);
+            }
+    }
+});
+}
+});</pre></div>
+</div></section></div>
+<div class="section"><section class="section" type="API Reference"><h2 class="section_title" style="font-size: 1.15em;">API Reference</h2>
+
+<ul class="ul" id="loio112d7b417e914a5a951abc6411d6f6c4__ul_ctp_1bc_f5">
+<li class="li"><a class="xref" href="../../#/api/sap.ui.vk.Viewport" target="_top" alt="#/api/sap.ui.vk.Viewport" title="#/api/sap.ui.vk.Viewport">sap.ui.vk.Viewport</a></li>
+</ul>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/acd34672ef33429e99a0247486e37c78.html" target="_top">Viewport</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

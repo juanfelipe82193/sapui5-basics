@@ -1,0 +1,258 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+
+<title>InteractiveCharts: ALP Use Case (HeaderContainer and Dialog)</title>
+
+<base href="../../../../../">
+
+<script src="resources/sap-ui-core.js"
+	id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.m, sap.suite.ui.microchart, sap.ui.layout"
+	data-sap-ui-theme="sap_belize">
+</script>
+
+<script>
+
+	var oBar = new sap.suite.ui.microchart.InteractiveBarChartBar({
+		label : "S/4 Hana",
+		value : 28.4,
+		displayedValue : "28,4%"
+	});
+
+	var oInteractiveBarChart = new sap.suite.ui.microchart.InteractiveBarChart({
+		displayedBars : 3,
+		selectionEnabled : true,
+		min : 0,
+		max : 100,
+		bars : [
+			oBar,
+			oBar.clone().setLabel("Akron Heating").setValue(18.4).setDisplayedValue("18,4%"),
+			oBar.clone().setLabel("Silverstar Systems").setValue(8.4).setDisplayedValue("8,4%")
+		],
+		selectionChanged: function (oEvt) {
+			sap.m.MessageToast.show("The selected bar is: " + oEvt.getParameter("bar").getId());
+		}
+	});
+
+	var oFlexBox = new sap.m.FlexBox({
+		height : "116px",
+		width : "320px",
+		items : oInteractiveBarChart
+	});
+
+	var oVerticalLayout = new sap.ui.layout.VerticalLayout({
+		content : [
+			new sap.m.Title({
+				text : "Bar Chart Title"
+			}),
+			oFlexBox
+		]
+	});
+
+	var oPoint = new sap.suite.ui.microchart.InteractiveLineChartPoint({
+		label : "May",
+		value : 33.1,
+		displayedValue : "33.1%"
+	});
+
+	var oInteractiveLineChart = new sap.suite.ui.microchart.InteractiveLineChart({
+		displayedPoints : 6,
+		selectionEnabled : true,
+		points : [
+			oPoint,
+			oPoint.clone().setLabel("Jun").setValue(31.7).setDisplayedValue("31,7%"),
+			oPoint.clone().setLabel("Jul").setValue(30.1).setDisplayedValue("30.1%"),
+			oPoint.clone().setLabel("Aug").setValue(29.8).setDisplayedValue("29,8%"),
+			oPoint.clone().setLabel("Sep").setValue(28.9).setDisplayedValue("28,9%"),
+			oPoint.clone().setLabel("Oct").setValue(7.8).setDisplayedValue("7,8%"),
+		],
+		selectionChanged: function (oEvt) {
+			sap.m.MessageToast.show("The selected point is: " + oEvt.getParameter("point").getId());
+		}
+	});
+
+	var oFlexBoxLineChart = new sap.m.FlexBox({
+		height : "116px",
+		width : "320px",
+		items : oInteractiveLineChart
+	});
+
+	var oVerticalLayoutLineChart = new sap.ui.layout.VerticalLayout({
+		content : [
+			new sap.m.Title({
+				text : "Line Chart Title"
+			}),
+			oFlexBoxLineChart
+		]
+	});
+
+	var oSegment = new sap.suite.ui.microchart.InteractiveDonutChartSegment({
+		label : "Phase 4:",
+		value : 40.0,
+		displayedValue : "40.0%"
+	});
+
+	var oInteractiveDonutChart = new sap.suite.ui.microchart.InteractiveDonutChart({
+		displayedSegments : 3,
+		selectionEnabled : true,
+		segments : [
+			oSegment,
+			oSegment.clone().setLabel("Phase 2:").setValue(21.5).setDisplayedValue("21,5%"),
+			oSegment.clone().setLabel("Other (5):").setValue(38.5).setDisplayedValue("38,5%")
+		],
+		selectionChanged: function (oEvt) {
+			sap.m.MessageToast.show("The selected segment is: " + oEvt.getParameter("segment").getId());
+		}
+	});
+
+	var oFlexBoxDonutChart = new sap.m.FlexBox({
+		height : "116px",
+		width : "320px",
+		items : oInteractiveDonutChart
+	});
+
+	var oVerticalLayoutDonutChart = new sap.ui.layout.VerticalLayout({
+		content : [
+			new sap.m.Title({
+				text : "Donut Chart Title"
+			}),
+			oFlexBoxDonutChart
+		]
+	});
+
+	var oHeaderContainer = new sap.m.HeaderContainer({
+		content : [
+			oVerticalLayout,
+			oVerticalLayoutLineChart,
+			oVerticalLayoutDonutChart
+		],
+		showDividers : true,
+		width : "750px"
+	});
+
+	var oToolbar = new sap.m.OverflowToolbar({
+		content : [
+			new sap.m.Title({
+				text : "Toolbar Title"
+			}),
+			new sap.m.ToolbarSpacer(), new sap.m.Button({
+				icon : "sap-icon://line-charts"
+			}),
+			new sap.m.Button({
+				icon : "sap-icon://line-charts"
+			}),
+			new sap.m.Button({
+				icon : "sap-icon://line-charts"
+			})
+		]
+	});
+
+	var oVerticalLayoutForBarChartInDialog = new sap.ui.layout.VerticalLayout({
+		content : [
+			oToolbar,
+			oFlexBox.clone()
+		]
+	});
+
+	var oCheckBox = new sap.m.CheckBox();
+
+	var oHorizontalLayoutForBarChartInDialog = new sap.ui.layout.HorizontalLayout({
+		content : [
+			oCheckBox,
+			oVerticalLayoutForBarChartInDialog
+		]
+	});
+
+	var oVerticalLayoutForLineChartInDialog = new sap.ui.layout.VerticalLayout({
+		content : [
+			oToolbar.clone(),
+			oFlexBoxLineChart.clone()
+		]
+	});
+
+	var oHorizontalLayoutForLineChartInDialog = new sap.ui.layout.HorizontalLayout({
+		content : [
+			oCheckBox.clone(),
+			oVerticalLayoutForLineChartInDialog
+		]
+	});
+
+	var oVerticalLayoutForDonutChartInDialog = new sap.ui.layout.VerticalLayout({
+		content : [
+			oToolbar.clone(),
+			oFlexBoxDonutChart.clone()
+		]
+	});
+
+	var oHorizontalLayoutForDonutChartInDialog = new sap.ui.layout.HorizontalLayout({
+		content : [
+			oCheckBox.clone(),
+			oVerticalLayoutForDonutChartInDialog
+		]
+	});
+
+	var oDialogLayout = new sap.m.VBox({
+		items : [
+			oHorizontalLayoutForBarChartInDialog.addStyleClass("sapUiResponsiveContentPadding"),
+			oHorizontalLayoutForLineChartInDialog.addStyleClass("sapUiResponsiveContentPadding"),
+			oHorizontalLayoutForDonutChartInDialog.addStyleClass("sapUiResponsiveContentPadding")
+		]
+	});
+
+	var oDialog = new sap.m.Dialog({
+		title : "Filter Dialog with InteractiveCharts",
+		subHeader : new sap.m.Toolbar({
+			content : [new sap.m.SearchField()]
+		}),
+		buttons : [
+			new sap.m.Button({
+				text : "Close",
+				press : function() {
+					oDialog.close();
+				}
+			})
+		],
+		content : [oDialogLayout]
+	});
+
+	var oToolbar = new sap.m.OverflowToolbar({
+		content : [
+			new sap.m.Title({
+				text : "Toolbar Title"
+			}),
+			new sap.m.Button({
+				text : "Open Dialog",
+				press : function() {
+					oDialog.open();
+				}
+			})
+		]
+	});
+
+	var oPage = new sap.m.Page({
+		subHeader : oToolbar,
+		content : oHeaderContainer,
+		title : "ALP Use Case (HeaderContainer and Dialog)",
+		footer : oToolbar.clone()
+	});
+
+	new sap.m.App({
+		pages : oPage
+	}).placeAt("content");
+
+	//set the contrast class for belize plus when missing
+	jQuery(document).ready(function() {
+		if (jQuery("html").hasClass("sapUiTheme-sap_belize_plus") && !jQuery("body").hasClass("sapContrastPlus")) {
+			jQuery("body").addClass("sapContrastPlus");
+		}
+	});
+</script>
+
+</head>
+<body id="body" class="sapUiBody sapUiSizeCompact">
+	<div id="content"></div>
+</body>
+</html>

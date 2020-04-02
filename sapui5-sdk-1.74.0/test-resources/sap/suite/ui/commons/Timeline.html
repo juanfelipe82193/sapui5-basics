@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Timeline - sap.suite.ui.commons</title>
+
+<!-- UI5 Bootstrap -->
+<script src="../../../../../resources/sap-ui-core.js"
+	type="text/javascript" id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.suite.ui.commons,sap.m,sap.ui.commons"
+	data-sap-ui-theme="sap_belize"></script>
+
+<style type="text/css">
+</style>
+<script type="text/javascript">
+	sap.ui.getCore().attachInit(function () {
+		"use strict";
+		sap.ui.require([
+				"sap/ui/model/json/JSONModel",
+				"sap/suite/ui/commons/Timeline",
+				"sap/suite/ui/commons/TimelineItem",
+				"sap/m/Panel",
+				"sap/m/Toolbar",
+				"sap/m/CheckBox",
+				"sap/m/Button",
+				"sap/m/Text",
+				"sap/m/Link",
+				"sap/m/ObjectHeader",
+				"sap/m/ObjectAttribute",
+				"sap/m/ObjectStatus",
+				"sap/m/FlexBox",
+				"sap/m/OverflowToolbar",
+				"sap/m/Input",
+				"sap/m/FlexItemData"
+		], function (JSONModel, Timeline, TimelineItem, Panel, Toolbar, CheckBox, Button, Text, Link, ObjectHeader,
+					ObjectAttribute, ObjectStatus, FlexBox, OverflowToolbar, Input, FlexItemData) {
+
+			function getDate(iMultiple) {
+				return new Date(new Date().getTime() - (1000 * 3600 * 24) * iMultiple).getTime();
+			}
+
+			var oModel = new JSONModel([
+				{
+					dateTime : getDate(4),
+					text :  "On his first day as sole CEO at SAP, Bill McDermott addresses employees with a video message and asks for their support to work together to achieve the company’s mission and transform SAP into the cloud company powered by SAP HANA",
+					userName : "Sarah Social",
+					title : "added a Note",
+					filterValue: "Note",
+					icon : "sap-icon://accept"
+				},
+				{
+					dateTime :  getDate(4),
+					text : "79% of consumers spend at least 50% of total shopping time researching products online 82% of consumers will substitute and switch brands due to an out-of-stock product",
+					userName : "Sarah Social",
+					title : "added a Note about retail reality",
+					filterValue: "Note",
+					icon : "sap-icon://accept"
+				},
+				{
+					dateTime : getDate(4),
+					text : "Comments on the retail reality",
+					userName : "John Smith",
+					title : "posted a Comment",
+					filterValue: "Comment",
+					icon : "sap-icon://activity-items"
+				},
+				{
+					dateTime :  getDate(1),
+					text : "Introducing the First  Collaborative SAP HANA",
+					userName : "Sam Sales",
+					title : "added a Note",
+					filterValue: "Note",
+					icon : "sap-icon://accept"
+				},
+
+				{
+					dateTime : getDate(6),
+					text : "A Call was made on this date. Left message to the customer to call back.",
+					userName : "Tony Stark",
+					title : "made the Call",
+					filterValue: "Call",
+					icon : "sap-icon://outgoing-call"
+				},
+				{
+					dateTime : getDate(5),
+					text : "Added a comment on the customer call back that the issue is resolved",
+					userName : "Tony Stark",
+					title : "posted a Comment",
+					filterValue: "Comment",
+					icon : "sap-icon://activity-items"
+				},
+				{
+					dateTime : getDate(2),
+					text : "A Call was made on this date. Need to follow up next week.",
+					userName : "Sarah Social",
+					title : "made a Call",
+					filterValue: "Call",
+					icon : "sap-icon://outgoing-call"
+				},
+				{
+					dateTime : getDate(1),
+					text : "This is my comments appearing in Comment type Item.",
+					userName : "Sam Sales",
+					title : "posted a Comment",
+					filterValue: "Comment",
+					icon : "sap-icon://activity-items"
+				},
+
+				{
+					dateTime : getDate(12),
+					text : "Commented on the issues of Commute",
+					userName : "Sarah Jones",
+					title : "posted a Comment",
+					filterValue: "Comment",
+					icon : "sap-icon://activity-items"
+				},
+
+				{
+					dateTime : getDate(10),
+					text : "Sample text for a Note type item",
+					userName : "John Smith",
+					title : "added a Note",
+					filterValue: "Note",
+					icon : "sap-icon://accept"
+				},
+				{
+					dateTime : getDate(40),
+					text : "Global Learning Center in Dublin, CA, SAP Academy has been hard at work transforming 148 high-potential Millennials (representing 38 countries) into SAP’s next generation of Sales and Presales leaders.",
+					userName : "Sarah Jones",
+					title : "added a Note",
+					filterValue: "Note",
+					icon : "sap-icon://accept"
+				},
+				{
+					dateTime : getDate(25),
+					text : "Made a Call to the IT group, reagrding the downtime of servers, need to hear back from them",
+					userName : "Sarah Jones",
+					title : "made a Call",
+					filterValue: "Call",
+					icon : "sap-icon://outgoing-call"
+				},
+				{
+					dateTime : getDate(30),
+					text : "Made a call to customer and discussed the Timeline changes",
+					userName : "Tony Stark",
+					title : "made a Call",
+					filterValue: "Call",
+					icon : "sap-icon://outgoing-call"
+				},
+				{
+					dateTime : getDate(5),
+					text : "A Call was made on this date. Need to follow up next week.",
+					userName : "Tony Stark",
+					title : "made a Call",
+					filterValue: "Call",
+					icon : "sap-icon://outgoing-call"
+				},
+				{
+					dateTime : new Date(),
+					text : "New Message - A Call was made on this date. Need to follow up next week.",
+					userName : "Tony Stark",
+					title : "made a Call",
+					filterValue: "Call",
+					icon : "sap-icon://outgoing-call"
+				},
+				{
+					dateTime : getDate(-7),
+					text : "Make a call next week..",
+					userName : "Tony Stark",
+					title : "TODO",
+					filterValue: "Note",
+					icon : "sap-icon://outgoing-call"
+				},
+			]);
+
+			var oModelChinese = new JSONModel([
+				{
+					dateTime: new Date(),
+					text: "在他的第一天作为唯一的首席执行官SAP，比尔·麦克德莫特解决员工的视频消息，并要求他们的支持，共同努力，以实现公司的使命和改造SAP进入云社搭载SAP HANA",
+					userName: "莎拉社会",
+					title: "加了注释",
+					filterValue: "注",
+					icon: "sap-icon://accept"
+				},
+				{
+					dateTime: getDate(4),
+					text: "消费者79％的花费占购物时间至少有50％的产品研究网上消费者的82％将替代和转换品牌，由于缺货的产品",
+					userName: "莎拉社会",
+					title: "添加一个备注零售现实",
+					filterValue: "注",
+					icon: "sap-icon://accept"
+				},
+				{
+					dateTime: getDate(4),
+					text: "对零售的现实意见",
+					userName: "约翰·史密斯",
+					title: "发表评论",
+					filterValue: "评论",
+					icon: "sap-icon://activity-items"
+				},
+				{
+					dateTime: getDate(1),
+					text: "推出了第一款协同SAP HANA",
+					userName: "山姆销售",
+					title: "加了注",
+					filterValue: "注",
+					icon: "sap-icon://accept"
+				},
+				{
+					dateTime: getDate(6),
+					text: "有人呼吁在这个日期。离开的消息给客户回电。",
+					userName: "托尼斯塔克",
+					title: "发出的呼吁",
+					filterValue: "通话",
+					icon: "sap-icon://outgoing-call"
+				},
+				{
+					dateTime: getDate(2),
+					text: "有人呼吁在这个日期。需要下周跟进。",
+					userName: "莎拉社会",
+					title: "发出的呼吁",
+					filterValue: "通话",
+					icon: "sap-icon://outgoing-call"
+				},
+
+				{
+					dateTime: getDate(2),
+					text: "有人呼吁在这个日期。需要下周跟进。",
+					userName: "莎拉社会",
+					title: "发出的呼吁",
+					filterValue: "通话",
+					icon: "sap-icon://outgoing-call"
+				},
+				{
+					dateTime: getDate(1),
+					text: "这是我的意见出现在注释类型的项目。",
+					userName: "山姆销售",
+					title: "发表评论 ",
+					filterValue: "注释”",
+					icon: "sap-icon://activity-items"
+				},
+				{
+					dateTime: getDate(12),
+					text: "谈到通勤的问题",
+					userName: "萨拉·琼斯",
+					title: "发表评论",
+					filterValue: "评论",
+					icon: "sap-icon://activity-items"
+				}
+			]);
+
+			var oModelRussian = new JSONModel([
+				{
+					dateTime: new Date(),
+					text: "В первый день в качестве единственного исполнительного директора в SAP, Билл Макдермотт адреса сотрудников с видеообращением и спрашивает за их поддержку, чтобы работать вместе для достижения миссии компании и превратить SAP в облаке компании питается от SAP HANA",
+					userName: "Сара Социальный",
+					title: "Добавлено примечание",
+					filterValue: "примечание",
+					icon: "sap-icon://accept"
+				},
+				{
+					dateTime: getDate(4),
+					text: "79% потребителей тратить не менее 50% от общего времени торговой исследования продукции в Интернете 82% потребителей заменит и включайте бренды из-за вышедшего из запаса продукта",
+					userName: "Сара Социальный",
+					title: "Добавлено примечание о розничной реальности",
+					filterValue: "примечание",
+					icon: "sap-icon://accept"
+				},
+				{
+					dateTime: getDate(4),
+					text: "Комментарии на розничном реальности",
+					userName: "Джон Смит",
+					title: "разместил комментарий",
+					filterValue: "комментарий",
+					icon: "sap-icon://activity-items"
+				},
+				{
+					dateTime: getDate(1),
+					text: "Представляем первый Collaborative HANA SAP",
+					userName: "Сэм продаж",
+					title: "Добавлено примечание",
+					filterValue: "примечание",
+					icon: "sap-icon://accept"
+				},
+				{
+					dateTime: getDate(6),
+					text: "Призыв был сделан в этот день. Левая сообщение для заказчика перезвонить.",
+					userName: "Тони Старк",
+					title: "уравнял",
+					filterValue: "вызов",
+					icon: "sap-icon://outgoing-call"
+				},
+				{
+					dateTime: getDate(2),
+					text: "Призыв был сделан в этот день. Нужно следить за следующей неделе.",
+					userName: "Сара Социальный",
+					title: "сделал вызов",
+					filterValue: "вызов",
+					icon: "sap-icon://outgoing-call"
+				},
+				{
+					dateTime: getDate(1),
+					text: "Это мои комментарии, появляющиеся в комментарий типа элемента.",
+					userName: "Сэм продаж",
+					title: "разместил комментарий",
+					filterValue: "Комментарий",
+					icon: "sap-icon://activity-items"
+				},
+				{
+					dateTime: getDate(12),
+					text: "Комментарии по вопросам Commute",
+					userName: "Сара Джонс",
+					title: "разместил комментарий",
+					filterValue: "комментарий",
+					icon: "sap-icon://activity-items"
+				}
+			]);
+
+			var HEIGHT = "600px";
+			var oLayoutData = new FlexItemData({
+				minWidth: "400px",
+				maxWidth: "400px"
+			});
+
+			var oTimelineIcons = new Timeline({
+				id: "timeline_icons",
+				enableBusyIndicator: false
+			});
+			oTimelineIcons.bindAggregation("content", {
+				path: "/",
+				template: new TimelineItem({
+					dateTime: "{dateTime}",
+					text: "{text}",
+					userName: "{userName}",
+					title: "{title}",
+					filterValue: "{filterValue}",
+					icon: "{icon}"
+				})
+			});
+			oTimelineIcons.setModel(oModel);
+
+			var oPanelIcons = new Panel({
+				headerText: "Timeline: Text Items with Show Icons, Show Header, Sort",
+				height: HEIGHT,
+				layoutData: oLayoutData,
+				content: [new Toolbar({
+					content: new CheckBox({
+						text: "Show Icons",
+						selected: true,
+						select: function () {
+							oTimelineIcons.setShowIcons(this.getSelected());
+						}
+					})
+				}), oTimelineIcons]
+			});
+
+			var oTimelineEmbded = new Timeline({
+				id: "timeline_embeded",
+				content: [
+					new TimelineItem({
+						dateTime: getDate(2),
+						userName: "Tony Spark",
+						title: "made a Call",
+						icon: "sap-icon://outgoing-call",
+						userNameClickable: true,
+						embeddedControl: new Button({
+							text: "Click me",
+							width: "90px",
+							press: function () {
+								alert("Hello from Timeline Item");
+							}
+						})
+					}),
+					new TimelineItem({
+						dateTime : getDate(3),
+						text : "Innovational spirit, entrepreneurialism, simplicity, and boldness are the most important,criteria for participating in the first Hasso Plattner Founders’ Award.Any employee who would like to nominate himself/herself, a colleague,or a team for this prestigious award should be on the lookout for projects	and initiatives that exemplify entrepreneurial action, innovative thinking,	and bold decisions. Beyond this, the entry should also foster simplification at SAP.",
+						userName : "Sarah Social",
+						title : "added a Note",
+						icon : "sap-icon://accept"
+					}),
+					new TimelineItem({
+						dateTime : getDate(1),
+						userName : "John Smith",
+						title : "made a Call",
+						icon : "sap-icon://outgoing-call",
+						embeddedControl: new Text({
+							text: "Display text in this box from embedded content sap.m.Text"
+						})
+					}),
+					new TimelineItem({
+						dateTime : getDate(1),
+						userName : "John Smith",
+						title : "made a Call",
+						icon : "sap-icon://outgoing-call",
+						embeddedControl: new Link({
+							text : "Link to SAP home page",
+							href : "http://www.sap.com",
+							target: "_blank"
+						})
+					}),
+					new TimelineItem({
+						dateTime : getDate(1),
+						userName : "Sarah Social",
+						title : "added some Contents",
+						icon : "sap-icon://activity-items",
+						embeddedControl: new ObjectHeader({
+							title:"Attachment.doc",
+							number:"22.83",
+							numberUnit:"USD",
+							attributes: new ObjectAttribute({text: "file name"}),
+							firstStatus: new ObjectStatus({
+								text:"Uploaded",
+								state: sap.ui.core.ValueState.Error
+							})
+						})
+					})
+				]
+			});
+
+			var oPanelEmbded = new Panel({
+				headerText: "Timeline: in Scroll Container with embedded controls",
+				height: HEIGHT,
+				layoutData: oLayoutData.clone(),
+				content: [
+						new OverflowToolbar({
+							content: [
+									new Button({
+										text: "Compact",
+										press: function () {
+											oPanelEmbded.addStyleClass("sapUiSizeCompact");
+										}
+									}),
+									new Button({
+										text: "Cozy",
+										press: function () {
+											oPanelEmbded.removeStyleClass("sapUiSizeCompact");
+										}
+									})
+							]
+						}),
+						oTimelineEmbded
+				]
+			});
+
+			var oTimelineNoData = new Timeline("timeline_nodata");
+
+			var oPanelNoData = new Panel({
+				headerText: "Timeline: No DataText Property",
+				height: HEIGHT,
+				layoutData: oLayoutData.clone(),
+				content: [
+						new Toolbar({
+							content: new Input({
+								placeholder: "No data text",
+								valueLiveUpdate: true,
+								liveChange: function (oEvent) {
+									oTimelineNoData.setNoDataText(oEvent.getParameter("value"));
+								}
+							})
+						}),
+						oTimelineNoData
+				]
+			});
+
+			var oTimelineChinese = new Timeline("timeline_chinese");
+			oTimelineChinese.bindAggregation("content", {
+				path: "/",
+				template: new TimelineItem({
+					dateTime: "{dateTime}",
+					text: "{text}",
+					userName: "{userName}",
+					title: "{title}",
+					filterValue: "{filterValue}",
+					icon: "{icon}"
+				})
+			});
+			oTimelineChinese.setModel(oModelChinese);
+
+			var oPanelChinese = new Panel({
+				headerText: "Timeline: Chinese Language",
+				height: HEIGHT,
+				layoutData: oLayoutData.clone(),
+				content: oTimelineChinese
+			});
+
+			var oTimelineRussian = new Timeline("timeline_russian");
+			oTimelineRussian.bindAggregation("content", {
+				path: "/",
+				template: new TimelineItem({
+					dateTime: "{dateTime}",
+					text: "{text}",
+					userName: "{userName}",
+					title: "{title}",
+					filterValue: "{filterValue}",
+					icon: "{icon}"
+				})
+			});
+			oTimelineRussian.setModel(oModelRussian);
+
+			var oPanelRussian = new Panel({
+				headerText: "Timeline: Russian Language",
+				height: HEIGHT,
+				layoutData: oLayoutData.clone(),
+				content: oTimelineRussian
+			});
+
+			var oFlexBox = new FlexBox({
+				renderType: "Bare",
+				fitContainer: true,
+				wrap: "Wrap",
+				justifyContent: "SpaceBetween",
+				items: [
+					oPanelIcons,
+					oPanelEmbded,
+					oPanelNoData,
+					oPanelChinese,
+					oPanelRussian
+				]
+			});
+
+			oFlexBox.placeAt("content");
+		});
+	});
+</script>
+</head>
+
+<body class="sapUiBody">
+	<div id="content"></div>
+</body>
+</html>

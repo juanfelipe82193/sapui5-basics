@@ -1,0 +1,849 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Spreadsheet Export Configuration</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="To perform a spreadsheet export for any content other than SmartTable, you have to set up the configuration for the columns and data sources, and you can configure some other additional properties."><meta name="description" content="To perform a spreadsheet export for any content other than SmartTable, you have to set up the configuration for the columns and data sources, and you can configure some other additional properties."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"283217d8f187401c8045723abc27e5e0.html","previousTopicHref":"2691788a08fc43f7bf269ea7c6336caf.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio7e12e6b9154a4607be9d6072c72d609c"><h1 class="title topictitle1" hidden>Spreadsheet
+Export Configuration</h1><div class="body conbody"><p class="shortdesc" hidden>To perform a spreadsheet export for any content other than <samp class="ph codeph">SmartTable</samp>,
+you have to set up the configuration for the columns and data sources, and you can configure
+some other additional properties.</p>
+<div class="section" id="loio7e12e6b9154a4607be9d6072c72d609c__section_m11_nx3_ffb"><section class="section" type="Overview"><h2 class="section_title" style="font-size: 1.15em;">Overview</h2>
+
+<p class="p">If you export data from the <samp class="ph codeph">SmartTable</samp> control, the configuration is already
+available. You can use it without making any modifications. You can also adapt the
+configuration to make it suitable for your own requirements. The existing export
+configuration is attached as an event parameter to the <samp class="ph codeph">beforeExport</samp>
+event provided by <samp class="ph codeph">SmartTable</samp>. The event is fired once the
+<samp class="ph codeph">SmartTable</samp> control has finished creating the export
+configuration. To adapt the export configuration, you have to modify the event
+parameter by registering an event handler and then adjusting the provided
+configuration.</p>
+<p class="p">If you want to use the export for any content other than the <samp class="ph codeph">SmartTable</samp>
+control, you have to define your own export configuration.</p>
+<p class="p">The export configuration is a JSON object that contains three major parts that are
+required to process the data export. While the column configuration and the data
+source information are mandatory, additional properties that are used for the
+processing are optional. The export configuration needs to be valid, otherwise the
+export process will be
+cancelled.</p>
+</section></div>
+<div class="section"><section class="section" type="Details"><h2 class="section_title" style="font-size: 1.15em;">Details</h2><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Column Configuration</p>
+<p class="p"> The column configuration is an array of JSON objects that is assigned to the
+column property of the export configuration.</p>
+<pre class="pre codeblock prettyprint lang-js">var exportConfiguration = {
+    workbook: {
+        columns: [
+            {
+                // Place your column definition here
+            }
+        ]
+    }
+}</pre>
+<p class="p">First you need to identify all the columns you want to export, since there has to
+be a column definition object for every column that is exported. Regardless of
+the data source (OData or JSON array), each
+row
+represents an instance of an
+entity
+with several properties, and each row is mapped to one of these
+properties. It is also possible to map multiple
+properties to a single column.
+</p>
+<p class="p">A column definition object is a JSON object that contains at least one
+<samp class="ph codeph">property</samp> property that maps the column to the property of
+the
+entity.
+Its value must be of type <samp class="ph codeph">string</samp> or an array of strings and
+must not be empty; otherwise the column definition is invalid. The string value
+must contain the name of a property of the entity. If there is no property with
+the given name, the column in the exported Office Open XML spreadsheet
+will
+be empty.</p>
+<p class="p"><span class="ph emphasis emphasis">Property Types</span></p>
+<div class="p">Apart from the <samp class="ph codeph">property</samp> property, a column definition can have
+additional properties. The following properties are used: <ul class="ul" id="loio7e12e6b9154a4607be9d6072c72d609c__ul_hqq_rwg_hfb">
+<li class="li">
+<p class="p">Type-independent</p>
+</li>
+<li class="li">
+<p class="p">Type-dependent</p>
+</li>
+</ul></div>
+<div class="p">The following table shows the different kind of properties. <div class="table-wrapper tablenoborder"><table summary id="loio7e12e6b9154a4607be9d6072c72d609c__table_gg1_p31_j3b" class="table" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Properties</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d277669e141">
+<p class="p">Type-Independent Properties</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d277669e147">
+<p class="p">Type-Dependent Properties</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e141 ">
+<p class="p"><samp class="ph codeph">property</samp> (<samp class="ph codeph">string</samp>)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e147 ">
+<p class="p"><samp class="ph codeph">scale</samp> (<samp class="ph codeph">number</samp>) </p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e141 ">
+<p class="p"><samp class="ph codeph">label</samp> (<samp class="ph codeph">string</samp>) </p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e147 ">
+<p class="p"><samp class="ph codeph">delimiter</samp> (<samp class="ph codeph">boolean</samp>)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e141 ">
+<p class="p"><samp class="ph codeph">type</samp> (<samp class="ph codeph">string</samp>)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e147 ">
+<p class="p"><samp class="ph codeph">unit</samp> (<samp class="ph codeph">string</samp>)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e141 ">
+<p class="p"><samp class="ph codeph">width</samp> (<samp class="ph codeph">number</samp>)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e147 ">
+<p class="p"><samp class="ph codeph">unitProperty</samp>
+(<samp class="ph codeph">string</samp>)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e141 ">
+<p class="p"><samp class="ph codeph">textAlign</samp> (<samp class="ph codeph">string</samp>)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e147 ">
+<p class="p"><samp class="ph codeph">displayUnit</samp>
+(<samp class="ph codeph">boolean</samp>)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e141 ">&#xA0;</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e147 ">
+<p class="p"><samp class="ph codeph">trueValue</samp> (<samp class="ph codeph">string</samp>) </p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e141 ">&#xA0;</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e147 ">
+<p class="p"><samp class="ph codeph">falseValue</samp> (<samp class="ph codeph">string</samp>)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e141 ">&#xA0;</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e147 ">
+<p class="p"><samp class="ph codeph">template</samp> (<samp class="ph codeph">string</samp>)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e141 ">&#xA0;</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e147 ">
+<p class="p"><samp class="ph codeph">inputFormat</samp>
+(<samp class="ph codeph">string</samp>)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e141 ">&#xA0;</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e147 ">
+<p class="p"><samp class="ph codeph">valueMap</samp>
+(<samp class="ph codeph">object|Map</samp>)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e141 ">&#xA0;</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e147 ">
+<p class="p"><samp class="ph codeph">wrap</samp> (<samp class="ph codeph">boolean</samp>)</p>
+</td>
+</tr>
+</tbody></table></div>In this section, you can find out more about type-independent
+properties.</div>
+<p class="p">The <samp class="ph codeph">label</samp> property is optional, and its value must be of type
+<samp class="ph codeph">string</samp>. Its value will be used as column header for the
+column. If no <samp class="ph codeph">label</samp> property has been provided, the value of
+the <samp class="ph codeph">property</samp> property will be used
+instead.</p>
+<p class="p">The optional <samp class="ph codeph">type</samp> property defines the data type for this column
+and needs to match
+one
+of the values of the <samp class="ph codeph">sap.ui.export.EdmType</samp>
+enumeration. If the <samp class="ph codeph">type</samp> property has not been defined or the
+enumeration does not contain its value, the default type
+(<samp class="ph codeph">sap.ui.export.EdmType.String</samp>) is used. <span class="ph">For more
+information, see the <a class="xref" href="../../#/api/sap.ui.export.EdmType" target="_top" alt="#/api/sap.ui.export.EdmType" title="#/api/sap.ui.export.EdmType">API Reference:
+<samp class="ph codeph">EdmType</samp></a>.</span>
+</p>
+<p class="p">The optional <samp class="ph codeph">width</samp> property defines the column width based on
+the
+number
+of characters that can be visible. The
+Office
+Open XML spreadsheet standard uses a width calculation that
+is not equivalent to the CSS sizes. Therefore, the calculation is handled by the
+library. If no <samp class="ph codeph">width</samp> property has been provided, or if its
+value is greater than <span class="ph uicontrol">1</span>, the default width is used. The
+default width is 10 characters. If the column header text has a length that is
+greater than the actual width, it will override the width with the
+length
+of the column header text.</p>
+<div class="p">The optional <samp class="ph codeph">textAlign</samp> property defines the horizontal text
+alignment. Its value must be of type <samp class="ph codeph">string</samp> and either be
+<samp class="ph codeph">left</samp>, <samp class="ph codeph">right</samp>, or <samp class="ph codeph">center</samp>.
+Other CSS alignments like <samp class="ph codeph">begin</samp> or <samp class="ph codeph">end</samp> are not
+supported. If no <samp class="ph codeph">textAlign</samp> property has been provided or its
+value is empty or not supported, the default alignment is used. The default
+alignment is defined by the type of the column. This is done by the application
+using the scenario and the generated
+Office
+Open XML spreadsheet, for example, Microsoft Excel. <aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">If you set the alignment for a particular column, the cell content is not
+always aligned as originally
+defined
+for every data type. The
+application
+that displays the spreadsheet can ignore the alignment depending on the
+column&apos;s data type or even the content of the cell, for example, in
+right-to-left scenarios.</p></aside></div>
+<p class="p">The following code shows you an example of a column definition:</p>
+<pre class="pre codeblock prettyprint lang-js">var exportConfiguration = {
+    workbook: {
+        columns: [
+            {
+                property: &quot;Firstname&quot;,
+                width: 15
+            },
+            {
+                property: &quot;Lastname&quot;,
+                width: 15
+            },
+            {
+                property: &quot;User&quot;,
+                label: &quot;Username&quot;,
+                width: 20
+            },
+            {
+                property: &quot;Attempts&quot;,
+                label: &quot;Login Attempts&quot;,
+                type: sap.ui.export.EdmType.Number
+            },
+            {
+                property: &quot;LastLogin&quot;,
+                label: &quot;Last Successful Login&quot;,
+                type: sap.ui.export.EdmType.DateTime
+                width: 20,
+                textAlign: &quot;center&quot;
+            }
+        ]
+    }
+}
+ </pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Data Source Configuration</p>
+<p class="p">Apart from the column configuration, data source configuration is the most
+important configuration for the export process. Data source configuration is
+mandatory. It can either be a JSON array containing all data or a JSON object
+with the following properties:</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio7e12e6b9154a4607be9d6072c72d609c__table_k2z_gr3_hfb" class="table" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Data Source Configuration Properties</span></span></caption><colgroup><col width="25%"><col width="25%"><col width="25%"><col width="25%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d277669e535">
+<p class="p">Property</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d277669e541">
+<p class="p">Type</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d277669e547">
+<p class="p">Optional</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d277669e555">
+<p class="p">Description</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e535 ">
+<p class="p"><samp class="ph codeph">type</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e541 ">
+<p class="p"><samp class="ph codeph">string</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e547 ">
+<p class="p"><img class="inline  " id="loio7e12e6b9154a4607be9d6072c72d609c__image_rrr_p3f_jfb" src="loio5befb5af20ed42fd9052a99014d953a3_LowRes.gif" alt="No" title="No"></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e555 ">
+<p class="p">Defines the type of the data service that provides the data.
+If it is an OData service, the value <samp class="ph codeph">OData</samp>
+must be assigned.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e535 ">
+<p class="p"><samp class="ph codeph">dataUrl</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e541 ">
+<p class="p"><samp class="ph codeph">string</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e547 ">
+<p class="p"><img class="inline  " id="loio7e12e6b9154a4607be9d6072c72d609c__image_why_3jf_jfb" src="loio5befb5af20ed42fd9052a99014d953a3_LowRes.gif" alt="No" title="No"></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e555 ">
+<p class="p">Request URL that is needed to request the data with all the
+filters and its
+order.
+The URL can either be relative or absolute. If the URL is
+relative,
+the
+current origin will be used as a
+host.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e535 ">
+<p class="p"><samp class="ph codeph">serviceUrl</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e541 ">
+<p class="p"><samp class="ph codeph">string</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e547 ">
+<p class="p"><img class="inline  " id="loio7e12e6b9154a4607be9d6072c72d609c__image_etv_3kf_jfb" src="loio3ea53dcd3acc4783a7a4b83e10c8f1aa_LowRes.gif" alt="Partially" title="Partially"></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e555 ">
+<p class="p">URL of the data service that
+serves
+the entity which is requested by the
+<samp class="ph codeph">dataUrl</samp>&quot;. It is usually a substring of
+<samp class="ph codeph">dataUrl</samp>. The URL can either be relative
+or absolute. If <samp class="ph codeph">dataUrl</samp> is relative,
+<samp class="ph codeph">serviceUrl</samp> must not be absolute.</p>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">This property is required if OData batch requests are
+enabled.</p></aside>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e535 ">
+<p class="p"><samp class="ph codeph">count</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e541 ">
+<p class="p"><samp class="ph codeph">number</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e547 ">
+<p class="p"><img class="inline  " id="loio7e12e6b9154a4607be9d6072c72d609c__image_mt1_1lf_jfb" src="loio3cb17ee88aed44d2bf1d14b97728c709_LowRes.gif" alt="Yes" title="Yes"></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e555 ">
+<p class="p">Indicator of the line items available
+through
+the service. During the export process
+there is neither a dedicated <cite class="cite">$count </cite> request
+nor is the <samp class="ph codeph">inlineCount</samp> request property
+used. If <samp class="ph codeph">count</samp> is provided, it splits the
+requests so that not all data is requested at once, and the
+progress indicator can show reliable information.</p>
+<aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p class="p">If the OData service is an analytical service, the ratio
+of processing time and number of queried items is not
+linear. For example, 200 items
+take
+up about two seconds, 1,000 items
+about 2.2 seconds. Therefore, it might be necessary to
+configure the requested size using the
+<samp class="ph codeph">sizeLimit</samp> property.</p></aside>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e535 ">
+<p class="p"><samp class="ph codeph">useBatch</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e541 ">
+<p class="p"><samp class="ph codeph">boolean</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e547 ">
+<p class="p"><img class="inline  " id="loio7e12e6b9154a4607be9d6072c72d609c__image_pwd_wmf_jfb" src="loio3cb17ee88aed44d2bf1d14b97728c709_LowRes.gif" alt="Yes" title="Yes"></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e555 ">
+<p class="p">If set to <samp class="ph codeph">true</samp>, the export library will use
+OData batch requests. Once batch requests are enabled,
+you&apos;ll have to provide the <samp class="ph codeph">serviceUrl</samp> and
+<samp class="ph codeph">headers</samp> properties. If batch requests
+are not supported by your OData service, you can disable
+this functionality by setting this property to
+<samp class="ph codeph">false</samp>.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e535 ">
+<p class="p"><samp class="ph codeph">headers</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e541 ">
+<p class="p"><samp class="ph codeph">object</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e547 ">
+<p class="p"><img class="inline  " id="loio7e12e6b9154a4607be9d6072c72d609c__image_mfb_2nf_jfb" src="loio3ea53dcd3acc4783a7a4b83e10c8f1aa_LowRes.gif" alt="Partially" title="Partially"></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e555 ">
+<p class="p">Provides additional request headers within an OData batch
+request. Every property you add to the
+<samp class="ph codeph">headers</samp> object will be put into the
+HTTP header section of the respective GET request within the
+batch request.</p>
+<aside class="note" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Note</strong></div>
+<p class="p">This property is required if OData batch requests are
+enabled.</p></aside>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e535 ">
+<p class="p"><samp class="ph codeph">sizeLimit</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e541 ">
+<p class="p"><samp class="ph codeph">number</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e547 "><img class="inline  " id="loio7e12e6b9154a4607be9d6072c72d609c__image_s5f_d4f_jfb" src="loio3cb17ee88aed44d2bf1d14b97728c709_LowRes.gif" alt="Yes" title="Yes"></td>
+<td class="entry" style="vertical-align:top;" headers="d277669e555 ">
+<p class="p">Defines the number of records that are requested from the
+service with a single request.
+This
+is important to make fine
+adjustments.</p>
+</td>
+</tr>
+</tbody></table></div>
+<p class="p">The following code shows you an example of data source configuration:</p>
+<pre class="pre codeblock prettyprint lang-js">/* JSON array as dataSource */
+var exportConfiguration = {
+    dataSource: [
+        // Several line items that contain actual data
+    ]
+}
+/* OData service as dataSource */
+exportConfiguration = {
+    dataSource: {
+        type: &quot;OData&quot;,
+        dataUrl: &quot;/sap/opu/odata/sap/MM_PUR_PODWNPAYT_MNTR_SRV/C_PurOrdDownPaymentMntr(P_DisplayCurrency=%27EUR%27)/Results?sap-client=715&amp;$format=json&amp;$select=PurchaseOrder,PurchaseOrderItem,DisplayCurrency,DownPaymentsRequest,NetAmount,PurchasingDocumentStatus&amp;$filter=(Supplier%20eq%20%2710300001%27)&amp;$orderby=PurchasingDocumentStatus%20asc&quot;,
+        serviceUrl: &quot;/sap/opu/odata/sap/MM_PUR_PODWNPAYT_MNTR_SRV&quot;,
+        count: 17491,
+        useBatch: true,
+        headers: {
+            /* Some sample headers DO NOT copy them */
+            Accept: &quot;application/json&quot;,
+            Accept-Language: &quot;en&quot;,
+            sap-cancel-on-close: &quot;true&quot;,
+            DataServiceVersion: &quot;2.0&quot;,
+            x-csrf-token: &quot;XvR_WdN7nCw83ngZnH9lZQ==&quot;
+        },
+        sizeLimit: 500
+    }
+}</pre>
+</div><div class="sectiondiv subsection">
+
+<p class="p subsectiontitle">Context Information</p>
+<p class="p">Apart from the mandatory configuration, you can add context information to the
+generated
+Office
+Open XML spreadsheet. This part of the configuration is
+optional. It is provided within a JSON object that is assigned to the
+<samp class="ph codeph">context</samp> property within the workbook object of the export
+configuration. Built-in properties are not visible on a data sheet and stored as
+document properties in the generated file while custom metadata is visible on a
+data sheet in the workbook. </p>
+<div class="fig fignone" id="loio7e12e6b9154a4607be9d6072c72d609c__fig_xnh_zld_kfb"><div class="figbody">
+<img class="inline  " id="loio7e12e6b9154a4607be9d6072c72d609c__image_ynh_zld_kfb" src="loio07d19bb87bd9407197b0dcf508953db1_Source1.png">
+</div></div>
+<aside class="note" aria-labelledby="note_4_title"><div class="title" id="note_4_title"><strong>Note</strong></div>
+<p class="p">Apart from the actual data that is exported, sometimes additional information
+is required in the spreadsheet. For example, this meta information could be
+the URL of the system from which the data is exported, the system ID, a
+timestamp of the export date, or the name of the user who exported this
+data.</p></aside>
+<p class="p">The <samp class="ph codeph">sap.ui.export.Spreadsheet</samp> library always exports the actual
+data to the main sheet of
+the
+Office Open XML spreadsheet but it can also add an additional
+sheet for meta information. The consuming applications can then
+assign
+their own specific names to both sheets. </p>
+<p class="p">The following code shows you an example of context configuration:</p>
+<pre class="pre codeblock prettyprint lang-js">var exportConfiguration = {
+    workbook: {
+        context: {
+            // Place your context information here
+        }
+    }
+}</pre>
+<p class="p">You can use the following properties:</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio7e12e6b9154a4607be9d6072c72d609c__table_bqr_btb_kfb" class="table" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Context Information Properties</span></span></caption><colgroup><col width="25%"><col width="25%"><col width="25%"><col width="25%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d277669e960">Property (optional)</th>
+<th class="entry" style="vertical-align:top;" id="d277669e963">Description</th>
+<th class="entry" style="vertical-align:top;" id="d277669e966">
+<p class="p">Built-in Context Information</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d277669e972">
+<p class="p">Custom Metadata Context Information </p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e960 ">
+<p class="p"><samp class="ph codeph">application</samp> (<samp class="ph codeph">string</samp>)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e963 ">
+<p class="p">Adds information about the business application that created
+a particular file.</p>
+<p class="p">We recommend to use this property because there are often
+several similar apps that
+work
+on the same data entity but with a
+different
+scope or view. This makes it easier to
+identify where the data comes from if the exported file is
+shared, for example, among employees and managers.</p>
+</td>
+<td class="entry" rowspan="4" style="vertical-align:top;" headers="d277669e966 ">
+<p class="p"><img class="inline  " id="loio7e12e6b9154a4607be9d6072c72d609c__image_ip2_wpc_kfb" src="loio3cb17ee88aed44d2bf1d14b97728c709_LowRes.gif" alt="Yes" title="Yes"></p>
+</td>
+<td class="entry" rowspan="4" style="vertical-align:top;" headers="d277669e972 ">&#xA0;</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e960 ">
+<p class="p"><samp class="ph codeph">version</samp> (<samp class="ph codeph">string</samp>)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e963 ">
+<p class="p">Identifies the application version through which a particular
+Office
+Open XML spreadsheet was created. This
+can be helpful for debugging because you can identify the
+version that caused the issues and compare it to previous
+builds. The more detailed your version information is, the
+easier it will be to identify your application changes
+within
+your
+source code management system.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e960 "><samp class="ph codeph">title</samp> (<samp class="ph codeph">string</samp>)</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e963 ">
+<p class="p">Adds a self-explanatory title to the document generated. This
+can be useful if the exported
+entity
+is not the main entity of the application in question, for
+example, company codes within a purchase order
+application.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e960 ">
+<p class="p"><samp class="ph codeph">modifiedBy</samp> (<samp class="ph codeph">string</samp>)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e963 ">
+<p class="p">Adds information about the user who created this
+document.</p>
+<p class="p">If you do not use this property, the
+<samp class="ph codeph">sap.ui.export.Spreadsheet</samp> library
+automatically adds <span class="ph"><span class="ph pname">SAPUI5</span></span>
+<span class="ph uicontrol">Document Export</span> as the author of the
+document to the generated file and generates the creation
+timestamp.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e960 ">
+<p class="p"><samp class="ph codeph">sheetName</samp> (<samp class="ph codeph">string</samp>)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e963 ">
+<p class="p">Changes the name of the sheet that contains the exported
+data.
+If
+this property is not used, the default value <samp class="ph codeph">SAP
+Document Export</samp> is used.</p>
+</td>
+<td class="entry" rowspan="3" style="vertical-align:top;" headers="d277669e966 ">&#xA0;</td>
+<td class="entry" rowspan="3" style="vertical-align:top;" headers="d277669e972 ">
+<p class="p"><img class="inline  " id="loio7e12e6b9154a4607be9d6072c72d609c__image_rcn_gvc_kfb" src="loio3cb17ee88aed44d2bf1d14b97728c709_LowRes.gif" alt="Yes" title="Yes"></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e960 ">
+<p class="p"><samp class="ph codeph">metaSheetName</samp> (<samp class="ph codeph">string</samp>)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e963 ">
+<p class="p">Changes the name of the sheet that contains the metadata. In
+contrast to <samp class="ph codeph">sheetName</samp>, it only affects the
+name of the additional sheet that contains the metadata. If
+no metadata has been provided, the additional sheet will not
+be created, and this property will not take effect.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d277669e960 ">
+<p class="p"><samp class="ph codeph">metaInfo</samp> (<samp class="ph codeph">array</samp>)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d277669e963 ">
+<p class="p">An array of JSON objects that follow an exact specification,
+the so-called meta information groups. Each meta information
+group has an explicit <samp class="ph codeph">name</samp> property which
+accepts a string that is not empty. Apart from the group
+name, it contains an array that is assigned to the
+<samp class="ph codeph">items</samp> property of the group. This array
+can contain several JSON objects that provide the
+<samp class="ph codeph">key</samp> and <samp class="ph codeph">value</samp>
+properties (type <samp class="ph codeph">string</samp>).</p>
+</td>
+</tr>
+</tbody></table></div>
+<aside class="note" aria-labelledby="note_5_title"><div class="title" id="note_5_title"><strong>Note</strong></div>
+<p class="p">Properties other than the ones listed are ignored during configuration.</p></aside>
+<p class="p">The following code shows you an example of context configuration with some of the
+properties mentioned:</p>
+<pre class="pre codeblock prettyprint lang-js">var exportConfiguration = {
+    workbook: {
+        context: {
+            application: &quot;Supplier Invoices List&quot;,
+            version: &quot;6.1.0-SNAPSHOT&quot;,
+            title: &quot;Supplier Invoices&quot;,
+            modifiedBy: &quot;Doe, John&quot;,
+            sheetName: &quot;Invoices&quot;
+        }
+    }
+}</pre>
+<p class="p">The following code shows you an example of context configuration with the
+<samp class="ph codeph">metaInfo</samp> property:</p>
+<pre class="pre codeblock prettyprint lang-js">var exportConfiguration = {
+    workbook: {
+        context: {
+            metaInfo: [
+                {
+                    name: &quot;Application settings&quot;,
+                    items: [
+                        {
+                            key: &quot;Name&quot;,
+                            value: &quot;Purchase Orders&quot;
+                        },
+                        {
+                            key: &quot;Version&quot;,
+                            value: &quot;1.23.8742-p&quot;
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}</pre>
+<aside class="note" aria-labelledby="note_6_title"><div class="title" id="note_6_title"><strong>Note</strong></div>
+<p class="p">The reasoning behind this design is that different layers (<span class="ph"><span class="ph pname">SAPUI5</span></span>
+framework, <span class="ph pname">SAP Fiori</span>
+elements, smart controls, and applications) can add metadata without
+depending on each other. As long as there is at least one valid meta
+information group within the <samp class="ph codeph">metaInfo</samp> array, the additional
+sheet will be shown in the generated file.</p></aside>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Configuration of Additional Properties</p>
+<p class="p">The <samp class="ph codeph">sap.ui.export.Spreadsheet</samp> library offers some other
+additional properties that you can configure. This part of the configuration is
+also optional.</p>
+<p class="p">The following properties are available for configuration:</p>
+<ul class="ul" id="loio7e12e6b9154a4607be9d6072c72d609c__ul_u1c_jzf_jfb">
+<li class="li">
+<p class="p"><samp class="ph codeph">count</samp>
+(type <samp class="ph codeph">number</samp>)</p>
+<p class="p">The value of this property must be positive. It restricts the amount of
+exported data, which avoids browser crashes during the transfer of very
+large amounts of data.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">worker</samp> (type <samp class="ph codeph">boolean</samp>)</p>
+<p class="p">The export process runs
+in
+a dedicated web worker by default. The <samp class="ph codeph">worker</samp> property
+allows you to disable this functionality. A web worker runs in a
+separate thread and does not affect the performance of the browser
+window&apos;s main thread.</p>
+<div class="p">Although it has some advantages to use a web worker, it can also cause
+some problems. Especially if <span class="ph"><span class="ph pname">SAPUI5</span></span> is
+loaded from a Content Delivery Network (CDN) and is not served by the
+original host, it depends on the Content Security Policy (CSP) of the
+server if the export can be processed in a web worker. To resolve
+problems related to this scenario, you should either add a
+<samp class="ph codeph">worker-src</samp> directive to your CSP or disable the web
+worker functionality. If the web worker functionality is disabled, the
+export process will run in the main thread of the browser window.
+Currently, the <samp class="ph codeph">worker-src</samp> directive is not fully
+supported by all browsers. If you can&apos;t set the
+<samp class="ph codeph">worker-src</samp> directive, you can also adjust the
+fallback directive <samp class="ph codeph">script-src</samp>. <aside class="note" aria-labelledby="note_7_title"><div class="title" id="note_7_title"><strong>Note</strong></div>
+<p class="p">The <samp class="ph codeph">script-src</samp> directive will also affect all
+other scripts that are loaded on your page.</p></aside></div>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">fileName</samp> (type <samp class="ph codeph">string</samp>)</p>
+<p class="p">Defines a particular name for the generated export file. The file
+extension is added to the given file name and is always xlsx. To take
+effect,
+the
+property must not be empty.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">showProgress</samp> (type <samp class="ph codeph">boolean</samp>)</p>
+<p class="p">The export process shows a progress dialog by default.To prevent this
+from happening, you can set the <samp class="ph codeph">showProgress</samp> property
+to <samp class="ph codeph">false</samp>.</p>
+</li>
+</ul>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Hierarchical Data</p>
+<p class="p">The <samp class="ph codeph">sap.ui.export.Spreadsheet</samp> library can also handle
+hierarchical structures. </p>
+<p class="p">To get exported, each object of the relevant entity must have the following:</p>
+<ul class="ul" id="loio7e12e6b9154a4607be9d6072c72d609c__ul_s5t_hmk_kfb">
+<li class="li">
+<p class="p">A distinct property containing its absolute numerical hierarchy level</p>
+</li>
+<li class="li">
+<p class="p">An
+order
+in which parent nodes are followed by their direct child nodes</p>
+</li>
+</ul>
+<p class="p">To enable a hierarchical representation, you have to simply assign the name of
+the property containing the hierarchy level to the
+<samp class="ph codeph">hierarchyLevel</samp> property of the workbook object in the
+export configuration.</p>
+<p class="p">The following code shows you an example of hierarchy data:</p>
+<pre class="pre codeblock prettyprint lang-js">var exportConfiguration = {
+    workbook: {
+        hierarchyLevel: &quot;level&quot;
+    }
+}</pre>
+<aside class="note" aria-labelledby="note_8_title"><div class="title" id="note_8_title"><strong>Note</strong></div>
+<p class="p">Relational hierarchy data is not supported.</p></aside>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Starting the Export Process</p>
+
+<p class="p">After you have created a valid configuration, you will have to
+create a new<samp class="ph codeph">sap.ui.export.Spreadsheet</samp> instance and initialize
+it with the previously created configuration. After the instance has been
+initialized, you can start the export process by calling the
+<samp class="ph codeph">build</samp> method. Everything else will be handled by the export
+library. The result will be an
+Office
+Open XML spreadsheet which is automatically downloaded. The
+export library does not offer you any events to which you can register. If you
+need to perform additional steps after the export has been completed, you can
+use the <samp class="ph codeph">Promise</samp> that is returned by the <samp class="ph codeph">build</samp>
+method.</p>
+<p class="p">The following code sample shows the start of an export:</p>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+    &quot;sap/ui/core/mvc/Controller&quot;,
+    &quot;sap/ui/export/Spreadsheet&quot;
+], function(Controller, Spreadsheet) {
+    &quot;use strict&quot;;
+ 
+    return Controller.extend(&quot;sample.Spreadsheet&quot;, {
+ 
+        onExport: function() {
+            var oExportConfiguration, oExportPromise, oSpreadsheet;
+ 
+            /* Creates the configuration and initializes the spreadsheet export */
+            oExportConfiguration = this.createExportConfiguration();
+            oSpreadsheet= new Spreadsheet(oExportConfiguration);
+ 
+            /* Starts the export and returns a Promise */
+            oExportPromise = oSpreadsheet.build();
+ 
+            oExportPromise.then(function() {
+                // Here you can perform additional steps after the export has finished
+            });
+        },
+ 
+        createExportConfiguration: function() {
+            var oConfiguration;
+ 
+            // Create a valid export configuration
+ 
+            return oConfiguration;
+        }
+    });
+});</pre>
+</div></section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,50 @@
+<mvc:View controllerName="sap.viz.sample.TimeAxis.TimeAxis" xmlns="sap.m"
+    xmlns:viz="sap.viz.ui5.controls" xmlns:layout="sap.ui.layout"
+    xmlns:mvc="sap.ui.core.mvc" xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:core="sap.ui.core" xmlns:viz.data="sap.viz.ui5.data" height="100%">
+    <layout:FixFlex id='chartFixFlex' minFlexSize="250">
+        <!--Below is the setting panel -->
+        <layout:fixContent>
+            <Panel id='settingsPanel' class="panelStyle" expandable="true" expanded="true" headerText="Settings" width="auto">
+                <content>
+                    <HBox class='settingsHBox'>
+                    <VBox width="200px">
+                        <Label text = '{/chartType/name}' design="Bold" class='settingsLabel'></Label>
+                        <Select id='chartTypeSelect' class='settingsSelect' selectedKey='{/chartType/defaultSelected}' maxWidth="150px" change='onChartTypeChanged' 
+                            items="{path: '/chartType/values'}">
+                            <items>
+                                <core:Item text="{name}" key="{key}" />
+                            </items>
+                        </Select>
+                    </VBox>
+                    </HBox>
+                </content>
+            </Panel>
+        </layout:fixContent>
+        <layout:flexContent>
+            <viz:Popover id="idPopOver"></viz:Popover>
+            <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}"
+                height='100%' width="100%" vizType='timeseries_line'>
+                <viz:dataset>
+                    <viz.data:FlattenedDataset data="{/milk}">
+                        <viz.data:dimensions>
+                            <viz.data:DimensionDefinition name="Date"
+                                value="{Date}" dataType="date"/>
+                        </viz.data:dimensions>
+                        <viz.data:measures>
+                            <viz.data:MeasureDefinition name="Revenue"
+                                value="{Revenue}" />
+                        </viz.data:measures>
+                    </viz.data:FlattenedDataset>
+                </viz:dataset>
+
+                <viz:feeds>
+                    <viz.feeds:FeedItem uid="valueAxis" type="Measure"
+                        values="Revenue" />
+                    <viz.feeds:FeedItem uid="timeAxis" type="Dimension"
+                        values="Date" />
+                </viz:feeds>
+            </viz:VizFrame>
+        </layout:flexContent>
+    </layout:FixFlex>
+</mvc:View>

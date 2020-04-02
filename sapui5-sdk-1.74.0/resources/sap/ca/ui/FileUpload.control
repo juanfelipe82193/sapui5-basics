@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>FileUpload</name>
+    <derived/>
+    <documentation>Allows you to display a list of uploaded files. You can also upload a new one, rename or delete them</documentation>
+    <deprecation since="1.26">This control is available in sap.m in 1.26, as sap.m.UploadCollection.
+Please use UploadCollection, as sap.ca.ui.FileUpload will not be supported anymore from 1.26.</deprecation>
+    <baseType>sap.ui.core/Control</baseType>
+    <properties>
+        <property name="uploadUrl" type="sap.ui.core/string" group="Misc">
+            <documentation>Url of server we wish to upload to</documentation>
+        </property>
+        <property name="fileName" type="sap.ui.core/string" group="Misc">
+            <documentation>Relative path in model, pointing to property that stores the name of a file.</documentation>
+        </property>
+        <property name="size" type="sap.ui.core/string" group="Misc">
+            <documentation>Relative path in model, pointing to property that stores the size of a file.</documentation>
+        </property>
+        <property name="url" type="sap.ui.core/string" group="Misc">
+            <documentation>Relative path in model, pointing to property that stores the url at which the file is stored.</documentation>
+        </property>
+        <property name="uploadedDate" type="sap.ui.core/string" group="Misc">
+            <documentation>Relative path in model, pointing to property that stores the date at which a file was uploaded.</documentation>
+        </property>
+        <property name="contributor" type="sap.ui.core/string" group="Misc">
+            <documentation>Relative path in model, pointing to property that stores the name of the person who uploaded the file.</documentation>
+        </property>
+        <property name="fileExtension" type="sap.ui.core/string" group="Misc">
+            <documentation>Relative path in model, pointing to property that stores the uploaded files extension. Note: either fileExtension or mimeType may be used, but mimeType is preferable.</documentation>
+        </property>
+        <property name="mimeType" type="sap.ui.core/string" group="Misc">
+            <documentation>Relative path in model, pointing to property that stores the file's mimeType. Note: either fileExtension or mimeType may be used, but mimeType is preferable.</documentation>
+        </property>
+        <property name="items" type="sap.ui.core/string" group="Misc">
+            <documentation>The base path in the model for the control. Avoid trailing forward slashes in value, as per default value.</documentation>
+        </property>
+        <property name="uploadEnabled" type="sap.ui.core/boolean" group="Misc">
+            <documentation>This property enables &amp; disables the ability to upload a file</documentation>
+        </property>
+        <property name="fileId" type="sap.ui.core/string" group="Misc">
+            <documentation>An identifier property name that is used to uniquely reference the file on the server.</documentation>
+        </property>
+        <property name="xsrfToken" type="sap.ui.core/string" group="Misc">
+            <documentation>The XSRF token the control should use when making the upload request. If it is not set, the control will not use a security token.</documentation>
+        </property>
+        <property name="useMultipart" type="sap.ui.core/boolean" defaultValue="false" group="Misc">
+            <documentation>Indicates if the control should send multipart/form data request when uploading</documentation>
+        </property>
+        <property name="acceptRequestHeader" type="sap.ui.core/string" defaultValue="application/json" group="Misc">
+            <documentation>The Accept request header the control should use when sending the upload request</documentation>
+        </property>
+        <property name="encodeUrl" type="sap.ui.core/string" group="Misc">
+            <documentation>Url of server that will base64 encode the file</documentation>
+        </property>
+        <property name="renameEnabled" type="sap.ui.core/boolean" group="Misc">
+            <documentation>Indicates whether rename functionality should be enabled</documentation>
+        </property>
+        <property name="deleteEnabled" type="sap.ui.core/boolean" group="Misc">
+            <documentation>Indicates whether delete functionality should be enabled</documentation>
+        </property>
+        <property name="multipleSelectionEnabled" type="sap.ui.core/boolean" defaultValue="true" group="Misc">
+            <documentation>Indicates whether the user is allowed to select multiple file at once from his desktop</documentation>
+        </property>
+        <property name="showNoData" type="sap.ui.core/boolean" defaultValue="false" group="Misc">
+            <documentation>Show the label "No data" when the control doesn't have files</documentation>
+        </property>
+        <property name="sequentialUploadsEnabled" type="sap.ui.core/boolean" defaultValue="false" group="Misc">
+            <documentation>Indicates whether file uploads should occur sequentially or in parallel. The default is in parallel.</documentation>
+        </property>
+        <property name="showAttachmentsLabel" type="sap.ui.core/boolean" defaultValue="true" group="Misc">
+            <documentation>Show the Attachments count label</documentation>
+        </property>
+        <property name="useEditControls" type="sap.ui.core/boolean" defaultValue="false" group="Misc">
+            <documentation>Show the edit user controls to rename and delete files (same as deleteEnabled and renameEnabled)</documentation>
+        </property>
+        <property name="showAttachmentsLabelInEditMode" type="sap.ui.core/boolean" defaultValue="true" group="Misc">
+            <documentation>Show the Attachments label in edit mode</documentation>
+            <deprecation since="1.21.0">This method is deprecated now. Use the showAttachmentsLabel instead</deprecation>
+        </property>
+        <property name="editMode" type="sap.ui.core/boolean" defaultValue="false" group="Misc">
+            <documentation>Property to allow toggling between edit and view screens.</documentation>
+            <deprecation since="1.21.0">This method is deprecatd now. If you want to prevent edit you can use useEditControls property or the deleteEnabled, renameEnabed and uploadEnabled properties</deprecation>
+        </property>
+    </properties>
+    <events>
+        <event name="deleteFile" allowPreventDefault="false">
+            <documentation>Fired when a file deletion event occurs typically by clicking a the delete icon. The file descriptor json for the file to be deleted is passed in the event data</documentation>
+        </event>
+        <event name="renameFile" allowPreventDefault="false">
+            <documentation>Fired when a file is renamed. The file descripter json for the file to be renamed is passed in the event data and also a property, newFilename, that contains the new filename.</documentation>
+        </event>
+        <event name="uploadFile" allowPreventDefault="false">
+            <documentation>Fired when a file is uploaded and the response comes back from service. The service response for the file to be added to the list is passed in the event data and the consumer must format it in the correct json structure and pass it back to the control using commitUploadFile method.</documentation>
+        </event>
+        <event name="fileUploadFailed" allowPreventDefault="false">
+            <documentation>Fired when a file fails to upload. The error code and response data is passed in this event. The consumer should handle the error by showing the appropriate message.</documentation>
+        </event>
+        <event name="beforeUploadFile" allowPreventDefault="false">
+            <documentation>Fired just before the control is about to make a file upload request. The data passed is the file object selected by the user. You may handle this event to attach custom headers for example if your service implementation requires it.</documentation>
+        </event>
+        <event name="saveClicked" allowPreventDefault="false">
+            <documentation>Fired when the save button is clicked. The consumer should handle the event and save all the file renames to backend.</documentation>
+            <deprecation since="1.21.1">This method is deprecated now. The rename or delete event is enough and should be use to commit the action immediatly</deprecation>
+        </event>
+        <event name="cancelClicked" allowPreventDefault="false">
+            <documentation>Fired when the cancel button is clicked. The consumer may handle the event if required.</documentation>
+            <deprecation since="1.21.1">This method is deprecated now</deprecation>
+        </event>
+    </events>
+    <aggregations>
+        <aggregation name="_fileList" type="sap.m/List" cardinality="0..1" visibility="hidden">
+            <documentation>Aggregation that displays the list of items currently uploaded or uploading</documentation>
+        </aggregation>
+        <aggregation name="uploadProgressLabel" type="sap.m/Label" cardinality="0..1">
+            <documentation>Aggregation that displays the current number of items that are being uploaded</documentation>
+        </aggregation>
+        <aggregation name="attachmentNumberLabel" type="sap.m/Label" cardinality="0..1">
+            <documentation>Aggregation that shows the number of files currently uploaded</documentation>
+            <deprecation since="1.21.0">This aggregation is deprecatd now. The label is part of the ToolBar</deprecation>
+        </aggregation>
+        <aggregation name="toolBar" type="sap.m/Toolbar" cardinality="0..1">
+            <documentation>Aggregation that contains the buttons for adding</documentation>
+        </aggregation>
+    </aggregations>
+    <methods>
+        <method name="removeFile" type="sap.ui.core/void">
+            <documentation>Remove the specified file from the control</documentation>
+        </method>
+        <method name="abandonPendingRenames" type="sap.ui.core/void">
+            <documentation>Abandon any pending renames to update the filenames</documentation>
+        </method>
+        <method name="commitPendingRenames" type="sap.ui.core/void">
+            <documentation>Commit the pending renames so the filename is updated in the model</documentation>
+        </method>
+        <method name="abandonPendingRename" type="sap.ui.core/void">
+            <documentation>Abandon the pending rename of a specific file</documentation>
+        </method>
+        <method name="commitPendingRename" type="sap.ui.core/void">
+            <documentation>Commit the pending rename of a specific file</documentation>
+        </method>
+        <method name="commitFileUpload" type="sap.ui.core/void">
+            <documentation>Commit the file upload by sending the control the JSON structure of the file descriptor.</documentation>
+        </method>
+        <method name="setCustomHeader" type="sap.ui.core/void">
+            <documentation>method to set a custom header for a request. Takes the header name and the value as parameters.</documentation>
+        </method>
+        <method name="removeCustomHeader" type="sap.ui.core/void">
+            <documentation>method to remove request headers set. Takes name of header to remove.</documentation>
+        </method>
+        <method name="preventEdits" type="sap.ui.core/void">
+            <documentation>Enable/Disable editing, typically to be used during saves or deletes and other server updates</documentation>
+        </method>
+        <method name="isUploading" type="sap.ui.core/void">
+            <documentation>method to check if control is currently uploading a file</documentation>
+        </method>
+        <method name="abortUpload" type="sap.ui.core/void">
+            <documentation>Method to abort an upload. If a file parameter is supplied only the file will be aborted. Otherwise, all pending uploads are aborted.</documentation>
+        </method>
+    </methods>
+</control>

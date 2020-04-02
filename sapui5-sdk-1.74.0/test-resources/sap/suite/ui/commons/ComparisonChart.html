@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ComparisonChart - sap.suite.ui.commons</title>
+
+<!-- UI5 Bootstrap -->
+<script src="../../../../../resources/sap-ui-core.js"
+        type="text/javascript"
+        id="sap-ui-bootstrap"
+        data-sap-ui-libs="sap.ui.commons,sap.suite.ui.commons,sap.m,sap.ui.ux3"
+        data-sap-ui-theme="sap_bluecrystal"></script>
+
+<style type="text/css">
+	.sapMFlexItem {
+		margin: 1px;
+	}
+
+    .sapMFlexItem.sapMVBox {
+        padding: 8px;
+    }
+    
+</style>
+
+<script src="locationColor.js" ></script>
+
+<script type="text/javascript">
+    jQuery.sap.initMobile();
+
+	function _fnIsNumber(n) {
+	    return typeof n == 'number' && !isNaN(n) && isFinite(n);
+	};
+
+    var oConfCCData = {
+        sizes: {
+            L: sap.suite.ui.commons.InfoTileSize.L,
+            M: sap.suite.ui.commons.InfoTileSize.M,
+            S: sap.suite.ui.commons.InfoTileSize.S,
+            Auto: sap.suite.ui.commons.InfoTileSize.Auto
+        },
+        scale: "M",
+        view: sap.suite.ui.commons.ComparisonChartView.Normal,
+        data: [
+            { title: "Americas", value: 10, color: "Good", displayValue:"10M" },
+            { title: "EMEA", value: 50, color: "Good", displayValue:"50M" },
+            { title: "APAC", value: -20, color: "Error" }
+        ],
+		press: function (oEvent) {
+			sap.m.MessageToast.show("The chart is pressed.");
+		},
+		tooltip: "Cumulative Totals\n{AltText}\ncalculated in EURO",
+		shrinkable: false
+    };
+
+    var oConfModel = new sap.ui.model.json.JSONModel();
+    oConfModel.setData(oConfCCData);
+    sap.ui.getCore().setModel(oConfModel);
+
+    var aCCs = [];
+    var aColorSelects = [];
+    var fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The comparison chart is pressed.");
+	};
+	
+	var fnBPress = function (oEvent) {
+		sap.m.MessageToast.show("The " + oEvent.getSource().getTitle() + " bar is pressed.");
+	}
+    
+    var buildCC = function(sSize, sText) {
+	    var oCmprsDataTmpl = new sap.suite.ui.commons.ComparisonData({
+	        title: "{title}",
+	        value: "{value}",
+	        color: "{color}",
+	        displayValue: "{displayValue}",
+			press: fnBPress
+		});
+	    
+	    var oCmprsChrtTmpl = new sap.suite.ui.commons.ComparisonChart("comp-chart-"+sSize, {
+	        size: "{/sizes/"+ sSize +"}",
+	        scale: "{/scale}",
+	        width: "{/width}",
+	        height: "{/height}",
+	        view: "{/view}",
+	        data: {
+	        	template : oCmprsDataTmpl,
+	        	path : "/data"
+	        },
+    		press: fnPress,
+	        tooltip: "{/tooltip}",
+	        colorPalette: "{/colorPalette}",
+	        shrinkable: "{/shrinkable}"
+	    });
+
+	    aCCs.push(oCmprsChrtTmpl);
+	    
+	    return  new sap.m.FlexBox("cc-fb"+sSize, {
+	    	items: [oCmprsChrtTmpl],
+	    	height: "120px",
+       		layoutData: new sap.ui.commons.layout.ResponsiveFlowLayoutData({ minWidth: 200 }) 
+	    });
+    };
+
+    var oCCL = buildCC(sap.suite.ui.commons.InfoTileSize.L, "large");
+    var oCCM = buildCC(sap.suite.ui.commons.InfoTileSize.M, "medium");
+    var oCCS = buildCC(sap.suite.ui.commons.InfoTileSize.S, "small");
+    var oCCA = buildCC(sap.suite.ui.commons.InfoTileSize.Auto, "auto");
+    
+    var oCCForm = new sap.ui.layout.form.SimpleForm("cc-form", { content: [ oCCL, oCCM, oCCS, oCCA ] });
+
+	var fnAdjustHeight = function () {
+        oCCL.$().height(35+oCCL.getItems()[0].$().height());
+        oCCM.$().height(35+oCCM.getItems()[0].$().height());
+        oCCS.$().height(35+oCCS.getItems()[0].$().height());
+        oCCA.$().height(35+oCCA.getItems()[0].$().height());
+	};
+	
+    var oScaleLbl = new sap.m.Label({
+        text: "Scale",
+        labelFor: "scale-value"
+    });
+    
+    var oScaleInput = new sap.m.Input("scale-value", {
+        width: "10rem",
+        placeholder: 'Enter scale ...',
+        value: "{/scale}"
+    });
+    
+    var oViewLbl = new sap.m.Label({
+        text: "View",
+        labelFor: "view-select"
+    });
+
+    var oViewSelect = new sap.m.Select("view-select", {
+        width: "10rem",
+        items: [
+            new sap.ui.core.Item("view-select-none", { 
+                key: "", 
+                text: "Not specified" 
+            }),
+            new sap.ui.core.Item("view-select" + sap.suite.ui.commons.ComparisonChartView.Normal, { 
+                key: sap.suite.ui.commons.ComparisonChartView.Normal, 
+                text: sap.suite.ui.commons.ComparisonChartView.Normal 
+            }),
+            new sap.ui.core.Item("view-select" + sap.suite.ui.commons.ComparisonChartView.Wide, { 
+                key: sap.suite.ui.commons.ComparisonChartView.Wide, 
+                text: sap.suite.ui.commons.ComparisonChartView.Wide 
+            })
+        ],
+        selectedItem: "view-select-none",
+	    change: function(oEvent) {
+            var oSelectedItem = oEvent.getParameter("selectedItem").getKey();
+   		    oConfCCData.view = (""==oSelectedItem) ? undefined : oSelectedItem;
+       		oConfModel.checkUpdate();            
+  		}
+    });
+
+    
+    var oWidthLbl = new sap.m.Label({
+        text: "Width",
+        labelFor: "scale-width"
+    });
+    
+    var patt = new RegExp("^\\d+(px|rem|%|in|cm|mm|em|ex|pt|pc)$");
+    var oWidthInput = new sap.m.Input("scale-width", {
+        width: "10rem",
+        placeholder: 'Enter width ...',
+        liveChange : function(e) {
+            var sEnteredText = e.getParameter("newValue");
+            
+            var oItem = jQuery.sap.byId("scale-width-inner");
+            if (patt.test(sEnteredText)) {
+            	oConfCCData.width = sEnteredText;
+            	oItem.css("color", "black");
+            } else {
+            	oConfCCData.width = "";
+            	if (sEnteredText) {
+            		oItem.css("color", "red");
+            	} else {
+            		oItem.css("color", "black");
+            	}
+            	
+            }
+            oConfModel.checkUpdate();
+        }
+    });
+    
+    var oHeightLbl = new sap.m.Label({
+        text: "Height",
+        labelFor: "scale-height"
+    });
+    
+    var oHeightInput = new sap.m.Input("scale-height", {
+        width: "10rem",
+        placeholder: 'Enter height ...',
+        liveChange : function(e) {
+            var sEnteredText = e.getParameter("newValue");
+            
+            var oItem = jQuery.sap.byId("scale-width-inner");
+            if (patt.test(sEnteredText)) {
+            	oConfCCData.height = sEnteredText;
+            	oItem.css("color", "black");
+            } else {
+            	oConfCCData.height = "";
+            	if (sEnteredText) {
+            		oItem.css("color", "red");
+            	} else {
+            		oItem.css("color", "black");
+            	}
+            	
+            }
+            oConfModel.checkUpdate();
+        }
+    });
+
+    var oCPLbl = new sap.m.Label({
+        text: "Colors",
+        labelFor: "cp-value"
+    });
+    
+    var oCPInput = new sap.m.Input("cp-value", {
+        width: "100%",
+        enabled: false,
+        placeholder: 'Enter colors via space ...',
+        value: "#5cbae6 #b6d957 #fac364 #8cd3ff #d998cb #f2d249 #93b9c6 #ccc5a8 #52bacc #dbdb46 #98aafb",
+        liveChange : function(e) {
+            var sEnteredText = e.getParameter("value");
+            oConfCCData.colorPalette = sEnteredText.split(" ");
+            oConfModel.checkUpdate();
+        }
+    });
+    
+    var oTooltipLbl = new sap.m.Label({
+		text : "Tooltip",
+		labelFor : "tooltip"
+	});
+
+    var oTooltipInput = new sap.m.TextArea("tooltip", {
+    	rows: 3,
+        placeholder: 'Enter tooltip (use {AltText} for inserting the default text) ...',
+        value: "{/tooltip}"
+    });
+
+    var oTooltipSwtchLbl = new sap.m.Label({
+		text : "QuickView Tooltip",
+		labelFor : "tooltip-swtch"
+	});
+
+    var oTooltipSwtch = new sap.m.Switch({ 
+		id: "tooltip-swtch", 
+		state: false,
+		name: "QuickView tooltip",
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			for (var i = 0; i < aCCs.length; i++) {
+				aCCs[i].setTooltip(bState ? 
+						new sap.ui.ux3.QuickView({	content: new sap.m.Text({ text: oTooltipInput.getValue().split("{AltText}").join(aCCs[i].getAltText()) })})
+						: oTooltipInput.getValue());
+			}
+		}
+	});
+
+    var iBIndex = 0;
+
+    var oBAddButton = new sap.m.Button("add-button-b", {
+        width: "10rem",
+		text: "Add Bar",
+		press: function(oEvent) {
+		    iBIndex = 0;
+		    oConfCCData.data.push( { title: "", value: 0, color: "Neutral" } );
+		    fnAdjustHeight();
+            oConfModel.checkUpdate();          
+		}
+	});
+
+	var oPressLbl = new sap.m.Label({ text: "Chart Press Action", labelFor: "press-action" });
+
+	var oPressSwtch = new sap.m.Switch({ 
+		id: "press-action", 
+		state: true,
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			for (var i = 0; i < aCCs.length; i++) {
+				if(bState) {
+					aCCs[i].attachPress(fnPress);
+				} else {
+					aCCs[i].detachPress(fnPress);
+				}
+			}
+		}
+	});
+	
+	var oShrinkableLbl = new sap.m.Label({ text: "Shrinkable", labelFor: "shrinkable" });
+
+	var oShrinkableSwtch = new sap.m.Switch({ 
+		id: "shrinkable", 
+		state: "{/shrinkable}"
+	});
+
+	var oCPSwtchLbl = new sap.m.Label({ text: "Color Palette", labelFor: "cp-switch" });
+
+	var oCPSwtch = new sap.m.Switch({ 
+		id: "cp-switch", 
+		state: false,
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			oCPInput.setEnabled(bState);
+			
+			if (bState) {
+				oConfCCData.colorPalette = oCPInput.getValue().split(" ")
+			} else { 
+				oConfCCData.colorPalette = [];
+			}
+            oConfModel.checkUpdate();
+		}
+	});
+	
+    var oCCSimpleForm = new sap.ui.layout.form.SimpleForm("controls-cc", {
+        maxContainerCols: 2,
+        editable: true,
+        content: [ oScaleLbl, oScaleInput, oTooltipLbl, oTooltipInput,  oTooltipSwtchLbl, oTooltipSwtch, oWidthLbl, oWidthInput, oHeightLbl, oHeightInput, oViewLbl,
+                   oViewSelect, oCPSwtchLbl, oCPSwtch, oCPLbl, oCPInput, new sap.m.Label({ text: "" }), oBAddButton, oPressLbl, oPressSwtch,
+                   oShrinkableLbl, oShrinkableSwtch]
+    });
+
+    var fnBFormFactoryCC = function(sId, oContext) {
+        var sColor = oContext.getProperty("color");
+		var oBRemoveBtn = new sap.m.Button(sId+"-cc-remove-button", {
+            width: "10rem",
+			text: "Remove Bar",
+			press: function(oEvent) {
+			    oConfCCData.data.splice(this._index, 1)
+   				iBIndex = 0;
+			    fnAdjustHeight();
+  		        oConfModel.checkUpdate();            
+				oBAddButton.setEnabled(true);
+			}
+		});
+		oBRemoveBtn._index = iBIndex;
+		
+        var oBTitleInput = new sap.m.Input(sId+"-bar-title", {
+            width: "10rem",
+            placeholder: "Enter title ...",
+            value: { path: "title",	type: new sap.ui.model.type.String() }
+        });
+        oBTitleInput._index = iBIndex;
+        
+        var oBValueInput = new sap.m.Input(sId+"-bar-value", {
+            width: "10rem",
+            placeholder: "Enter value ...",
+            value: { path: "value", type: new sap.ui.model.type.Float({groupingEnabled: false})},
+            liveChange: function(oControlEvent) {
+            	var fVal = parseFloat(oControlEvent.getParameter("newValue"));
+            	oConfCCData.data[this._index].value = _fnIsNumber(fVal) ? fVal : undefined;
+            	oConfModel.checkUpdate(); 
+            }
+        });
+        oBValueInput._index = iBIndex;
+        
+        var oBDisplayValueInput = new sap.m.Input(sId+"-bar-displayValue", {
+            width: "10rem",
+            placeholder: "Enter display value ...",
+            value:"{displayValue}",
+            liveChange: function(oControlEvent) {
+                var fVal = oControlEvent.getParameter("newValue");
+                oConfCCData.data[this._index].displayValue = fVal;
+                oConfModel.checkUpdate(); 
+            }
+        });
+        oBDisplayValueInput._index = iBIndex;
+        
+        var oBColorSelect = new sap.m.Select(sId+"-bar-color", {
+            width: "10rem",
+            items : [
+	            new sap.ui.core.Item(sId+"-bar-color-"+sap.suite.ui.commons.InfoTileValueColor.Neutral, { 
+	                key: sap.suite.ui.commons.InfoTileValueColor.Neutral, 
+	                text: sap.suite.ui.commons.InfoTileValueColor.Neutral 
+	            }),
+	            new sap.ui.core.Item(sId+"-bar-color-"+sap.suite.ui.commons.InfoTileValueColor.Good, { 
+	                key: sap.suite.ui.commons.InfoTileValueColor.Good, 
+	                text: sap.suite.ui.commons.InfoTileValueColor.Good 
+	            }),
+	            new sap.ui.core.Item(sId+"-bar-color-"+sap.suite.ui.commons.InfoTileValueColor.Error, { 
+	                key: sap.suite.ui.commons.InfoTileValueColor.Error, 
+	                text: sap.suite.ui.commons.InfoTileValueColor.Error 
+	            }),
+	                
+	            new sap.ui.core.Item(sId+"-bar-color-"+sap.suite.ui.commons.InfoTileValueColor.Critical, { 
+	                key: sap.suite.ui.commons.InfoTileValueColor.Critical, 
+	                text: sap.suite.ui.commons.InfoTileValueColor.Critical 
+	            })
+	        ],
+            selectedItem: sId+"-bar-color-"+sColor,
+    	    change: function(oEvent) {
+	            var oSelectedItem = oEvent.getParameter("selectedItem");
+       		    oConfCCData.data[this._index].color = oSelectedItem.getKey();
+           		oConfModel.checkUpdate();            
+      		}
+        });
+        oBColorSelect._index = iBIndex;
+
+	    aColorSelects.push(oBColorSelect);
+
+    	var oBPressSwtch = new sap.m.Switch({ 
+    		id: sId + "-press-action", 
+    		state: true,
+    		change: function(oE) {
+    			var bState = oE.getParameter("state");
+    			for (var i = 0; i < aCCs.length; i++) {
+    				if(bState) {
+    					aCCs[i].getData()[this._index].attachPress(fnBPress);
+    				} else {
+    					aCCs[i].getData()[this._index].detachPress(fnBPress);
+    				}
+    			}
+    		}
+    	});
+    	oBPressSwtch._index = iBIndex;
+	    
+        var oBVBox = new sap.m.VBox(sId+"-bar-box", {
+        	height: "500px",
+            items: [
+				oBRemoveBtn,
+            	new sap.m.Label({ text: "Title", labelFor: sId+"-bar-title" }), 
+                oBTitleInput, 
+                new sap.m.Label({ text: "Value", labelFor: sId+"-bar-value" }), 
+                oBValueInput,
+                new sap.m.Label({ text : "Color", labelFor : sId+"-bar-color" }), 
+                oBColorSelect,
+                new sap.m.Label({ text: "DisplayValue", labelFor: sId+"-bar-displayValue" }), 
+                oBDisplayValueInput,
+                new sap.m.Label({ text: "Bar Press Action", labelFor: sId + "-press-action" }),
+                oBPressSwtch
+            ],
+       		layoutData: new sap.ui.commons.layout.ResponsiveFlowLayoutData({ minWidth: 170 })
+        });
+        
+        iBIndex++;
+        return oBVBox;
+    };
+    
+	var oBBoxSimpleForm = new sap.ui.layout.form.SimpleForm("bar-box-form", {
+		content: {
+			path: "/data",
+			factory: fnBFormFactoryCC
+		}
+	})
+
+	var oCCVBox = new sap.m.VBox("vbox-cc", { items: [ oCCSimpleForm , oBBoxSimpleForm ] });
+
+   	new sap.m.Page("initial-page", {
+        showHeader: false,
+        content: [oCCForm, oCCVBox]
+    }).placeAt("content");
+	
+   	setBackgroundColor(oCCForm);
+   	
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+<div id="content" style="height:100%"></div>
+</body>
+</html>

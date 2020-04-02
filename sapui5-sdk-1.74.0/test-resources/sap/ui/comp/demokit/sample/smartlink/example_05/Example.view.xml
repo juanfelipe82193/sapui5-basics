@@ -1,0 +1,156 @@
+<core:View xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout"
+		   xmlns:smartTable="sap.ui.comp.smarttable" xmlns:sl="sap.ui.comp.navpopover"
+		   xmlns:m="sap.m" xmlns="sap.ui.comp.navpopover"
+		   controllerName="sap.ui.comp.sample.smartlink.example_05.Example">
+
+	<l:VerticalLayout class="sapUiContentPadding" width="100%">
+		<l:content>
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiSmallMarginTop,	sapUiLargeMarginBottom"
+							text="The Name property is annotated with the com.sap.vocabularies.Common.v1.SemanticObject annotation."/>
+					<m:Text class="sapUiSmallMarginTop, sapUiLargeMarginBottom"
+							text="Link personalization is disabled."/>
+				</l:content>
+			</l:VerticalLayout>
+
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiLargeMarginTop"
+							text="Popover of SmartLink shows main navigation link and additional content"/>
+				</l:content>
+			</l:VerticalLayout>
+			<SmartLink text="{Name}"
+					   enableAvailableActionsPersonalization="false"
+					   navigationTargetsObtained="onNavigationTargetsObtainedMainAndContent"
+					   forceLinkRendering="true"/>
+
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiLargeMarginTop"
+							text="Popover of SmartLink shows main navigation link and action link"/>
+				</l:content>
+			</l:VerticalLayout>
+			<SmartLink text="{Name}"
+					   enableAvailableActionsPersonalization="false"
+					   navigationTargetsObtained="onNavigationTargetsObtainedMainAndAction"
+					   forceLinkRendering="true"/>
+
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiLargeMarginTop"
+							text="Popover of SmartLink shows additional content and action link"/>
+				</l:content>
+			</l:VerticalLayout>
+			<SmartLink text="{Name}"
+					   enableAvailableActionsPersonalization="false"
+					   navigationTargetsObtained="onNavigationTargetsObtainedContentAndAction"
+					   forceLinkRendering="true"/>
+
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiLargeMarginTop"
+							text="Popover of SmartLink shows main navigation link, additional content and action link"/>
+				</l:content>
+			</l:VerticalLayout>
+			<SmartLink text="{Name}"
+					   enableAvailableActionsPersonalization="false"
+					   navigationTargetsObtained="onNavigationTargetsObtainedMainAndContentAndAction"
+					   forceLinkRendering="true"/>
+
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiLargeMarginTop" text="Popover of SmartLink shows additional content only"/>
+				</l:content>
+			</l:VerticalLayout>
+			<SmartLink text="{Name}"
+					   enableAvailableActionsPersonalization="false"
+					   navigationTargetsObtained="onNavigationTargetsObtainedOnlyContent" forceLinkRendering="true"/>
+
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiLargeMarginTop"
+							text="Popover of SmartLink shows 'No content available'"/>
+				</l:content>
+			</l:VerticalLayout>
+			<SmartLink text="{Name}"
+					   enableAvailableActionsPersonalization="false"
+					   navigationTargetsObtained="onNavigationTargetsObtainedNothing" forceLinkRendering="true"/>
+
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiLargeMarginTop"
+							text="SmartLink embedded into SmartTable. With a formatter function of property 'ignoreLinkRendering' application can distinguish for each SmartLink whether it is active or not."/>
+				</l:content>
+			</l:VerticalLayout>
+			<smartTable:SmartTable tableType="ResponsiveTable"
+								   entitySet="ProductCollection" useVariantManagement="false"
+								   useTablePersonalisation="false" showRowCount="false"
+								   useExportToExcel="false">
+				<m:Table items="{/ProductCollection}">
+					<m:columns>
+						<m:Column>
+							<m:customData>
+								<core:CustomData key="p13nData"
+												 value='\{"columnKey": "Name", "leadingProperty": "Name"}'/>
+							</m:customData>
+							<m:Label text="Name"/>
+						</m:Column>
+					</m:columns>
+					<m:items>
+						<m:ColumnListItem>
+							<m:cells>
+								<sl:SmartLink text="{Name}"
+											  enableAvailableActionsPersonalization="false"
+											  ignoreLinkRendering="{path: 'Name', formatter:'.formatter.ignoreLinkRendering'}"
+											  navigationTargetsObtained="onNavigationTargetsObtainedMainAndContentAndAction"
+											  forceLinkRendering="true"/>
+							</m:cells>
+						</m:ColumnListItem>
+					</m:items>
+				</m:Table>
+			</smartTable:SmartTable>
+
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiLargeMarginTop"
+							text="The 'beforePopoverOpens' handler performs asynchronous logic"/>
+				</l:content>
+			</l:VerticalLayout>
+			<smartTable:SmartTable tableType="ResponsiveTable"
+								   entitySet="ProductCollection" enableAutoBinding="true"
+								   useVariantManagement="false" useTablePersonalisation="false"
+								   showRowCount="false" useExportToExcel="false">
+				<smartTable:semanticObjectController>
+					<SemanticObjectController enableAvailableActionsPersonalization='\{"Name":false\}'
+											  beforePopoverOpens="onBeforePopoverOpens"
+											  navigationTargetsObtained="onNavigationTargetsObtainedMainAndContentAndAction"
+											  forceLinkRendering='\{"Name":true\}'/>
+				</smartTable:semanticObjectController>
+			</smartTable:SmartTable>
+
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiLargeMarginTop"
+							text="The 'navigationTargetsObtained' handler removes 'href' of main navigation link. Then the link on the popover header becomes inactive."/>
+				</l:content>
+			</l:VerticalLayout>
+			<SmartLink text="{Name}"
+					   enableAvailableActionsPersonalization="false"
+					   navigationTargetsObtained="onNavigationTargetsObtainedOnlyMainNavigationId"
+					   forceLinkRendering="true"/>
+
+		</l:content>
+	</l:VerticalLayout>
+
+</core:View>

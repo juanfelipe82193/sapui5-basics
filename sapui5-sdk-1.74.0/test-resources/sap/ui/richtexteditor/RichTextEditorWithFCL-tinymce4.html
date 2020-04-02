@@ -1,0 +1,392 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>RichTextEditor - sap.ui.richtexteditor</title>
+
+<script src="../../../../resources/sap-ui-core.js" type="text/javascript" charset="UTF-8" id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.richtexteditor, sap.m, sap.ui.layout, sap.f">
+
+</script>
+
+<script>
+    jQuery.sap.require("sap.ui.richtexteditor.RichTextEditor");
+
+    var oApp = new sap.m.App;
+
+    // Page with List
+
+    var oPageWithList = new sap.m.Page("listOverview", {
+		title : "List Overview"
+	});
+
+    var oList = new sap.m.List({
+		id : "sapMList001",
+		inset : false,
+		headerText : "List Overview",
+		footerText : "These are just some list examples and this won't show all possible combinations."
+	});
+
+    function bindListData(data, itemTemplate, list) {
+		var oModel = new sap.ui.model.json.JSONModel();
+		// set the data for the model
+		oModel.setData(data);
+		// set the model to the list
+		list.setModel(oModel);
+
+		// create a CustomData template, set its key to "answer" and bind its value to the answer data
+		var oDataTemplate = new sap.ui.core.CustomData({
+			key : "xyz"
+		});
+
+		oDataTemplate.bindProperty("value", "press");
+
+
+		// add the CustomData template to the item template
+		itemTemplate.addCustomData(oDataTemplate);
+
+		var oDataTemplate2 = new sap.ui.core.CustomData({
+			key : "abc"
+		});
+
+		oDataTemplate2.bindProperty("value", "detailPress");
+
+
+		// add the CustomData template to the item template
+		itemTemplate.addCustomData(oDataTemplate2);
+
+		// bind Aggregation
+		list.bindAggregation("items", "/navigation", itemTemplate);
+	}
+
+    var dataOverview = {
+		navigation : [ 
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            },
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            },
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            },
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            },
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            },
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            },
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            },
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            }
+            ,
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            },
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            },
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            },
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            },
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            },
+            {
+                title : "ListItem",
+                type : "Navigation",
+                press : 'standardListThumb'
+            }
+        ]
+	};
+
+    var oItemTemplateOverview = new sap.m.StandardListItem({
+		title : "{title}",
+		type : "{type}",
+		unread: "{unread}"
+	});
+
+    bindListData(dataOverview, oItemTemplateOverview, oList);
+
+    oPageWithList.addContent(oList);
+
+
+
+    // Page with RichTextEditor, Form, Input, TextArea
+
+    var oRichTextEditor = new sap.ui.richtexteditor.RichTextEditor("myRTE", {
+        editorType : sap.ui.richtexteditor.RichTextEditor.EDITORTYPE_TINYMCE4,
+        width : "100%",
+        height : "300px",
+        showGroupClipboard : true,
+        showGroupStructure : true,
+        showGroupFont : true,
+        showGroupInsert : true,
+        showGroupLink : true,
+        showGroupUndo : true,
+        tooltip : "My Tooltip"
+    });
+
+    var oLayout = new sap.ui.layout.form.FormLayout("myLayout");
+
+    var oForm = new sap.ui.layout.form.Form("myForm",{
+        title: new sap.ui.core.Title({text: "Form", tooltip: "Title tooltip"}),
+        tooltip: "Form tooltip",
+        editable: true,
+        layout: oLayout,
+        formContainers: [
+            new sap.ui.layout.form.FormContainer("C1",{
+                title: "Form Container",
+                formElements: [
+                    new sap.ui.layout.form.FormElement("F1C1E1", {
+                        label: "Name",
+                        fields: [new sap.m.Input({value: "Name", required: true})]
+                    }),
+                    new sap.ui.layout.form.FormElement({
+                        label: "Date of birth",
+                        fields: [new sap.m.DatePicker()]
+                    })
+                ]
+            })
+        ]
+    });
+
+    var oInput1 = new sap.m.Input({placeholder : "Input with placeholder"}),
+        oInput2 = new sap.m.Input({value: "Input with value"});
+
+    var oTextArea = new sap.m.TextArea({
+        value: "100% width TextArea",
+        width: "100%",
+        rows: 5
+    });
+
+    var oPageWithRichTextEditor = new sap.m.Page("pageWithRichTextEditor", {
+        landmarkInfo: new sap.m.PageAccessibleLandmarkInfo(),
+        title: "Page",
+        showNavButton: true,
+        contentOnlyBusy: true,
+        content: [
+            oInput1,
+            oInput2,
+            oTextArea,
+            oRichTextEditor,
+            oForm
+        ]
+    });
+
+
+
+    //Page with Table
+
+	var aData = [
+		{id: Math.random(), lastName: "Dente", name: "Al", checked: true, linkText: "www.sap.com", href: "http://www.sap.com", src: "employee", gender: "male", rating: 4, money: 5.67, birthday: "1984-06-01", currency: "EUR", type: "Inactive"},
+		{id: Math.random(), lastName: "Friese", name: "Andy", checked: true, linkText: "www.gogle.de", href: "http://www.gogle.de", src: "leads", gender: "male", rating: 2, money: 10.45, birthday: "1975-01-01", currency: "EUR", type: "Inactive"},
+		{id: Math.random(), lastName: "Mann", name: "Anita", checked: false, linkText: "www.kicker.de", href: "http://www.kicker.de", src: "employee", gender: "female", rating: 3, money: 1345.212, birthday: "1987-01-07", currency: "EUR", type: "Inactive"},
+		{id: Math.random(), lastName: "Schutt", name: "Doris", checked: true, linkText: "www.facebook.de", href: "http://www.facebook.de", src: "employee", gender: "female", rating: 4, money: 1.1, birthday: "2001-03-01", currency: "USD", type: "Inactive"},
+		{id: Math.random(), lastName: "Open", name: "Doris", checked: true, linkText: "www.spiegel.de", href: "http://www.spiegel.de", src: "doctor", gender: "female", rating: 2, money: 55663.1, birthday: "1953-01-04", currency: "USD", type: "Inactive"},
+		{id: Math.random(), lastName: "Dewit", name: "Kenya", checked: false, linkText: "www.gogle.de", href: "http://www.gogle.de", src: "employee", gender: "female", rating: 3, money: 34.23, birthday: "1957-01-01", currency: "EUR", type: "Inactive"},
+		{id: Math.random(), lastName: "Zar", name: "Lou", checked: true, linkText: "www.facebook.de", href: "http://www.facebook.de", src: "employee", gender: "male", rating: 1, money: 123, birthday: "1965-02-08", currency: "EUR", type: "Inactive"},
+		{id: Math.random(), lastName: "Burr", name: "Tim", checked: true, linkText: "www.spiegel.de", href: "http://www.spiegel.de", src: "leads", gender: "male", rating: 2, money: 678.45, birthday: "1978-08-11", currency: "DEM", type: "Inactive"},
+		{id: Math.random(), lastName: "Hughes", name: "Tish", checked: true, linkText: "www.spiegel.de", href: "http://www.spiegel.de", src: "employee", gender: "male", rating: 5, money: 123.45, birthday: "1972-03-04", currency: "EUR", type: "Inactive"},
+	];
+
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData({modelData: aData});
+
+	var aColumns = [
+		new sap.m.Column({
+			header : new sap.m.Label({
+				text : "LastName"
+			})
+		}),
+		new sap.m.Column({
+			header : new sap.m.Label({
+				text : "FirstName"
+			})
+		}),
+		new sap.m.Column({
+			hAlign: "Center",
+			header : new sap.m.Label({
+				text : "Available"
+			})
+		}),
+		new sap.m.Column({
+			header : new sap.m.Link({
+				text : "Website"
+			}),
+			minScreenWidth : "XXLarge",
+			popinDisplay : "Inline",
+			demandPopin : true
+		}),
+		new sap.m.Column({
+			hAlign: "Center",
+			header : new sap.m.Label({
+				text : "Image"
+			}),
+			minScreenWidth : "Phone",
+		}),
+		new sap.m.Column({
+			header : new sap.m.Label({
+				text : "Raiting"
+			}),
+			minScreenWidth : "Tablet",
+			popinDisplay : "WithoutHeader",
+			demandPopin : true
+		}),
+		new sap.m.Column({
+			header : new sap.m.Label({
+				text : "Birthday"
+			}),
+			minScreenWidth: "800px"
+		}),
+		new sap.m.Column({
+			hAlign: "End",
+			header : new sap.m.Label({
+				text : "Salary"
+			}),
+			minScreenWidth : "Desktop",
+			popinDisplay : "Inline",
+			demandPopin : true
+		}),
+	];
+
+	var oTemplate = new sap.m.ColumnListItem({
+		vAlign: "Middle",
+		type : "{type}",
+		cells : [
+			new sap.m.Text({
+				text : "{lastName}",
+				wrapping : false
+			}),
+			new sap.m.Text({
+				text : "{name}",
+				wrapping : false
+			}),
+			new sap.m.CheckBox({
+				selected: "{checked}"
+			}),
+			new sap.m.Link({
+				text: "{linkText}"
+			}),
+			new sap.ui.core.Icon({
+				src : "sap-icon://{src}",
+				decorative: false,
+				press: function() {}
+			}),
+			new sap.m.RatingIndicator({
+				value: "{rating}"
+			}),
+			new sap.m.DatePicker({
+				value : "{birthday}",
+				valueFormat : "yyyy-MM-dd",
+				displayFormat : "dd.MM.yyyy"
+			}),
+			new sap.m.Text({
+				text : "{money} EUR",
+			}),
+		]
+	});
+
+	var oTable = new sap.m.Table({
+		growing: true,
+		growingThreshold: 5,
+		growingScrollToLoad : true,
+		footerText : "Static table footer text",
+		headerToolbar : new sap.m.Toolbar({
+            content : [
+                new sap.m.Title({
+                    text : "Table"
+                }),
+                new sap.m.ToolbarSpacer(),
+                new sap.m.Button({
+                    tooltip: "View Settings",
+                    icon: "sap-icon://drop-down-list"
+                }),
+                new sap.m.Button({
+                    tooltip: "Personalization Settings",
+                    icon: "sap-icon://action-settings"
+                })
+            ]
+        }),
+		infoToolbar : new sap.m.Toolbar({
+            active : true,
+            content : [
+                new sap.m.ToolbarSpacer(),
+                new sap.ui.core.Icon({
+                    src : "sap-icon://add-filter",
+                    decorative: false,
+                    press: function() {}
+                })
+            ]
+        }),
+		columns : aColumns
+	});
+
+	oTable.setModel(oModel);
+	oTable.bindItems({
+		path: "/modelData",
+		template : oTemplate,
+		key: "id"
+	});
+
+	var oPageWithTable = new sap.m.Page({
+		enableScrolling : true,
+		content : [oTable]
+	});
+
+
+    //Flexible Column Layout
+
+    var oFCL = new sap.f.FlexibleColumnLayout("fcl", {
+        beginColumnPages: [ oPageWithList ],
+        midColumnPages: [ oPageWithRichTextEditor ],
+        endColumnPages: [ oPageWithTable ],
+        layout: sap.f.LayoutType.ThreeColumnsMidExpanded
+    });
+
+
+    oApp.addPage(oFCL).placeAt("content");
+
+</script>
+
+</head>
+<body class="sapUiBody">
+	<div id="content"></div>
+</body>
+</html>

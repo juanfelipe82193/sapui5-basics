@@ -1,0 +1,256 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Side Effect Annotations: Examples</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="You define side effects either in the *MPC_EXT class or in the local annotation file."><meta name="description" content="You define side effects either in the *MPC_EXT class or in the local annotation file."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"955ae316856a4dcdbe07a1dbf584fa98.html","previousTopicHref":"18b17bdd49d1436fa9172cbb01e26544.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio61cf21d50ed34cbf888713496c618904"><h1 class="title topictitle1" hidden>Side Effect Annotations: Examples</h1><div class="body conbody"><p class="shortdesc" hidden>You define side effects either in the *<samp class="ph codeph">MPC_EXT</samp> class or in the local
+annotation file.</p>
+<div class="section" id="loio61cf21d50ed34cbf888713496c618904__section_msf_hlk_lz"><section class="section" type="Example: Annotating side effects in the method DEFINE of the class CL_MM_PUR_PO_AI_MAINT_MPC_EXT"><h2 class="section_title" style="font-size: 1.15em;">Example: Annotating side effects in the method <samp class="ph codeph">DEFINE</samp> of the class <samp class="ph codeph">CL_MM_PUR_PO_AI_MAINT_MPC_EXT</samp></h2>
+
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">  
+* define Side Effects for Purchase Order:
+    DATA lo_ann_target TYPE REF TO /iwbep/if_mgw_vocan_ann_target.   &quot; Vocabulary Annotation Target                     &quot;#EC NEEDED
+    DATA lo_annotation TYPE REF TO /iwbep/if_mgw_vocan_annotation.   &quot; Vocabulary Annotation                            &quot;#EC NEEDED
+    DATA lo_collection TYPE REF TO /iwbep/if_mgw_vocan_collection.   &quot; Vocabulary Annotation Collection                 &quot;#EC NEEDED
+    DATA lo_function   TYPE REF TO /iwbep/if_mgw_vocan_function.     &quot; Vocabulary Annotation Function                   &quot;#EC NEEDED
+    DATA lo_fun_param  TYPE REF TO /iwbep/if_mgw_vocan_fun_param.    &quot; Vocabulary Annotation Function Parameter         &quot;#EC NEEDED
+    DATA lo_property   TYPE REF TO /iwbep/if_mgw_vocan_property.     &quot; Vocabulary Annotation Property                   &quot;#EC NEEDED
+    DATA lo_record     TYPE REF TO /iwbep/if_mgw_vocan_record.       &quot; Vocabulary Annotation Record                     &quot;#EC NEEDED
+    DATA lo_reference  TYPE REF TO /iwbep/if_mgw_vocan_reference.    &quot; Vocabulary Annotation Reference
+ 
+ 
+    lo_reference = vocab_anno_model-&gt;create_vocabulary_reference( iv_vocab_id = &apos;/IWBEP/VOC_COMMON&apos;
+                                                                  iv_vocab_version = &apos;0001&apos;).
+    lo_reference-&gt;create_include( iv_namespace = &apos;com.sap.vocabularies.Common.v1&apos; ).
+    lo_reference = vocab_anno_model-&gt;create_vocabulary_reference( iv_vocab_id = &apos;/IWBEP/VOC_CORE&apos;
+                                                                  iv_vocab_version = &apos;0001&apos;).
+    lo_reference-&gt;create_include( iv_namespace = &apos;Org.OData.Core.V1&apos; ).
+ 
+    lo_ann_target = vocab_anno_model-&gt;create_annotations_target( &apos;MM_PUR_PO_AI_MAINTAIN.C_PurchaseOrderEnhWDType&apos; ) ##NO_TEXT . &quot;Add annotation term for VIPs introduced
+ 
+    lo_annotation = lo_ann_target-&gt;create_annotation( iv_term = &apos;com.sap.vocabularies.Common.v1.SideEffects&apos; ) ##NO_TEXT .
+ 
+    lo_record     = lo_annotation-&gt;create_record( )  ##NO_TEXT.
+    lo_property   = lo_record-&gt;create_property( &apos;SourceProperties&apos; )   ##NO_TEXT.
+    lo_collection = lo_property-&gt;create_collection( ).
+ 
+    lo_collection-&gt;create_simple_value( )-&gt;set_property_path( &apos;Supplier&apos; )  ##NO_TEXT .
+    lo_collection-&gt;create_simple_value( )-&gt;set_property_path( &apos;CompanyCode&apos; )  ##NO_TEXT .
+    lo_collection-&gt;create_simple_value( )-&gt;set_property_path( &apos;DocumentCurrency&apos; )  ##NO_TEXT .
+    lo_collection-&gt;create_simple_value( )-&gt;set_property_path( &apos;PurchasingGroup&apos; )  ##NO_TEXT.
+    lo_collection-&gt;create_simple_value( )-&gt;set_property_path( &apos;PurchasingOrganization&apos; )  ##NO_TEXT.</pre></aside>
+</section></div>
+<div class="section" id="loio61cf21d50ed34cbf888713496c618904__section_rmp_rlk_lz"><section class="section" type="Example: User changes a source property and the system refreshes the price"><h2 class="section_title" style="font-size: 1.15em;">Example: User changes a source property and the system refreshes the price</h2>
+
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&lt;Annotations Target=&quot;NAMESPACE.ENTITYTYPE&quot;&gt;
+&lt;Annotation Term=&quot;com.sap.vocabularies.Common.v1.SideEffects&quot; Qualifier=&quot;PriceChanged&quot;&gt;
+    &lt;Record&gt;
+        &lt;PropertyValue Property=&quot;SourceProperties&quot;&gt;
+            &lt;Collection&gt;
+                &lt;PropertyPath&gt;Amount&lt;/PropertyPath&gt;
+                &lt;PropertyPath&gt;Discount&lt;/PropertyPath&gt;
+                &lt;PropertyPath&gt;Product&lt;/PropertyPath&gt;
+            &lt;/Collection&gt;
+        &lt;/PropertyValue&gt;
+      &lt;PropertyValue Property=&quot;TargetProperties&quot;&gt;
+         &lt;Collection&gt;
+            &lt;PropertyPath&gt;Price&lt;/PropertyPath&gt;
+         &lt;/Collection&gt;
+      &lt;/PropertyValue&gt;
+        &lt;PropertyValue Property=&quot;EffectTypes&quot; EnumMember=&quot;ValueChange&quot; /&gt;
+    &lt;/Record&gt;
+&lt;/Annotation&gt;
+&lt;/Annotations&gt;</pre></aside>
+</section></div>
+<div class="section" id="loio61cf21d50ed34cbf888713496c618904__section_ukx_pmk_lz"><section class="section" type="Example: User changes the supplier and the system refreshes the 1:1 navigation toSupplier"><h2 class="section_title" style="font-size: 1.15em;">Example: User changes the supplier and the system refreshes the 1:1 navigation toSupplier</h2>
+
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&lt;Annotations Target=&quot;NAMESPACE.ENTITYTYPE&quot;&gt;
+&lt;Annotation Term=&quot;com.sap.vocabularies.Common.v1.SideEffects&quot; Qualifier=&quot;SupplierChanged&quot;&gt;
+    &lt;Record&gt;
+        &lt;PropertyValue Property=&quot;SourceProperties&quot;&gt;
+            &lt;Collection&gt;
+                &lt;PropertyPath&gt;Supplier&lt;/PropertyPath&gt;
+            &lt;/Collection&gt;
+        &lt;/PropertyValue&gt;
+      &lt;PropertyValue Property=&quot;TargetEntities&quot;&gt;
+         &lt;Collection&gt;
+            &lt;NavigationPropertyPath&gt;toSupplier&lt;/NavigationPropertyPath&gt;
+         &lt;/Collection&gt;
+      &lt;/PropertyValue&gt;
+        &lt;PropertyValue Property=&quot;EffectTypes&quot; EnumMember=&quot;ValueChange&quot; /&gt;
+    &lt;/Record&gt;
+&lt;/Annotation&gt;
+&lt;/Annotations&gt;</pre></aside>
+</section></div>
+<div class="section" id="loio61cf21d50ed34cbf888713496c618904__section_ykt_5mk_lz"><section class="section" type="Example: User changes a single property, and the system reads the whole entity due to field control"><h2 class="section_title" style="font-size: 1.15em;">Example: User changes a single property, and the system reads the whole entity due to field control</h2>
+
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&lt;Annotations Target=&quot;NAMESPACE.ENTITYTYPE&quot;&gt;
+&lt;Annotation Term=&quot;com.sap.vocabularies.Common.v1.SideEffects&quot; Qualifier=&quot;PriceChanged&quot;&gt;
+    &lt;Record&gt;
+        &lt;PropertyValue Property=&quot;SourceProperties&quot;&gt;
+            &lt;Collection&gt;
+                &lt;PropertyPath&gt;Status&lt;/PropertyPath&gt;
+            &lt;/Collection&gt;
+        &lt;/PropertyValue&gt;
+       &lt;PropertyValue Property=&quot;TargetEntities&quot;&gt;
+         &lt;Collection&gt;
+            &lt;NavigationPropertyPath&gt;&lt;/NavigationPropertyPath&gt;
+         &lt;/Collection&gt;
+      &lt;/PropertyValue&gt;
+        &lt;PropertyValue Property=&quot;EffectTypes&quot; EnumMember=&quot;FieldControlChange&quot; /&gt;
+    &lt;/Record&gt;
+&lt;/Annotation&gt;
+&lt;/Annotations&gt;</pre></aside>
+</section></div>
+<div class="section" id="loio61cf21d50ed34cbf888713496c618904__section_edb_pvk_lz"><section class="section" type="Example: Side effect on structural changes of a 1:n association"><h2 class="section_title" style="font-size: 1.15em;">Example: Side effect on structural changes of a 1:n association</h2>
+
+<p class="p">If any header information or other associated entity needs to be refreshed once a
+subitem has been created or deleted, you should add side effect annotations as shown
+in the example below:</p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_4_title"><div class="title" id="note_4_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&lt;Annotations Target=&quot;NAMESPACE.ENTITYTYPE&quot;&gt;
+&lt;Annotation Term=&quot;com.sap.vocabularies.Common.v1.SideEffects&quot; Qualifier=&quot;ReactOnItemCreationOrDeletion&quot;&gt;
+   &lt;Record&gt;
+      &lt;PropertyValue Property=&quot;SourceEntities&quot;&gt;
+         &lt;Collection&gt;
+            &lt;NavigationPropertyPath&gt;toSalesOrderItems&lt;/NavigationPropertyPath&gt;
+         &lt;/Collection&gt;
+      &lt;/PropertyValue&gt;
+      &lt;PropertyValue Property=&quot;EffectTypes&quot; EnumMember=&quot;ValueChange&quot;/&gt;
+      &lt;PropertyValue Property=&quot;TargetProperties&quot;&gt;
+         &lt;Collection&gt;
+            &lt;PropertyPath&gt;OverallAmount&lt;/PropertyPath&gt;
+         &lt;/Collection&gt;
+      &lt;/PropertyValue&gt;
+   &lt;/Record&gt;
+&lt;/Annotation&gt;
+&lt;/Annotations&gt;</pre></aside>
+</section></div>
+<div class="section" id="loio61cf21d50ed34cbf888713496c618904__section_isk_ywk_lz"><section class="section" type="Example: Side effect after executing an action"><h2 class="section_title" style="font-size: 1.15em;">Example: Side effect after executing an action</h2>
+
+<p class="p">After executing an action, but only if the returned entity is different from the
+entity for which the action was called, the related list binding is refreshed.
+Therefore, you need to define a side effect annotation for those cases in which any
+other entity or an association might be changed due to an action call. The target
+definition&#x2019;s property path that may cover both properties and entities has to
+express a binding parameter name referring to the entity to which the action is
+bound. </p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_5_title"><div class="title" id="note_5_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&lt;Annotations Target=&quot;CA_OC_MANAGE_OR_ITEMS_SRV.CA_OC_MANAGE_OR_ITEMS_SRV_Entities/IssueOutput&quot;&gt;
+   &lt;Annotation Term=&quot;com.sap.vocabularies.Common.v1.SideEffects&quot;&gt;
+      &lt;Record&gt;
+         &lt;PropertyValue Property=&quot;EffectTypes&quot; EnumMember=&quot;ValueChange&quot;/&gt;
+         &lt;PropertyValue Property=&quot;TargetProperties&quot;&gt;
+            &lt;Collection&gt; 
+                &lt;PropertyPath&gt;_it/to_OutputRequestItemStatus/OutputRequestItemStatus_Text&lt;/PropertyPath&gt;
+            &lt;/Collection&gt;
+         &lt;/PropertyValue&gt;
+      &lt;/Record&gt;
+   &lt;/Annotation&gt;
+&lt;/Annotations&gt;</pre></aside>
+</section></div>
+<div class="section" id="loio61cf21d50ed34cbf888713496c618904__section_nnt_bwc_r2b"><section class="section" type="Example: Refresh the navigation target"><h2 class="section_title" style="font-size: 1.15em;">Example: Refresh the navigation target</h2>
+
+<p class="p">In this case, when the item tax amount is changed, the navigation property leading to
+the root (<samp class="ph codeph">to_SalesOrder</samp>) is updated.</p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_6_title"><div class="title" id="note_6_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&lt;Annotations Target=&quot;STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type&quot;&gt;
+               &lt;Annotation Term=&quot;com.sap.vocabularies.Common.v1.SideEffects&quot; Qualifier=&quot;TaxAmountChanged&quot;&gt;
+                      &lt;Record&gt;
+                             &lt;PropertyValue Property=&quot;SourceProperties&quot;&gt;
+                                    &lt;Collection&gt;
+                                            &lt;PropertyPath&gt;TaxAmount&lt;/PropertyPath&gt;
+                                    &lt;/Collection&gt;
+                             &lt;/PropertyValue&gt;
+                             &lt;PropertyValue Property=&quot;TargetEntities&quot;&gt;
+                                    &lt;Collection&gt;
+                                            &lt;NavigationPropertyPath&gt;to_SalesOrder&lt;/NavigationPropertyPath&gt;
+                                    &lt;/Collection&gt;
+                             &lt;/PropertyValue&gt;
+                             &lt;PropertyValue Property=&quot;EffectTypes&quot; EnumMember=&quot;ValueChange&quot;/&gt;
+                       &lt;/Record&gt;
+                &lt;/Annotation&gt;
+</pre></aside>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

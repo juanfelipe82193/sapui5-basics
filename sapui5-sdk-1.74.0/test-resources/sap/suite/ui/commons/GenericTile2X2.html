@@ -1,0 +1,550 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		
+		<title>GenericTile2X2 - sap.suite.ui.commons</title>
+		
+		<script src="../../../../../resources/sap-ui-core.js"
+			type="text/javascript"
+			id="sap-ui-bootstrap"
+			data-sap-ui-libs="sap.ui.layout,sap.suite.ui.commons,sap.m">
+		</script>
+
+		<style type="text/css">
+		.sapSuiteUiGTForm .sapUiFormResLayout>div {
+			padding: .5rem;
+		}
+
+		.sapSuiteGT {
+		  margin-top:0.5rem;
+		  margin-left:0.5rem;
+		}
+
+		</style>
+
+		<script type="text/javascript">
+		jQuery.sap.initMobile();
+		
+		var oGenericTileData = {
+			subheader : "Expenses By Region",
+			header : "Comparative Annual Totals",
+			footerNum : "Actual and Target",
+			footerComp : "Compare across regions",
+               scale: "MM",
+               unit: "EUR",
+               value: 7777,
+               size:"Auto",
+               state: sap.suite.ui.commons.LoadState.Loaded,
+               valueColor:sap.suite.ui.commons.InfoTileValueColor.Error,
+               indicator: sap.suite.ui.commons.DeviationIndicator.None,
+               title : "US Profit Margin",
+               footer : "Current Quarter",
+               description: "Maximum deviation",
+               imageDescription: "",
+               height:"",
+               data: [
+                      { title: "Americas", value: 10, color: "Good" },
+                      { title: "EMEA", value: 50, color: "Good" },
+                      { title: "APAC", value: -20, color: "Error" },
+                      { title: "Americas", value: 10, color: "Good" },
+                      { title: "EMEA", value: 50, color: "Good" },
+                      { title: "APAC", value: -20, color: "Error" },
+                      { title: "Americas", value: 10, color: "Good" },
+                      { title: "EMEA", value: 50, color: "Good" },
+                      { title: "APAC", value: -20, color: "Error" },
+                      { title: "Americas", value: 10, color: "Good" },
+                      { title: "EMEA", value: 50, color: "Good" },
+                      { title: "APAC", value: -20, color: "Error" },
+                      { title: "EMEA", value: 50, color: "Good" },
+                      { title: "APAC", value: -20, color: "Error" }
+
+
+               ],
+              	macData: {
+              		width: "100%",
+              		height: "100%",
+              		chart: {
+              			data: [
+              				{day: 0, balance: 0},
+              				{day: 30, balance: 20},
+              				{day: 60, balance: 20},
+              				{day: 100, balance: 80}
+              			]
+              		},
+              		target: {
+              			data: [
+              				{day: 0, balance: 0},
+              				{day: 30, balance: 30},
+              				{day: 60, balance: 40},
+              				{day: 100, balance: 90}
+              			]
+              		},
+              		maxThreshold: {
+              			color: "Good",
+              			data: [
+              				{day: 0, balance: 0},
+              				{day: 30, balance: 40},
+              				{day: 60, balance: 50},
+              				{day: 100, balance: 100}
+              			]
+              		},
+              		innerMaxThreshold: {
+              			color: "Good",
+              			data: [
+              			]
+              		},
+              		innerMinThreshold: {
+              			color: "Good",
+              			data: [
+              			]
+              		},
+              		minThreshold: {
+              			color: "Error",
+              			data: [
+              				{day: 0, balance: 0},
+              				{day: 30, balance: 20},
+              				{day: 60, balance: 30},
+              				{day: 100, balance: 70},
+              			]
+              		},
+           		minXValue: 0,
+           		maxXValue: 100,
+           		minYValue: 0,
+           		maxYValue: 100,
+           		firstXLabel: { label: "June 1", color: "Good"	},
+           		lastXLabel: { label: "June 30", color: "Critical" },
+           		firstYLabel: { label: "0M", color: "Good" },
+           		lastYLabel: { label: "80M", color: "Critical" },
+           		minLabel: { },
+           		maxLabel: { },
+                   tooltip: "Cumulative Totals\n{AltText}\ncalculated in EURO",
+                   view: "Normal"
+              }
+	}
+
+   	var oMACDataTmpl = sap.suite.ui.commons.MicroAreaChartPoint({
+           x: "{day}",
+           y: "{balance}"
+       });
+   	
+   	var buildChartItem = function(sName) {
+   		return new sap.suite.ui.commons.MicroAreaChartItem({
+      		color: "{"+sName+"/color}",
+   			points: {
+   	        	path: sName+"/data",
+   	        	template: oMACDataTmpl
+   	        }
+      		});
+   	};
+
+   	var buildMACLabel = function(sName) {
+   		return new sap.suite.ui.commons.MicroAreaChartLabel({ 
+   			label: "{"+sName+"/label}", 
+   			color: "{"+sName+"/color}" 
+   		});
+   	};
+   	
+    var oGenericTileModel = new sap.ui.model.json.JSONModel();
+	oGenericTileModel.setData(oGenericTileData);
+	
+   	var oMicroChart = new sap.suite.ui.commons.MicroAreaChart({
+      		width: "{width}",
+      		height: "{height}",
+      		target: buildChartItem("target"),
+      		innerMinThreshold: buildChartItem("innerMinThreshold"),
+      		innerMaxThreshold: buildChartItem("innerMaxThreshold"),
+      		minThreshold: buildChartItem("minThreshold"),
+      		maxThreshold: buildChartItem("maxThreshold"),
+      		chart: buildChartItem("chart"),
+	   		minXValue: "{minXValue}",
+	   		maxXValue: "{maxXValue}",
+	   		minYValue: "{minYValue}",
+	   		maxYValue: "{maxYValue}",
+	   		firstXLabel: buildMACLabel("firstXLabel"), 
+	   		lastXLabel: buildMACLabel("lastXLabel"), 
+	   		firstYLabel: buildMACLabel("firstYLabel"),
+	   		lastYLabel: buildMACLabel("lastYLabel"),
+	   		minLabel: buildMACLabel("minLabel"),
+	   		maxLabel: buildMACLabel("maxLabel"),
+           tooltip: "{tooltip}",
+           view: "{view}"
+      }).bindContext("/macData");
+    	
+	   var oNVConfContS = new sap.suite.ui.commons.NumericContent("numeric-cont-l", {
+	        value : "{/value}",
+	        scale : "{/scale}",
+	        indicator : "{/indicator}",
+	        size : "{/size}",
+	        formatterValue : "{/isFormatterValue}",
+	        truncateValueTo : "{/truncateValueTo}",
+	        valueColor: "{/valueColor}",
+	    });
+		
+	    var oNVConfS = new sap.suite.ui.commons.TileContent2X2("numeric-tile-cont-l", {
+	        unit : "{/unit}",
+	        size : "{/size}",
+	        footer : "{/footerNum}",
+	        content: oMicroChart
+	    });
+
+	    
+	    var oCmprsDataTmpl = new sap.suite.ui.commons.ComparisonData({
+	        title: "{title}",
+	        value: "{value}",
+	        color: "{color}"
+	    });
+	    
+	    var oCmprsChrtTmpl = new sap.suite.ui.commons.ComparisonChart("comp-chart-r", {
+	    	size : "{/size}",
+	        scale: "{/scale}",
+	        view: "Wide",
+	        height: "{/height}",
+	        width: "100%",
+	        data: {
+	            template : oCmprsDataTmpl,
+	            path : "/data"
+	        },
+	    });
+	    
+	    var oNVConfM = new sap.suite.ui.commons.TileContent2X2("comp-tile-cont-r", {
+	        unit : "{/unit}",
+	        size : "{/size}",
+	        footer : "{/footerComp}",
+	        content: oCmprsChrtTmpl,
+	    });
+	   
+		var fnPress = function (oEvent) {
+			sap.m.MessageToast.show("The Generic Tile is pressed.");
+		};
+		
+		var oGenericTile1 = new sap.suite.ui.commons.GenericTile2X2({
+			subheader : "{/subheader}",
+			size : "{/size}",
+			header : "{/header}",
+			state : "{/state}",
+			headerImage : "{/headerImage}",
+			imageDescription : "{/imageDescription}",
+			press: fnPress,
+	        failedText: "{/failedText}",
+			tileContent : [oNVConfS,oNVConfM]
+		});
+		
+	      var oGenericTile2 = new sap.suite.ui.commons.GenericTile2X2({
+	            subheader : "{/subheader}",
+	            size : "{/size}",
+	            header : "{/header}",
+	            state : "{/state}",
+	            headerImage : "{/headerImage}",
+				imageDescription : "{/imageDescription}",
+	            press: fnPress,
+		        failedText: "{/failedText}",
+	            tileContent : [oNVConfM.clone()]
+	        });
+  		var oNumCnt2x1 = new sap.suite.ui.commons.NumericContent("numeric-cont-2x1", {
+	       value : "-431.241.621,5",
+	       scale : "MM",
+	       indicator : "Up",
+	       size : "{/size}",
+	       truncateValueTo : 14,
+	       valueColor: "{/valueColor}",
+	       width:"100%"
+	   });
+		
+	    var oTc2x1 = new sap.suite.ui.commons.TileContent2X2("comp-tile-cont-2x1", {
+	      unit : "{/unit}",
+	      size : "{/size}",
+	      footer : "{/footerComp}",
+	      content: oNumCnt2x1,
+	  	});
+  		
+		var oGenericTile3 = new sap.suite.ui.commons.GenericTile2X2({
+  			subheader : "{/subheader}",
+  			size : "{/size}",
+  			header : "{/header}",
+  			state : "{/state}",
+  			headerImage : "{/headerImage}",
+  			imageDescription : "{/imageDescription}",
+  			press: fnPress,
+  	        failedText: "{/failedText}",
+  			tileContent : [oTc2x1]
+  		}); 
+/* 	    oGenericTile1.placeAt("content");
+	    oGenericTile2.placeAt("content");
+	    oGenericTile3.placeAt("content");  */
+		var oPage = new sap.m.Page("initial-page",{
+		        showHeader: false,
+		        content: [
+	      		     oGenericTile1,
+	      		     oGenericTile2,
+	      		     oGenericTile3
+		        ]
+		});
+		oPage.setModel(oGenericTileModel);
+			
+		var oTitleLbl = new sap.m.Label({
+			text : "Header",
+			labelFor : "title-value"
+		});
+		
+		var oTitleInput = new sap.m.Input("title-value",{
+	          type: sap.m.InputType.Text,
+	          placeholder: 'Enter header ...'
+	    });
+		oTitleInput.bindValue("/header");		
+		
+		
+		
+		var oTitleDscr = new sap.m.Label({
+			text : "Subheader",
+			labelFor : "desc-value"
+		});
+		
+		var oDescInput = new sap.m.Input("desc-value",{
+	          type: sap.m.InputType.Text,
+	          placeholder: 'Enter description ...'
+	    });
+		oDescInput.bindValue("/subheader");
+		
+		var oTitleFoot = new sap.m.Label({
+			text : "Footers",
+			labelFor : "footer-value"
+		});
+		
+		var oFooterInputNum = new sap.m.Input("footer-num-value",{
+	          type: sap.m.InputType.Text,
+	          placeholder: 'Enter Numeric Footer ...'
+	    });
+		oFooterInputNum.bindValue("/footerNum");
+		
+	    var oFooterInputComp = new sap.m.Input("footer-cmp-value",{
+              type: sap.m.InputType.Text,
+              placeholder: 'Enter Comp Footer ...'
+        });
+	    oFooterInputComp.bindValue("/footerComp");
+		
+		var oTitleUnit = new sap.m.Label({
+            text : "Units",
+            labelFor : "unit-value"
+        });
+        
+        var oUnitInput = new sap.m.Input("unit-value",{
+              type: sap.m.InputType.Text,
+              placeholder: 'Enter Units ...'
+        });
+        oUnitInput.bindValue("/unit");
+		
+		var oSizeLbl = new sap.m.Label({
+			text : "Size",
+			labelFor : "size-value"
+		});
+		
+		var oSizeSlct = new sap.m.Select("size-value",{
+			change : function (oE) {
+                var selectedItem = oE.getParameter("selectedItem");
+                oGenericTileData.size = selectedItem.getKey();
+                oGenericTileModel.checkUpdate(); 
+			},
+			items : [
+				new sap.ui.core.Item({key: "Auto", text: "Auto"}),
+			    new sap.ui.core.Item({key: "S", text: "Small"}),
+				new sap.ui.core.Item({key: "M", text: "Middle"})
+			]
+		});
+		        
+	    var oPictureLbl = new sap.m.Label({
+	          text : "Header Image",
+	          labelFor : "picture-change"
+	    });
+	      
+		var oPictureSlct = new sap.m.Select("picture-value", {
+			change: function(oE) {
+			    var selectedItem = oE.getParameter("selectedItem");
+				oGenericTileData.headerImage = selectedItem.getKey();
+				oGenericTileModel.checkUpdate();
+			},
+			items: [ 
+			    new sap.ui.core.Item("picture-item-1", { key: "", text: "No picture" }),
+			    new sap.ui.core.Item("picture-item-2", { key: "images/grass.jpg",	text: "Image1" }),
+				new sap.ui.core.Item("picture-item-3", { key: "images/headerImg1.png",	text: "Image2" }),
+				new sap.ui.core.Item("picture-item-4", { key: "images/headerImg2.jpg",	text: "Image3" }),
+				new sap.ui.core.Item("picture-item-5", { key: "sap-icon://world",	text: "Icon1" }),
+				new sap.ui.core.Item("picture-item-6", { key: "sap-icon://customer-financial-fact-sheet",	text: "Icon2" }),
+			],
+			selectedItem: "picture-item-1"
+		});
+		
+	    var oImageDescLbl = new sap.m.Label({
+	        text : "Image Description",
+	        labelFor : "imageDesc"
+	    });
+
+	    var oImageDescInput = new sap.m.TextArea("imageDesc", {
+	        rows: 1,
+	        placeholder: '',
+	        value: "{/imageDescription}"
+	    });
+
+	    var oTriggerLoadLbl = new sap.m.Label({
+            text : "State",
+            labelFor : "loading-state"
+        });
+        
+        var oTriggerLoadSlct = new sap.m.Select("loading-state",{
+            change : function (oE) {
+                var selectedItem = oE.getParameter("selectedItem");
+                oGenericTileData.state = selectedItem.getProperty("key");
+                oGenericTileModel.checkUpdate();
+            },
+            items : [
+                new sap.ui.core.Item({key: "Loaded", text: "Loaded"}),
+                new sap.ui.core.Item({key: "Loading", text: "Loading"}),
+                new sap.ui.core.Item({key: "Failed", text: "Failed"}),
+                new sap.ui.core.Item({key: "Disabled", text: "Disabled"})          
+            ]
+        });
+
+	   	var oPressLbl = new sap.m.Label({
+			text : "Press Action",
+			labelFor : "press-action"
+		});
+	
+	    var oPressSwtch = new sap.m.Switch({
+	 	   id : "press-action",
+	 	   state: true,
+	 	   change: function(oE) {
+				var bState = oE.getParameter("state");
+				if(bState) {
+					oGenericTile1.attachPress(fnPress);
+					oGenericTile2.attachPress(fnPress);
+					oGenericTile3.attachPress(fnPress);
+				} else {
+					oGenericTile1.detachPress(fnPress);
+					oGenericTile2.detachPress(fnPress);
+					oGenericTile3.detachPress(fnPress);
+				}
+	 	   }
+	    });
+    
+
+		var oFailedLabel = new sap.m.Label({
+			text : "Failed Text",
+			labelFor : "failed-text"
+		});
+		
+		var oFailedInput = new sap.m.Input("failed-text",{
+	          type: sap.m.InputType.Text,
+	          placeholder: 'Enter failed message...'
+	    });
+		oFailedInput.bindValue("/failedText");
+		
+		var oModifyBarsLabel = new sap.m.Label({
+			text : "Modify Numbers of Bars"
+		});
+		
+		var fnNumerInRange = function(min, max) {
+		    if (min < 0) {
+		        return Math.round(min + Math.random() * (Math.abs(min)+max));
+		    }else {
+		        return Math.round(min + Math.random() * max);
+		    }
+		};
+		
+		var fnSelectRegion = function() {
+			var ar = ["EMEA", "Americas","APJ"];
+			return ar[Math.floor(Math.random() * 3)]
+			
+		};
+		
+		var fnSelectColor = function() {
+			var ar = ["Good", "Error","Neutral","Critical"];
+			return ar[Math.floor(Math.random() * 5)]
+			
+		};
+		
+		var oAddCmpBarButton = new sap.m.Button({text:"Add Comparison Bar", press: function(oE){
+			oGenericTileData.data.push({ title: fnSelectRegion(), value: fnNumerInRange(-100, 100), color: fnSelectColor()})
+			oGenericTileModel.checkUpdate();
+		}});
+	    
+		var oRemCmpBarButton = new sap.m.Button({text:"Remove Comparison Bar", press: function(oE){
+			oGenericTileData.data.splice(oGenericTileData.data.length-1);
+			oGenericTileModel.checkUpdate();
+		}});
+		
+		var oWideSwith = new sap.m.Switch({state: true, customTextOff:"Normal", customTextOn:"Wide", change:function(oE){
+			var oCmpChart = sap.ui.getCore().byId("comp-chart-r-__clone0")
+			var bState = oE.getParameter("state");
+			if(bState) {
+				oCmpChart.setView("Wide");
+			} else {
+				oCmpChart.setView("Normal");
+			}
+		}})
+		
+		var oCmprChartHeightLabel = new sap.m.Label({
+			text : "Height of Comparison Chart",
+			labelFor: "cmpr-chart-height"
+		});
+		
+	    var oCmprsChartHeightValue = new sap.m.Input("cmpr-chart-height",{
+		      type: sap.m.InputType.Text,
+		      placeholder: 'Enter height ...'
+		});
+	    oCmprsChartHeightValue.bindValue("/height");
+		
+	    var editableSimpleForm = new sap.ui.layout.form.SimpleForm("controls",{
+			maxContainerCols : 2,
+			editable: true,
+			content : [
+				new sap.ui.core.Title({ // this starts a new group
+					text: "Modify"
+				}),
+				oTitleLbl,
+				oTitleInput,
+				oTitleDscr,
+				oDescInput,
+				oTitleFoot,
+			     oFooterInputNum,
+			     oFooterInputComp,
+				oTitleUnit,
+				oUnitInput,
+				oFailedLabel,
+				oFailedInput,
+				oSizeLbl,
+				oSizeSlct,
+				oPictureLbl,
+				oPictureSlct,
+				oImageDescLbl,
+				oImageDescInput,
+				oTriggerLoadLbl,
+				oTriggerLoadSlct,
+				oPressLbl,
+				oPressSwtch,
+				oModifyBarsLabel,
+				oAddCmpBarButton,
+				oRemCmpBarButton,
+				oWideSwith,
+				oCmprChartHeightLabel,
+				oCmprsChartHeightValue
+			]
+		}).addStyleClass("sapSuiteUiGTForm");
+		oPage.addContent(editableSimpleForm);
+		//editableSimpleForm.placeAt("content");
+		//var oApp = new sap.m.App("myApp", {initialPage:"initial-page"});
+		//oApp.addPage(oPage);
+
+//		var oShell = new sap.m.Shell({
+//			app : oApp,
+//			title : "Generic Tile"
+//		});
+		
+		oPage.placeAt("content");
+		//oShell.placeAt("content");
+		</script>
+
+	</head>
+	<body id="body" class="sapUiBody" style="height:100%;">
+    	<div id="content" style="height:100%;"></div>
+	</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Flexible Column Layout Semantic Helper</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="A helper class, designed to facilitate the implementation of apps based on the sap.f.FlexibleColumnLayout control and the SAP Fiori 2.0 design guidelines."><meta name="description" content="A helper class, designed to facilitate the implementation of apps based on the sap.f.FlexibleColumnLayout control and the SAP Fiori 2.0 design guidelines."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"933965ba8c0440308e1e3233be7bc52f.html","previousTopicHref":"607a316ea4cd47c893d69ef111428e9d.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio623b01e57b2349e0888d9dc16020b135"><h1 class="title topictitle1" hidden>Flexible Column Layout Semantic Helper</h1><div class="body conbody"><p class="shortdesc" hidden>A helper class, designed to facilitate the implementation of apps based on the
+<samp class="ph codeph">sap.f.FlexibleColumnLayout</samp> control and the SAP Fiori 2.0 design
+guidelines.</p>
+<div class="p"><samp class="ph codeph">FlexibleColumnLayout</samp> gives you the freedom to implement any app logic that
+involves changing the layout (showing/hiding columns) as a result of the user&#x2019;s actions.
+However, there are certain UX patterns that are considered as optimal and are
+recommended for SAP Fiori 2.0 apps. The
+<samp class="ph codeph">FlexibleColumnLayoutSemanticHelper</samp> class helps you implement them
+by giving you tips about what layout to display when. <aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>Using this class is NOT
+mandatory in order to build an app with the <samp class="ph codeph">FlexibleColumnLayout</samp>,
+but makes it easier to achieve the optimal UX recommended in the SAP Fiori 2.0
+design guidelines.</p></aside></div>
+<p class="p">The first 3 logical levels of information are displayed in the three columns side by
+side, and the forth (and others) are displayed in the <samp class="ph codeph">End</samp> column in
+fullscreen. If at any time the user opens a page in fullscreen, all subsequent levels
+are also displayed in fullscreen.</p>
+<p class="p">Here is a short overview of some of the rules of the default rule set:</p>
+<ul class="ul" id="loio623b01e57b2349e0888d9dc16020b135__ul_rm5_5tb_wy">
+<li class="li">
+<p class="p">The control starts with <samp class="ph codeph">OneColumn</samp> layout (usually to display a list of
+items).</p>
+</li>
+<li class="li">
+<p class="p">When the user selects an item from the <samp class="ph codeph">Begin</samp> column, the item&apos;s details are
+displayed in the <samp class="ph codeph">Mid</samp> column and the layout should change to
+<samp class="ph codeph">TwoColumnsBeginExpanded</samp>. Two action buttons are displayed
+on the page in the <samp class="ph codeph">Mid</samp> column &#x2013;
+<span class="ph uicontrol">Fullscreen</span> and <span class="ph uicontrol">Close</span>.</p>
+<ul class="ul" id="loio623b01e57b2349e0888d9dc16020b135__ul_fsz_wtb_wy">
+<li class="li">
+<p class="p">Choosing the <span class="ph uicontrol">Close</span> button changes the layout back to
+<samp class="ph codeph">OneColumn</samp>.</p>
+</li>
+<li class="li">
+<p class="p">Choosing the <span class="ph uicontrol">Fullscreen</span> button changes the layout to
+<samp class="ph codeph">MidColumnFullScreen</samp>. The
+<span class="ph uicontrol">Fullscreen</span> button is then replaced with an
+<span class="ph uicontrol">ExitFullscreen</span> button, which restores the
+layout to <samp class="ph codeph">TwoColumnsBeginExpanded</samp>.</p>
+</li>
+</ul>
+</li>
+<li class="li">
+<p class="p">If the user selects an item from the <samp class="ph codeph">Mid</samp> column:</p>
+<ul class="ul" id="loio623b01e57b2349e0888d9dc16020b135__ul_is3_15b_wy">
+<li class="li">
+<p class="p">If the current layout is
+<samp class="ph codeph">TwoColumnsBeginExpanded</samp>/<samp class="ph codeph">TwoColumnsMidExpanded</samp>,
+the layout changes to <samp class="ph codeph">ThreeColumnsMidExpanded</samp>. The
+<span class="ph uicontrol">Close</span> and <span class="ph uicontrol">Fullscreen</span>
+buttons should now be displayed only in the <samp class="ph codeph">End</samp>
+column.</p>
+</li>
+<li class="li">
+<p class="p">If the current layout is <samp class="ph codeph">MidColumnFullScreen</samp>, the layout changes to
+<samp class="ph codeph">EndColumnFullScreen</samp>.</p>
+</li>
+</ul>
+</li>
+<li class="li">
+<p class="p">If the user selects an item from the <samp class="ph codeph">End</samp> column (which represents the third
+logical level of information), the layout should change to
+<samp class="ph codeph">EndColumnFullScreen</samp> and the forth (then fifth, etc.)
+logical level should again be displayed in the <samp class="ph codeph">End</samp> column.</p>
+</li>
+</ul>
+</div><div class="related-links"> <br><div class="childtopics"><strong>In this section:</strong></div><ul class="ullinks"><div><strong><a class="link" href="../../#/topic/933965ba8c0440308e1e3233be7bc52f.html" title="Overview of the two main methods used in the sap.f.FlexibleColumnLayoutSemanticHelper class." target="_top">Main Methods</a></strong><br></div></ul></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

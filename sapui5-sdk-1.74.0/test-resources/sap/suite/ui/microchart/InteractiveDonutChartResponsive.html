@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage Responsive - sap.suite.ui.microchart.InteractiveDonutChart</title>
+
+<base href="../../../../../">
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout, sap.m, sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize"
+	src="resources/sap-ui-core.js">
+</script>
+
+<script type="text/javascript">
+	jQuery.sap.initMobile();
+	var oData = {
+		displayedSegments: 4,
+		selectionEnabled: true,
+		segments: [
+			{ label: "Phase 4", value: 40.0, displayedValue: "40%", color : sap.m.ValueColor.Neutral } ,
+			{ label: "Phase 2", value: 21.5, displayedValue: "21.5%", color : sap.m.ValueColor.Critical },
+			{ label: "Phase Zero", value: 33.1, displayedValue: "33.1%", color : sap.m.ValueColor.Good },
+			{ label: "Other phase", value: 38.5, displayedValue: "38.5%", color : sap.m.ValueColor.Error, selected: true }
+		],
+		segmentsNa: [
+			{label : "Phase 1", value : 33.1, displayedValue : "33.1%", color : sap.m.ValueColor.Neutral },
+			{label : "Phase 0", value : null, color : sap.m.ValueColor.Critical },
+			{label : "Unidentified phase", value : 20.1, displayedValue : "20.1%", color : sap.m.ValueColor.Good, selected : true}
+		]
+	};
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData(oData);
+	sap.ui.getCore().setModel(oModel);
+
+	var oSegmentTempl = new sap.suite.ui.microchart.InteractiveDonutChartSegment({
+		label : "{label}",
+		value : "{value}",
+		displayedValue : "{displayedValue}",
+		selected : "{selected}",
+		color: "{color}"
+	});
+
+	var fnSelectionChanged = function (oEvent) {
+		sap.m.MessageToast.show("The number of selected segments is: " + oEvent.getParameter("selectedSegments").length + "\nThe selected segment is: " + oEvent.getParameter("segment").getId());
+	};
+
+	var fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The chart is pressed.");
+	};
+
+	var oDonutChart = new sap.suite.ui.microchart.InteractiveDonutChart({
+		displayedSegments: "{/displayedSegments}",
+		selectionEnabled: "{/selectionEnabled}",
+		segments: {
+			path: "/segments",
+			template: oSegmentTempl
+		},
+		selectionChanged: fnSelectionChanged,
+		press: fnPress
+	});
+	oDonutChart.placeAt("content");
+	var oDonutChartNa = new sap.suite.ui.microchart.InteractiveDonutChart({
+		displayedSegments: "{/displayedSegments}",
+		selectionEnabled: "{/selectionEnabled}",
+		segments: {
+			path: "/segmentsNa",
+			template: oSegmentTempl
+		},
+		selectionChanged: fnSelectionChanged,
+		press: fnPress
+	});
+	oDonutChartNa.placeAt("contentNa");
+
+	oHeightSlider = new sap.m.Slider({
+		showAdvancedTooltip: true,
+		value : 250,
+		step : 1,
+		min : 40,
+		max : 700,
+		liveChange : function(oControlEvent) {
+			var height = oControlEvent.getParameter("value");
+			jQuery("#content").css("height", height + "px");
+			jQuery("#contentNa").css("height", height + "px");
+		}
+	});
+
+	oWidthSlider = new sap.m.Slider({
+		showAdvancedTooltip: true,
+		value : 350,
+		step : 1,
+		min : 40,
+		max : 700,
+		liveChange : function(oControlEvent) {
+			var width = oControlEvent.getParameter("value");
+			jQuery("#content").css("width", width + "px");
+			jQuery("#contentNa").css("width", width + "px");
+		}
+	});
+
+	// compact switch
+	var oCompactLbl = new sap.m.Label({
+		text: "Compact Mode",
+		labelFor: "compactMode"
+	});
+	var oCompactSwitch = new sap.m.Switch({
+		id: "compactMode",
+		state: false,
+		name: "Compact Mode",
+		change: function(oEvent) {
+			var bState = oEvent.getParameter("state");
+			oData.compact = bState;
+			oModel.checkUpdate();
+
+			if (bState) {
+				jQuery(".sapSuiteIDC").each(function() {
+					var oControl = sap.ui.getCore().byId(jQuery(this).data("sap-ui"));
+					if (oControl) {
+						oControl.addStyleClass("sapUiSizeCompact");
+						oControl.rerender();
+					}
+				});
+			} else {
+				jQuery(".sapSuiteIDC").each(function() {
+					var oControl = sap.ui.getCore().byId(jQuery(this).data("sap-ui"));
+					if (oControl) {
+						oControl.removeStyleClass("sapUiSizeCompact");
+						oControl.rerender();
+					}
+				});
+			}
+		}
+	});
+	var oCompactForm = new sap.ui.layout.form.SimpleForm("compact-form", {
+		editable : true,
+		content : [oCompactLbl, oCompactSwitch ]
+	});
+	oCompactForm.placeAt("compact");
+
+	oHeightSlider.setLayoutData(new sap.m.FlexItemData({
+		growFactor: 1
+	}));
+	oWidthSlider.setLayoutData(new sap.m.FlexItemData({
+		growFactor: 1
+	}));
+
+	var oModifiersForm = new sap.m.HBox("modifiers-form", {
+		width: "100%",
+		height: "6rem",
+		alignItems: "End",
+		items: [
+			oHeightSlider,
+			oWidthSlider
+		]
+	});
+	oModifiersForm.placeAt("modifiers");
+
+</script>
+</head>
+<body class="sapUiBody" role="application">
+	<script>
+		//set the contrast class for belize plus
+		if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+			jQuery("body").addClass("sapContrastPlus");
+		}
+	</script>
+	<div id="modifiers"></div>
+	<div id="content" style="height: 250px; width: 350px; border-color : black; border: 1px;border-style:solid;"></div>
+	<div id="contentNa" style="height: 250px; width: 350px; border-color : black; border: 1px;border-style:solid;"></div>
+	<div id="compact"></div>
+</body>
+</html>

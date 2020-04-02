@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta charset="UTF-8">
+		<title>SAPUI5 Navigation</title>
+	
+	</head>
+	<body id="content" class="sapUiBody">
+		<p>This sample application demonstrates the visualization of regions on an Analytic Map and their corresponding data in a chart. You can filter the display of the chart data by selecting and deselecting regions on the Analytic Map.</p>
+		<div class="row">
+			<h3>Define and set a Model</h3>
+			<div class="col6">
+			   <h4>Controller code</h4>
+				<pre class="prettyprint lang-js">
+this.oData = 
+   {
+      regionProperties :
+      [  {
+            "code" : "DE",
+            "region" : "Germany",
+            "Revenue": 428214.13,
+            "Cost": 94383.52,
+            "color" : "rgb(92,186,230)",
+         }, {
+            "code" : "FR",
+            ...
+         }   
+      ]
+   };
+// Analytic Map: create model, set the data and set the model
+this.oModel = new sap.ui.model.json.JSONModel();
+this.oModel.setData(this.oData);
+this.oVBI = this.getView().byId("VBIAnalytic");
+this.oVBI.setModel(this.oModel);
+....
+// Chart: create model, set the data and set the model
+this.oChartModel = new sap.ui.model.json.JSONModel();
+this.oChartModel.setData(this.oData);
+this.oChart = this.getView().byId("ChartAnalytic");
+this.oChart.setModel(this.oChartModel);
+				</pre> 
+    		</div>
+			<div class="col6">
+				<p>In the method <code>onInit</code> of the controller we define some data for the regions in JSON format. This data is given to a <code>JSONModel</code> for <code>AnalyticMap</code> Control and for the <code>VizFrame</code> Control that serves as the chart, and then assigned to the view. We use two different models for both controls because with the selection of regions on the map the data for the chart is filtered.</p>  
+			</div>    		
+    	</div>
+
+ 		<div class="row">
+			<h3>Add Analytic Map control to view and bind it to model data</h3>
+			<div class="col6">
+			   <h4>XML View code</h4>
+				<pre class="prettyprint lang-xml">
+&lt;vbm:AnalyticMap
+   id="VBIAnalytic" 
+   regions="{/regionProperties}" 
+   width="100%" 
+   height="100%" 
+   centerPosition="10.350;48.431" 
+   zoomlevel="5" 
+   regionSelect="handleSelect" 
+   regionDeselect="handleDeselect"&gt;
+   &lt;vbm:regions&gt; 
+      &lt;vbm:Region 
+         code="{code}" 
+         color="{color}" 
+         tooltip="{region}"&gt;
+      &lt;/vbm:Region&gt;
+   &lt;/vbm:regions&gt;
+   ....
+&lt;/vbm:AnalyticMap&gt;
+				</pre> 
+    		</div>
+			<div class="col6">
+				<p>In the XML view we define an Analytic Map control with some settings.</p> 
+				<p>The <code>regions</code> aggregation consists of several <code>Region</code> controls. The path to the regions' data is the <code>regionProperties</code> array.</p>
+				<p>The <code>regions</code> aggregation gets a single <code>Region</code> control acting as a template for the aggregation binding. The attributes of the template object are bound to model attributes.</p>
+				<p>We add event handler <code>regionSelect</code> and <code>regionDeselect</code> to the Analytic Map.</p>
+			</div>    		
+    	</div>   
+ 		<div class="row">
+			<h3>Add VizFrame control to view and bind it to model data</h3>
+			<div class="col6">
+			   <h4>XML View code</h4>
+				<pre class="prettyprint lang-xml">
+&lt;viz:VizFrame 
+   id="ChartAnalytic" 
+   uiConfig="{applicationSet:'fiori'}"
+   height='100%' width="100%" vizType='column'&gt;
+   &lt;viz:dataset&gt;
+      &lt;viz.data:FlattenedDataset data="{/regionProperties}"&gt;
+         &lt;viz.data:dimensions&gt;
+            &lt;viz.data:DimensionDefinition name="Region"
+               value="{region}" /&gt;
+         &lt;/viz.data:dimensions&gt;
+         &lt;viz.data:measures&gt;
+               &lt;viz.data:MeasureDefinition name="Revenue"
+                  value="{Revenue}" /&gt;
+               &lt;viz.data:MeasureDefinition name="Cost"
+                  value="{Cost}" /&gt;
+         &lt;/viz.data:measures&gt;
+      &lt;/viz.data:FlattenedDataset&gt;
+   &lt;/viz:dataset&gt;
+...
+&lt;/viz:VizFrame&gt;				
+				</pre> 
+    		</div>
+			<div class="col6">
+				<p>Then we define the second control as a <code>VizFrame</code> which acts as a chart. The data again points to the <code>regionProperties</code> array. The values of the x- and y-axis are bound to the model attributes.</p>
+			</div>    		
+    	</div>   
+ 		<div class="row">
+			<h3>Create and set the legend on the Analytic Map</h3>
+			<div class="col6">
+			   <h4>Controller code</h4>
+				<pre class="prettyprint lang-js">
+// Analytic Map: create and set the legend
+this.oLegend = new sap.ui.vbm.Legend({
+   caption: "Analytic Legend",
+   items: {
+      path: "/regionProperties",
+      template: new sap.ui.vbm.LegendItem({
+         text: "{region}",
+         color: '{color}'
+      })
+   }
+});
+this.oVBI.setLegend(this.oLegend);
+				</pre>
+			</div>
+			<div class="col6">
+				<p>We create a new <code>Legend</code> with a defined caption and <code>LegendItems</code> as aggregation.</p>
+				<p>With the attribute items of the Legend we define a path on the model, selecting the regionProperties array in our case.</p>
+				<p>We define a template object <code>LegendItem</code> with attributes bound to model attributes.</p> 
+				<p>Then we set the legend on the Analytic Map.</p>
+			</div>			
+ 		<div class="row">
+			<h3>Select and deselect regions on the map to filter the chart data</h3>
+			<div class="col6">
+			   <h4>Controller code</h4>
+				<pre class="prettyprint lang-js">
+handleSelect : function (e) {
+   var oObject = e.getParameters().selected[0];
+   this.Selection[oObject.getProperty("code")] = true;
+   this.refreshFilter();
+},
+handleDeselect : function (e) {
+   var aRegionProperties = e.getParameters().deselected;
+   for (var j = 0; j < aRegionProperties.length; j++) {
+      delete this.Selection[aRegionProperties[j].getCode()];
+   }
+   this.refreshFilter();
+}
+				</pre>
+			</div>
+			<div class="col6">
+				<p> When a select event occurs we fetch the first selected object out of the event parameters. Note that multi selection is not considered in this basic sample!</p>
+				<p> The region code of this object is added to the selection hashmap which is used afterwards in the method <code>refreshFilter.</code></p>
+				<p>  When a deselect event occurs we take the array of all deselected regions out of the event and remove the corresponding code from the selection. The selection hashmap is then used in the <code>refreshFilter</code> method.
+			</div>			
+ 		<div class="row">
+			<h3>Set the filter</h3>
+			<div class="col6">
+			   <h4>Controller code</h4>
+				<pre class="prettyprint lang-js">
+refreshFilter : function (e) {
+  this.aFilter = [];
+  for (var j = 0; j < this.oData.regionProperties.length; j++){ 
+    var oFilter = this.oData.regionProperties[j];
+    if (this.Selection[oFilter.code]) {                                    
+      this.aFilter.push(oFilter);
+    }     
+  }
+  if (this.aFilter.length < 1){
+    // no filter
+    this.oChartModel.setData(this.oData);
+   } else {
+    this.oChartModel.setData({"regionProperties":this.aFilter});
+   }
+},
+				</pre>
+			</div>
+			<div class="col6">
+				<p> In the <code>refreshFilter</code> method we loop over the <code>regionProperties</code> array and add all objects with their code also in the selection to the filter array.</p>
+				<p> If the filter array is empty the chart uses all data; otherwise the filter data.</p> 
+			</div>			
+		</div>			    		
+	</body>
+</html>

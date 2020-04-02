@@ -1,0 +1,267 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 2: Data Access and Client-Server Communication</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In this step, we see how the Table that is bound to the People entity set initially requests its data, and how the data can be refreshed. We use the Console tab in the browser developer tools to monitor the communication between the browser and the server. We see the initial request as well as the requests for refreshing the data."><meta name="description" content="In this step, we see how the Table that is bound to the People entity set initially requests its data, and how the data can be refreshed. We use the Console tab in the browser developer tools to monitor the communication between the browser and the server. We see the initial request as well as the requests for refreshing the data."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"96bb6e06fa22491fa65a5040f6da099c.html","previousTopicHref":"15d84f36c0594cb2b3295aa1f55cb961.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/bcdbde6911bd4fc68fd435cf8e306ed0.html" title="In this tutorial, we explore how features of OData V4 can be used in SAPUI5. We write a small app that consumes data from an OData V4 service to understand how to access, modify, aggregate, and filter data in an OData V4 model." target="_top">OData V4</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/15d84f36c0594cb2b3295aa1f55cb961.html" title="We start by setting up a simple app that loads data from an OData service and displays it in a table. We use a mock server to simulate requests to and responses from the service." target="_top">Step 1: The Initial App</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/96bb6e06fa22491fa65a5040f6da099c.html" title="In this step, we use the automatic data type detection of the OData V4 model to parse, validate, and format user entries. The service metadata contains type information for the properties of each entity." target="_top">Step 3: Automatic Data Type Detection</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loioe9de002ddf1e478fbb9232bfba83dcf0"><h1 class="title topictitle1" hidden>Step 2: Data Access and Client-Server Communication</h1><div class="body conbody"><p class="shortdesc" hidden>In this step, we see how the <samp class="ph codeph">Table</samp> that is bound to the
+<samp class="ph codeph">People</samp> entity set initially requests its data, and how the data can be
+refreshed. We use the <span class="ph uicontrol">Console</span> tab in the browser developer tools to
+monitor the communication between the browser and the server. We see the initial request as
+well as the requests for refreshing the data.</p>
+<div class="section" id="loioe9de002ddf1e478fbb9232bfba83dcf0__section_bt4_fxc_z1b"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loioe9de002ddf1e478fbb9232bfba83dcf0__fig_blw_dkb_mcb"><div class="figbody">
+
+<img class="inline  " id="loioe9de002ddf1e478fbb9232bfba83dcf0__image_cxt_1kb_mcb" src="loio0abcbb65bba54780948b00c20ce53690_LowRes.png">
+</div><span class="figcap">App with a toolbar that contains a <span class="ph uicontrol">Refresh</span>
+button</span></div>
+</section></div>
+<div class="section" id="loioe9de002ddf1e478fbb9232bfba83dcf0__section_tsr_gxc_z1b"><section class="section" type="Coding"><h2 class="section_title" style="font-size: 1.15em;">Coding</h2>
+
+<p class="p">You can view and download all files <span class="ph">at <a class="xref" href="../../#/sample/sap.ui.core.tutorial.odatav4.02/preview" target="_top" alt="#/sample/sap.ui.core.tutorial.odatav4.02/preview" title="#/sample/sap.ui.core.tutorial.odatav4.02/preview">OData V4 - Step 2</a></span>.</p>
+</section></div>
+<div class="section" id="loioe9de002ddf1e478fbb9232bfba83dcf0__section_pvc_fyc_z1b"><section class="section" type="webapp/controller/App.controller.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/controller/App.controller.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/core/mvc/Controller&quot;,
+	<span class="ph emphasis emphasis">&quot;sap/m/MessageToast&quot;,
+	&quot;sap/m/MessageBox&quot;,</span>
+	&quot;sap/ui/model/json/JSONModel&quot;
+], function (Controller, <span class="ph emphasis emphasis">MessageToast, MessageBox,</span> JSONModel) {
+	&quot;use strict&quot;;
+
+	return Controller.extend(&quot;sap.ui.core.tutorial.odatav4.controller.App&quot;, {
+
+		onInit : function () {
+			var oJSONData = {
+				busy : false
+			};
+			var oModel = new JSONModel(oJSONData);
+			this.getView().setModel(oModel, &quot;appView&quot;);
+		}<span class="ph emphasis emphasis">,
+
+		onRefresh : function () {
+			var oBinding = this.byId(&quot;peopleList&quot;).getBinding(&quot;items&quot;);
+
+			if (oBinding.hasPendingChanges()) {
+				MessageBox.error(this._getText(&quot;refreshNotPossibleMessage&quot;));
+				return;
+			}
+			oBinding.refresh();
+			MessageToast.show(this._getText(&quot;refreshSuccessMessage&quot;));
+		},
+
+		_getText : function (sTextId, aArgs) {
+			return this.getOwnerComponent().getModel(&quot;i18n&quot;).getResourceBundle().getText(sTextId, aArgs);
+
+		}</span>
+	});
+});</pre>
+<div class="p">We add the event handler <samp class="ph codeph">onRefresh</samp> to the controller. In this
+method, we retrieve the current data binding of the table. If the binding has
+unsaved changes, we display an error message, otherwise we call
+<samp class="ph codeph">refresh()</samp> and display a success message.<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>At this stage,
+our app cannot have unsaved changes. We will change this in Step 6.</p></aside> We
+also add the private method <samp class="ph codeph">_getText</samp> to retrieve translatable texts
+from the resource bundle (<span class="ph filepath">i18n</span> model).</div>
+</section></div>
+<div class="section" id="loioe9de002ddf1e478fbb9232bfba83dcf0__section_pp2_mxc_z1b"><section class="section" type="webapp/view/App.view.xml"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/App.view.xml</h2>
+
+<pre class="pre codeblock prettyprint lang-xml">...
+&lt;Page title=&quot;{i18n&gt;peoplePageTitle}&quot;&gt;
+	&lt;content&gt;
+		&lt;Table
+			id=&quot;peopleList&quot;
+			growing=&quot;true&quot;
+			growingThreshold=&quot;10&quot;
+			items=&quot;{
+				path: &apos;/People&apos;
+			}&quot;&gt;
+<span class="ph emphasis emphasis">			&lt;headerToolbar&gt;
+				&lt;OverflowToolbar&gt;
+					&lt;content&gt;
+						&lt;ToolbarSpacer/&gt;
+						&lt;Button
+							id=&quot;refreshUsersButton&quot;
+							icon=&quot;sap-icon://refresh&quot;
+							tooltip=&quot;{i18n&gt;refreshButtonText}&quot;
+							press=&quot;.onRefresh&quot;/&gt;
+						&lt;/content&gt;
+					&lt;/OverflowToolbar&gt;
+				&lt;/headerToolbar&gt;
+</span>
+				&lt;columns&gt;
+...</pre>
+<p class="p">We add the <samp class="ph codeph">headerToolbar</samp> with a single <samp class="ph codeph">Button</samp> to
+the <samp class="ph codeph">Table</samp>. The button has a <samp class="ph codeph">press</samp> event to which
+we attach an event handler called <samp class="ph codeph">onRefresh</samp>.</p>
+</section></div>
+<div class="section" id="loioe9de002ddf1e478fbb9232bfba83dcf0__section_etg_fyc_z1b"><section class="section" type="webapp/i18n/i18n.properties"><h2 class="section_title" style="font-size: 1.15em;">webapp/i18n/i18n.properties</h2>
+
+<pre class="pre codeblock prettyprint"># App Descriptor
+...
+
+<span class="ph emphasis emphasis"># Toolbar
+#XTOL: Tooltip for refresh data
+refreshButtonText=Refresh Data</span>
+
+# Table Area
+...
+
+<span class="ph emphasis emphasis"># Messages
+#XMSG: Message for refresh failed
+refreshNotPossibleMessage=Before refreshing, please save or revert your changes
+
+#XMSG: Message for refresh succeeded
+refreshSuccessMessage=Data refreshed</span></pre>
+<p class="p">We add the tooltip and message texts to the <span class="ph filepath">properties</span> file.</p>
+</section></div>
+<div class="section" id="loioe9de002ddf1e478fbb9232bfba83dcf0__section_kk1_cq1_mcb"><section class="section" type="Under the Hood"><h2 class="section_title" style="font-size: 1.15em;">Under the Hood</h2>
+
+<p class="p">To get more insight into the client-server communication, we open the
+<span class="ph uicontrol">Console</span> tab of the browser developer tools and then
+reload the app.</p>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">To monitor the client-server communication in a productive app, you would use the
+<span class="ph uicontrol">Network</span> tab of the developer tools.</p><p class="p">In this tutorial, we are using a mock server instead of a real OData service so
+that we can execute the code in every environment. The mock server does not
+generate any network traffic, so we use the <span class="ph uicontrol">Console</span> tab
+to monitor the communication.</p><div class="p">If you want to switch to the real service, do the following:<ol class="ol" id="loioe9de002ddf1e478fbb9232bfba83dcf0__ol_d3p_35s_qcb">
+<li class="li">
+<p class="p">In the <span class="ph filepath">index.html</span> file, remove the line
+<samp class="ph codeph">data-sap-ui-oninit=&quot;module:sap/ui/core/tutorial/odatav4/initMockServer&quot;</samp>.</p>
+</li>
+<li class="li">
+<p class="p">Check the URI of the default data source in the
+<span class="ph filepath">manifest.json</span> file. Depending on the
+environment, change it to something that avoids cross-origin
+resource sharing (CORS) problems. For more information, see <a class="xref" href="../../#/topic/5bb388fc289d44dca886c8fa25da466e.html" target="_top">Request Fails Due to Same-Origin Policy (Cross-Origin Resource Sharing - CORS)</a></p>
+</li>
+</ol></div></aside>
+<p class="p">We search for the following mock server requests:</p>
+<ul class="ul" id="loioe9de002ddf1e478fbb9232bfba83dcf0__ul_asf_23w_mcb">
+<li class="li">
+<p class="p"><a class="extlink" href="http://help.sap.com/disclaimer?site=http://services.odata.org/TripPinRESTierService/(S(id))/$metadata" target="_blank" alt="http://services.odata.org/TripPinRESTierService/(S(id))/$metadata" title="http://services.odata.org/TripPinRESTierService/(S(id))/$metadata">http://services.odata.org/TripPinRESTierService/(S(id))/$metadata<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></p>
+<p class="p">This first request fetches the metadata that describes the entities of the
+service (see also <a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html" target="_blank" alt="http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html" title="http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html">OData Version 4.0. Part 3: Common Schema Definition
+Language (CSDL) Plus Errata 03<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a>).</p>
+<p class="p">The server responds with an XML file that describes the entities, for
+example, entity type <samp class="ph codeph">&quot;Person&quot;</samp> has several properties such
+as <samp class="ph codeph">UserName</samp>, <samp class="ph codeph">FirstName</samp>,
+<samp class="ph codeph">LastName</samp>, and <samp class="ph codeph">Age</samp>.</p>
+<aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p class="p">The URL contains the session ID <samp class="ph codeph">(S(id))</samp>. Since the
+public <span class="ph uicontrol">TripPin</span> service can be used by multiple
+persons at the same time, the session ID separates read and write
+requests from different sources. You could use a different ID or request
+the service without a specified session ID. In the latter case, you will
+get a response with a new, random session ID.</p></aside>
+</li>
+<li class="li">
+<p class="p"><a class="extlink" href="http://help.sap.com/disclaimer?site=http://services.odata.org/TripPinRESTierService/(S(id))/People?$select=Age,FirstName,LastName,UserName&amp;$skip=0&amp;$top=10" target="_blank" alt="http://services.odata.org/TripPinRESTierService/(S(id))/People?$select=Age,FirstName,LastName,UserName&amp;$skip=0&amp;$top=10" title="http://services.odata.org/TripPinRESTierService/(S(id))/People?$select=Age,FirstName,LastName,UserName&amp;$skip=0&amp;$top=10">http://services.odata.org/TripPinRESTierService/(S(id))/People?$select=Age,FirstName,LastName,UserName&amp;$skip=0&amp;$top=10<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a>. </p>
+<p class="p">The second request fetches the first 10 entities from the OData service. The
+<samp class="ph codeph">growingThreshold=&quot;10&quot;</samp> setting in the implementation of
+the <samp class="ph codeph">Table</samp> control in the <span class="ph filepath">App.view.xml</span>
+file defines that only 10 entities are fetched at the same time from the
+<samp class="ph codeph">&apos;/people&apos;</samp> path. Further data is only loaded when
+requested from the user interface (<samp class="ph codeph">growing=&quot;true&quot;</samp>).
+Therefore, there are only 10 entities requested at the same time by using
+<samp class="ph codeph">$skip=0&amp;$top=10</samp> (see <a class="extlink" href="http://help.sap.com/disclaimer?site=http://www.odata.org/getting-started/basic-tutorial/#topskip" target="_blank" alt="http://www.odata.org/getting-started/basic-tutorial/#topskip" title="http://www.odata.org/getting-started/basic-tutorial/#topskip">System Query Option $top and $skip<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a> in the Basic
+Tutorial on the OData home page.)</p>
+<p class="p">This request explicitly lists the fields that should be included in the
+response by using the <samp class="ph codeph">$select</samp> query option. Although the
+<span class="ph uicontrol">TripPin</span> service has more fields in its
+<samp class="ph codeph">People</samp> entity set, only those four are included in the
+response. This is a feature of the OData V4 Model called &quot;automatic
+determination of <samp class="ph codeph">$select</samp>&quot;, or
+&quot;auto-<samp class="ph codeph">$select</samp>&quot;. It helps restricting the size of
+responses to what is really needed. The <samp class="ph codeph">ODataModel</samp> computes
+the required fields from binding paths specified for controls. This feature
+is not active by default. In our case, this is activated by setting the
+<samp class="ph codeph">autoExpandSelect</samp> property to <samp class="ph codeph">true</samp> when
+instantiating the model in the <span class="ph filepath">manifest.json</span> descriptor
+file .</p>
+</li>
+</ul>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/bcdbde6911bd4fc68fd435cf8e306ed0.html" title="In this tutorial, we explore how features of OData V4 can be used in SAPUI5. We write a small app that consumes data from an OData V4 service to understand how to access, modify, aggregate, and filter data in an OData V4 model." target="_top">OData V4</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/15d84f36c0594cb2b3295aa1f55cb961.html" title="We start by setting up a simple app that loads data from an OData service and displays it in a table. We use a mock server to simulate requests to and responses from the service." target="_top">Step 1: The Initial App</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/96bb6e06fa22491fa65a5040f6da099c.html" title="In this step, we use the automatic data type detection of the OData V4 model to parse, validate, and format user entries. The service metadata contains type information for the properties of each entity." target="_top">Step 3: Automatic Data Type Detection</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/54e0ddf695af4a6c978472cecb01c64d.html" title="Bindings connect SAPUI5 view elements to model data, allowing changes in the model to be reflected in the view element and vice versa." target="_top">Bindings</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataMetaModel" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataMetaModel" title="#/api/sap.ui.model.odata.v4.ODataMetaModel">API Reference:
+<samp class="ph codeph">sap.ui.model.odata.v4.ODataMetaModel</samp></a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataListBinding/methods/refresh" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataListBinding/methods/refresh" title="#/api/sap.ui.model.odata.v4.ODataListBinding/methods/refresh">API Reference:
+<samp class="ph codeph">sap.ui.model.odata.v4.ODataListBinding.refresh</samp></a></div><div><a class="link" href="../../#/topic/eadd60ae907646bbb838866566b23182.html" title="In this step, you will learn how to use your browser&apos;s developers tools to troubleshoot your SAPUI5 app." target="_top">Troubleshooting Tutorial Step 1: Browser Developer Tools</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

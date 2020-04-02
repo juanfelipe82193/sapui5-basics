@@ -1,0 +1,71 @@
+<core:View xmlns:core="sap.ui.core" xmlns:smartField="sap.ui.comp.smartfield"
+		   xmlns:smartForm="sap.ui.comp.smartform" xmlns:l="sap.ui.layout"
+		   xmlns:m="sap.m" xmlns="sap.ui.comp.navpopover"
+		   xmlns:smartTable="sap.ui.comp.smarttable" controllerName="sap.ui.comp.sample.smartlink.example_08.Example">
+
+	<l:VerticalLayout class="sapUiContentPadding" width="100%">
+		<l:content>
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiSmallMarginTop,	sapUiLargeMarginBottom"
+							text="The Name and SupplierId properties are annotated with the com.sap.vocabularies.Common.v1.SemanticObject annotation."/>
+					<m:Text class="sapUiSmallMarginTop, sapUiLargeMarginBottom"
+							text="Link personalization is enabled and the layered repository changes are stored in browser's local storage. Use URL parameter 'sap-ui-layer=VENDOR' in order to use link personalization as an application developer."/>
+				</l:content>
+			</l:VerticalLayout>
+
+
+			<m:Button text="Start Key User Adaptation" press="onPressRTA"/>
+
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiLargeMarginTop"
+							text="SmartLink applied to SupplierId. ContactAnnotationPath points to supplier-specific contact information."/>
+				</l:content>
+			</l:VerticalLayout>
+			<SmartLink text="SupplierId" fieldName="SupplierId"
+					   semanticObject="demokit_smartlink_example_08_SemanticObjectSupplierId"
+					   contactAnnotationPath="to_Supplier"/>
+
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiLargeMarginTop"
+							text="SmartField embedded into SmartForm. ContactAnnotationPath points to supplier-specific contact information."/>
+				</l:content>
+			</l:VerticalLayout>
+			<smartForm:SmartForm>
+				<smartForm:Group>
+					<smartForm:GroupElement>
+						<smartField:SmartField value="{Name}"/>
+					</smartForm:GroupElement>
+				</smartForm:Group>
+				<smartForm:semanticObjectController>
+					<SemanticObjectController entitySet="ProductCollection"
+											  contactAnnotationPaths='\{"Name":""\}'/>
+				</smartForm:semanticObjectController>
+			</smartForm:SmartForm>
+
+
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<m:Text class="sapUiLargeMarginTop"
+							text="SmartLink embedded into SmartTable. ContactAnnotationPath of Name property points to supplier-specific contact information. Contact information fields are displayed in the popover only if the related data exists."/>
+				</l:content>
+			</l:VerticalLayout>
+			<smartTable:SmartTable tableType="ResponsiveTable"
+								   entitySet="ProductCollection" enableAutoBinding="true"
+								   useVariantManagement="false" useTablePersonalisation="false"
+								   showRowCount="false" useExportToExcel="false">
+				<smartTable:semanticObjectController>
+					<SemanticObjectController entitySet="ProductCollection"
+											  contactAnnotationPaths='\{"Name":"","SupplierId":"to_Supplier"\}'/>
+				</smartTable:semanticObjectController>
+			</smartTable:SmartTable>
+
+		</l:content>
+	</l:VerticalLayout>
+
+</core:View>

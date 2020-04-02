@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta charset="UTF-8">
+
+	<title>Testpage - ColorPaletteMap</title>
+
+	<base href="../../../../../">
+
+	<script id="sap-ui-bootstrap"
+			data-sap-ui-libs="sap.ui.layout, sap.m, sap.ui.ux3, sap.suite.ui.microchart"
+			data-sap-ui-theme="sap_belize"
+			src="resources/sap-ui-core.js">
+	</script>
+
+	<script>
+		jQuery.sap.require("sap.ui.core.theming.Parameters");
+
+		var fnGetHexColor = function (sColor) {
+			if (!sap.m.ValueCSSColor.isValid(sColor)) {
+				return null;
+			} else if (sap.ui.core.CSSColor.isValid(sColor)) {
+				return (sColor[0] !== "#") ? null : sColor;
+			}
+			return sap.ui.core.theming.Parameters.get(sColor);
+		};
+
+		var fnGetLabelColor = function(sHexColor) {
+			var iRedValue, iGreenValue, iBlueValue, fDataPoint,
+				sLabelColorLight = "#ffffff",
+				sLabelColorDark = "#000000";
+
+			// convert 3-digit hex color to 6-digit first (e.g.: #abc -> #aabbcc)
+			if (sHexColor.length === 4) {
+				sHexColor = "#" + new Array(3).join(sHexColor.substring(1, 2)) + new Array(3).join(sHexColor.substring(2, 3)) + new Array(3).join(sHexColor.substring(3, 4));
+			}
+
+			iRedValue = parseInt(sHexColor.substring(1, 3), 16);
+			iGreenValue = parseInt(sHexColor.substring(3, 5), 16);
+			iBlueValue = parseInt(sHexColor.substring(5, 7), 16);
+			// apply the data point color brightness algorithm
+			fDataPoint = ((iRedValue * 299) + (iGreenValue * 587) + (iBlueValue * 114)) / 1000;
+			return fDataPoint > 127.5 ? sLabelColorDark : sLabelColorLight;
+		};
+
+		var fnCreateList = function (oPalette) {
+			var oList = new sap.m.List({
+				headerText: oPalette.headerText
+			});
+
+			oPalette.colors.forEach(function (sColor) {
+				oList.addItem(new sap.m.StandardListItem({
+					id: sColor,
+					title: sColor
+				}));
+			});
+			oList.addEventDelegate({
+				onAfterRendering: function () {
+					oList.getItems().forEach(function (oItem) {
+						var sBackgroundColor = sap.ui.core.theming.Parameters.get(oItem.getId());
+						oItem.$().css("background", sBackgroundColor);
+						oItem.$().find(".sapMSLITitleOnly").css("color", fnGetLabelColor(sBackgroundColor));
+					});
+				}
+			});
+			return oList;
+		};
+
+		var oMainContainer = new sap.m.FlexBox({
+				direction: "Row",
+				fitContainer: true,
+				renderType: "Div"
+			}),
+			oTesterListItem = new sap.m.StandardListItem({
+				title: "Color from input to test background and foreground color."
+			}),
+			oInput = new sap.m.Input({
+				placeholder: "LESS or HEX color"
+			}),
+			oButton = new sap.m.Button({
+				text: "Show colors",
+				press: function () {
+					var sBackgroundColor = fnGetHexColor(oInput.getValue());
+					oTesterListItem.$().css("background", sBackgroundColor ? sBackgroundColor : "#fff");
+					oTesterListItem.$().find(".sapMSLITitleOnly").css("color", sBackgroundColor ? fnGetLabelColor(sBackgroundColor) : "#fff");
+				}
+			}),
+			oQualitativePalette = {
+				headerText: "Qualitative Palette",
+				colors: []
+			},
+			oSemanticPalette = {
+				headerText: "Semantic Palette",
+				colors: ["sapUiChartPaletteSemanticBad", "sapUiChartPaletteSemanticCritical", "sapUiChartPaletteSemanticGood",
+					"sapUiChartPaletteSemanticNeutral"]
+			};
+
+		oMainContainer.addItem(new sap.m.FlexBox({
+			direction: "Column",
+			fitContainer: true,
+			renderType: "Div",
+			items: [
+				oInput,
+				oButton,
+				new sap.m.List({
+					width: "450px",
+					items: [oTesterListItem]
+				})
+			]
+		}));
+
+		// fill qualitative colors
+		for (var i = 1; i <= 11; i++) {
+			oQualitativePalette.colors.push("sapUiChartPaletteQualitativeHue" + i);
+		}
+
+		oMainContainer.addItem(fnCreateList(oQualitativePalette));
+		oMainContainer.addItem(fnCreateList(oSemanticPalette));
+
+		new sap.m.App("myApp", {
+			pages: [
+				new sap.m.Page("page", {
+					customHeader: new sap.m.Bar({
+						contentMiddle: new sap.m.Label({
+							text: "Color Palette Map"
+						})
+					}),
+					content: oMainContainer
+				})
+			],
+			initialPage: "page"
+		}).placeAt("body");
+	</script>
+</head>
+<body id="body" class="sapUiBody"></body>
+</html>

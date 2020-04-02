@@ -1,0 +1,265 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Integrating the Rules in OPA Tests</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The Support Assistant can be used as part of an existing OPA test to cover more test aspects of the application."><meta name="description" content="The Support Assistant can be used as part of an existing OPA test to cover more test aspects of the application."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"a34eb58aaf124f538a3ead23a6cab04a.html","previousTopicHref":"29bcdec715a2428092666212bb6bb875.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page task  - topic-topic task-task " id="loiocfabbd4dfc054936997d9d00916e1668"><h1 class="title topictitle1" hidden>Integrating the Rules in OPA Tests </h1><div class="body taskbody"><p class="shortdesc" hidden>The Support Assistant can be used as part of an existing OPA test to cover more test
+aspects of the application.</p>
+<div class="section context"><span id="steps" class="anchor"></span><div class="tasklabel"><h2 class="sectiontitle tasklabel">Context</h2></div>
+<div class="p">The Support Assistant can be used in OPA tests to check if there are issues in the different states of the application. To do that, you need to
+use the Support Assistant OPA extension. This extension is available as of version 1.48. It provides three assertions:<ul class="ul" id="loiocfabbd4dfc054936997d9d00916e1668__ul_mnc_h5n_tz">
+<li class="li">
+<div class="p"><samp class="ph codeph">noRuleFailures</samp> - Analyzes the current state of the application, and if errors are found, the assertion
+will fail. A non-mandatory <samp class="ph codeph">options</samp> object can be passed to the assertion containing the following
+properties:<ul class="ul" id="loiocfabbd4dfc054936997d9d00916e1668__ul_ehz_j5n_tz">
+<li class="li">
+<p class="p"><samp class="ph codeph">failOnAnyIssues (boolean)</samp> - Determines if the assertion should fail if issues of
+<cite class="cite">any</cite> severity type are found.</p>
+</li>
+<li class="li">
+<div class="p"><samp class="ph codeph">failOnHighIssues (boolean)</samp> - Determines if the assertion should fail if issues of severity
+type <cite class="cite">high</cite> are found. Warning - this parameter will ignore issues of severity types:
+<cite class="cite">medium</cite> and <cite class="cite">low</cite>. <aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">This parameter overrides <samp class="ph codeph">failOnAnyIssues</samp>.</p></aside></div>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">rules (Array)</samp> - Determines a subset of rules to check. By default if this property is not set,
+all rules are checked. The rules have two properties <samp class="ph codeph">libName</samp> (for example,
+<samp class="ph codeph">sap.ui.core</samp>) and <samp class="ph codeph">ruleId</samp> (for example, <samp class="ph codeph">orphanedElement</samp>).
+</p>
+</li>
+<li class="li">
+<div class="p"><samp class="ph codeph">executionScope (Object)</samp> - The execution scope defines the scope of the analysis. Can be of
+type <cite class="cite">global</cite>, <cite class="cite">subtree</cite>, <cite class="cite">components</cite>. <aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">If types <cite class="cite">subtree</cite> or <cite class="cite">components</cite> are selected, the <samp class="ph codeph">selectors</samp>
+property should also be set to define the IDs of the subtree/components.</p></aside></div>
+</li>
+</ul></div>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">getFinalReport</samp> - If there are issues found, the assertion fails and a report is created as part of the
+message of that assertion. </p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">getReportAsFileInFormat</samp> - Collects the past history analysis and stores it in
+<samp class="ph codeph">window._$files</samp> array for further usage. The main purpose of this assertion is to allow the OPA
+extension to serve the history to external services like Jenkins job or other services so that the data can be stored on
+the filesystem.</p>
+<p class="p">The assertion can be called with two optional parameters: <samp class="ph codeph">historyFormat</samp> - The format into which the
+history object will be converted. Possible values are listed in <samp class="ph codeph">sap.ui.support.HistoryFormats.</samp> and
+<samp class="ph codeph">fileName</samp> &#x2013; the name of the file in which the history will be stored.</p>
+</li>
+</ul></div>
+<p class="p">In addition, if you pass <samp class="ph codeph">sap-skip-rules-issues=true</samp> as a URL
+parameter to your OPA test, the assertion results of <samp class="ph codeph">noRuleFailures</samp>
+and <samp class="ph codeph">getFinalReport</samp> assertions will be <samp class="ph codeph">true</samp>,
+overriding the actual results.</p>
+<p class="p">This special URL parameter could be used temporarily in cases when you extend an
+existing OPA test to run the Support Assistant rule checks initially but you don&#x2019;t
+want the entire OPA journey to fail immediately. After you gain experience and clean
+up any check issues, you can set it to <samp class="ph codeph">false</samp> or omit passing it and
+use once again the desired <samp class="ph codeph">onError</samp> behavior.</p>
+<aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p class="p">When the <samp class="ph codeph">sap-skip-rules-issues</samp> URL parameter is set, it affects all tests globally, unlike the
+<samp class="ph codeph">FailOnAnyIssues</samp> parameters, which only affect a specific test level.</p></aside>
+</div>
+<section class="section procedure"><span id="steps" class="anchor"></span><div class="ol steps tasklabel"><h2 class="sectiontitle tasklabel">Procedure</h2></div><ol class="ol steps"><li class="li step stepexpand">
+<span class="ph cmd">Enable the Support Assistant OPA extension in the OPA configuration file.</span>
+<div class="itemgroup info">
+<div class="p">You need to change two parameters: <ul class="ul" id="loiocfabbd4dfc054936997d9d00916e1668__ul_u34_dwn_tz">
+<li class="li">
+<p class="p"><samp class="ph codeph">extensions</samp> - You need to include the Support
+Assistant OPA extension path
+(<span class="keyword parmname">sap/ui/core/support/RuleEngineOpaExtension</span>).</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">appParams</samp> - You need to add
+<samp class="ph codeph">sap-ui-support</samp> with a value of
+<span class="keyword parmname">true,silent</span>. This will start the
+application in support mode and will start the Support Assistant
+in silent mode (without UI).</p>
+</li>
+</ul></div>
+</div>
+<div class="itemgroup stepresult">
+<div class="p">The configuration file will look like
+this:<pre class="pre codeblock prettyprint">sap.ui.define([
+...
+], function(Opa5, Arrangement) {
+...
+extensions: [&quot;sap/ui/core/support/RuleEngineOpaExtension&quot;],
+
+appParams: {
+  &quot;sap-ui-support&quot;: &quot;true,silent&quot;
+}
+
+...
+});
+});
+</pre></div>
+</div>
+</li><li class="li step stepexpand">
+<span class="ph cmd">Add additional assertions to the OPA configuration file.</span>
+<div class="itemgroup info">
+<div class="p">Add generic or specific assertions - depending on the use case. For
+example:<ul class="ul" id="loiocfabbd4dfc054936997d9d00916e1668__ul_y3v_gzn_tz">
+<li class="li">
+<p class="p"><samp class="ph codeph">iShouldSeeNoHighSeverityErrors</samp> - This assertion
+calls <samp class="ph codeph">noRuleFailures</samp> with a few parameters set,
+as you can see in the example code below. It checks for high
+issues and ignores medium and low. The rules checked are
+<samp class="ph codeph">preloadAsyncCheck</samp>,
+<samp class="ph codeph">orphanedElement</samp>,
+<samp class="ph codeph">deprecatedEntities</samp> and the scope is set to
+<cite class="cite">global</cite>.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">iShouldGetSupportRuleReport</samp>- This assertion
+calls <samp class="ph codeph">getFinalReport</samp> and if there are any
+issues after all the analysis, it fails and a report is created
+as part of the message.</p>
+</li>
+</ul></div>
+</div>
+<div class="itemgroup stepresult">
+<div class="p">The configuration file should look like
+this:<pre class="pre codeblock prettyprint">assertions: new Opa5({
+...
+iShouldSeeNoHighSeverityErrors: function() {
+  return this.waitFor({
+    success: function() {
+      Opa5.assert.noRuleFailures({
+        &quot;failOnHighIssues&quot;: true,
+        rules: [{
+          libName: &quot;sap.ui.core&quot;,
+          ruleId: &quot;preloadAsyncCheck&quot;
+        }, {
+          libName: &quot;sap.ui.core&quot;,
+          ruleId: &quot;orphanedElement&quot;
+        }, {
+          libName: &quot;sap.ui.core&quot;,
+          ruleId: &quot;deprecatedEntities&quot;
+        }],
+        executionScope: {
+          type: &quot;global&quot;
+        }
+      });
+    }
+  });
+},
+iShouldGetSupportRuleReport: function() {&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;
+  return this.waitFor({&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;
+    success: function() {&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;
+      Opa5.assert.getFinalReport();&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;
+    }&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;
+  });&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;
+}
+...
+</pre></div>
+</div>
+</li><li class="li step stepexpand">
+<span class="ph cmd">The added assertions can now be used inside the journeys.</span>
+<div class="itemgroup info">
+<div class="p">Knowing the flow of the tests, choose the right place in your OPA test
+journey to add the needed
+assertion:<pre class="pre codeblock prettyprint">...
+opaTest(&quot;Should see no Support Assistant issues with high severity&quot;, function (Given, When, Then) {
+	Then.iShouldSeeNoHighSeverityErrors();
+});
+...
+</pre></div>
+<aside class="note" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Note</strong></div>
+<p class="p">Put these assertions after the web page being tested has been rendered and displayed with a
+stable UI.</p></aside>
+</div>
+</li><li class="li step stepexpand">
+<span class="ph cmd">Repeat the extended OPA test and see how your specific Support Assistant
+assertions are triggered.</span>
+<div class="itemgroup info">
+<p class="p">You can see a detailed report for each run. The report is tabular and lists
+all executed rules with their details, followed by a list of the issues
+generated by that rule. It looks like this:</p>
+<div class="fig fignone" id="loiocfabbd4dfc054936997d9d00916e1668__fig_wq5_lm1_k1b"><div class="figbody">
+
+<img class="inline  " id="loiocfabbd4dfc054936997d9d00916e1668__image_wnm_2c4_tz" src="loio2d0db1687d01471095d520ccdcce6d68_HiRes.png">
+</div><span class="figcap">OPA Test Results</span></div>
+</div>
+</li></ol></section>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/e15067d976f24b11907f4c262bd749a0.html" title="SAPUI5 apps consist of multiple views, components and fragments. If you run the rules on the complete app with all loaded elements and components, you may not get the desired results. Therefore, the Support Assistant allows you to change the scope of an analysis run and thus narrow down your result set. This helps you focus on specific issues, components or controls within your app." target="_top">Execution Scope</a></div><div><a class="link" href="../../#/topic/2696ab50faad458f9b4027ec2f9b884d.html" title="OPA5 is an API for SAPUI5 controls. It hides asynchronicity and eases access to SAPUI5 elements. This makes OPA especially helpful for testing user interactions, integration with SAPUI5, navigation, and data binding." target="_top">Integration Testing with One Page Acceptance Tests (OPA5)</a></div><div><a class="link" href="../../#/sample/sap.ui.core.sample.OpaWithSupportAssistant/preview" target="_top" alt="#/sample/sap.ui.core.sample.OpaWithSupportAssistant/preview" title="#/sample/sap.ui.core.sample.OpaWithSupportAssistant/preview">Samples: <samp class="ph codeph">Running OPA tests with Support Assistant checks</samp></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

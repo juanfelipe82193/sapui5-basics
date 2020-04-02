@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+	xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+	<edmx:DataServices
+		xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+		<Schema Namespace="GANTT_CHART_ODATA_SRV"
+			xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices"
+			xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+			xmlns="http://schemas.microsoft.com/ado/2006/04/edm"
+			xmlns:edmanno="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
+			xmlns:sap="http://www.sap.com/Protocols/SAPData">
+			<EntityType Name="Requirement">
+				<Key>
+					<PropertyRef Name="RequirementID" />
+				</Key>
+				<Property Name="RequirementID" Type="Edm.String" Nullable="false" sap:hierarchy-node-for="RequirementID"/>
+				<Property Name="ResourceID" Type="Edm.String" Nullable="true" />
+				<Property Name="Type" Type="Edm.String" Nullable="false" />
+				<Property Name="PlanStatus" Type="Edm.String" Nullable="false" />
+				<Property Name="StartTime" Type="Edm.DateTime" Nullable="false" />
+				<Property Name="EndTime" Type="Edm.DateTime" Nullable="false" />
+				<Property Name="SourceLocation" Type="Edm.String" Nullable="false" />
+				<Property Name="DestinationLocation" Type="Edm.String" Nullable="false" />
+				<Property Name="ParentResourceID" Type="Edm.String" Nullable="true"/>
+				<Property Name="ParentRequirementID" Type="Edm.String" Nullable="true" sap:hierarchy-parent-node-for="RequirementID"/>
+				<Property Name="HierarchyLevel" Type="Edm.Int32" Nullable="false" sap:hierarchy-level-for="HierarchyLevel"/>
+				<Property Name="DrillState" Type="Edm.String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" sap:hierarchy-drill-state-for="RequirementID" />
+				<NavigationProperty Name="OrderToUnit"
+					Relationship="GANTT_CHART_ODATA_SRV.OderToUnit" FromRole="FromRole_OrderToUnit"
+					ToRole="ToRole_OrderToUnit" />
+				<NavigationProperty Name="OrderToUtilization"
+					Relationship="GANTT_CHART_ODATA_SRV.OrderToUtilization" FromRole="FromRole_OrderToUtilization"
+					ToRole="ToRole_OrderToUtilization" />
+			</EntityType>
+			<Association Name="OrderToUnit" sap:content-version="1">
+				<End Type="GANTT_CHART_ODATA_SRV.Requirement"
+					Multiplicity="1" Role="FromRole_OrderToUnit" />
+				<End Type="GANTT_CHART_ODATA_SRV.Requirement"
+					Multiplicity="*" Role="ToRole_OrderToUnit" />
+				<ReferentialConstraint>
+					<Principal Role="FromRole_OrderToUnit">
+						<PropertyRef Name="RequirementID" />
+					</Principal>
+					<Dependent Role="ToRole_OrderToUnit">
+						<PropertyRef Name="ParentRequirementID" />
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="OrderToUtilization" sap:content-version="1">
+				<End Type="GANTT_CHART_ODATA_SRV.Requirement"
+					Multiplicity="1" Role="FromRole_OrderToUtilization" />
+				<End Type="GANTT_CHART_ODATA_SRV.Utilization"
+					Multiplicity="*" Role="ToRole_OrderToUtilization" />
+				<ReferentialConstraint>
+					<Principal Role="FromRole_OrderToUtilization">
+						<PropertyRef Name="RequirementID" />
+					</Principal>
+					<Dependent Role="ToRole_OrderToUtilization">
+						<PropertyRef Name="ParentRequirementID" />
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+
+			<EntityType Name="Resource">
+				<Key>
+					<PropertyRef Name="ResourceID" />
+				</Key>
+				<Property Name="ResourceID" Type="Edm.String" Nullable="false"/>
+				<Property Name="Type" Type="Edm.String" Nullable="false" />
+				<Property Name="Description" Type="Edm.String" Nullable="false" />
+				<Property Name="Capacity" Type="Edm.Decimal" Nullable="false" />
+				<Property Name="UintOfMeasure" Type="Edm.String" Nullable="false" />
+				<Property Name="MaximumUtilization" Type="Edm.Decimal" Nullable="false" />
+				<NavigationProperty Name="ResourceToRequirements"
+					Relationship="GANTT_CHART_ODATA_SRV.ResourceToRequirements" FromRole="FromRole_ResourceToRequirements"
+					ToRole="ToRole_ResourceToRequirements" />
+			</EntityType>
+			<Association Name="ResourceToRequirements" sap:content-version="1">
+				<End Type="GANTT_CHART_ODATA_SRV.Resource"
+					Multiplicity="1" Role="FromRole_ResourceToRequirements" />
+				<End Type="GANTT_CHART_ODATA_SRV.Requirement"
+					Multiplicity="*" Role="ToRole_ResourceToRequirements" />
+				<ReferentialConstraint>
+					<Principal Role="FromRole_ResourceToRequirements">
+						<PropertyRef Name="ResourceID" />
+					</Principal>
+					<Dependent Role="ToRole_ResourceToRequirements">
+						<PropertyRef Name="ParentResourceID" />
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+
+			<EntityType Name="Utilization" sap:content-version="">
+				<Key>
+					<PropertyRef Name="UtilizationID" />
+				</Key>
+				<Property Name="UtilizationID" Type="Edm.String" Nullable="false" />
+				<Property Name="ParentRequirementID" Type="Edm.String" Nullable="false" />
+				<Property Name="UtilizationName" Type="Edm.String" Nullable="false" />
+				<Property Name="Color" Type="Edm.String" Nullable="false" />
+				<NavigationProperty Name="UtilizationToItems"
+					Relationship="GANTT_CHART_ODATA_SRV.UtilizationToItems" FromRole="FromRole_UtilizationToItems"
+					ToRole="ToRole_UtilizationToItems" />
+			</EntityType>
+			<EntityType Name="UtilizationItem" sap:content-version="">
+				<Key>
+					<PropertyRef Name="UtilItemID" />
+				</Key>
+				<Property Name="UtilItemID" Type="Edm.String" Nullable="false" />
+				<Property Name="UtilizationID" Type="Edm.String" Nullable="false" />
+				<Property Name="RootRequirementID" Type="Edm.String" Nullable="false" />
+				<Property Name="StartTime" Type="Edm.DateTime" Nullable="false" />
+				<Property Name="EndTime" Type="Edm.DateTime" Nullable="false" />
+				<Property Name="Value" Type="Edm.Float" Nullable="false" />
+			</EntityType>
+			<Association Name="UtilizationToItems" sap:content-version="1">
+				<End Type="GANTT_CHART_ODATA_SRV.Utilization"
+					Multiplicity="1" Role="FromRole_UtilizationToItems" />
+				<End Type="GANTT_CHART_ODATA_SRV.UtilizationItem"
+					Multiplicity="*" Role="ToRole_UtilizationToItems" />
+				<ReferentialConstraint>
+					<Principal Role="FromRole_UtilizationToItems">
+						<PropertyRef Name="UtilizationID" />
+					</Principal>
+					<Dependent Role="ToRole_UtilizationToItems">
+						<PropertyRef Name="UtilizationID" />
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+
+			<EntityContainer Name="GANTT_CHART_ODATA_SRV_Entities" edmanno:LazyLoadingEnabled="true" m:IsDefaultEntityContainer="true">
+				<EntitySet Name="Requirements" EntityType="GANTT_CHART_ODATA_SRV.Requirement" />
+				<EntitySet Name="Resources" EntityType="GANTT_CHART_ODATA_SRV.Resource" />
+				<EntitySet Name="Utilizations" EntityType="GANTT_CHART_ODATA_SRV.Utilization"/>
+				<EntitySet Name="UtilizationItems" EntityType="GANTT_CHART_ODATA_SRV.UtilizationItem"/>
+				<AssociationSet Name="OrderToUnit"
+					Association="GANTT_CHART_ODATA_SRV.OrderToUnit"
+					sap:content-version="1">
+					<End EntitySet="Requirements" Role="FromRole_OrderToUnit" />
+					<End EntitySet="Requirements" Role="ToRole_OrderToUnit" />
+				</AssociationSet>
+				<AssociationSet Name="ResourceToRequirements"
+					Association="GANTT_CHART_ODATA_SRV.ResourceToRequirements"
+					sap:content-version="1">
+					<End EntitySet="Resources" Role="FromRole_ResourceToRequirements" />
+					<End EntitySet="Requirements" Role="ToRole_ResourceToRequirements" />
+				</AssociationSet>
+				<AssociationSet Name="OrderToUtilization"
+					Association="GANTT_CHART_ODATA_SRV.OrderToUtilization"
+					sap:creatable="false" sap:updatable="false" sap:deletable="false"
+					sap:content-version="1">
+					<End EntitySet="Requirements" Role="FromRole_OrderToUtilization" />
+					<End EntitySet="Utilizations" Role="ToRole_OrderToUtilization" />
+				</AssociationSet>
+				<AssociationSet Name="UtilizationToItems"
+					Association="GANTT_CHART_ODATA_SRV.UtilizationToItems"
+					sap:creatable="false" sap:updatable="false" sap:deletable="false"
+					sap:content-version="1">
+					<End EntitySet="Utilizations" Role="FromRole_UtilizationToItems" />
+					<End EntitySet="UtilizationItems" Role="ToRole_UtilizationToItems" />
+				</AssociationSet>
+			</EntityContainer>
+
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

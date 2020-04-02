@@ -1,0 +1,206 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Adding Segmented Buttons to a Table Toolbar</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="You can add segmented buttons to the toolbar, to enable switching between the table content using a selection variant annotation."><meta name="description" content="You can add segmented buttons to the toolbar, to enable switching between the table content using a selection variant annotation."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"cfb04f0c58e7409992feb4c91aa9410b.html","previousTopicHref":"d9a45394165e439595cf0006924b6996.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio5532c899e6e94137b18b8ee68df12efb"><h1 class="title topictitle1" hidden>Adding Segmented Buttons to a Table Toolbar</h1><div class="body conbody"><p class="shortdesc" hidden>You can add segmented buttons to the toolbar, to enable switching between the table
+content using a selection variant annotation.</p>
+<p class="p">You can associate every button of the segmented buttons (or every list item in the select
+box) with a selection variant that filters the table according to the selection variant
+filters once a user has clicked it. This means that the user has multiple views in a single
+table of the object page. You can enable this feature for any table on the object page.</p>
+<p class="p">To implement this feature, make a <samp class="ph codeph">&quot;quickVariantSelection&quot;</samp> entry in the
+manifest. Every variant corresponds to its filter on the UI. A segmented button is rendered
+when the number of variants defined is less than or equal to 3. Defining 4 or more variants in
+the manifest renders a selection box.</p>
+<p class="p">The following manifest settings are required for adding segmented buttons:</p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&quot;component&quot;: {
+  &quot;name&quot;: &quot;sap.suite.ui.generic.template.ObjectPage&quot;,
+  &quot;settings&quot;: {
+    &quot;showConfirmationOnDraftActivate&quot;: false,
+    &quot;sections&quot;: {
+      &quot;SalesOrderItemsID&quot;: {
+        &quot;navigationProperty&quot;: &quot;to_Item&quot;,
+        &quot;entitySet&quot;: &quot;C_STTA_SalesOrderItem_WD_20&quot;,
+        &quot;createMode&quot;: &quot;inline&quot;,
+        &quot;quickVariantSelection&quot;: {
+          &quot;showCounts&quot;: true,
+          &quot;variants&quot;: {
+            &quot;0&quot;: {
+              &quot;key&quot;: &quot;_tab2&quot;,
+              &quot;annotationPath&quot;: &quot;com.sap.vocabularies.UI.v1.SelectionVariant#SimpleFilter&quot;
+            },
+            &quot;1&quot;: {
+              &quot;key&quot;: &quot;_tab3&quot;,
+              &quot;annotationPath&quot;: &quot;com.sap.vocabularies.UI.v1.SelectionVariant#ComplexFilter&quot;
+            }
+          }
+        }
+      }
+    },
+    &quot;showRelatedApps&quot;: true
+  }
+}
+</pre></aside>
+<p class="p">To show the number of records available next to the title of the segmented button, set
+<samp class="ph codeph">showCounts</samp> to <samp class="ph codeph">true</samp>.</p>
+<p class="p">You can define a simple or a complex filter condition inside the
+<samp class="ph codeph">SelectionVariant</samp>. While the simple condition has only one property in the
+<samp class="ph codeph">SelectionVariant</samp>, the complex filter condition can have more than one
+property to be filtered.</p>
+<p class="p">The annotations defined in the variants are:</p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">   
+&lt;Annotation Term=&quot;UI.SelectionVariant&quot; Qualifier=&quot;SimpleFilter&quot;&gt;
+      &lt;Record&gt;
+         &lt;PropertyValue Property=&quot;Text&quot; String=&quot;Tax amount less than 10 USD&quot; /&gt;
+         &lt;PropertyValue Property=&quot;SelectOptions&quot;&gt;
+            &lt;Collection&gt;
+               &lt;Record Type=&quot;UI.SelectOptionType&quot;&gt;
+                  &lt;PropertyValue Property=&quot;PropertyName&quot; PropertyPath=&quot;tax_amount&quot; /&gt;
+                  &lt;PropertyValue Property=&quot;Ranges&quot;&gt;
+                     &lt;Collection&gt;
+                        &lt;Record Type=&quot;UI.SelectionRangeType&quot;&gt;
+                           &lt;PropertyValue Property=&quot;Sign&quot; EnumMember=&quot;UI.SelectionRangeSignType/I&quot; /&gt;
+                           &lt;PropertyValue Property=&quot;Option&quot; EnumMember=&quot;UI.SelectionRangeOptionType/LT&quot; /&gt;
+                           &lt;PropertyValue Property=&quot;Low&quot; String=&quot;10&quot; /&gt;
+                        &lt;/Record&gt;
+                     &lt;/Collection&gt;
+                  &lt;/PropertyValue&gt;
+               &lt;/Record&gt;
+            &lt;/Collection&gt;
+         &lt;/PropertyValue&gt;
+      &lt;/Record&gt;
+   &lt;/Annotation&gt;
+   &lt;Annotation Term=&quot;UI.SelectionVariant&quot; Qualifier=&quot;ComplexFilter&quot;&gt;
+      &lt;Record&gt;
+         &lt;PropertyValue Property=&quot;Text&quot; String=&quot;Net Amount between 10 and 40 And Gross Amount Less than 100 USD&quot; /&gt;
+         &lt;PropertyValue Property=&quot;SelectOptions&quot;&gt;
+            &lt;Collection&gt;
+               &lt;Record Type=&quot;UI.SelectOptionType&quot;&gt;
+                  &lt;PropertyValue Property=&quot;PropertyName&quot; PropertyPath=&quot;net_amount&quot; /&gt;
+                  &lt;PropertyValue Property=&quot;Ranges&quot;&gt;
+                     &lt;Collection&gt;
+                        &lt;Record&gt;
+                           &lt;PropertyValue Property=&quot;Sign&quot; EnumMember=&quot;com.sap.vocabularies.UI.v1.SelectionRangeSignType/I&quot; /&gt;
+                           &lt;PropertyValue Property=&quot;Option&quot; EnumMember=&quot;UI.SelectionRangeOptionType/BT&quot; /&gt;
+                           &lt;PropertyValue Property=&quot;Low&quot; String=&quot;10&quot; /&gt;
+                           &lt;PropertyValue Property=&quot;High&quot; String=&quot;40&quot; /&gt;
+                        &lt;/Record&gt;
+                     &lt;/Collection&gt;
+                  &lt;/PropertyValue&gt;
+               &lt;/Record&gt;
+               &lt;Record Type=&quot;UI.SelectOptionType&quot;&gt;
+                  &lt;PropertyValue Property=&quot;PropertyName&quot; PropertyPath=&quot;gross_amount&quot; /&gt;
+                  &lt;PropertyValue Property=&quot;Ranges&quot;&gt;
+                     &lt;Collection&gt;
+                        &lt;Record Type=&quot;UI.SelectionRangeType&quot;&gt;
+                           &lt;PropertyValue Property=&quot;Option&quot; EnumMember=&quot;UI.SelectionRangeOptionType/LT&quot; /&gt;
+                           &lt;PropertyValue Property=&quot;Sign&quot; EnumMember=&quot;UI.SelectionRangeSignType/I&quot; /&gt;
+                           &lt;PropertyValue Property=&quot;Low&quot; String=&quot;100&quot; /&gt;
+                        &lt;/Record&gt;
+                     &lt;/Collection&gt;
+                  &lt;/PropertyValue&gt;
+               &lt;/Record&gt;
+            &lt;/Collection&gt;
+         &lt;/PropertyValue&gt;
+      &lt;/Record&gt;
+   &lt;/Annotation&gt;
+</pre></aside>
+<aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p>If the <samp class="ph codeph">SelectionVariant</samp> has multiple
+<samp class="ph codeph">&lt;SelectionOptionType&gt;</samp>, filters that have the same target property are
+combined with an OR condition. Filters that have different target properties are combined with
+an AND condition.</p></aside>
+<p class="p">The table containing the segmented buttons looks like this: </p>
+<div class="fig fignone" id="loio5532c899e6e94137b18b8ee68df12efb__fig_pbr_kmr_tgb"><div class="figbody">
+
+<img class="inline  " id="loio5532c899e6e94137b18b8ee68df12efb__image_yr1_z2n_2jb" src="loio3d9da3f6ad0346aa845aac9b45c2b574_LowRes.png">
+</div><span class="figcap">Segmented button 1 selected</span></div>
+<div class="fig fignone" id="loio5532c899e6e94137b18b8ee68df12efb__fig_dyn_bfn_2jb"><div class="figbody">
+
+<img class="inline  " id="loio5532c899e6e94137b18b8ee68df12efb__image_vw3_cfn_2jb" src="loioe1d19dc79e9e4985a64acebdf0559923_LowRes.png">
+</div><span class="figcap">Segmented button 2 selected</span></div>
+<aside class="note" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Note</strong></div>
+<p class="p">When the table is initially loaded, two calls are made to determine the number of the
+records in the table. These are shown in the button text.</p><p class="p">Setting <samp class="ph codeph">showCounts</samp> to <samp class="ph codeph">false</samp> will not show the number in
+the button text. This means that in this case no count calls are made. </p></aside>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/0d390fed360c4c58a0f0619338938de1.html" title="You can define multiple views of a table and display them in single table mode. Users can switch between views using a segmented button." target="_top">Defining Multiple Views on a List Report Table - Single Table Mode</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+	xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+	xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+	xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="EPM_SEMANANTICS_SRV" sap:schema-version="0"
+			xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="Share" sap:service-schema-version="1"
+				sap:service-version="1" sap:semantics="aggregate"
+				sap:content-version="1">
+				<Key>
+					<PropertyRef Name="Name" />
+					<PropertyRef Name="Year" />
+				</Key>
+				<Property Name="Name" Type="Edm.String" MaxLength="8"
+					sap:aggregation-role="dimension" sap:label="Name" sap:sortable="true"
+					sap:filterable="true" />
+				<Property Name="Year" Type="Edm.Int64" MaxLength="4"
+					sap:aggregation-role="dimension" sap:label="Year" sap:sortable="true"
+					sap:filterable="true" />
+				<Property Name="Course" Type="Edm.Decimal"
+					sap:aggregation-role="measure" sap:label="Course" sap:sortable="true"
+					sap:filterable="false" />
+				<Property Name="TargetCourse" Type="Edm.Decimal"
+					sap:aggregation-role="measure" sap:label="Aimed Course"
+					sap:sortable="true" sap:filterable="false" />
+				<Property Name="ForeCast" Type="Edm.Decimal"
+					sap:aggregation-role="measure" sap:label="Fore Cast" sap:sortable="true"
+					sap:filterable="false" />
+				<Property Name="CourseCriticality" Type="Edm.String"
+					sap:label="Criticality" sap:aggregation-role="dimension"
+					sap:text="CriticalityDescription" />
+				<Property Name="CriticalityDescription" Type="Edm.String"
+					sap:label="Criticality" sap:sortable="true" sap:filterable="false" />
+			</EntityType>
+			<EntityContainer Name="EPM_SEMANANTICS_SRV"
+				m:IsDefaultEntityContainer="true">
+				<EntitySet Name="Shares" EntityType="EPM_SEMANANTICS_SRV.Share"
+					sap:creatable="false" sap:updatable="false" sap:deletable="false"
+					sap:content-version="1" />
+			</EntityContainer>
+			<Annotations Target="EPM_SEMANANTICS_SRV.Share"
+				xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.UI.v1.Chart"
+					Qualifier="Static">
+					<Record>
+						<PropertyValue Property="ChartType"
+							EnumMember="com.sap.vocabularies.UI.v1.ChartType/Column" />
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>Name</PropertyPath>
+								<PropertyPath>Year</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Course</PropertyPath>
+								<PropertyPath>TargetCourse</PropertyPath>
+								<PropertyPath>ForeCast</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record>
+									<PropertyValue Property="Measure" PropertyPath="Course" />
+									<PropertyValue Property="Role"
+										EnumMember="com.sap.vocabularies.UI.v1.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint"
+										AnnotationPath="@com.sap.vocabularies.UI.v1.DataPoint#StaticCourse" />
+								</Record>
+								<Record>
+									<PropertyValue Property="Measure" PropertyPath="TargetCourse" />
+									<PropertyValue Property="Role"
+										EnumMember="com.sap.vocabularies.UI.v1.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint"
+										AnnotationPath="@com.sap.vocabularies.UI.v1.DataPoint#StaticTargetCourse" />
+								</Record>
+								<Record>
+									<PropertyValue Property="Measure" PropertyPath="ForeCast" />
+									<PropertyValue Property="Role"
+										EnumMember="com.sap.vocabularies.UI.v1.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint"
+										AnnotationPath="@com.sap.vocabularies.UI.v1.DataPoint#StaticForeCast" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.Chart"
+					Qualifier="Calculated">
+					<Record>
+						<PropertyValue Property="ChartType"
+							EnumMember="com.sap.vocabularies.UI.v1.ChartType/Column" />
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>Name</PropertyPath>
+								<PropertyPath>Year</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Course</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record>
+									<PropertyValue Property="Measure" PropertyPath="Course" />
+									<PropertyValue Property="Role"
+										EnumMember="com.sap.vocabularies.UI.v1.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint"
+										AnnotationPath="@com.sap.vocabularies.UI.v1.DataPoint#Calculated" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.Chart"
+					Qualifier="StaticThresholds">
+					<Record>
+						<PropertyValue Property="ChartType"
+							EnumMember="com.sap.vocabularies.UI.v1.ChartType/Column" />
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>Name</PropertyPath>
+								<PropertyPath>Year</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Course</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record>
+									<PropertyValue Property="Measure" PropertyPath="Course" />
+									<PropertyValue Property="Role"
+										EnumMember="com.sap.vocabularies.UI.v1.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint"
+										AnnotationPath="@com.sap.vocabularies.UI.v1.DataPoint#StaticThresholds" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.Chart"
+					Qualifier="DynamicThresholds">
+					<Record>
+						<PropertyValue Property="ChartType"
+							EnumMember="com.sap.vocabularies.UI.v1.ChartType/Column" />
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>Name</PropertyPath>
+								<PropertyPath>Year</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Course</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record>
+									<PropertyValue Property="Measure" PropertyPath="Course" />
+									<PropertyValue Property="Role"
+										EnumMember="com.sap.vocabularies.UI.v1.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint"
+										AnnotationPath="@com.sap.vocabularies.UI.v1.DataPoint#DynamicThresholds" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.DataPoint"
+					Qualifier="StaticCourse">
+					<Record Type="com.sap.vocabularies.UI.v1.DataPointType">
+						<PropertyValue Property="Value" Path="Course" />
+						<PropertyValue Property="Criticality"
+							EnumMember="com.sap.vocabularies.UI.v1.CriticalityType/Neutral" />
+					</Record>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.DataPoint"
+					Qualifier="StaticTargetCourse">
+					<Record Type="com.sap.vocabularies.UI.v1.DataPointType">
+						<PropertyValue Property="Value" Path="TargetCourse" />
+						<PropertyValue Property="Criticality"
+							EnumMember="com.sap.vocabularies.UI.v1.CriticalityType/Positive" />
+					</Record>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.DataPoint"
+					Qualifier="StaticForeCast">
+					<Record Type="com.sap.vocabularies.UI.v1.DataPointType">
+						<PropertyValue Property="Value" Path="ForeCast" />
+						<PropertyValue Property="Criticality"
+							EnumMember="com.sap.vocabularies.UI.v1.CriticalityType/Critical" />
+					</Record>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.DataPoint"
+					Qualifier="Calculated">
+					<Record Type="com.sap.vocabularies.UI.v1.DataPointType">
+						<PropertyValue Property="Value" Path="Course" />
+						<PropertyValue Property="Criticality" Path="CourseCriticality" />
+					</Record>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.DataPoint"
+					Qualifier="StaticThresholds">
+					<Record Type="com.sap.vocabularies.UI.v1.DataPointType">
+						<PropertyValue Property="Value" Path="Course" />
+						<PropertyValue Property="CriticalityCalculation">
+							<Record Type="com.sap.vocabularies.UI.v1.ImprovementDirectionType">
+								<PropertyValue Property="ImprovementDirection"
+									EnumMember="com.sap.vocabularies.UI.v1.ImprovementDirectionType/Maximize" />
+								<PropertyValue Property="DeviationRangeLowValue"
+									Decimal="2000" />
+								<PropertyValue Property="ToleranceRangeLowValue"
+									Decimal="6000" />
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.UI.v1.DataPoint"
+					Qualifier="DynamicThresholds">
+					<Record Type="com.sap.vocabularies.UI.v1.DataPointType">
+						<PropertyValue Property="Value" Path="Course" />
+						<PropertyValue Property="CriticalityCalculation">
+							<Record Type="com.sap.vocabularies.UI.v1.ImprovementDirectionType">
+								<PropertyValue Property="ImprovementDirection"
+									EnumMember="com.sap.vocabularies.UI.v1.ImprovementDirectionType/Maximize" />
+								<PropertyValue Property="DeviationRangeLowValue"
+									Path="ForeCast" />
+								<PropertyValue Property="ToleranceRangeLowValue"
+									Path="TargetCourse" />
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

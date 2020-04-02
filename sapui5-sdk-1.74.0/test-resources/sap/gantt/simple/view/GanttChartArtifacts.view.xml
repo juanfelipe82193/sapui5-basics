@@ -1,0 +1,259 @@
+<mvc:View height="100%"
+		  controllerName="sap.gantt.simple.test.GanttChartArtifacts"
+		  xmlns="sap.ui.table"
+		  xmlns:mvc="sap.ui.core.mvc"
+		  xmlns:m="sap.m"
+		  xmlns:test="sap.gantt.simple.test"
+		  xmlns:gnt="sap.gantt"
+		  xmlns:gnt-def="sap.gantt.def"
+		  xmlns:gnt-pattern="sap.gantt.def.pattern"
+		  xmlns:gnt-cal="sap.gantt.def.cal"
+		  xmlns:custom-shapes="sap.gantt.simple.test.customShapes"
+		  xmlns:gnt2="sap.gantt.simple">
+
+	<m:Page title="GanttChartArtifacts" showNavButton="false" contentOnlyBusy="true" enableScrolling="true">
+		<gnt2:GanttChartContainer id="container" enableTimeScrollSync="true">
+			<gnt2:toolbar>
+				<gnt2:ContainerToolbar stepCountOfSlider="11" zoomControlType="SliderWithButtons" id="containerToolbar"
+									   infoOfSelectItems="{path: 'other>/null', formatter: '.createTimeLineOptions'}">
+					<m:MenuButton text="Row Settings" tooltip="Row Settings" buttonMode="Regular">
+						<m:Menu itemSelected=".rowSettingsSelected">
+							<m:MenuItem text="Selection Mode">
+								<m:MenuItem text="None" />
+								<m:MenuItem text="Single" />
+								<m:MenuItem text="MultiToggle" icon="sap-icon://accept" />
+							</m:MenuItem>
+							<m:MenuItem text="Selection Behavior">
+								<m:MenuItem text="Row" />
+								<m:MenuItem text="RowOnly" />
+								<m:MenuItem text="RowSelector" icon="sap-icon://accept" />
+							</m:MenuItem>
+						</m:Menu>
+					</m:MenuButton>
+					<m:MenuButton text="Shape Settings" tooltip="Shape Settings" buttonMode="Regular">
+						<m:Menu itemSelected=".shapeSettingsSelected">
+							<m:MenuItem text="Selection Mode">
+								<m:MenuItem text="None" />
+								<m:MenuItem text="Single" />
+								<m:MenuItem text="Multiple" icon="sap-icon://accept" />
+								<m:MenuItem text="MultiWithKeyboard" />
+							</m:MenuItem>
+						</m:Menu>
+					</m:MenuButton>
+					<m:MenuButton text="Zoom Strategy Type" id="zoomStrategyMenu">
+						<m:Menu itemSelected=".itemSelected">
+							<m:MenuItem text="Proportion Zoom Strategy" />
+							<m:MenuItem text="Full Screen Zoom Strategy" />
+							<m:MenuItem text="Stepwise Zoom Strategy" icon="sap-icon://accept" />
+							<m:MenuItem text="Stepwise Zoom Strategy (Custom)" />
+						</m:Menu>
+					</m:MenuButton>
+				</gnt2:ContainerToolbar>
+			</gnt2:toolbar>
+			<gnt2:GanttChartWithTable id="gantt" showShapeTimeOnDrag="true" adhocLineLayer="Bottom" shapeSelectionMode="Multiple">
+				<gnt2:table>
+					<TreeTable visibleRowCountMode="Auto"
+							   rows="{
+							   	path: 'data>/MonitorProject',
+								parameters: {
+									operationMode: 'Server',
+									numberOfExpandedLevels: 2,
+									treeAnnotationProperties: {
+										hierarchyNodeFor: 'ObjectID',
+										hierarchyParentNodeFor: 'ParentObjectID',
+										hierarchyLevelFor: 'HierarchyNodeLevel',
+										hierarchyDrillStateFor: 'DrillDownState',
+										hierarchyNodeDescendantCountFor: 'Magnitude'
+									},
+									expand: 'MonitorTasks/TaskToSteps,Relationships'
+								}
+							   }"
+					>
+						<rowSettingsTemplate>
+							<test:CustomRowSettings rowId="{data>ObjectID}" calendars="{path: 'data>/Calendars', templateShareable: false}"
+													steppedTasks="{path: 'data>MonitorTasks', templateShareable: false}"
+													relationships="{path: 'data>Relationships', templateShareable: false}">
+								<test:calendars>
+									<gnt2:BaseCalendar shapeId="{data>CalendarID}" calendarName="workingDays" />
+								</test:calendars>
+								<test:steppedTasks>
+									<test:SteppedTask draggable="true" resizable="true" hoverable="true" expandable="true"
+													selectable="true" connectable="false" scheme="TaskToSteps" shapeId="{data>TaskID}"
+													tooltip="{data>Tooltip}" time="{data>StartDate}" endTime="{data>EndDate}"
+													breaks="{path: 'data>TaskToSteps', templateShareable: false}"
+													steps="{path: 'data>TaskToSteps', templateShareable: false}">
+										<test:task>
+											<gnt2:BaseRectangle height="19" time="{data>StartDate}" endTime="{data>EndDate}"
+															fill="{= ${data>TaskID} === 'monitor_task_2' ? '#5CBAE5' : '#129758' }"/>
+										</test:task>
+										<test:steps>
+											<gnt2:BaseRectangle yBias="-2" height="19" scheme="task_to_step" shapeId="{data>StepID}"
+															time="{data>StartDate}" endTime="{data>EndDate}"
+															fill="{= ${data>StepStatus} === 'finished' ? '#4CAB0A' : '#FF0000' }"/>
+										</test:steps>
+										<test:breaks>
+											<gnt2:BaseRectangle draggable="true" resizable="true" selectable="true" height="19"
+																scheme="task_to_step" shapeId="{data>StepID}" tooltip="{data>StepStatus}"
+																time="{data>StartDate}" endTime="{data>EndDate}"/>
+										</test:breaks>
+									</test:SteppedTask>
+								</test:steppedTasks>
+								<test:relationships>
+									<gnt2:Relationship selectable="true" type="{data>RelationType}" shapeId="{data>RelationID}"
+										predecessor="{data>PredecTaskID}" successor="{data>SuccTaskID}" tooltip="{data>RelationType}"
+										stroke="{= ${data>RelationID} === 'rls-0' ? '#d5dadc' : '#000000' }"
+										selectedStroke="{= ${data>RelationID} === 'rls-1' ? '#ffa500' : '#ff0000' }"/>
+								</test:relationships>
+								<test:dynamicShapes>
+									<gnt2:BaseConditionalShape activeShape="{parts: ['data>ObjectType', 'data>ObjectID'], formatter: '.activeShapeFormatter'}" selectable="true"
+															   shapeId="{data>ObjectID}">
+										<gnt2:shapes>
+											<gnt2:BaseDiamond height="19" draggable="true" selectable="true" connectable="true"
+													time="{data>StartDate}" endTime="{data>EndDate}" shapeId="{data>ObjectID}"
+													tooltip="{data>ObjectName}" width="19" fill="#BAC1C4"/>
+											<gnt2:BaseGroup shapeId="{data>ObjectID}" selectable="true">
+												<gnt2:shapes>
+													<gnt2:BaseDiamond height="19" draggable="true" selectable="true" connectable="true"
+																	  time="{data>StartDate}" endTime="{data>EndDate}"
+																	  tooltip="{data>ObjectName}" width="19" fill="#BAC1C4"/>
+													<custom-shapes:CustomPath draggable="true" selectable="true" connectable="true"
+																			  time="{data>StartDate}" endTime="{data>EndDate}" stroke="#FF0000"
+																			  strokeWidth="2" strokeDasharray="2, 2" height="19"/>
+												</gnt2:shapes>
+											</gnt2:BaseGroup>
+											<gnt2:BaseChevron height="19" draggable="true" selectable="true" connectable="true"
+															  time="{data>StartDate}" endTime="{data>EndDate}" shapeId="{data>ObjectID}"
+															  tooltip="{data>ObjectName}"
+															  fill="{= (${data>ObjectID} === 'object-0-1') ? '#D5DADC' : (${data>SeverityText} ? '#DC0D0E' : '#BAC1C4') }"/>
+											<gnt2:BaseGroup shapeId="{data>ObjectID}" selectable="true">
+												<gnt2:shapes>
+													<gnt2:BaseChevron height="19" draggable="true" selectable="true" connectable="true"
+																	  time="{data>StartDate}" endTime="{data>EndDate}"
+																	  tooltip="{data>ObjectName}"
+																	  fill="{= (${data>ObjectID} === 'object-0-1') ? '#D5DADC' : (${data>SeverityText} ? '#DC0D0E' : '#BAC1C4') }"/>
+													<gnt2:BaseText fill="#0000FF" hoverable="true" textAnchor="end"
+															x="{parts: [
+																{path: 'data>StartDate'},
+																{path: 'data>EndDate'}
+															], formatter: '.xProducer'}" text="{path: 'data>StartDate', formatter: '.formatDate'}"
+																   tooltip="{path: 'data>StartDate', formatter: '.formatDate'}"/>
+													<gnt2:BaseText fill="#0000FF" hoverable="true" textAnchor="start"
+																   x="{parts: [
+																		{path: 'data>StartDate'},
+																		{path: 'data>EndDate'}
+																	], formatter: '.xEndProducer'}" text="{path: 'data>EndDate', formatter: '.formatDate'}"
+																   tooltip="{path: 'data>EndDate', formatter: '.formatDate'}"/>
+												</gnt2:shapes>
+											</gnt2:BaseGroup>
+											<gnt2:BaseGroup shapeId="{data>ObjectID}" selectable="true">
+												<gnt2:shapes>
+													<gnt2:BaseChevron height="19" draggable="true" selectable="true" connectable="true"
+																	  time="{data>StartDate}" endTime="{data>EndDate}"
+																	  tooltip="{data>ObjectName}"
+																	  fill="{= (${data>ObjectID} === 'object-0-1') ? '#D5DADC' : (${data>SeverityText} ? '#DC0D0E' : '#BAC1C4') }"/>
+													<gnt2:BaseImage hoverable="true" yBias="-1" src="sap-icon://locked" tooltip="Locked"
+																	x="{parts: [
+																		{path: 'data>StartDate'},
+																		{path: 'data>EndDate'}
+																	], formatter: '.xProducer2'}"/>
+												</gnt2:shapes>
+											</gnt2:BaseGroup>
+											<gnt2:BaseGroup shapeId="{data>ObjectID}" selectable="true">
+												<gnt2:shapes>
+													<gnt2:BaseChevron height="19" draggable="true" selectable="true" connectable="true"
+																	  time="{data>StartDate}" endTime="{data>EndDate}"
+																	  tooltip="{data>ObjectName}"
+																	  fill="{= (${data>ObjectID} === 'object-0-1') ? '#D5DADC' : (${data>SeverityText} ? '#DC0D0E' : '#BAC1C4') }"/>
+													<gnt2:BaseImage hoverable="true" src="../image/warning.png" tooltip="Warning"
+																	x="{parts: [
+																		{path: 'data>StartDate'},
+																		{path: 'data>EndDate'}
+																	], formatter: '.xProducer2'}"/>
+												</gnt2:shapes>
+											</gnt2:BaseGroup>
+											<custom-shapes:Progress shapeId="{data>ObjectID}" percentage="{data>Percentage}" time="{data>StartDate}"
+																	endTime="{data>EndDate}" height="19" selectable="true" />
+											<gnt2:BaseRectangle time="{data>StartDate}" endTime="{data>EndDate}" height="19" shapeId="{data>ObjectID}"
+														strokeWidth="1" stroke="{= ${data>ObjectID} === 'object-0-2-3' ? 'red' : '' }"
+														fill="{parts: ['data>ObjectID', 'data>SeverityText'], formatter: '.rectangleFillFormatter'}"
+														selectable="true"/>
+											<gnt2:BaseGroup shapeId="{data>ObjectID}" time="{data>StartDate}" endTime="{data>EndDate}" selectable="true">
+												<gnt2:shapes>
+													<gnt2:BaseRectangle time="{data>StartDate}" endTime="{data>EndDate}" height="19"
+																		strokeWidth="1" stroke="{= ${data>ObjectID} === 'object-0-2-3' ? 'red' : '' }"
+																		fill="{parts: ['data>ObjectID', 'data>SeverityText'], formatter: '.rectangleFillFormatter'}"/>
+													<gnt2:BaseText text="{data>ObjectName}" time="{data>StartDate}" endTime="{data>StartDate}"
+																   truncateWidth="1000"/>
+												</gnt2:shapes>
+											</gnt2:BaseGroup>
+											<gnt2:BaseGroup shapeId="{data>ObjectID}" selectable="true">
+												<gnt2:shapes>
+													<gnt2:BaseRectangle time="{data>StartDate}" endTime="{data>EndDate}" height="19"
+																		strokeWidth="1" stroke="{= ${data>ObjectID} === 'object-0-2-3' ? 'red' : '' }"
+																		fill="{parts: ['data>ObjectID', 'data>SeverityText'], formatter: '.rectangleFillFormatter'}"/>
+													<custom-shapes:CustomLine stroke="#FF0000" strokeWidth="2" time="{data>StartDate}" endTime="{data>EndDate}" height="19"/>
+												</gnt2:shapes>
+											</gnt2:BaseGroup>
+										</gnt2:shapes>
+									</gnt2:BaseConditionalShape>
+								</test:dynamicShapes>
+							</test:CustomRowSettings>
+						</rowSettingsTemplate>
+						<columns>
+							<Column width="330px" sortProperty="ObjectName" filterProperty="ObjectName">
+								<label>
+									<m:Label text="ObjectName" />
+								</label>
+								<template>
+									<m:Text text="{data>ObjectName}" wrapping="false" />
+								</template>
+							</Column>
+							<Column width="170px">
+								<label>
+									<m:Label text="StartDate" />
+								</label>
+								<template>
+									<m:DatePicker dateValue="{data>StartDate}" />
+								</template>
+							</Column>
+							<Column width="170px">
+								<label>
+									<m:Label text="EndDate" />
+								</label>
+								<template>
+									<m:DatePicker dateValue="{data>EndDate}" />
+								</template>
+							</Column>
+						</columns>
+					</TreeTable>
+				</gnt2:table>
+				<gnt2:calendarDef>
+					<gnt-cal:CalendarDefs defs="{
+						path: 'data>/Calendars',
+						parameters: {
+							expand: 'CalendarInterval'
+						},
+						templateShareable: false
+					}">
+						<gnt-cal:Calendar key="{data>CalendarName}" timeIntervals="{path: 'data>CalendarInterval', templateShareable: false}">
+							<gnt-cal:TimeInterval startTime="{data>StartDate}" endTime="{data>EndDate}" />
+						</gnt-cal:Calendar>
+					</gnt-cal:CalendarDefs>
+				</gnt2:calendarDef>
+				<gnt2:adhocLines>
+					<gnt:AdhocLine stroke="#e17b24" strokeWidth="2" strokeDasharray="5, 1" timeStamp="20160615000000" description="Adhoc line description" />
+					<gnt:AdhocLine stroke="#27a3dd" strokeWidth="2" strokeDasharray="5, 5" timeStamp="20161115000000" description="Second Adhoc line description" />
+				</gnt2:adhocLines>
+				<gnt2:shapeSchemes>
+					<gnt2:ShapeScheme key="TaskToSteps" primary="true" />
+					<gnt2:ShapeScheme key="task_to_step" rowSpan="1" />
+				</gnt2:shapeSchemes>
+				<gnt2:svgDefs>
+					<gnt-def:SvgDefs>
+						<gnt-pattern:BackSlashPattern id="pattern_backslashFilled_gray" stroke="#ccc5a8" strokeWidth="1" backgroundColor="none" />
+					</gnt-def:SvgDefs>
+				</gnt2:svgDefs>
+			</gnt2:GanttChartWithTable>
+		</gnt2:GanttChartContainer>
+	</m:Page>
+</mvc:View>

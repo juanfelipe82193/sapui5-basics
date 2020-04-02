@@ -1,0 +1,169 @@
+<!DOCTYPE html >
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="UTF-8">
+		<title>SAPUI5 Demokit - Version Info</title>
+		<link rel="stylesheet" href="theme/default.css">
+		<style>	
+			.myDS.sapUiUx3DS,
+			.myDS.sapUiUx3DS .sapUiUx3DSSVItem:hover {
+				background-color: transparent;
+			}
+			.myDS.sapUiUx3DS .sapUiLnk,
+			.myDS.sapUiUx3DS .sapUiTv {
+				width: auto !important;
+			}
+			.myReleaseNotes {
+				height: 400px;
+				overflow: auto; 
+			}
+		</style>
+		<script 
+			id="sap-ui-bootstrap"
+			src="resources/sap-ui-core.js"
+			data-sap-ui-theme="sap_bluecrystal"
+			data-sap-ui-preload="async"
+			data-sap-ui-libs="sap.ui.ux3, sap.ui.commons, sap.ui.layout, sap.ui.documentation"
+			data-sap-ui-bindingSyntax="complex"
+			data-sap-ui-xx-supportedLanguages="default"
+			data-sap-ui-xx-waitForTheme="true" >
+		</script>
+		<script>
+		sap.ui.getCore().attachInit(function() {
+			
+			jQuery.sap.require("sap.ui.model.json.JSONModel");
+			sap.ui.localResources("versioninfo");
+			var oModel = new sap.ui.model.json.JSONModel();
+			
+			sap.ui.documentation._loadAllLibInfo("", "_getLibraryInfo","", function(aLibs, oLibInfos){
+				var data = {};
+				var oLibInfo = new sap.ui.core.util.LibraryInfo();
+				
+				for (var i = 0, l = aLibs.length; i < l; i++) {
+					aLibs[i] = oLibInfos[aLibs[i]];
+					aLibs[i].libDefaultComponent = oLibInfo._getDefaultComponent(aLibs[i]);
+				}
+				data.libs = aLibs;
+				oModel.setData(data);
+			});
+			
+			fnOpenReleaseDialog = function openReleaseDialog() {
+				
+				var oNotesModel;
+				var oNotesView = sap.ui.getCore().byId("notesView");
+				var oDialog = sap.ui.getCore().byId("notesDialog");
+				if (!oDialog) {
+					var oText = new sap.ui.commons.TextView({text: "No changes for this library!", id: "noRelNote"});
+					oNotesView = sap.ui.view({id:"notesView", viewName:"versioninfo.notes", type:sap.ui.core.mvc.ViewType.Template});
+					oNotesModel = new sap.ui.model.json.JSONModel();
+					oNotesView.setModel(oNotesModel);
+					oDialog = new sap.ui.commons.Dialog("notesDialog");	
+					oDialog.addButton(new sap.ui.commons.Button({
+						text: "OK", 
+						press: function(){
+							oDialog.close();
+						}
+					}));
+					oDialog.setModal(true);
+					oDialog.setHeight("50%");
+					oNotesView.addStyleClass("myReleaseNotes");
+					oDialog.setResizable(true);
+				}
+				
+				var oLibInfo = new sap.ui.core.util.LibraryInfo();
+				oDialog.setTitle("Change log for: " + this.getBindingContext().getProperty("library"));
+				
+				var oVersion = jQuery.sap.Version(this.getBindingContext().getProperty("version"));
+				var sVersion = oVersion.getMajor() + "." + oVersion.getMinor() + "." + oVersion.getPatch() + oVersion.getSuffix() ;
+				
+				oLibInfo._getReleaseNotes(this.getBindingContext().getProperty("library"), sVersion, function(oRelNotes, sVersion) {
+					oDialog.removeAllContent();
+					
+					if (oRelNotes && oRelNotes[sVersion] && oRelNotes[sVersion].notes && oRelNotes[sVersion].notes.length > 0) {
+						oDialog.addContent(oNotesView);
+						oNotesView.getModel().setData(oRelNotes);
+						oNotesView.bindElement("/" + sVersion);
+						oDialog.open();
+					} else {
+						oDialog.addContent(sap.ui.getCore().byId("noRelNote"));
+						oDialog.open();
+					}
+					
+				});
+			};
+			
+			var oDataSet = new sap.ui.ux3.DataSet({
+				items : {
+					path : "/libs",
+					template : new sap.ui.ux3.DataSetItem({
+						title : "{library}"
+					})
+				},
+				views : [ new sap.ui.ux3.DataSetSimpleView({
+					floating : false,
+					template : new sap.ui.commons.form.Form({
+						title : new sap.ui.core.Title({text : "{library}"}),
+						width : "100%",
+						layout : new sap.ui.commons.form.GridLayout(),
+						formContainers : [ new sap.ui.commons.form.FormContainer({
+							formElements : [
+								new sap.ui.commons.form.FormElement({
+									label : new sap.ui.commons.Label({text : "Version:", layoutData : new sap.ui.commons.form.GridElementData({hCells : "3"})}),
+									fields : [ new sap.ui.commons.TextView({text : "{version}"})]
+								}),
+								new sap.ui.commons.form.FormElement({
+									label : new sap.ui.commons.Label({text : "Vendor:", layoutData : new sap.ui.commons.form.GridElementData({hCells : "3"})}),
+									fields : [ new sap.ui.commons.TextView({text : "{vendor}"})]
+								}),
+								new sap.ui.commons.form.FormElement({
+									label : new sap.ui.commons.Label({text : "Description:", layoutData : new sap.ui.commons.form.GridElementData({hCells : "3"})}),
+									fields : [ new sap.ui.commons.TextView({text : "{documentation}"})]
+								}),
+								new sap.ui.commons.form.FormElement({
+									label : new sap.ui.commons.Label({text : "Change Log:", layoutData : new sap.ui.commons.form.GridElementData({hCells : "3"})}),
+									fields : [ new sap.ui.commons.Link({text : "Open Change Log", press : fnOpenReleaseDialog})],
+									visible : {
+										path: "releasenotes",
+										formatter: function(oValue) {
+											return !!oValue; 
+										}
+									}
+								}),
+								new sap.ui.commons.form.FormElement({
+									label : new sap.ui.commons.Label({text : "Component:", layoutData : new sap.ui.commons.form.GridElementData({hCells : "3"})}),
+									fields : [ new sap.ui.commons.TextView({text : "{libDefaultComponent}"})],
+									visible : {
+										path: "libDefaultComponent",
+										formatter: function(oValue) {
+											return !!oValue;
+										}
+									}
+								})
+							]
+						})]
+					})
+				})],
+				showToolbar: false,
+				selectionChanged: function(){
+					oDataSet.setLeadSelection(-1);
+				}
+			});
+			
+			oDataSet.setModel(oModel);
+			oDataSet.addStyleClass("myDS");
+			oDataSet.placeAt("libraries");
+			
+		});
+		</script>
+	</head>
+
+	<body class="sapUiDemokitBody sapUiBody" role="application">
+		<h1>Version Info</h1>
+		
+		This Software includes the following library versions
+		(a full change log for all libraries can be found <a class="sapUiDemokitLink" href="releasenotes.html">here</a>).
+		<div id="libraries"></div>
+		
+	</body>
+</html>

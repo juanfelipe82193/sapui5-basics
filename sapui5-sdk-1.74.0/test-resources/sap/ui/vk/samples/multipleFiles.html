@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="UTF-8">
+<title>Multiple file load</title>
+<base href="../../../../../">
+
+<script id="sap-ui-bootstrap" src="resources/sap-ui-core.js"
+	data-sap-ui-libs="sap.ui.vk, sap.m" data-sap-ui-theme="sap_bluecrystal">
+</script>
+
+	<!-- URL test data
+	url1: /models/Pump Service Operation.vds
+	url2: /models/998 Clutch-no screws.vds
+	url3: /models/998 Clutch-screw.vds -->
+
+<script>
+
+	//instance of viewer
+	var viewer = new sap.ui.vk.Viewer();
+
+	//title + size of toolbar
+	viewer.setToolbarTitle("Uploading multiple files");
+	viewer.setWidth("100%");
+	viewer.setHeight("525px");
+
+	//oject - string containers for storing the input url - gathered from the form(depends on number of input url's you want the form to have)
+	var sourceData = {
+		url1: "",
+		url2: "",
+		url3: ""
+	};
+
+	//new JSON model passing the data as object literal and store the resulting model instance in a local variable called sourceData
+	var model = new sap.ui.model.json.JSONModel();
+	model.setData(sourceData);
+	sap.ui.getCore().setModel(model, "source");
+
+	//formatting the grid layout for input and button controls
+	var layout = new sap.ui.layout.form.GridLayout({
+	singleColumn: true
+	});
+
+	//first url input field
+	var container1 = sap.ui.layout.form.FormElement({
+		fields: [
+			new sap.m.Input({
+				layoutData: new sap.ui.layout.form.GridElementData({ hCells: "auto" }),
+				placeholder: "Remote model URL 1",
+				value: "{source>/url1}"
+			}),
+		]
+	});
+
+	//second url input field
+	var container2 = new sap.ui.layout.form.FormElement({
+		fields: [
+			new sap.m.Input({
+				layoutData: new sap.ui.layout.form.GridElementData({ hCells: "auto" }),
+				placeholder: "Remote model URL 2",
+				value: "{source>/url2}"
+			}),
+		]
+	});
+
+	//third url input field
+	var container3 = new sap.ui.layout.form.FormElement({
+		fields: [
+			new sap.m.Input({
+				layoutData: new sap.ui.layout.form.GridElementData({ hCells: "auto" }),
+				placeholder: "Remote model URL 3",
+				value: "{source>/url3}"
+			}),
+		]
+	});
+
+	//"Load" model button.
+	var container4 = new sap.ui.layout.form.FormElement({
+		fields: [
+			new sap.m.Button({
+				layoutData: new sap.ui.layout.form.GridElementData({ hCells: "1" }),
+				text: "Load",
+				press: function(event) {
+					if (sourceData.url1 /* && sourceData.url2 && sourceData.url3 */) { //if one || two || three urls's selected then...
+						viewer.destroyContentResources();  //destroy current viewer content
+						//url 1
+						var contentResource1 = new sap.ui.vk.ContentResource({
+							source: sourceData.url1,
+							sourceType: "vds",
+							sourceId: "123",
+							name: sourceData.url1 //scene tree node name property
+						});
+						viewer.addContentResource(contentResource1);
+
+						//url2
+						var contentResource2 = new sap.ui.vk.ContentResource({
+							source: sourceData.url2,
+							sourceType: "vds",
+							sourceId: "abc",
+							name: sourceData.url2
+						});
+						viewer.addContentResource(contentResource2);
+
+						//url3
+						var contentResource3 = new sap.ui.vk.ContentResource({
+							source: sourceData.url3,
+							sourceType: "vds",
+							sourceId: "abc123",
+							name: sourceData.url3
+						});
+						viewer.addContentResource(contentResource3);
+					}
+				}
+			})
+		]
+	});
+	var page = new sap.m.Page({
+		title: "Sample viewer",
+		content: [
+			viewer,
+			new sap.ui.layout.form.Form({
+				layout: layout,
+				formContainers: new sap.ui.layout.form.FormContainer({
+					formElements: [ container1, container2, container3, container4] //array of container variables
+				})
+			})
+		]
+	});
+
+	var app = new sap.m.App();
+	app.addPage(page);
+	app.placeAt("body");
+</script>
+</head>
+<body id="body" class="sapUiBody">
+</body>
+</html>

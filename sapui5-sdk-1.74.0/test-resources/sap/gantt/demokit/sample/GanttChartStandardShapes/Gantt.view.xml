@@ -1,0 +1,62 @@
+<mvc:View
+		controllerName="sap.gantt.sample.GanttChartStandardShapes.Gantt"
+		height="100%"
+		xmlns="sap.gantt.simple"
+		xmlns:axistime="sap.gantt.axistime"
+		xmlns:config="sap.gantt.config"
+		xmlns:m="sap.m"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:shapes="sap.gantt.simple.shapes"
+		xmlns:table="sap.ui.table">
+	<m:OverflowToolbar>
+		<m:Button text="Change Color" press=".changeColor" />
+	</m:OverflowToolbar>
+	<GanttChartWithTable id="gantt" shapeSelectionMode="Multiple" disableShapeDoubleClickEvent="true">
+		<axisTimeStrategy>
+			<axistime:FullScreenStrategy>
+				<axistime:totalHorizon>
+					<config:TimeHorizon
+							startTime="20181029000000"
+							endTime="20181129000000"/>
+				</axistime:totalHorizon>
+				<axistime:visibleHorizon>
+					<config:TimeHorizon
+							startTime="20181029000000"
+							endTime="20181129000000"/>
+				</axistime:visibleHorizon>
+			</axistime:FullScreenStrategy>
+		</axisTimeStrategy>
+		<table>
+			<table:TreeTable
+					selectionMode="Single"
+					visibleRowCountMode="Auto"
+					minAutoRowCount="12"
+					selectionBehavior="RowSelector"
+					enableColumnReordering="true"
+					rows="{
+						path: '/root',
+						parameters: {
+							arrayNames: ['children'],
+							numberOfExpandedLevels: 1
+						}
+					}">
+				<table:columns>
+					<table:Column label="Type">
+						<table:template>
+							<m:Text text="{text}"/>
+						</table:template>
+					</table:Column>
+				</table:columns>
+				<table:rowSettingsTemplate>
+					<GanttRowSettings rowId="{id}" shapes1="{path:'tasks', templateShareable:false}">
+						<shapes1>
+							<shapes:Task time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+										 endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+										 type="{type}" color="{/color}"/>
+						</shapes1>
+					</GanttRowSettings>
+				</table:rowSettingsTemplate>
+			</table:TreeTable>
+		</table>
+	</GanttChartWithTable>
+</mvc:View>

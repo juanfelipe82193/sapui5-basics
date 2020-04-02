@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+		   xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+		   xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+		   xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:Reference Uri="https://mydomain.com/catalogService/ui/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI" />
+	</edmx:Reference>
+	<edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml">
+		<edmx:Include Alias="MEASURES" Namespace="Org.OData.Measures.V1" />
+	</edmx:Reference>
+	<edmx:Reference Uri="https://mydomain.com/catalogService/common/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Alias="COMMON" Namespace="com.sap.vocabularies.Common.v1" />
+	</edmx:Reference>
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="SmartStackedBarMicroChart" xml:lang="en" sap:schema-version="0" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="SerieType">
+				<Key>
+					<PropertyRef Name="Month" />
+				</Key>
+				<Property Name="Month" Type="Edm.Int32"/>
+				<Property Name="Price" Type="Edm.Int32" sap:unit="Currency" />
+				<Property Name="Title" Type="Edm.String" />
+				<Property Name="Description" Type="Edm.String" />
+				<Property Name="DisplayValue" Type="Edm.String" />
+				<Property Name="Currency" Type="Edm.String" />
+			</EntityType>
+			<EntityContainer Name="SmartStackedBarMicroChart_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+				<EntitySet Name="Series" EntityType="SmartStackedBarMicroChart.SerieType" sap:content-version="1" />
+			</EntityContainer>
+
+			<Annotations Target="SmartStackedBarMicroChart.SerieType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="UI.Chart">
+					<Record>
+						<PropertyValue Property="ChartType" EnumMember="UI.ChartType/BarStacked" />
+						<PropertyValue Property="Title" Path="Title" />
+						<PropertyValue Property="Description" Path="Description" />
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>Month</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Price</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="Price" />
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#StackedBarChartQualifier" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="StackedBarChartQualifier">
+					<Record>
+						<PropertyValue Property="Value" Path="Price" />
+					</Record>
+				</Annotation>
+			</Annotations>
+
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="SmartStackedBarMicroChart.SerieType/Price">
+				<Annotation Term="MEASURES.ISOCurrency" Path="Currency" />
+				<Annotation Term="COMMON.Text" Path="DisplayValue" />
+			</Annotations>
+
+			<atom:link rel="self" href="https://mydomain.com/myService/$metadata" xmlns:atom="http://www.w3.org/2005/Atom" />
+			<atom:link rel="latest-version" href="https://mydomain.com/myService/$metadata" xmlns:atom="http://www.w3.org/2005/Atom" />
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

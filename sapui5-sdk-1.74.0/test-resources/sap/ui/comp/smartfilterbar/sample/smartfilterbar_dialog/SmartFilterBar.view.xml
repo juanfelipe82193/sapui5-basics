@@ -1,0 +1,196 @@
+<core:View controllerName="sap.ui.comp.sample.smartfilterbar_dialog.SmartFilterBar"
+	xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:f="sap.f"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar" xmlns:sv="sap.ui.comp.smartvariants"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	height="100%">
+
+	<App>
+		<Page id="page" class="sapUiSizeCompact">
+			<content>
+
+				<HBox>
+					<Button id="toggleUpdateMode" text="Change to 'LiveMode'"
+						press="toggleUpdateMode" />
+					<Button id="toggleShowGo" text="Toggle Go button" press="toggleShowGoOnFB" />
+					<Button id="toggleToolbar" text="Toggle useToolbar" press="toggleUseToolbar" />
+					<Button id="toggleAPILevel" text="Current: Single Value Filters"
+						press="toggleAPILevel" visible="false" />
+					<Button id="toggleStrictMode" text="Mode: strict" press="toggleStrictMode" />
+					<Button id="toggleErrorMode" text="Toggle error" press="toggleErrorMode" />
+					<Button id="triggerGetFilters" text="Trigger getFilters"
+						press="triggerGetFilters" />
+					<Button id="triggerSimulateIsSensitiveCheck" text="Simulate IsSensitive"
+						press="triggerIsSensitiveCheck" />
+					<Button id="triggerSimulateMeasureCheck" text="Simulate Clear Measures"
+						press="triggerClearMeasures" />	
+				</HBox>
+
+				<f:DynamicPage id="synamicPage">
+					<f:title>
+						<f:DynamicPageTitle>
+							<f:heading>
+								<sv:SmartVariantManagement id="__SVM01"
+									persistencyKey="smartfilterbar_dialog" showShare="true"
+									entitySet="ZEPM_C_SALESORDERITEMQUERYResults"
+									showExecuteOnSelection="true" />
+							</f:heading>
+							<f:snappedContent>
+								<Text id="statusText" />
+							</f:snappedContent>
+
+						</f:DynamicPageTitle>
+					</f:title>
+					<f:header>
+						<f:DynamicPageHeader>
+							<f:content>
+
+								<smartFilterBar:SmartFilterBar id="smartFilterBar"
+									advancedMode="false" smartVariant="__SVM01" persistencyKey="smartfilterbar_dialog_sfb"
+									clear="onClear" reset="onRestore" cancel="onCancel" search="onSearch"
+									filtersDialogBeforeOpen="onDialogOpened" filtersDialogClosed="onDialogClosed"
+									filtersDialogSearch="onDialogSearch" filtersDialogCancel="onDialogCancel"
+									filtersDialogSearchForFilters="onSearchForFilters" liveMode="false"
+									considerAnalyticalParameters="true" considerSelectionVariants="true"
+									showClearButton="true" useProvidedNavigationProperties="true"
+									navigationProperties="to_CompanyCode" assignedFiltersChanged="onAssignedFiltersChanged"
+									entitySet="ZEPM_C_SALESORDERITEMQUERYResults" useToolbar="false"
+									enableBasicSearch="true">
+
+									<smartFilterBar:customData>
+										<core:CustomData key="dateFormatSettings"
+											value='\{"UTC":true,"style":"short"\}' />
+									</smartFilterBar:customData>
+
+
+									<!-- layout data used to make the table growing but the filter bar 
+										fixed -->
+									<smartFilterBar:layoutData>
+										<FlexItemData shrinkFactor="0" />
+									</smartFilterBar:layoutData>
+
+									<smartFilterBar:controlConfiguration>
+
+
+
+										<!-- <smartFilterBar:ControlConfiguration key="MyOwnFilterField" 
+											index="2" label="Custom Filter Field" groupId="_BASIC" width="300px" mandatory="mandatory" 
+											visibleInAdvancedArea="true"> <smartFilterBar:customControl> <Select id="foo" 
+											customData:hasValue="true"> <core:Item key="1" text="ONE" /> <core:Item key="2" 
+											text="TWO" /> <core:Item key="3" text="THREE" /> </Select> </smartFilterBar:customControl> 
+											</smartFilterBar:ControlConfiguration> -->
+										<!--BCP:1970470346 overwrite tooltip from view
+										<smartFilterBar:ControlConfiguration id="ToolTipCheckbox" groupId="_BASIC" index="30" label="{@i18n>HUGO}" tooltip="{@i18n>HUGO}" key="STATUS_TEXT_CODE">
+											<smartFilterBar:customControl>
+												<CheckBox id="checkboxWithTooltip" tooltip="{@i18n>HUGO}">
+												</CheckBox>
+											</smartFilterBar:customControl>
+										</smartFilterBar:ControlConfiguration>
+										<smartFilterBar:ControlConfiguration key="ToolTipCheckbox" index="31" label="{@i18n>HUGO}" groupId="_BASIC" width="300px" visibleInAdvancedArea="true">
+											<smartFilterBar:customControl>
+												 <MultiComboBox  id="foo" customData:hasValue="true" placeholder="Custom MultiComboBox" tooltip="{@i18n>HUGO}" >
+												 <core:Item key="1" text="ONE" /> <core:Item key="2" text="TWO" />  <core:Item key="3" text="THREE" />
+											 	</MultiComboBox>
+											</smartFilterBar:customControl>
+										</smartFilterBar:ControlConfiguration>-->
+										<smartFilterBar:ControlConfiguration
+											key="Bukrs" groupId="_BASIC" index="0" />
+										<smartFilterBar:ControlConfiguration
+											key="BUDAT" groupId="_BASIC" visibleInAdvancedArea="true" />
+
+										<!-- <smartFilterBar:ControlConfiguration key="BUDAT_ST" groupId="_BASIC" 
+											visibleInAdvancedArea="true"/> -->
+										<smartFilterBar:ControlConfiguration
+											key="BUDAT_ST" visibleInAdvancedArea="true"
+											conditionType="sap.ui.comp.config.condition.DateRangeType"
+											label="DateRangeType">
+										</smartFilterBar:ControlConfiguration>
+
+
+										<smartFilterBar:ControlConfiguration
+											key="IsReversalDocument" groupId="_BASIC"
+											visibleInAdvancedArea="true" filterType="single" />
+										<smartFilterBar:ControlConfiguration
+											key="XCPDS" groupId="_BASIC" visibleInAdvancedArea="true" />
+										<smartFilterBar:ControlConfiguration
+											key="AvailableSince" groupId="_BASIC" visibleInAdvancedArea="true" />
+										<smartFilterBar:ControlConfiguration
+											key="AvailableSinceSingle" groupId="_BASIC"
+											visibleInAdvancedArea="true" filterType="single" />
+										<smartFilterBar:ControlConfiguration
+											key="AvailableSinceInterval" groupId="_BASIC"
+											visibleInAdvancedArea="true" filterType="interval" />
+										<smartFilterBar:ControlConfiguration
+											key="LocalBoolean" groupId="_BASIC" visibleInAdvancedArea="true"
+											filterType="single" />
+										<smartFilterBar:ControlConfiguration
+											key="Quantity" groupId="_BASIC" index="5"
+											visibleInAdvancedArea="true" filterType="interval" />
+
+										<smartFilterBar:ControlConfiguration
+											key="DueTime" groupId="_BASIC" visibleInAdvancedArea="true"
+											filterType="single" />
+
+										<smartFilterBar:ControlConfiguration
+											key="DateTimeOffset" groupId="_BASIC" visibleInAdvancedArea="true"
+											filterType="multiple" />
+
+										<smartFilterBar:ControlConfiguration
+											key="NUMC" groupId="_BASIC" visibleInAdvancedArea="true"
+											filterType="auto" hasValueHelpDialog="true" />
+											
+
+										<smartFilterBar:ControlConfiguration
+											key="to_CompanyCode.Id" groupId="_BASIC" visibleInAdvancedArea="true"
+											filterType="single" hasValueHelpDialog="true" />											
+
+									</smartFilterBar:controlConfiguration>
+
+								</smartFilterBar:SmartFilterBar>
+
+							</f:content>
+						</f:DynamicPageHeader>
+					</f:header>
+					<f:content>
+
+						<VBox>
+
+							<Text text="Parameters:" />
+							<TextArea id="outputAreaParam" width="100%" />
+
+							<Text text="Filters:" />
+							<TextArea id="outputAreaFilters" width="100%" />
+
+							<Text text="UIState:" />
+							<Text text="DataSuiteFormat:" />
+							<TextArea id="outputAreaDataSuite" width="100%" rows="6" />
+							<Text text="Values:" />
+							<TextArea id="outputAreaValueTexts" width="100%" />
+
+
+							<Text text="SelectionVariant:" />
+							<HBox fitContainer="true">
+								<Button id="toSelectionVariant" text="Convert to SelectionVariant"
+									press="onCreateToSelectionVariant" />
+							</HBox>
+							<TextArea id="outputAreaToSelectionVariant" width="100%"
+								editable="true" rows="6" />
+
+							<Text text="Applied SelectionVariant:" />
+							<HBox fitContainer="true">
+								<Button id="fromSelectionVariant" text="Assign to FilterBar"
+									press="onCreatetFromSelectionVariant" />
+							</HBox>
+							<TextArea id="outputAreaFromSelectionVariant" width="100%"
+								editable="false" rows="6" />
+						</VBox>
+
+
+					</f:content>
+
+				</f:DynamicPage>
+
+			</content>
+		</Page>
+	</App>
+</core:View>

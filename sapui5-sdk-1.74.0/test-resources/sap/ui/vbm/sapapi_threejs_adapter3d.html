@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="UTF-8">
+
+		<title>Testpage - ThreeJS Adapter3D</title>
+
+		<script id="sap-ui-bootstrap"
+				data-sap-ui-libs="sap.ui.vbm, sap.ui.unified, sap.m, sap.ui.layout"
+				data-sap-ui-theme="sap_belize"
+				src="../../../../resources/sap-ui-core.js"
+		>
+		</script>
+
+		<script>
+			sap.ui.getCore().attachInit(function() {
+				sap.ui.require([
+					"sap/ui/vbm/Viewport", "sap/ui/vbm/Adapter3D",
+					"sap/ui/layout/Splitter", "sap/ui/layout/SplitterLayoutData",
+					"sap/ui/model/json/JSONModel", "sap/ui/layout/form/GridLayout", "sap/ui/layout/form/FormElement",
+					"sap/ui/layout/form/GridElementData", "sap/ui/layout/form/FormContainer",
+					"sap/ui/layout/form/Form", "sap/m/Button", "sap/m/Page", "sap/m/App", "sap/m/TextArea"
+				], function(
+					Viewport, Adapter3D,
+					Splitter, SplitterLayoutData,
+					JSONModel, GridLayout, FormElement,
+					GridElementData, FormContainer,
+					Form, Button, Page, App, TextArea
+				) {
+					var payloads = {
+						methodPayload: undefined,
+						eventPayload: undefined
+					};
+					var model = new JSONModel(payloads);
+					sap.ui.getCore().setModel(model, "source");
+
+					var viewport = new Viewport({
+						id: "lso-viewport",
+						height: "600px",
+						layoutData: new SplitterLayoutData({
+							size: "100%"
+						})
+					});
+
+					var adapter3D = new Adapter3D({
+						id: "adapter3D",
+						viewport: viewport,
+						submit: function(oPayload) {
+							payloads.eventPayload = oPayload.getParameters().data;
+							model.setData(payloads);
+						}
+					});
+
+					var oLayout = new GridLayout();
+
+					var page = new Page({
+						title: "ThreeJS Adapter3D",
+						content: [
+							new Form({
+								editable: true,
+								layout: oLayout,
+								formContainers: [
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+													new Button({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Initial Load",
+														press: loadData.bind(undefined,
+															"media/threejs/Initial.json"
+														)
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "2" }),
+														text: "Truck Europe",
+														press: loadData.bind(undefined, "media/threejs/Truck_Europe.json")
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Truck US",
+														press: loadData.bind(undefined, "media/threejs/Truck_US.json")
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Multi Truck",
+														press: loadData.bind(undefined, "media/threejs/Multi_Truck_Europe.json")
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "2" }),
+														text: "Multitruck Delta",
+														press: loadData.bind(undefined, "media/threejs/Multi_Truck_Europe_Delta.json")
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "2" }),
+														text: "Context Menu",
+														press: loadData.bind(undefined, "media/threejs/ContextMenu.json")
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Detail #1",
+														press: loadData.bind(undefined, "media/threejs/DetailWindow1.json")
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Detail #2",
+														press: loadData.bind(undefined, "media/threejs/DetailWindow2.json")
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Detail #3",
+														press: loadData.bind(undefined, "media/threejs/DetailWindow3.json")
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Fly To",
+														press: loadData.bind(undefined, "media/threejs/FlyTo.json")
+													})
+												]
+											})
+										]
+									}),
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+													new Splitter({
+														layoutData: new GridElementData({ vCells: 4 }),
+														height: "100%",
+														width: "100%",
+														contentAreas: [
+															viewport
+														]
+													})
+												]
+											})
+										]
+									}),
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+													new TextArea("methodPayload",{
+														layoutData: new GridElementData({ vCells: 2 }),
+														placeholder: "Custom Payload",
+														value: "{source>/methodPayload}",
+														height: "260px"
+													}),
+													new TextArea({
+														layoutData: new GridElementData({ vCells: 2 }),
+														placeholder: "Submit Data",
+														value: "{source>/eventPayload}",
+														height: "260px"
+													})
+												]
+											})
+										]
+									}),
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+													new Button({
+														layoutData: new GridElementData({ hCells: "2" }),
+														text: "Custom Load",
+														press: function(event) {
+															try {
+																adapter3D.load(payloads.methodPayload);
+															} catch(ex) {
+																alert(ex);
+															}
+														}
+													})
+												]
+											})
+										]
+									})
+								]
+							})
+						]
+					});
+
+					function loadData(url) {
+						$.ajax({
+							url: url,
+							dataType: "json",
+							success: function(data, status, xhr) {
+								try
+								{
+									adapter3D.load(JSON.stringify(data));
+								} catch(ex) {
+									alert(ex);
+								}
+							}
+						});
+					}
+
+					var app = new App();
+					app.addPage(page);
+					app.placeAt("body");
+				});
+			});
+		</script>
+	</head>
+	<body id="body" class="sapUiBody">
+	</body>
+</html>

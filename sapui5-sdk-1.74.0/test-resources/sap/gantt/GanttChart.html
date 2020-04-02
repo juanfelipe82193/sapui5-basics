@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>GanttChart</title>
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.gantt, sap.m"
+	src="../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize"
+	data-sap-ui-resourceroots='{ "sap.gantt.test.shape": "./shape", "sap.gantt.test.data": "./qunit/data" }'>
+</script>
+<script src="./test.js"></script>
+
+<script>
+	sap.ui.loader.config({async:true});
+	sap.ui.require([
+		"sap/gantt/GanttChart",
+		"sap/gantt/axistime/ProportionZoomStrategy",
+		"sap/gantt/config/TimeHorizon",
+		"sap/gantt/config/Shape",
+		"sap/gantt/test/data/DataProducer",
+		"sap/gantt/shape/Rectangle"
+	], function(GanttChart, ProportionZoomStrategy, TimeHorizon, ShapeConfig, DataProducer){
+		createPage("Test Page for sap.gantt.GanttChart", true);
+
+		// create shape configuration
+		var oShapeConfig = new ShapeConfig({
+			key: "activity",
+			shapeClassName: "sap.gantt.shape.Rectangle",
+			shapeDataName: "activity",
+			level: 10,
+			shapeProperties: {
+				time: "{startTime}",
+				endTime: "{endTime}",
+				fill: "#A52A2A",
+				height: 21,
+				rx: 10,
+				ry: 10,
+				yBias: 0.5,
+				isDuration: true,
+				enableDnD: true
+			}
+		});
+
+		var oDataProducer = new DataProducer();
+		oDataProducer.produceData();
+		// create model and load data
+		var oModel = new sap.ui.model.json.JSONModel();
+		oModel.setData(oDataProducer.getData("sap_hierarchy"));
+
+		var oProportionZoomStrategy = new ProportionZoomStrategy({
+			totalHorizon: new TimeHorizon({
+				startTime: "20150918000000",
+				endTime: "20161027000000"
+			}),
+			visibleHorizon: new TimeHorizon({
+				startTime: "20150918000000",
+				endTime: "20151027000000"
+			})
+		});
+		// create GanttChart
+		var oGanttChart = new GanttChart({
+			axisTimeStrategy: oProportionZoomStrategy,
+			shapeDataNames: ["activity"],
+			shapes: [oShapeConfig],
+			rows: {
+				path: "test>/root",
+					parameters: {
+						arrayNames: ["children"]
+					}
+			},
+			//baseRowHeight: 27,
+			chartMouseOver: pushEventToMsgStack,
+			chartDoubleClick: pushEventToMsgStack,
+			chartRightClick: pushEventToMsgStack
+		});
+		oGanttChart.setModel(oModel, "test");
+
+		var oItems = new sap.m.FlexBox({
+			items:[sap.ui.jsfragment("sap.gantt.test.CSSModeButton", oGanttChart),
+				sap.ui.jsfragment("sap.gantt.test.JumpDatePicker", oGanttChart)]
+		});
+		addFooterContentsToPage(oItems);
+		window.oPage.addContent(oGanttChart);
+	});
+</script>
+</head>
+<body id="body" class="sapUiBody sapUiSizeCompact">
+	<div id="content" style="width: 100vw; height: 100vh;"></div>
+</body>
+</html>

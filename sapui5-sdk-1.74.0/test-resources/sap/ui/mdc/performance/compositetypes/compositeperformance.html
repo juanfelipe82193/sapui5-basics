@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta charset="UTF-8">
+
+		<title>XMLComposite Performance Measurements</title>
+
+		<script src="../../shared-config.js"></script>
+		<script id="sap-ui-bootstrap"
+			src="../../../../../../resources/sap-ui-core.js"
+			data-sap-ui-libs="sap.m,sap.ui.mdc,sap.ui.table"
+			data-sap-ui-compatVersion="edge"
+			data-sap-ui-xx-supportedLanguages="en"
+			data-sap-ui-resourceroots='{
+				"test": "./"
+			}'>
+		</script>
+
+		<script>
+			sap.ui.require(["test/control/SearchFieldPlain", "test/control/SearchFieldXML", "test/control/SearchFieldMDC",
+					"test/control/SearchFieldPlain_nomodel", "test/control/SearchFieldXML_nomodel", "test/control/SearchFieldMDC_nomodel",
+					"sap/m/Text", "sap/m/Button", "sap/m/Input", "sap/m/Panel", "sap/ui/mdc/Field", "sap/ui/mdc/field/FieldBase",
+					"sap/ui/layout/HorizontalLayout", "sap/m/ScrollContainer", "sap/base/Log", "sap/ui/mdc/XMLComposite"],
+					function(SearchFieldPlain, SearchFieldXML, SearchFieldMDC, SearchFieldPlain_nomodel, SearchFieldXML_nomodel, SearchFieldMDC_nomodel,
+							Text, Button, Input, Panel, Field, FieldBase, HorizontalLayout, ScrollContainer, Log, MDCXMLComposite) {
+
+				var fnMdcRetemplating = MDCXMLComposite.prototype.fragmentRetemplating;
+				MDCXMLComposite.prototype.fragmentRetemplating = function() {
+					fnMdcRetemplating.apply(this, arguments);
+					if (window.fnRetemplatingCallback) {
+						window.fnRetemplatingCallback();
+					}
+				}
+
+				Log.setLevel(-1);
+				delete console.assert;
+
+				var oScroll = new ScrollContainer("content", {vertical: true, horizontal: false, width: "auto", height: "600px"}).placeAt("contentForScroll");
+
+				var aControlSet = [
+					{controlClass: SearchFieldPlain, name: "Plain"},
+					{controlClass: SearchFieldXML, name: "XML"},
+					{controlClass: SearchFieldMDC, name: "MDC", bWaitForRetemplating: true},
+					{controlClass: SearchFieldPlain_nomodel, name: "PlainNomodel"},
+					{controlClass: SearchFieldXML_nomodel, name: "XMLNomodel"},
+					{controlClass: SearchFieldMDC_nomodel, name: "MDCNomodel", bWaitForRetemplating: true},
+					{controlClass: Input, name: "sap.m.Input"},
+					{controlClass: Field, name: "sap.ui.mdc.Field"},
+					{controlClass: FieldBase, name: "sap.ui.mdc.field.FieldBase"}
+				];
+				var mInstances = {};
+
+
+				// render initial fields
+				for (var i = 0; i < aControlSet.length; i++) {
+					var t1 = performance.now();
+					var oControl = new aControlSet[i].controlClass().placeAt("renderContent");
+					var t2 = performance.now();
+					new Text({text: aControlSet[i].name + ": " + (t2-t1).toFixed(2) + " ms"}).placeAt("renderContent");
+					mInstances[aControlSet[i].name] = [oControl];
+				}
+
+
+				// TEST buttons
+				for (var i = 0; i < aControlSet.length; i++) {
+					var oControl = aControlSet[i];
+
+					new Button({
+						text: "instantiate " + oControl.name,
+						press: instantiate.bind(null, oControl.controlClass, oControl.name, oControl.bWaitForRetemplating)
+					}).placeAt("header1");
+
+					new Button({
+						text: "clone " + oControl.name,
+						press: clone.bind(null, oControl.controlClass, oControl.name, oControl.bWaitForCloneRetemplating)
+					}).placeAt("header2");
+
+					new Button({
+						text: "render " + oControl.name,
+						press: render.bind(null, oControl.controlClass, oControl.name)
+					}).placeAt("header3");
+				}
+
+
+				/*
+				new Button({
+					text: "clone ALL",
+					press: function() {
+						for (var i = 0; i < aControlSet.length; i++) {
+							var oControl = aControlSet[i];
+							clone(oControl.controlClass, oControl.name);
+						}
+					}
+				}).placeAt("header2");
+
+				new Button({
+					text: "render ALL",
+					press: function() {
+						for (var i = 0; i < aControlSet.length; i++) {
+							var oControl = aControlSet[i];
+							render(oControl.controlClass, oControl.name);
+						}
+					}
+				}).placeAt("header3");
+				*/
+
+
+				new Button({
+					text: "Clear Log",
+					press: function() {oScroll.destroyContent();}
+				}).placeAt("header4");
+
+				new Input("count", {value: "100", width: "5rem"}).placeAt("header4");
+
+				function getCount() {
+					var sCount = sap.ui.getCore().byId("count").getValue();
+					return parseInt(sCount);
+				}
+
+
+				function instantiate(oClass, sText, bWaitForRetemplating) {
+					var COUNT = getCount();
+					if (bWaitForRetemplating) {
+						var counter = 0;
+						window.fnRetemplatingCallback = function() {
+							counter++;
+							if (counter === COUNT) {
+								t2 = performance.now();
+								new Text({text: "Instantiate " + sText + " (" + COUNT + " controls): " + (t2-t1).toFixed(1) + " ms"}).addStyleClass("log").placeAt("content");
+							}
+						};
+					}
+
+					t1 = performance.now();
+					var sfx;
+					for (var i = 0; i < COUNT; i++) {
+						sfx = new oClass();
+					}
+
+					if (!bWaitForRetemplating) {
+						t2 = performance.now();
+						new Text({text: "Instantiate " + sText + " (" + COUNT + " controls): " + (t2-t1).toFixed(1) + " ms"}).addStyleClass("log").placeAt("content");
+					}
+				}
+
+
+				function clone(oClass, sName, bWaitForRetemplating) {
+					var COUNT = getCount();
+					if (bWaitForRetemplating) {
+						var counter = 0;
+						window.fnRetemplatingCallback = function() {
+							counter++;
+							if (counter === COUNT) {
+								t2 = performance.now();
+								new Text({text: "Clone " + sName + " (" + COUNT + " clones): " + (t2-t1).toFixed(1) + " ms"}).addStyleClass("log").placeAt("content");
+							}
+						};
+					}
+
+					t1 = performance.now();
+					var oClone;
+					var oControl = mInstances[sName][0];
+					var aClones = mInstances[sName];
+					for (var i = 0; i < COUNT; i++) {
+						oClone = oControl.clone();
+						aClones.push(oClone);
+					}
+
+					if (!bWaitForRetemplating) {
+						t2 = performance.now();
+						new Text({text: "Clone " + sName + " (" + COUNT + " clones): " + (t2-t1).toFixed(1) + " ms"}).addStyleClass("log").placeAt("content");
+					}
+				}
+
+
+				function render(oClass, sText) {
+					document.getElementById("renderContent").innerHtml = "";
+					var oPanel = new Panel();
+					var aControls = mInstances[sText];
+					for (var i = 0; i < aControls.length; i++) {
+						oPanel.addContent(aControls[i]);
+					}
+					oPanel.addEventDelegate({
+						onAfterRendering: function() {
+							t2 = performance.now();
+							new Text({text: "Render " + sText + " (" + aControls.length + " controls): " + (t2-t1).toFixed(1) + " ms"}).addStyleClass("log").placeAt("content");
+							oPanel.removeAllContent();
+							oPanel.destroy();
+						}
+					});
+
+					window.setTimeout(function() { // make sure UI is clean
+						t1 = performance.now();
+						oPanel.placeAt("renderContent");
+					}, 100)
+				}
+		});
+
+		</script>
+		<style>
+		.log {
+			display: block;
+			border: 1px solid #BBB;
+			padding: 3px;
+		}
+		.sep {
+			padding-right: 16px;
+		}
+		#renderContent > div {
+			display: inline-block;
+			width: auto !important;
+		}
+		</style>
+	</head>
+	<body class="sapUiBody sapUiSizeCompact" style="margin:0px">
+	<div id="header1"></div>
+	<div id="header2"></div>
+	<div id="header3"></div>
+	<div id="header4"></div>
+	<hr>
+	<div id="contentForScroll"></div>
+	<hr>
+	<div id="renderContent"></div>
+	</body>
+</html>

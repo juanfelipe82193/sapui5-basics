@@ -1,0 +1,288 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 4: Filtering, Sorting, and Counting</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In this step, we add features to filter, sort, and count the user data by using the OData V4 model API to apply OData system query options $filter, $orderby, and $count."><meta name="description" content="In this step, we add features to filter, sort, and count the user data by using the OData V4 model API to apply OData system query options $filter, $orderby, and $count."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"ef2af4957fae469e9203e98006d3ee75.html","previousTopicHref":"96bb6e06fa22491fa65a5040f6da099c.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/bcdbde6911bd4fc68fd435cf8e306ed0.html" title="In this tutorial, we explore how features of OData V4 can be used in SAPUI5. We write a small app that consumes data from an OData V4 service to understand how to access, modify, aggregate, and filter data in an OData V4 model." target="_top">OData V4</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/96bb6e06fa22491fa65a5040f6da099c.html" title="In this step, we use the automatic data type detection of the OData V4 model to parse, validate, and format user entries. The service metadata contains type information for the properties of each entity." target="_top">Step 3: Automatic Data Type Detection</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/ef2af4957fae469e9203e98006d3ee75.html" title="In this step, we have a closer look at batch groups. Batch groups are used to group multiple requests into one server request to improve the overall performance." target="_top">Step 5: Batch Groups</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loio426ff318051a465191c861b51a74f00e"><h1 class="title topictitle1" hidden>Step 4: Filtering, Sorting, and Counting</h1><div class="body conbody"><p class="shortdesc" hidden>In this step, we add features to filter, sort, and count the user data by using the
+OData V4 model API to apply OData system query options <samp class="ph codeph">$filter</samp>,
+<samp class="ph codeph">$orderby</samp>, and <samp class="ph codeph">$count</samp>.</p>
+<div class="section" id="loio426ff318051a465191c861b51a74f00e__section_bt4_fxc_z1b"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+<div class="fig fignone" id="loio426ff318051a465191c861b51a74f00e__fig_bfg_dqb_mcb"><div class="figbody">
+
+<img class="inline  " id="loio426ff318051a465191c861b51a74f00e__image_dq3_spg_mcb" src="loio3ac4fcc0ea714c7c9157b22cbca4db79_LowRes.png">
+</div><span class="figcap">App now has a search field, the entries can be sorted, and you can see how many entities
+are loaded and how many more are available</span></div></section></div>
+<div class="section" id="loio426ff318051a465191c861b51a74f00e__section_tsr_gxc_z1b"><section class="section" type="Coding"><h2 class="section_title" style="font-size: 1.15em;">Coding</h2><p class="p">You can view and download all files <span class="ph">at <a class="xref" href="../../#/sample/sap.ui.core.tutorial.odatav4.04/preview" target="_top" alt="#/sample/sap.ui.core.tutorial.odatav4.04/preview" title="#/sample/sap.ui.core.tutorial.odatav4.04/preview">OData V4 - Step 4</a></span>.</p></section></div>
+<div class="section" id="loio426ff318051a465191c861b51a74f00e__section_pvc_fyc_z1b"><section class="section" type="webapp/controller/App.controller.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/controller/App.controller.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/core/mvc/Controller&quot;,
+	&quot;sap/m/MessageToast&quot;,
+	&quot;sap/m/MessageBox&quot;,
+	<span class="ph emphasis emphasis">&quot;sap/ui/model/Sorter&quot;,
+	&quot;sap/ui/model/Filter&quot;,
+	&quot;sap/ui/model/FilterOperator&quot;,
+	&quot;sap/ui/model/FilterType&quot;,</span>
+	&quot;sap/ui/model/json/JSONModel&quot;
+], function (Controller, MessageToast, MessageBox, <span class="ph emphasis emphasis">Sorter, Filter, FilterOperator, FilterType,</span> JSONModel) {
+	&quot;use strict&quot;;
+
+	return Controller.extend(&quot;sap.ui.core.tutorial.odatav4.controller.App&quot;, {
+
+		onInit : function () {
+			var oJSONData = {
+				busy : false,
+				<span class="ph emphasis emphasis">order : 0</span>
+			};
+			var oModel = new JSONModel(oJSONData);
+			this.getView().setModel(oModel, &quot;appView&quot;);
+		},
+
+		onRefresh : function () {
+		...
+		}<span class="ph emphasis emphasis">,
+
+		onSearch : function () {
+			var oView = this.getView(),
+				sValue = oView.byId(&quot;searchField&quot;).getValue(),
+				oFilter = new Filter(&quot;LastName&quot;, FilterOperator.Contains, sValue);
+
+			oView.byId(&quot;peopleList&quot;).getBinding(&quot;items&quot;).filter(oFilter, FilterType.Application);
+		},
+
+		onSort : function () {
+			var oView = this.getView(),
+				aStates = [undefined, &quot;asc&quot;, &quot;desc&quot;],
+				aStateTextIds = [&quot;sortNone&quot;, &quot;sortAscending&quot;, &quot;sortDescending&quot;],
+				sMessage,
+				iOrder = oView.getModel(&quot;appView&quot;).getProperty(&quot;/order&quot;);
+
+			iOrder = (iOrder + 1) % aStates.length;
+			var sOrder = aStates[iOrder];
+
+			oView.getModel(&quot;appView&quot;).setProperty(&quot;/order&quot;, iOrder);
+			oView.byId(&quot;peopleList&quot;).getBinding(&quot;items&quot;).sort(sOrder &amp;&amp; new Sorter(&quot;LastName&quot;, sOrder === &quot;desc&quot;));
+
+			sMessage = this._getText(&quot;sortMessage&quot;, [this._getText(aStateTextIds[iOrder])]);
+			MessageToast.show(sMessage);
+		},</span>
+
+		_getText : function (sTextId, aArgs) {
+		...
+		}
+	});
+});</pre>
+<p class="p">We add the <samp class="ph codeph">onSearch</samp> and <samp class="ph codeph">onSort</samp> event handlers for the <span class="ph uicontrol">Search</span> field and the <span class="ph uicontrol">Sort</span> button to the controller. We also enhance the <samp class="ph codeph">appView</samp> model to store the active sorting order.</p>
+<p class="p">The <span class="ph emphasis emphasis"><samp class="ph codeph">onSearch</samp></span> event handler filters the table
+for people whose last name contains any string value entered in the
+<span class="ph uicontrol">Search</span> field. We define a
+<samp class="ph codeph">sap.ui.model.Filter</samp> and apply it to the binding of the
+<samp class="ph codeph">Table</samp> using the <samp class="ph codeph">filter</samp> method. The binding
+will then automatically retrieve filtered data from the OData V4 service and update
+the <samp class="ph codeph">Table</samp>.</p>
+<div class="p">When the request is triggered, only entities that match the given filter criteria are requested from the OData V4 service.<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">Filters of OData services are case-sensitive. If you prefer a non case-sensitive search,
+implement it in the controller logic.</p></aside></div>
+<p class="p">The <span class="ph emphasis emphasis"><samp class="ph codeph">onSort</samp></span> event handler requests the data unordered, or
+in ascending order, or descending order. Each time the <span class="ph uicontrol">Sort</span>
+button is clicked, the next sort order is applied. The sorting is applied to the
+table by calling the <samp class="ph codeph">sort</samp> method of the list binding with a new
+<samp class="ph codeph">sap.ui.model.Sorter</samp>.</p>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">The features of filtering and sorting can also be combined.</p></aside><p class="p">We add the <samp class="ph codeph">order</samp> property to variable <samp class="ph codeph">oJSONData</samp> in <samp class="ph codeph">onInit</samp> method. This property stores the current sort order.</p>
+</section></div>
+<div class="section" id="loio426ff318051a465191c861b51a74f00e__section_pp2_mxc_z1b"><section class="section" type="webapp/view/App.view.xml"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/App.view.xml</h2><pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+	controllerName=&quot;sap.ui.core.tutorial.odatav4.controller.App&quot;
+	displayBlock=&quot;true&quot;
+	xmlns=&quot;sap.m&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;Shell&gt;
+		&lt;App busy=&quot;{appView&gt;/busy}&quot; class=&quot;sapUiSizeCompact&quot;&gt;
+			&lt;pages&gt;
+				&lt;Page title=&quot;{i18n&gt;peoplePageTitle}&quot;&gt;
+					&lt;content&gt;
+						&lt;Table
+							id=&quot;peopleList&quot;
+							growing=&quot;true&quot;
+							growingThreshold=&quot;10&quot;
+							items=&quot;{
+								path: &apos;/People&apos;,
+<span class="ph emphasis emphasis">								parameters: {
+									$count: true
+</span>
+								}
+							}&quot;&gt;
+							&lt;headerToolbar&gt;
+								&lt;OverflowToolbar&gt;
+									&lt;content&gt;
+										&lt;ToolbarSpacer/&gt;
+<span class="ph emphasis emphasis">										&lt;SearchField
+											id=&quot;searchField&quot;
+											width=&quot;20%&quot;
+											placeholder=&quot;{i18n&gt;searchFieldPlaceholder}&quot;
+											search=&quot;.onSearch&quot;/&gt;</span>
+										&lt;Button
+											id=&quot;refreshUsersButton&quot;
+											icon=&quot;sap-icon://refresh&quot;
+											tooltip=&quot;{i18n&gt;refreshButtonText}&quot;
+											press=&quot;.onRefresh&quot;/&gt;
+<span class="ph emphasis emphasis">										&lt;Button
+											id=&quot;sortUsersButton&quot;
+											press=&quot;onSort&quot;
+											tooltip=&quot;{i18n&gt;sortButtonText}&quot;
+											icon=&quot;sap-icon://sort&quot;/&gt;</span>
+									&lt;/content&gt;
+								&lt;/OverflowToolbar&gt;
+							&lt;/headerToolbar&gt;
+							&lt;columns&gt;
+								&lt;Column id=&quot;userNameColumn&quot;&gt;
+									&lt;Text text=&quot;{i18n&gt;userNameLabelText}&quot;/&gt;
+								&lt;/Column&gt;
+								&lt;Column id=&quot;firstNameColumn&quot;&gt;
+									&lt;Text text=&quot;{i18n&gt;firstNameLabelText}&quot;/&gt;
+								&lt;/Column&gt;
+								&lt;Column id=&quot;lastNameColumn&quot;&gt;
+									&lt;Text text=&quot;{i18n&gt;lastNameLabelText}&quot;/&gt;
+								&lt;/Column&gt;
+								&lt;Column id=&quot;ageColumn&quot;&gt;
+									&lt;Text text=&quot;{i18n&gt;ageLabelText}&quot;/&gt;
+								&lt;/Column&gt;
+							&lt;/columns&gt;
+							&lt;items&gt;
+								&lt;ColumnListItem&gt;
+									&lt;cells&gt;
+										&lt;Input value=&quot;{UserName}&quot;/&gt;
+									&lt;/cells&gt;
+									&lt;cells&gt;
+										&lt;Input value=&quot;{FirstName}&quot;/&gt;
+									&lt;/cells&gt;
+									&lt;cells&gt;
+										&lt;Input value=&quot;{LastName}&quot;/&gt;
+									&lt;/cells&gt;
+									&lt;cells&gt;
+										&lt;Input value=&quot;{Age}&quot;/&gt;
+									&lt;/cells&gt;
+								&lt;/ColumnListItem&gt;
+							&lt;/items&gt;
+						&lt;/Table&gt;
+					&lt;/content&gt;
+				&lt;/Page&gt;
+			&lt;/pages&gt;
+		&lt;/App&gt;
+	&lt;/Shell&gt;
+&lt;/mvc:View&gt;
+</pre><div class="p">We add the <samp class="ph codeph">$count : true</samp> parameter to tell the OData service to send the number
+of entities. With this setting, we automatically get the full number of entities
+(20) and the number of displayed entities (10) beneath the
+<span class="ph uicontrol">More</span> button.<aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p class="p">The live TripPin service does not support the <samp class="ph codeph">$count</samp>
+parameter yet. If you use the live service instead of the mock server, as
+described in Step 2, leave out the <samp class="ph codeph">$count</samp> parameter.</p></aside></div>
+<p class="p">In the <samp class="ph codeph">OverflowToolbar</samp>, we add a <span class="ph uicontrol">Search</span> field and a
+<span class="ph uicontrol">Sort</span> button with their events.</p></section></div>
+<div class="section" id="loio426ff318051a465191c861b51a74f00e__section_etg_fyc_z1b"><section class="section" type="webapp/i18n/i18n.properties"><h2 class="section_title" style="font-size: 1.15em;">webapp/i18n/i18n.properties</h2><pre class="pre codeblock prettyprint">...
+#XTOL: Tooltip for refresh data
+refreshButtonText=Refresh Data
+
+<span class="ph emphasis emphasis">#XTOL: Tooltip for sort
+sortButtonText=Sort by Last Name
+
+#XTXT: Placeholder text for search field
+searchFieldPlaceholder=Type in a last name</span>
+...
+# Messages
+...
+#XMSG: Message for refresh succeeded
+refreshSuccessMessage=Data refreshed
+
+<span class="ph emphasis emphasis">#MSG: Message for sorting
+sortMessage=Users sorted by {0}
+
+#MSG: Suffix for sorting by LastName, ascending
+sortAscending=last name, ascending
+
+#MSG: Suffix for sorting by LastName, descending
+sortDescending=last name, descending
+
+#MSG: Suffix for no sorting
+sortNone=the sequence on the server</span></pre>
+<p class="p">We add the missing texts to the properties file.</p></section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/bcdbde6911bd4fc68fd435cf8e306ed0.html" title="In this tutorial, we explore how features of OData V4 can be used in SAPUI5. We write a small app that consumes data from an OData V4 service to understand how to access, modify, aggregate, and filter data in an OData V4 model." target="_top">OData V4</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/96bb6e06fa22491fa65a5040f6da099c.html" title="In this step, we use the automatic data type detection of the OData V4 model to parse, validate, and format user entries. The service metadata contains type information for the properties of each entity." target="_top">Step 3: Automatic Data Type Detection</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/ef2af4957fae469e9203e98006d3ee75.html" title="In this step, we have a closer look at batch groups. Batch groups are used to group multiple requests into one server request to improve the overall performance." target="_top">Step 5: Batch Groups</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/5338bd1f9afb45fb8b2af957c3530e8f.html" title="The OData V4 Model supports server side filtering on lists." target="_top">Filtering</a></div><div><a class="link" href="../../#/topic/d2ce3f51e5e34198b0c1a7f6ddd98def.html" title="The OData V4 model supports server side sorting on lists." target="_top">Sorting</a></div><div><a class="extlink" href="http://help.sap.com/disclaimer?site=http://www.odata.org/getting-started/basic-tutorial/#queryData" target="_blank" alt="http://www.odata.org/getting-started/basic-tutorial/#queryData" title="http://www.odata.org/getting-started/basic-tutorial/#queryData">Query Options under <span class="ph uicontrol">Querying Data</span> in the Basic Tutorial
+on the OData home page<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

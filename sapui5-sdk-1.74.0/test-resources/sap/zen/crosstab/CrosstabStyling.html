@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Style Tests</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="json/TESTDATA_QUINN_IE9.js"></script>
+<script type="text/javascript" src="json/TESTDATA_PLAINTABLE.js"></script>
+<script type="text/javascript" src="testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Style Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+
+		module("Crosstab Style Tests", {
+			setup : function() {
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				this.oCrosstab.setWidth("1600px");
+				this.oCrosstab.setHeight("1200px");
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				
+				this.oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+				this.oDataArea = this.oCrosstab.getDataArea();
+				this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+				this.oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+				
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+				
+				this.checkFirstInRow = function(oArea) {
+					var cellHasStyle = oArea.getCell(0, 0).hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_FIRST_IN_ROW);
+					ok(cellHasStyle, "First cell in " + oArea.getAreaType() + " row must have first-in-row style");
+				};
+				
+				this.checkLastInRow = function(oArea) {
+					var iLastColIdx = oArea.getColCnt() - 1;
+					var oLastCell = oArea.getCellWithColSpan(0, iLastColIdx);
+					var cellHasStyle = oLastCell.hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_LAST_IN_ROW);
+					ok(cellHasStyle, "Last cell in " + oArea.getAreaType() + " row must have last-in-row style");
+				};
+				
+				this.checkFirstInCol = function(oArea) {
+					var cellHasStyle = oArea.getCell(0, 0).hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_FIRST_IN_COL);
+					ok(cellHasStyle, "First cell in "+oArea.getAreaType()+" col must have first-in-col style");
+				}
+				
+				this.checkLastInCol = function(oArea) {
+					var iLastRowIdx = oArea.getRowCnt() - 1;
+					var oLastCell = oArea.getCellWithRowSpan(iLastRowIdx, 0);
+					var cellHasStyle = oLastCell.hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_LAST_IN_COL);
+					ok(cellHasStyle, "Last cell in " + oArea.getAreaType() + " col must have last-in-col style");
+				};
+
+			},
+			teardown : function() {
+				this.oCrosstab = null;
+			}
+		});
+
+		test("Check first in row style", function() {
+			var cellHasStyle = this.oDimensionHeaderArea.getCell(0, 0).hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_FIRST_IN_ROW);
+			ok(cellHasStyle, "Frist cell in Dimension Header Area row must have first-in-row style");
+			
+			cellHasStyle = this.oRowHeaderArea.getCell(0, 0).hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_FIRST_IN_ROW);
+			ok(cellHasStyle, "Frist cell in Row Header Area row must have first-in-row style");
+		});
+		
+		test("Check last in row style", function() {
+			this.checkLastInRow(this.oColumnHeaderArea);
+			this.checkLastInRow(this.oDataArea);
+		});
+		
+		test("Check first in col style", function() {
+			this.checkFirstInCol(this.oDimensionHeaderArea);
+			this.checkFirstInCol(this.oColumnHeaderArea);
+		});
+		
+		test("Check last in col style", function() {
+			this.checkLastInCol(this.oRowHeaderArea);
+			this.checkLastInCol(this.oDataArea);
+		});
+		
+		test("Spotcheck single cells", function() {
+			var oCell = this.oColumnHeaderArea.getCell(2,1);
+			
+			var cellHasStyle = oCell.hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_LAST_IN_ROW);
+			ok(!cellHasStyle, "Cell (ID:"+oCell.getId()+" Text: "+oCell.getText()+") must not have last-in-row style");
+			
+			cellHasStyle = oCell.hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_FIRST_IN_COL);
+			ok(!cellHasStyle, "Cell (ID:"+oCell.getId()+" Text: "+oCell.getText()+") must not have first-in-col style");
+			
+			cellHasStyle = oCell.hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_FIRST_IN_ROW);
+			ok(!cellHasStyle, "Cell (ID:"+oCell.getId()+" Text: "+oCell.getText()+") must not have first-in-row style");
+			
+			
+			oCell = this.oRowHeaderArea.getCell(3,1);
+			cellHasStyle = oCell.hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_LAST_IN_COL)
+			ok(!cellHasStyle, "Cell (ID:"+oCell.getId()+" Text: "+oCell.getText()+") must not have last-in-col style");
+			
+			cellHasStyle = oCell.hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_FIRST_IN_COL);
+			ok(!cellHasStyle, "Cell (ID:"+oCell.getId()+" Text: "+oCell.getText()+") must not have first-in-col style");
+			
+			cellHasStyle = oCell.hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_FIRST_IN_ROW);
+			ok(!cellHasStyle, "Cell (ID:"+oCell.getId()+" Text: "+oCell.getText()+") must not have first-in-row style");
+			
+			
+			oCell = this.oDataArea.getCell(4,1);
+			cellHasStyle = oCell.hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_LAST_IN_COL)
+			ok(!cellHasStyle, "Cell (ID:"+oCell.getId()+" Text: "+oCell.getText()+") must not have last-in-col style");
+			
+			cellHasStyle = oCell.hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_LAST_IN_ROW);
+			ok(!cellHasStyle, "Cell (ID:"+oCell.getId()+" Text: "+oCell.getText()+") must not have last-in-row style");
+			
+			cellHasStyle = oCell.hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_FIRST_IN_COL);
+			ok(!cellHasStyle, "Cell (ID:"+oCell.getId()+" Text: "+oCell.getText()+") must not have first-in-col style");
+			
+			cellHasStyle = oCell.hasStyle(sap.zen.crosstab.rendering.RenderingConstants.STYLE_FIRST_IN_ROW);
+			ok(!cellHasStyle, "Cell (ID:"+oCell.getId()+" Text: "+oCell.getText()+") must not have first-in-row style");
+			
+		});
+		
+		test("Table without Row- and Dimensionheader", function() {
+			this.oTableControl = sapzen.crosstab.test.jsonTestData.quinnIE9.control;
+			this.oCrosstab.updateControlProperties(this.oTableControl);
+			
+		  this.checkFirstInRow(this.oCrosstab.getColumnHeaderArea());
+		  this.checkFirstInRow(this.oCrosstab.getDataArea());
+		  
+		  this.checkLastInRow(this.oCrosstab.getColumnHeaderArea());
+		  this.checkLastInRow(this.oCrosstab.getDataArea());
+		  
+		  this.checkFirstInCol(this.oCrosstab.getColumnHeaderArea());
+		  this.checkLastInCol(this.oCrosstab.getDataArea());
+		});
+		
+	</script>
+
+</body>
+
+</html>

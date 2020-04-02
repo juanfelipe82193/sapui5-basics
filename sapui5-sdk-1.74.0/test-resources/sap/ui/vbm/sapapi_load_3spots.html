@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js" id="sap-ui-bootstrap" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+	<!-- add sap.ui.table,sap.ui.ux3 and/or other libraries to 'data-sap-ui-libs' if required -->
+
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+
+		h4 {
+			margin: 1em 0;
+		}
+
+		i {
+			color: blue
+		}
+
+		#btnZoomIn {
+			margin-right: 10px;
+		}
+
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+		#margin {
+			margin-right: 50px;
+		}
+
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+
+	<script>
+		// creation of visual business...........................//
+		sap.ui.localResources("vbitestapp");
+
+		var oVBI1 = new sap.ui.vbm.VBI('vbiWrap2', {
+			width: "100%",
+			height: 620
+		});
+		oVBI1.placeAt("content");
+
+		// load the json and set the default text area text
+		var dat = $.getJSON("media/ZoomToMultiplePositions/main.json", function(dat) {
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array) {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(dat);
+		});
+
+		function zoom100Test() {
+			document.getElementById('para1').innerHTML = jQuery("#vbiWrap2")[0].style.width;
+		};
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: Loading Testing - Zoom to multiple Locations</h1>
+
+
+	<div id="description1">
+		<br>
+
+		<div id="margin">
+			<h3> The aim: </h3>
+			<p>To check whether the GeoMap control loads in Right to Left mode (RTL) mode. </p>
+			<br>
+			<h3> To test: </h3>
+			<ol>
+				<i>There are 3 spots on the GeoMap. We will <b>not</b> be testing these spots</i>
+				<li>Click the "Test zoom 100%" button. Check that the GeoMap spans the entire width of the container. Check that the resulting number below is '100'
+					<br>
+					<p>Width: </p>
+					<p style="color:red;" class="col" id="para1"></p>
+				</li>
+				<li> Check that the text on the page is oriented in a RTL manner (aligned along the right side of the page) </li>
+				<li> Check that the Copyright information is located on the bottom-left of the GeoMap control </li>
+				<li> Check that the scale is located on the bottom-right of the GeoMap control </li>
+				<li> Check that the scroll zoom is located on the top-right of the GeoMap control </li>
+
+			</ol>
+			<figure style="float: left">
+				<img src="img/rtlimg.jpg" style="width:600px;"/>
+			</figure>
+		</div>
+	</div>
+
+	<div id="description2">
+		<br>
+		<button id="zoom100Test" onClick="zoom100Test()" style="margin-right: 20px;">Test zoom 100%</button>
+		<br>
+		<br>
+
+		<div id="content" style="margin-right: 20px;"></div>
+	</div>
+</body>
+
+</html>

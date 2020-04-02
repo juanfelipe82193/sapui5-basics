@@ -1,0 +1,913 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Creating a Descriptor File for Existing Apps</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Detailed description of the steps needed to create a descriptor V2 for applications file for an existing transactional app created by the customer based on SAP Fiori."><meta name="description" content="Detailed description of the steps needed to create a descriptor V2 for applications file for an existing transactional app created by the customer based on SAP Fiori."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"a110f762148a4933a33d30751a37a743.html","previousTopicHref":"adcbcf8b50924556ab3f321fcd9353ea.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loio3a9babace121497abea8f0ea66e156d9"><h1 class="title topictitle1" hidden>Creating a Descriptor File for Existing Apps</h1><div class="body"><p class="shortdesc" hidden>Detailed description of the steps needed to create a descriptor V2 for applications
+file for an existing transactional <span class="ph">app
+created by the customer based on SAP Fiori</span>.</p>
+<ol class="ol" id="loio3a9babace121497abea8f0ea66e156d9__ol_flk_yzy_tr">
+<li class="li">
+<p class="p">Create the <samp class="ph codeph">manifest.json</samp> file.</p>
+<p class="p">You create the file in the web context root of your app on the same level as the
+<samp class="ph codeph">Component.js</samp> file, using the content according to the
+instructions described from step 2 onwards. You can use the following code
+sample as a template. Make sure that you exchange or remove all placeholders
+(<samp class="ph codeph">&lt;...&gt;</samp>) according to the instructions below.</p>
+<pre class="pre codeblock prettyprint json">
+{
+    &quot;_version&quot;: &quot;1.1.0&quot;,
+	
+	&quot;start_url&quot;: &quot;&lt;startUrl&gt;&quot;,
+	
+    &quot;sap.app&quot;: {
+        &quot;_version&quot;: &quot;1.1.0&quot;,
+        &quot;id&quot;: &quot;&lt;id&gt;&quot;,
+        &quot;type&quot;: &quot;application&quot;,
+        &quot;i18n&quot;: &quot;&lt;i18nPathRelativeToManifest&gt;&quot;,
+        &quot;applicationVersion&quot;: {
+            &quot;version&quot;: &quot;&lt;version&gt;&quot;
+        },
+        &quot;title&quot;: &quot;{{&lt;title&gt;}}&quot;,
+        &quot;tags&quot;: {
+            &quot;keywords&quot;: [
+                &quot;{{&lt;keyword1&gt;}}&quot;, &quot;{{&lt;keyword2&gt;}}&quot;
+            ]
+        },
+        &quot;dataSources&quot;: {
+            &quot;&lt;dataSourceAlias&gt;&quot;: {
+                &quot;uri&quot;: &quot;&lt;uri&gt;&quot;,
+                &quot;settings&quot;: {
+                    &quot;localUri&quot;: &quot;&lt;localUri&gt;&quot;
+                }
+            }
+        }
+    },
+    &quot;sap.ui&quot;: {
+        &quot;_version&quot;: &quot;1.1.0&quot;,
+        &quot;icons&quot;: {
+            &quot;icon&quot;: &quot;&lt;icon&gt;&quot;,
+            &quot;favIcon&quot;: &quot;&lt;favIcon&gt;&quot;,
+            &quot;phone&quot;: &quot;&lt;phone&gt;&quot;,
+            &quot;phone@2&quot;: &quot;&lt;phone@2&gt;&quot;,
+            &quot;tablet&quot;: &quot;&lt;tablet&gt;&quot;,
+            &quot;tablet@2&quot;: &quot;&lt;tablet@2&gt;&quot;
+        },
+        &quot;deviceTypes&quot;: {
+            &quot;desktop&quot;: true,
+            &quot;tablet&quot;: true,
+            &quot;phone&quot;: true
+        },
+        &quot;supportedThemes&quot;: [
+            &quot;sap_hcb&quot;,
+            &quot;sap_belize&quot;
+        ]
+    },
+    &quot;sap.ui5&quot;: {
+        &quot;_version&quot;: &quot;1.1.0&quot;,
+        &quot;resources&quot;: {
+            &quot;js&quot;: [
+                {
+                    &quot;uri&quot;: &quot;&lt;uri&gt;&quot;
+                }
+            ],
+            &quot;css&quot;: [
+                {
+                    &quot;uri&quot;: &quot;&lt;uri&gt;&quot;,
+                    &quot;id&quot;: &quot;&lt;id&gt;&quot;
+                }
+            ]
+        },
+        &quot;dependencies&quot;: {
+            &quot;minUI5Version&quot;: &quot;&lt;minUI5Version&gt;&quot;,
+            &quot;libs&quot;: {
+                &quot;&lt;ui5lib1&gt;&quot;: {                   
+                    &quot;minVersion&quot;: &quot;&lt;minVersion1&gt;&quot;
+                },
+                &quot;&lt;ui5lib2&gt;&quot;: {                   
+                    &quot;minVersion&quot;: &quot;&lt;minVersion2&gt;&quot;
+                }
+            },
+            &quot;components&quot;: {
+                &quot;&lt;ui5component1&gt;&quot;: {
+                    &quot;minVersion&quot;: &quot;&lt;minComp1Version&gt;&quot;
+                }
+            }
+        },
+        &quot;models&quot;: {
+            &quot;i18n&quot;: {
+                &quot;type&quot;: &quot;sap.ui.model.resource.ResourceModel&quot;,
+                &quot;uri&quot;: &quot;&lt;uriRelativeToManifest&gt;&quot;
+            },
+            &quot;&quot;: {
+                &quot;dataSource&quot;: &quot;&lt;dataSourceAlias&gt;&quot;,
+                &quot;settings&quot;: {}
+            }
+        },
+        &quot;rootView&quot;: &quot;&lt;rootView&gt;&quot;,
+        &quot;handleValidation&quot;: &lt;true|false&gt;,
+        &quot;config&quot;: {
+          
+        },
+        &quot;routing&quot;: {
+          
+        },
+        &quot;extends&quot;: {
+            &quot;component&quot; : &quot;&lt;extendedComponentId&gt;&quot;,
+			&quot;minVersion&quot;: &quot;&lt;minComp1Version&gt;&quot;,
+			&quot;extensions&quot;: {}
+        }
+        &quot;contentDensities&quot;: {
+            &quot;compact&quot;: &lt;true|false&gt;,
+            &quot;cozy&quot;: &lt;true|false&gt;
+        }
+    },
+
+    &quot;sap.platform.abap&quot;: {
+        &quot;_version&quot;: &quot;1.1.0&quot;,
+        &quot;uri&quot;: &quot;&lt;uri&gt;&quot;
+    },
+    &quot;sap.platform.hcp&quot;: {
+        &quot;_version&quot;: &quot;1.1.0&quot;,
+        &quot;uri&quot;: &quot;&lt;uri&gt;&quot;
+    }
+}
+</pre>
+</li>
+<li class="li">
+<p class="p">Fill the <samp class="ph codeph">start_url</samp> (W3C namespace).</p>
+<p class="p">If applicable, replace the <samp class="ph codeph">&lt;start_url&gt;</samp> placeholder with
+the start URL of your app, for example <samp class="ph codeph">index.html</samp>. If no start
+URL is shipped, remove the <samp class="ph codeph">&quot;start_url&quot;</samp> section in the
+<samp class="ph codeph">manifest.json</samp> file.</p>
+<pre class="pre codeblock prettyprint lang-js">{
+    &quot;start_url&quot;: &quot;index.html&quot;,
+    ...
+}</pre>
+</li>
+<li class="li">
+<p class="p">Fill the <samp class="ph codeph">id</samp> and <samp class="ph codeph">applicationVersion/version</samp>
+attributes of the <samp class="ph codeph">sap.app</samp> namespace.</p>
+<aside class="note caution" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Caution</strong></div>
+<p class="p"><samp class="ph codeph">id</samp> in the <samp class="ph codeph">sap.app</samp> namespace must correspond
+to the component name in the <samp class="ph codeph">Component.js</samp> file, for example
+<samp class="ph codeph">jQuery.sap.declare(&quot;<span class="ph emphasis emphasis">cust.emp.myleaverequests</span>.Component&quot;);</samp>.</p></aside>
+<p class="p">To fill the ID and version information, open the <samp class="ph codeph">Component.js</samp>
+file of your app and add the ID / namespace and version information:</p>
+<pre class="pre codeblock prettyprint lang-js">
+<span class="ph">jQuery.sap.declare(&quot;cust.emp.myleaverequests.Component&quot;);</span>
+... 
+    metadata :  {
+        &quot;name&quot; : &quot;My Leave Requests&quot;,
+        &quot;version&quot; : &quot;1.2.6&quot;
+</pre>
+<p class="p">Open the <samp class="ph codeph">manifest.json</samp> file and enter the values from the
+<samp class="ph codeph">Component.js</samp> file as follows:</p>
+<ul class="ul" id="loio3a9babace121497abea8f0ea66e156d9__ul_tbs_m3z_tr">
+<li class="li">
+<p class="p">Replace the <samp class="ph codeph">&lt;id&gt;</samp> placeholder with the the id /
+namespace value from <samp class="ph codeph">jQuery.sap.declare</samp> (<span class="ph"><samp class="ph codeph">&quot;cust.emp.myleaverequests.Component&quot;</samp></span> in
+the example above).</p>
+</li>
+<li class="li">
+<p class="p">Replace the <samp class="ph codeph">&lt;version&gt;</samp> placeholder with the
+<samp class="ph codeph">version</samp> value (<samp class="ph codeph">&quot;1.2.6&quot;</samp> in the
+example above).</p>
+</li>
+</ul>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">sap.app/id</samp> and
+<samp class="ph codeph">sap.app/applicationVersion/version</samp> in the
+<samp class="ph codeph">manifest.json</samp> file</span>:</p>
+<pre class="pre codeblock prettyprint lang-js">&quot;sap.app&quot;: {
+    &quot;_version&quot;: &quot;1.1.0&quot;,
+    ...
+<span class="ph">    &quot;id&quot;: &quot;cust.emp.myleaverequests&quot;,</span>
+    ...
+    &quot;applicationVersion&quot;: {
+        &quot;version&quot;: &quot;1.2.6&quot;
+    },
+</pre>
+</li>
+<li class="li">
+<p class="p">Fill the <samp class="ph codeph">i18n</samp> and <samp class="ph codeph">title</samp> attributes of the
+<samp class="ph codeph">sap.app</samp> namespace.</p>
+<p class="p">You find the respective information in the <samp class="ph codeph">Component.js</samp> file
+under <samp class="ph codeph">resourceBundle</samp> for the <samp class="ph codeph">i18n</samp> attribute,
+and under <samp class="ph codeph">titleResource</samp> for the <samp class="ph codeph">title</samp>
+attribute:</p>
+<pre class="pre codeblock prettyprint lang-js">&quot;config&quot; : {
+    &quot;titleResource&quot;: &quot;app.Identity&quot;,
+    &quot;resourceBundle&quot;: &quot;i18n/i18n.properties&quot;,
+</pre>
+<p class="p">Open the <samp class="ph codeph">manifest.json</samp> file and enter the values from the
+<samp class="ph codeph">Component.js</samp> file as follows:</p>
+<ul class="ul" id="loio3a9babace121497abea8f0ea66e156d9__ul_kkx_k31_5r">
+<li class="li">
+<p class="p">Replace the <samp class="ph codeph">&lt;title&gt;</samp> placeholder with the
+<samp class="ph codeph">titleResource</samp> value
+(<samp class="ph codeph">&quot;app.Identity&quot;</samp> in the example above)</p>
+</li>
+<li class="li">
+<p class="p">Replace the <samp class="ph codeph">&lt;i18nPathRelativeToManifest&gt;</samp>
+placeholder with the <samp class="ph codeph">resourceBundle</samp> value
+(<samp class="ph codeph">&quot;i18n/i18n.properties&quot;</samp> in the example above).</p>
+</li>
+</ul>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">sap.app/i18n</samp> and
+<samp class="ph codeph">sap.app/title</samp> in the <samp class="ph codeph">manifest.json</samp>
+file</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;sap.app&quot;: {
+    &quot;_version&quot;: &quot;1.1.0&quot;,
+    ...
+    &quot;i18n&quot;: &quot;i18n/i18n.properties&quot;,
+    ...
+    &quot;title&quot;: &quot;{{app.Identity}}&quot;,
+</pre>
+</li>
+<li class="li">
+<p class="p">Fill the <samp class="ph codeph">tags/keywords</samp> attribute of the <samp class="ph codeph">sap.app</samp>
+namespace.</p>
+<p class="p">If you maintain keywords for the SAP Fiori launchpad tile configuration
+(optional), enter one or more text symbols from the
+<samp class="ph codeph">sap.app/i18n</samp> file in the <samp class="ph codeph">keywords</samp>
+attribute of the <samp class="ph codeph">manifest.json</samp> file. If not, remove the
+tags/keywords section from the <samp class="ph codeph">manifest.json</samp> file.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">sap.app/tags/keywords</samp> in the
+<samp class="ph codeph">manifest.json</samp> file</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;sap.app&quot;: {
+    &quot;_version&quot;: &quot;1.1.0&quot;,
+    ... 
+    &quot;tags&quot;: {
+        &quot;keywords&quot;: [
+            &quot;{{Leave}}&quot;
+        ]
+    },
+</pre>
+</li>
+<li class="li">
+<p class="p">Fill the <samp class="ph codeph">dataSource</samp> attribute of the <samp class="ph codeph">sap.app</samp>
+namespace with the data source you use for your app.</p>
+<p class="p">For this, open the location where the service URL and the mock data source is
+defined. </p>
+<ul class="ul" id="loio3a9babace121497abea8f0ea66e156d9__ul_ab1_rsq_vr">
+<li class="li">
+<p class="p">Open the <samp class="ph codeph">Component.js</samp> file of your app to see the data
+source under <samp class="ph codeph">serviceUrl</samp>, see the following example for
+<samp class="ph codeph">name</samp>, <samp class="ph codeph">serviceUrl</samp> and mock data URL
+in <samp class="ph codeph">Component.js</samp>:</p>
+<pre class="pre codeblock prettyprint lang-js">metadata : {
+    ...
+    &quot;config&quot; : {
+        ...           
+        &quot;serviceConfig&quot; : {
+            name: &quot;LEAVEREQUEST&quot;,
+            serviceUrl: &quot;/sap/opu/odata/GBHCM/LEAVEREQUEST;v=2/&quot;
+        }
+    },
+...
+ 
+init : function() {
+    ...
+        oMockServer.simulate(rootPath + &quot;/model/metadata.xml&quot;, rootPath + &quot;/model/&quot;);</pre>
+</li>
+</ul>
+<p class="p">Return to the <samp class="ph codeph">manifest.json</samp> file and do the following:</p>
+<ul class="ul" id="loio3a9babace121497abea8f0ea66e156d9__ul_nns_4jh_wr">
+<li class="li">
+<p class="p">Enter the <samp class="ph codeph">name</samp> value in the placeholder for
+<samp class="ph codeph">&lt;dataSourceAlias&gt;</samp>.</p>
+</li>
+<li class="li">
+<p class="p">Enter the value from the <samp class="ph codeph">serviceUrl</samp> in the placeholder
+for <samp class="ph codeph">&lt;uri&gt;</samp> to fill the value for the URI
+attribute.</p>
+</li>
+<li class="li">
+<p class="p">Enter the value from the URI of <samp class="ph codeph">oMockServer.simulate...</samp>
+in the <samp class="ph codeph">Component.js</samp> file in the placeholder
+for <samp class="ph codeph">&lt;localUri&gt;</samp> to fill the value for the
+<samp class="ph codeph">localUri</samp> attribute.</p>
+</li>
+</ul>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">dataSources</samp> with alias and URI in the
+<samp class="ph codeph">sap.app</samp> namespace of the <samp class="ph codeph">manifest.json</samp>
+file</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;sap.app&quot;: {
+    &quot;_version&quot;: &quot;1.1.0&quot;,
+    ...       
+    &quot;dataSources&quot;: {
+        &quot;LEAVEREQUEST&quot;: {
+            &quot;uri&quot;: &quot;/sap/opu/odata/GBHCM/LEAVEREQUEST;v=2/&quot;,
+            &quot;settings&quot;: {
+                &quot;localUri&quot;: &quot;model/metadata.xml&quot;
+            }
+        }
+    }</pre>
+</li>
+<li class="li">
+<p class="p">Fill the <samp class="ph codeph">icons</samp> attribute of the <samp class="ph codeph">sap.ui</samp>
+namespace.</p>
+<p class="p">Open the <samp class="ph codeph">Component.js</samp> file of your app to see the
+<samp class="ph codeph">icons</samp> in the <samp class="ph codeph">config</samp> section.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">icons</samp> in the <samp class="ph codeph">Component.js</samp>
+file:</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;config&quot; : {
+    ...
+    &quot;icon&quot;: &quot;sap-icon://Fiori2/F0394&quot;,
+    &quot;favIcon&quot;: &quot;./resources/sap/ca/ui/themes/base/img/favicon/My_Leave_Requests.ico&quot;,
+    &quot;homeScreenIconPhone&quot;: &quot;./resources/sap/ca/ui/themes/base/img/launchicon/My_Leave_Requests/57_iPhone_Desktop_Launch.png&quot;,
+    &quot;homeScreenIconPhone@2&quot;: &quot;./resources/sap/ca/ui/themes/base/img/launchicon/My_Leave_Requests/114_iPhone-Retina_Web_Clip.png&quot;,
+    &quot;homeScreenIconTablet&quot;: &quot;./resources/sap/ca/ui/themes/base/img/launchicon/My_Leave_Requests/72_iPad_Desktop_Launch.png&quot;,
+    &quot;homeScreenIconTablet@2&quot;: &quot;./resources/sap/ca/ui/themes/base/img/launchicon/My_Leave_Requests/144_iPad_Retina_Web_Clip.png&quot;
+},</pre>
+<p class="p">Return to the <samp class="ph codeph">manifest.json</samp> file:</p>
+<ul class="ul" id="loio3a9babace121497abea8f0ea66e156d9__ul_xnf_zjg_yr">
+<li class="li">
+<p class="p">Enter the <samp class="ph codeph">icon</samp> value in the
+<samp class="ph codeph">&lt;icon&gt;</samp> placeholder.</p>
+</li>
+<li class="li">
+<p class="p">Enter the <samp class="ph codeph">favIcon</samp> value in the
+<samp class="ph codeph">&lt;favIcon&gt;</samp> placeholder.</p>
+</li>
+<li class="li">
+<p class="p">Enter the <samp class="ph codeph">homeScreenIconPhone</samp> value in the
+<samp class="ph codeph">&lt;phone&gt;</samp> placeholder. Do the same for the
+<samp class="ph codeph">&lt;phone@2&gt;</samp>, <samp class="ph codeph">&lt;tablet&gt;</samp>
+and <samp class="ph codeph">&lt;tablet@2&gt;</samp> placeholders.</p>
+</li>
+</ul>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">icons</samp> in the <samp class="ph codeph">sap.ui</samp>
+namespace of the <samp class="ph codeph">manifest.json</samp> file</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;sap.ui&quot;: {
+    &quot;_version&quot;: &quot;1.1.0&quot;,
+    ...
+    &quot;icons&quot;: {
+        &quot;icon&quot;: &quot;sap-icon://Fiori2/F0394&quot;,
+        &quot;favIcon&quot;: &quot;./resources/sap/ca/ui/themes/base/img/favicon/My_Leave_Requests.ico&quot;,
+        &quot;phone&quot;: &quot;./resources/sap/ca/ui/themes/base/img/launchicon/My_Leave_Requests/57_iPhone_Desktop_Launch.png&quot;,
+        &quot;phone@2&quot;: &quot;./resources/sap/ca/ui/themes/base/img/launchicon/My_Leave_Requests/114_iPhone-Retina_Web_Clip.png&quot;,
+        &quot;tablet&quot;: &quot;./resources/sap/ca/ui/themes/base/img/launchicon/My_Leave_Requests/72_iPad_Desktop_Launch.png&quot;,
+        &quot;tablet@2&quot;: &quot;./resources/sap/ca/ui/themes/base/img/launchicon/My_Leave_Requests/144_iPad_Retina_Web_Clip.png&quot;
+    },</pre>
+<p class="p">If your app does not have icons, remove the icons section or the corresponding
+icon attributes from the <samp class="ph codeph">manifest.json</samp> file.</p>
+</li>
+<li class="li">
+<p class="p">Fill the <samp class="ph codeph">deviceTypes</samp> and <samp class="ph codeph">supportedThemes</samp>
+attributes in the <samp class="ph codeph">sap.ui</samp> namespace in the
+<samp class="ph codeph">manifest.json</samp> file.</p>
+<p class="p">Return to the <samp class="ph codeph">manifest.json</samp> file and ensure that the
+<samp class="ph codeph">deviceTypes</samp> and <samp class="ph codeph">supportedThemes</samp> attributes
+in the <samp class="ph codeph">manifest.json</samp> are correct for your application. If not,
+adapt the entries accordingly.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">deviceTypes</samp> and
+<samp class="ph codeph">supportedThemes</samp> in the <samp class="ph codeph">sap.ui</samp>
+namespace in the <samp class="ph codeph">manifest.json</samp> file</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;sap.ui&quot;: {
+    &quot;_version&quot;: &quot;1.1.0&quot;,
+    ...       
+    &quot;deviceTypes&quot;: {
+        &quot;desktop&quot;: true,
+        &quot;tablet&quot;: true,
+        &quot;phone&quot;: true
+    },
+    &quot;supportedThemes&quot;: [
+        &quot;sap_hcb&quot;,
+        &quot;sap_belize&quot;
+    ]</pre>
+</li>
+<li class="li">
+<p class="p">Fill the <samp class="ph codeph">resources</samp> attribute in the <samp class="ph codeph">sap.ui5</samp>
+namespace.</p>
+<p class="p">Open the <samp class="ph codeph">Component.js</samp> file of your app to see the js and CSS
+resources under <samp class="ph codeph">includes</samp>.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">includes</samp> in the <samp class="ph codeph">Component.js</samp>
+file</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;includes&quot;: [&quot;css/shopStyles.css&quot;, &quot;myfile.js&quot;],</pre>
+<p class="p">Return to the <samp class="ph codeph">manifest.json</samp> file:</p>
+<ul class="ul" id="loio3a9babace121497abea8f0ea66e156d9__ul_wmv_dln_wr">
+<li class="li">
+<p class="p">Enter the js resource value under <samp class="ph codeph">&quot;js&quot;</samp> in the
+<samp class="ph codeph">&lt;uri&gt;</samp> placeholder.</p>
+</li>
+<li class="li">
+<p class="p">Enter the CSS resource value under <samp class="ph codeph">&quot;css&quot;</samp> in the
+<samp class="ph codeph">&lt;uri&gt;</samp> placeholder.</p>
+</li>
+</ul>
+<aside class="note caution" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Caution</strong></div>
+<p class="p">The format in the <samp class="ph codeph">Component.js</samp> file is an array, whereas the
+format in the <samp class="ph codeph">manifest.json</samp> file is a map.</p></aside>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">resources</samp> attribute in the
+<samp class="ph codeph">sap.ui</samp> namespace in the <samp class="ph codeph">manifest.json</samp>
+file</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;sap.ui5&quot;: {
+    &quot;_version&quot;: &quot;1.1.0&quot;,
+    ...
+    &quot;resources&quot;: {
+        &quot;js&quot;: [
+            {
+                &quot;uri&quot;: &quot;myfile.js&quot;
+            }
+        ],
+        &quot;css&quot;: [
+            {
+                &quot;uri&quot;: &quot;css/shopStyles.css&quot;
+            }
+        ]
+    },</pre>
+<p class="p">If your app does not include resources, remove the <samp class="ph codeph">resources</samp>
+section from the <samp class="ph codeph">manifest.json</samp> file.</p>
+</li>
+<li class="li">
+<p class="p">Fill the <samp class="ph codeph">dependecies</samp> attribute of the <samp class="ph codeph">sap.ui5</samp>
+namespace with the <span class="ph"><span class="ph pname">SAPUI5</span></span> dependencies
+that are used.</p>
+<p class="p">Open the <samp class="ph codeph">Component.js</samp> file of your app to see the dependencies
+for the <samp class="ph codeph">ui5</samp> libs and components.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">dependencies</samp> in the
+<samp class="ph codeph">Component.js</samp> file</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;dependencies&quot;: {
+    &quot;libs&quot;: [
+        &quot;sap.m&quot;,
+        &quot;sap.me&quot;
+    ],
+    &quot;components&quot;: [&quot;sap.app.otherComponent&quot;]
+} </pre>
+<p class="p">Return to the <samp class="ph codeph">manifest.json</samp> file and fill the corresponding
+entries in the <samp class="ph codeph">manifest.json</samp>. Enter a value for the minimum <span class="ph"><span class="ph pname">SAPUI5</span></span> version in
+the <samp class="ph codeph">&lt;ui5Version&gt;</samp> placeholder.</p>
+<aside class="note caution" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Caution</strong></div>
+<p class="p">The format in the <samp class="ph codeph">Component.js</samp> file is an array, whereas the
+format in the <samp class="ph codeph">manifest.json</samp> file is a map. Ensure that
+<span class="ph emphasis emphasis">all</span> of the <span class="ph"><span class="ph pname">SAPUI5</span></span>
+libraries used by your app are mentioned under libs. Also make sure that all
+of the <span class="ph"><span class="ph pname">SAPUI5</span></span>
+components used by your app are mentioned under <samp class="ph codeph">components</samp>.
+If there are no dependent components, remove the <samp class="ph codeph">components</samp>
+entry.</p></aside>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">dependencies</samp> in the <samp class="ph codeph">sap.ui5</samp>
+namespace in the <samp class="ph codeph">manifest.json</samp> file</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;sap.ui5&quot;: {
+    &quot;_version&quot;: &quot;1.1.0&quot;,
+    ...
+    &quot;dependencies&quot;: {
+        &quot;minUI5Version&quot;: &quot;1.30&quot;,
+        &quot;libs&quot;: {
+            &quot;sap.m&quot;: {                   
+                &quot;minVersion&quot;: &quot;1.30&quot;
+            },
+            &quot;sap.me&quot;: {                   
+                &quot;minVersion&quot;: &quot;1.30&quot;
+            }
+        },
+        &quot;components&quot;: {
+            &quot;sap.app.otherComponent&quot;: {                   
+                &quot;minVersion&quot;: &quot;1.2.0&quot;
+            }
+        }
+    },</pre>
+<p class="p">If your app requires a minimum version of a lib or component, specify the version
+under <samp class="ph codeph">minVersion</samp> for information purposes. If not, remove the
+<samp class="ph codeph">minVersion</samp> attribute.</p>
+</li>
+<li class="li">
+<p class="p">Fill the <samp class="ph codeph">models</samp> attribute of the <samp class="ph codeph">sap.ui5</samp>
+namespace.</p>
+<p class="p">If a <samp class="ph codeph">model</samp> is entered in <samp class="ph codeph">sap.ui5/models</samp> in the
+<samp class="ph codeph">manifest.json</samp> file, <span class="ph"><span class="ph pname">SAPUI5</span></span> creates the
+model automatically and the coding for model creation inside the app can be
+removed.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">model</samp> creation in
+<samp class="ph codeph">Component.js</samp>:</span></p>
+<pre class="pre codeblock prettyprint lang-js">init : function() {
+    ...
+    // set i18n model
+    var i18nModel = new sap.ui.model.resource.ResourceModel({
+        bundleUrl : rootPath + &quot;/i18n/i18n.properties&quot;
+    });
+    this.setModel(i18nModel, &quot;i18n&quot;);
+     
+    // set data model
+    var m = new sap.ui.model.odata.v2.ODataModel(sServiceUrl);
+    this.setModel(m);</pre>
+<p class="p">Return to the <samp class="ph codeph">manifest.json</samp> file:</p>
+<ul class="ul" id="loio3a9babace121497abea8f0ea66e156d9__ul_m3k_c5n_wr">
+<li class="li">
+<p class="p">i18n model</p>
+<p class="p">Use the same model name as in the <samp class="ph codeph">Component.js</samp> file, for
+example &quot;i18n&quot;, and the type
+<samp class="ph codeph">sap.ui.model.resource.ResourceModel</samp>. Enter the URI
+from the <samp class="ph codeph">Component.js</samp> file in the
+<samp class="ph codeph">&lt;uriRelativeToManifest&gt;</samp> placeholder relative
+to <samp class="ph codeph">manifest.json</samp>, for example,
+<samp class="ph codeph">i18n/i18n.properties</samp></p>
+</li>
+<li class="li">
+<p class="p">OData model</p>
+<p class="p">Use the same model name as in the <samp class="ph codeph">Component.js</samp> file, for
+example &quot;leave&quot; or &quot;&quot; for the default model. Enter a reference to a data
+source from <samp class="ph codeph">sap.app/dataSource</samp> in the
+<samp class="ph codeph">&lt;dataSourceAlias&gt;</samp> placeholder; if needed,
+enhance it with more settings for <span class="ph"><span class="ph pname">SAPUI5</span></span>.</p>
+</li>
+</ul>
+<p class="p"><span class="ph emphasis emphasis">Example: Models in the <samp class="ph codeph">sap.ui5</samp> namespace in the
+<samp class="ph codeph">manifest.json</samp> file</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;sap.ui5&quot;: {
+    &quot;_version&quot;: &quot;1.1.0&quot;,
+    ...
+    &quot;models&quot;: {
+        &quot;i18n&quot;: {
+            &quot;type&quot;: &quot;sap.ui.model.resource.ResourceModel&quot;,
+            &quot;uri&quot;: &quot;i18n/i18n.properties&quot;
+        },
+        &quot;&quot;: {
+            &quot;dataSource&quot;: &quot;LEAVEREQUEST&quot;,
+            &quot;settings&quot;: {
+            }
+        }
+    },</pre>
+</li>
+<li class="li">
+<p class="p">Fill the <samp class="ph codeph">rootView</samp>, <samp class="ph codeph">handleValidation</samp>,
+<samp class="ph codeph">config</samp> and <samp class="ph codeph">routing</samp> attributes in the
+<samp class="ph codeph">sap.ui5</samp> namespace.</p>
+<p class="p">Open the <samp class="ph codeph">Component.js</samp> file of your app to see the
+<samp class="ph codeph">rootView</samp>, <samp class="ph codeph">handleValidation</samp>,
+<samp class="ph codeph">routing</samp>, <samp class="ph codeph">config</samp> in the component metadata
+section.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">rootView</samp>, <samp class="ph codeph">handleValidation</samp>,
+<samp class="ph codeph">config</samp>, <samp class="ph codeph">routing</samp> in
+<samp class="ph codeph">sap.ui5</samp> namespace of the <samp class="ph codeph">manifest.json</samp>
+file:</span></p>
+<pre class="pre codeblock prettyprint lang-js">    ...
+    &quot;rootView&quot;: &quot;myRootView&quot;,
+    &quot;handleValidation&quot;: true,
+    &quot;config&quot;: {
+        ...
+    },
+    &quot;routing&quot;: {
+        ...
+    }</pre>
+<p class="p">Return to the <samp class="ph codeph">manifest.json</samp> file and copy this metadata from the
+<samp class="ph codeph">Component.js</samp> file to the <samp class="ph codeph">sap.ui5</samp> namespace
+in the <samp class="ph codeph">manifest.json</samp> file.</p>
+<p class="p">Only transfer those config parameters in the <samp class="ph codeph">config</samp> section to
+the <samp class="ph codeph">manifest.json</samp> file that have not yet been transferred in
+the steps before. In other words, do not transfer
+<samp class="ph codeph">resourceBundle</samp>, <samp class="ph codeph">titleResource</samp>,
+<samp class="ph codeph">icon</samp>, <samp class="ph codeph">favicon</samp>,
+<samp class="ph codeph">homeScreenIconPhone</samp>, <samp class="ph codeph">homeScreenIconPhone2</samp>,
+<samp class="ph codeph">homeScreenIconTablet</samp> and
+<samp class="ph codeph">homeScreenIconTablet2</samp>.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">rootView</samp>, <samp class="ph codeph">handleValidation</samp>,
+<samp class="ph codeph">config</samp> and <samp class="ph codeph">routing</samp> in the
+<samp class="ph codeph">sap.ui5</samp> namespace of the <samp class="ph codeph">manifest.json</samp>
+file</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;sap.ui5&quot;: {
+    &quot;_version&quot;: &quot;1.1.0&quot;,
+    ...
+    &quot;rootView&quot;: &quot;myRootView&quot;,
+    &quot;handleValidation&quot;: true,
+    &quot;config&quot;: {
+        ...
+    },
+    &quot;routing&quot;: {
+        ...
+    },</pre>
+<p class="p">If there is no corresponding entry in the <samp class="ph codeph">Component.js</samp> file,
+remove the section in the <samp class="ph codeph">manifest.json</samp> file.</p>
+</li>
+<li class="li">
+<p class="p">Fill the <samp class="ph codeph">extends</samp> attribute of the <samp class="ph codeph">sap.ui5</samp>
+namespace.</p>
+<p class="p">Open the <samp class="ph codeph">Component.js</samp> file of your app to see the component
+which your app extends:</p>
+<pre class="pre codeblock prettyprint lang-js">
+<span class="ph">hcm.emp.myleaverequests.Component.extend(&quot;cust.emp.myleaverequests.Component&quot;, {</span></pre>
+<p class="p">Return to the <samp class="ph codeph">manifest.json</samp> file and enter the value from the
+<samp class="ph codeph">component</samp> namespace in the
+<samp class="ph codeph">&lt;extendedComponentId&gt;</samp> placeholder, for example <span class="ph"><samp class="ph codeph">hcm.emp.myleaverequests</samp></span>.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">extends/component</samp> in <samp class="ph codeph">sap.ui5</samp>
+namespace in <samp class="ph codeph">manifest.json</samp> file</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;sap.ui5&quot;: {
+    &quot;_version&quot;: &quot;1.1.0&quot;,
+    ...
+    &quot;extends&quot;: {
+<span class="ph">        &quot;component&quot;: &quot;hcm.emp.myleaverequests&quot;,</span>
+        &quot;minVersion&quot;: &quot;1.1.0&quot;
+    }</pre>
+<p class="p">If your app requires a minimum version of a component, specify the version under
+<samp class="ph codeph">minVersion</samp> for information purposes, otherwise remove the
+attribute. If your app uses the <span class="ph"><span class="ph pname">SAPUI5</span></span> extension
+concept with a <samp class="ph codeph">customizing</samp> entry under component metadata in
+the <samp class="ph codeph">Component.js</samp> file, move the content of that entry to
+<samp class="ph codeph">sap.ui5/extends/extensions</samp> in the
+<samp class="ph codeph">manifest.json</samp> file, or remove the
+<samp class="ph codeph">customizing</samp> entry. If your app does
+<span class="ph emphasis emphasis">not</span> extend another component, remove the
+<samp class="ph codeph">extends</samp> section from the <samp class="ph codeph">manifest.json</samp>
+file.</p>
+</li>
+<li class="li">
+<p class="p">Fill the <samp class="ph codeph">contentDensities</samp> attribute of the
+<samp class="ph codeph">sap.ui5</samp> namespace.</p>
+<p class="p">Enter the correct values for the <samp class="ph codeph">compact</samp> and
+<samp class="ph codeph">cozy</samp> attributes (<samp class="ph codeph">true</samp> or
+<samp class="ph codeph">false</samp>) under <samp class="ph codeph">contentDensities</samp> in the
+<samp class="ph codeph">manifest.json</samp> file. The attributes specify the content
+density modes that your app supports, see <a class="xref" href="../../#/topic/e54f729da8e3405fae5e4fe8ae7784c1.html" title="The devices used to run apps that are developed with SAPUI5 run on various different operating systems and have very different screen sizes. SAPUI5 contains different content densities for certain controls that allow your app to adapt to the device in question, allowing you to display larger controls for touch-enabled devices and a smaller, more compact design for devices that are operated by mouse." target="_top">Content Densities</a>.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">contentDensities</samp> in <samp class="ph codeph">sap.ui5</samp>
+namespace of the <samp class="ph codeph">manifest.json</samp> file:</span></p>
+<pre class="pre codeblock prettyprint lang-js">&quot;sap.ui5&quot;: {
+    &quot;_version&quot;: &quot;1.1.0&quot;,
+    ...       
+    &quot;contentDensities&quot;: {
+        &quot;compact&quot;: true,
+        &quot;cozy&quot;: true
+    }</pre>
+</li>
+<li class="li">
+<p class="p">Verify that <span class="ph emphasis emphasis">no</span> placeholders exist.</p>
+<p class="p">Return to the <samp class="ph codeph">manifest.json</samp> file and make sure there are
+<span class="ph emphasis emphasis">no more</span> placeholders within it
+(<samp class="ph codeph">&lt;...&gt;</samp>). If the file still contains placeholders,
+remove the corresponding sections.</p>
+</li>
+</ol>
+<div class="section"><section class="section" type="Code Changes"><h2 class="section_title" style="font-size: 1.15em;">Code Changes</h2>
+
+<ol class="ol" id="loio3a9babace121497abea8f0ea66e156d9__ol_d5g_fyn_wr">
+<li class="li">
+<p class="p">Adapt the <samp class="ph codeph">Component.js</samp> file.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">Component.js</samp> before making
+changes</span></p>
+<pre class="pre codeblock prettyprint lang-js">
+<span class="ph">jQuery.sap.declare(&quot;cust.emp.myleaverequests.Component&quot;);</span>
+
+<span class="ph">jQuery.sap.require(&quot;cust.emp.myleaverequests.Configuration&quot;);</span>
+
+ 
+
+<span class="ph">hcm.emp.myleaverequests.Component.extend(&quot;cust.emp.myleaverequests.Component&quot;, {</span>
+    metadata :  {
+        &quot;name&quot; : &quot;My Leave Requests&quot;,
+        &quot;version&quot; : &quot;...&quot;,
+
+<span class="ph">        &quot;library&quot; : &quot;cust.emp.myleaverequests&quot;,</span>
+        &quot;includes&quot; : [],
+        &quot;dependencies&quot; : {
+            &quot;libs&quot; : [&quot;sap.m&quot;, &quot;sap.me&quot;],
+            &quot;components&quot; : [&quot;sap.app.otherComponent&quot;]
+        },
+        &quot;rootView&quot;: ...,
+        &quot;handleValidation&quot;: ...,
+        &quot;config&quot;: {
+            ...
+        },
+        &quot;routing&quot;: {
+            ...
+        },
+        &quot;config&quot; : {
+            &quot;titleResource&quot;: &quot;app.Identity&quot;,
+            &quot;resourceBundle&quot;: &quot;i18n/i18n.properties&quot;,
+            &quot;icon&quot;: &quot;sap-icon://Fiori2/F0394&quot;,
+            &quot;favIcon&quot;: &quot;./resources/sap/ca/ui/themes/base/img/favicon/My_Leave_Requests.ico&quot;,
+            &quot;homeScreenIconPhone&quot;: &quot;./resources/sap/ca/ui/themes/base/img/launchicon/My_Leave_Requests/57_iPhone_Desktop_Launch.png&quot;,
+            &quot;homeScreenIconPhone@2&quot;: &quot;./resources/sap/ca/ui/themes/base/img/launchicon/My_Leave_Requests/114_iPhone-Retina_Web_Clip.png&quot;,
+            &quot;homeScreenIconTablet&quot;: &quot;./resources/sap/ca/ui/themes/base/img/launchicon/My_Leave_Requests/72_iPad_Desktop_Launch.png&quot;,
+            &quot;homeScreenIconTablet@2&quot;: &quot;./resources/sap/ca/ui/themes/base/img/launchicon/My_Leave_Requests/144_iPad_Retina_Web_Clip.png&quot;
+        });
+        });</pre>
+<p class="p">Apply the following changes:</p>
+<ul class="ul" id="loio3a9babace121497abea8f0ea66e156d9__ul_qv4_jyn_wr">
+<li class="li">
+<p class="p">Comment or remove the line for the <samp class="ph codeph">require</samp> statement
+for configuration (if available) <span class="ph"><samp class="ph codeph">sap.ui.require(&quot;cust.emp.myleaverequests.Configuration&quot;);</samp></span></p>
+</li>
+<li class="li">
+<p class="p">Add the manifest reference to the metadata: <samp class="ph codeph">&quot;manifest&quot;:
+&quot;json&quot;</samp>.</p>
+</li>
+<li class="li">
+<p class="p">Remove the <samp class="ph codeph">name</samp> section.</p>
+</li>
+<li class="li">
+<p class="p"> Remove the <samp class="ph codeph">library</samp> section.</p>
+</li>
+<li class="li">
+<p class="p">Remove the <samp class="ph codeph">version</samp> section.</p>
+</li>
+<li class="li">
+<p class="p">Remove the <samp class="ph codeph">includes</samp> section.</p>
+</li>
+<li class="li">
+<p class="p">Remove the <samp class="ph codeph">dependencies</samp> section.</p>
+</li>
+<li class="li">
+<p class="p">Remove the <samp class="ph codeph">rootView</samp> section.</p>
+</li>
+<li class="li">
+<p class="p">Remove the <samp class="ph codeph">handleValidation</samp> section.</p>
+</li>
+<li class="li">
+<p class="p">Remove the <samp class="ph codeph">routing</samp> section.</p>
+</li>
+<li class="li">
+<p class="p">Remove the <samp class="ph codeph">config</samp> section.</p>
+</li>
+</ul>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">Component.js</samp> after making
+changes</span></p>
+<pre class="pre codeblock prettyprint lang-js">
+<span class="ph">jQuery.sap.declare(&quot;cust.emp.myleaverequests.Component&quot;);
+//jQuery.sap.require(&quot;cust.emp.myleaverequests.Configuration&quot;);</span>
+ 
+
+<span class="ph">hcm.emp.myleaverequests.Component.extend(&quot;cust.emp.myleaverequests.Component&quot;, {
+    metadata : {
+        &quot;manifest&quot;: &quot;json&quot;,
+        ...</span>
+
+<span class="ph">});</span></pre>
+</li>
+<li class="li">
+<p class="p">Adapt the data source reference in the <samp class="ph codeph">Component.js</samp>
+file.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: Data source reference in <samp class="ph codeph">Component.js</samp>
+file before making changes</span></p>
+<pre class="pre codeblock prettyprint lang-js">metadata : {
+    ...
+    &quot;config&quot; : {
+        ...           
+        &quot;serviceConfig&quot; : {
+            name: &quot;LEAVEREQUEST&quot;,
+            serviceUrl: &quot;/sap/opu/odata/GBHCM/LEAVEREQUEST;v=2/&quot;
+        }
+    },
+...
+ 
+init : function() {
+    ...
+    var oServiceConfig = this.getMetadata().getConfig()[&quot;serviceConfig&quot;];
+    var sServiceUrl = oServiceConfig.serviceUrl;
+    ...
+    oMockServer.simulate(rootPath + &quot;/model/metadata.xml&quot;, rootPath + &quot;/model/&quot;);</pre>
+<p class="p">Apply the following changes:</p>
+<ul class="ul" id="loio3a9babace121497abea8f0ea66e156d9__ul_fnc_1zn_wr">
+<li class="li">
+<p class="p">Remove <samp class="ph codeph">serviceConfig</samp> under <samp class="ph codeph">config</samp>
+in the component metadata.</p>
+</li>
+<li class="li">
+<p class="p">If you are still using the service URL in your coding for purposes
+other than model creation, change the lines for getting the service
+config / url and read the URI from the manifest via your component
+metadata, for example,
+<samp class="ph codeph">this.getMetadata().getManifestEntry(&quot;sap.app&quot;)...</samp>;
+otherwise, remove that coding.</p>
+</li>
+<li class="li">
+<p class="p">Change the line for <samp class="ph codeph">oMockServer.simulate...</samp> and read
+the URI from the manifest via your component metadata, for example,
+<samp class="ph codeph">this.getMetadata().getManifestEntry(&quot;sap.app&quot;)...</samp></p>
+</li>
+</ul>
+<p class="p"><span class="ph emphasis emphasis">Example: Data source reference in <samp class="ph codeph">Component.js</samp>
+file after making changes</span></p>
+<pre class="pre codeblock prettyprint lang-js">metadata : {
+    &quot;manifest&quot;: &quot;json&quot;,
+    ...           
+ 
+init : function() {
+    ...
+    var sServiceUrl = this.getMetadata().getManifestEntry(&quot;sap.app&quot;).dataSources[&quot;LEAVEREQUEST&quot;].uri;
+    ...
+    oMockServer.simulate(rootPath + &quot;/&quot; + this.getMetadata().getManifestEntry(&quot;sap.app&quot;).dataSources[&quot;LEAVEREQUEST&quot;].settings.localUri, rootPath + &quot;/model/&quot;);</pre>
+</li>
+<li class="li">
+<p class="p">Remove the <span class="ph"><span class="ph pname">SAPUI5</span></span> model creation in the <samp class="ph codeph">Component.js</samp> file.</p>
+<p class="p"><span class="ph emphasis emphasis">Example: <samp class="ph codeph">Component.js</samp> file before making
+changes</span></p>
+<pre class="pre codeblock prettyprint lang-js">init : function() {
+    ...
+    // set i18n model
+    var i18nModel = new sap.ui.model.resource.ResourceModel({
+        bundleUrl : rootPath + &quot;/i18n/i18n.properties&quot;
+    });
+    this.setModel(i18nModel, &quot;i18n&quot;);
+     
+    // set data model
+    var m = new sap.ui.model.odata.v2.ODataModel(sServiceUrl);
+    this.setModel(m);</pre>
+<p class="p">Apply the following changes:</p>
+<ul class="ul" id="loio3a9babace121497abea8f0ea66e156d9__ul_mc5_szn_wr">
+<li class="li">
+<p class="p">Delete the lines for the i18n model creation and model setting.</p>
+</li>
+<li class="li">
+<p class="p">Delete the lines for the data model creation and model setting.</p>
+</li>
+</ul>
+</li>
+</ol>
+</section></div>
+<div class="section"><section class="section" type="Smoke Test"><h2 class="section_title" style="font-size: 1.15em;">Smoke Test</h2>
+
+<p class="p">To verify that your app works as before, perform checks to make sure the following is
+true:</p>
+<ul class="ul" id="loio3a9babace121497abea8f0ea66e156d9__ul_kn5_q1k_cs">
+<li class="li">
+<p class="p">OData service works as before</p>
+</li>
+<li class="li">
+<p class="p">Mock data works as before</p>
+</li>
+<li class="li">
+<p class="p">Title, icons in SAP Fiori launchpad work as before</p>
+</li>
+<li class="li">
+<p class="p">Navigation works as before</p>
+</li>
+</ul>
+</section></div>
+</div><div class="related-links"> </div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

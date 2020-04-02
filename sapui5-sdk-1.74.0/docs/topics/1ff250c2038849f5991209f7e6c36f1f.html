@@ -1,0 +1,206 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 30: Debugging Tools</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Even though we have added a basic test coverage in the previous steps, it seems like we accidentally broke our app, because it does not display prices to our invoices anymore. We need to debug the issue and fix it before someone finds out."><meta name="description" content="Even though we have added a basic test coverage in the previous steps, it seems like we accidentally broke our app, because it does not display prices to our invoices anymore. We need to debug the issue and fix it before someone finds out."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"e5200ee755f344c8aef8efcbab3308fb.html","previousTopicHref":"9bf4dce43b7943d0909cd6c58a933589.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/9bf4dce43b7943d0909cd6c58a933589.html" title="If we want to test interaction patterns or more visual features of our app, we can also write an integration test." target="_top">Step 29: Integration Test with OPA</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/e5200ee755f344c8aef8efcbab3308fb.html" title="So far, we have put all app content on one single page. As we add more and more features, we want to split the content and put it on separate pages." target="_top">Step 31: Routing and Navigation</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loio1ff250c2038849f5991209f7e6c36f1f"><h1 class="title topictitle1" hidden>Step 30: Debugging Tools</h1><div class="body conbody"><p class="shortdesc" hidden>Even though we have added a basic test coverage in the previous steps, it seems like
+we accidentally broke our app, because it does not display prices to our invoices anymore.
+We need to debug the issue and fix it before someone finds out.</p>
+<p class="p">Luckily, <span class="ph"><span class="ph pname">SAPUI5</span></span> provides a
+couple of debugging tools that we can use within the app to check the application logic
+and the developer tools of modern browsers are also quite good. We will now check for
+the root cause.</p>
+<div class="section" id="loio1ff250c2038849f5991209f7e6c36f1f__section_chj_s5x_31b"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loio1ff250c2038849f5991209f7e6c36f1f__fig_r1j_pst_mr"><div class="figbody">
+
+<img class="inline  " id="loio1ff250c2038849f5991209f7e6c36f1f__image_c4w_sgf_yr" src="loioc4e83f0e553c4314a1f24e13972e20df_HiRes.png">
+</div><span class="figcap">The diagnostics window</span></div>
+</section></div>
+<div class="section" id="loio1ff250c2038849f5991209f7e6c36f1f__section_dhj_s5x_31b">
+<div class="section_title">Coding</div>
+<p class="p">You can view and download all files <span class="ph">at <a class="xref" href="../../#/sample/sap.m.tutorial.walkthrough.30/preview" target="_top" alt="#/sample/sap.m.tutorial.walkthrough.30/preview" title="#/sample/sap.m.tutorial.walkthrough.30/preview">Walkthrough - Step 30</a></span>.</p>
+<div class="section_title">webapp/view/InvoiceList.view.xml </div>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+		controllerName=&quot;sap.ui.demo.walkthrough.controller.InvoiceList&quot;
+		xmlns=&quot;sap.m&quot;
+		xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;List
+			id=&quot;invoiceList&quot;
+			class=&quot;sapUiResponsiveMargin&quot;
+			width=&quot;auto&quot;
+			items=&quot;{
+			path : &apos;invoice&gt;/Invoices&apos;,
+			sorter : {
+				path : &apos;ShipperName&apos;,
+				group : true
+			}
+		}&quot;&gt;
+		&lt;headerToolbar&gt;
+			&lt;Toolbar&gt;
+				&lt;Title text=&quot;{i18n&gt;invoiceListTitle}&quot;/&gt;
+				&lt;ToolbarSpacer/&gt;
+				&lt;SearchField width=&quot;50%&quot; search=&quot;.onFilterInvoices&quot;/&gt;
+			&lt;/Toolbar&gt;
+		&lt;/headerToolbar&gt;
+		&lt;items&gt;
+			&lt;ObjectListItem
+					title=&quot;{invoice&gt;Quantity} x {invoice&gt;ProductName}&quot;
+					number=&quot;{
+					parts: [{path: &apos;invoice&gt;<span class="ph emphasis emphasis">ExTendedPrice&apos;</span>}, {path: &apos;view&gt;/currency&apos;}],
+					type: &apos;sap.ui.model.type.Currency&apos;,
+					formatOptions: {
+						showMeasure: false
+					}
+				}&quot;
+				numberUnit=&quot;{view&gt;/currency}&quot;
+					numberState=&quot;{=	${invoice&gt;ExtendedPrice} &gt; 50 ? &apos;Error&apos; : &apos;Success&apos; }&quot;&gt;
+				&lt;attributes&gt;
+					&lt;ObjectAttribute text=&quot;{
+						path: &apos;invoice&gt;Status&apos;,
+						formatter: &apos;.formatter.statusText&apos;
+					}&quot;/&gt;
+				&lt;/attributes&gt;
+			&lt;/ObjectListItem&gt;
+		&lt;/items&gt;
+	&lt;/List&gt;
+&lt;/mvc:View&gt;</pre>
+<p class="p">We introduced a typo in the binding of the number attribute to simulate a frequent
+error; instead of using <samp class="ph codeph">&apos;invoice&gt;ExtendedPrice&apos;</samp> we use
+<samp class="ph codeph">&apos;invoice&gt;Ex<span class="ph emphasis emphasis">T</span>endedPrice&apos;</samp>. Now we
+call the app and notice that the price is actually missing. By pressing <span class="keys">
+<kbd class="key">CTRL</kbd>
+ + <kbd class="key">ALT</kbd>
+ + <kbd class="key">SHIFT</kbd>
+ + <kbd class="key">S</kbd>
+</span> we open the <span class="ph"><span class="ph pname">SAPUI5</span></span> support
+diagnostics tool and check the app.</p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">If you use the Google Chrome browser, you can install the <span class="ph uicontrol">UI5
+Inspector</span> plugin. With this plugin, you can easily debug your
+<span class="ph pname">SAPUI5</span>- or <span class="ph pname">OpenUI5</span>-based
+apps. For more information, see <a class="xref" href="../../#/topic/b24e72443eb34d0fb7bf6940f2d697eb.html" title="The UI5 Inspector is an open source Chrome DevTools extension that helps app developers to inspect, analyze, and support SAPUI5-based apps. It is supported for apps based on SAPUI5 version 1.28 and higher." target="_top">UI5 Inspector</a>.</p></aside>
+<p class="p">Besides technical information about the app and a trace that is similar to the
+developer tools console of the browser, there is a really handy tool for checking
+such errors in this dialog. Open the tab <span class="ph uicontrol">Control Tree</span> by
+clicking on the expand symbol on the right. </p>
+<p class="p">A hierarchical tree of <span class="ph"><span class="ph pname">SAPUI5</span></span> controls is
+shown on the left and the properties of the selected control are displayed on the
+right. If we now select the first <samp class="ph codeph">ObjectListItem</samp> control of the
+tree and go to the <span class="ph uicontrol">Binding Infos</span> tab on the right, we can
+actually see that the binding path of the number attribute is marked as invalid. We
+can now correct the error in the view and the price should appear in the list of
+invoices again. </p>
+<p class="p">Sometimes errors are not as easy to spot and you actually need to debug the
+JavaScript code with the tools of the browser. For performance reasons, the <span class="ph"><span class="ph pname">SAPUI5</span></span> files are
+shipped in a minified version, this means that all possible variable names are
+shortened and comments are removed. </p>
+<p class="p">This makes debugging harder because the code is a lot less readable. You can load the
+debug sources by adding the URL parameter <samp class="ph codeph">sap-ui-debug=true</samp> or by
+pressing <span class="keys">
+<kbd class="key">CTRL</kbd>
+ + <kbd class="key">ALT</kbd>
+ + <kbd class="key">SHIFT</kbd>
+ + <kbd class="key">P</kbd>
+</span> and select <span class="ph uicontrol">Use Debug Sources</span> in the dialog box that
+is displayed. After reloading the page, you can see in the
+<span class="ph uicontrol">Network</span> tab of the browser&#x2019;s developer tools that now a
+lot of files with the <samp class="ph codeph">&#x2013;dbg</samp> suffix are loaded. These are the source
+code files that include comments and the uncompressed code of the app and the <span class="ph"><span class="ph pname">SAPUI5</span></span> artifacts.</p>
+<div class="fig fignone" id="loio1ff250c2038849f5991209f7e6c36f1f__fig_vfz_xgf_yr"><div class="figbody">
+
+<img class="inline  " id="loio1ff250c2038849f5991209f7e6c36f1f__image_txg_hmm_tv" src="loio8cec8a2b3dab4681a66c70740bd0d298_LowRes.png" alt="Technical Information Dialog" title="Technical Information Dialog">
+</div><span class="figcap">Technical information dialog </span></div>
+<p class="p">For a more detailed explanation of the <span class="ph"><span class="ph pname">SAPUI5</span></span> support tools,
+go through the <a class="xref" href="../../#/topic/5661952e72df471b932eddc10350c081.html" title="In this tutorial, we will show you some tools that will help you if you run into problems with your SAPUI5 app." target="_top">Troubleshooting</a> tutorial.</p>
+<p class="p">If you&apos;re stuck and need help for some development task, you can also post a question
+in the <span class="ph"><span class="ph pname">SAPUI5</span></span>-related
+forums, for example in the <a class="xref" href="https://www.sap.com/community/topic/ui5.html" target="_blank" alt="https://www.sap.com/community/topic/ui5.html" title="https://www.sap.com/community/topic/ui5.html">SAP Community</a> or on <a class="xref" href="https://stackoverflow.com/search?q=sapui5" target="_blank" alt="https://stackoverflow.com/search?q=sapui5" title="https://stackoverflow.com/search?q=sapui5">Stack Overflow</a>.</p>
+</div>
+<div class="section" id="loio1ff250c2038849f5991209f7e6c36f1f__section_lvc_gkw_31b"><section class="section" type="Conventions"><h2 class="section_title" style="font-size: 1.15em;">Conventions</h2>
+
+<ul class="ul" id="loio1ff250c2038849f5991209f7e6c36f1f__ul_nh5_ybb_nr">
+<li class="li">
+<p class="p">As per <span class="ph"><span class="ph pname">SAPUI5</span></span>
+convention uncompressed source files end with <samp class="ph codeph">*-dbg.js</samp></p>
+</li>
+</ul>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/9bf4dce43b7943d0909cd6c58a933589.html" title="If we want to test interaction patterns or more visual features of our app, we can also write an integration test." target="_top">Step 29: Integration Test with OPA</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/e5200ee755f344c8aef8efcbab3308fb.html" title="So far, we have put all app content on one single page. As we add more and more features, we want to split the content and put it on separate pages." target="_top">Step 31: Routing and Navigation</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/c9b0f8cca852443f9b8d3bf8ba5626ab.html#loioc9b0f8cca852443f9b8d3bf8ba5626ab" title="When developing apps, searching for bugs is an inevitable part of the process. To analyze an issue, you can use the developer tools of your browser and built-in SAPUI5 tools. In this section, we give an overview of the SAPUI5 tools you can use when debugging. To learn more about the developer tools of your browser, check the documentation of the browser." target="_top">Debugging</a></div><div><a class="link" href="../../#/topic/6ec18e80b0ce47f290bc2645b0cc86e6.html#loio6ec18e80b0ce47f290bc2645b0cc86e6" title="The Diagnostics window available in SAPUI5 is a support tool that runs within an existing SAPUI5 app." target="_top">Diagnostics</a></div><div><a class="link" href="../../#/topic/616a3ef07f554e20a3adf749c11f64e9.html#loio616a3ef07f554e20a3adf749c11f64e9" title="The Technical Information dialog shows details of the SAPUI5 version currently being used in an app built with SAPUI5. You can use the Technical Information dialog to enable debug resources and open additional support tools to debug your app." target="_top">Technical Information Dialog</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

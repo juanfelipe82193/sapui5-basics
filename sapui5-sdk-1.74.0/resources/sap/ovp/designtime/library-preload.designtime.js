@@ -1,0 +1,10 @@
+//@ui5-bundle sap/ovp/designtime/library-preload.designtime.js
+sap.ui.predefine('sap/ovp/ui/DashboardLayout.designtime',["sap/ovp/ui/ComponentContainerDesigntimeMetadata","sap/ovp/app/resources"],function(C,O){"use strict";return{actions:{},aggregations:{content:{domRef:".sapUiComponentContainer",actions:{},propagateMetadata:function(e){var t=e.getMetadata().getName();if(t==="sap.ui.core.ComponentContainer"){return C;}else{return{actions:"not-adaptable"};}},propagateRelevantContainer:false}},name:{singular:O&&O.getText("Card"),plural:O&&O.getText("Cards")}};},false);
+/*!
+ * UI development toolkit for HTML5 (OpenUI5)
+ * (c) Copyright 2009-2017 SAP SE or an SAP affiliate company.
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ */
+sap.ui.predefine('sap/ovp/ui/EasyScanLayout.designtime',["sap/ovp/ui/ComponentContainerDesigntimeMetadata","sap/ovp/app/resources"],function(C,O){"use strict";return{actions:{},aggregations:{content:{domRef:".sapUiComponentContainer",actions:{},propagateMetadata:function(e){var t=e.getMetadata().getName();if(t==="sap.ui.core.ComponentContainer"){return C;}else{return{actions:"not-adaptable"};}},propagateRelevantContainer:false}},name:{singular:O&&O.getText("Card"),plural:O&&O.getText("Cards")}};},false);
+sap.ui.predefine('sap/ovp/ui/OVPWrapper.designtime',["sap/ovp/app/resources","sap/ovp/cards/CommonUtils","sap/ovp/app/OVPUtils"],function(O,C,a){"use strict";return{'default':{controllerExtensionTemplate:"sap/ovp/ui/OVPControllerExtensionTemplate",actions:{},aggregations:{DynamicPage:{propagateMetadata:function(e){var t=e.getMetadata().getName();var l=C._getLayer();if(t!=="sap.ovp.ui.EasyScanLayout"&&t!=="sap.ui.core.ComponentContainer"&&!((l&&(l===a.Layers.vendor||l===a.Layers.customer_base))&&t==="sap.ui.comp.smartfilterbar.SmartFilterBar")){return{actions:"not-adaptable"};}},propagateRelevantContainer:false}}},'strict':{actions:{},name:{singular:O&&O.getText("Card"),plural:O&&O.getText("Cards")}}};},false);
+//# sourceMappingURL=library-preload.designtime.js.map

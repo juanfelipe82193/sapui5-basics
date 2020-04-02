@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>RichTextEditor - sap.ui.richtexteditor / TinyMCE custom Plugin Integration</title>
+
+	<script src="../../../../resources/sap-ui-core.js"
+	        type="text/javascript"
+	        charset="UTF-8"
+	        id="sap-ui-bootstrap"
+	        data-sap-ui-libs="sap.ui.richtexteditor, sap.m, sap.uxap, sap.ui.codeeditor"
+	        data-sap-ul-theme="sap-belize"
+	        data-sap-ui-preload="async">
+	</script>
+
+	<style>
+		body, html {
+			height: 100%;
+		}
+	</style>
+
+	<script>
+		sap.ui.getCore().attachInit(function () {
+			sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/uxap/ObjectPageLayout",
+					"sap/uxap/ObjectPageSection", "sap/uxap/ObjectPageSubSection", "sap/uxap/ObjectPageHeader", "sap/ui/codeeditor/CodeEditor",
+					"sap/m/Button"],
+				function (RTE, ObjectPageLayout, ObjectPageSection, ObjectPageSubSection, ObjectPageHeader, CodeEditor, Button) {
+					var oCustomButton, oRTECustomToolbar, oCodeEditorCustomToolbar, oRTERequestPlugin,
+						oCodeEditorRequestPlugin, oLayout,
+						oLocalConfig = {
+							editorType: sap.ui.richtexteditor.EditorType.TinyMCE4,
+							width: "100%",
+							height: "300px",
+							showGroupFont: true,
+							showGroupUndo: true,
+							showGroupLink: true,
+							showGroupInsert: true,
+							beforeEditorInit: function (oEvent) {
+								tinymce.PluginManager.add('myCustomPlugin', function (editor) {
+									function _showDialog() {
+										editor.windowManager.open({
+											title: 'My Custom Plugin',
+											body: [
+												{type: 'textbox', name: 'title', label: 'Title'}
+											],
+											onsubmit: function (e) {
+												editor.insertContent('Title: ' + e.data.title);
+											}
+										});
+									}
+
+									editor.addButton('myCustomPluginButton', {
+										text: 'My Custom Plugin Button',
+										icon: false,
+										onclick: _showDialog
+									});
+
+									editor.addCommand('customDialogShow', _showDialog);
+								});
+
+								var oConfig = oEvent.getParameter('configuration');
+								oConfig.plugins += ",myCustomPlugin";
+								oConfig.toolbar[0] += " | myCustomPluginButton";
+							}
+						};
+
+					// Build the RichTextEditor
+					function _getRTE(oRTEConfig) {
+						var oConfigBuilder = jQuery.extend({}, oLocalConfig, oRTEConfig || {});
+
+						return new RTE(oConfigBuilder);
+					}
+
+					// Build the CodeEditor
+					function _getScriptEditor(oConfig) {
+						return new CodeEditor({
+							value: _buildEditorScriptString(oConfig),
+							height: "300px",
+							type: "javascript",
+							syntaxHints: false,
+							editable: false
+						});
+					}
+
+					// Stringify and pretty print the config
+					function _buildEditorScriptString(oConfig) {
+						var oConfigBuilder = jQuery.extend({}, oLocalConfig, oConfig);
+						var sConfig = JSON.stringify(oConfigBuilder, function (sKey, vVal) {
+							return (typeof vVal === 'function') ? '' + vVal : vVal;
+						})
+							.replace(/(\\)?\\n/gi, "\n") // Replace new line chars with real new lines
+							.replace(/(\\)?\\t/gi, "\t") // Replace tab chars with real tabs
+							.replace(/,"/gi, ",\n\t\"") // Prettify listed config properties- place each property on a new line
+							.replace(/("|')function/gi, 'function') // Remove any quotes around function declarations
+							.replace(/}("|')/gi, '}') // Remove any quotes around function declarations (closing braces)
+							.replace(/("|')new/gi, 'new') // Remove any quotes around instantiating new object
+							.replace(/}\)("|')/gi, '})') // Remove any quotes around instantiating new object (closing braces)
+							.replace(/\\('|")/gi, "$1"); //Cleaunp escaping quotes
+
+						sConfig = 'var oRTE = new sap.ui.richtexteditor.RichTextEditor(' + sConfig + "\n);";
+
+						return sConfig;
+					}
+
+
+					//Configuration for RTE with custom plugin & toolbar
+					oCustomButton = new Button({
+						text: "Custom Button + Plugin",
+						icon: "sap-icon://crm-sales",
+						type: "Transparent",
+						press: function () {
+							oRTECustomToolbar.getNativeApi().execCommand("customDialogShow");
+						}
+					});
+					oRTECustomToolbar = _getRTE({
+						customToolbar: true,
+						customButtons: [oCustomButton]
+					});
+					oCodeEditorCustomToolbar = _getScriptEditor({
+						customToolbar: true,
+						customButtons: ['new sap.m.Button({\n' +
+						'\t\t\t\t\t\ttext: "Custom Button + Plugin",\n' +
+						'\t\t\t\t\t\ticon: "sap-icon://crm-sales",\n' +
+						'\t\t\t\t\t\ttype: "Transparent",\n' +
+						'\t\t\t\t\t\tpress: function () {\n' +
+						'\t\t\t\t\t\t\toRTE.getNativeApi().execCommand("customDialogShow");\n' +
+						'\t\t\t\t\t\t}\n' +
+						'\t\t\t\t\t})']
+					});
+
+					//Configuration for RTE with a plugin requested via AJAX
+					// Actually the editor won't load the external resource. However it's been tested and working.
+					oCodeEditorRequestPlugin = _getScriptEditor({
+						beforeEditorInit: function () {
+							// Load the external plugin for example via jQuery.getScript:
+							//jQuery.getScript("/some/place/in/my/app/plugin.js");
+						},
+						ready: function () {
+							// When the plugin gets loaded and the editor is ready, add the plugin and the button
+							this.addPlugin("myCustomPlugin"); // Plugin's name
+							this.addButtonGroup("myCustomPluginButton"); // Add button, if there's such
+						}
+					});
+
+					//Build the layout
+					oLayout = new ObjectPageLayout({
+						id: "rte-custom-plugins",
+						headerTitle: new ObjectPageHeader({objectTitle: "RichTextEditor: Enable Custom Plugins"}),
+						sections: [
+							new ObjectPageSection({
+								title: "Custom Plugin Inline",
+								subSections: [new ObjectPageSubSection({blocks: [_getScriptEditor(), _getRTE()]})]
+							}),
+							new ObjectPageSection({
+								title: "Custom Plugin",
+								subSections: [new ObjectPageSubSection({blocks: [oCodeEditorRequestPlugin, _getRTE()]})]
+							}),
+							new ObjectPageSection({
+								title: "Custom Toolbar + Custom Plugin",
+								subSections: [new ObjectPageSubSection({blocks: [oCodeEditorCustomToolbar, oRTECustomToolbar]})]
+							})
+						]
+					});
+
+					oLayout.placeAt("content");
+				});
+		});
+	</script>
+</head>
+<body class="sapUiBody" id="content"></body>
+</html>

@@ -1,0 +1,218 @@
+{
+	"_version": "1.2.0",
+	"sap.app": {
+		"_version": "1.2.0",
+		"id": "sap.suite.ui.generic.template",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"applicationVersion": {
+			"version": "1.74.0"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"tags": {
+			"keywords": []
+		},
+		"ach": "ca-ui5-st",
+		"resources": "resources.json",
+		"dataSources": {
+			"mainService": {
+				"uri": "/sap/opu/odata/sap/STTA_SALES_ORDER_ND_SRV_01/",
+				"type": "OData",
+				"settings": {
+					"annotations": [
+						"STTA_SALES_ORDER_ND_ANNO_MDL_01",
+						"localAnnotations"
+					],
+					"localUri": "localService/metadata.xml"
+				}
+			},
+			"STTA_SALES_ORDER_ND_ANNO_MDL_01": {
+				"uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='STTA_SALES_ORDER_ND_ANNO_MDL_01',Version='0001')/$value/",
+				"type": "ODataAnnotation",
+				"settings": {
+					"localUri": "localService/STTA_SALES_ORDER_ND_ANNO_MDL_01.xml"
+				}
+			},
+			"localAnnotations": {
+				"uri": "annotations/annotations.xml",
+				"type": "ODataAnnotation",
+				"settings": {
+					"localUri": "annotations/annotations.xml"
+				}
+			}
+		},
+		"offline": false,
+		"sourceTemplate": {
+			"id": "ui5template.smarttemplate",
+			"version": "1.0.0"
+		},
+		"crossNavigation": {
+			"inbounds": {},
+			"outbounds": {
+				"EPMProductManageSt":
+				{
+					"semanticObject": "EPMProduct",
+					"action": "manage_st"
+				}
+			}
+		}
+	},
+	"sap.ui": {
+		"_version": "1.2.0",
+		"technology": "UI5",
+		"icons": {
+			"icon": "",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		},
+		"supportedThemes": [
+			"sap_hcb",
+			"sap_bluecrystal",
+			"sap_belize"
+		]
+	},
+	"sap.ui5": {
+		"_version": "1.1.0",
+		"resources": {
+			"js": [],
+			"css": []
+		},
+		"dependencies": {
+			"minUI5Version": "${sap.ui5.dist.version}",
+			"libs": {
+				"sap.ui.core": {},
+				"sap.m": {},
+				"sap.ui.comp": {},
+				"sap.uxap": {},
+				"sap.suite.ui.generic.template": {}
+			},
+			"components": {}
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/i18n.properties"
+			},
+			"@i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/i18n.properties"
+			},
+			"i18n|sap.suite.ui.generic.template.ListReport|STTA_C_SO_SalesOrder_ND": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/ListReport/STTA_C_SO_SalesOrder_ND/i18n.properties"
+			},
+			"i18n|sap.suite.ui.generic.template.ObjectPage|STTA_C_SO_SalesOrder_ND": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/ObjectPage/STTA_C_SO_SalesOrder_ND/i18n.properties"
+			},
+			"i18n|sap.suite.ui.generic.template.ObjectPage|to_Item": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/ObjectPage/STTA_C_SO_SalesOrderItem_ND/i18n.properties"
+			},
+			"": {
+				"dataSource": "mainService",
+				"settings": {
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Inline",
+					"refreshAfterChange": false
+				}
+			}
+		},
+		"extends": {
+		  "extensions": {		
+			"sap.ui.controllerExtensions": {
+				"sap.suite.ui.generic.template.ListReport.view.ListReport": {
+					"controllerName": "STTA_SO_ND.ext.controller.ListReportExt",
+					"sap.ui.generic.app": {
+						"STTA_C_SO_SalesOrder_ND": {
+							"EntitySet": "STTA_C_SO_SalesOrder_ND",
+							"Actions": {
+								"ActionSTTA_C_SO_SalesOrder_ND": {
+									"id": "NavigatioButton",
+									"text": "Sales Order-MES(Ext nav to createMode)",
+									"press": "onClickActionNavigatioButton"
+								},
+								"ActionOppID": {
+									"id": "RandomOppID",
+									"text": "Set Random Opp ID",
+									"press": "onRandomOppID",
+									"requiresSelection": true
+								}
+							}
+						}
+					}
+				},
+				"sap.suite.ui.generic.template.ObjectPage.view.Details": {
+					"controllerName": "STTA_SO_ND.ext.controller.DetailsExtension"
+			  }
+			}		
+		  }
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		}
+	},
+	"sap.ui.generic.app": {
+		"_version": "1.1.0",
+		"pages": [
+			{
+				"entitySet": "STTA_C_SO_SalesOrder_ND",
+				"component": {
+					"name": "sap.suite.ui.generic.template.ListReport",
+					"list": true,
+					"settings": {
+						"gridTable": false,
+						"multiSelect": true
+					}
+				},
+				"pages": [
+					{
+						"entitySet": "STTA_C_SO_SalesOrder_ND",
+						"component": {
+							"name": "sap.suite.ui.generic.template.ObjectPage",
+							"settings": {
+								"gridTable": false,
+								"sections": {
+									"to_Item::com.sap.vocabularies.UI.v1.LineItem": {
+										"navigationProperty": "to_Item",
+										"entitySet": "STTA_C_SO_SalesOrderItem_ND",
+									    "createMode": "inline"
+									}
+								}
+							}
+
+						},
+						"pages": [
+							{
+								"navigationProperty": "to_Item",
+								"entitySet": "STTA_C_SO_SalesOrderItem_ND",
+								"component": {
+									"name": "sap.suite.ui.generic.template.ObjectPage"
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"sap.fiori": {
+		"_version": "1.1.0",
+		"registrationIds": [],
+		"archeType": "transactional"
+	},
+	"sap.platform.hcp": {
+		"_version": "1.2.0",
+		"uri": "webapp"
+	}
+}

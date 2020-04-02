@@ -1,0 +1,363 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Server Messages in OData V4 Model</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The OData V4 model supports server messages sent via an OData V4 service."><meta name="description" content="The OData V4 model supports server messages sent via an OData V4 service."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"4d1b9d44941f483f9b7f579873d38685.html","previousTopicHref":"7d914317c0b64c23824bf932cc8a4ae1.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loiofbe1cb5613cf4a40a841750bf813238e"><h1 class="title topictitle1" hidden>Server Messages in OData V4 Model</h1><div class="body conbody"><p class="shortdesc" hidden>The OData V4 model supports server messages sent via an OData V4 service.</p>
+<aside class="note caution" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Caution</strong></div>
+<p>This feature is experimental. For more information, see <a class="xref" href="../../#/topic/91f087396f4d1014b6dd926db0e91070.html" title="The following sections describe what SAP can change in major, minor, and patch releases. Always consider these rules when developing apps, features, or controls with or for SAPUI5." target="_top">Compatibility Rules</a>.</p></aside>
+<p class="p">Messages transported via an OData V4 service response are parsed and reported to the message
+model <samp class="ph codeph">sap.ui.model.message.MessageModel</samp>. An application can retrieve
+the messages and display them in a suitable control, for example in
+<samp class="ph codeph">sap.m.MessageView</samp>.</p>
+<p class="p">End user messages contain the following information:</p>
+<ul class="ul" id="loiofbe1cb5613cf4a40a841750bf813238e__ul_gjj_fdz_5fb">
+<li class="li">
+<p class="p"><samp class="ph codeph">code</samp> - language-independent message code</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">message</samp>- language-dependent message text</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">target</samp> - path to the target of the message detail</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">technicalDetails</samp> - technical details of the message</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">transition</samp> - specifies a message as a state (false) or a
+transition message (true)</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">numericSeverity</samp> &#x2013; classification of end user messages; allowed values: 1
+(success), 2 (info), 3 (warning), 4 (error); <samp class="ph codeph">numericSeverity</samp> is
+mapped to the specific <samp class="ph codeph">sap.ui.core.MessageType</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">longtextUrl</samp> &#x2013; optional; is omitted, if there is no long text available for
+the corresponding message. </p>
+</li>
+</ul>
+<p class="p">The use of the fields in specific cases is described in the sections below.</p>
+<p class="p">Messages can be either bound or unbound: Unbound messages are not related to OData entities and
+are, therefore, also not part of the OData success response in the HTTP body. Bound
+messages are related to OData entities and are modeled as OData resources.</p>
+<div class="section" id="loiofbe1cb5613cf4a40a841750bf813238e__section_jrv_5wm_2fb"><section class="section" type="Unbound Messages"><h2 class="section_title" style="font-size: 1.15em;">Unbound Messages</h2>
+<p class="p">Unbound messages are transported in the header field <samp class="ph codeph">sap-messages</samp>, which is
+an array of messages. Unbound messages cannot be suppressed. They are always
+returned by the server and they always refer to the current request as described in
+the section about transition messages below. In case of successful requests, unbound
+messages are transported as an array in the HTTP header field
+<samp class="ph codeph">sap-messages</samp>:</p>
+<pre class="pre codeblock prettyprint">sap-messages:[
+     {
+          &quot;code&quot; : &quot;SYS/42&quot;,
+          &quot;message&quot; : &quot;System will be down for maintenance next weekend.&quot;,
+          &quot;numericSeverity&quot; : 2,
+          &quot;longtextUrl&quot; : &quot;Messages(3)/LongText/$value&quot;
+     }
+]</pre>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p><samp class="ph codeph">longtextUrl</samp> can be a relative or absolute path. Relative paths
+are treated as relative to the request URL. Absolute paths are treated as relative
+to the server.</p></aside>
+<aside class="note sap-example example" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Example</strong></div>
+<p class="p">Request URL:
+<span class="ph filepath">http://&lt;server&gt;:&lt;port&gt;/serviceroot.svc/BusinessPartners(42)/to_Address;
+longtextUrl: &quot;Messages(3)/LongText/$value&quot;</span></p><p class="p">Result:
+<span class="ph filepath">http://&lt;server&gt;:&lt;port&gt;/serviceroot.svc/BusinessPartners(42)/Messages(3)/LongText/$value</span></p><p class="p">Request URL:
+<span class="ph filepath">http://&lt;server&gt;:&lt;port&gt;/serviceroot.svc/BusinessPartners(42);
+longtextUrl: &quot;/Messages(3)/LongText/$value&quot;</span></p><p class="p">Result:
+<span class="ph filepath">http://&lt;server&gt;:&lt;port&gt;/Messages(3)/LongText/$value</span></p></aside></section></div>
+<div class="section" id="loiofbe1cb5613cf4a40a841750bf813238e__section_phx_wdz_5fb"><section class="section" type="Bound Messages"><h2 class="section_title" style="font-size: 1.15em;">Bound Messages</h2>
+
+<p class="p">Bound messages are related to OData entities and are modeled as OData resources. An OData
+entity contains its bound messages as collection valued property of the complex type
+specified in the description of
+<samp class="ph codeph">com.sap.vocabularies.Common.v1.Messages</samp>. Thus, bound messages
+are transported in the HTTP body. The target property specifies to which property
+the message is bound. The application needs to specify in the<samp class="ph codeph">
+$select</samp> binding parameter whether messages should be returned by the
+server, or not.</p>
+<pre class="pre codeblock prettyprint lang-js">1  &lt;ComplexType Name=&quot;&lt;name of message type&gt;&quot;&gt;
+2      &lt;Property Name=&quot;code&quot; Type=&quot;Edm.String&quot; Nullable=&quot;false&quot; /&gt;
+3      &lt;Property Name=&quot;message&quot; Type=&quot;Edm.String&quot; Nullable=&quot;false&quot; /&gt;
+4      &lt;Property Name=&quot;target&quot; Type=&quot;Edm.String&quot; Nullable=&quot;true&quot; /&gt;
+5      &lt;Property Name=&quot;transition&quot; Type=&quot;Edm.Boolean&quot; Nullable=&quot;false&quot; /&gt;
+6      &lt;Property Name=&quot;numericSeverity&quot; Type=&quot;Edm.Byte&quot; Nullable=&quot;false&quot; /&gt;
+7      &lt;Property Name=&quot;longtextUrl&quot; Type=&quot;Edm.String&quot; Nullable=&quot;true&quot; /&gt;
+8  &lt;/ComplexType&gt;</pre>
+<p class="p">The <samp class="ph codeph">target</samp> property may contain a path relative to the entity which contains
+the message. The target can, for example, refer to a property within that entity.
+This information is used to highlight UI elements such as input fields, if they are
+bound to properties referenced by the path contained in the <samp class="ph codeph">target</samp>
+property. All responses are checked for bound messages. If there are messages, they
+are reported to the message model.</p>
+<p class="p">For bound messages, <samp class="ph codeph">longtextUrl</samp> can be a relative or absolute path.
+Relative paths are treated as relative to the innermost context path
+(<samp class="ph codeph">@odata.context</samp>) in the response, or to the request URL, if
+there is no context path. Absolute paths are treated as relative to the server.</p>
+</section></div>
+<div class="section" id="loiofbe1cb5613cf4a40a841750bf813238e__section_fmj_dw2_nfb"><section class="section" type="Messages in Error Responses"><h2 class="section_title" style="font-size: 1.15em;">Messages in Error Responses</h2>
+
+<p class="p">Error messages are always reported in the error response in JSON format as described in the
+OData JSON Format Version 4.0 in section <em class="ph i">19 Error Response</em> with the following
+additions:</p>
+<ul class="ul" id="loiofbe1cb5613cf4a40a841750bf813238e__ul_o2d_3fz_5fb">
+<li class="li">
+<p class="p">The instance annotation <samp class="ph codeph">com.sap.vocabularies.Common.v1.longtextUrl</samp> can be
+used to provide a long text URL, which can be a relative or an absolute
+path. Relative paths are treated as relative to the request URL. Absolute
+paths are treated as relative to the server.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">target</samp> is relative to the requested resource.</p>
+</li>
+<li class="li">
+<p class="p">The error message type is always <samp class="ph codeph">sap.ui.core.MessageType.Error</samp>. The
+instance annotation
+<samp class="ph codeph">com.sap.vocabularies.Common.v1.numericSeverity</samp>
+determines the message type of the detail messages.</p>
+</li>
+<li class="li">
+<p class="p">The error message and all messages in details are transition messages.</p>
+</li>
+</ul>
+</section></div>
+<div class="section" id="loiofbe1cb5613cf4a40a841750bf813238e__section_lnt_hym_2fb"><section class="section" type="State Messages and Transition Messages"><h2 class="section_title" style="font-size: 1.15em;">State Messages and Transition Messages</h2><p class="p">Messages
+can be either state or transition messages:</p><ul class="ul" id="loiofbe1cb5613cf4a40a841750bf813238e__ul_xs3_1fz_5fb">
+<li class="li">
+<p class="p">State messages refer to the state of the corresponding resource (OData entity
+instance). State messages are valid as long as the related business object
+is not changed. The OData V4 Model is responsible for the lifecycle of state
+messages and will remove state messages from the message model, if they are
+no longer sent by the server when the corresponding resource is
+requested.</p>
+</li>
+<li class="li">
+<p class="p">Transition messages refer to the current request and are not related to the
+state of a resource. They are only relevant for the request that was
+triggered, for example <span class="ph uicontrol">System not available, business object
+could not be updated</span>. Optionally, transition messages can
+reference a business object, for example <span class="ph uicontrol">Shipping address could
+not be changed due to missing authorization</span>. Transition
+messages are translated into persistent messages in the message model. The
+application is responsible for the lifecycle of such persistent messages.
+The OData V4 Model will not remove persistent messages from the message
+model.</p>
+</li>
+</ul><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Lifecycle Management for State Messages</p>
+<p class="p">The lifecycle management for state messages is optimized for a specific
+orchestration with the server. When bound messages are requested, the OData V4
+server returns all bound messages for the respective entity and its subentities
+within the same business object. The business object is defined by the first
+path segment.</p>
+<p class="p">The following example uses a sales order with items and related products:</p>
+<ul class="ul" id="loiofbe1cb5613cf4a40a841750bf813238e__ul_atn_zwx_wfb">
+<li class="li">
+<p class="p">A <samp class="ph codeph">GET</samp> request for <samp class="ph codeph">/SalesOrder(&#xB4;0815&#xB4;)</samp> returns all bound
+messages for the sales order and the items, even if the items themselves
+are not contained in the response. Messages to assigned products,
+business partners, and so on, that are not part of the
+<samp class="ph codeph">SalesOrder</samp> business object will
+<span class="ph emphasis emphasis">not</span> be sent if the path starts within the
+<samp class="ph codeph">SalesOrder</samp> business object.</p>
+</li>
+<li class="li">
+<p class="p">A <samp class="ph codeph">GET</samp> request for a specific item with path
+<samp class="ph codeph">/SalesOrder(&#xB4;0815&#xB4;)/_Items(&#xB4;010&#xB4;)</samp> returns all bound
+messages for this item.</p>
+</li>
+<li class="li">
+<p class="p">A <samp class="ph codeph">GET</samp> request for the product related to an item using the deep path
+<samp class="ph codeph">/SalesOrder(&#xB4;0815&#xB4;)/_Items(&#xB4;010&#xB4;)/_Product</samp> will not
+return any bound messages.</p>
+</li>
+</ul>
+<p class="p">The OData V4 model checks whether the response contains the message property and
+removes all previous bound state messages from the message model, if their
+target path starts with the path of the entity.</p>
+<p class="p">This concept has the following consequences:</p>
+<ul class="ul" id="loiofbe1cb5613cf4a40a841750bf813238e__ul_lcc_kxx_wfb">
+<li class="li">
+<p class="p">When you display the information for the business object itself, you can
+also display the messages for all subentities of this business
+object.</p>
+</li>
+<li class="li">
+<p class="p">For displaying the entities within a business object, an application has
+to use deep paths, instead of canonical paths. Otherwise, messages will
+appear twice. In the object page of item <samp class="ph codeph">&#xB4;010&#xB4;</samp>, for
+example, the binding needs to use the path
+<samp class="ph codeph">/SalesOrder(&#xB4;0815&#xB4;)/_Items(&#xB4;010&#xB4;)</samp>. You can achieve
+this also with a relative binding using the context of the sales
+order.</p>
+</li>
+<li class="li">
+<p class="p">Binding entities outside the business object with the deep path means
+that no messages will be retrieved for this entity. Using the binding
+<samp class="ph codeph">/SalesOrder(&#xB4;0815&#xB4;)/_Items(&#xB4;010&#xB4;)/_Product</samp> to
+display product information of item <samp class="ph codeph">010</samp>, for example,
+will not return any product-specific bound message.</p>
+</li>
+<li class="li">
+<p class="p">As a consequence, it must also <span class="ph emphasis emphasis">not</span> be possible to change the entity
+that is bound with a path that starts with a different business object.
+If, for example, product information needs to be changed, we recommended
+to use the canonical path to bind the product assigned to item
+<samp class="ph codeph">010</samp> to achieve that the server sends the bound
+messages of the product.</p>
+</li>
+</ul>
+<aside class="note" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Note</strong></div>
+<p>The <span class="ph"><span class="ph pname">SAPUI5</span></span> V4 ODataModel is
+agnostic to business objects. The application needs to take care of the proper
+setup.</p></aside>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Combining State/Transition and Bound/Unbound
+Messages</p>
+<div class="table-wrapper tablenoborder"><table summary id="loiofbe1cb5613cf4a40a841750bf813238e__table_mt4_kym_2fb" class="table" frame="border" border="1" rules="all"><colgroup><col width="33.333333333333336%"><col width="33.333333333333336%"><col width="33.333333333333336%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d215162e406">&#xA0;</th>
+<th class="entry" style="vertical-align:top;" id="d215162e408">State</th>
+<th class="entry" style="vertical-align:top;" id="d215162e411">Transition</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d215162e406 ">Unbound</td>
+<td class="entry" style="vertical-align:top;" headers="d215162e408 "><img class="inline  " id="loiofbe1cb5613cf4a40a841750bf813238e__image_qgz_1xr_gfb" src="loio38d78b4d740c43719a4eb8d80d4184e0_LowRes.png"></td>
+<td class="entry" style="vertical-align:top;" headers="d215162e411 "><img class="inline  " id="loiofbe1cb5613cf4a40a841750bf813238e__image_szd_1xr_gfb" src="loio0d13ebb7aa8b4bf8b5c56acfa02653ef_LowRes.png"></td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d215162e406 ">Bound</td>
+<td class="entry" style="vertical-align:top;" headers="d215162e408 "><img class="inline  " id="loiofbe1cb5613cf4a40a841750bf813238e__image_j4l_xwr_gfb" src="loio0d13ebb7aa8b4bf8b5c56acfa02653ef_LowRes.png"></td>
+<td class="entry" style="vertical-align:top;" headers="d215162e411 "><img class="inline  " id="loiofbe1cb5613cf4a40a841750bf813238e__image_qfp_zwr_gfb" src="loio0d13ebb7aa8b4bf8b5c56acfa02653ef_LowRes.png"></td>
+</tr>
+</tbody></table></div>
+</div></section></div>
+<div class="section" id="loiofbe1cb5613cf4a40a841750bf813238e__section_kxc_pp3_ffb"><section class="section" type="Message Severity"><h2 class="section_title" style="font-size: 1.15em;">Message Severity</h2>
+
+<p class="p">The table shows the supported severity values and their mapping to the specific
+<samp class="ph codeph">sap.ui.core.MessageType</samp>.</p>
+<p class="p"></p>
+<div class="table-wrapper tablenoborder"><table summary id="loiofbe1cb5613cf4a40a841750bf813238e__table_g4s_vym_2fb" class="table" frame="border" border="1" rules="all"><colgroup><col width="33.333333333333336%"><col width="33.333333333333336%"><col width="33.333333333333336%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d215162e473">numericSeverity</th>
+<th class="entry" style="vertical-align:top;" id="d215162e476">Type</th>
+<th class="entry" style="vertical-align:top;" id="d215162e479">Comment</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d215162e473 ">1</td>
+<td class="entry" style="vertical-align:top;" headers="d215162e476 "><samp class="ph codeph">sap.ui.core.MessageType.Success</samp></td>
+<td class="entry" style="vertical-align:top;" headers="d215162e479 ">
+<p class="p">Positive feedback - no action required</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d215162e473 ">2</td>
+<td class="entry" style="vertical-align:top;" headers="d215162e476 "><samp class="ph codeph">sap.ui.core.MessageType.Information</samp></td>
+<td class="entry" style="vertical-align:top;" headers="d215162e479 ">
+<p class="p">Additional information - no action required</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d215162e473 ">3</td>
+<td class="entry" style="vertical-align:top;" headers="d215162e476 "><samp class="ph codeph">sap.ui.core.MessageType.Warning</samp></td>
+<td class="entry" style="vertical-align:top;" headers="d215162e479 ">
+<p class="p">Warning - action may be required</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d215162e473 ">4</td>
+<td class="entry" style="vertical-align:top;" headers="d215162e476 "><samp class="ph codeph">sap.ui.core.MessageType.Error</samp></td>
+<td class="entry" style="vertical-align:top;" headers="d215162e479 ">
+<p class="p">Error - action is required</p>
+</td>
+</tr>
+</tbody></table></div>
+</section></div>
+<div class="section" id="loiofbe1cb5613cf4a40a841750bf813238e__section_jsd_vwk_33b"><section class="section" type="Accessing the Original Message"><h2 class="section_title" style="font-size: 1.15em;">Accessing the Original Message</h2>
+
+<p class="p">The attribute <samp class="ph codeph">technicalDetails.originalMessage</samp> of the message in the message
+model allows you to access the original message from the back-end.</p>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common" target="_blank" alt="https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common" title="https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common">https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

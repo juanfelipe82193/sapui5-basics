@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+	<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>
+	<title>Standard Shapes Test Page</title>
+
+	<!-- ********************************************************************** -->
+	<!-- SAPUI5 Bootstrap:                                                     -->
+	<!-- Extend the "libs" property if you like to import additional libraries  -->
+	<!-- ********************************************************************** -->
+
+	<script id="sap-ui-bootstrap"
+	        type="text/javascript"
+	        data-sap-ui-libs="sap.m, sap.gantt"
+	        data-sap-ui-theme="sap_fiori_3"
+	        data-sap-ui-compatVersion="edge"
+	        src="/testsuite/resources/sap-ui-core.js">
+	</script>
+
+	<script id="mainView" type="sapui5/xmlview">
+                <core:View xmlns:core="sap.ui.core" xmlns:table="sap.ui.table" controllerName="mainView.controller" xmlns="sap.gantt.simple" xmlns:m="sap.m" xmlns:at="sap.gantt.axistime" xmlns:gc="sap.gantt.config" height="100%" xmlns:shapes="sap.gantt.simple.shapes">
+                    <m:OverflowToolbar>
+                        <m:Label text="Color" />
+                        <m:Select selectedKey="{settings>/selectedColor}"
+                            items="{path: 'settings>/colors'}">
+                            <core:Item key="{settings>key}" text="{settings>value}" />
+                        </m:Select>
+                    </m:OverflowToolbar>
+					<GanttChartContainer height="100%">
+						<GanttChartWithTable id="gantt" height="500px" disableShapeDoubleClickEvent="true">
+							<table>
+								<table:TreeTable selectionMode="Single" visibleRowCountMode="Auto" minAutoRowCount="12" selectionBehavior="RowSelector" rows="{path: '/root', parameters: {arrayNames: ['children'], numberOfExpandedLevels: 1}}">
+									<table:columns>
+										<table:Column label="Label">
+											<table:template>
+												<m:Text text="{name}"/>
+											</table:template>
+										</table:Column>
+									</table:columns>
+									<table:rowSettingsTemplate>
+										<GanttRowSettings rowId="{id}" shapes1="{path: 'tasks', templateShareable: true}">
+											<shapes1>
+												<shapes:Task type="{type}" time="{path: 'startTime', formatter: '.abapTimestampToDate'}" endTime="{path: 'endTime', formatter: '.abapTimestampToDate'}" color="{settings>/selectedColor}" shapeId="{id}" />
+											</shapes1>
+										</GanttRowSettings>
+									</table:rowSettingsTemplate>
+								</table:TreeTable>
+							</table>
+							<axisTimeStrategy>
+								<at:ProportionZoomStrategy>
+									<at:totalHorizon>
+										<gc:TimeHorizon startTime="20181020090000" endTime="20181129090000" />
+									</at:totalHorizon>
+									<at:visibleHorizon>
+										<gc:TimeHorizon startTime="20181101090000" endTime="20181127090000" />
+									</at:visibleHorizon>
+								</at:ProportionZoomStrategy>
+							</axisTimeStrategy>
+						</GanttChartWithTable>
+					</GanttChartContainer>
+                </core:View>
+</script>
+	<script>
+		sap.ui.define("mainView.controller", [
+			"sap/ui/core/mvc/Controller",
+			"sap/gantt/misc/Format",
+			"sap/ui/model/json/JSONModel",
+			"sap/gantt/library"
+		], function (Controller, Format, JSONModel, library) {
+			var oData = {
+				root: {
+					children: [
+						{
+							id: "01",
+							name: "Row 1",
+							tasks: [
+								{
+									id: "task11",
+									type: "Normal",
+									startTime: "20181103090000",
+									endTime: "20181111090000"
+								},
+								{
+									id: "task12",
+									type: "Normal",
+									startTime: "20181104090000",
+									endTime: "20181109090000"
+								},
+								{
+									id: "task13",
+									type: "Normal",
+									startTime: "20181106090000",
+									endTime: "20181108090000"
+								}
+							]
+						},
+						{
+							id: "02",
+							name: "Row 2",
+							tasks: [
+								{
+									id: "task21",
+									type: "SummaryExpanded",
+									startTime: "20181103090000",
+									endTime: "20181111090000"
+								},
+								{
+									id: "task22",
+									type: "SummaryExpanded",
+									startTime: "20181104090000",
+									endTime: "20181109090000"
+								},
+								{
+									id: "task23",
+									type: "SummaryExpanded",
+									startTime: "20181106090000",
+									endTime: "20181108090000"
+								}
+							]
+						},
+						{
+							id: "03",
+							name: "Row 3",
+							tasks: [
+								{
+									id: "task31",
+									type: "SummaryCollapsed",
+									startTime: "20181103090000",
+									endTime: "20181111090000"
+								},
+								{
+									id: "task32",
+									type: "SummaryCollapsed",
+									startTime: "20181104090000",
+									endTime: "20181109090000"
+								},
+								{
+									id: "task33",
+									type: "SummaryCollapsed",
+									startTime: "20181106090000",
+									endTime: "20181108090000"
+								}
+							]
+						},
+						{
+							id: "04",
+							name: "Row 4",
+							tasks: [
+								{
+									id: "task41",
+									type: "Error",
+									startTime: "20181103090000",
+									endTime: "20181111090000"
+								},
+								{
+									id: "task42",
+									type: "Error",
+									startTime: "20181104090000",
+									endTime: "20181109090000"
+								},
+								{
+									id: "task43",
+									type: "Error",
+									startTime: "20181106090000",
+									endTime: "20181108090000"
+								}
+							]
+						},
+						{
+							id: "05",
+							name: "Row 5",
+							tasks: [
+								{
+									id: "task51",
+									type: "Normal",
+									startTime: "20181103090000",
+									endTime: "20181111090000"
+								},
+								{
+									id: "task52",
+									type: "SummaryCollapsed",
+									startTime: "20181104090000",
+									endTime: "20181109090000"
+								},
+								{
+									id: "task53",
+									type: "SummaryExpanded",
+									startTime: "20181106090000",
+									endTime: "20181108090000"
+								}
+							]
+						},
+						{
+							id: "06",
+							name: "Row 6",
+							tasks: [
+								{
+									id: "task51",
+									type: "Normal",
+									startTime: "20181103090000",
+									endTime: "20181111090000"
+								},
+								{
+									id: "task52",
+									type: "SummaryExpanded",
+									startTime: "20181104090000",
+									endTime: "20181109090000"
+								},
+								{
+									id: "task53",
+									type: "SummaryCollapsed",
+									startTime: "20181106090000",
+									endTime: "20181108090000"
+								}
+							]
+						}
+					]
+				}
+			};
+			var oSettingsData = {
+				selectedColor: "sapUiLegend6",
+				colors: library.palette.SemanticColors.concat(library.palette.LegendColors).concat(library.palette.AccentColors).map(function (k) {return {key: k, value: k}})
+			};
+			return Controller.extend("mainView.controller", {
+				onInit: function () {
+					var oModel = new JSONModel(oData);
+					this.getView().setModel(oModel);
+					var oSettingsModel = new JSONModel(oSettingsData);
+					this.getView().setModel(oSettingsModel, "settings");
+				},
+				abapTimestampToDate: function (oTime) {
+					return Format.abapTimestampToDate(oTime);
+				}
+			});
+		});
+
+		sap.ui.require([
+			"sap/ui/core/mvc/XMLView"
+		], function (XMLView) {
+			XMLView.create({
+				definition: jQuery("#mainView").html()
+			}).then(function (oView) {
+				oView.placeAt("content");
+			});
+		});
+
+	</script>
+</head>
+
+<body class='sapUiBody'>
+<div id='content'></div>
+</body>
+</html>

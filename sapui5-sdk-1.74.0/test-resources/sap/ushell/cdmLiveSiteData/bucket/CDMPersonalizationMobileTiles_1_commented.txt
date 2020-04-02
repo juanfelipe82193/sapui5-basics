@@ -1,0 +1,91 @@
+// Improved proposal ("better"):
+// Comparing to the "simple" version, we did the following changes:
+//    1. Move "added tile" into the "moveTiles" collection into its corresponding entry as
+//      new property "item".
+//    2. Drop array "removedTiles" from any group, because we don't need it further.
+//
+// Note: Reserve "groups" collection for tiles which do have internal changes only.
+//
+// Some hints for mixin / apply:
+// =============================
+//
+// Order of operation *IS* important!
+// For mixin case:
+//    1. Firstly apply all changes inside of "moveTiles" object collection.
+//       Note: Afterwards length of "tileOrder" array here and "tiles" array at personalized
+//       site object should have equal length (if not, consider this an severe error).
+//    2. Only after step (1) change tile order at the personalized site object while
+//      2.1. ...thereby apply changes made to single tiles, using objects in "groups.tiles"
+//         collection.
+//         (Ok: Step (2.1) could be done at any time - but in this order it is more efficiently.)
+//
+// Implementation algorithm for extract
+// (After handling entire groups as usual - without saving payload.tiles array content):
+//  # Create a "HashItemCollection" for both, original and personalized site.
+//  # For each group in original site: Walk over all tiles and check, if current tile is also found
+//    in resp. group of personalized site object (use "HashItemCollection" created before).
+//     * If not => add entry to "moveTiles" ((re)moved tile).
+//  # For each group in personalized site: Walk over all tiles, doing
+//     * build tileOrder array by adding a new entry.
+//      (Remove tileOder array later, if not needed because there were no order changes detected.)
+//     * check, if current tile is also found in resp. group of *original* site object, using "HashArray".
+//        If YES: Compare for changes applied to the tile directly (and create entry in "tiles"
+//        section of that group if neccessary).
+//     * If NO: => Added or moved tile:
+//        => Check, if already in "moveTiles" as a "(re)moved" tile:
+//          YES => moved tile => Update entry in "moveTiles"
+//                 + Compare for changes... as before (entry in target group).
+//          NO => added tile => Add as "item" to entry in "moveTiles" + ready.
+//
+//
+// TODO (further open): Where is a data format for changed tiles...(?)!
+//
+// Extra note: Use similar structure named "mobileLinks" for handling links. Doing so
+// will allow to handle both cases within one single method for both.
+
+// TODO: moveTiles && moveLinks  OR moveTiles+moveLinks in one collection ?!
+
+{
+	"moveTiles": {
+		"#My-tileAdded": {			// Added Tile
+			"fromGroup": null,
+			"toGroup": "ONE",
+			"item": {
+				"id":"#My-tileAdded",
+				"target":{
+					"semanticObject":"My",
+					"action":"tileAdded"
+				}
+			}
+		},
+		// This case should not be persisted: We already create and save the tile order in an array,
+		// if it was changed. But for detection we need to handle this case:
+		// "idNewsTilePersonalized": {	// Moved inside group
+		// 	"fromGroup": "ONE",
+		// 	"toGroup": "ONE"
+		// },
+		"idCustomTile2": {			// Removed Tile
+			"fromGroup": "ONE",
+			"toGroup": null
+		},
+		"idCustomTile": {			// Moved Tile accross groups
+			"fromGroup": "ONE",
+			"toGroup": "SAP_UI2_TEST"
+		}
+	},
+	"groups" : {
+		"ONE" : {
+			"payload" : {
+				"tileOrder" : [ "idNewsTilePersonalized", "idNewsTile","00O2TR8035SI47IE62FR3GM7X", "00O2TR8035SJUP6AW43TU86LR", "00O2TR8035SJUP6AW43TU86U", "00O2TR8035SJUP6AW43TU86X", "#My-tileAdded"]
+				// Available only, if there are any changed tiles here:
+				// "tiles" : {}		// "tiles" collection is reserved for changed-only-tiles.
+			}
+		},
+		"SAP_UI2_TEST" : {
+			"payload" : {
+				"tileOrder" : ["00O2TR803AME62FR3GM7E", "idCustomTile", "00OESFM7P", "00OESFM7XP", "00O2TR8035SI4EAR3GM7P", "00O2TR8035SJUP6AW43TU86L0", "00O2TR8035SJUP6AW43TAFL0", "00O2TR8035SJUP6AW43TUPRL0"]
+				// "tiles": {}			// "tiles" collection is reserved for changed-only-tiles.
+			}
+		}
+	}
+}

@@ -1,0 +1,305 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Logging and Tracing</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Use the built-in SAPUI5 logging mechanisms to debug and analyze applications or framework errors."><meta name="description" content="Use the built-in SAPUI5 logging mechanisms to debug and analyze applications or framework errors."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"616a3ef07f554e20a3adf749c11f64e9.html","previousTopicHref":"c9b0f8cca852443f9b8d3bf8ba5626ab.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio9f4d62c6648a423d85aaf2bfc2c7ddfe"><h1 class="title topictitle1" hidden>Logging and Tracing</h1><div class="body conbody"><p class="shortdesc" hidden>Use the built-in <span class="ph"><span class="ph pname">SAPUI5</span></span>
+logging mechanisms to debug and analyze applications or framework errors.</p>
+<p class="p">You can view the log in the console in the developer tools of your browser. A log entry
+contains a timestamp, a log level, a message with optional details, and component
+information.</p>
+<p class="p">Log messages can be written by the framework or the application code. Which log messages are
+contained in the log is defined according to their severity and the log level that is
+currently set.</p>
+<p class="p">Specific log messages only appear in the console when the severity of the issue is equal to or
+higher than the currently set log level. For example, when opening an <span class="ph"><span class="ph pname">SAPUI5</span></span> app without any
+additional configuration, the default log level (1 = <samp class="ph codeph">ERROR</samp>) is applied.
+Only messages with severity <samp class="ph codeph">FATAL</samp> and <samp class="ph codeph">ERROR</samp> will be
+written to the console; other messages are not logged for performance reasons.</p>
+<aside class="note tip" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Tip</strong></div>
+<p class="p">In productive applications, you should keep the system defaults for log levels for performance
+reasons.</p></aside>
+<div class="p">
+<div class="table-wrapper tablenoborder"><table summary id="loio9f4d62c6648a423d85aaf2bfc2c7ddfe__table_ihz_4ld_xz" class="table" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Severities and Log Levels</span></span></caption><colgroup><col width="25%"><col width="25%"><col width="25%"><col width="25%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d284689e69">
+<p class="p">Severity</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d284689e75">
+<p class="p">Log Level</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d284689e81">
+<p class="p">Description</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d284689e87">
+<p class="p">Example</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d284689e69 ">
+<p class="p"><samp class="ph codeph">NONE</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e75 ">
+<p class="p">-1</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e81 ">
+<p class="p">No messages are written to the console</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e87 ">
+<p class="p"></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d284689e69 ">
+<p class="p"><samp class="ph codeph">FATAL</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e75 ">
+<p class="p">0</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e81 ">
+<p class="p">Unrecoverable situations</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e87 ">
+<p class="p">A parse error occurred while processing a JavaScript file or an
+XML view</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d284689e69 ">
+<p class="p"><samp class="ph codeph">ERROR</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e75 ">
+<p class="p">1 (Default) </p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e81 ">
+<p class="p">Erroneous but recoverable situations</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e87 ">
+<p class="p">Loading a requested module failed</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d284689e69 ">
+<p class="p"><samp class="ph codeph">WARNING</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e75 ">
+<p class="p">2</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e81 ">
+<p class="p">Unwanted but foreseen situations</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e87 ">
+<p class="p">Wrong property format was passed to a control</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d284689e69 ">
+<p class="p"><samp class="ph codeph">INFO</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e75 ">
+<p class="p">3</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e81 ">
+<p class="p">Purely informative</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e87 ">
+<p class="p">A configuration parameter was set</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d284689e69 ">
+<p class="p"><samp class="ph codeph">DEBUG</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e75 ">
+<p class="p">4
+(Debug
+Mode)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e81 ">
+<p class="p">Information necessary for debugging</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e87 ">
+<p class="p">A framework event was fired</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d284689e69 ">
+<p class="p"><samp class="ph codeph">TRACE</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e75 ">
+<p class="p">5</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e81 ">
+<p class="p">Tracing the program flow</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e87 ">
+<p class="p">A certain position in the code was reached</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d284689e69 ">
+<p class="p"><samp class="ph codeph">ALL</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e75 ">
+<p class="p">6</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e81 ">
+<p class="p">Messages of all severity categories are written to the
+console</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d284689e87 ">
+<p class="p"></p>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="section" id="loio9f4d62c6648a423d85aaf2bfc2c7ddfe__section_wmr_fnd_xz"><section class="section" type="Tracing Errors"><h2 class="section_title" style="font-size: 1.15em;">Tracing Errors</h2>
+
+<p class="p">During development, or when you&apos;re troubleshooting application errors, you can increase the
+log level for debugging . When you enable debug mode, for example in the
+<span class="ph uicontrol">Technical Information</span> dialog, the log level is
+automatically increased to 4 (<samp class="ph codeph">DEBUG</samp>) and you will see messages in
+the console that might be helpful for finding bugs.</p>
+<p class="p">You can also set the log level manually, either by calling
+<samp class="ph codeph"> in the application code or by
+setting the framework parameter &lt;level&gt;)
+setting the framework parameter &lt;level&gt;)</samp><samp class="ph codeph"></samp>sap-ui-loglevel= (see&lt;level
+sap-ui-loglevel=&lt;level&gt;<a class="xref" href="../../#/topic/91f2d03b6f4d1014b6dd926db0e91070.html" title="The complete list of configuration options available in SAPUI5 can be found in the API Reference under sap.ui.core.Configuration. The following table shows a subset of the available configuration options." target="_top">Configuration Options and URL Parameters</a>). Depending on the log
+level, you might get a large amount of log messages in the console. The error might
+not be clearly visible from a single log message and might need further
+analysis.</p>
+<p class="p">Log entries are written to the console in chronological order. When you identify a
+message in the console that is connected to the error you are tracing, there might
+be other related log messages written shortly before or after the current
+message.</p>
+<p class="p">A dash separates the log message and the component (or feature) that logged it.</p>
+<p class="p">To find out which messages are related to a specific error, you can filter the
+messages in the console. Narrow down the log messages by selecting a severity or
+doing a full-text search, for example for a specific keyword or an <span class="ph"><span class="ph pname">SAPUI5</span></span> component.</p>
+</section></div>
+<div class="section" id="loio9f4d62c6648a423d85aaf2bfc2c7ddfe__section_g5r_gnd_xz"><section class="section" type="Adding Your Own Log Messages"><h2 class="section_title" style="font-size: 1.15em;">Adding Your Own Log Messages</h2><p class="p">You can define your
+own log messages in your code to help tracing errors and understanding the
+application flow. You can use the <samp class="ph codeph">Log</samp> API to create and manage log
+entries <span class="ph">(see
+the <a class="xref" href="../../#/api/module%3Asap%2Fbase%2FLog" target="_top" alt="#/api/module%3Asap%2Fbase%2FLog" title="#/api/module%3Asap%2Fbase%2FLog">API Reference:
+<samp class="ph codeph">sap/base/log</samp></a>)</span>.</p><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Generic Log Entries</p>
+<div class="p">To log a message, simply call <samp class="ph codeph">Log.*</samp> with the specific method
+that corresponds to the log levels described above. The following code line
+issues a log statement with severity <span class="ph uicontrol">Error</span>. The browser
+highlights the statement in red to indicate an application
+error:<pre class="pre codeblock prettyprint">// &quot;Log&quot; required from module &quot;sap/base/Log&quot;
+Log.error(&quot;This should never have happened!&quot;);</pre></div>
+<div class="p">The next code line issues a log statement with severity
+<span class="ph uicontrol">Information</span>. The browser does not display this
+statement if your log console is set to filter for errors
+only:<pre class="pre codeblock prettyprint">// &quot;Log&quot; required from module &quot;sap/base/Log&quot;
+Log.info(&quot;Something has happened&quot;);</pre></div>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Component Logging</p>
+<p class="p">The log statements above do not contain the component. A log component can be
+used to semantically group log entries that belong to the same software
+component (or feature).</p>
+<div class="p">It can be specified as an additional argument to the log function or as a default
+for all log entries written by a certain component. With
+<samp class="ph codeph">Log.getLogger(&quot;&lt;component&gt;&quot;)</samp>, you can retrieve a
+logger that automatically adds the given component as component parameter to
+each log
+entry.<pre class="pre codeblock prettyprint">// &quot;Log&quot; required from module &quot;sap/base/Log&quot;
+this._oLogger = Log.getLogger(&quot;sap.ui.demo.MyComponent&quot;);
+this._oLogger.info(&quot;Something has happened&quot;);</pre></div>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">The log entries can also be accessed programmatically. You can also register
+a listener to the log that will be notified whenever a new entry is added to
+the log.</p></aside>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Assertions</p>
+<p class="p">For logical checks in your application flow, you can use assertions. With
+<samp class="ph codeph">sap/base/assert</samp> an error message is logged when a given
+condition is not met.</p>
+<pre class="pre codeblock prettyprint">// &quot;assert&quot; required from module &quot;sap/base/assert&quot;
+assert(aValues.length === 10, &quot;There are 10 values stored in the array&quot;)</pre>
+<aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p class="p">Assertions might be removed when the JavaScript code is optimized during a
+build. Therefore, callers should not rely on any side effects of this
+method.</p></aside>
+</div></section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/c9b0f8cca852443f9b8d3bf8ba5626ab.html#loioc9b0f8cca852443f9b8d3bf8ba5626ab" title="When developing apps, searching for bugs is an inevitable part of the process. To analyze an issue, you can use the developer tools of your browser and built-in SAPUI5 tools. In this section, we give an overview of the SAPUI5 tools you can use when debugging. To learn more about the developer tools of your browser, check the documentation of the browser." target="_top">Debugging</a></div><div><a class="link" href="../../#/topic/eadd60ae907646bbb838866566b23182.html" title="In this step, you will learn how to use your browser&apos;s developers tools to troubleshoot your SAPUI5 app." target="_top">Troubleshooting Tutorial Step 1: Browser Developer Tools</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,63 @@
+<core:FragmentDefinition
+	xmlns="sap.ui.table"
+	xmlns:m="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:axistime="sap.gantt.axistime"
+	xmlns:config="sap.gantt.config"
+	xmlns:gnt2="sap.gantt.simple">
+	<gnt2:GanttChartWithTable id="FreightOrder" ghostAlignment="Start" adhocLineLayer="Bottom"
+			shapeSelectionMode = "MultiWithKeyboard"
+			shapeSelectionSettings="{color:'red', strokeDasharray:'1,0'}"
+			shapeDrop="onShapeDrop"
+			shapeDoubleClick="onShapeDoubleClick"
+			>
+		<gnt2:table>
+			<Table
+				selectionMode="Single"
+				visibleRowCountMode="Auto"
+				minAutoRowCount="1"
+				selectionBehavior="RowSelector"
+				enableColumnReordering="true"
+				fixedColumnCount = "1"
+				rows="{
+					path: 'data>/Requirements',
+					filters: [
+						{
+							path: 'Type',
+							operator: 'EQ',
+							value1: 'FO'
+						}
+					],
+					parameters: {
+						operationMode: 'Server'
+					}
+				}">
+				<extension>
+					<m:OverflowToolbar>
+						<m:Select forceSelection="false" selectedKey="FO" change="onHierarchyChange">
+							<m:items>
+								<core:ListItem key="FOFU" text="Freight Order and Freight Unit"/>
+								<core:ListItem key="FO" text="Freight Order"/>
+								<core:ListItem key="FU" text="Freight Unit"/>
+							</m:items>
+						</m:Select>
+						<m:Button text="Create" type="Transparent" press="onCreate"/>
+						<m:Button text="Delete" type="Transparent" press="onDelete"/>
+					</m:OverflowToolbar>
+				</extension>
+				<rowSettingsTemplate>
+					<gnt2:GanttRowSettings rowId="{data>RequirementID}">
+						<gnt2:shapes1>
+							<core:Fragment fragmentName="sap.gantt.sample.GanttChartContainer.view.Requirement" type="XML"/>
+						</gnt2:shapes1>
+					</gnt2:GanttRowSettings>
+				</rowSettingsTemplate>
+				<core:Fragment fragmentName="sap.gantt.sample.GanttChartContainer.view.SharedTableColumn" type="XML"/>
+			</Table>
+		</gnt2:table>
+
+		<gnt2:axisTimeStrategy>
+			<core:Fragment fragmentName="sap.gantt.sample.GanttChartContainer.view.AxisTimeStrategy" type="XML"/>
+		</gnt2:axisTimeStrategy>
+	</gnt2:GanttChartWithTable>
+</core:FragmentDefinition>

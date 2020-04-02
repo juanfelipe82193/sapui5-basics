@@ -1,0 +1,81 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:fl="sap.ui.fl.variants"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:mdc="sap.ui.mdc"
+	xmlns:l="sap.ui.layout">
+	<l:Splitter id="rootSplitter" height="100%" width="100%" class="sapMdcValueHelpPanel">
+		<VBox fitContainer= "true">
+			<layoutData>
+				<l:SplitterLayoutData size="auto" />
+			</layoutData>
+
+			<IconTabBar id="iconTabBar" expandable="false" upperCase="true" stretchContentHeight="true" class="sapUiNoContentPadding" select="iconTabSelect">
+				<layoutData>
+					<FlexItemData growFactor= "1" shrinkFactor= "0"/>
+				</layoutData>
+				<items>
+					<IconTabFilter id="fromList" text="{parts: ['$i18n>valuehelp.SELECTFROMLIST', '$this>/conditions'], formatter: '._formatListTabTitle'}" key="selectFromList" visible="false">
+						<l:FixFlex>
+							<l:fixContent>
+								<Toolbar id="toolbar" width="100%" visible="{= ${$this>/searchEnabled} || ${$this>/showFilterbar}}">
+									<fl:VariantManagement id="VHPVariantManagementCtrl" modelName="VHPSearchTemplates" editable="false" visible="false" class="sapUiTinyMarginBegin"/>
+									<ToolbarSpacer/>
+									<mdc:FilterField
+										id="SearchField"
+										dataType="sap.ui.model.type.String"
+										maxConditions="1"
+										conditions="{path: '$this>/filterConditions'}"
+										placeholder="{$i18n>filterbar.SEARCH}"
+										width="30%"
+										visible="{$this>/searchEnabled}"
+										change="_handleSearch"/>
+									<ToggleButton id="AdvancedFilter" pressed="{$this>/_filterBarVisible}" icon="sap-icon://filter" type="Transparent"
+										class="sapMBtnTransparent" visible="{$this>/showFilterbar}"/>
+									<!-- <ToggleButton visible="false" icon="sap-icon://multiselect-all" type="Transparent" press="handleShowSelected"
+										class="sapMBtnTransparent"></ToggleButton> -->
+								</Toolbar>
+							</l:fixContent>
+
+							<l:flexContent>
+								<l:Splitter id="filterbarSplitter" height="100%" width="100%">
+									<VBox id="filterbarVBox" fitContainer= "true" visible="{$this>/_filterBarVisible}">
+										<layoutData>
+											<l:SplitterLayoutData size="280px" />
+										</layoutData>
+										<Toolbar id="filterbarToolbar" width="100%" style="Clear">
+											<ToolbarSpacer/>
+											<Button id="closeAdvancedFilter" icon="sap-icon://decline" type="Transparent" press="_handleCloseFilterbar" />
+										</Toolbar>
+									</VBox>
+								</l:Splitter>
+							</l:flexContent>
+						</l:FixFlex>
+					</IconTabFilter>
+
+					<IconTabFilter id="defineCondition" text="{parts: ['$i18n>valuehelp.DEFINECONDITIONS', '$this>/conditions'], formatter: '._formatDefineTabTitle'}" key="defineCondition" visible="false"/>
+				</items>
+			</IconTabBar>
+		</VBox>
+
+		<Panel id="VHPTokenizerPanel" class="sapMdcTokenizerPanel"
+			expanded="true"
+			headerText="{parts: ['$i18n>valuehelp.TOKENIZERTITLE', '$this>/conditions'], formatter: '._formatTokenizerTitle'}"
+			height="100%"
+			width="100%">
+			<Tokenizer id="VHPTokenizer" class="sapMdcTokenizer"
+				visible="{path: '$this>/showTokenizer'}"
+				tokenUpdate="_handleTokenUpdate"
+				tokens="{path: '$this>/conditions', filters:[{path:'isEmpty', operator:'NE', value1:true}], templateShareable: false}">
+				<Token id="VHPToken"
+					text="{path: '$this>', type: 'sap.ui.mdc.field.ConditionType'}"
+				/>
+			</Tokenizer>
+			<layoutData>
+				<l:SplitterLayoutData size="210px" />
+			</layoutData>
+		</Panel>
+	</l:Splitter>
+
+</core:FragmentDefinition>

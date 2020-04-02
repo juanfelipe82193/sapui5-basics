@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+		<title>Fragment Tests - Progress Indicator</title>
+
+		<!-- <base href="../../../../../../../../"> -->
+		<!--[if lte IE 9]><script type="text/javascript">
+		(function() {
+			var baseTag = document.getElementsByTagName('base')[0];
+			baseTag.href = baseTag.href;
+		})();
+		</script><![endif]-->
+
+		<script id="sap-ui-bootstrap"
+				type="text/javascript"
+				src="../../../../../../../../../resources/sap-ui-core.js"
+				data-sap-ui-theme="sap_bluecrystal"
+				data-sap-ui-libs="sap.suite.ui.generic.template"
+				data-sap-ui-noConflict="true"
+    			data-sap-ui-resourceroots='{ "tests" : "./", "mockserver": "mockserver" }'
+    			data-sap-ui-xx-bindingSyntax="complex">
+		</script>
+
+		<script>
+			sap.ui.define([
+						"sap/ui/qunit/qunit-css",
+						"sap/ui/thirdparty/qunit",
+						"sap/ui/qunit/qunit-junit",
+						"sap/ui/qunit/QUnitUtils"
+					],
+					function() {
+
+			}, /* bExport= */ true);
+		</script>
+
+		<script>
+			//Launch mock server
+			var launchMockServer = function(){
+				sap.ui.define([
+							"mockserver/MockServerRunner"
+						],
+						function(MockServerRunner) {
+							var oMockServerRunner = new MockServerRunner();
+							oMockServerRunner.init();
+				}, /* bExport= */ true);
+
+			};
+		</script>
+
+		<script>
+			var loadLanguageBundle = function(){
+				/*var sLocale = sap.ui.getCore().getConfiguration().getLanguage();
+				var oBundle = jQuery.sap.resources({url : "i18n/i18n.properties", locale: sLocale});
+				sap.ui.getCore().setModel(oBundle, "i18n");*/
+				var i18nModel = new sap.ui.model.resource.ResourceModel({
+					bundleUrl: "./i18n/i18n.properties"
+				});
+				sap.ui.getCore().setModel(i18nModel, "i18n");
+			};
+		</script>
+
+		<script>
+			//load model
+			var loadModel = function(sAnnotationsPath){
+				var sMockServerPath = sap.ui.require.toUrl("mockserver");
+				sAnnotationsPath = sAnnotationsPath || "annotations.xml";
+				var oModel = new sap.ui.model.odata.v2.ODataModel("/", {annotationURI: sMockServerPath + "/annotations/" + sAnnotationsPath});
+				var oPromise = oModel.metadataLoaded();
+				var oMetaModelPromise = new Promise(function (resolve, reject) {
+					oPromise.then(function(){
+			    	sap.ui.getCore().setModel(oModel);
+				}).then(function(){
+					var oMetaModel = oModel.getMetaModel();
+					oMetaModel.loaded().then(function(){
+						resolve();
+					});
+				});
+				});
+				return oMetaModelPromise;
+			};
+		</script>
+
+		<script>
+			//create view
+			var createView = function(oSettings){
+				var oDefaultSettings = {
+						id: "myWrapperView",
+						name: "tests.FragmentWrapper",
+						path: "/Projects('001')"
+				};
+				if(!oSettings){
+					oSettings = oDefaultSettings;
+				}
+				var oModel = sap.ui.getCore().getModel();
+				var oMetaModel = oModel.getMetaModel();
+				var oMetaContext = oMetaModel.getMetaContext(oSettings.path);
+
+				var xmlView = sap.ui.view(oSettings.id, {
+					preprocessors: {
+						xml: {
+							bindingContexts: {
+								meta: oMetaContext,
+							},
+							models: {
+								meta: oMetaModel,
+								entitySet: oMetaModel
+							}
+						}
+					},
+					type: sap.ui.core.mvc.ViewType.XML,
+	           		viewName : oSettings.name
+	            });
+
+				xmlView.bindElement(oSettings.path);
+				xmlView.placeAt("content");
+			};
+		</script>
+
+		<script>
+			//initialize test container
+			sap.ui.getCore().attachInit(function () {
+				launchMockServer();
+				loadLanguageBundle();
+				//loadModel();
+				//initOData();
+			});
+		</script>
+
+		<script>
+			sap.ui.define([
+						"tests/ProgressIndicatorFragmentTest",
+						"tests/ProgressIndicatorFragmentTest-PercentValue",
+						"tests/ProgressIndicatorFragmentTest-DisplayValue",
+						"tests/ProgressIndicatorFragmentTest-Criticality"
+					],
+					function() {
+
+			}, /* bExport= */ true);
+		</script>
+
+	</head>
+	<body>
+		<div id="qunit"></div>
+		<div id="content"></div>
+	</body>
+</html>

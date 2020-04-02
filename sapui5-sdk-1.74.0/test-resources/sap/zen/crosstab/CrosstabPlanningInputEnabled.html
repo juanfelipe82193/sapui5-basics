@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Rendering test</title>
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize"
+	data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet"
+	href="../../../../resources/sap/ui/thirdparty/qunit.css"
+	type="text/css" media="screen" />
+<script type="text/javascript"
+	src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript"
+	src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript"
+	src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="json/PLANNING/TESTDATA_PLANNING.js"></script>
+<script type="text/javascript" src="json/PLANNING/TESTDATA_PLANNING_ERROR.js"></script>
+<script type="text/javascript" src="testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Planning Basic Test</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Planning Tests", {
+			setup: function () {
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.PLANNING.control;
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				this.oCrosstab.setWidth("1000px");
+				this.oCrosstab.setHeight("500px");
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+
+				this.checkCellStyle = function (oCell, sClassToCheck) {
+					var oDomCell = null;
+					if (oCell) {
+						oDomCell = jQuery.sap.byId(oCell.getId());
+						ok(oDomCell.attr("class").indexOf(sClassToCheck) !== -1, "Cell: " + oCell.getId()
+								+ " must have corresponding CSS style: " + sClassToCheck);
+					}
+				};
+				
+				this.hasWidthSetByStyle = function (oJqContentDiv) {
+					var i = 0;
+					var sStyle = "";
+					var aStyleDef = null;
+					var bHasWidthSet = false;
+					var sStyles = oJqContentDiv.attr('style');
+					if (sStyles) {
+						var aStyles = sStyles.split(";");
+						if (aStyles) {
+							for (i = 0; i < aStyles.length; i++) {
+								sStyle = aStyles[i];
+								if (sStyle) {
+									aStyleDef = sStyle.split(":");
+									if (aStyleDef[0] === "width") {
+										bHasWidthSet = true;
+										break;
+									}
+								}
+							}
+						}
+					}
+					return bHasWidthSet;
+				};
+
+			},
+			teardown: function () {
+				this.oCrosstab = null;
+			}
+		});
+
+		test("Test read-only rendering for input enabled cell", function () {
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oCell = oDataArea.getCell(2, 0);
+			var sText = oCell.getText();
+
+			ok(sText === "33.00", "Text must be 33.00");
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellEntryEnabled");
+		});
+		
+		test("Test clicking into input enabled cell", function () {
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oCell = oDataArea.getCell(2, 0);
+			var sText = oCell.getText();
+			
+			var oJqCell = $('#' + oCell.getId());
+			oJqCell.trigger("click");
+			
+			var oJqInputField = oJqCell.find("#" + oCell.getId() + "_input");
+			ok(oJqInputField.length > 0, "Cell must contain input field");
+			
+			ok(oJqInputField.val() === oCell.getText(), "Input field and read-only cell must contain the same text");
+			
+			var oJqContentDiv = $('#' + oCell.getId() + "_contentDiv");
+			var bHasWidthSet = this.hasWidthSetByStyle(oJqContentDiv);
+			ok(bHasWidthSet, "Content div must have its width set");
+		});
+		
+		test("Check cell has no width on content div after blur", function () {
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oCell = oDataArea.getCell(2, 0);
+			
+			var oJqContentDiv = $('#' + oCell.getId() + "_contentDiv");
+			
+			var bHasWidthSet = this.hasWidthSetByStyle(oJqContentDiv);
+			
+			ok(!bHasWidthSet, "Cell must not have any width left in style");
+		});
+		
+		test("Check cell has no input field in content div after blur", function () {
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oCell = oDataArea.getCell(2, 0);
+			
+			var oJqContentDiv = $('#' + oCell.getId() + "_contentDiv");
+			
+			var oJqInputField = oJqContentDiv.find("#" + oCell.getId() + "_input");
+			ok(oJqInputField.length === 0, "Input field must no longer be hosted in content div");
+		});
+		
+		test("Test clicking into input enabled cell in first data row", function () {
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oCell = oDataArea.getCell(0, 0);
+			var sText = oCell.getText();
+			
+			var oJqCell = $('#' + oCell.getId());
+			oJqCell.trigger("click");
+			
+			var oJqInputField = oJqCell.find("#" + oCell.getId() + "_input");
+			ok(oJqInputField.length > 0, "Cell must contain input field");
+			
+			ok(oJqInputField.val() === oCell.getText(), "Input field and read-only cell must contain the same text");
+			
+			var oJqContentDiv = $('#' + oCell.getId() + "_contentDiv");
+			var bHasWidthSet = this.hasWidthSetByStyle(oJqContentDiv);
+			ok(bHasWidthSet, "Content div must have its width set");
+		});
+		
+		test("Check cell in first row has width preserved on content div after blur", function () {
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oCell = oDataArea.getCell(0, 0);
+			
+			var oJqContentDiv = $('#' + oCell.getId() + "_contentDiv");
+			
+			var bHasWidthSet = this.hasWidthSetByStyle(oJqContentDiv);
+			
+			ok(bHasWidthSet, "Cell must have width preserved in style");
+		});
+		
+		test("Check formatting in case of error", function () {
+			this.oTableControl = sapzen.crosstab.test.jsonTestData.PLANNING_ERROR.control;
+			this.oCrosstab.updateControlProperties(this.oTableControl);
+			this.oCrosstab.setWidth("1000px");
+			this.oCrosstab.setHeight("500px");
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+			
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oCell = oDataArea.getCell(4, 0);
+			var oJqCell = $('#' + oCell.getId());
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellInvalidValue");
+		});
+		
+	</script>
+
+</body>
+
+</html>

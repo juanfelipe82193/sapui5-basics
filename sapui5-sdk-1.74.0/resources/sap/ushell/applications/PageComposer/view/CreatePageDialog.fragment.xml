@@ -1,0 +1,58 @@
+<Dialog
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    id="createPageDialog"
+    title="{i18n>CreatePageDialog.Title}"
+    beforeOpen=".onBeforeOpen"
+    afterClose=".destroy"
+    core:require="{
+        String: 'sap/ui/model/type/String',
+        CustomString: 'sap/ushell/applications/PageComposer/controller/CustomString'
+    }">
+    <content>
+        <f:SimpleForm id="createPageDialogForm" editable="true">
+            <Label id="createPageIdLabel" text="{i18n>Label.PageID}" />
+            <Input
+                maxLength="35"
+                required="true"
+                id="createPageIdInput"
+                change=".onPageIDChange"
+                liveChange=".onPageIDLiveChange"
+                valueLiveUpdate="true"
+                value="{ path: '/id', type: 'CustomString' }" />
+            <Label id="createPageDescriptionLabel" text="{i18n>Label.Description}" />
+            <Input
+                maxLength="100"
+                required="true"
+                id="createPageDescriptionInput"
+                placeholder="{i18n>Placeholder.Description}"
+                liveChange=".onDescriptionLiveChange"
+                valueLiveUpdate="true"
+                valueStateText="{i18n>Message.EmptyDescription}"
+                value="{ path: '/description', type: 'String' }" />
+            <Label id="createPageTitleLabel" text="{i18n>Label.PageTitle}" />
+            <Input
+                maxLength="100"
+                required="true"
+                id="createPageTitleInput"
+                placeholder="{i18n>Placeholder.PageTitle}"
+                liveChange=".onTitleLiveChange"
+                valueLiveUpdate="true"
+                valueStateText="{i18n>Message.EmptyTitle}"
+                value="{ path: '/title', type: 'String' }" />
+        </f:SimpleForm>
+        <core:ComponentContainer id="transportContainer" lifecycle="Application"/>
+    </content>
+    <beginButton>
+        <Button
+            id="createPageSaveButton"
+            type="Emphasized"
+            text="{i18n>Button.Create}"
+            press=".onConfirm"
+            enabled="{ path: '/validation', formatter: '.validate' }" />
+    </beginButton>
+    <endButton>
+        <Button id="createPageCancelButton" text="{i18n>Button.Cancel}" press=".onCancel" />
+    </endButton>
+</Dialog>

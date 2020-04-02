@@ -1,0 +1,42 @@
+<core:FragmentDefinition
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns="sap.m" xmlns:build="sap.build" xmlns:core="sap.ui.core"
+	template:require="{AH: 'sap/suite/ui/generic/template/js/AnnotationHelper'}">
+	<!-- @classdesc @name: Name: sap.suite.ui.generic.template.ObjectPage.view.fragments.CRUDActionButtons.fragment.xml -->
+	<template:with path="parameter>/" helper="sap.suite.ui.generic.template.js.StableIdHelper.preparePathForStableId"
+				   var="facetId">
+		<template:if test="{= ${facetId>}.buildFacetId(${facet>})}"/>
+		<template:if
+			test="{parts: [{path: 'entitySet>'}, {path: 'listEntitySet>'}, {path: 'parameter>/'}], formatter: 'AH.isNavigationPropertyInsertable'}">
+					<Button
+						id="{:= ${parameter>/stableId}.getStableId({ type:'ObjectPageAction', subType:'Create', sFacet: ${facetId>id}}) }"
+						text="{i18n>CREATE_OBJECT}"
+						type="Transparent"
+						press="cmd:TableEntryAdd"
+						visible="{parts: [{path: 'entitySet>'}, {path: 'listEntitySet>'}, {path: 'parameter>/settings/subPages/'}, {path: 'facet>'}, {path: 'parameter>/settings/sections'},{path: 'parameter>/isDraftEnabled'}], formatter: 'AH.isRelatedEntityCreatable'}">
+					</Button>
+		</template:if>
+		<template:if
+			test="{parts: [{path: 'listEntitySet>Org.OData.Capabilities.V1.DeleteRestrictions'}, {path: 'listEntitySet>entityType'}, {value: 'Deletable'}], formatter: 'AH.areBooleanRestrictionsValidAndPossible'}">
+			<template:with path="parameter>/"
+						   helper="sap.suite.ui.generic.template.js.StableIdHelper.preparePathForStableId"
+						   var="deleteButtonId">
+				<template:if
+					test="{= ${deleteButtonId>}.buildStableId({type: 'ObjectPageAction', subType: 'Delete', sFacet: ${facetId>id}})}"/>
+				<customData>
+					<core:CustomData key="deleteButtonId" value="{deleteButtonId>id}"/>
+				</customData>
+				<Button
+					id="{deleteButtonId>id}"
+					text="{i18n>DELETE}"
+					press="cmd:TableEntryDelete" type="Transparent"
+					enabled="{= '{_templPriv>/generic/controlProperties/' + ${deleteButtonId>id} + '/enabled}' }"
+					visible="{= ${parameter>/isDraftEnabled} ? '{ui>/editable}' : '{= !${ui>/editable} }' }">
+					<customData>
+						<core:CustomData key="Type" value="CRUDActionDelete"/>
+					</customData>
+				</Button>
+			</template:with>
+		</template:if>
+	</template:with>
+</core:FragmentDefinition>

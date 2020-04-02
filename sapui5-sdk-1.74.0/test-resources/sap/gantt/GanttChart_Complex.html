@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>GanttChart Complex</title>
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.gantt, sap.m"
+	data-sap-ui-theme="sap_belize" 
+	src="../../../resources/sap-ui-core.js"
+	data-sap-ui-resourceroots='{ "sap.gantt.test.shape": "./shape", "sap.gantt.test.data": "./qunit/data" }'></script>
+<script src="./test.js"></script>
+
+<script>
+	sap.ui.require([
+		"sap/gantt/def/SvgDefs",
+		"sap/gantt/def/pattern/SlashPattern",
+		"sap/gantt/def/gradient/LinearGradient",
+		"sap/gantt/test/data/DataProducer",
+		"sap/gantt/test/shape/OrderShape",
+		"sap/gantt/test/shape/CustomSelectedShape"
+	], function(SvgDefs, SlashPattern, LinearGradient, DataProducer){
+		createPage("Test Page for sap.gantt.GanttChart Complex", true);
+
+		var oSvgDefs = new SvgDefs({
+			defs: [new SlashPattern("pattern_slash_grey", {
+				stroke: "#CAC7BA"
+			}), new SlashPattern("pattern_slash_blue", {
+				stroke: "#008FD3"
+			}), new SlashPattern("pattern_slash_green", {
+				stroke: "#99D101"
+			}), new SlashPattern("pattern_slash_orange", {
+				stroke: "#F39B02"
+			}), new SlashPattern("pattern_slash_lightblue", {
+				stroke: "#9FCFEB"
+			})]
+		});
+
+		// create model and load data
+		var oModel = new sap.ui.model.json.JSONModel();
+
+		var oData = {};
+		var oDataProducer = new DataProducer();
+		var oRESOURCESHierarchy = oDataProducer.produceData("RESOURCES");
+		// load test data
+		oData.data = {
+			containerLayoutKey: "d1",
+			view: [oDataProducer.getData("RESOURCES")],
+			calendar: oDataProducer.getData("RESOURCES").calendar
+		};
+		oModel.setData(oData);
+
+		var aToolbarSchemesConfig = [
+			new sap.gantt.config.ToolbarScheme({
+				key: "GLOBAL_TOOLBAR",
+				sourceSelect: new sap.gantt.config.ToolbarGroup({
+					position: "L1",
+					overflowPriority: sap.m.OverflowToolbarPriority.High
+				}),
+				timeZoom: new sap.gantt.config.TimeZoomGroup({
+					position: "R3",
+					overflowPriority: sap.m.OverflowToolbarPriority.NeverOverflow,
+					zoomControlType: sap.gantt.config.ZoomControlType.SliderWithButtons
+				})
+			})
+		];
+
+		var aContainerLayouts = [
+			new sap.gantt.config.ContainerLayout({
+				key: "d1",
+				text: "Single: Resources",
+				toolbarSchemeKey: "GLOBAL_TOOLBAR",
+				ganttChartLayouts: [new sap.gantt.config.GanttChartLayout({
+					activeModeKey: "A",
+					hierarchyKey: "RESOURCES"
+				})]
+			})
+		];
+
+		// create GanttChart
+		var oGanttChart = new sap.gantt.GanttChartContainer({
+			svgDefs: oSvgDefs,
+			//modes: aModesConfig,
+			toolbarSchemes: aToolbarSchemesConfig,
+			containerLayouts: aContainerLayouts,
+			containerLayoutKey: "{test>/data/containerLayoutKey}",
+			ganttCharts: {
+				path: "test>/data/view",
+				template: new sap.gantt.GanttChart({
+					timeAxis: new sap.gantt.config.TimeAxis({
+						planHorizon: new sap.gantt.config.TimeHorizon({
+							startTime: "20140101000000",
+							endTime: "20151027060610"
+						}),
+						initHorizon: new sap.gantt.config.TimeHorizon({
+							startTime: "20140920121212",
+							endTime: "20141027000000"
+						})
+					}),
+					shapeDataNames: ["activity"],
+					shapes: [new sap.gantt.config.Shape({
+						key: "activity",
+						shapeDataName: "activity",
+						shapeClassName: "sap.gantt.test.shape.OrderShape",
+						selectedClassName: "sap.gantt.test.shape.CustomSelectedShape",
+						shapeProperties: {
+							time: "{startTime}",
+							endTime: "{endTime}",
+							title: "{tooltip}",
+							rx: 0,
+							ry: 0,
+							isDuration: true
+						}
+					})],
+					rows: {
+						path: "test>root",
+						parameters: {
+							arrayNames: ["children"]
+						}
+					},
+					chartMouseOver: pushEventToMsgStack,
+					chartDoubleClick: pushEventToMsgStack,
+					chartRightClick: pushEventToMsgStack
+				})
+			}
+		});
+		var oModeSegmentedButton = sap.ui.jsfragment("sap.gantt.test.CSSModeButton", oGanttChart);
+		oGanttChart.setModel(oModel, "test");
+		addFooterContentsToPage(oModeSegmentedButton);
+		window.oPage.addContent(oGanttChart);
+	});
+</script>
+</head>
+<body id="body" class="sapUiBody  sapUiSizeCompact">
+	<div id="content" style="width: 100%; height: 100vh;"></div>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright (c) 2009-2017 SAP SE, All Rights Reserved -->
+<mvc:View controllerName="sap.ushell.demo.AppShellUIServiceSample.App"
+	xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:t="sap.ui.table"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    height="100%" 
+    >
+
+        <ScrollContainer
+            class="sapUiContentPadding"
+            height="100%"
+            width="100%"
+            horizontal="false"
+            vertical="true"
+            focusable="true">
+
+                    <Toolbar height="2rem" class="sapUiSmallMarginTop">
+                        <Title text="About" />
+                    </Toolbar>
+                    <TextArea id="infoArea" width="100%" rows="15" editable="false" value="{/introText}" />
+                                        
+                    <Toolbar height="3rem" class="sapUiSmallMarginTop">
+                        <Title text="General Settings" />
+                    </Toolbar>
+                    <FlexBox alignItems="Center" justifyContent="Start">
+                        <items>
+                            <Switch state="false" change="onUseInjectedServiceChange" class="sapUiSmallMarginEnd"/>
+                            <Label text="{/currentStateText}"/>
+                        </items>
+                    </FlexBox>
+                    <Toolbar height="3rem" class="sapUiSmallMarginTop">
+                        <Title text="ShellUIService#setTitle" />
+                    </Toolbar>
+                    <VBox>
+                        <Label text="Title changed every {/currentTimeout} milliseconds" class="sapUiSmallMarginTop sapUiSmallMarginBegin"/>
+                        <Slider liveChange="onTimeoutChanged" step="500" min="500" liveUpdate="true" max="20000" value="3000" width="25em" class="sapUiSmallMarginTop" />
+                        <FlexBox alignItems="Center" justifyContent="Start">
+                            <items>
+                                <Button text="Go Home" press="btnGoHomePressed" class="sapUiSmallMarginEnd"/>
+                                <Button text="Go to #Action-toappnavsample" press="btnGoToAppNavSample" />
+                            </items>
+                        </FlexBox>
+                        <ToggleButton press="btnStartStopPressed" icon="sap-icon://{/setTitleIcon}" text="{/setTitleText}" />
+                    </VBox>
+                    <Toolbar height="3rem" class="sapUiSmallMarginTop">
+                        <Title text="ShellUIService#setHierarchy and ShellUIService#setRelatedApps" />
+                    </Toolbar>
+                    <FlexBox class="sapUiSmallMarginTop">
+                        <items>
+                            <f:Form width="16em" id="setHierarchyRelatedAppsForm">
+                                <f:layout><f:ResponsiveGridLayout /></f:layout>
+                                <f:formContainers>
+                                    <f:FormContainer>
+                                        <f:formElements>
+                                            <f:FormElement label="Title">
+                                                <f:fields>
+                                                    <Input id="setHierarchyRelatedAppsTitle" value="{/setHierarchyRelatedAppsFormItem/title}" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="Subtitle">
+                                                <f:fields>
+                                                    <Input id="setHierarchyRelatedAppsSubtitle" value="{/setHierarchyRelatedAppsFormItem/subtitle}" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="Icon">
+                                                <f:fields><Input id="setHierarchyRelatedAppsIcon" value="{/setHierarchyRelatedAppsFormItem/icon}" /></f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="Intent">
+                                                <f:fields><Input id="setHierarchyRelatedAppsIntent" value="{/setHierarchyRelatedAppsFormItem/intent}" /></f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement>
+                                                <HBox>
+                                                    <Button icon="sap-icon://add" press="btnAddHierarchyEntryPressed" class="sapUiSmallMarginEnd"/>
+                                                    <Button enabled="{/setHierarchyRelatedAppsFormSaveEnabled}" icon="sap-icon://save" press="btnSaveHierarchyEntryPressed" class="sapUiSmallMarginEnd"/>
+                                                    <Button enabled="{/setHierarchyRelatedAppsFormDeleteEnabled}" icon="sap-icon://delete" press="btnDeleteHierarchyEntryPressed" />
+                                                </HBox>
+                                            </f:FormElement>
+                                        </f:formElements>
+                                    </f:FormContainer>
+                                </f:formContainers>
+                            </f:Form>
+                            <VBox>
+                                <t:TreeTable 
+                                    id="setHierarchyRelatedAppsTable"
+                                    visibleRowCount="5"
+                                    class="sapUiSmallMarginEnd sapUiSmallMarginBegin"
+                                    rowSelectionChange="onSetHierarchyRowSelectionChange"
+                                    rows="{path: '/', parameters: {arrayNames: ['setHierarchyRelatedAppsArg']}}"
+                                    selectionMode="Single" enableSelectAll="false"
+                                    editable="false"
+                                    >
+                                    <t:columns>
+                                        <t:Column>
+                                            <Label text="Title" />
+                                            <t:template>
+                                                <Text text="{title}" />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column>
+                                            <Label text="Icon" />
+                                            <t:template>
+                                                <core:Icon src="{icon}" />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column>
+                                            <Label text="Subtitle" />
+                                            <t:template>
+                                                <Text text="{subtitle}" />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column>
+                                            <Label text="Intent" />
+                                            <t:template>
+                                                <Text text="{intent}" />
+                                            </t:template>
+                                        </t:Column>
+                                    </t:columns>
+                                </t:TreeTable>
+                                <FlexBox alignItems="Right" justifyContent="End" class="sapUiSmallMarginTop sapUiSmallMarginEnd">
+                                    <items>
+                                        <RadioButton id="radioHierarchy" groupName="shellUIServiceMethod" text="Hierarchy" selected="true" />
+                                        <RadioButton id="radioRelatedApps" groupName="shellUIServiceMethod" text="Related Apps" selected="false" class="sapUiSmallMarginEnd" />
+                                        <Button text="Set" icon="sap-icon://save" press="btnSetHierarchyRelatedAppsPressed" class="sapUiSmallMarginEnd"/>
+                                        <Button text="Clear" icon="sap-icon://eraser" press="btnClearHierarchyRelatedAppsPressed" />
+                                    </items>
+                                </FlexBox>
+                            </VBox>
+                        </items>
+                    </FlexBox>
+
+            </ScrollContainer>
+
+</mvc:View>

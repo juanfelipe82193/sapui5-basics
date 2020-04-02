@@ -1,0 +1,47 @@
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns="sap.m"
+	xmlns:macro="sap.fe.macros"
+	xmlns:core="sap.ui.core"
+	xmlns:unittest="http://schemas.sap.com/sapui5/preprocessorextension/sap.fe.unittesting/1"
+	template:require="{
+		ID: 'sap/fe/macros/StableIdHelper',
+		CORE: 'sap/fe/core/AnnotationHelper',
+		COMMON: 'sap/fe/macros/CommonHelper'
+	}">
+	<template:with path="collection>" helper="COMMON.getTargetCollection" var="targetCollection" >
+		<macro:Table
+				unittest:id="TablePropertyExpressionTest"
+				id="{= ID.generate(['fe', 'table', ${metaPath>/navigationPath}.get() || ${collection>@sapui.name}, ${annotationPath>@sapui.name}.replace(RegExp('.*\\.'), '')]) }"
+				collection="{collection>}"
+				presentation="{presentation>}"
+				navigationPath="{= ${metaPath>/navigationPath}.get() }"
+				editMode="{= (${collection>$kind} === 'EntitySet') ? 'Display' : '{ui>/editable}'}"
+				createMode="{= (${collection>$kind} === 'EntitySet') ? 'Display' : '{ui>/createMode}'}"
+				busy="{= ${collection>$kind} === 'EntitySet' ? '{ui>/busy}' : '{ui>/busyLocal/' + ID.generate(['fe', 'table', ${collection>@sapui.name}, ${annotationPath>@sapui.name}.replace(RegExp('.*\\.'), '')]) + '}' }"
+				tableType="{= ${viewData>/controlConfiguration}[(${collection>$kind} === 'EntitySet' ? '' : (${collection>@sapui.name} + '/')) + ${annotationPath>@sapui.name}]['tableSettings']['type'] }"
+				rowPress="{=  CORE.getTableChevronPressExpression(${viewData>/navigation}, (${metaPath>/navigationPath}.get() || ${collection>@sapui.name}), (${targetCollection>@com.sap.vocabularies.Common.v1.DraftRoot} || ${targetCollection>@com.sap.vocabularies.Common.v1.DraftNode})) }"
+				rowAction="{=  CORE.getTableRowActionExpression(${viewData>/navigation}, (${metaPath>/navigationPath}.get() || ${collection>@sapui.name})) }"
+				selectionMode="{= CORE.getSelectionMode(${viewData>/}, ((${collection>$kind} === 'EntitySet' ? '' : (${collection>@sapui.name} + '/')) + ${annotationPath>@sapui.name}), (${collection>$kind} !== 'EntitySet'), !(${targetCollection>@Org.OData.Capabilities.V1.DeleteRestrictions/Deletable} === false), ${visualizationPath>} )}"
+				onCallAction=".transaction.onCallAction"
+				onDataFieldForIBN=".handlers.onDataFieldForIntentBasedNavigation"
+				onCreate=".editFlow.createDocument"
+				showCreate="{= (${collection>$kind} === 'EntitySet') ? undefined : (CORE.getNavigationInsertableRestrictions(${collection>@sapui.name}, ${entitySet>@Org.OData.Capabilities.V1.NavigationRestrictions/RestrictedProperties}, ${targetCollection>@Org.OData.Capabilities.V1.InsertRestrictions/Insertable}))}"
+				showDelete="{= (${collection>$kind} === 'EntitySet') ? undefined : (CORE.isNavigationPropertyDeletable(${collection>@sapui.name}, ${entitySet>@Org.OData.Capabilities.V1.NavigationRestrictions/RestrictedProperties}, ${targetCollection>@Org.OData.Capabilities.V1.DeleteRestrictions/Deletable}))}"
+				onDelete=".editFlow.deleteMultipleDocuments"
+				selectedContextsModel="localUI"
+				groupId="$auto.associations"
+				threshold="{= ${collection>$kind} !== 'EntitySet' ? '10' : '30' }"
+				onDataReceived=".editFlow.handleErrorOfTable"
+				noDataText="{= ${collection>$kind} === 'EntitySet' ? ${sap.fe.i18n>TABLE_NO_DATA_TEXT} : undefined}"
+				creationMode="{= ${viewData>/controlConfiguration}[(${collection>$kind} === 'EntitySet' ? '' : (${collection>@sapui.name} + '/')) + ${annotationPath>@sapui.name}]['tableSettings']['creationMode']['name'] }"
+				createAtEnd="{= ${viewData>/controlConfiguration}[(${collection>$kind} === 'EntitySet' ? '' : (${collection>@sapui.name} + '/')) + ${annotationPath>@sapui.name}]['tableSettings']['creationMode']['createAtEnd'] }"
+				namedBindingId="{= ${collection>$kind} === 'EntitySet' ? ID.generate(['fe', 'table', ${collection>@sapui.name}, ${annotationPath>@sapui.name}.replace(RegExp('.*\\.'), '')]) : ID.generate(['fe', 'table', ${metaPath>/currentPath}.get()]) }"
+				autoBindOnInit="{= ${collection>$kind} !== 'EntitySet' || ${viewData>/liveMode} || ${viewData>/initialLoad} ? true : false}"
+				onChange=".handlers.onFieldValueChange"
+				editModePropertyBinding="ui>/editable"
+				enableControlVM="{= ${viewData>/variantManagement} === 'Control' &amp;&amp; CORE.getP13nMode(${viewData>/}, (${collection>$kind} === 'EntitySet' ? '' : (${collection>@sapui.name} + '/')) + ${annotationPath>@sapui.name}) }"
+				p13nMode="{= CORE.getP13nMode(${viewData>/}, (${collection>$kind} === 'EntitySet' ? '' : (${collection>@sapui.name} + '/')) + ${annotationPath>@sapui.name}) }"
+		>
+		</macro:Table>
+	</template:with>
+</core:FragmentDefinition>

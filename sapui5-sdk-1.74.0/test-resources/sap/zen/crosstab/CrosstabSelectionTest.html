@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Selection Tests</title>
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize"
+	data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet"
+	href="../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css"
+	media="screen" />
+<script type="text/javascript"
+	src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript"
+	src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+	<script type="text/javascript" src="testutils/TestUtils.js"></script>
+
+<script type="text/javascript" src="json/TESTDATA_DELTA_RESPONSE_CHROME.js"></script>
+<script type="text/javascript" src="json/TESTDATA_DELTA_RESPONSE_CHROME_DESC.js"></script>
+
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Selection Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Selection Tests", {
+			setup: function () {
+				var that = this;
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.TESTDATA_DELTA_RESPONSE_CHROME.control;
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				this.oCrosstab.setWidth("645px");
+				this.oCrosstab.setHeight("243px");
+				this.oCrosstab.getPropertyBag().setSelectionEnabled(true);
+				this.oTestProxy = this.oCrosstab.getTestProxy();
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+
+				this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+				this.oColHeaderArea = this.oCrosstab.getColumnHeaderArea();
+				this.oDataArea = this.oCrosstab.getDataArea();
+				this.oDimHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+				
+				this.aTestData = [];
+				this.aTestData[0] = sapzen.crosstab.test.jsonTestData.TESTDATA_DELTA_RESPONSE_CHROME.control;
+				this.aTestData[1] = sapzen.crosstab.test.jsonTestData.TESTDATA_DELTA_RESPONSE_CHROME_DESC.control;
+				this.iTestDataIndex = 0;
+
+				this.checkStyle = function (oArea, iRow, iCol, bCheckRow, sClassToCheck) {
+					var i = 0;
+					var iMaxRow = 0;
+					var iMaxCol = 0;
+					var oCell = null;
+					var oDomCell = null;
+					var sClasses = "";
+
+					function checkCell (oCell, sClassToCheck) {
+						if (oCell) {
+							oDomCell = $('#' + oCell.getId());
+							if (oDomCell && oDomCell.length > 0) {
+								sClasses = oDomCell.attr('class');
+								ok(sClasses.indexOf(sClassToCheck) != -1, "Cell in " + oArea.getAreaType() + " Row: "
+										+ oCell.getRow() + " Col: " + oCell.getCol() + " needs to have class " + sClassToCheck);
+							}
+						}
+					}
+
+					if (bCheckRow) {
+						iMaxCol = iCol + oArea.getRenderColCnt();
+						for (i = iCol; i < iMaxCol; i++) {
+							oCell = oArea.getCell(iRow, i);
+							checkCell(oCell, sClassToCheck);
+						}
+					} else {
+						iMaxRow = iRow + oArea.getRenderRowCnt();
+						for (i = iRow; i < iMaxRow; i++) {
+							oCell = oArea.getCell(i, iCol);
+							checkCell(oCell, sClassToCheck);
+						}
+					}
+				};
+				
+				this.nextSortState = function() {
+					that.iTestDataIndex++;
+					if (that.iTestDataIndex > 1) {
+						that.iTestDataIndex = 0;
+					}
+				};
+							
+				this.checkRowSelectedAfterSort = function() {
+					this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+					this.oDataArea = this.oCrosstab.getDataArea();
+					var oSelectedCellData = this.oCrosstab.getSelectedCellData();
+					ok(oSelectedCellData.sAreaType === sap.zen.crosstab.rendering.RenderingConstants.TYPE_ROW_HEADER_AREA, "Row selection must be via RowHeaderArea");
+					this.checkStyle(this.oRowHeaderArea, oSelectedCellData.iRow, 0, true, "sapzencrosstab-SelectRowHeaderCell");
+					this.checkStyle(this.oDataArea, oSelectedCellData.iRow, 0, true, "sapzencrosstab-SelectDataCell");
+					
+					// Check that the row is visible in the UI by checking the RowHeaderArea cell. It needs to be the 3rd row in this test
+					var sDomRow = (typeof(jQuery.browser.mozilla) !== "undefined") ? "2" : "3";
+					var oDomRow = $('#' + this.oRowHeaderArea.getId() + " > tbody > tr:nth-child(" + sDomRow + ")");
+					var oDomCell = oDomRow.find('#' + this.oRowHeaderArea.getCell(oSelectedCellData.iRow, 0).getId());
+					var sClasses = oDomCell.attr('class');
+					ok(sClasses.indexOf('sapzencrosstab-SelectRowHeaderCell') != -1, "selected cell is in actually visible area in the UI");
+				};
+			},
+
+			teardown: function () {
+				this.oCrosstab = null;
+			}
+		});
+
+		test("Hover test RowHeader", function () {
+			this.oTestProxy.hoverCell(this.oRowHeaderArea, 0, 0);
+			this.checkStyle(this.oRowHeaderArea, 0, 0, true, "sapzencrosstab-HoverRowHeaderCell");
+			this.checkStyle(this.oDataArea, 0, 0, true, "sapzencrosstab-HoverDataCell");
+		});
+
+		test("Selection test RowHeader", function () {
+			this.oTestProxy.hoverCell(this.oRowHeaderArea, 0, 0);
+			this.oTestProxy.selectCell(this.oRowHeaderArea, 0, 0);
+			this.checkStyle(this.oRowHeaderArea, 0, 0, true, "sapzencrosstab-SelectRowHeaderCell");
+			this.checkStyle(this.oDataArea, 0, 0, true, "sapzencrosstab-SelectDataCell");
+		});
+		
+		// Column header selection
+		test("Hover test ColHeader", function () {
+			this.oTestProxy.hoverCell(this.oColHeaderArea, 1, 2);
+			this.checkStyle(this.oColHeaderArea, 1, 2, false, "sapzencrosstab-HoverColHeaderCell");
+			this.checkStyle(this.oDataArea, 0, 2, false, "sapzencrosstab-HoverDataCell");
+		});
+
+		test("Selection test ColHeader", function () {
+			this.oTestProxy.hoverCell(this.oColHeaderArea, 1, 2);
+			this.oTestProxy.selectCell(this.oColHeaderArea, 1, 2);
+			this.checkStyle(this.oColHeaderArea, 1, 2, false, "sapzencrosstab-SelectColHeaderCell");
+			this.checkStyle(this.oDataArea, 0, 2, false, "sapzencrosstab-SelectDataCell");
+		});
+		
+		test("Keep selection after sort", function() {
+			this.oTestProxy.hoverCell(this.oRowHeaderArea, 1, 0);
+			this.oTestProxy.selectCell(this.oRowHeaderArea, 1, 0);
+			
+			// sort
+			this.oTestProxy.setTestAction(true);
+			this.oTestProxy.testClickSortOrHierarchy(this.oDimHeaderArea, 2, 0);
+			
+			this.nextSortState();
+			this.oCrosstab.updateControlProperties(this.aTestData[this.iTestDataIndex]);
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+			
+			this.checkRowSelectedAfterSort();
+		});
+		
+	</script>
+
+</body>
+
+</html>

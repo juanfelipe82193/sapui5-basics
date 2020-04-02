@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+
+<title>TreeTable - sap.ui.table</title>
+<link rel="shortcut icon" type="image/x-icon" href="images/controls/sap.ui.table.TreeTable.gif">
+
+<!-- ********************************************************************** -->
+<!-- SAPUI5 Bootstrap:												     -->
+<!-- Extend the "libs" property if you like to import additional libraries  -->
+<!-- ********************************************************************** -->
+<script src="shared-config.js"></script>
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.commons,sap.ui.table"
+	data-sap-ui-theme="sap_bluecrystal"
+	src="../../../../resources/sap-ui-core.js"></script>
+
+<script src="Settings.js"></script>
+
+<script>
+
+
+var oModel = new sap.ui.model.json.JSONModel();
+oModel.setData(TABLESETTINGS.treeTestData);
+
+var oTable = new sap.ui.table.TreeTable({
+	title: "TreeTable",
+	groupHeaderProperty: "name",
+	toolbar: new sap.ui.commons.Toolbar({
+		items: [
+			new sap.ui.commons.Button({text: "Expand",
+				press: function() {
+					var iSelectedIndex = oTable._getSelectionPlugin().getSelectedIndex();
+					oTable.expand(iSelectedIndex);
+					oTable.setSelectedIndex(iSelectedIndex);
+				}
+			}),
+			new sap.ui.commons.Button({text: "Collapse",
+				press: function() {
+					var iSelectedIndex = oTable._getSelectionPlugin().getSelectedIndex();
+					oTable.collapse(iSelectedIndex);
+					oTable._getSelectionPlugin().setSelectedIndex(iSelectedIndex);
+				}
+			}),
+			new sap.ui.commons.Button({text: "Toggle Group Mode",
+				press: function() {
+					if (oTable.getUseGroupMode()) {
+						oTable.setUseGroupMode(false);
+					} else {
+						oTable.setUseGroupMode(true);
+						oTable.setGroupHeaderProperty("name");
+					}
+				}
+			})
+		]
+	}),
+	visibleRowCount: 20,
+	columns: [
+		new sap.ui.table.Column({label: "Name", template: "name", filterProperty: "name", sortProperty: "name"}),
+		new sap.ui.table.Column({label: "Description", template: "description", sortProperty: "description"})
+	],
+	selectionMode: sap.ui.table.SelectionMode.Single,
+	enableColumnReordering: true,
+	expandFirstLevel: true
+});
+
+oTable.attachToggleOpenState(function(oEvent) {
+	jQuery.sap.log.info("ToggleOpenState: rowIndex: " + oEvent.getParameter("rowIndex") +
+			" - rowContext: " + oEvent.getParameter("rowContext") +
+			" - expanded? " + oEvent.getParameter("expanded"));
+});
+
+oTable.attachRowSelectionChange(function(oEvent) {
+	jQuery.sap.log.info("RowSelectionChange: rowIndex: " + oEvent.getParameter("rowIndex") +
+			" - rowContext: " + oEvent.getParameter("rowContext"));
+});
+
+oTable.setModel(oModel);
+oTable.bindRows("/root");
+
+oTable.placeAt("content");
+
+b = oTable.getBinding("rows");
+
+</script>
+
+</head>
+
+<body class="sapUiBody sapUiSizeCompact" role="application">
+<h1>Test Page for <code>sap.ui.table.TreeTable</code> with <code>sap.ui.commons</code> library</h1>
+<p>
+<div id="content"></div>
+</body>
+</html>

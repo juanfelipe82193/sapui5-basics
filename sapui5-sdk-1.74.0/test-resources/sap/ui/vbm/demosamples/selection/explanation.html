@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta charset="UTF-8">
+		<title>SAPUI5 Navigation</title>
+	
+	</head>
+	<body id="content" class="sapUiBody">
+		<p>This sample application demonstrates the interaction between a table and the GeoMap control. All objects are shown as rows in the table, as well as spot locations on the map. 
+		The data for both controls comes from a shared model. It is possible to select objects in the table or on the map. The selection on both controls is kept in sync using model binding.</p>
+		<div class="row">
+			<h3>Define and set a Model</h3>
+			<div class="col6">
+			   <h4>Controller code</h4>
+				<pre class="prettyprint lang-js">
+var oData = {
+   Spots : [
+      { "key" : "1", "pos": "13.407965;52.517906;0", ...},
+      ...
+   ]
+};    				
+// create model and set the data
+var oModel = new sap.ui.model.json.JSONModel();
+oModel.setData( oData );
+this.getView().setModel(oModel);				
+				</pre> 
+    		</div>
+			<div class="col6">
+				<p>In the method <code>onInit</code> of the controller we define some data in JSON format. This data is given to a <code>JSONModel</code>, which is finally assigned to the view.</p>  
+			</div>    		
+    	</div>
+
+ 		<div class="row">
+			<h3>Add GeoMap control to view and bind it to model data</h3>
+			<div class="col6">
+			   <h4>XML View code</h4>
+				<pre class="prettyprint lang-xml">
+&lt;vbm:GeoMap id="VBISelection" 
+            width="100%" 
+            height="100%" 
+            centerPosition="13.407965;52.517906" 
+            zoomlevel="4"&gt;
+   &lt;vbm:vos&gt;
+      &lt;vbm:Spots items="{/Spots}" &gt;
+         &lt;vbm:items&gt;
+            &lt;vbm:Spot position="{pos}" 
+                      tooltip="{tooltip}" 
+                      type="{type}"
+                      select="{select}" 
+                      selectColor="RHLSA(0;1.0;3.0;1.0)"&gt;
+            &lt;/vbm:Spot&gt;
+         &lt;/vbm:items&gt;
+      &lt;/vbm:Spots&gt;
+    &lt;/vbm:vos&gt;
+&lt;/vbm:GeoMap&gt;			
+				</pre> 
+    		</div>
+			<div class="col6">
+				<p>In the XML view we define a GeoMap control with some settings for size and a initial section of the map to show.</p> 
+				<p>We define a <code>Spots</code> aggregation as child of the <code>VOs</code> aggregation.
+				With the attribute <code>items</code> of the <code>Spots</code> aggregation we define a path on the model, selecting the <i>Spots</i> array in our case.</p>
+				<p>The <code>Spots</code> aggregation gets a single <code>Spot</code> element assigned to the <code>items</code> aggregation
+				- acting as a template for the aggregation binding. The attributes of the template object are bound to model attributes. Besides bound attributes, the template can also 
+				have attributes with static values, such as <code>selectColor</code>, which will than be equal for all instances in the aggregation.</p>
+				<p>Note: For the example the binding of the <code>select</code> attribute of the <code>Spot</code> to the model is of special importance. Since we bind the selection state, 
+				we do not need to handle the <code>select</code> and <code>deselect</code> events.</p>
+			</div>    		
+    	</div>   
+ 		<div class="row">
+			<h3>Add Table control to view and bind selection</h3>
+			<div class="col6">
+			   <h4>XML View code</h4>
+				<pre class="prettyprint lang-xml">			
+&lt;m:Table id="vbitable" 
+         items="{/Spots}"
+         mode="MultiSelect"
+          ... &gt;
+   ...
+   &lt;m:items&gt;
+      &lt;m:ColumnListItem  selected='{select}'&gt;
+         ...		
+      &lt;/m:ColumnListItem&gt;
+   &lt;/m:items&gt;
+&lt;/m:Table&gt;	
+				</pre> 
+    		</div>	
+			<div class="col6">
+			<p>We also add the <code>sap.m.Table</code> control to the page. Again, we set through the attribute <code>items</code> a path on the model.</p>
+			<p>On the <code>ColumnListItem</code> we bind the attribute <code>selected</code> to the select property in the model. Thus we have established a 
+			connection between the <i>select</i> attribute of the Spot and the <i>selected</i> attribute of the ColumnListItem using the model property <i>select</i>.
+			<p>Additionally we assign handler function <code>onSelectionChanged</code> of the controller to the <code>Spots</code> aggregation events <code>select</code> and <code>deselect</code>.		
+			This is not required for synchronizing the selection state of the controls, but will allow us to focus the map on the current selection in the table as additional feature. </p>			
+			</div>    								
+		</div>
+ 		<div class="row">
+			<h3>Set visible map section to selection</h3>
+			<div class="col6">
+			   <h4>Controller code</h4>
+				<pre class="prettyprint lang-js">
+onSelectionChanged : function (e) {
+   var oModel = this.getView().getModel();
+   var lons = [];
+   var lats = [];
+   for (var nJ = 0; nJ < spots.length; ++nJ) {
+      if (spots[nJ].select) {
+         var pos = spots[nJ].pos.split(";");
+         lons.push(pos[0]);
+         lats.push(pos[1]);
+      }
+   }
+   if (lons.length && lats.length) {
+      if (lons.length == 1 && lats.length == 1) {
+         this.oVBI.zoomToGeoPosition(lons, lats, 5);
+      } else {
+         this.oVBI.zoomToGeoPosition(lons, lats);
+      }
+   }
+}				
+				</pre>
+			</div>
+			<div class="col6">
+				<p>We use the <code>selectionChanged</code> event of the table only as a trigger. We get the actual selected objects from the model
+				by checking <code>select</code> property. We collect the longitude and latitude values for all selected spots and call function
+				<code>zoomToGeoPosition</code> to the the visible map section.</p>
+				<p>If only one object is selected, we will need to provide the desired zoom level as well. For multiple positions the control can calculate 
+				the optimal zoomlevel on its own.</p>
+			</div>			
+		</div>			    		
+	</body>
+</html>

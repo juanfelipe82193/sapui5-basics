@@ -1,0 +1,64 @@
+<core:FragmentDefinition
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	template:require="{
+			ID: 'sap/fe/macros/StableIdHelper',
+			OP: 'sap/fe/templates/ObjectPage/AnnotationHelper',
+			MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+			CORE: 'sap/fe/core/AnnotationHelper'
+	}">
+	
+	<template:if test="{= ${entitySet>@com.sap.vocabularies.Common.v1.DraftRoot/EditAction} || ${entitySet>@com.sap.vocabularies.Session.v1.StickySessionSupported/EditAction} }">
+		<template:with path="entitySet>" helper="OP.getEditAction" var="editAction">
+			<template:with path="editAction>@Org.OData.Core.V1.OperationAvailable" var="operationAvailable">
+				<template:if test="{= ${operationAvailable>} !== false }">
+					<Button id="{= ID.generate(['fe', 'edit', ${entitySet>@sapui.name}]) }"
+						type="Emphasized"
+						text="{sap.fe.i18n>OBJECT_PAGE_EDIT}"
+						enabled="{= ${operationAvailable>} === null ?
+						(${entitySet>@com.sap.vocabularies.Common.v1.DraftRoot/EditAction} ? '{= ${#' + ${entitySet>@com.sap.vocabularies.Common.v1.DraftRoot/EditAction} + '} ? true : false }'
+						: '{= ${#' + ${entitySet>@com.sap.vocabularies.Common.v1.StickySessionSupported/EditAction} + '} ? true : false }')
+						: ${operationAvailable>$Path} ? ${operationAvailable>@@MODEL.format} : true }"
+						visible="{= '{= !$' + %{entitySet>@com.sap.vocabularies.UI.v1.UpdateHidden@@MODEL.value} + ' &amp;&amp; !(${ui>/editable} === \'Editable\')'}}"
+						press=".editFlow.editDocument(${$view>/getBindingContext})">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" />
+						</layoutData>
+					</Button>
+				</template:if>
+			</template:with>
+		</template:with>
+	</template:if>
+	<template:if test="{= !(${entitySet>@Org.OData.Capabilities.V1.DeleteRestrictions/Deletable/} === false)}">
+		<Button id="{= ID.generate(['fe', 'delete', ${entitySet>@sapui.name}]) }"  
+			type="Default"
+			text="{sap.fe.i18n>OBJECT_PAGE_DELETE}"
+			visible="{= OP.getDeleteButtonVisibility(${entitySet>@Org.OData.Capabilities.V1.DeleteRestrictions/Deletable@@MODEL.value}, ${viewData>viewLevel}, ${entitySet>@com.sap.vocabularies.UI.v1.DeleteHidden@@MODEL.value})}"
+			press=".editFlow.deleteSingleDocument(${$view>/getBindingContext},
+									{title: ${$view>/#fe::op/getHeaderTitle/getExpandedHeading/getItems/1/getItems/0/getText},
+									description: ${$view>/#fe::op/getHeaderTitle/getExpandedHeading/getItems/1/getItems/1/getText}})"/>
+	</template:if>
+	
+	<template:repeat list="{entityType>@com.sap.vocabularies.UI.v1.Identification}" var="dataField">
+        <template:if test="{= ${dataField>$Type} === 'com.sap.vocabularies.UI.v1.DataFieldForAction' &amp;&amp; ${dataField>Determining} !== true }">
+		<template:with path="dataField>Action" helper="CORE.getActionContext" var="actionContext">
+		<template:with path="dataField>Action" helper="CORE.getPathToBoundActionOverload" var="isBound">
+            <template:if test="{= !(${dataField>./@com.sap.vocabularies.UI.v1.Hidden} === true) &amp;&amp; (${isBound>$IsBound} !== true || ${actionContext>@Org.OData.Core.V1.OperationAvailable} !== false) }">
+                <Button
+					id="{= ID.generate(['fe', ${dataField>Action}, ${entitySet>@sapui.name}]) }" 
+                    text="{dataField>Label}"
+                	press="{= '.editFlow.onCallAction(\'' + ${dataField>Action} + '\', { contexts: ${$view>/getBindingContext}, invocationGrouping : \'' + (${dataField>InvocationGrouping/$EnumMember} === 'com.sap.vocabularies.UI.v1.OperationGroupingType/ChangeSet' ? 'ChangeSet' : 'Isolated') + '\', label: \'' + ${dataField>Label} + '\'})'}"
+                    visible="{= ${dataField>./@com.sap.vocabularies.UI.v1.Hidden/$Path} ? '{= !%' + %{dataField>./@com.sap.vocabularies.UI.v1.Hidden@@MODEL.value} + '}' : 'true' }"
+                    enabled="{= ${isBound>$IsBound} !== true ? 'true'
+					: ${actionContext>@Org.OData.Core.V1.OperationAvailable} === null ? '{= !${#' + ${dataField>Action} + '} ? false : true }'
+					: ${actionContext>@Org.OData.Core.V1.OperationAvailable/$Path} ? '{= $' + ${actionContext>@Org.OData.Core.V1.OperationAvailable@@MODEL.format} + '}'
+					: true }"
+					type="Default"/>
+            </template:if>
+		</template:with>
+		</template:with>
+        </template:if>
+    </template:repeat>
+	<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.RelatedApps" type="XML"/>
+</core:FragmentDefinition>

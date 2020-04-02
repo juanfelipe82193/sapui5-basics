@@ -1,0 +1,293 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="../style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm,sap.m"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+
+	<script>
+
+	// query for charts library, the microchart is positioned in a container vo
+    jQuery.sap.require( "sap.suite.ui.microchart.ColumnMicroChart" );
+	
+	// have some data
+	var oData = 
+		{
+				Spots :
+				[
+					{ "key":  "1", "pos": "8.641597;49.293701;0", "tooltip": "SAP SE", "type":sap.ui.vbm.SemanticType.Success },
+					{ "key" : "2", "pos": "-3.726;40.474;0",  "tooltip": "Madrid", "type":sap.ui.vbm.SemanticType.Default },
+					{ "key":  "3", "pos": "116.431;39.888;0", "tooltip": "Beijing", "type":sap.ui.vbm.SemanticType.Error, "labeltext" : "Very polluted city", "labeltype" : "Error", "labelarrow" : true, "labelpos" : "7" },
+					{ "key":  "$$$", "pos": "-74.008;40.724;0", "tooltip": "New York", "type":sap.ui.vbm.SemanticType.Warning }
+				],
+				Circles :
+				[
+					{ "key" : "1", "pos": "35;0;0",  "tooltip": "Circle1" },
+				],
+				PieSeries :
+				[
+					{ "key":  "7", "value": "10",  	"tooltip": "10 Items" 	},
+					{ "key":  "8", "value": "20", 	"tooltip": "20 Items"	},
+					{ "key":  "9", "value": "30", 	"tooltip": "30 Items" 	}
+				],
+				Containers :
+				[
+					{ "key":  "1", "pos": "-40.0;35.0;0", "tooltip": "Cost of living statistics",
+					  ChartCols: [ { "value": 10, "color": "Good", "label": "Dime" },
+						           { "value": 20, "color": "Neutral" },
+						           { "value": 40, "color": "Error" },
+						           { "value": 30, "color": "Critical" },
+						           { "value": 50, "color": "Error" }
+						         ]
+					}
+				]	
+		};
+	
+	// create model and set the data
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+	//sap.ui.getCore().setModel( oModel );
+	
+	// named model for i18n
+	var oTexts = {
+			Label1: "City",
+			Label2: "NY"
+	};
+	var oNamedModel = new sap.ui.model.json.JSONModel();
+	oNamedModel.setData( oTexts );
+	//sap.ui.getCore().setModel( oNamedModel, "i18n" );
+	
+	
+	// sample event handlers
+	function onClickSpot( evt )
+	{
+	   	// click on spot 
+		sap.m.MessageToast.show( "Spot " + this.getText() );
+	};
+
+	function onContextMenuSpot( evt )
+	{
+	   	// click on spot 
+		//sap.m.MessageToast.show( "ContextMenu " + this );
+	};
+	
+	function onClickSpots( evt )
+	{
+	   	// click on spot 
+		//sap.m.MessageToast.show( "onClickSpots" );
+	};
+
+	function onContextMenuSpots( evt )
+	{
+	   	// click on spot 
+		//sap.m.MessageToast.show( "ContextMenu " + this );
+	};
+
+	function onClickItem( evt )
+	{
+	   	// click on item 
+		sap.m.MessageToast.show( this );
+	};
+
+	function onContextMenuItem( evt )
+	{
+	   	// context menu on item 
+		sap.m.MessageToast.show( "ContextMenu " + this );
+	};
+	
+	// create a geomap and bind to model
+	var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+	    width : "1280px",
+    	height: "720px",
+    	initialZoom: "0",
+    	resources: [ new sap.ui.vbm.Resource({ name: "smiley", src: "../demokit/media/images/smiley.png"})
+ 		],
+    	vos: [
+ 	         new sap.ui.vbm.Containers( "containers", {
+	               click: onClickItem.bind("Container"),
+	               contextMenu: onContextMenuItem.bind("Container"),
+		            // bind to an array in the model
+	         	    items: { 
+	                   	path : "/Containers",
+	                    template: new sap.ui.vbm.Container( { 
+	                    	 position: '{pos}', 
+	                    	 tooltip: '{tooltip}', 
+	                    	 click: onClickItem.bind( "Container"),  
+	                    	 contextMenu: onContextMenuItem.bind( "Container" ),
+	                    	 item: new sap.suite.ui.microchart.ColumnMicroChart( { 
+	                             	 size : "Auto",
+	                             	 columns: { path: "ChartCols",
+	                             	            template: new sap.suite.ui.microchart.ColumnMicroChartData( { value: '{value}', color: '{color}', label: '{label}' } )         
+	                             	 },
+	                    	         leftTopLabel: new sap.suite.ui.microchart.ColumnMicroChartLabel( { label: '{i18n>/Label1}' } ),
+	                    	         rightTopLabel: new sap.suite.ui.microchart.ColumnMicroChartLabel( { label: '{i18n>/Label2}' } )   
+	                          	   })
+	                    } )
+	          	    }
+	         } ),
+    	  	new sap.ui.vbm.Spots( "spots1", {
+            click: onClickSpots,
+            contextMenu: onContextMenuItem.bind( "Spots" ),
+            // bind to an array in the model
+            items: { 
+             	path : "/Spots",
+              	template: new sap.ui.vbm.Spot(  { text: '{key}', position: '{pos}', tooltip: '{tooltip}', type: '{type}', labelType: '{labeltype}', labelText : '{labeltext}', labelArrow : '{labelarrow}', labelPos : '{labelpos}', click: onClickSpot, contextMenu: onContextMenuSpot }  )
+           	} } ),
+	       	new sap.ui.vbm.Circles( "circles", {
+	      	    click: onClickItem.bind("Circles" ),
+	      	    contextMenu: onContextMenuItem.bind( "Circles" ),
+	       	    // bind to an array in the model
+	      	    items: { 
+	               	path : "/Circles",
+	                template: new sap.ui.vbm.Circle(  { position: '{pos}', tooltip: '{tooltip}', color: 'RGB(92,186,230)', colorBorder: 'rgb(250, 195, 100)', click: onClickItem.bind( "Circle"),  contextMenu: onContextMenuItem.bind( "Circle" ) } )
+	      	    } } ),
+            // single instance
+	       	new sap.ui.vbm.GeoCircles( "geocircles", {
+	       	    click: onClickItem.bind("GeoCircles" ),
+	       	    contextMenu: onContextMenuItem.bind( "GeoCircles" ),
+	       	    // explicitly specify 
+	       	    items:  [
+                 	geoCircle0=new sap.ui.vbm.GeoCircle( "geoCircle0", { radius: "400000",  slices: "40", position: '146.396;-32.5;0', tooltip: 'New South Wales', color: 'rgba(217, 152, 203, 0.7)', colorBorder: 'rgb(92, 186, 230)', click: onClickItem.bind( "GeoCircle"),  contextMenu: onContextMenuItem.bind( "GeoCircle" ) } )
+	       	    ] } ),
+			// single instance item
+	   	 	new sap.ui.vbm.Routes( "routes", {
+	   	    	click: onClickItem.bind("Routes" ),
+	   	       	contextMenu: onContextMenuItem.bind( "Routes" ),
+	   	       	// explicitly specify 
+	   	       	items:  [
+	                    new sap.ui.vbm.Route({ position: '8.641597;49.293701;0;11.58;48.134;0;13.4;52.52;0;21.01;52.2;0;14.4;50.12;0;16.36;48.25;0', tooltip: 'This is a Route', end: "1", start: "0", color: 'rgba(92, 186, 230, 0.7)', click: onClickItem.bind("Route"), contextMenu: onContextMenuItem.bind("Route") }),
+	                    new sap.ui.vbm.Route({ position: '77.058;28.707;0;116.431;39.888;0', labelText:'Route: New Delhi -> Beijing', tooltip: 'This is a Route', end: "1", start: "0", color: 'rgba(152, 170, 251, 0.7)', lineDash: '7;10', click: onClickItem.bind("Route"), contextMenu: onContextMenuItem.bind("Route") })
+	   	       	]
+	   	 	}),
+ 			// single instance item
+	   	 	new sap.ui.vbm.Areas("areas", {
+	   	 	    click: onClickItem.bind("Areas"),
+	   	 	    contextMenu: onContextMenuItem.bind("Areas"),
+	   	 	    // explicitly specify 
+	   	 	    items: [
+	                    new sap.ui.vbm.Area( { position: '-119.989;42.001;0;-120.011;39.02;0;-114.65;35.049;0;-114.792;36.094;0;-114.397;36.192;0;-114.232;36.05;0;-114.078;36.209;0;-114.067;42.001;0', tooltip: 'Nevada area', color: 'rgba(92, 186, 230, 0.7)', colorBorder: 'rgb(217, 152, 203)', borderDash: '10;10;5;10', click: onClickItem.bind("Area"), contextMenu: onContextMenuItem.bind("Area") } ),
+	                    new sap.ui.vbm.Area( { position: '87.923;49.126;0;47.599, 90.503009', tooltip: 'Nevada area', color: 'rgba(92, 186, 230, 0.7)', colorBorder: 'rgb(217, 152, 203)', borderDash: '10;10;5;10', click: onClickItem.bind("Area"), contextMenu: onContextMenuItem.bind("Area") } )
+	   	 	    ]
+	   	 	}),
+   			// single instance item
+	   	 	new sap.ui.vbm.Boxes("boxes", {
+	   	 	    click: onClickItem.bind("Boxes"),
+	   	 	    contextMenu: onContextMenuItem.bind("Boxes"),
+	   	 	    // explicitly specify 
+	   	 	    items: [
+	                    new sap.ui.vbm.Box( { scale: '0.1;0.1;0.1', position: '-110;60;0',  tooltip: 'This is a Box', color: 'rgba(250, 195, 100, 0.7)', colorBorder: 'rgb(250, 195, 100)', click: onClickItem.bind("Boxes"), contextMenu: onContextMenuItem.bind("Boxes") } )
+	   	 	    ]
+	   	 	}),
+   	   		// single instance item
+   	   	 	new sap.ui.vbm.Pies("pies", {
+   	   	 	    click: onClickItem.bind("Pies"),
+   	   	 	    contextMenu: onContextMenuItem.bind("Pies"),
+   	   	 	    // explicitly specify 
+   	   	 	    items: [
+   	                    new sap.ui.vbm.Pie( 
+   	                          { 
+   	                             scale: '1;1;1', position: '-60;-30;0',  tooltip: 'This is a Pie', click: onClickItem.bind("Pie"), contextMenu: onContextMenuItem.bind("Pie"), 
+   	                             items: { 
+   	                              	path : "/PieSeries",
+   	                               	template: new sap.ui.vbm.PieItem(  { value: '{value}', tooltip: '{tooltip}' }  )
+   	                             } } ) ] 
+   	   	 	})
+    	]
+	});
+
+
+ 	geoCircle0.setTooltip(new sap.ui.commons.RichTooltip({
+ 		text : "This is a rich tooltip. It is used to provide tool tips that can have long text, image and title.",
+ 		title: "New South Wales GeoCircle",
+ 		imageSrc : "demokit/media/images/smiley.png"
+ 	}));
+	
+	oVBI.setModel( oModel );
+	oVBI.setModel( oNamedModel, "i18n" );
+	oVBI.placeAt("content");
+	
+
+	function onRemoveCharts(){
+		cont = oVBI.removeVo("containers");
+	};
+	function onAddCharts(){
+       if (cont)
+	      oVBI.addVo(cont);	
+	};
+	function onRemoveSpots(){
+		spots = oVBI.removeVo("spots1");
+	};
+	function onAddSpots(){
+	   if (spots)	
+	      oVBI.addVo(spots);	
+	};	
+	function onRemoveRoutes(){
+		routes = oVBI.removeVo("routes");
+	};
+	function onAddRoutes(){
+	   if (routes)
+	      oVBI.addVo(routes);
+	};	
+	function onRemoveAreas(){
+		areas = oVBI.removeVo("areas");
+	};
+	function onAddAreas(){
+	   if (areas)
+	      oVBI.addVo(areas);
+	};	
+	function onRemoveBoxes(){
+		boxes = oVBI.removeVo("boxes");
+	};
+	function onAddBoxes(){
+	   if (boxes)
+	      oVBI.addVo(boxes);
+	};	
+	function onRemoveCircles(){
+		circles = oVBI.removeVo("circles");
+	};
+	function onAddCircles(){
+	   if (circles)
+	      oVBI.addVo(circles);
+	};	
+	function onRemoveGeoCircles(){
+		geocircles = oVBI.removeVo("geocircles");
+	};
+	function onAddGeoCircles(){
+	   if (geocircles)
+	      oVBI.addVo(geocircles);
+	};	
+
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business GeoMap Sample</h1>
+			<ul>
+				<li> This sample is showing the Visual Business GeoMap Control with all supported VOs. </li>
+				<li> Option to remove/add the objects for a clearer overview. </li>
+			</ul>
+			<p><b>Remarks:</b> Removing and Adding VOs should be repeatable!</p>
+		 <div id="content"></div>
+		 <br />
+		 <button id="onRemoveSpots" onClick="onRemoveSpots()">Remove Spots</button>
+		 <button id="onAddSpots" onClick="onAddSpots()">Add Spots</button>		 
+		 <button id="onRemoveRoutes" onClick="onRemoveRoutes()">Remove Routes</button>
+		 <button id="onAddRoutes" onClick="onAddRoutes()">Add Routes</button>		 
+		 <button id="onRemoveAreas" onClick="onRemoveAreas()">Remove Areas</button>
+		 <button id="onAddAreas" onClick="onAddAreas()">Add Areas</button>		 
+		 <button id="onRemoveBoxes" onClick="onRemoveBoxes()">Remove Boxes</button>
+		 <button id="onAddBoxes" onClick="onAddBoxes()">Add Boxes</button>		 
+		 <button id="onRemoveCircles" onClick="onRemoveCircles()">Remove Circles</button>
+		 <button id="onAddCircles" onClick="onAddCircles()">Add Circles</button>		 
+		 <button id="onRemoveGeoCircles" onClick="onRemoveGeoCircles()">Remove GeoCircles</button>
+		 <button id="onAddGeoCircles" onClick="onAddGeoCircles()">Add GeoCircles</button>		 
+		 <button id="onRemoveCharts" onClick="onRemoveCharts()">Remove Charts</button>
+		 <button id="onAddCharts" onClick="onAddCharts()">Add Charts</button>
+	</body>
+</html>

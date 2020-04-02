@@ -1,0 +1,255 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Migrating from Component Metadata to Descriptor</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Overview, how the component metadata are mapped to the descriptor."><meta name="description" content="Overview, how the component metadata are mapped to the descriptor."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"b229914587444025be986d81dcc77303.html","previousTopicHref":"be0cf40f61184b358b5faedaec98b2da.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loioe282db2865e94f69972c407469b801e9"><h1 class="title topictitle1" hidden>Migrating from Component Metadata to Descriptor</h1><div class="body conbody"><p class="shortdesc" hidden>Overview, how the component metadata are mapped to the descriptor. </p>
+<div class="p">For compatibility reasons, the mapping to the <samp class="ph codeph">manifest.json</samp> file is done
+automatically. If a metadata property has been defined, it can also be consumed via the
+corresponding property of the <samp class="ph codeph">manifest.json</samp> file. For a detailed
+step-by-step guide, see <a class="xref" href="../../#/topic/3a9babace121497abea8f0ea66e156d9.html" title="Detailed description of the steps needed to create a descriptor V2 for applications file for an existing transactional app created by the customer based on SAP Fiori." target="_top">Creating a Descriptor File for Existing Apps</a>. <aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>To
+benefit from the performance improvements that can be achieved by using <span class="q">&#x201C;manifest
+first&#x201D;</span>, we recommend to migrate the component metadata to the descriptor
+(<samp class="ph codeph">manifest.json</samp>). For more information about manifest first, see
+the <em class="ph i">Manifest First Function</em> section in <a class="xref" href="../../#/topic/be0cf40f61184b358b5faedaec98b2da.html" title="The descriptor for applications, components, and libraries is inspired by the Web Application Manifest concept introduced by the W3C. The descriptor provides a central, machine-readable and easy-to-access location for storing metadata associated with an application, an application component, or a library." target="_top">Descriptor for Applications, Components, and Libraries</a>.</p></aside></div>
+<div class="table-wrapper tablenoborder"><table summary id="loioe282db2865e94f69972c407469b801e9__table_ogz_llt_45" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Mapping Table</span></span></caption><colgroup><col width="33.333333333333336%"><col width="33.333333333333336%"><col width="33.333333333333336%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d168707e70">
+<p class="p">Metadata</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d168707e76">
+<p class="p">Descriptor</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d168707e82">
+<p class="p">Comment</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d168707e70 ">
+<p class="p">Component namespace</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e76 ">
+<p class="p"><samp class="ph codeph">sap.app/id</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e82 ">
+<p class="p">-</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d168707e70 ">
+<p class="p"><samp class="ph codeph">version</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e76 ">
+<p class="p"><samp class="ph codeph">sap.app/applicationVersion/version</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e82 ">
+<p class="p">-</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d168707e70 ">
+<p class="p"><samp class="ph codeph">config</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e76 ">
+<p class="p"><samp class="ph codeph">sap.ui5/config</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e82 ">
+<p class="p">-</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d168707e70 ">
+<p class="p"><samp class="ph codeph">dependencies</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e76 ">
+<p class="p"><samp class="ph codeph">sap.ui5/depedencies</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e82 ">
+<p class="p">Different format, see <em class="ph i">Dependencies</em> section below</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d168707e70 ">
+<p class="p"><samp class="ph codeph">customizing</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e76 ">
+<p class="p"><samp class="ph codeph">sap.ui5/extends/extensions</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e82 ">
+<p class="p">-</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d168707e70 ">
+<p class="p"><samp class="ph codeph">handleValidation</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e76 ">
+<p class="p"><samp class="ph codeph">sap.ui5/handleValidation</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e82 ">
+<p class="p">-</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d168707e70 ">
+<p class="p"><samp class="ph codeph">includes</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e76 ">
+<p class="p"><samp class="ph codeph">sap.ui5/resources</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e82 ">
+<p class="p">Different format, see <em class="ph i">Resources</em> section below</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d168707e70 ">
+<p class="p"><samp class="ph codeph">rootView</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e76 ">
+<p class="p"><samp class="ph codeph">sap.ui5/rootView</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e82 ">
+<p class="p">-</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d168707e70 ">
+<p class="p"><samp class="ph codeph">routing</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e76 ">
+<p class="p"><samp class="ph codeph">sap.ui5/routing</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d168707e82 ">
+<p class="p">-</p>
+</td>
+</tr>
+</tbody></table></div>
+<div class="section"><section class="section" type="Dependencies"><h2 class="section_title" style="font-size: 1.15em;">Dependencies</h2>
+
+<p class="p">Libraries and components are objects and not arrays. For the descriptor part, we use
+<samp class="ph codeph">ui5version</samp> instead of <samp class="ph codeph">minUI5Version</samp>.</p>
+<p class="p"><span class="ph emphasis emphasis">Metadata</span>
+</p>
+<pre class="pre codeblock prettyprint lang-js">
+&quot;dependencies&quot;: {
+    &quot;ui5version&quot;: &quot;1.30.0&quot;,
+    &quot;libs&quot;: [
+        &quot;sap.m&quot;,
+        &quot;sap.ui.unified&quot;
+    ],
+    &quot;components&quot;: [ &quot;sap.app.otherComponent&quot; ]
+}</pre>
+<p class="p"><span class="ph emphasis emphasis">Descriptor</span></p>
+<pre class="pre codeblock prettyprint lang-js">
+&quot;dependencies&quot;: {
+    &quot;minUI5Version&quot;: &quot;1.30.0&quot;,
+    &quot;libs&quot;: {
+        &quot;sap.m&quot;: {},
+        &quot;sap.ui.unified&quot;: {}
+    },
+    &quot;components&quot;: {
+        &quot;sap.app.otherComponent&quot;: {}
+    }
+}</pre>
+</section></div>
+<div class="section"><section class="section" type="Resources"><h2 class="section_title" style="font-size: 1.15em;">Resources</h2>
+
+<p class="p">Includes are renamed to resources and are objects and not an array.</p>
+<p class="p"><span class="ph emphasis emphasis">Metadata</span></p>
+<pre class="pre codeblock prettyprint lang-js">
+&quot;includes&quot;: [&quot;script.js&quot;, &quot;style.css&quot;]</pre>
+<p class="p"><span class="ph emphasis emphasis">Descriptor</span></p>
+<pre class="pre codeblock prettyprint lang-js">
+&quot;resources&quot;: {
+    &quot;js&quot;: [
+        {
+            &quot;uri&quot;: &quot;script.js&quot;
+        }
+    ],
+    &quot;css&quot;: [
+        {
+            &quot;uri&quot;: &quot;style.css&quot;
+        }
+    ]
+}</pre>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

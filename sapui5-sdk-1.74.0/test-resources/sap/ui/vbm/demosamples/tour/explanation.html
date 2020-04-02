@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta charset="UTF-8">
+		<title>SAPUI5 Navigation</title>
+	
+	</head>
+<body id="content" class="sapUiBody">
+	<h2>Demo Tour Logistics</h2>
+	<div>This sample application demonstrates the integration of a Tourplanning Webservice for routes on a GeoMap.
+	At the beginning you will see a simplified logistic situation with stores and production sites.
+	A click on the stores shows the local inventory situation in a Microchart, the “Plan Route” button resolves the shortage situation in the 
+	Berlin store. Actually it makes a Webservice call to routing service and shows the planned route on the GeoMap.</div>
+
+<div class="row">
+<h3>Load the data and Initialize the Model</h3>
+<div class="col6">
+<h4>Controller code</h4>
+<pre class="prettyprint lang-js">
+onInit: function() {			         
+    this.oVBI = null;
+    var oController = this;
+    var oModel = new sap.ui.model.json.JSONModel();
+    var data = $.getJSON("media/Tour.json", function(data){
+		oModel.setData(data);
+		oController.oData = data;
+	});
+    this.getView().setModel(oModel);
+    this.oVBI = this.getView().byId(this.createId("VBITour"));
+    var oModelCharts = new sap.ui.model.json.JSONModel();
+    sap.ui.getCore().setModel(oModel);
+},
+</pre> 
+</div>
+			<div class="col6">
+				<p>In function <code>onInit</code> we create a <code>JSONModel</code>, and initialize the JSONModel 
+				with the data from the Logistic Tour Sample. The model will serve as data container for our Logistic Tour Sample.</p>
+				Our logistic Model has a Production Site in the middle and four stores which get their deliveries from the Production Site.
+			</div>    		
+    	</div>
+    	
+    	<div class="row">
+<h3>Add GeoMap control to view</h3>
+<div class="col6">
+<h4>XML View code</h4>
+<pre class="prettyprint lang-xml">
+&lt;vbm:GeoMap id="VBITour" width="100%" 
+               height="100%" 
+               centerPosition='8.6948125;49.4042720;0' 
+               zoomlevel="6" /&gt;			 
+               ....		    
+   &lt;vbm:vos&gt;
+     &lt;vbm:Spots id="spots" items="{/Spots}"&gt;
+        &lt;vbm:items&gt;
+          &lt;vbm:Spot 
+                  key="{key}"
+                  icon="{icon}"
+                  position="{position}" 
+                  tooltip="{tooltip}" 
+                  ......
+                  image="{image}"
+                  scale="{scale}"
+                  click= "onClickSpot"&gt;
+          &lt;/vbm:Spot&gt;			
+       &lt;/vbm:items&gt;
+    &lt;/vbm:Spots&gt;
+    &lt;vbm:Routes id="routes" items="{/Routes}"&gt;
+       &lt;vbm:items>
+          &lt;vbm:Route
+                  key="{key}"
+                  position="{poslist}" 
+                  tooltip= "{tooltip}"
+                  color= "{color}"
+                  colorBorder="{colorBorder}"
+                  ......
+                  start="{start}"
+                  end="{end}"
+                  hotDeltaColor="RHLSA(0;0;1;1)" /&gt;
+     &lt;/vbm:items&gt;
+   &lt;/vbm:Routes&gt;		
+ &lt;/vbm:vos&gt;
+&lt;/vbm:GeoMap&gt;
+</pre> 			   
+</div>
+
+			<div class="col6">
+				<p>Next we define a <code>GeoMap</code> control on the XML-view 
+				with some settings for size and a initial section of the map to show. We define a Spots aggregation 
+				as child of the VOs aggregation. We initialize the attribute items in of the Spots aggregation we via 
+				template binding to an array of spots in the model. The attributes of the template object are bound to 
+				model attributes. Besides bound attributes, the template can also have attributes with static values, 
+				such as contenSize, which will than be equal for all instances in the aggregation. We proceed the same 
+				way for the aggregation of routes.</p>  
+				In total this will initialize the Logistic Model mentioned above with the VOs representing the various components.
+			</div>    		
+    	</div>
+    	   
+ 		<div class="row">
+			<h3>Open Detailwindow for "onClickSpot" event</h3>
+			<div class="col6">
+ <h4>Controller code</h4>
+<pre class="prettyprint lang-js">		
+onClickSpot : function(evt) {
+   var sLabelText = evt.getSource().getLabelText();
+   if ( sLabelText == "Heidelberg" ){
+        this.DetailWindowGen(evt, 0 )
+       }
+   else if ( sLabelText == "Zürich" ){
+        this.DetailWindowGen(evt, 2 )
+       }
+   else if ( sLabelText == "Wien" ){
+        this.DetailWindowGen(evt, 1 )
+ 	  }
+   else if ( sLabelText == "Paris" ){
+        this.DetailWindowGen(evt, 3 )
+       }
+   else {
+         //  Berlin Store
+        this.DetailWindowGen(evt, 4 )
+	  }		
+},</pre> 
+    		</div>	
+			<div class="col6">
+			<p>With the click event on a Spot we receive the properties of the clicked Spot as parameter. We use this information to open
+			a Detailwindow with a Microchart at the corresponding Spot. The microchart shows the utilization/inventory situation
+			of the site.</p>
+			There is also a "Plan Route" button at the bottom of the Detailwindow, raising a "Press" event.			
+			</div>    								
+		</div>
+ 		<div class="row">
+			<h3>Event handler for "Press Event"</h3>
+			<div class="col6">
+			   <h4>Controller code</h4>
+				<pre class="prettyprint lang-js">
+new sap.ui.layout.HorizontalLayout({
+    content : {
+     path : "/Chart/Buttons",
+     template : new sap.m.Button({
+        text :  '{text}',
+        press :  function() { oController.onPlanRoute( oSpot )} 
+	    })
+      }
+    })
+......
+onPlanRoute : function( oSpot  ) {
+   if ( oSpot.getProperty("labelText") == "Berlin"){
+	   this.PlanBerlinRoute( oSpot );
+		   }
+	 }    
+    
+    				
+	         </pre>
+			</div>
+			<div class="col6">
+				<p>From the event <code>press</code> we receive the origin Spot with all its parameters. These are routed 
+				to the  <code>onPlanRoute</code> event handler.</p> 
+				<p>For the Berlin site (which shows shortage of inventory) this call is routed to the function <code>calculateRoute</code> which 
+				is a wrapper of a Webservice for routeplanning.</p>				
+			</div>			
+		</div>	
+		<div class="row">
+<h3>Call Routing Webservice</h3>
+<div class="col6">
+<h4>Controller code</h4>
+<pre class="prettyprint lang-js">
+calculateRoute : function(oRouteStart, oRouteEnd, 
+                          sTypeOfTransport, sRoutingMethod, 
+                          sColor, oModel, oPin ){
+                           
+                            ......
+// Call Routing Webservice, 
+// receive the results data in a string sRoute   
+                            ......
+    oModel.oData.Routes[0].poslist = sRoute;
+    var oRoute = oModel.oData.Routes[0];
+    oRoute.poslist = sRoute;
+    oRoute.linewidth = "5";
+    oRoute.color = "RGB(97,166,86)";
+    oRoute.colorBorder = "RGBA(255,255,255,255)";
+    oRoute.tooltip = sTooltip; 
+    oModel.setData(oData);	                          
+ };		
+</pre> 			   
+</div>
+
+			<div class="col6">
+				<p>The <code>calculateRoute</code> function takes a bunch of parameters for the Webservice, most important 
+				the Start- and Endpoint of the route. It returns with routing string sRoute, containing the concatenated waypoints.
+				 The result is is written back to the model, replacing the former unplanned route. Thereafter a re-render is triggered. Also the inventory situation is updated. </p>  
+			</div>    		
+    	</div>
+	</body>
+</html>

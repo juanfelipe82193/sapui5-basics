@@ -1,0 +1,90 @@
+<mvc:View
+		controllerName="sap.gantt.sample.GanttChart2Shapes.Gantt"
+		height="100%"
+		xmlns="sap.gantt.simple"
+		xmlns:axistime="sap.gantt.axistime"
+		xmlns:config="sap.gantt.config"
+		xmlns:gch2="sap.gantt.sample.GanttChart2Shapes"
+		xmlns:m="sap.m"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:table="sap.ui.table">
+	<GanttChartWithTable id="gantt">
+		<axisTimeStrategy>
+			<axistime:FullScreenStrategy>
+				<axistime:totalHorizon>
+					<config:TimeHorizon
+							startTime="20181029000000"
+							endTime="20181129000000"/>
+				</axistime:totalHorizon>
+				<axistime:visibleHorizon>
+					<config:TimeHorizon
+							startTime="20181029000000"
+							endTime="20181129000000"/>
+				</axistime:visibleHorizon>
+			</axistime:FullScreenStrategy>
+		</axisTimeStrategy>
+		<table>
+			<table:TreeTable
+					selectionMode="Single"
+					visibleRowCountMode="Auto"
+					minAutoRowCount="12"
+					selectionBehavior="RowSelector"
+					enableColumnReordering="true"
+					rows="{
+						path: '/root',
+						parameters: {
+							arrayNames: ['children'],
+							numberOfExpandedLevels: 1
+						}
+					}">
+				<table:columns>
+					<table:Column label="Type">
+						<table:template>
+							<m:Link text="{text}" href="{path: 'url', formatter: '.fnBuildApiUrl'}" />
+						</table:template>
+					</table:Column>
+				</table:columns>
+				<table:rowSettingsTemplate>
+					<gch2:CustomRowSettings rowId="{id}" rectangles="{rectangle}" chevrons="{chevron}" texts="{texts}"
+											diamonds="{diamond}" cursors="{cursor}" images="{image}" paths="{path}">
+						<gch2:rectangles>
+							<BaseRectangle time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+										   endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+										   fill="@sapUiChartPaletteQualitativeHue6"/>
+						</gch2:rectangles>
+						<gch2:chevrons>
+							<BaseChevron time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+										 endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+										 fill="@sapUiChartPaletteQualitativeHue1"/>
+						</gch2:chevrons>
+						<gch2:texts>
+							<BaseText time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+									  endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+									  text="Test text"/>
+						</gch2:texts>
+						<gch2:diamonds>
+							<BaseDiamond time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+										 endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+										 fill="@sapUiChartPaletteQualitativeHue7"/>
+						</gch2:diamonds>
+						<gch2:cursors>
+							<BaseCursor time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+										endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+										fill="@sapUiChartPaletteQualitativeHue11"/>
+						</gch2:cursors>
+						<gch2:images>
+							<BaseImage time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+									   endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+									   src="{path: 'src', formatter: '.fnPrefixImg'}"/>
+						</gch2:images>
+						<gch2:paths>
+							<gch2:CustomPath time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+									  endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+									  fill="@sapUiChartPaletteQualitativeHue5"/>
+						</gch2:paths>
+					</gch2:CustomRowSettings>
+				</table:rowSettingsTemplate>
+			</table:TreeTable>
+		</table>
+	</GanttChartWithTable>
+</mvc:View>

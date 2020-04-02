@@ -1,0 +1,467 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Performance Measurement Using sap/ui/performance/Measurement Module</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="You can use sap/ui/performance/Measurement to measure the performance of your JavaScript code."><meta name="description" content="You can use sap/ui/performance/Measurement to measure the performance of your JavaScript code."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"b2825eabd7bb43d79b475fee4194c609.html","previousTopicHref":"b24e72443eb34d0fb7bf6940f2d697eb.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio78880c09a1954a02b49c21357d45c91f"><h1 class="title topictitle1" hidden>Performance Measurement Using sap/ui/performance/Measurement Module</h1><div class="body conbody"><p class="shortdesc" hidden>You can use <samp class="ph codeph">sap/ui/performance/Measurement</samp> to measure the
+performance of your JavaScript code. </p>
+<p class="p">For each measurement, the result is a time and a duration. The time are the milliseconds
+(ms) from starting the measurement till its end. The duration is the effective
+milliseconds, pause phases are not counted here. </p>
+<div class="p">You can measure the categories that are used by the <span class="ph"><span class="ph pname">SAPUI5</span></span> core classes as
+listed in the following table:<div class="table-wrapper tablenoborder"><table summary id="loio78880c09a1954a02b49c21357d45c91f__table_vtv_mb4_w5" class="table" frame="border" border="1" rules="all"><colgroup><col width="17.825311942959%"><col width="82.17468805704101%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d295728e40">
+<p class="p">Category</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d295728e46">
+<p class="p">Description</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e40 ">
+<p class="p"><samp class="ph codeph">javascript</samp> (default)</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e46 ">
+<p class="p">Default measurement category if no category is provided</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e40 ">
+<p class="p"><samp class="ph codeph">require</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e46 ">
+<p class="p">Identifies the duration of <samp class="ph codeph">jQuery.sap.require</samp>
+for lazy loading of JavaScipt classes including the loading and
+parsing times for a class</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e40 ">
+<p class="p"><samp class="ph codeph">xmlhttprequest</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e46 ">
+<p class="p">Identifies the duration of an <samp class="ph codeph">jQuery.ajax</samp>
+call</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e40 ">
+<p class="p"><samp class="ph codeph">render</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e46 ">
+<p class="p">Used for all rendering-related measurements that trigger core
+rendering of controls within the <samp class="ph codeph">RenderManager</samp>
+class</p>
+<p class="p">With the <samp class="ph codeph">render</samp> category there comes an
+additional set of categories to distinguish between different
+phases of rendering</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e40 ">
+<p class="p"><samp class="ph codeph">control</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e46 ">
+<p class="p">Identifies the duration for HTML rendering provided with the
+<samp class="ph codeph">ControlRender.render</samp> method</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e40 ">
+<p class="p"><samp class="ph codeph">after</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e46 ">
+<p class="p">Identifies the duration for calls on the control&apos;s
+<samp class="ph codeph">onAfterRendering</samp> method</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e40 ">
+<p class="p"><samp class="ph codeph">preserve</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e46 ">
+<p class="p">Identifies the duration needed to find out whether rendering can
+be preserved</p>
+</td>
+</tr>
+</tbody></table></div></div>
+<div class="section"><section class="section" type="Procedure"><h2 class="section_title" style="font-size: 1.15em;">Procedure</h2><div class="sectiondiv subsection">
+<p class="p subsectiontitle">1. Activate performance measurement</p>
+<div class="p">By default, <samp class="ph codeph">Measurement</samp> is disabled to avoid unnecessary code
+execution during runtime. Therefore, you first have to activate the measurement
+using one of the following options:<ul class="ul" id="loio78880c09a1954a02b49c21357d45c91f__ul_twg_v5g_w5">
+<li class="li">
+<p class="p">Use URL Parameter <samp class="ph codeph">sap-ui-measure=true</samp> to measure an
+initial request.</p>
+</li>
+<li class="li">
+<p class="p">Use the diagnostics window in your app with <span class="keys">
+<kbd class="key">Ctrl</kbd>
+ + <kbd class="key">Alt</kbd>
+ + <kbd class="key">Shift</kbd>
+ + <kbd class="key">S</kbd>
+</span>. In this window, you can also see a visualization of the
+results.</p>
+</li>
+<li class="li">
+<p class="p">Activate measurement in the browser&apos;s console by calling
+<samp class="ph codeph">Measurement.setActive(true)</samp></p>
+</li>
+<li class="li">
+<div class="p">Create a measurement in your code with:
+<pre class="pre codeblock prettyprint lang-js">// &quot;Log&quot; required from module &quot;sap/base/Log&quot;
+// &quot;Measurement&quot; required from module &quot;sap/ui/performance/Measurement&quot;
+Measurement.setActive(true);
+Measurement.start(&quot;myId&quot;,&quot;Measurement of myId&quot;);
+Log.info(&quot;foo&quot;);
+Measurement.end(&quot;myId&quot;);</pre></div>
+<div class="p">You can use methods as listed in the following table:<div class="table-wrapper tablenoborder"><table summary id="loio78880c09a1954a02b49c21357d45c91f__table_zc2_grh_w5" class="table" frame="border" border="1" rules="all"><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d295728e268">
+<p class="p">Action</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d295728e274">
+<p class="p">Method</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e268 ">
+<p class="p">Start measurement</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e274 ">
+<p class="p"><samp class="ph codeph">Measurement.start(sId,sInfo,[categories])</samp></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e268 ">
+<p class="p">End measurement</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e274 ">
+<p class="p"><samp class="ph codeph">Measurement.end(sId)</samp></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e268 ">
+<p class="p">Pause</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e274 ">
+<p class="p"><samp class="ph codeph">Measurement.pause(sId)</samp></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e268 ">
+<p class="p">Resume</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e274 ">
+<p class="p"><samp class="ph codeph">Measurement.resume(sId)</samp></p>
+</td>
+</tr>
+</tbody></table></div></div>
+</li>
+</ul></div>
+<div class="p">To activate measurement for certain categories only, you have the following
+options:<ul class="ul" id="loio78880c09a1954a02b49c21357d45c91f__ul_njn_wph_w5">
+<li class="li">
+<p class="p">Provide a URL Parameter with categories
+<samp class="ph codeph">sap-ui-measure=category1,category2</samp></p>
+</li>
+<li class="li">
+<div class="p">Add the category as parameter to the call of the
+<samp class="ph codeph">Measurement.setActive</samp> as in the following
+example:<pre class="pre codeblock prettyprint">// Measure only &quot;require&quot; category
+// &quot;Measurement&quot; required from module &quot;sap/ui/performance/Measurement&quot;
+Measurement.setActive(true,<span class="ph emphasis emphasis">&quot;require&quot;</span>)</pre></div>
+<div class="p">To assign a measurement to a specific category, just add the category
+to the <samp class="ph codeph">start</samp> function.
+<pre class="pre codeblock prettyprint">// &quot;Measurement&quot; required from module &quot;sap/ui/performance/Measurement&quot;
+Measurement.start(&quot;myId&quot;,&quot;Measurement of myId&quot;, **\[&quot;foo&quot;\]**);</pre></div>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">If you also use the <samp class="ph codeph">start</samp> or
+<samp class="ph codeph">average</samp> method, make sure that the same
+categories are passed on, otherwise no measurement is started.
+</p></aside>
+</li>
+</ul></div>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">2. Retrieve the results</p>
+<p class="p">You can view the results in the
+<span class="ph uicontrol">Performance</span> section of the diagnostics window (<span class="keys">
+<kbd class="key">Ctrl</kbd>
+ + <kbd class="key">Alt</kbd>
+ + <kbd class="key">Shift</kbd>
+ + <kbd class="key">S</kbd>
+</span>). Here, you can also refresh the result list, if the performance
+measurement is still running.</p>
+<div class="p">You can retrieve the results via API with one of the following commands:<div class="table-wrapper tablenoborder"><table summary id="loio78880c09a1954a02b49c21357d45c91f__table_yqv_rxn_w5" class="table" frame="border" border="1" rules="all"><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d295728e440">
+<p class="p">Command</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d295728e446">
+<p class="p">Returns</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e440 ">
+<p class="p"><samp class="ph codeph">Measurement.getAllMeasurements()</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e446 ">
+<p class="p">Array of all measures (running and completed)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e440 ">
+<p class="p"><samp class="ph codeph">Measurement.getAllMeasurements(true)</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e446 ">
+<p class="p">Array of completed measures</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e440 ">
+<p class="p"><samp class="ph codeph">Measurement.getAllMeasurements(false)</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e446 ">
+<p class="p">Array of running (not completed) measures</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e440 ">
+<p class="p"><samp class="ph codeph">Measurement.getMeasurement(string) </samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e446 ">
+<p class="p">One specific measurement by ID</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e440 ">
+<p class="p"><samp class="ph codeph">Measurement.filterMeasurements(func)</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e446 ">
+<p class="p">Array of all measures based on the result of the filter
+function (running and completed)</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e440 ">
+<p class="p"><samp class="ph codeph">Measurement.filterMeasurements(func,
+true)</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e446 ">
+<p class="p">Array of completed measures based on the result of the
+filter function</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d295728e440 ">
+<p class="p"><samp class="ph codeph">Measurement.filterMeasurements(func,
+false)</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d295728e446 ">
+<p class="p">Array of running measures based on the result of the
+filter function</p>
+</td>
+</tr>
+</tbody></table></div></div>
+<div class="p">In Google Chrome, for example, you can also display the results in a table in the
+console by using:
+<pre class="pre codeblock prettyprint">console.table(Measurement.getAllMeasurements(true)) //table with completed measurements</pre></div>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">3. Interpret the results</p>
+<div class="p">Each entry in the resulting array provides an object of the following
+structure:<ul class="ul" id="loio78880c09a1954a02b49c21357d45c91f__ul_anq_f5g_w5">
+<li class="li">
+<p class="p"><samp class="ph codeph">id</samp>: <samp class="ph codeph">string</samp></p>
+<p class="p">The unique ID of the measurement as provided in the
+<samp class="ph codeph">start</samp> or <samp class="ph codeph">average</samp> method</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">info</samp>: <samp class="ph codeph">string</samp></p>
+<p class="p">Additional information as provided in the <samp class="ph codeph">start</samp> or
+<samp class="ph codeph">average</samp> method</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">duration</samp>: <samp class="ph codeph">float</samp></p>
+<p class="p">Duration or average duration in ms </p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">count</samp>: <samp class="ph codeph">int</samp></p>
+<p class="p">Number of calls counted of an average</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">average</samp>: <samp class="ph codeph">boolean</samp></p>
+<p class="p">Indicates whether the result is an average</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">categories</samp>: <samp class="ph codeph">string[]</samp></p>
+<p class="p">Categories as provided in the <samp class="ph codeph">start</samp> or
+<samp class="ph codeph">average</samp> method </p>
+</li>
+</ul></div>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">4. Clear results</p>
+<p class="p">To clear all measurements call the <samp class="ph codeph">Measurement.clear</samp> method.</p>
+</div></section></div>
+<div class="section"><section class="section" type="Specific Use Cases"><h2 class="section_title" style="font-size: 1.15em;">Specific Use Cases</h2><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Averages</p>
+<div class="p">For repeatedly occurring operations, you can calculate an average duration with
+the <samp class="ph codeph">Measurement.average</samp> method.
+<pre class="pre codeblock prettyprint">// &quot;Log&quot; required from module &quot;sap/base/Log&quot;
+// &quot;Measurement&quot; required from module &quot;sap/ui/performance/Measurement&quot;
+Measurement.setActive(true);
+for (var i=0;i&lt;1000;i++) {
+    Measurement.average(&quot;myId&quot;,&quot;Average of myId&quot;);
+    Log.info(&quot;Foo &quot; + i);
+    Measurement.end(&quot;myId&quot;);
+}</pre>Based
+on the ID, all measurement calls are counted and the average duration is
+calculated and provided in the result, together with the complete duration and
+the number of
+calls:<pre class="pre codeblock prettyprint">// &quot;Log&quot; required from module &quot;sap/base/Log&quot;
+// &quot;Measurement&quot; required from module &quot;sap/ui/performance/Measurement&quot;
+Log.info(&quot;1000 calls: &quot; + Measurement.getMeasurement(&quot;myId&quot;).count === 1000); //true
+Log.info(&quot;Average time: &quot; + Measurement.getMeasurement(&quot;myId&quot;).duration);
+</pre></div>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Measurement of Object Methods</p>
+<div class="p">You can register an average measurement without changing the original source
+code. For this, you use the following APIs:<ul class="ul" id="loio78880c09a1954a02b49c21357d45c91f__ul_vn4_1sg_w5">
+<li class="li">
+<p class="p"><samp class="ph codeph">Measurement.registerMethod</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">Measurement.unregisterMethod</samp></p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">Measurement.unregisterAllMethods</samp></p>
+</li>
+</ul></div>
+<div class="p">To measure the average time a method of an instance, you can use the following
+example
+code:<pre class="pre codeblock prettyprint">// &quot;Button&quot; required from module &quot;sap/m/Button&quot;
+// &quot;Measurement&quot; required from module &quot;sap/ui/performance/Measurement&quot;
+var oButton = new Button();
+Measurement.registerMethod(&quot;oButton.setText&quot;, oButton, &quot;setText&quot;, [&quot;instance&quot;]); //register to oButton instance on method setText
+Measurement.setActive(true,[&quot;instance&quot;]); //measure only category &quot;instance&quot;
+for (var i=0;i&lt;1000;i++) {
+    oButton.setText(&quot;MyButton&quot; + i);
+}
+ 
+Measurement.unregisterMethod(oButton, &quot;setText&quot;);
+// or Measurement.unregisterAllMethods();
+
+Measurement.getAllMeasurements();</pre></div>
+<div class="p">To measure the average time a method of a class, you can use the following
+example
+code:<pre class="pre codeblock prettyprint">// &quot;Button&quot; required from module &quot;sap/m/Button&quot;
+// &quot;Measurement&quot; required from module &quot;sap/ui/performance/Measurement&quot;
+Measurement.registerMethod(&quot;oButton.setText&quot;, Button.prototype, &quot;setText&quot;,[&quot;class&quot;]); //register to Button class on method setText
+Measurement.setActive(true,[&quot;class&quot;]); //measure only category &quot;class&quot;
+for (var i=0;i&lt;1000;i++) {
+    var oButton = new Button();
+    oButton.setText(&quot;MyButton&quot; + i);
+}
+ 
+Measurement.unregisterMethod(oButton, &quot;setText&quot;);
+//or Measurement.unregisterAllMethods();
+ 
+Measurement.getAllMeasurements();</pre></div>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">Filtering</p>
+<p class="p">You can also use the categories listed above as filters for the result list or to
+define measurements for one or more specific categories with the
+<samp class="ph codeph">filterMeasurements</samp> method. </p>
+<div class="p">To filter the categories that are measured, you use, for
+example:<pre class="pre codeblock prettyprint">// Filter for category1
+Measurement.filterMeasurements(function(oMeasurement) {
+    return oMeasurement.categories.indexOf(&quot;category1&quot;) &gt; -1;
+});</pre></div>
+<div class="p">To filter the results, you can use a code like
+this:<pre class="pre codeblock prettyprint">// Filter for duration &gt; 500ms
+Measurement.filterMeasurements(function(oMeasurement) {
+    return oMeasurement.duration &gt; 500;
+});
+</pre></div>
+</div></section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/api/jQuery.sap.measure" target="_top" alt="#/api/jQuery.sap.measure" title="#/api/jQuery.sap.measure">API Reference: <samp class="ph codeph">jQuery.sap.measure.html</samp></a></div><div><a class="link" href="../../#/topic/408b40efed3c416681e1bd8cdd8910d4.html" title="If a web app has performance issues, finding the cause can be both a time-consuming and nerve-consuming task. To help you avoid and solve performance issues in your app, here are some good practices we&apos;ve discovered while dealing with SAPUI5 apps." target="_top">Performance: Speed Up Your App</a></div><div><a class="link" href="../../#/topic/966d67c8cc5046419d1b35556cd9e447.html" title="This section lists some of the most important issues that should be avoided to improve performance in SAPUI5 applications." target="_top">Performance Issues</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

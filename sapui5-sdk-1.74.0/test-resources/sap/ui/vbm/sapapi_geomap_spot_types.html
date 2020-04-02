@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#btnZoomIn{
+			margin-right: 10px;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 40.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#margin {
+			margin-right: 50px;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 55.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+	
+	// have some data
+	var oData = 
+		{
+				Spots :
+				[
+					{ "key" : "1", "txt" : "1", "pos": "-30;-40;0",  "tooltip": "Spot1", "type":sap.ui.vbm.SemanticType.Error  },
+					{ "key":  "2", "txt" : "33", "pos": "-30;-20;0", "tooltip": "Spot2", "type":sap.ui.vbm.SemanticType.Warning  },
+					{ "key":  "3", "txt" : "555", "pos": "-30;0;0", "tooltip": "Spot3", "type":sap.ui.vbm.SemanticType.Success  },
+					{ "key":  "4", "pos": "-30;20;0", "tooltip": "Spot4", "type":sap.ui.vbm.SemanticType.Default  },
+					{ "key":  "5", "txt" : "9999", "pos": "-30;40;0", "tooltip": "Spot5", "type":sap.ui.vbm.SemanticType.Inactive  }
+				],
+				Spots2 :
+				[
+					{ "key" : "1", "txt" : "1", "pos": "-80;-40;0",  "tooltip": "Spot1" },
+					{ "key":  "23", "txt" : "3", "pos": "-80;-20;0", "tooltip": "Spot2" },
+					{ "key":  "356", "txt" : "5", "pos": "-80;0;0", "tooltip": "Spot3" },
+					{ "key":  "4131", "pos": "-80;20;0", "tooltip": "Spot4" },
+					{ "key":  "56789", "txt" : "9", "pos": "-80;40;0", "tooltip": "Spot5" }
+				],
+				LegendItems:
+					[
+						{ "semanticSpotType" : sap.ui.vbm.SemanticType.Warning,  "text": "Warning" },
+						{ "semanticSpotType" : sap.ui.vbm.SemanticType.Hidden,  "text": "Hidden" },
+						{ "semanticSpotType" : sap.ui.vbm.SemanticType.Error,  "text": "Error" },
+						{ "semanticSpotType" : sap.ui.vbm.SemanticType.Inactive,  "text": "Inactive" },
+						{ "semanticSpotType" : sap.ui.vbm.SemanticType.Default,  "text": "Default" },
+						{ "semanticSpotType" : sap.ui.vbm.SemanticType.Success,  "text": "Success" }
+					]
+		};
+	
+	// create model and set the data
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+	sap.ui.getCore().setModel( oModel );
+
+	
+	
+	// sample event handlers
+	
+	// create analytic map and bind to model
+	var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+	    width : "1024px",
+    	height: "600px",
+		legend : new sap.ui.vbm.Legend(
+		      {
+		        caption : "Spot Types",
+		        items : {
+						path : "/LegendItems",
+						template: new sap.ui.vbm.LegendItem(  { text: "{text}", semanticSpotType: '{semanticSpotType}' } )
+					}
+		      }
+		),    	
+    	vos: [
+    	  	new sap.ui.vbm.Spots( "spots1", {
+            // bind to an array in the model
+            items: { 
+             	path : "/Spots2",
+              	template: new sap.ui.vbm.Spot(  { text: '{key}', position: '{pos}', tooltip: '{tooltip}', type: sap.ui.vbm.SemanticType.Warning }  )
+           	} } ),
+    	  	new sap.ui.vbm.Spots( "spots2", {
+                // bind to an array in the model
+                items: { 
+                 	path : "/Spots",
+                  	template: new sap.ui.vbm.Spot(  { text: '{txt}', position: '{pos}', tooltip: '{tooltip}', type: '{type}' }  )
+               	} } ),
+           	new sap.ui.vbm.Spots( "spots_fix", {
+                items: [ new sap.ui.vbm.Spot(  { type: sap.ui.vbm.SemanticType.Error, text: "1234", position: "20;0;0", tooltip: "Error" }  ),
+                         new sap.ui.vbm.Spot(  { type: sap.ui.vbm.SemanticType.Warning, position: "40;0;0", tooltip: "Warning" }  ),
+                         new sap.ui.vbm.Spot(  { type: sap.ui.vbm.SemanticType.Success, text: "34567", position: "60;0;0", tooltip: "Success" }  ),
+                         new sap.ui.vbm.Spot(  { type: sap.ui.vbm.SemanticType.Default, position: "80;0;0", tooltip: "Default" }  ),
+                         new sap.ui.vbm.Spot(  { type: sap.ui.vbm.SemanticType.Inactive, position: "100;0;0", tooltip: "Inactive" }  )
+               	] } )
+	   	 	]
+	});
+	oVBI.placeAt("content");
+	oVBI.setMapConfiguration(JSON.parse(localStorage.getItem('map')));
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business GeoMap Sample</h1>
+					<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test Visual Business GeoMap Control with typed Spots.  </p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+			<li> Check that the GeoMap control loads with Spots.</li>
+				<li> Check that you can see the different spot types <i>i.e. Success, Warning, Error, information and Default</i></li> </li>			
+			
+						</ol>
+						</div>
+						<div id="description2">
+							<br>
+							<br>
+		 <div id="content"></div>	 
+							</div>
+	</body>
+</html>

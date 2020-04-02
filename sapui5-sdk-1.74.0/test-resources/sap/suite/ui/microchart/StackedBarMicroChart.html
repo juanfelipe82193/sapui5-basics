@@ -1,0 +1,288 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.suite.ui.microchart.StackedBarMicroChart</title>
+
+<base href="../../../../../">
+
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout, sap.m, sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize"
+	src="resources/sap-ui-core.js">
+</script>
+<script type="text/javascript">
+	jQuery.sap.initMobile();
+
+	var oStBMCData = {
+		bars: [
+			{ value: 40, valueColor: "Good" },
+			{ value: 50},
+			{ value: 60, valueColor: "Error" },
+			{ value: 10, valueColor: "Neutral" }
+		],
+		tooltip: "Cumulative Totals\n((AltText))\ncalculated in EURO",
+		size: "Responsive",
+		precision: 0
+	};
+
+	var oConfModel = new sap.ui.model.json.JSONModel();
+	oConfModel.setData(oStBMCData);
+	sap.ui.getCore().setModel(oConfModel);
+
+	function fnPress(oEvent) {
+		sap.m.MessageToast.show("The chart is pressed.");
+	}
+
+	var buildStBMC = function (width, height, size, text) {
+		var oStBMCBarTemplate = new sap.suite.ui.microchart.StackedBarMicroChartBar({
+			displayValue: "{displayValue}",
+			value: "{value}",
+			valueColor: "{valueColor}",
+			tooltip: "{tooltip}"
+		});
+
+		var oStBMCTmpl = new sap.suite.ui.microchart.StackedBarMicroChart("stbmc" + text, {
+			size: size,
+			bars: {
+				path: "/bars",
+				template: oStBMCBarTemplate
+			},
+			press: fnPress,
+			tooltip: "{/tooltip}",
+			maxValue: "{/maxValue}",
+			precision: "{/precision}"
+		});
+
+		if (size !== sap.m.Size.Responsive) {
+			oStBMCTmpl.addStyleClass("sapUiTinyMargin");
+			return oStBMCTmpl;
+		}
+
+		var oFlexBox = new sap.m.FlexBox("stb-fb-" + text, {
+			items: [oStBMCTmpl],
+			layoutData: new sap.ui.layout.ResponsiveFlowLayoutData({ minWidth: 200 }),
+			height: height,
+			width: width,
+			renderType: "Bare"
+		});
+		oFlexBox.addStyleClass("sapUiTinyMargin");
+
+		return oFlexBox;
+	};
+
+	// fixed control
+	var oFixedFormLabel = new sap.m.Label({
+		text: "Fixed control",
+		width: "100%",
+		textAlign: "Center"
+	});
+	var oFixedSizeChart = buildStBMC("", "", sap.m.Size.Auto, "fixed");
+	var oStBMCFixedForm = new sap.ui.layout.form.SimpleForm("stb-fixed-form", {
+		content:[
+			oFixedSizeChart
+		]
+	});
+
+	// responsive controls
+	var oResponsiveFormLabel = new sap.m.Label({
+		text: "Responsive controls in a FlexBox",
+		labelFor: "stb-responsive-form",
+		width: "100%",
+		textAlign: "Center"
+	});
+	var oStbResponsiveForm = new sap.ui.layout.form.SimpleForm("stb-responsive-form", {
+		content:[
+			buildStBMC("144px", "62px", sap.m.Size.Responsive, "large"),
+			buildStBMC("144px", "62px", sap.m.Size.Responsive, "medium"),
+			buildStBMC("128px", "55px", sap.m.Size.Responsive, "small"),
+			buildStBMC("128px", "55px", sap.m.Size.Responsive, "extrasmall")
+		]
+	});
+
+	// size
+	var oSizeLbl = new sap.m.Label({
+		text : "Size",
+		labelFor : "size-value"
+	});
+	var oSizeSlct = new sap.m.Select("size-value", {
+		width : "10rem",
+		change : function (oE) {
+			var selectedItem = oE.getParameter("selectedItem");
+			oFixedSizeChart.setSize(selectedItem.getKey());
+			oFixedSizeChart.invalidate();
+		},
+		items : [
+			new sap.ui.core.Item({key: "Auto", text: "Auto"}),
+			new sap.ui.core.Item({key: "L", text: "Large"}),
+			new sap.ui.core.Item({key: "M", text: "Middle"}),
+			new sap.ui.core.Item({key: "S", text: "Small"}),
+			new sap.ui.core.Item({key: "XS", text: "Extra small"})
+		]
+	});
+
+	// precision
+	var oPrecisionLbl = new sap.m.Label({
+		text : "Precision",
+		labelFor : "precision-value"
+	});
+	var oPrecisionSlct = new sap.m.Select("precision-value", {
+		width : "10rem",
+		change : function(oControlEvent) {
+			var selectedItem = oControlEvent.getParameter("selectedItem");
+			oStBMCData.precision = parseInt(selectedItem.getKey());
+			oConfModel.checkUpdate();
+		},
+		items : [
+			new sap.ui.core.Item({key: 0, text: "0"}),
+			new sap.ui.core.Item({key: 1, text: "1"}),
+			new sap.ui.core.Item({key: 2, text: "2"}),
+			new sap.ui.core.Item({key: 3, text: "3"}),
+		]
+	});
+
+	// tooltip
+	var oTooltipLbl = new sap.m.Label({
+		text : "Tooltip",
+		labelFor : "tooltip"
+	});
+	var oTooltipInput = new sap.m.TextArea("tooltip", {
+		rows: 3,
+		placeholder: 'Enter tooltip (use ((AltText)) for inserting the default text) ...',
+		value: "{/tooltip}"
+	});
+
+	// max value
+	var oMaxValueLbl = new sap.m.Label({
+		text : "Max value",
+		labelFor : "maxValue"
+	});
+	var oMaxValueInput = new sap.m.Input("maxValue", {
+		width: "10rem",
+		placeholder: "Enter max value ...",
+		value: { path: "/maxValue", type: new sap.ui.model.type.Float({groupingEnabled: false})},
+		liveChange: function(oControlEvent) {
+			var fVal = parseFloat(oControlEvent.getParameter("newValue"));
+			oStBMCData.maxValue = jQuery.isNumeric(fVal) ? fVal : undefined;
+			oConfModel.checkUpdate();
+		}
+	});
+
+	// add button
+	var iBarIndex = 0;
+	var oBarAddButton = new sap.m.Button("add-button-bar", {
+		width: "10rem",
+		text: "Add Bar",
+		press: function(oEvent) {
+			iBarIndex = 0;
+			oStBMCData.bars.push( { value: 0, color: "Neutral" } );
+			oConfModel.checkUpdate();
+		}
+	});
+
+	var oSimpleForm = new sap.ui.layout.form.SimpleForm("controls-stb", {
+		maxContainerCols: 4,
+		editable: true,
+		content: [oMaxValueLbl, oMaxValueInput, oTooltipLbl, oTooltipInput, oSizeLbl, oSizeSlct, oPrecisionLbl, oPrecisionSlct, oBarAddButton]
+	});
+
+	function fnFormFactory(sId, oContext) {
+		var oBarRemoveBtn = new sap.m.Button(sId+"-stb-remove-button", {
+			width: "10rem",
+			text: "Remove Bar",
+			press: function(oEvent) {
+				oStBMCData.bars.splice(this._index, 1);
+				iBarIndex = 0;
+				oConfModel.checkUpdate();
+			}
+		});
+		oBarRemoveBtn._index = iBarIndex;
+
+		var oBarDisplayValueInput = new sap.m.Input(sId + "-bar-displayvalue", {
+			width: "10rem",
+			placeholder: "Enter displayValue ...",
+			value: "{displayValue}"
+		});
+		oBarDisplayValueInput._index = iBarIndex;
+
+		var oBarValueInput = new sap.m.Input(sId + "-bar-value", {
+			width: "10rem",
+			placeholder: "Enter value ...",
+			value: { path: "value", type: new sap.ui.model.type.Float({groupingEnabled: false})},
+			liveChange: function(oControlEvent) {
+				var fVal = parseFloat(oControlEvent.getParameter("newValue"));
+				oStBMCData.bars[this._index].value = jQuery.isNumeric(fVal) ? fVal : undefined;
+				oConfModel.checkUpdate();
+			}
+		});
+		oBarValueInput._index = iBarIndex;
+
+		var oBarValueColor = new sap.m.Input(sId + "-bar-valuecolor", {
+			width: "10rem",
+			placeholder: "Enter color ...",
+			value: "{valueColor}"
+		});
+		oBarValueColor._index = iBarIndex;
+
+		var oBarTooltipInput = new sap.m.Input(sId + "-bar-tooltip", {
+			width: "10rem",
+			placeholder: "Enter a tooltip",
+			value: "{tooltip}"
+		});
+
+		var oBarVBox = new sap.m.VBox(sId + "-bar-box", {
+			items: [
+				oBarRemoveBtn,
+				new sap.m.Label({ text: "Display Value", labelFor: sId + "-bar-label" }),
+				oBarDisplayValueInput,
+				new sap.m.Label({ text: "Value", labelFor: sId + "-bar-value" }),
+				oBarValueInput,
+				new sap.m.Label({ text: "Color", labelFor: sId + "-bar-color" }),
+				oBarValueColor,
+				new sap.m.Label({ text: "Tooltip", labelFor: sId + "-bar-tooltip" }),
+				oBarTooltipInput
+			],
+			layoutData: new sap.ui.layout.ResponsiveFlowLayoutData({ minWidth: 170 })
+		});
+
+		iBarIndex++;
+		return oBarVBox;
+	}
+
+	var oBarBoxSimpleForm = new sap.ui.layout.form.SimpleForm("bar-box-form", {
+		content: {
+			path: "/bars",
+			factory: fnFormFactory
+		}
+	});
+
+	var oPage = new sap.m.Page("vbox-stb", {
+		showHeader: false,
+		content: [
+			oResponsiveFormLabel,
+			oStbResponsiveForm,
+			oFixedFormLabel,
+			oFixedSizeChart,
+			oSimpleForm,
+			oBarBoxSimpleForm
+		]
+	});
+
+	var oApp = new sap.m.App({
+		pages: oPage
+	}).placeAt("content");
+
+	//set the contrast class for belize plus
+	if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+		oApp.addStyleClass("sapContrastPlus");
+	}
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+	<div id="content"></div>
+</body>
+</html>

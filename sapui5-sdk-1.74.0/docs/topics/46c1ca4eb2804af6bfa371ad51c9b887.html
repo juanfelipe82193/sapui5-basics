@@ -1,0 +1,161 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 3: Handling Custom URL Parameters</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In this step, we add the functionality to interpret URL parameters in our local mock server configuration."><meta name="description" content="In this step, we add the functionality to interpret URL parameters in our local mock server configuration."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"95e5b87804ef4059bb68dd511666d4e3.html","previousTopicHref":"50897decc9504b2a875fb41d89fd254a.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3a9728ec31f94ca18a7d543ce419d85d.html" title="In this tutorial, we will explore some advanced features of the mock server." target="_top">Mock Server</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/50897decc9504b2a875fb41d89fd254a.html" title="In this step, we use the mock server to add data to our app without dependency to any remote server or system." target="_top">Step 2: Creating a Mock Server to Simulate Data</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/95e5b87804ef4059bb68dd511666d4e3.html" title="We only want to display the upcoming meetings and hide the meetings happened in the past in our app. By using a function import that calculates these items on the back end we do not need to do the calculation on the client. The mock server will be instructed to do the calculation locally for testing purposes." target="_top">Step 4: Calling a Function Import</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loio46c1ca4eb2804af6bfa371ad51c9b887"><h1 class="title topictitle1" hidden>Step 3: Handling Custom URL Parameters</h1><div class="body conbody"><p class="shortdesc" hidden>In this step, we add the functionality to interpret URL parameters in our local mock
+server configuration.</p>
+<p class="p">We know that the OData provider of this service implements a URL parameter that returns
+only the first three entries of a set. So, for example, calling the URL with
+parameter<samp class="ph codeph">/Meetups?first=3</samp> should return only the first 3 meet-up
+entries instead of all available entries.</p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loio46c1ca4eb2804af6bfa371ad51c9b887__fig_lfn_3jq_st"><div class="figbody">
+
+<img class="inline  " id="loio46c1ca4eb2804af6bfa371ad51c9b887__image_zlc_tjq_st" src="loioe65ccb233c334129b11726a20b102211_HiRes.png">
+</div><span class="figcap">Only the next three meet-ups are shown</span></div>
+</section></div>
+<div class="section"><section class="section" type="Coding"><h2 class="section_title" style="font-size: 1.15em;">Coding</h2>
+
+<p class="p">You can view and download all files in the Demo Kit <span class="ph">at <a class="xref" href="../../#/sample/sap.ui.core.tutorial.mockserver.03/preview" target="_top" alt="#/sample/sap.ui.core.tutorial.mockserver.03/preview" title="#/sample/sap.ui.core.tutorial.mockserver.03/preview">Mock Server - Step 3</a></span>.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/localService/mockserver.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/localService/mockserver.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/core/util/MockServer&quot;,
+	&quot;sap/base/Log&quot;
+], function(MockServer, Log) {
+	&quot;use strict&quot;;
+
+	return {
+		/**
+		 * Initializes the mock server.
+		 * You can configure the delay with the URL parameter &quot;serverDelay&quot;.
+		 * The local mock data in this folder is returned instead of the real data for testing.
+		 * @public
+		 */
+		init: function() {
+			// create
+			var oMockServer = new MockServer({
+				rootUri: &quot;/&quot;
+			});
+
+			oMockServer.simulate(&quot;../localService/metadata.xml&quot;, {
+				sMockdataBaseUrl: &quot;../localService/mockdata&quot;,
+				bGenerateMissingMockData: true
+			});
+
+<span class="ph emphasis emphasis">			// handling custom URL parameter step
+			var fnCustom = function(oEvent) {
+				var oXhr = oEvent.getParameter(&quot;oXhr&quot;);
+				if (oXhr &amp;&amp; oXhr.url.indexOf(&quot;first&quot;) &gt; -1) {
+					oEvent.getParameter(&quot;oFilteredData&quot;).results.splice(3, 100);
+				}
+			};
+			oMockServer.attachAfter(&quot;GET&quot;, fnCustom, &quot;Meetups&quot;);
+</span>
+
+			// start
+			oMockServer.start();
+
+			Log.info(&quot;Running the app with mock data&quot;);
+		}
+
+	};
+
+});
+</pre>
+<p class="p">In some scenarios, a server-specific implementation is used to calculate the returned data. For example, you can use a custom URL parameter that
+is typically interpreted by the server. The mock server ignores it, thus still returning the entire set of meet-ups. </p>
+<p class="p">In this tutorial, we use the URL parameter <samp class="ph codeph">first=3</samp> to fetch the first three entries. So, for example, calling to
+<samp class="ph codeph">/Meetups?first=3</samp> should return at most three meet-up entries.</p>
+<p class="p">However, since this is a custom parameter that is not part of the standard official OData query options, it will not get processed correctly by
+the mock server. Moreover, the mock server simply ignores it and return the entire set of meet-ups.</p>
+<p class="p">We now enable the functionality when running in mock mode. As its functionality corresponds to the OData <samp class="ph codeph">$top</samp> system query, we
+simply evaluate it to <samp class="ph codeph">$top</samp> at runtime.</p>
+<p class="p">First, we create a callback function that we later attach to every <samp class="ph codeph">GET</samp> request made to the <samp class="ph codeph">Meetups</samp> entity set
+of the service. Note that we choose the <samp class="ph codeph">attachAfter</samp> event that is fired after the built-in request processing of the mock
+server. The event contains the actual <samp class="ph codeph">XHR</samp> object and the mock data to be returned to the application. Inside the callback
+function we remove all results starting from third entry: The <samp class="ph codeph">oFilteredData</samp> parameter comes with the event
+<samp class="ph codeph">attachAfter</samp> and contains the mock data entries that are about to be returned in the response.</p>
+<p class="p">Second, we attach the callback to every <samp class="ph codeph">GET</samp> request to the specific <samp class="ph codeph">Meetups</samp> entity set. </p>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3a9728ec31f94ca18a7d543ce419d85d.html" title="In this tutorial, we will explore some advanced features of the mock server." target="_top">Mock Server</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/50897decc9504b2a875fb41d89fd254a.html" title="In this step, we use the mock server to add data to our app without dependency to any remote server or system." target="_top">Step 2: Creating a Mock Server to Simulate Data</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/95e5b87804ef4059bb68dd511666d4e3.html" title="We only want to display the upcoming meetings and hide the meetings happened in the past in our app. By using a function import that calculates these items on the back end we do not need to do the calculation on the client. The mock server will be instructed to do the calculation locally for testing purposes." target="_top">Step 4: Calling a Function Import</a><br></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

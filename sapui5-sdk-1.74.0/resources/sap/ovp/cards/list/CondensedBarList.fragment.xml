@@ -1,0 +1,132 @@
+<core:FragmentDefinition
+        xmlns="sap.m"
+        xmlns:core="sap.ui.core"
+        xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+        xmlns:build="sap.build"
+        xmlns:sfi="sap.ui.comp.smartfield"
+        xmlns:navpopover="sap.ui.comp.navpopover"
+        xmlns:micro="sap.suite.ui.microchart">
+
+    <items>
+        <CustomListItem
+                id="listItem"
+                type="Active"
+                press="onListItemPress"
+                class="sapOvpBarList sapOvpBarCondensedList">
+            <!-- if manifest Property showLineItemDetail is set to true then the first data field will be a Link to show the Line Item Details -->
+            <template:if
+                    test="{= ${ovpCardProperties>/showLineItemDetail} === true}">
+            <template:then>
+                <VBox>
+                    <core:Fragment
+                            fragmentName="sap.ovp.cards.generic.LineItemDetails"
+                            type="XML"/>
+                    <Link
+                            class="sapOvpBarListDataField sapOvpOverflowEllipsisDataField sapOvpBarListTitle"
+                            text="{parts:[{path:'lineItem>'}, {path:'ovpConstants>/firstDataFieldIndex'}], formatter: 'sap.ovp.cards.AnnotationHelper.formatDataFieldValueOnIndex'}"
+                            press="onContactDetailsLinkPress">
+                    </Link>
+                </VBox>
+            </template:then>
+                <!-- if first data field contain semantic object then smartlink to show semantic object info else  first data field value -->
+            <template:elseif
+                    test="{parts:[{path:'entitySet>'}, {path:'lineItem>'}], formatter: 'sap.ovp.cards.AnnotationHelper.semanticObjectOfFirstDataField'}">
+                    <navpopover:SmartLink
+                            class="sapOvpBarListDataField sapOvpOverflowEllipsisDataField sapOvpBarListTitle"
+                            text="{parts:[{path:'lineItem>'}, {path:'ovpConstants>/firstDataFieldIndex'}], formatter: 'sap.ovp.cards.AnnotationHelper.formatDataFieldValueOnIndex'}"
+                            semanticObject="{parts:[{path:'entitySet>'}, {path:'lineItem>'}], formatter: 'sap.ovp.cards.AnnotationHelper.semanticObjectOfFirstDataField'}"
+                            contactAnnotationPath="{parts:[{path:'lineItem>'}, {path:'ovpConstants>/firstDataFieldIndex'}], formatter: 'sap.ovp.cards.AnnotationHelper.checkNavTargetForContactAnno'}" enableAvailableActionsPersonalization="false"
+							forceLinkRendering="{parts: [{path: 'entitySet>'}], formatter: 'sap.ovp.cards.AnnotationHelper.checkForContactAnnotation'}">
+                    </navpopover:SmartLink>
+            </template:elseif>
+                <template:else>
+                    <Text
+                            id="DataField"
+                            class="sapOvpBarListDataField sapOvpOverflowEllipsisDataField sapOvpBarListTitle"
+                            text="{parts:[{path:'lineItem>'}, {path:'ovpConstants>/firstDataFieldIndex'}], formatter: 'sap.ovp.cards.AnnotationHelper.formatDataFieldValueOnIndex'}"/>
+                </template:else>
+            </template:if>
+            <HBox class="sapOvpBarListHBox sapOvpBarStandardList">
+                <micro:ComparisonMicroChart 
+                                            id= "BarChartDataPoint"
+                                            class="sapOvpBarListComparisonMicroChartAlignment" width="100%"
+                                            shrinkable="true"
+                                            colorPalette="{path: 'lineItem>', formatter: 'sap.ovp.cards.AnnotationHelper.colorPaletteForComparisonMicroChart'}"
+                                            minValue="{minMaxModel>/minValue}"
+                                            maxValue="{minMaxModel>/maxValue}"> 
+                    <micro:data> 
+                        <micro:ComparisonMicroChartData displayValue=" "
+                                                        value="{= '{path: \'' + ${path: 'lineItem>', formatter: 'sap.ovp.cards.AnnotationHelper.getFirstDataPointValue'} + '\', formatter: \'.returnBarChartValue\'}' }"
+                                                        color="{path: 'lineItem>', formatter: 'sap.ovp.cards.AnnotationHelper.formatFirstDataPointColor'}">
+
+                        </micro:ComparisonMicroChartData>
+
+                    </micro:data>
+
+                </micro:ComparisonMicroChart>
+                <template:if test="{= ${path: 'lineItem>', formatter: 'sap.ovp.cards.AnnotationHelper.getDataPointsCount'} > 0}" >
+                    <template:if test="{= ${path: 'lineItem>', formatter: 'sap.ovp.cards.AnnotationHelper.isFirstDataPointPercentageUnit'}}" >
+                        <template:then>
+                            <ObjectNumber
+                                    id="DataPoint1"
+                                    class="sapOvpBarListObjectNumber sapOvpBarListSubDataField sapOvpBarListObjectNumberPercentage"
+                                    textAlign="End"
+                                    number="{parts:[{path:'lineItem>'}, {path:'ovpConstants>/firstDataPointIndex'}], formatter: 'sap.ovp.cards.AnnotationHelper.formatDataPointValueOnIndex'}"/>
+                        </template:then>
+                        <template:else>
+                            <ObjectNumber
+                                    id="DataPoint1"
+                                    class="sapOvpBarListObjectNumber sapOvpBarListSubDataField sapOvpObjectNumber"
+                                    textAlign="End"
+                                    state="{path: 'lineItem>', formatter: 'sap.ovp.cards.AnnotationHelper.formatFirstDataPointState'}"
+                                    number="{parts:[{path:'lineItem>'}, {path:'ovpConstants>/firstDataPointIndex'}, {path:'ovpConstants>/dontIncludeUOM'}], formatter: 'sap.ovp.cards.AnnotationHelper.formatObjectNumber'}"
+                                    unit="{parts:[{path:'lineItem>'}, {path:'ovpConstants>/firstDataPointIndex'}], formatter: 'sap.ovp.cards.AnnotationHelper.formatUnit'}"/>
+                        </template:else>
+                    </template:if>
+                </template:if>
+
+                <template:if test="{= ${path: 'lineItem>', formatter: 'sap.ovp.cards.AnnotationHelper.isFirstContactAnnotation'} === true}">
+                    <template:then>
+                        <template:repeat list="{path:'lineItem>'}" var="dataField">
+                            <template:if
+                                    test="{= ${dataField>RecordType} === 'com.sap.vocabularies.UI.v1.DataFieldForAnnotation'}">
+                                <template:then>
+                                    <template:if
+                                            test="{= ${dataField>Target/AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Contact') >= 0}">
+                                        <template:then>
+                                            <template:with path="dataField>Target"
+                                                           helper="sap.ui.model.odata.AnnotationHelper.resolvePath"
+                                                           var="contact">
+                                                <VBox class="textAlignRight">
+                                                <core:Fragment fragmentName="sap.ovp.cards.generic.ContactDetails"
+                                                               type="XML"/>
+                                                <Link binding="{= ${ path: 'dataField>Target/AnnotationPath'}.indexOf('/') > -1 ? '{' + ${path: 'dataField>Target/AnnotationPath'}.slice(0, ${ path: 'dataField>Target/AnnotationPath'}.indexOf('/')) + '}' : null}"
+                                                      text="{path: 'contact>fn', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
+                                                      press="onContactDetailsLinkPress">
+                                                </Link>
+                                                </VBox>
+                                            </template:with>
+                                        </template:then>
+                                    </template:if>
+                                </template:then>
+                            </template:if>
+                        </template:repeat>
+                    </template:then>
+                    <template:else>
+                        <template:if test="{= ${path: 'lineItem>', formatter: 'sap.ovp.cards.AnnotationHelper.getDataPointsCount'} > 1}" >
+                            <ObjectNumber
+                                    id="DataPoint2"
+                                    class="{= ${path: 'lineItem>', formatter: 'sap.ovp.cards.AnnotationHelper.formatFirstDataPointState'} === 'None' ?
+                                            'sapOvpBarListObjectNumber sapOvpBarListSubDataField' : 'sapOvpBarListObjectNumber sapOvpBarListSubDataField sapOvpBarListObjectNumberWithoutState'} sapOvpObjectNumber"
+                                    textAlign="End"
+                                    number="{parts:[{path:'lineItem>'}, {path:'ovpConstants>/secondDataPointIndex'}, {path:'ovpConstants>/dontIncludeUOM'}], formatter: 'sap.ovp.cards.AnnotationHelper.formatObjectNumber'}"
+                                    state="{path: 'lineItem>', formatter: 'sap.ovp.cards.AnnotationHelper.formatSecondDataPointState'}"
+                                    unit="{parts:[{path:'lineItem>'}, {path:'ovpConstants>/secondDataPointIndex'}], formatter: 'sap.ovp.cards.AnnotationHelper.formatUnit'}"/>
+                        </template:if>
+                    </template:else>
+                </template:if>
+            </HBox>
+        </CustomListItem>
+    </items>
+
+</core:FragmentDefinition>

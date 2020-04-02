@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta charset="UTF-8">
+		<title>SAPUI5 Navigation</title>
+
+	</head>
+	<body id="content" class="sapUiBody">
+		<p>This sample application demonstrates a possible data drilldown or refinement. The sample implements two options in parallel:
+		<ul>
+		<li>An automatic drilldown based on the actual zoom level, and
+		<li>An explicite zoom and drilldown when clicking the object.
+		</ul>
+		The sample uses the <code>FeatureCollection</code> element, which allows the use of GeoJSON data as input. We use two different GeoJSON source files, 
+		one providing the country border, and the second providing county borders.</p>
+		<p>The GeoJSON files provide only the geometry data. In order to interact with the objects defined in the GeoJSON we need to add <code>Feature</code> elements
+		to the <code>FeatureCollection</code>. <code>Feature</code> work as active overlays on the GeoJSON objects allowing to change colors and to interact with them 
+		by handling event. The match between <code>Feature</code> elements and GeoJSON objects is done by ID. In our sample is the either the ISO country code or the 
+		ISO county code.</p>
+		<div class="row">
+			<h3>Add GeoMap control to view</h3>
+			<div class="col6">
+			   <h4>XML View code</h4>
+				<pre class="prettyprint lang-xml">
+&lt;GeoMap id="VBIDrillDown" 
+            width="100%" 
+            height="100%" 
+            centerPosition="10.298404;50.829142" 
+            zoomlevel="4" 
+            zoomChanged="onZoomChanged" /&gt;		
+				</pre> 			   
+    		</div>
+			<div class="col6">
+				<p>We start placing a plain <code>GeoMap</code> control on the view without any aggregation. Important is the assignment of the
+				handler function <code>onZoomChanged</code> to the map event <code>zoomChanged</code>. This will allow us to react on zoom changes.</p>  
+			</div>    		
+    	</div>
+
+ 		<div class="row">
+			<h3>Add a Model and Initialize the map display</h3>
+			<div class="col6">
+			   <h4>Controller code</h4>
+				<pre class="prettyprint lang-js">
+onInit : function () {				
+   var oModel = new sap.ui.model.json.JSONModel();
+   oModel.setData( this.oData );
+   this.getView().setModel(oModel);
+
+   this.oVBI = this.getView().byId("VBIDrillDown");
+   this.addFeatureCollection(0);
+},
+addFeatureCollection : function ( currentDetailLevel ) {
+   this.FCRef = new sap.ui.vbm.FeatureCollection( {
+      srcURL: (!currentDetailLevel) ? 
+         "media/L0_DE.json" : "media/L1_DE.json",
+      click : this.onClickFC.bind(this), 	  			
+      items: {
+         path: "/Features",
+         template: new sap.ui.vbm.Feature({
+			   color: '{color}', 
+				tooltip:'{tooltip}',
+				featureId : '{id}'
+		   })
+      }
+   });
+   this.oVBI.addFeatureCollection(this.FCRef);
+}	
+				</pre> 
+    		</div>
+			<div class="col6">
+				<p>In function <code>onInit</code> we create a <code>JSONModel</code>, give it some data and assign it to the view.
+				The model will serve as data source for our <code>Feature</code> overlays. Thus we need actually two models, one for 
+				the country level and one for the county level. Since we either show the country or the county level, we do not use 
+				two models in this sample, but exchange the data of the model. Therefore we define two data objects, <code>oData</code> 
+				and <code>oDataDetail</code> in the controller.</p>
+				<p>As last initilization step we call function <code>addFeatureCollection</code>. In this function we create a <code>FeatureCollection</code>
+				instance, with either the country (L0) or county (L1) GeoJSON as source depending on function parameter <code>currentDetailLevel</code>. </p>
+				<p>We add event handler <code>onClickFC</code> to react on click events of the feature collection. We use the bind function to srt the scope of 
+				the handler function to the controller instance.</p>
+				<p>Finally we add a <code>Feature</code> template for the <code>items</code> aggregation, bound to the model. Depending on the actual data given to the model, 
+				we will get <code>Feature</code> instances for the country or counties.</p>
+			</div>    		
+    	</div>   
+ 		<div class="row">
+			<h3>Zoom on click event</h3>
+			<div class="col6">
+			   <h4>Controller code</h4>
+				<pre class="prettyprint lang-js">			
+onClickFC : function (e) {
+   var id = e.getParameter("featureId");
+   var FeatureIds = [id];
+   var datas = this.FCRef.getFeaturesInfo(FeatureIds);
+   var bbs = [datas[id].BBox];
+   this.oVBI.zoomToAreas(bbs, 0.95);			
+}
+				</pre> 
+    		</div>	
+			<div class="col6">
+			<p>With the click event we receive the ID of the clicked feature as parameter. We can use the <code>getFeaturesInfo</code>
+			function of the <code>FeatureCollection</code> to retrieve additional information for that ID. One information is are the 
+			coordinates for the bounding box of that feature. We use this bounding box coordinates as input for <code>GeoMap</code> function 
+			<code>zoomToAreas</code> in order to focus the map display on that area. The second parameter of this function allows the add 
+			some margin to the visible map section.</p>			
+			</div>    								
+		</div>
+ 		<div class="row">
+			<h3>Adjust detail depending on zoom level</h3>
+			<div class="col6">
+			   <h4>Controller code</h4>
+				<pre class="prettyprint lang-js">
+onZoomChanged : function (e) {
+   var oVBI = this.oVBI;
+   if(oVBI) {
+      var switchZoomLevel = 5;
+      var zl = e.getParameter( "zoomLevel" );
+      var oModel = this.getView().getModel();
+      if(oVBI.getFeatureCollections().length > 0) {
+         if (zl > switchZoomLevel && 
+                             this.currentDetailLevel === 0){
+            oModel.setData( this.oDataDetail );
+            this.currentDetailLevel = 1;
+         } else if (zl <= switchZoomLevel && 
+                             this.currentDetailLevel === 1){
+            oModel.setData( this.oData );
+            this.currentDetailLevel = 0;
+         }
+         oVBI.removeFeatureCollection(this.FCRef);	
+         this.addFeatureCollection(this.currentDetailLevel);	
+      }
+   }
+}				
+				</pre>
+			</div>
+			<div class="col6">
+				<p>From the event <code>zoomChanged</code> we receive the new zoom level as parameter <code>zoomLevel</code>. We compare 
+				the new zoom level with our pre-defined <code>switchZoomLevel</code>.</p> 
+				<p>Is the new zoom level greater than the switch value 
+				and the <code>currentDetailLevel</code> is still zero we remove the current <code>FeatureCollection</code> instance from the 
+				<code>GeoMap</code> control by calling function <code>removeFeatureCollection</code>. Than we create a new feature collection for
+				detail level 1 and set also the model data to <code>this.oDataDetail</code>.</p>
+				<p>Is the new zoom level less or equal the switch value 
+				and the <code>currentDetailLevel</code> is 1 we remove the <code>FeatureCollection</code> instance from the 
+				<code>GeoMap</code> control, create a new feature collection for
+				detail level 0, and set also the model data back to <code>this.oData</code>.</p>				
+			</div>			
+		</div>	
+	</body>
+</html>

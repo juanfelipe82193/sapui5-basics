@@ -1,0 +1,298 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="utf-8">
+
+	<title>NetworkGraph</title>
+
+	<script id="sap-ui-bootstrap"
+			src="../../../../../resources/sap-ui-core.js"
+			data-sap-ui-noDuplicateIds="false"
+			data-sap-ui-libs="sap.m, sap.ui.commons, sap.suite.ui.commons"
+			data-sap-ui-theme="sap_belize">
+	</script>
+
+	<script type="text/javascript">
+		sap.ui.getCore().attachInit(function () {
+			sap.ui.require([
+				"sap/ui/model/json/JSONModel",
+				"sap/m/HBox",
+				"sap/m/Button",
+				"sap/m/Select",
+				"sap/m/Slider",
+				"sap/m/ResponsiveScale",
+				"sap/m/Label",
+				"sap/ui/core/Item",
+				"sap/ui/layout/HorizontalLayout",
+				"sap/ui/layout/VerticalLayout",
+				"sap/suite/ui/commons/networkgraph/Orientation",
+				"sap/suite/ui/commons/networkgraph/NodeShape",
+				"sap/suite/ui/commons/networkgraph/LineArrowPosition",
+				"sap/suite/ui/commons/networkgraph/Graph",
+				"sap/suite/ui/commons/networkgraph/Node",
+				"sap/suite/ui/commons/networkgraph/Line",
+				"sap/suite/ui/commons/networkgraph/Group",
+				"sap/suite/ui/commons/networkgraph/ElementAttribute",
+				"sap/suite/ui/commons/networkgraph/layout/LayeredLayout",
+				"sap/suite/ui/commons/networkgraph/layout/SwimLaneChainLayout",
+				"sap/suite/ui/commons/networkgraph/layout/ForceBasedLayout",
+				"sap/suite/ui/commons/networkgraph/layout/ForceDirectedLayout",
+				"sap/suite/ui/commons/networkgraph/layout/TwoColumnsLayout"
+			], function (JSONModel, HBox, Button, Select, Slider, ResponsiveScale, Label, Item, HorizontalLayout, VerticalLayout,
+						 Orientation, NodeShape, ArrowPosition, Graph, Node, Line, Group, ElementAttribute,
+						 LayeredLayout, SwimLaneChainLayout, ForceBasedLayout, ForceDirectedLayout, TwoColumnsLayout) {
+				var oGraph = new Graph({
+					orientation: "{settings>/orientation}",
+					nodes: {
+						path: "/nodes",
+						template: new Node({
+							key: "{key}",
+							title: "{title}",
+							height: "{height}",
+							width: "{width}",
+							shape: "{settings>/nodeShape}",
+							group: "{group}",
+							status: "{status}",
+							x: "{x}",
+							y: "{y}",
+							descriptionLineSize: 0,
+							description: "{description}",
+							attributes: {
+								path: "attributes",
+								template: new ElementAttribute({
+									label: "{label}",
+									value: "{value}"
+								})
+							}
+						})
+					},
+					lines: {
+						path: "/lines",
+						template: new Line({
+							from: "{from}",
+							to: "{to}",
+							arrowPosition: "{settings>/arrowPosition}",
+							arrowOrientation: "ParentOf",
+//							status: "{status}"
+							status: "Error"
+						})
+					},
+					groups: {
+						path: "/groups",
+						template: new Group({
+							key: "{key}",
+							title: "{title}",
+							minWidth: "{minWidth}",
+							status: "{status}",
+							collapsed: "{collapsed}",
+							parentGroupKey: "{parentGroupKey}"
+						})
+					},
+					layoutAlgorithm: new TwoColumnsLayout()
+				});
+
+				var aSampleLib = [
+						"etalon",
+						"alain-brieuc-gall",
+						"approvals",
+						"crm-processflow",
+						"customer-vendor-docs",
+						"hr-recruiting",
+						"order-processing",
+						"order-to-cash",
+						"payroll-process",
+						"pizza-baking",
+						"pizza-delivery",
+						"prashant-soni",
+						"product-purchasing",
+						"query-execution",
+						"single-sign-on",
+						"software-service",
+						"work-request",
+						"x-functional-process-map"
+					],
+					aForceSampleLib = [
+						"albg-providersLinedUp",
+						"galaxy",
+						"flatGalaxy",
+						"triangleGalaxy",
+						"mendelejev",
+						"mendelejevFixedGrid",
+						"miserables",
+						"mcu"
+					],
+					aTwoColumnsSampleLib = [
+						"two-column-basic",
+						"two-column-lines",
+						"two-column-reality-check"
+					],
+					aLayoutMap = {
+						"Layered": new LayeredLayout(),
+						"SwimLane": new SwimLaneChainLayout(),
+						"ForceBased": new ForceBasedLayout(),
+						"ForceDirected": new ForceDirectedLayout({
+							optimalDistanceConstant: "{settings>/optimalDistanceConstant}",
+							maxIterations: "{settings>/maxIterations}",
+							maxTime: "{settings>/maxTime}",
+							initialTemperature: "{settings>/initialTemperature}",
+							coolDownStep: "{settings>/coolDownStep}"
+						}),
+						"TwoColumns": new TwoColumnsLayout()
+					},
+					oSampleNameLabel;
+
+				new VerticalLayout({id: "vertical1"}).placeAt("content");
+				[1, 2, 3, 4].forEach(function (n) {
+					new HorizontalLayout({id: "controlsLine" + n, allowWrapping: true}).placeAt("vertical1");
+				});
+				new Label({text: "Layers/Lanes:"}).addStyleClass("sapUiSmallMargin").placeAt("controlsLine1");
+				new Label({text: "Forces:"}).addStyleClass("sapUiSmallMargin").placeAt("controlsLine2");
+				new Label({text: "Two Colunms:"}).addStyleClass("sapUiSmallMargin").placeAt("controlsLine3");
+
+				var fnUpdateStaticNodes = function () {
+						if (oGraph.getLayoutAlgorithm() && oGraph.getLayoutAlgorithm().setStaticNodes) {
+							oData = sap.ui.getCore().getModel().getData();
+							if (oData.layoutAlgorithm) {
+								oGraph.getLayoutAlgorithm().setStaticNodes(oData.layoutAlgorithm.staticNodes);
+							} else {
+								oGraph.getLayoutAlgorithm().setStaticNodes([]);
+							}
+						}
+					},
+					fnSetModel = function (sName) {
+						var oModel = new JSONModel("data/" + sName + ".json");
+						oModel.setSizeLimit(Number.MAX_SAFE_INTEGER);
+						sap.ui.getCore().setModel(oModel);
+						oSampleNameLabel.setText("Current: " + sName);
+						oModel.attachRequestCompleted(function () {
+							fnUpdateStaticNodes();
+						});
+					};
+
+				aSampleLib.forEach(function (sName) {
+					new Button({
+						text: sName,
+						press: function () {
+							fnSetModel(sName);
+						}
+					}).placeAt("controlsLine1");
+				});
+				aForceSampleLib.forEach(function (sName) {
+					new Button({
+						text: sName,
+						press: function () {
+							fnSetModel(sName);
+						}
+					}).placeAt("controlsLine2");
+				});
+				aTwoColumnsSampleLib.forEach(function (sName) {
+					new Button({
+						text: sName,
+						press: function () {
+							fnSetModel(sName);
+						}
+					}).placeAt("controlsLine3");
+				});
+
+				var sInitGraph = "two-column-basic";
+				oSampleNameLabel = new Label({
+					text: "Current: " + sInitGraph
+				});
+				oSampleNameLabel.addStyleClass("sapUiSmallMargin");
+				oSampleNameLabel.placeAt("controlsLine4");
+
+				// Layout
+				var oLayout, oData;
+				new Select({
+					change: function (event) {
+						oLayout = aLayoutMap[event.getParameter("selectedItem").getProperty("key")];
+						oGraph.setLayoutAlgorithm(oLayout);
+						fnUpdateStaticNodes();
+					},
+					items: [
+						new Item({text: "Layered", key: "Layered"}),
+						new Item({text: "Swim Lane", key: "SwimLane"}),
+						new Item({text: "Force Based", key: "ForceBased"}),
+						new Item({text: "Force Directed", key: "ForceDirected"}),
+						new Item({text: "Two Columns", key: "TwoColumns"})]
+				}).placeAt("controlsLine4");
+
+				// Orientation
+				new Select({
+					selectedKey: "{settings>/orientation}",
+					items: [
+						new Item({text: "LeftRight", key: Orientation.LeftRight}),
+						new Item({text: "RightLeft", key: Orientation.RightLeft}),
+						new Item({text: "TopBottom", key: Orientation.TopBottom}),
+						new Item({text: "BottomTop", key: Orientation.BottomTop})]
+				}).placeAt("controlsLine4");
+
+				// Node shape
+				new Select({
+					selectedKey: "{settings>/nodeShape}",
+					items: [
+						new Item({text: "Box", key: NodeShape.Box}),
+						new Item({text: "Circle", key: NodeShape.Circle})]
+				}).placeAt("controlsLine4");
+
+				// Arrow position
+				new Select({
+					selectedKey: "{settings>/arrowPosition}",
+					items: [
+						new Item({text: "Start", key: ArrowPosition.Start}),
+						new Item({text: "Middle", key: ArrowPosition.Middle}),
+						new Item({text: "End", key: ArrowPosition.End})]
+				}).placeAt("controlsLine4");
+
+				// ForceDirected
+				var oScale = new ResponsiveScale({tickmarksBetweenLabels: 2});
+				new HBox({
+					width: "100%",
+					renderType: "Bare",
+					items: [
+						new Label({text: "ODC:"}),
+						new Slider({width: "20%", value: "{settings>/optimalDistanceConstant}", min: 0.1, max: 0.6, step: 0.1, enableTickmarks: true, scale: oScale}),
+						new Label({text: "Iter:"}),
+						new Slider({width: "20%", value: "{settings>/maxIterations}", min: 50, max: 300, step: 50, enableTickmarks: true, scale: oScale}),
+						new Label({text: "Time:"}),
+						new Slider({width: "20%", value: "{settings>/maxTime}", min: 0, max: 3000, step: 500, enableTickmarks: true, scale: oScale}),
+						new Label({text: "Temp:"}),
+						new Slider({width: "20%", value: "{settings>/initialTemperature}", min: 50, max: 300, step: 50, enableTickmarks: true, scale: oScale}),
+						new Label({text: "Cool:"}),
+						new Slider({width: "10%", value: "{settings>/coolDownStep}", min: 0.5, max: 2, step: 0.5, enableTickmarks: true, scale: oScale})
+					]
+				}).placeAt("content");
+
+				// Main model
+				var oModel = new JSONModel("data/" + sInitGraph + ".json");
+				oModel.setSizeLimit(Number.MAX_SAFE_INTEGER);
+				sap.ui.getCore().setModel(oModel);
+
+				// Settings model
+				this.oModelSettings = new JSONModel({
+					orientation: "LeftRight",
+					nodeShape: "Box",
+					arrowPosition: "End",
+					arrowOrientation: "ParentOf",
+					// ForceDirected
+					optimalDistanceConstant: 0.4,
+					maxIterations: 200,
+					maxTime: 2000,
+					initialTemperature: 200,
+					coolDownStep: 1
+				});
+				sap.ui.getCore().setModel(this.oModelSettings, "settings");
+
+				oGraph.getToolbar().setVisible(false);
+				oGraph.placeAt("content");
+			});
+			"use strict";
+		});
+	</script>
+
+</head>
+<body class="sapUiBody" role="application">
+<div id="content" style="height:100%"></div>
+</body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 31: Routing and Navigation</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="So far, we have put all app content on one single page. As we add more and more features, we want to split the content and put it on separate pages."><meta name="description" content="So far, we have put all app content on one single page. As we add more and more features, we want to split the content and put it on separate pages."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"2366345a94f64ec1a80f9d9ce50a59ef.html","previousTopicHref":"1ff250c2038849f5991209f7e6c36f1f.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/1ff250c2038849f5991209f7e6c36f1f.html" title="Even though we have added a basic test coverage in the previous steps, it seems like we accidentally broke our app, because it does not display prices to our invoices anymore. We need to debug the issue and fix it before someone finds out." target="_top">Step 30: Debugging Tools</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/2366345a94f64ec1a80f9d9ce50a59ef.html" title="We can now navigate between the overview and the detail page, but the actual item that we selected in the overview is not displayed on the detail page yet. A typical use case for our app is to show additional information for the selected item on the detail page." target="_top">Step 32: Routing with Parameters</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loioe5200ee755f344c8aef8efcbab3308fb"><h1 class="title topictitle1" hidden>Step 31: Routing and Navigation</h1><div class="body conbody"><p class="shortdesc" hidden>So far, we have put all app content on one single page. As we add more and more features, we want to split the content and put it on separate pages.</p>
+<p class="p"> In this step, we will use the <span class="ph"><span class="ph pname">SAPUI5</span></span> navigation features
+to load and show a separate detail page that we can later use to display details for an
+invoice. In the previous steps, we defined the page directly in the app view so that it
+is displayed when the app is loaded. We will now use the <span class="ph"><span class="ph pname">SAPUI5</span></span> router class to load
+the pages and update the URL for us automatically. We specify a routing configuration
+for our app and create a separate view for each page of the app, then we connect the
+views by triggering navigation events.</p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loioe5200ee755f344c8aef8efcbab3308fb__fig_r1j_pst_mr"><div class="figbody">
+
+<img class="inline  " id="loioe5200ee755f344c8aef8efcbab3308fb__image_nl4_kfm_yr" src="loioa1d85cc6f6b4452cac5382afd0a29699_HiRes.png">
+</div><span class="figcap">A second page is added to display the invoice</span></div>
+</section></div>
+<div class="section">
+<div class="section_title">Coding</div>
+<p class="p">You can view and download all files <span class="ph">at <a class="xref" href="../../#/sample/sap.m.tutorial.walkthrough.31/preview" target="_top" alt="#/sample/sap.m.tutorial.walkthrough.31/preview" title="#/sample/sap.m.tutorial.walkthrough.31/preview">Walkthrough - Step 31</a></span>.</p>
+<div class="section_title">webapp/manifest.json</div>
+<pre class="pre codeblock prettyprint lang-js">{
+  &quot;_version&quot;: &quot;1.12.0&quot;,
+  &#x2026;
+  &quot;sap.ui5&quot;: {
+	&#x2026;
+	&quot;models&quot;: {
+		&#x2026;
+	}<span class="ph emphasis emphasis">,
+	&quot;routing&quot;: {
+	  &quot;config&quot;: {
+		&quot;routerClass&quot;: &quot;sap.m.routing.Router&quot;,
+		&quot;viewType&quot;: &quot;XML&quot;,
+		&quot;viewPath&quot;: &quot;sap.ui.demo.walkthrough.view&quot;,
+		&quot;controlId&quot;: &quot;app&quot;,
+		&quot;controlAggregation&quot;: &quot;pages&quot;,
+		&quot;async&quot;: true
+	  },
+	  &quot;routes&quot;: [
+		{
+		  &quot;pattern&quot;: &quot;&quot;,
+		  &quot;name&quot;: &quot;overview&quot;,
+		  &quot;target&quot;: &quot;overview&quot;
+		},
+		{
+		  &quot;pattern&quot;: &quot;detail&quot;,
+		  &quot;name&quot;: &quot;detail&quot;,
+		  &quot;target&quot;: &quot;detail&quot;
+		}
+	  ],
+	  &quot;targets&quot;: {
+		&quot;overview&quot;: {
+		  &quot;viewId&quot;: &quot;overview&quot;,
+		  &quot;viewName&quot;: &quot;Overview&quot;
+		},
+		&quot;detail&quot;: {
+		  &quot;viewId&quot;: &quot;detail&quot;,
+		  &quot;viewName&quot;: &quot;Detail&quot;
+		}
+	  }
+	}</span>
+  }
+}</pre>
+<div class="p">We add a new &#x201C;routing&quot; section to the <samp class="ph codeph">sap.ui5</samp> part of the descriptor. There
+are three subsections that define the routing and navigation structure of the app:
+<ul class="ul" id="loioe5200ee755f344c8aef8efcbab3308fb__ul_os5_n3m_yr">
+<li class="li">
+<p class="p"><samp class="ph codeph">config</samp></p>
+<p class="p">This section contains the global router configuration and default values
+that apply for all routes and targets. We define the router class that
+we want to use and where our views are located in the app. To load and
+display views automatically, we also specify which control is used to
+display the pages and what aggregation should be filled when a new page
+is displayed.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">routes</samp></p>
+<p class="p">Each route defines a name, a pattern, and one or more targets to navigate to when the route
+has been hit. The pattern is basically the URL part that matches to the
+route, we define two routes for our app. The first one is a default
+route that will show the overview page with the content from the
+previous steps, and the second is the detail route with the URL pattern
+<samp class="ph codeph">detail</samp> that will show a new page.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">targets</samp></p>
+<p class="p"> A target defines a view that is displayed, it is associated with one or more routes and it
+can also be displayed manually from within the app. Whenever a target is
+displayed, the corresponding view is loaded and shown in the app. In our
+app we simply define two targets with a view name that corresponds to
+the target name. </p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section"><section class="section" type="webapp/Component.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/Component.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/core/UIComponent&quot;,
+	&quot;sap/ui/model/json/JSONModel&quot;,
+	&quot;./controller/HelloDialog&quot;
+], function (UIComponent, JSONModel, HelloDialog) {
+	&quot;use strict&quot;;
+
+	return UIComponent.extend(&quot;sap.ui.demo.walkthrough.Component&quot;, {
+
+		metadata: {
+			manifest: &quot;json&quot;
+		},
+
+		init: function () {
+			// call the init function of the parent
+			UIComponent.prototype.init.apply(this, arguments);
+
+			// set data model
+			var oData = {
+				recipient: {
+					name: &quot;World&quot;
+				}
+			};
+			var oModel = new JSONModel(oData);
+			this.setModel(oModel);
+
+			// set dialog
+			this._helloDialog = new HelloDialog(this.getRootControl());
+			<span class="ph emphasis emphasis">// create the views based on the url/hash
+			this.getRouter().initialize();</span>
+		},
+	});
+
+		exit : function () {
+			this._helloDialog.destroy();
+			delete this._helloDialog;
+		},
+
+		openHelloDialog : function () {
+			this._helloDialog.open();
+		}
+	});
+
+});</pre>
+<p class="p">In the component initialization method, we now add a call to initialize the router.
+We do not need to instantiate the router manually, it is automatically instantiated
+based on our <samp class="ph codeph">AppDescriptor</samp> configuration and assigned to the
+component.</p>
+<p class="p">Initializing the router will evaluate the current URL and load the corresponding view
+automatically. This is done with the help of the routes and targets that have been
+configured in the <samp class="ph codeph">AppDescriptor</samp>. If a route has been hit, the view
+of its corresponding target is loaded and displayed.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/view/Overview.view.xml (New)"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/Overview.view.xml (New)</h2>
+
+<pre class="pre codeblock prettyprint lang-xml"><span class="ph emphasis emphasis">&lt;mvc:View
+		controllerName=&quot;sap.ui.demo.walkthrough.controller.App&quot;
+		xmlns=&quot;sap.m&quot;
+		xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;Page title=&quot;{i18n&gt;homePageTitle}&quot;&gt;
+		&lt;headerContent&gt;
+			&lt;Button
+					icon=&quot;sap-icon://hello-world&quot;
+					press=&quot;.onOpenDialog&quot;/&gt;
+		&lt;/headerContent&gt;
+		&lt;content&gt;
+			&lt;mvc:XMLView viewName=&quot;sap.ui.demo.walkthrough.view.HelloPanel&quot;/&gt;
+			&lt;mvc:XMLView viewName=&quot;sap.ui.demo.walkthrough.view.InvoiceList&quot;/&gt;
+		&lt;/content&gt;
+	&lt;/Page&gt;
+&lt;/mvc:View&gt;</span></pre>
+<p class="p">We move the content of the previous steps from the <samp class="ph codeph">App</samp> view to a new
+<samp class="ph codeph">Overview</samp> view. For simplicity, we do not change the controller
+as it only contains our helper method to open the dialog, that means we reuse the
+controller <samp class="ph codeph">sap.ui.demo.walkthrough.controller.App</samp> for two different views
+(for the new overview and for the app view). However, two instances of that
+controller are instantiated at runtime. In general, one instance of a controller is
+instantiated for each view that references the controller.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/view/App.view.xml"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/App.view.xml</h2>
+
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+		controllerName=&quot;sap.ui.demo.walkthrough.controller.App&quot;
+		xmlns=&quot;sap.m&quot;
+		xmlns:mvc=&quot;sap.ui.core.mvc&quot;
+		displayBlock=&quot;true&quot;&gt;
+<span class="ph emphasis emphasis">&lt;Shell&gt;
+	&lt;App class=&quot;myAppDemoWT&quot; id=&quot;app&quot;/&gt;
+&lt;/Shell&gt;</span>
+&lt;/mvc:View&gt;</pre>
+<p class="p">Our <samp class="ph codeph">App</samp> view is now only containing the empty app tag. The router will
+automatically add the view that corresponds to the current URL into the app control.
+The router identifies the app control with the ID that corresponds to the property
+<samp class="ph codeph">controlId: &#x201C;app&#x201D;</samp> in the <samp class="ph codeph">AppDescriptor</samp>.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/view/Detail.view.xml (New)"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/Detail.view.xml (New)</h2>
+
+<pre class="pre codeblock prettyprint lang-xml"><span class="ph emphasis emphasis">&lt;mvc:View
+	xmlns=&quot;sap.m&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;Page
+		title=&quot;{i18n&gt;detailPageTitle}&quot;&gt;
+		&lt;ObjectHeader
+			title=&quot;Invoice&quot;/&gt;
+	&lt;/Page&gt;
+&lt;/mvc:View&gt;</span></pre>
+<p class="p">Now we add a second view for the detail view. It only contains a page and an
+<samp class="ph codeph">ObjectHeader</samp> control that displays the static text
+<span class="ph uicontrol">Invoice</span> for now. </p>
+</section></div>
+<div class="section"><section class="section" type="webapp/i18n/i18n.properties"><h2 class="section_title" style="font-size: 1.15em;">webapp/i18n/i18n.properties</h2>
+
+<pre class="pre codeblock prettyprint lang-prefs">&#x2026;
+# Invoice List
+invoiceListTitle=Invoices
+invoiceStatusA=New
+invoiceStatusB=In Progress
+invoiceStatusC=Done
+
+<span class="ph emphasis emphasis"># Detail Page
+detailPageTitle=Walkthrough - Details</span></pre>
+<p class="p">We add a new string to the resource bundle for the detail page title.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/view/InvoiceList.view.xml"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/InvoiceList.view.xml</h2>
+
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+		controllerName=&quot;sap.ui.demo.walkthrough.controller.InvoiceList&quot;
+		xmlns=&quot;sap.m&quot;
+		xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;List	&#x2026;&gt;
+		&#x2026;
+		&lt;items&gt;
+			&lt;ObjectListItem
+					
+					title=&quot;{invoice&gt;Quantity} x {invoice&gt;ProductName}&quot;
+					number=&quot;{
+					parts: [{path: &apos;invoice&gt;ExtendedPrice&apos;}, {path: &apos;view&gt;/currency&apos;}],
+					type: &apos;sap.ui.model.type.Currency&apos;,
+					formatOptions: {
+						showMeasure: false
+					}
+				}&quot;
+					numberUnit=&quot;{view&gt;/currency}&quot;
+					numberState=&quot;{=	${invoice&gt;ExtendedPrice} &gt; 50 ? &apos;Error&apos; : &apos;Success&apos; }&quot;
+					<span class="ph emphasis emphasis">type=&quot;Navigation&quot;
+					press=&quot;onPress&quot;</span>&gt;
+				&lt;firstStatus&gt;
+					&lt;ObjectStatus text=&quot;{
+						path: &apos;invoice&gt;Status&apos;,
+						formatter: &apos;.formatter.statusText&apos;
+					}&quot;/&gt;
+				&lt;/firstStatus&gt;
+			&lt;/ObjectListItem&gt;
+		&lt;/items&gt;
+	&lt;/List&gt;
+&lt;/mvc:View&gt;</pre>
+<p class="p">In the invoice list view we add a press event to the list item and set the item type to
+<samp class="ph codeph">Navigation</samp> so that the item can actually be clicked.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/controller/InvoiceList.controller.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/controller/InvoiceList.controller.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/core/mvc/Controller&quot;,
+	&quot;sap/ui/model/json/JSONModel&quot;,
+	&quot;../model/formatter&quot;,
+	&quot;sap/ui/model/Filter&quot;,
+	&quot;sap/ui/model/FilterOperator&quot;
+], function (Controller, JSONModel, formatter, Filter, FilterOperator) {
+	&quot;use strict&quot;;
+
+	return Controller.extend(&quot;sap.ui.demo.walkthrough.controller.InvoiceList&quot;, {
+
+		&#x2026;
+
+		<span class="ph emphasis emphasis">onPress: function (oEvent) {
+			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+			oRouter.navTo(&quot;detail&quot;);
+		}</span>
+	});
+
+});</pre>
+<p class="p">We add the event handler function to the controller of our invoices list. Now it is
+time to navigate to the detail page by clicking an item in the invoice list. We
+access the router instance for our app by calling the helper method
+<samp class="ph codeph">sap.ui.core.UIComponent.getRouterFor(this)</samp>. On the router we
+call the <samp class="ph codeph">navTo</samp> method to navigate to the <samp class="ph codeph">detail</samp>
+route that we specified in the routing configuration.</p>
+<p class="p">You should now see the detail page when you click an item in the list of invoices.</p>
+</section></div>
+<div class="section"><section class="section" type="Conventions"><h2 class="section_title" style="font-size: 1.15em;"> Conventions</h2>
+
+<ul class="ul" id="loioe5200ee755f344c8aef8efcbab3308fb__ul_nh5_ybb_nr">
+<li class="li">
+<p class="p">Define the routing configuration in the descriptor</p>
+</li>
+</ul>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/1ff250c2038849f5991209f7e6c36f1f.html" title="Even though we have added a basic test coverage in the previous steps, it seems like we accidentally broke our app, because it does not display prices to our invoices anymore. We need to debug the issue and fix it before someone finds out." target="_top">Step 30: Debugging Tools</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/2366345a94f64ec1a80f9d9ce50a59ef.html" title="We can now navigate between the overview and the detail page, but the actual item that we selected in the overview is not displayed on the detail page yet. A typical use case for our app is to show additional information for the selected item on the detail page." target="_top">Step 32: Routing with Parameters</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/3d18f20bd2294228acb6910d8e8a5fb5.html" title="SAPUI5 offers hash-based navigation, which allows you to build single-page apps where the navigation is done by changing the hash. In this way the browser does not have to reload the page; instead there is a callback to which the app and especially the affected view can react. A hash string is parsed and matched against patterns which will then inform the handlers." target="_top">Routing and Navigation</a></div><div><a class="link" href="../../#/topic/1b6dcd39a6a74f528b27ddb22f15af0d.html" title="SAPUI5 comes with a powerful routing API that helps you control the state of your application efficiently. This tutorial will illustrate all major features and APIs related to navigation and routing in SAPUI5 apps by creating a simple and easy to understand mobile app. It represents a set of best practices for applying the navigation and routing features of SAPUI5 to your applications." target="_top">Tutorial: Navigation and Routing</a></div><div><a class="link" href="../../#/api/sap.m.routing.Router" target="_top" alt="#/api/sap.m.routing.Router" title="#/api/sap.m.routing.Router">API Reference: <samp class="ph codeph">sap.m.routing.Router</samp></a></div><div><a class="link" href="../../#/entity/sap.m.routing.Router" target="_top" alt="#/entity/sap.m.routing.Router" title="#/entity/sap.m.routing.Router">Samples: <samp class="ph codeph">sap.m.routing.Router</samp>
+</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

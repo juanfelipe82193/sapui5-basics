@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DeltaMicroChart - sap.suite.ui.commons</title>
+
+<!-- UI5 Bootstrap -->
+<script src="../../../../../resources/sap-ui-core.js"
+        type="text/javascript"
+        id="sap-ui-bootstrap"
+        data-sap-ui-libs="sap.ui.commons,sap.suite.ui.commons,sap.m,sap.ui.ux3"
+        data-sap-ui-theme="sap_bluecrystal"></script>
+
+<style type="text/css">
+	.sapMFlexItem {
+		margin: 10px 1px 0 1px;
+	}
+</style>
+
+<script src="locationColor.js" ></script>
+
+<script type="text/javascript">
+    jQuery.sap.initMobile();
+
+    function _fnParseFloat(fValue) {
+    	if (!fValue || 0==fValue.length || "-"==fValue) {
+    		return undefined;
+    	} if (/[.,]$/.test(fValue)) {
+    		return sap.ui.core.format.NumberFormat.getFloatInstance().parse(fValue.slice(0, -1));
+    	} else {
+	    	return sap.ui.core.format.NumberFormat.getFloatInstance().parse(fValue);
+    	}
+    };
+    
+    var oConfDMCData = {
+        sizes: {
+            M: sap.suite.ui.commons.InfoTileSize.M,
+            S: sap.suite.ui.commons.InfoTileSize.S,
+            Auto: sap.suite.ui.commons.InfoTileSize.Auto
+        },
+		value1: 20,
+    	value2: 200,
+    	title1: "May 2014",
+    	title2: "Apr 2014",
+    	displayValue1: "8833 Mio",
+    	displayValue2: "8888 Mio",
+    	deltaDisplayValue: "5555 Mio",
+    	tooltip: "Cumulative Totals\n{AltText}\ncalculated in EURO"
+    };
+
+    var oConfModel = new sap.ui.model.json.JSONModel();
+    oConfModel.setData(oConfDMCData);
+    sap.ui.getCore().setModel(oConfModel);
+
+    var fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The delta micro chart is pressed.");
+	};
+    
+	var aDMCs = [];
+    var buildDMC = function(sSize, sText) {
+        
+	    var oDMCTmpl = new sap.suite.ui.commons.DeltaMicroChart("delta-chart-"+sSize, {
+	        size: "{/sizes/"+ sSize +"}",
+		   	value1: "{/value1}",
+		   	value2: "{/value2}",
+		   	title1: "{/title1}",
+		   	title2: "{/title2}",
+		   	displayValue1: "{/displayValue1}",
+		   	displayValue2: "{/displayValue2}",
+		   	deltaDisplayValue: "{/deltaDisplayValue}",
+		   	color: "{/color}",
+		   	width: "{/width}",
+	        press: fnPress,
+	        tooltip: "{/tooltip}"
+		});
+	    
+	    aDMCs.push(oDMCTmpl);
+
+	    return new sap.m.FlexBox("dmc-fb-"+sSize, {
+	    	items: [oDMCTmpl],
+       		layoutData: new sap.ui.commons.layout.ResponsiveFlowLayoutData({ minWidth: 200 }),
+       		height: "110px"
+	    });
+	};
+	    	
+	var oDMCForm = new sap.ui.layout.form.SimpleForm("dmc-form", {
+		content: [
+            	buildDMC(sap.suite.ui.commons.InfoTileSize.M), 
+            	buildDMC(sap.suite.ui.commons.InfoTileSize.S), 
+            	buildDMC(sap.suite.ui.commons.InfoTileSize.Auto)
+		]
+	});
+    
+    var oTooltipLbl = new sap.m.Label({
+		text : "Tooltip",
+		labelFor : "tooltip"
+	});
+
+    var oTooltipInput = new sap.m.TextArea("tooltip", {
+    	rows: 3,
+        placeholder: 'Enter tooltip (use {AltText} for inserting the default text) ...',
+        value: "{/tooltip}"
+    });
+	
+    var oTooltipSwtchLbl = new sap.m.Label({
+		text : "QuickView Tooltip",
+		labelFor : "tooltip-swtch"
+	});
+
+    var oTooltipSwtch = new sap.m.Switch({ 
+		id: "tooltip-swtch", 
+		state: false,
+		name: "QuickView tooltip",
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			for (var i = 0; i < aDMCs.length; i++) {
+				aDMCs[i].setTooltip(bState ? 
+						new sap.ui.ux3.QuickView({	content: new sap.m.Text({ text: oTooltipInput.getValue().split("{AltText}").join(aDMCs[i].getAltText()) })})
+						: oTooltipInput.getValue());
+			}
+		}
+	});
+    
+    var oFirstValueLbl = new sap.m.Label({
+        text: "value1",
+        labelFor: "first-value"
+    });
+
+    var oFirstValueInput = new sap.m.Input("first-value", {
+        placeholder: 'Enter the first value ...',
+        value: {
+            path: "/value1",
+            type: new sap.ui.model.type.Float({groupingEnabled: false})
+        },
+        liveChange: function(oControlEvent) {
+        	var fValue = _fnParseFloat(oControlEvent.getParameter("newValue"));
+        	if (typeof fValue == "undefined" || !isNaN(fValue)) {
+       			oConfDMCData.value1 = fValue; 
+       			oConfModel.checkUpdate(); 
+        	}
+        }
+    });
+
+    var oSecondValueLbl = new sap.m.Label({
+        text: "value2",
+        labelFor: "second-value"
+    });
+
+    var oSecondValueInput = new sap.m.Input("second-value", {
+        placeholder: 'Enter the second value ...',
+        value: {
+            path: "/value2",
+            type: new sap.ui.model.type.Float({groupingEnabled: false})
+        },
+        liveChange: function(oControlEvent) {
+        	var fValue = _fnParseFloat(oControlEvent.getParameter("newValue"));
+        	if (typeof fValue == "undefined" || !isNaN(fValue)) {
+       			oConfDMCData.value2 = fValue; 
+       			oConfModel.checkUpdate(); 
+        	}
+        }
+    });
+    
+    var oDisplayValue1Lbl = new sap.m.Label({
+		text : "Display Value 1",
+		labelFor : "display-value-1"
+	});
+
+    var oDisplayValue1Input = new sap.m.Input("display-value-1", {
+        placeholder: 'Enter display value 1...',
+        value: "{/displayValue1}"
+    });
+
+    var oDisplayValue2Lbl = new sap.m.Label({
+		text : "Display Value 2",
+		labelFor : "display-value-2"
+	});
+
+    var oDisplayValue2Input = new sap.m.Input("display-value-2", {
+        placeholder: 'Enter display value 2...',
+        value: "{/displayValue2}"
+    });
+
+    var oDeltaDisplayValueLbl = new sap.m.Label({
+		text : "Delta Display Value",
+		labelFor : "delta-display-value"
+	});
+
+    var oDeltaDisplayValueInput = new sap.m.Input("delta-display-value", {
+        placeholder: 'Enter delta display value...',
+        value: "{/deltaDisplayValue}"
+    });
+
+    var oTitle1Lbl = new sap.m.Label({
+        text: "Title 1",
+        labelFor: "title-1"
+    });
+    
+    var oTitle1Input = new sap.m.Input("title-1", {
+        placeholder: 'Enter title 1 ...',
+        value: "{/title1}"
+    });
+    
+    var oTitle2Lbl = new sap.m.Label({
+        text: "Title 2",
+        labelFor: "title-2"
+    });
+    
+    var oTitle2Input = new sap.m.Input("title-2", {
+        placeholder: 'Enter title 2 ...',
+        value: "{/title2}"
+    });
+    
+	var oSColorLabel = new sap.m.Label("color-label", { text: "Color", labelFor: "color-select"  }); 
+	
+    var buildColorItem = function(sId, sColor) {
+		return new sap.ui.core.Item(sId+"-"+sColor, { key: sColor, text: sColor });    	
+    };
+
+    var oSColorSelect = new sap.m.Select("color-select", {
+        width: "10rem",
+        items: [
+			buildColorItem("color-select", sap.suite.ui.commons.InfoTileValueColor.Neutral),
+			buildColorItem("color-select", sap.suite.ui.commons.InfoTileValueColor.Good),
+			buildColorItem("color-select", sap.suite.ui.commons.InfoTileValueColor.Error),
+			buildColorItem("color-select", sap.suite.ui.commons.InfoTileValueColor.Critical)
+        ],
+        selectedItemId: "color-select-" + oConfDMCData.color,
+        change: function(oEvent) {
+            var oSelectedItem = oEvent.getParameter("selectedItem");
+            oConfDMCData.color = oSelectedItem.getKey();
+            oConfModel.checkUpdate();            
+        }
+    });
+    
+    var oWidthLbl = new sap.m.Label({
+        text: "Width",
+        labelFor: "scale-width"
+    });
+    
+    var patt = new RegExp("^\\d+(px|rem|%|in|cm|mm|em|ex|pt|pc)$");
+    var oWidthInput = new sap.m.Input("scale-width", {
+        width: "10rem",
+        placeholder: 'Enter width ...',
+        liveChange : function(e) {
+            var sEnteredText = e.getParameter("newValue");
+            
+            var oItem = jQuery.sap.byId("scale-width-inner");
+            if (patt.test(sEnteredText)) {
+            	oConfDMCData.width = sEnteredText;
+            	oItem.css("color", "black");
+            } else {
+            	oConfDMCData.width = "";
+            	if (sEnteredText) {
+            		oItem.css("color", "red");
+            	} else {
+            		oItem.css("color", "black");
+            	}
+            	
+            }
+            oConfModel.checkUpdate();
+        }
+    });
+    
+	var oPressLbl = new sap.m.Label({ text: "Press Action", labelFor: "press-action" });
+
+	var oPressSwtch = new sap.m.Switch({ 
+		id: "press-action", 
+		state: true,
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			for (var i = 0; i < aDMCs.length; i++) {
+				if(bState) {
+					aDMCs[i].attachPress(fnPress);
+				} else {
+					aDMCs[i].detachPress(fnPress);
+				}
+			}
+		}
+	});
+	
+    var oDMCSimpleForm = new sap.ui.layout.form.SimpleForm("controls-bc", {
+        maxContainerCols: 2,
+        editable: true,
+   	    content: [
+			oTooltipLbl, oTooltipInput, oTooltipSwtchLbl, oTooltipSwtch, oFirstValueLbl, oFirstValueInput,
+			oSecondValueLbl, oSecondValueInput, oDisplayValue1Lbl, oDisplayValue1Input,
+			oDisplayValue2Lbl, oDisplayValue2Input, oDeltaDisplayValueLbl,
+			oDeltaDisplayValueInput, oSColorLabel, oSColorSelect, oTitle1Lbl, oTitle1Input, 
+			oTitle2Lbl, oTitle2Input, oWidthLbl, oPressLbl, oPressSwtch, oWidthLbl, oWidthInput
+   	    ]
+    });
+    
+   	new sap.m.Page("initial-page", {
+        showHeader: false,
+        content: [oDMCForm, oDMCSimpleForm]
+    }).placeAt("content");
+    
+   	setBackgroundColor(oDMCForm);
+   	
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+<div id="content" style="height:100%"></div>
+</body>
+</html>

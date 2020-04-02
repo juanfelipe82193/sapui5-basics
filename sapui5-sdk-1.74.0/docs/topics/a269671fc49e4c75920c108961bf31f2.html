@@ -1,0 +1,224 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Adaptation Extension Example: Adding a Button to the Table Toolbar in the List Report</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="In this example, you add a button to the table toolbar in the list report and extend it to filter only the records which have a price that is greater than or equal to 1000."><meta name="description" content="In this example, you add a button to the table toolbar in the list report and extend it to filter only the records which have a price that is greater than or equal to 1000."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"0d2f1a9ebd2d4a4c906216ded1d33783.html","previousTopicHref":"bafc1f9ff60b49fca6d8bb8aa875f075.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page task  - topic-topic task-task " id="loioa269671fc49e4c75920c108961bf31f2"><h1 class="title topictitle1" hidden>Adaptation Extension Example: Adding a Button to the Table Toolbar in the List
+Report</h1><div class="body taskbody"><p class="shortdesc" hidden>In this example, you add a button to the table toolbar in the list report and extend it
+to filter only the records which have a price that is greater than or equal to
+1000.</p>
+<div class="section prereq p" id="loioa269671fc49e4c75920c108961bf31f2__prereq_u32_mjk_kfb"><div class="tasklabel"><h2 class="sectiontitle tasklabel">Prerequisites</h2></div>
+<p class="p">You have performed the steps described in <a class="xref" href="../../#/topic/52fc48b479314d0688be24f699778c47.html" title="You can extend delivered apps based on SAP Fiori elements by using the SAPUI5 Visual Editor." target="_top">Extending Delivered Apps Using Adaptation Extensions</a>.</p>
+</div>
+<div class="section context"><span id="steps" class="anchor"></span><div class="tasklabel"><h2 class="sectiontitle tasklabel">Context</h2></div></div>
+<section class="section procedure"><span id="steps" class="anchor"></span><div class="ol steps tasklabel"><h2 class="sectiontitle tasklabel">Procedure</h2></div><ol class="ol steps"><li class="li step stepexpand">
+<span class="ph cmd">Select the table tool bar and choose <span class="ph uicontrol">Add Fragment</span>.</span>
+<div class="itemgroup info">
+<div class="fig fignone" id="loioa269671fc49e4c75920c108961bf31f2__fig_utv_xjk_kfb"><div class="figbody">
+<img class="inline  " id="loioa269671fc49e4c75920c108961bf31f2__image_zqr_yjk_kfb" src="loioe13933b8234443e5a332958b9ea0b8ee_LowRes.png">
+</div></div>
+</div>
+</li><li class="li step stepexpand">
+<span class="ph cmd">Under <span class="ph uicontrol">Target Aggregation</span>, select
+<span class="ph uicontrol">content</span> and choose your preferred index value. Choose
+<span class="ph uicontrol">Create New</span> to create the fragment. If the fragment is
+already there, you can search for it.</span>
+<div class="itemgroup info">
+<div class="fig fignone" id="loioa269671fc49e4c75920c108961bf31f2__fig_s35_qkk_kfb"><div class="figbody">
+<img class="inline  " id="loioa269671fc49e4c75920c108961bf31f2__image_h2h_rkk_kfb" src="loio978b2536c39c467a9cd5e210777a0bd7_LowRes.png">
+</div></div>
+</div>
+</li><li class="li step stepexpand">
+<span class="ph cmd">Enter a fragment name, for example, <samp class="ph codeph">FilterPriceButton</samp>, and choose
+<span class="ph uicontrol">Create</span>.</span>
+</li><li class="li step stepexpand">
+<span class="ph cmd">Write the following code in the auto-generated
+<span class="ph sap-technical-name sap-technical-name">FilterPriceButton.fragment.xml</span>
+file. Note that the bold code needs a supporting function in the extension
+controller. This is described in the next step.</span>
+<div class="itemgroup info">
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&lt;core:FragmentDefinition xmlns:core=&apos;sap.ui.core&apos; xmlns=&apos;sap.m&apos;&gt;
+&lt;Button id=&quot;PriceBtnID&quot; text=&quot;Filter Price&quot; <span class="ph emphasis emphasis">press=&quot;.extension.ProdMan.AdaptProject.ListReportExtension.handleFilterPricePress&quot;</span>&gt;&lt;/Button&gt;
+&lt;/core:FragmentDefinition&gt;</pre></aside>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p>
+<samp class="ph codeph">&quot;.extension.ProdMan.AdaptProject.ListReportExtension.handleFilterPricePress&quot;</samp>
+consists of the following elements that are connected with a dot
+(.).</p><p class="p"><samp class="ph codeph">.extension</samp>: Required according to the UI
+adaptation tool guidelines</p><p class="p"><samp class="ph codeph">ProdMan.AdaptProject</samp>:
+Name of the project</p><p class="p"><samp class="ph codeph">ListReportExtension</samp>:
+Controller extension file
+name</p><p class="p"><samp class="ph codeph">handleFilterPricePress</samp>: Function in the
+controller extension file</p></aside>
+</div>
+</li><li class="li step stepexpand">
+<span class="ph cmd">Create a controller extension. Select the table toolbar as described under step
+1 and choose <span class="ph uicontrol">Extend with Controller</span>.</span>
+<div class="itemgroup info">
+<div class="fig fignone" id="loioa269671fc49e4c75920c108961bf31f2__fig_cr1_smk_kfb"><div class="figbody">
+<img class="inline  " id="loioa269671fc49e4c75920c108961bf31f2__image_qsr_smk_kfb" src="loio03287806ffec4f33929141290ad516b6_LowRes.png">
+</div></div>
+</div>
+</li><li class="li step stepexpand">
+<span class="ph cmd">Enter the controller name, for example, <samp class="ph codeph">ListReportExtension</samp>, and choose
+<span class="ph uicontrol">Extend</span>. </span>
+<div class="itemgroup info">The system generates the controller extension file
+<span class="ph sap-technical-name sap-technical-name">ListReportExtension.js</span>.<p class="p">This
+auto-generated file contains predefined life-cycle functions under the
+<span class="keyword uinolabel">Override</span> block. All extensibility functions
+provided by SAP Fiori elements should be consumed inside
+<span class="keyword uinolabel">Override</span>. The custom-defined functions should be
+consumed outside the <span class="keyword uinolabel">Override</span> block.</p><p class="p">To
+complete the example, copy and paste the code shown below to
+<span class="ph sap-technical-name sap-technical-name">ListReportExtension.js</span>.</p><aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p><samp class="ph codeph">handleFilterPricePress</samp>
+is a custom-defined function and <samp class="ph codeph">addFilters</samp> is the
+extensibility function provided by SAP Fiori
+elements.</p></aside><aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Sample Code</strong></div>
+<p>In this example, there is a property
+named <span class="keyword uinolabel">Price</span> named property in your list report entity
+type.</p><pre class="pre codeblock prettyprint">/**
+*@controller Name: sap.suite.ui.generic.template.ListReport.view.ListReport,
+*@viewId:STTA_MP::sap.suite.ui.generic.template.ListReport.view.ListReport::STTA_C_MP_Product
+*/
+sap.ui.define([&quot;sap/ui/core/mvc/Controller&quot;, &quot;sap/ui/core/mvc/ControllerExtension&quot;], function (Controller, ControllerExtension) {
+return ControllerExtension.extend(&quot;ProdMan.AdaptProject.ListReportExtension&quot;, {
+ 
+
+handleFilterPricePress : function() {
+     this.iPriceRestriction = &quot;1000&quot;;
+     var oExtensionAPI = this.base.templateBaseExtension.getExtensionAPI();
+     oExtensionAPI.rebindTable(); 
+},
+//override an existing method of the Main.controller
+override: {
+//adding a life cycle method
+/**
+* Called when a controller is instantiated and its View controls (if available) are already created.
+* Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
+* @memberOf src.client.uiadaptation
+*/
+onInit: function () {
+},
+/**
+* Similar to onAfterRendering, but this hook is invoked before the controller&apos;s View is re-rendered
+* (NOT before the first rendering! onInit() is used for that one!).
+* @memberOf src.client.uiadaptation
+*/
+onBeforeRendering: function () {
+},
+/**
+* Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
+* This hook is the same one that SAPUI5 controls get after being rendered.
+* @memberOf src.client.uiadaptation
+*/
+onAfterRendering: function () {
+},
+/**
+* Called when the Controller is destroyed. Use this one to free resources and finalize activities.
+* @memberOf src.client.uiadaptation
+*/
+onExit: function () {
+},
+&quot;templateBaseExtension&quot;: {
+addFilters : function(fnAddFilter, sControlId){
+if(this.iPriceRestriction){
+fnAddFilter(this, new sap.ui.model.Filter(&quot;Price&quot;, &quot;GE&quot;, this.iPriceRestriction));
+}
+}
+}
+}
+});
+});</pre></aside></div>
+</li><li class="li step stepexpand">
+<span class="ph cmd">In the adaptation editor, choose the <span class="ph uicontrol">Preview</span> tab page
+and choose <span class="ph uicontrol">Go</span>. Check the value in the
+<span class="ph uicontrol">Price</span> field for all records.</span>
+</li><li class="li step stepexpand">
+<span class="ph cmd">Choose <span class="ph uicontrol">Filter Price</span> and check the value in the
+<span class="ph uicontrol">Price</span> field for the filtered records.</span>
+<div class="itemgroup info">
+<div class="fig fignone" id="loioa269671fc49e4c75920c108961bf31f2__fig_wmq_spk_kfb"><div class="figbody">
+<img class="inline  " id="loioa269671fc49e4c75920c108961bf31f2__image_t5f_tpk_kfb" src="loio8c525dd25aa649028993ddd1c080618a_LowRes.png">
+</div></div>
+</div>
+</li></ol></section>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

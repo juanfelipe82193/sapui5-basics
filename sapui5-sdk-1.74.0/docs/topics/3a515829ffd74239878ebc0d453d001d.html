@@ -1,0 +1,229 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Adding Filterable Field to the Smart Filter Bar</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The following example shows the development steps for adding an additional filter to the smart filter bar of the list report."><meta name="description" content="The following example shows the development steps for adding an additional filter to the smart filter bar of the list report."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"25885b6f62ec4f61bf9271553ef369cd.html","previousTopicHref":"5fb9f57fcf12401bbe39a635e9a32a4e.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio3a515829ffd74239878ebc0d453d001d"><h1 class="title topictitle1" hidden>Adding Filterable Field to the Smart Filter Bar</h1><div class="body conbody"><p class="shortdesc" hidden>The following example shows the development steps for adding an additional filter to the
+smart filter bar of the list report.</p>
+<aside class="note caution" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Caution</strong></div>
+<p>Use app extensions with caution and only if you
+cannot produce the required behavior by other means, such as manifest settings or
+annotations. To correctly integrate your app extension coding with SAP Fiori elements,
+use only the extensionAPI of SAP Fiori elements. For more information, see <a class="xref" href="../../#/topic/bd2994b69ef542998becbc69ab093f7e.html" title="This API consists of several elements that are described below. It can be used for the analytical list page, list report, and object page." target="_top">Using the ExtensionAPI</a>. </p><p class="p">After you&apos;ve created an app
+extension, its display (for example, control placing, CSS) and system behavior (for
+example, model and binding usage, busy handling) of the app extension lies within
+the application&apos;s responsibility. SAP Fiori elements provides support only for the
+official extensionAPI functions. Don&apos;t access or manipulate SAP Fiori elements&apos;
+internal coding.</p></aside>
+<p class="p">In this example, we assume that you want to add a <span class="ph uicontrol">Price</span> field with
+two filter options to the smart filter bar of the Manage Products app&apos;s list report. To
+do so, you have to complete the following steps: </p>
+<ol class="ol">
+<li class="li">Create a controller for a new facet on the list report</li>
+<li class="li">Add field name and filter option texts to the <samp class="ph codeph">i18n</samp> file</li>
+<li class="li">Define a view and a controller extension in the <samp class="ph codeph">manifest.json</samp>
+file</li>
+</ol>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p>You can only add new fields to the smart filter bar, not change existing ones. If you
+want to change existing fields, you must remove them first completely from the
+annotations, then add them again as new fields. </p></aside>
+<div class="section"><section class="section" type="Step 1: Create a controller for a new facet in the list report"><h2 class="section_title" style="font-size: 1.15em;">Step 1: Create a controller for a new facet in the list report</h2>
+
+<p class="p">In the SAP Web IDE, open the folder structure of the Manage Products project and then
+proceed as follows:</p>
+<ol class="ol">
+<li class="li">In the <samp class="ph codeph">webapp</samp> folder, create a new subfolder called
+<samp class="ph codeph">ext</samp>.</li>
+<li class="li">In the folder <samp class="ph codeph">ext</samp>, create a new subfolder called
+<samp class="ph codeph">fragment</samp>.</li>
+<li class="li">In the <samp class="ph codeph">fragment</samp> folder, create file
+<samp class="ph codeph">Custom.Filter.fragment.xml</samp>.</li>
+<li class="li">In the <samp class="ph codeph">controller</samp> folder, create file
+<samp class="ph codeph">Custom.Filter.controller.js</samp>.</li>
+<li class="li">Define the fragment by adding <samp class="ph codeph">ControlConfiguration</samp> to the smart
+filter bar. You can see the options for the <samp class="ph codeph">ComboBox</samp> in the
+following example: <div class="p">
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&lt;core:FragmentDefinition
+		xmlns=&quot;sap.m&quot;
+		xmlns:smartfilterbar=&quot;sap.ui.comp.smartfilterbar&quot;
+		xmlns:core=&quot;sap.ui.core&quot;&gt;
+	&lt;!-- Price Filter--&gt;
+	&lt;smartfilterbar:ControlConfiguration key=&quot;CustomPriceFilter&quot; index=&quot;3&quot; 
+	label=&quot;{i18n|sap.suite.ui.generic.template.ListReport|SEPMRA_C_PD_Product&gt;xfld.Price}&quot;
+							visibleInAdvancedArea=&quot;true&quot; groupId=&quot;_BASIC&quot;&gt;
+		&lt;smartfilterbar:customControl&gt;
+			&lt;ComboBox id=&quot;CustomPriceFilter-combobox&quot;&gt;
+				&lt;core:Item id=&quot;CustomPriceFilterItem0&quot; key=&quot;0&quot; 
+						text=&quot;{i18n|sap.suite.ui.generic.template.ListReport|SEPMRA_C_PD_Product&gt;xtit.Price_0-100}&quot;/&gt;
+				&lt;core:Item id=&quot;CustomPriceFilterItem3&quot; key=&quot;1&quot; 
+						text=&quot;{i18n|sap.suite.ui.generic.template.ListReport|SEPMRA_C_PD_Product&gt;xtit.Price_GE100}&quot;/&gt;
+			&lt;/ComboBox&gt;
+		&lt;/smartfilterbar:customControl&gt;
+	&lt;/smartfilterbar:ControlConfiguration&gt; 
+&lt;/core:FragmentDefinition&gt;	</pre></aside>
+</div><aside class="note" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Note</strong></div>
+<p>You can use the index property to define the position of the
+filterable field. For more information, see also <a class="xref" href="../../#/topic/7bcdffc056a94731b4341db73251e32b.html" title="The sap.ui.comp.smartfilterbar.SmartFilterBar control analyzes the $metadata document of an OData service and renders a FilterBar control that can be used to filter, for example, a table or a chart." target="_top">Smart Filter Bar</a> and <a class="xref" href="../../#/api/sap.ui.comp.smartfilterbar.ControlConfiguration" target="_top" alt="#/api/sap.ui.comp.smartfilterbar.ControlConfiguration" title="#/api/sap.ui.comp.smartfilterbar.ControlConfiguration">https://sapui5.hana.ondemand.com/#docs/api/symbols/sap.ui.comp.smartfilterbar.ControlConfiguration.html</a>.</p></aside></li>
+<li class="li">To generate the additional filter logic, implement the logic in the controller
+as shown in the example below. <p class="p">Note that if a user changes a filter field in
+the filter bar, the table shows an overlay to indicate that the state of the
+filter bar differs from the date currently being displayed. If the control
+used in your app does not trigger a change event, you have to set this up
+using <samp class="ph codeph">.fireChange()</samp> so that the filter bar will recognize
+the change and display the overlay.</p>
+<div class="p">
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_4_title"><div class="title" id="note_4_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">sap.ui.controller(&quot;ManageProducts.ext.controller.CustomFilter&quot;, {
+		onBeforeRebindTableExtension: function(oEvent) {
+		var oBindingParams = oEvent.getParameter(&quot;bindingParams&quot;);
+		oBindingParams.parameters = oBindingParams.parameters || {};
+						
+		var oSmartTable = oEvent.getSource();
+		var oSmartFilterBar = this.byId(oSmartTable.getSmartFilterId());
+		var vCategory;
+		if (oSmartFilterBar instanceof sap.ui.comp.smartfilterbar.SmartFilterBar) {
+			//Custom price filter
+			var oCustomControl = oSmartFilterBar.getControlByKey(&quot;CustomPriceFilter&quot;);
+			if (oCustomControl instanceof sap.m.ComboBox) {
+				vCategory = oCustomControl.getSelectedKey();
+				switch (vCategory) {
+					case &quot;0&quot;:
+						oBindingParams.filters.push(new sap.ui.model.Filter(&quot;Price&quot;, &quot;LE&quot;, &quot;100&quot;));
+						break;
+					case &quot;1&quot;:
+						oBindingParams.filters.push(new sap.ui.model.Filter(&quot;Price&quot;, &quot;GT&quot;, &quot;100&quot;));
+						break;
+					default:
+						break;
+				}
+			}
+		}
+	}
+});</pre></aside>
+</div></li>
+</ol>
+</section></div>
+<div class="section"><section class="section" type="Step 2: Add field name and filter option texts to the i18n file"><h2 class="section_title" style="font-size: 1.15em;">Step 2: Add field name and filter option texts to the i18n file</h2>
+
+<p class="p">To make the field name and the filter options translatable, add the texts to the
+<samp class="ph codeph">i18n</samp> file as follows:</p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_5_title"><div class="title" id="note_5_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">#XFLD: Custom filter breakout label
+xfld.Price=Price
+#XTIT: Price range 0-100
+xtit.Price_0-100=Price between 0-100
+#XTIT: Price range Over 100
+xtit.Price_GE100=Price: Over 100		</pre></aside>
+</section></div>
+<div class="section"><section class="section" type="Step 3: Define a view and a controller extension in the manifest.json file"><h2 class="section_title" style="font-size: 1.15em;">Step 3: Define a view and a controller extension in the manifest.json file</h2>
+
+<p class="p">To integrate the logic as an extension, define a view and controller extension to
+load the files you created in Step 1 (<samp class="ph codeph">Custom.Filter.fragment.xml</samp>
+and <samp class="ph codeph">Custom.Filter.controller.js</samp>). </p>
+<p class="p">The logic is added to the <samp class="ph codeph">ListReport</samp> section of the Manage Products
+app.</p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_6_title"><div class="title" id="note_6_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&quot;extends&quot;: {
+	&quot;extensions&quot;: {
+		&quot;sap.ui.controllerExtensions&quot;: {
+			&quot;sap.suite.ui.generic.template.ListReport.view.ListReport&quot;: {
+				&quot;controllerName&quot;: &quot;ManageProducts.ext.controller.CustomFilter&quot;
+			}
+		},
+		&quot;sap.ui.viewExtensions&quot;: {
+			&quot;sap.suite.ui.generic.template.ListReport.view.ListReport&quot;: {
+				&quot;SmartFilterBarControlConfigurationExtension|SEPMRA_C_PD_Product&quot;: {
+					&quot;className&quot;: &quot;sap.ui.core.Fragment&quot;,
+					&quot;fragmentName&quot;: &quot;ManageProducts.ext.fragment.CustomFilter&quot;,
+					&quot;type&quot;: &quot;XML&quot;
+				}	         
+			}
+		}
+	}
+},</pre></aside>
+</section></div>
+<div class="section"><section class="section" type="Results"><h2 class="section_title" style="font-size: 1.15em;">Results</h2>
+
+<p class="p">The list report of the Manage Products app displays the new
+<span class="ph uicontrol">Price</span> field with filter options.</p>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

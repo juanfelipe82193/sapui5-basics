@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+(function(){"use strict";if(typeof jQuery==="function"&&jQuery.sap){jQuery.sap.declare("sap.ui2.srvc.contracts.navigation");jQuery.sap.require("sap.ui2.srvc.chip");}var n;if(typeof sap.ui2.shell==="object"&&typeof sap.ui2.shell.getNavigationHandle==="function"){n=sap.ui2.shell.getNavigationHandle();if(typeof n==="object"&&typeof n.navigateToUrl==="function"){sap.ui2.srvc.Chip.addContract("navigation",function(c){this.navigateToUrl=function(u,s){n.navigateToUrl.apply(n,arguments);};});}}}());

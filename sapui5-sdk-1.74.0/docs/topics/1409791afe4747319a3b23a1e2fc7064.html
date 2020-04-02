@@ -1,0 +1,174 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 4: XML Views</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Putting all our UI into the index.html file will very soon result in a messy setup and there is quite a bit of work ahead of us. So let&#x2019;s do a first modularization by putting the sap.m.Text control into a dedicated view."><meta name="description" content="Putting all our UI into the index.html file will very soon result in a messy setup and there is quite a bit of work ahead of us. So let&#x2019;s do a first modularization by putting the sap.m.Text control into a dedicated view."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"50579ddf2c934ce789e056cfffe9efa9.html","previousTopicHref":"ddbceecd7d3d42eea9cf78a820a238fb.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/ddbceecd7d3d42eea9cf78a820a238fb.html" title="Now it is time to build our first little UI by replacing the &#x201C;Hello World&#x201D; text in the HTML body by the SAPUI5 control sap.m.Text. In the beginning, we will use the JavaScript control interface to set up the UI, the control instance is then placed into the HTML body." target="_top">Step 3: Controls</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/50579ddf2c934ce789e056cfffe9efa9.html" title="In this step, we replace the text with a button and show the &#x201C;Hello World&#x201D; message when the button is pressed. The handling of the button&apos;s press event is implemented in the controller of the view." target="_top">Step 5: Controllers</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loio1409791afe4747319a3b23a1e2fc7064"><h1 class="title topictitle1" hidden>Step 4: XML Views</h1><div class="body conbody"><p class="shortdesc" hidden>Putting all our UI into the <samp class="ph codeph">index.html</samp> file will very soon result in a
+messy setup and there is quite a bit of work ahead of us. So let&#x2019;s do a first modularization
+by putting the <samp class="ph codeph">sap.m.Text</samp> control into a dedicated
+<samp class="ph codeph">view</samp>.</p>
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> supports multiple
+view types (XML, HTML, JavaScript). We choose XML as this produces the most readable
+code and will force us to separate the view declaration from the controller logic. Yet
+the look of our UI will not change.</p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loio1409791afe4747319a3b23a1e2fc7064__fig_r1j_pst_mr"><div class="figbody">
+
+<img class="inline  " id="loio1409791afe4747319a3b23a1e2fc7064__image_ylg_x4n_wr" src="loioc1d7d89b92c14f7ea88af6771d962f72_HiRes.png">
+</div><span class="figcap">The &quot;Hello World&quot; text is now displayed by a <span class="ph"><span class="ph pname">SAPUI5</span></span> control (No
+visual changes to last step)</span></div>
+</section></div>
+<div class="section">
+<div class="section_title">Coding</div>
+<p class="p">You can view and download all files <span class="ph">at <a class="xref" href="../../#/sample/sap.m.tutorial.walkthrough.04/preview" target="_top" alt="#/sample/sap.m.tutorial.walkthrough.04/preview" title="#/sample/sap.m.tutorial.walkthrough.04/preview">Walkthrough - Step 4</a></span>.</p>
+<div class="section_title">webapp/view/App.view.xml (New)</div>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+   xmlns=&quot;sap.m&quot;
+   xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+&lt;/mvc:View&gt;</pre>
+<p class="p">We create a new <span class="ph filepath">view</span> folder in our app and a new file for our XML view inside the <span class="ph filepath">app</span> folder. The root node of
+the XML structure is the <span class="ph filepath">view</span>. Here, we reference the default namespace <samp class="ph codeph">sap.m</samp> where the majority of our UI
+assets are located. We define an additional <samp class="ph codeph">sap.ui.core.mvc</samp> namespace with alias <samp class="ph codeph">mvc</samp>, where the <span class="ph"><span class="ph pname">SAPUI5</span></span> views and all other Model-View-Controller (MVC) assets are located.</p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>The namespace identifies all resources of the project and has to be unique. If you develop your own application code or controls,
+you cannot use the namespace prefix <samp class="ph codeph">sap</samp>, because this namespace is reserved for SAP resources. Instead, simply define
+your own unique namespace (for example, <samp class="ph codeph">myCompany.myApp</samp>).</p></aside>
+</div>
+<div class="section"><section class="section" type="webapp/view/App.view.xml"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/App.view.xml</h2>
+
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+   xmlns=&quot;sap.m&quot;
+   xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+   <span class="ph emphasis emphasis">&lt;Text text=&quot;Hello World&quot;/&gt;</span>
+&lt;/mvc:View&gt;
+</pre>
+<p class="p">Inside the <samp class="ph codeph">view</samp> tag, we add the declarative definition of our
+<samp class="ph codeph">text</samp> control with the same properties as in the previous step.
+The XML tags are mapped to controls and the attributes are mapped to the properties
+of the control.</p>
+</section></div>
+<div class="section" id="loio1409791afe4747319a3b23a1e2fc7064__section_nlq_g1w_xfb"><section class="section" type="webapp/index.js"><h2 class="section_title" style="font-size: 1.15em;">webapp/index.js</h2>
+
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+<span class="ph emphasis emphasis">	&quot;sap/ui/core/mvc/XMLView&quot;</span>
+], function (<span class="ph emphasis emphasis">XMLView</span>) {
+	&quot;use strict&quot;;
+
+<span class="ph emphasis emphasis">	XMLView.create({
+		viewName: &quot;sap.ui.demo.walkthrough.view.App&quot;
+	}).then(function (oView) {
+		oView.placeAt(&quot;content&quot;);
+	});
+</span>
+});
+</pre>
+<p class="p">We replace the instantiation of the <samp class="ph codeph">sap.m.Text</samp> control by our new <samp class="ph codeph">App</samp> XML view. The view is created
+by a factory function of <span class="ph"><span class="ph pname">SAPUI5</span></span> which makes sure that the view is
+correctly configured and can be extended by customers. The name is prefixed with the namespace
+<samp class="ph codeph">sap.ui.demo.walkthrough.view</samp> in order to uniquely identify this resource.</p>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">From this step onwards, it is necessary to run the app on a Web server. We structure the app with multiple files that are loaded
+from the local file system. Without a Web server, this is prevented by the browser due to security reasons. If the error message
+&quot;sap is not defined&quot; appears in the developer tools of the browser, you need to check the <samp class="ph codeph">resource</samp> path in the
+bootstrap.</p><p class="p">You can find more information about how to install a Web server for your particular environment at <a class="xref" href="../../#/topic/7bb04e05f9484e1b95b38a2e48ecef4f.html" title="This part of the documentation gives you guidance on the most common and recommended use cases of the installation, configuration, and setup of the SAPUI5 development environment." target="_top">Development Environment</a>.</p></aside>
+</section></div>
+<div class="section"><section class="section" type="Conventions"><h2 class="section_title" style="font-size: 1.15em;"> Conventions</h2>
+
+<ul class="ul" id="loio1409791afe4747319a3b23a1e2fc7064__ul_nh5_ybb_nr">
+<li class="li">
+<p class="p">View names are capitalized</p>
+</li>
+<li class="li">
+<p class="p">All views are stored in the <samp class="ph codeph">view</samp> folder</p>
+</li>
+<li class="li">
+<p class="p">Names of XML views always end with <samp class="ph codeph">*.view.xml</samp></p>
+</li>
+<li class="li">
+<p class="p">The default XML namespace is <samp class="ph codeph">sap.m</samp></p>
+</li>
+<li class="li">
+<p class="p">Other XML namespaces use the last part of the SAP namespace as alias (for example, <samp class="ph codeph">mvc</samp> for
+<samp class="ph codeph">sap.ui.core.mvc</samp>)</p>
+</li>
+</ul>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/ddbceecd7d3d42eea9cf78a820a238fb.html" title="Now it is time to build our first little UI by replacing the &#x201C;Hello World&#x201D; text in the HTML body by the SAPUI5 control sap.m.Text. In the beginning, we will use the JavaScript control interface to set up the UI, the control instance is then placed into the HTML body." target="_top">Step 3: Controls</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/50579ddf2c934ce789e056cfffe9efa9.html" title="In this step, we replace the text with a button and show the &#x201C;Hello World&#x201D; message when the button is pressed. The handling of the button&apos;s press event is implemented in the controller of the view." target="_top">Step 5: Controllers</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/91f233476f4d1014b6dd926db0e91070.html" title="The Model View Controller (MVC) concept is used in SAPUI5 to separate the representation of information from the user interaction. This separation facilitates development and the changing of parts independently." target="_top">Model View Controller (MVC)</a></div><div><a class="link" href="../../#/topic/91f27e3e6f4d1014b6dd926db0e91070.html" title="The view in the Model View Controller concept is responsible for defining and rendering the UI. SAPUI5 supports predefined view types." target="_top">Views</a></div><div><a class="link" href="../../#/topic/91f292806f4d1014b6dd926db0e91070.html" title="The XML view type is defined in an XML file. The file name either ends with .view.xml or as an XML string. The file name and the folder structure together specify the name of the view that equals the SAPUI5 module name." target="_top">XML View</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

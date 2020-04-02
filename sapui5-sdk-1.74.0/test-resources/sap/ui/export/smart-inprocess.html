@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+<meta http-equiv='Content-Type' content='text/html;charset=UTF-8' />
+
+<title>Spreadsheet Export using SmartTable</title>
+
+<script src="shared-config.js"></script>
+<script id='sap-ui-bootstrap'
+	src='../../../../resources/sap-ui-core.js'
+	data-sap-ui-compatVersion="edge"
+	data-sap-ui-libs='sap.m,sap.ui.comp'></script>
+
+<script id="view1" type="sapui5/xmlview">
+		<core:View xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:smartFilterBar="sap.ui.comp.smartfilterbar" xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+		 xmlns:smartTable="sap.ui.comp.smarttable" controllerName="smartTable.controller" class="sapUiSizeCompact">
+			<Page title="In-process SmartTable Spreadsheet Export">
+				<VBox fitContainer="true">
+					<smartFilterBar:SmartFilterBar id="smartFilterBar" entitySet="Orders">
+						<smartFilterBar:layoutData>
+							<FlexItemData shrinkFactor="0" />
+						</smartFilterBar:layoutData>
+					</smartFilterBar:SmartFilterBar>
+					<smartTable:SmartTable id="smartTable" entitySet="Orders" smartFilterId="smartFilterBar" tableType="Table"
+					 useExportToExcel="true" beforeExport="onBeforeExport" exportType="UI5Client"
+					 useTablePersonalisation="true" header="Orders" showRowCount="true" enableAutoBinding="true" initiallyVisibleFields="OrderID,CustomerID,OrderDate,ShipName">
+						<smartTable:layoutData>
+							<FlexItemData growFactor="1" baseSize="0%" styleClass="sapUiResponsiveContentPadding" />
+						</smartTable:layoutData>
+					</smartTable:SmartTable>
+				</VBox>
+			</Page>
+		</core:View>
+	</script>
+
+<script>
+	//Controller
+	sap.ui.controller("smartTable.controller", {
+		onInit: function() {
+			var sURL, oModel, oView;
+			sURL = "../../../../proxy/http/services.odata.org/V2/Northwind/Northwind.svc";
+			oModel = new sap.ui.model.odata.v2.ODataModel(sURL);
+			oView = this.getView();
+			oView.setModel(oModel);
+		},
+		onBeforeExport: function (event) {
+			// Modify the default spreadsheet export configuration
+			var mSettings = event.getParameter("exportSettings");
+			mSettings.worker = false;
+			mSettings.fileName = "spreadsheet.xlsx";
+		}
+	});
+
+	jQuery.sap.declare("smartTable.Component");
+	sap.ui.core.UIComponent.extend("smartTable.Component", {
+		/**
+		 * Initialize the application
+		 * 
+		 * @returns {sap.ui.core.Control} the content
+		 */
+		createContent: function() {
+
+			var app = new sap.m.App({
+				initialPage: "idView"
+			});
+			var oView = sap.ui.xmlview("idView", {
+				viewContent: jQuery("#view1").html()
+			});
+			app.addPage(oView);
+
+			return app;
+		}
+	});
+
+	new sap.ui.core.ComponentContainer({
+		name: "smartTable"
+	}).placeAt("content")
+</script>
+</head>
+<body class='sapUiBody'>
+	<div id='content'></div>
+</body>
+</html>

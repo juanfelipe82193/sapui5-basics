@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta charset="UTF-8" />
+		<title>UI5 CVOM HTML5 VizFrame</title>
+		<meta name="keywords" content="Control Table" />
+		<link rel="stylesheet" type="text/css"
+		href="../../../resources/sap/viz/ui5/controls/css/controls.css"/>
+
+
+		<script id="sap-ui-bootstrap" src="../../../resources/sap-ui-core.js"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-libs="sap.viz,sap.m "></script>
+
+
+		<script id='horizontal_VizContainerSimpleExample'>
+
+
+			  //var chartPopover = new sap.viz.ui5.controls.Popover({});
+			  var oModel = new sap.ui.model.json.JSONModel({
+					'businessData' : [{
+						'Country' : "Canada",
+						'Product':"Car",
+						'profit' : -141.25
+					}, {
+						'Country' : "China",
+						'Product':"Car",
+						'profit' : 133.82
+					}, {
+						'Country' : "France",
+						'Product':"Car",
+						'profit' : 348.76
+					}, {
+						'Country' : "Germany",
+						'Product':"Car",
+						'profit' : 217.29
+					}, {
+						'Country' : "India",
+						'Product':"Car",
+						'profit' : 117.00
+					}, {
+						'Country' : "United States",
+						'Product':"Car",
+						'profit' : 609.16
+					},{
+						'Country' : "Canada",
+						'Product':"Bike",
+						'profit' : 141.25
+					}, {
+						'Country' : "China",
+						'Product':"Bike",
+						'profit' : 153.82
+					}, {
+						'Country' : "France",
+						'Product':"Bike",
+						'profit' : 38.76
+					}, {
+						'Country' : "Germany",
+						'Product':"Bike",
+						'profit' : 219
+					}, {
+						'Country' : "India",
+						'Product':"Bike",
+						'profit' : 17.00
+					}, {
+						'Country' : "United States",
+						'Product':"Bike",
+						'profit' : 69.16
+					}]
+				});
+
+				// A Dataset defines how the model data is mapped to the chart
+				var oDataset = new sap.viz.ui5.data.FlattenedDataset({
+					// a Bar Chart requires exactly one dimension (x-axis)
+					'dimensions' : [{
+						'name' : 'Country',
+						'value' : "{Country}"
+					},{
+						'name' : 'Product',
+						'value' : "{Product}"
+					}],
+					// it can show multiple measures, each results in a new set of bars in a new color
+					'measures' : [
+					// measure 1
+					{
+						'name' : 'Profit', // 'name' is used as label in the Legend
+						'value' : '{profit}' // 'value' defines the binding for the displayed value
+					}],
+					// 'data' is used to bind the whole data collection that is to be displayed in the chart
+					'data' : {
+						'path' : "/businessData"
+					}
+				});
+
+			// create a VizFrame
+        var oVizFrame = new sap.viz.ui5.controls.VizSlider({
+          'uiConfig' : {
+            'applicationSet': 'fiori'
+          },
+          'vizType' : 'column'
+        });
+        oVizFrame._setCategoryRange({
+            'start': {Country: "China"},
+            'end': {Country: "Germany"}
+        });
+        oVizFrame.setWidth("800px");
+        oVizFrame.setHeight("200px");
+
+				// oVizFrame.
+				// attach the model to the chart and display it
+				oVizFrame.setDataset(oDataset);
+				oVizFrame.setModel(oModel);
+
+				// set feeds
+				var feedPrimaryValues = new sap.viz.ui5.controls.common.feeds.FeedItem({
+					'uid' : "primaryValues",
+					'type' : "Measure",
+					'values' : ["Profit"]
+				}), feedAxisLabels = new sap.viz.ui5.controls.common.feeds.FeedItem({
+					'uid' : "axisLabels",
+					'type' : "Dimension",
+					'values' : ["Country"]
+				}),
+				 feedColor = new sap.viz.ui5.controls.common.feeds.FeedItem({
+						'uid' : "color",
+						'type' : "Dimension",
+						'values' : ["Product"]
+					});
+
+				oVizFrame.addFeed(feedPrimaryValues);
+				oVizFrame.addFeed(feedAxisLabels);
+				oVizFrame.addFeed(feedColor);
+
+                oVizFrame.attachRangeChanged(function(e){
+                    console.log(e.getParameters().data);
+                });
+
+				oVizFrame.placeAt("chart");
+
+
+
+
+
+
+
+
+		</script>
+
+
+	</head>
+	<body class="sapUiBody">
+		<div id="chart" style="top:100px; position:absolute;" > </div>
+
+
+
+	</body>
+</html>

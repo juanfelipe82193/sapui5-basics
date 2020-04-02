@@ -1,0 +1,850 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.gantt.LegendContainer</title>
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.gantt, sap.m"
+	data-sap-ui-theme="sap_bluecrystal"
+	src="../../../../resources/sap-ui-core.js">
+</script>
+
+<script type="text/javascript">
+	jQuery.sap.require("sap.gantt.legend.LegendContainer");
+	jQuery.sap.require("sap.gantt.legend.ListLegend");
+	jQuery.sap.require("sap.gantt.legend.DimensionLegend");
+	jQuery.sap.require("sap/ui/thirdparty/d3");
+
+	//create a instance of legend container
+	var oLegendContainer = new sap.gantt.legend.LegendContainer({
+		width: "270px"
+	});
+
+	// build a freestyle simple legend section
+	var simpleLegendData = [{
+		color: "#676767",
+		name: "Downtime",
+		pattern_x: 25,
+		pattern_y: 2,
+		text_x: 48,
+		text_y: 12.5
+	},{
+		color: "#E8E8E8",
+		name: "Non-working Time",
+		pattern_x: 25,
+		pattern_y: 22,
+		text_x: 48,
+		text_y: 32.5
+	}];
+
+	/**
+	 * define a simple legendSection class
+	 */
+	jQuery.sap.declare("sap.test.gantt.SimpleLegendSection");
+	var SimpleLegendSection = sap.ui.core.Control.extend("sap.test.gantt.SimpleLegendSection", {
+		metadata: {
+			properties : {
+					legendData: {type: "object", defaultValue: null}
+				}
+		},
+		renderer: function (oRm, oControl) {
+			oRm.write("<div");
+			oRm.writeControlData(oControl);
+			oRm.writeClasses();
+			oRm.addStyle("width", "100%");
+			oRm.addStyle("height", "100%");
+			oRm.writeStyles();
+			oRm.write("></div>");
+	    }
+	});
+
+	SimpleLegendSection.prototype.onAfterRendering = function(){
+		var retLegend = this._buildLegend();
+		$("#" + this.getId()).append(retLegend);
+
+	};
+
+	SimpleLegendSection.prototype._buildLegend = function(){
+		var legendId = this.getId();
+		var legendData = this.getLegendData();
+		if (legendData){
+			var retLegend = document.createElement("div");
+			retLegend.setAttribute("id", legendId + "_legendPanel");
+
+			var legendSvg = d3.select(retLegend).append("svg")
+				.attr("id", legendId + "_legendBody");
+			var legendG = legendSvg.append("g")
+				.attr("id", legendId + "_legendG");
+
+			legendG.append("g")
+				.attr("id", "normalLegend")
+				.style("display", "block");
+
+			var normalGroup = legendSvg.select("#normalLegend").selectAll("g")
+							.data(legendData)
+							.enter().append("g");
+
+			normalGroup.append("rect")
+						.attr("x", function(d) { return d.pattern_x; } )
+						.attr("y", function(d) { return d.pattern_y; })
+						.attr("width",  11 )
+						.attr("height", 11)
+						.attr("fill", function(d) {return d.color})
+						.style("stroke", function(d) {return d.color})
+						.style("stroke-width", 2);
+			normalGroup.append("text")
+						.attr("x", function(d) { return d.text_x; })
+						.attr("y", function(d) { return d.text_y;})
+						.text(function(d) { return d.name; })
+						.attr("font-size", 12 );
+
+			legendSvg.attr("width", "200px");
+			legendSvg.attr("height", "50px");
+			return retLegend;
+		}
+	};
+
+	var oLegendSection1 = new sap.m.Page({
+		title:'Any Control (freestyle)',
+		content : new sap.test.gantt.SimpleLegendSection({"legendData" : simpleLegendData})
+	});
+
+	// message (freestyle)
+	var flexBox1 = new sap.m.FlexBox({
+		direction: sap.m.FlexDirection.Row,
+		alignItems: sap.m.FlexAlignItems.Center,
+		items : [new sap.m.CheckBox({selected: true}),
+				new sap.ui.core.Icon({src : sap.ui.core.IconPool.getIconURI("message-error"),size:"15px", color : "red", width:"25px"}),
+				new sap.m.Label({text: "Error"})]
+	});
+
+	var flexBox2 = new sap.m.FlexBox({
+		direction: sap.m.FlexDirection.Row,
+		alignItems: sap.m.FlexAlignItems.Center,
+		//justifyContent: sap.m.FlexJustifyContent.SpaceAround,
+		items : [new sap.m.CheckBox({selected: true}),
+				new sap.ui.core.Icon({src : sap.ui.core.IconPool.getIconURI("message-warning"),size:"15px", color : "yellow", width:"25px" }),
+				new sap.m.Label({text: "Warning"})]
+	});
+
+	var flexBox3 = new sap.m.FlexBox({
+		direction: sap.m.FlexDirection.Row,
+		alignItems: sap.m.FlexAlignItems.Center,
+		items : [new sap.m.CheckBox({selected: true}),
+				new sap.ui.core.Icon({src : sap.ui.core.IconPool.getIconURI("message-information"),size:"15px", color : "green", width:"25px"}),
+				new sap.m.Label({text: "Information"})]
+	});
+
+	var oLegendSection2 = new sap.m.Page({
+		title :'Message (freestyle)',
+		content : [flexBox1, flexBox2, flexBox3]
+	});
+
+	jQuery.sap.require("sap.gantt.def.pattern.SlashPattern");
+	jQuery.sap.require("sap.gantt.def.pattern.BackSlashPattern");
+	jQuery.sap.require("sap.gantt.def.gradient.LinearGradient");
+	jQuery.sap.require("sap.gantt.def.gradient.Stop");
+	jQuery.sap.require("sap.gantt.def.SvgDefs");
+	var oDocumentSvgDefs = new sap.gantt.def.SvgDefs({
+		defs: [new sap.gantt.def.pattern.SlashPattern("order_pattern_slash_grey", {
+			stroke: "@sapUiChartPaletteSemanticNeutralDark2"
+		})]
+	});
+	var oActivitySvgDefs = new sap.gantt.def.SvgDefs({
+		defs: [new sap.gantt.def.pattern.SlashPattern("activity_pattern_slash_grey", {
+			stroke: "@sapUiChartPaletteSemanticNeutralDark2"
+		}), new sap.gantt.def.pattern.SlashPattern("activity_pattern_slash_blue", {
+			stroke: "@sapUiChart1"
+		}), new sap.gantt.def.pattern.SlashPattern("activity_pattern_slash_green", {
+			stroke: "@sapUiChart2"
+		}), new sap.gantt.def.pattern.SlashPattern("activity_pattern_slash_orange", {
+			stroke: "@sapUiChart3"
+		}), new sap.gantt.def.pattern.SlashPattern("activity_pattern_slash_lightblue", {
+			stroke: "@sapUiChart4"
+		})]
+	});
+	var oListSvgDefs = new sap.gantt.def.SvgDefs({
+		defs: [new sap.gantt.def.pattern.BackSlashPattern("list_pattern_backslash_grey", {
+			stroke: "@sapUiChart8",
+			backgroundColor: "@sapUiChartNeutral"
+		}), new sap.gantt.def.pattern.SlashPattern("list_pattern_slash_orange", {
+			stroke: "@sapUiChart3"
+		})]
+	});
+	// define order rectangle shape class
+	sap.ui.define("sap.test.gantt.OrderShape", ["sap/gantt/shape/Group"], function (Group) {
+		var OrderShape = Group.extend("sap.test.gantt.OrderShape", {
+			metadata: {
+				properties: {
+					type: {type: "string"},
+					status: {type: "string"}
+				}
+			}
+		});
+
+		OrderShape.prototype.getType = function (oData) {
+			if (this.mShapeConfig.hasShapeProperty("type")) {
+				return this._configFirst("type", oData);
+			}
+			return oData.type;
+		};
+
+		OrderShape.prototype.getStatus = function (oData) {
+			if (this.mShapeConfig.hasShapeProperty("status")) {
+				return this._configFirst("status", oData);
+			}
+			return oData.status;
+		};
+
+		OrderShape.prototype.getAriaLabel = function (oData) {
+			if (this.mShapeConfig.hasShapeProperty("ariaLabel")) {
+				return this._configFirst("ariaLabel", oData);
+			}
+			return oData.xName + " " + oData.yName;
+		};
+
+		OrderShape.prototype.getTitle = function (oData) {
+			return this.getAriaLabel(oData);
+		};
+
+		OrderShape.prototype.getLegend = function(oData) {
+			var sType = this.getType(oData), sStatus = this.getStatus(oData);
+			if (sType == sap.gantt.DIMENSION_LEGEND_NIL) {
+				switch (sStatus){
+					case "00": return "Unplanned";
+					case "01": return "Planned";
+					case "02": return "Fixed";
+					case "03": return "In Excution";
+					case "04": return "Executed";
+				}
+			}
+
+			if (sStatus == sap.gantt.DIMENSION_LEGEND_NIL) {
+				switch (sType){
+					//for order
+					case "TOL": return "Freight Order";
+					case "FU": return "Freight Unit";
+					case "TUT": return "Trailer Unit";
+					//for activity
+					case "00": return "Travel";
+					case "01": return "Loading";
+					case "02": return "Unloading";
+					case "03": return "Coupling";
+					case "04": return "Uncoupling";
+				}
+			}
+			return "";
+		};
+
+		OrderShape.prototype.getFillPattern = function(oData) {
+			switch (oData.status) {
+				case "00" : return "colorDashStroked";
+				case "01" : return "colorFilledColorSolidStroked";
+				case "02" : return "whiteStrokeFilledColorSolidStroked";
+				case "03" : return "slashFilledColorSolidStroked";
+				case "04" : return "colorSolidStroked";
+				default: return null;
+			}
+		};
+
+		return OrderShape;
+	}, true);
+
+	// define order rectangle shape class
+	sap.ui.define("sap.test.gantt.OrderRectangle", ["sap/gantt/shape/Rectangle"], function (Rectangle) {
+		var OrderRectangle = Rectangle.extend("sap.test.gantt.OrderRectangle", {});
+
+		OrderRectangle.PATTERN = {
+			"colorDashStroked": {
+				"strokeColor": "default",
+				"strokeWidth": 2,
+				"strokeDasharray": "4,3,1"
+			},
+			"colorSolidStroked": {
+				"strokeColor": "default",
+				"strokeWidth": 2
+			},
+			"colorFilledColorSolidStroked": {
+				"fill": "default",
+				"strokeColor": "default",
+				"strokeWidth": 2
+			},
+			"slashFilledColorSolidStroked": {
+				"fill": "slash",
+				"strokeColor": "default",
+				"strokeWidth": 2
+			},
+			"backslashFilledColorSolidStroked": {
+				"fill": "backslash",
+				"strokeColor": "default",
+				"strokeWidth": 2
+			},
+			"backslashFilled": {
+				"fill": "backslash"
+			},
+			"middleStrokeFilledColorSolidStroked": {
+				"fill": "middlestroke",
+				"strokeColor": "default",
+				"strokeWidth": 2
+			},
+			"whiteStrokeFilledColorSolidStroked": {
+				"fill": "whitestroke",
+				"strokeColor": "default",
+				"strokeWidth": 2
+			}
+		};
+		OrderRectangle.prototype.getFill = function(oData){
+			if (this.mShapeConfig.hasShapeProperty("fill")) {
+				return this._configFirst("fill", oData);
+			}
+
+			var sPattern = this.getParent().getFillPattern(oData);
+			if (sPattern) {
+				var oPattern = OrderRectangle.PATTERN[sPattern];
+				switch(oPattern.fill){
+				case "none":
+				case "middlestroke":
+					return "#ffffff";
+				case "backslash":
+				case "slash":
+					return this._getSlashFill(oData);
+				case "default":
+				case "whitestroke":
+					return this.getStroke(oData);
+				default:
+					return "#ffffff";
+				}
+			} else {
+				return this.getStroke(oData);
+			}
+		};
+
+		OrderRectangle.prototype._getSlashFill = function(oData){
+			var sKey = this.mShapeConfig.getShapeProperties().key;
+			if (sKey === "Order"){
+				return sap.ui.getCore().byId("order_pattern_slash_grey").getRefString();
+			}else {
+				switch (oData.yIndex) {
+					case 0:
+						return sap.ui.getCore().byId("activity_pattern_slash_grey").getRefString();
+					case 1:
+						return sap.ui.getCore().byId("activity_pattern_slash_blue").getRefString();
+					case 2:
+						return sap.ui.getCore().byId("activity_pattern_slash_green").getRefString();
+					case 3:
+						return sap.ui.getCore().byId("activity_pattern_slash_orange").getRefString();
+					case 4:
+						return sap.ui.getCore().byId("activity_pattern_slash_lightblue").getRefString();
+					default:
+						return sap.ui.getCore().byId("activity_pattern_slash_grey").getRefString();
+				}
+			}
+		};
+
+		OrderRectangle.prototype.getStroke = function (oData) {
+			if (this.mShapeConfig.hasShapeProperty("strokeColor")) {
+				return this._configFirst("strokeColor", oData);
+			}
+
+			var sColor = "#000";
+			switch (oData.type) {
+				case "TOL" : sColor = "#CAC7BA"; break;
+				case "FU" : sColor = "#CAC7BA"; break;
+				case "TUT" : sColor = "#CAC7BA"; break;
+				case "00" : sColor = "#CAC7BA"; break;
+				case "01" : sColor = "#008FD3"; break;
+				case "02" : sColor = "#99D101"; break;
+				case "03" : sColor = "#F39B02"; break;
+				case "04" : sColor = "#9FCFEB"; break;
+			}
+			return sColor;
+		};
+		OrderRectangle.prototype.getStrokeDasharray = function (oData) {
+			if (this.mShapeConfig.hasShapeProperty("strokeDasharray")) {
+				return this._configFirst("strokeDasharray", oData);
+			}
+			if (oData.pattern) {
+				var oPattern = OrderRectangle.PATTERN[oData.pattern];
+				return oPattern.strokeDasharray ? oPattern.strokeDasharray : 0;
+			}
+		};
+		OrderRectangle.prototype.getWidth = function (oData, oRowInfo) {
+			if (this.mShapeConfig.hasShapeProperty("width")) {
+				return this._configFirst("width", oData, true);
+			}
+		};
+		return OrderRectangle;
+	}, true);
+
+	// define middle line shape class
+	sap.ui.define("sap.test.gantt.MiddleLine", ["sap/gantt/shape/Line"], function (Line) {
+		var MiddleLine = Line.extend("sap.test.gantt.MiddleLine", {});
+
+		MiddleLine.prototype.getX1 = function(oData){
+			if (this.mShapeConfig.hasShapeProperty("x1")) {
+				return this._configFirst("x1", oData);
+			}
+
+			var sPattern = this.getParent().getFillPattern(oData);
+			if (sPattern && sPattern == "whiteStrokeFilledColorSolidStroked") {
+				var oLegend = this.mChartInstance;
+				var iWidth = oLegend.getScaledLegendWidth();
+				return iWidth * oData.xIndex + oLegend.getLegendSpace() * (oData.xIndex + 1);
+			}
+			return 0;
+		};
+
+		MiddleLine.prototype.getY1 = function(oData){
+			if (this.mShapeConfig.hasShapeProperty("y1")) {
+				return this._configFirst("y1", oData);
+			}
+
+			var sPattern = this.getParent().getFillPattern(oData);
+			if (sPattern && sPattern == "whiteStrokeFilledColorSolidStroked") {
+				var oLegend = this.mChartInstance;
+				var iHeight = oLegend.getScaledLegendWidth();
+				return iHeight * oData.yIndex + oLegend.getLegendSpace() * (oData.yIndex + 1) + iHeight / 2;
+			}
+			return 0;
+		};
+
+		MiddleLine.prototype.getX2 = function(oData){
+			return this.getX1(oData) + this.mChartInstance.getScaledLegendWidth();
+		};
+
+		MiddleLine.prototype.getY2 = function(oData){
+			return this.getY1(oData);
+		};
+
+		MiddleLine.prototype.getStroke = function(oData){
+			if (this.mShapeConfig.hasShapeProperty("storke")) {
+				return this._configFirst("storke", oData);
+			}
+			var sPattern = this.getParent().getFillPattern(oData);
+			if (sPattern && sPattern == "whiteStrokeFilledColorSolidStroked") {
+				 return "#fff";
+			}
+		}
+		return MiddleLine;
+	}, true);
+
+	var oDocumentShape = new sap.gantt.config.Shape({
+		key: "Order",
+		shapeClassName: "sap.test.gantt.OrderShape",
+		groupAggregation: [
+			new sap.gantt.config.Shape({
+				shapeClassName: "sap.test.gantt.OrderRectangle",
+				shapeProperties: {
+					key: "Order",
+					width: 15,
+					height: 15,
+					isDuration: true
+				}
+			}),
+			new sap.gantt.config.Shape({
+				shapeClassName: "sap.test.gantt.MiddleLine",
+				shapeProperties: {
+					isDuration: true,
+					height: 3
+				}
+			})
+		]
+	});
+	var oDimensionLegend = new sap.gantt.legend.DimensionLegend({
+		svgDefs: oDocumentSvgDefs,
+		legendWidth: 15,
+		legendHeight: 15,
+		fontSize: 15,
+		shape: oDocumentShape,
+		xDimension: "status",
+		yDimension: "type",
+		xDomain: ["00", "01", "02", "03", "04"],
+		yDomain: ["TOL", "FU", "TUT"],
+		exclude: [["02", "FU"], ["03", "TUT"]]
+	});
+
+	var oLegendSection3 = new sap.m.Page({
+		title :'Document (dimension template)',
+		content : oDimensionLegend
+	});
+
+	var oActivityShape = new sap.gantt.config.Shape({
+		key: "Activity",
+		shapeClassName: "sap.test.gantt.OrderShape",
+		groupAggregation: [
+			new sap.gantt.config.Shape({
+				shapeClassName: "sap.test.gantt.OrderRectangle",
+				shapeProperties: {
+					key:"Activity",
+					width: 15,
+					height: 15,
+					isDuration: true
+				}
+			}),
+			new sap.gantt.config.Shape({
+				shapeClassName: "sap.test.gantt.MiddleLine",
+				shapeProperties: {
+					isDuration: true,
+					fill: "red",
+					height: 3
+			}
+		})]
+	})
+	var oDimensionLegend2 = new sap.gantt.legend.DimensionLegend({
+		svgDefs: oActivitySvgDefs,
+		legendWidth: 15,
+		legendHeight: 15,
+		fontSize: 15,
+		shape: oActivityShape,
+		xDimension: "status",
+		yDimension: "type",
+		xDomain: ["00", "01", "02", "03", "04"],
+		yDomain: ["00", "01", "02", "03", "04"]
+	});
+
+	var oLegendSection4 = new sap.m.Page({
+		title :'Activity (dimension template)',
+		content : oDimensionLegend2
+	});
+
+	// Define group
+	sap.ui.define("sap.test.gantt.RectangleGroup", ["sap/gantt/shape/Group"], function (Group) {
+		var RectangleGroup = Group.extend("sap.test.gantt.RectangleGroup",{
+			metadata: {
+				properties: {
+					enableDnD: {type: "boolean", defaultValue: "true"}
+				}
+			}
+		});
+
+		RectangleGroup.prototype.getRLSAnchors = function (oRawData, oObjectInfo) {
+			var shapes = this.getShapes();
+			var rectangleShapeClass;
+			for(var i in shapes){
+				if(shapes[i] instanceof sap.test.gantt.OrderShape){
+					rectangleShapeClass = shapes[i];
+				}
+			}
+
+			var _x = rectangleShapeClass.getX(oRawData);
+			var _y = rectangleShapeClass.getY(oRawData, oObjectInfo) + rectangleShapeClass.getHeight()/2;
+			return {
+				startPoint: {
+					x: _x,
+					y: _y,
+					height:rectangleShapeClass.getHeight(oRawData),
+				},
+				endPoint: {
+					x: _x + rectangleShapeClass.getWidth(oRawData),
+					y: _y,
+					height:rectangleShapeClass.getHeight(oRawData),
+				}
+			};
+		};
+
+		return RectangleGroup;
+	}, true);
+
+	sap.ui.define("sap.test.ChildCalendar", ["sap/gantt/shape/cal/Calendar"], function (Calendar) {
+		var ChildCalendar = Calendar.extend("sap.test.ChildCalendar");
+
+		return ChildCalendar;
+	}, true);
+
+	var aShapeConfig = [
+	 new sap.gantt.config.Shape({
+		key: "calendar",
+		shapeClassName: "sap.test.ChildCalendar",
+		shapeDataName: "nwt",
+		level: 30,
+		shapeProperties: {
+			calendarName: "calendar",
+			width: 32,
+			height: 33,
+			isDuration: false
+		}
+	}), new sap.gantt.config.Shape({
+		key: "ubc",
+		shapeDataName: "ubc",
+		modeKeys: ["C"],
+		level: 10,
+		switchOn: true,
+		shapeClassName: "sap.gantt.shape.ext.ubc.UtilizationBarChart",
+		shapeProperties: {
+			legend: "Group legend",
+			ariaLabel: "Group",
+			title: "Group"
+		},
+		groupAggregation: [
+			new sap.gantt.config.Shape({
+				key: "activity",
+				shapeClassName: "sap.gantt.shape.Rectangle",
+				shapeDataName: "activity",
+				level: 10,
+				shapeProperties: {
+					legend: "Rectangle legend",
+					fill: "green",
+					isDuration: true
+				}
+			}),
+			new sap.gantt.config.Shape({
+				key: "phase",
+				shapeDataName: "phase",
+				modeKeys: ["D"],
+				level: 30,
+				shapeClassName: "sap.gantt.shape.Rectangle",
+				shapeProperties: {
+					isDuration: true,
+					fill: "red",
+					height: 3,
+					y: 7.5
+				}
+			})]
+	}), new sap.gantt.config.Shape({
+		shapeClassName: "sap.gantt.shape.ext.ulc.UlcClipPath",
+		shapeProperties: {
+			legend: "ClipPath legend",
+			ariaLabel: "ClipPath",
+			isBulk: true
+		}
+	}),new sap.gantt.config.Shape({
+		key: "phase",
+		shapeDataName: "phase",
+		modeKeys: ["D"],
+		level: 30,
+		shapeClassName: "sap.gantt.shape.ext.Chevron",
+		shapeProperties: {
+			legend: "Chevron legend",
+			ariaLabel: "Chevron",
+			title: "Chevron",
+			fill: "url('#list_pattern_slash_orange')",
+			isDuration: true
+		}
+	}), new sap.gantt.config.Shape({
+		shapeClassName: "sap.gantt.shape.Path",
+		shapeProperties: {
+			legend: "Path legend",
+			ariaLabel: "Path",
+			title: "Path",
+			isBulk: true,
+			stroke: "#30920D",
+			strokeWidth: "2"
+		}
+	}), new sap.gantt.config.Shape({
+		shapeClassName: "sap.gantt.shape.Line",
+		shapeProperties: {
+			legend: "Line legend",
+			ariaLabel: "Line",
+			title: "Line",
+			stroke: "blue",
+			isBulk: true
+		}
+	}), new sap.gantt.config.Shape({
+		key: "activity",
+		shapeClassName: "sap.gantt.shape.Rectangle",
+		shapeDataName: "activity",
+		level: 10,
+		shapeProperties: {
+			legend: "Rectangle legend",
+			ariaLabel: "Rectangle",
+			title: "Rectangle",
+			fill: "url('#list_pattern_backslash_grey')",
+			yBias: 0.5,
+			isDuration: true,
+			title: "Hello"
+		}
+	}), new sap.gantt.config.Shape({
+		key: "text",
+		shapeClassName: "sap.gantt.shape.Text",
+		shapeDataName: "temp",
+		level: 4,
+		shapeProperties: {
+			legend: "Text legend",
+			ariaLabel: "Text",
+			title: "Text",
+			text: "Text",
+			stroke: "#58ACFA",
+			strokeWidth: 0.5,
+			fontSize: 15
+		}
+	}), new sap.gantt.config.Shape({
+		key: "image",
+		shapeClassName: "sap.gantt.shape.Image",
+		shapeProperties: {
+			legend: "Image legend",
+			ariaLabel: "Image",
+			title: "Image",
+			image: "../image/tractor.png"
+		}
+	}), new sap.gantt.config.Shape({
+		key: "pline",
+		shapeClassName: "sap.gantt.shape.Polyline",
+		shapeDataName: "pline",
+		level: 2,
+		shapeProperties: {
+			legend: "Polyline legend",
+			ariaLabel: "Polyline",
+			title: "Polyline",
+			stroke: "#3BB9FF",
+			strokeWidth: 2
+		}
+	}), new sap.gantt.config.Shape({
+		key: "circle",
+		shapeClassName: "sap.gantt.shape.Circle",
+		shapeProperties: {
+			legend: "Circle legend",
+			ariaLabel: "Circle",
+			title: "Circle",
+			fill: "orange"
+		}
+	}), new sap.gantt.config.Shape({
+		key: "pol",
+		shapeClassName: "sap.gantt.shape.Polygon",
+		shapeProperties: {
+			legend: "Polygon legend",
+			ariaLabel: "Polygon",
+			title: "Polygon",
+			stroke: "orange"
+		}
+	})];
+
+	var oListLegend = new sap.gantt.legend.ListLegend({
+//		legendWidth: 24,
+//		legendHeight: 24,
+		svgDefs: oListSvgDefs,
+		enableCheckBox: true,
+		shapes: aShapeConfig/*,
+		calendarDef: new sap.gantt.def.cal.CalendarDefs({
+			defs: [new sap.gantt.def.cal.Calendar({
+					key: "calendar",
+					backgroundColor: "@sapMediumBackground",
+					timeIntervals: {
+						path: "test>data",
+						templateShareable: true,
+						template: new sap.gantt.def.cal.TimeInterval({
+							startTime: "{test>startTime}",
+							endTime: "{test>endTime}"
+						})
+					}
+				})
+			]
+		})*/
+	});
+	oListLegend.attachCheckBoxChange(this._onCheckBoxChange, this);
+
+	function _onCheckBoxChange(oEvent) {
+		var oParameters = oEvent.getParameters();
+		var sValue = oParameters.value ? "checked" : "unchecked";
+		sap.m.MessageToast.show("The checkbox of " + oParameters.legendType + " is " + sValue + "\n", {width: "50em", my: "center center", at: "center center", duration: 2000 });
+	};
+
+	var oLegendSection5 = new sap.m.Page({
+		title :'Shapes (list template)',
+		content : oListLegend
+	});
+
+	function updateMode(sClasses) {
+		jQuery("body").removeClass("sapUiSizeCompact")
+		.removeClass("sapUiSizeCondensed").removeClass("sapUiSizeCozy").addClass(sClasses);
+		oDimensionLegend.rerender();
+		oDimensionLegend2.rerender();
+		oListLegend.rerender();
+	};
+
+	var oModeRadioGroup = new sap.m.RadioButtonGroup({
+		columns: 1,
+		selectedIndex: 0,
+		buttons: [
+			new sap.m.RadioButton({
+				id: "comp",
+				text: "Compact mode",
+				select: function() {
+					updateMode("sapUiSizeCompact");
+				}
+			}),
+			new sap.m.RadioButton({
+				id: "cozy",
+				text: "Cozy mode",
+				select: function() {
+					updateMode("sapUiSizeCozy");
+				}
+			}),
+			new sap.m.RadioButton({
+				id: "cond",
+				text: "Condensed mode",
+				select: function() {
+					updateMode("sapUiSizeCondensed sapUiSizeCompact");
+				}
+			})
+		]
+	});
+
+	var oLegendMap = {
+		"Any Control": {legendSection: oLegendSection1, value: true},
+		"Message": {legendSection: oLegendSection2, value: false},
+		"Document": {legendSection: oLegendSection3, value: true},
+		"Activity": {legendSection: oLegendSection4, value: true},
+		"Shapes": {legendSection: oLegendSection5, value: true}
+	};
+	var oAddButton= new sap.m.Select({
+		icon : "sap-icon://add",
+		tooltip : "Add Legend Section",
+		type: sap.m.SelectType.IconOnly,
+		autoAdjustWidth: true,
+		forceSelection: false,
+		change: function (oEvent) {
+			var oSelectedItem = oEvent.getParameter("selectedItem");
+			if (oSelectedItem) {
+				var sText = oSelectedItem.getText();
+				oLegendMap[sText].value = true;
+				this.getParent().removeItem(oSelectedItem);
+				oRemoveButton.addItem(oSelectedItem);
+				oLegendContainer.insertLegendSection(oLegendMap[sText].legendSection, 0);
+				oLegendContainer.rerender();
+			}
+		}
+	});
+
+	var oRemoveButton= new sap.m.Select({
+		icon : "sap-icon://less",
+		tooltip : "Remove Legend Section",
+		type: sap.m.SelectType.IconOnly,
+		autoAdjustWidth: true,
+		forceSelection: false,
+		change: function (oEvent) {
+			var oSelectedItem = oEvent.getParameter("selectedItem");
+			if (oSelectedItem) {
+				var sText = oSelectedItem.getText();
+				oLegendMap[sText].value = false;
+				this.getParent().removeItem(oSelectedItem);
+				oAddButton.addItem(oSelectedItem);
+				oLegendContainer.removeLegendSection(oLegendMap[sText].legendSection);
+				oLegendContainer.rerender();
+			}
+		}
+	});
+	for (var key in oLegendMap) {
+		if (!oLegendMap[key].value){
+			oAddButton.addItem(new sap.ui.core.Item({text: key}));
+		} else {
+			oRemoveButton.addItem(new sap.ui.core.Item({text: key}));
+			oLegendContainer.addLegendSection(oLegendMap[key].legendSection);
+		}
+	}
+	var oLayout = new sap.m.HBox({
+		items: [oLegendContainer, oModeRadioGroup, oAddButton, oRemoveButton]
+	});
+
+	oLayout.placeAt("content");
+</script>
+
+</head>
+
+<body id="body" class="sapUiBody sapUiSizeCompact">
+	<h1 id="header">Test Page for <code>sap.gantt.LegendContainer</code></h1>
+	<div id="content"></div>
+</body>
+</html>

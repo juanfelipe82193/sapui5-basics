@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sinaDefine(['../core/core','./SinaObject'],function(c,S){"use strict";return S.derive({_meta:{properties:{attributeLabel:{required:false},valueLabel:{required:false},userDefined:{required:false}}},_initClone:function(o){this.attributeLabel=o.attributeLabel;this.valueLabel=o.valueLabel;this.userDefined=o.userDefined;},_equals:function(o){return true;}});});

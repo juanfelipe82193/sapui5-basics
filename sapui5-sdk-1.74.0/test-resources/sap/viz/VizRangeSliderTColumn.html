@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta charset="UTF-8" />
+		<title>UI5 CVOM HTML5 VizFrame</title>
+		<meta name="keywords" content="Control Table" />
+		<link rel="stylesheet" type="text/css"
+		href="../../../resources/sap/viz/ui5/controls/css/controls.css"/>
+		
+		
+		<script id="sap-ui-bootstrap" src="../../../resources/sap-ui-core.js"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-libs="sap.viz,sap.m "></script>
+		
+
+		<script id='horizontal_VizContainerSimpleExample'>
+		var oRangeSlider;
+		// create a VizFrame
+        var oVizFrame = new sap.viz.ui5.controls.VizSlider({
+          'uiConfig' : {
+            'applicationSet': 'fiori'
+          },
+          'vizType' : 'timeseries_line'
+        
+        });				
+			  //var chartPopover = new sap.viz.ui5.controls.Popover({});
+			var model = new sap.ui.model.json.JSONModel(
+{
+    "businessData": [{
+        "Country": "China",
+        "Tax": 68.74129734933376,
+        "Date": 1420070400000
+    },
+    {
+        "Country": "Japan",
+        "Tax": 469.49445689097047,
+        "Date": 1420070400000
+    },
+    {
+        "Country": "France",
+        "Tax": 786.9790350086987,
+        "Date": 1420070400000
+    },
+    {
+        "Country": "UK",
+        "Tax": 235.14807038009167,
+        "Date": 1420070400000
+    },
+    {
+        "Country": "China",
+        "Tax": 753.5625018645078,
+        "Date": 1422662400000
+    },
+    {
+        "Country": "Japan",
+        "Tax": 666.7062356136739,
+        "Date": 1422662400000
+    },
+    {
+        "Country": "France",
+        "Tax": 849.2572987452149,
+        "Date": 1422662400000
+    },
+    {
+        "Country": "UK",
+        "Tax": 37.66878182068467,
+        "Date": 1422662400000
+    },
+    {
+        "Country": "China",
+        "Tax": 219.8575211223215,
+        "Date": 1425254400000
+    },
+    {
+        "Country": "Japan",
+        "Tax": 881.2251812778413,
+        "Date": 1425254400000
+    },
+    {
+        "Country": "France",
+        "Tax": 282.6830903068185,
+        "Date": 1425254400000
+    },
+    {
+        "Country": "UK",
+        "Tax": 765.7210510224104,
+        "Date": 1425254400000
+    },
+    {
+        "Country": "China",
+        "Tax": 947.2194274421781,
+        "Date": 1427846400000
+    },
+    {
+        "Country": "Japan",
+        "Tax": 309.41323027946055,
+        "Date": 1427846400000
+    },
+    {
+        "Country": "France",
+        "Tax": 787.0587811339647,
+        "Date": 1427846400000
+    },
+    {
+        "Country": "UK",
+        "Tax": 566.6894514579326,
+        "Date": 1427846400000
+    },
+    {
+        "Country": "China",
+        "Tax": 473.3121800236404,
+        "Date": 1430438400000
+    },
+    {
+        "Country": "Japan",
+        "Tax": 702.9698025435209,
+        "Date": 1430438400000
+    },
+    {
+        "Country": "France",
+        "Tax": 447.6791324559599,
+        "Date": 1430438400000
+    },
+    {
+        "Country": "UK",
+        "Tax": 820.7472339272499,
+        "Date": 1430438400000
+    },
+    {
+        "Country": "China",
+        "Tax": 60.784638626500964,
+        "Date": 1433030400000
+    },
+    {
+        "Country": "Japan",
+        "Tax": 12.696569785475731,
+        "Date": 1433030400000
+    },
+    {
+        "Country": "France",
+        "Tax": 913.2153333630413,
+        "Date": 1433030400000
+    },
+    {
+        "Country": "UK",
+        "Tax": 143.86586216278374,
+        "Date": 1433030400000
+    }]
+}
+);
+var dataset = new sap.viz.ui5.data.FlattenedDataset(
+{
+    "dimensions": [{
+        "name": "Country",
+        "value": "{Country}"
+    },
+    {
+        "name": "Date",
+        "value": "{Date}",
+        "dataType": "date"
+    },
+    {
+        "name": "Date",
+        "value": "{Date}"
+    }],
+    "measures": [{
+        "name": "Tax",
+        "value": "{Tax}"
+    }],
+    "data": {
+        "path": "/businessData"
+    }
+});
+oVizFrame.setModel(model);
+oVizFrame.setDataset(dataset);
+var feeds =[
+	new sap.viz.ui5.controls.common.feeds.FeedItem({"uid":"timeAxis","type":"Dimension","values":["Date"]})
+	,
+	new sap.viz.ui5.controls.common.feeds.FeedItem({"uid":"color","type":"Dimension","values":["Country"]})
+	,
+	new sap.viz.ui5.controls.common.feeds.FeedItem({"uid":"valueAxis","type":"Measure","values":["Tax"]})
+	]
+feeds.forEach(function(feedItem) {
+oVizFrame.addFeed(feedItem);
+
+})
+		
+        oVizFrame.setWidth("800px");
+        oVizFrame.setHeight("200px");
+     
+				// oVizFrame.
+				// attach the model to the chart and display it
+// 				oVizFrame.setDataset(oDataset);
+// 				oVizFrame.setModel(oModel);
+
+// 				// set feeds
+// 				var feedPrimaryValues = new sap.viz.ui5.controls.common.feeds.FeedItem({
+// 					'uid' : "primaryValues",
+// 					'type' : "Measure",
+// 					'values' : ["Profit"]
+// 				}), feedAxisLabels = new sap.viz.ui5.controls.common.feeds.FeedItem({
+// 					'uid' : "axisLabels",
+// 					'type' : "Dimension",
+// 					'values' : ["Country"]
+// 				});
+
+// 				oVizFrame.addFeed(feedPrimaryValues);
+// 				oVizFrame.addFeed(feedAxisLabels);
+				
+                oVizFrame.attachRangeChanged(function(e){
+                    var parm = e.getParameters().data;
+                    console.log(parm);
+                });
+				
+				oVizFrame.placeAt("chart");
+// 				oVizFrame.attachRenderComplete(
+// 					createRangeSlider    
+// 				);
+			    
+// 				var boundingBox;
+// 			    var lMock = document.getElementById("mock_left");
+// 			    var rMock = document.getElementById("mock_right");
+// 				function createRangeSlider(){
+// 				    boundingBox = document.querySelector("#chart .v-m-plot").getBoundingClientRect();
+// 				    var fontSize = parseFloat(getComputedStyle(document.getElementById("chart")).fontSize);
+// 				    lMock = document.getElementById("mock_left");
+// 				     rMock = document.getElementById("mock_right");
+// 				    lMock.style.height = boundingBox.height + "px";
+// 				    rMock.style.height = boundingBox.height + "px";
+// 				    lMock.style.top = boundingBox.top + "px";
+// 				    rMock.style.top = boundingBox.top + "px";
+				
+// 				    var strHeight = boundingBox.height + "px";
+// 				    var ele = document.getElementById('horizontal_sample');
+// 				    ele.style.width = strHeight;
+// 				    ele.style.height = boundingBox.height + "px";
+// 				    ele.style.left = (boundingBox.left - fontSize * 1.0625) + "px";
+// 				    ele.style.top = (boundingBox.top - fontSize * 1.406) + "px";
+// 				    ele.style.position = "absolute";
+// 			  		// create a VizFrame
+// 		            oRangeSlider = new sap.m.RangeSlider({
+// 		                  width:(boundingBox.width + fontSize * 1.0625 * 2 ) + "px",
+// 		                  showHandleTooltip: true,
+// 		               //   liveChange: processRangeChange
+// 		               //   showAdvancedTooltips:true
+		              
+// 		              });	
+// 		           //  oRangeSlider.setShowAdvancedTooltip(true);
+// 		         //    oRangeSlider.setInputsAsTooltips(true);
+	
+// 					// oVizFrame.
+// 					// attach the model to the chart and display it
+				
+// 				   oRangeSlider.attachChange(processRangeChange);
+// 				  // oRangeSlider.attachLiveChange(processRangeChange);
+// 					oRangeSlider.placeAt("horizontal_sample");
+					
+
+
+	
+					
+// 				}
+				
+			
+				
+				
+				
+
+
+		</script>
+
+		
+	</head>
+	<body class="sapUiBody">
+		<div id="chart" style="top:100px; position:absolute;" > </div>
+		
+		
+	
+	</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="UTF-8">
+
+	<script
+			data-sap-ui-libs="sap.ui.vk, sap.ui.unified, sap.m, sap.ui.layout"
+			src="../../../../../resources/sap-ui-core.js">
+	</script>
+
+	<script>
+		// We will create a custom viewport handler which supports
+		// multi-selection using the ctrl key + click
+		var CustomHandler = sap.ui.vk.ViewportHandler.extend("CustomHandler");
+
+		// Overriding the keyEventHandler method from ViewportHandler
+		CustomHandler.prototype.keyEventHandler = function(event) {
+			// If it's the CTRL key that was pressed
+			if (event.keyCode === 17) {
+				switch (event.type) {
+					case "keydown":
+						this._isMultiSelectOn = true;
+						break;
+					case "keyup":
+						this._isMultiSelectOn = false;
+						break;
+				}
+			}
+		};
+
+		// Overriding the click method from ViewportHandler
+		CustomHandler.prototype.click = function(event) {
+			if (this._isMultiSelectOn) {
+				var x = event.x - this._rect.x,
+					y = event.y - this._rect.y,
+					nodeRef = this._viewport.hitTest(x, y);
+
+				if (this._viewport._viewStateManager && nodeRef !== sap.ve.dvl.DVLID_INVALID) {
+					var currentState = this._viewport._viewStateManager.getSelectionState(nodeRef);
+					this._viewport._viewStateManager.setSelectionState(nodeRef, !currentState, false);
+				}
+			} else {
+				sap.ui.vk.ViewportHandler.prototype.click.call(this, event);
+			}
+		};
+
+		var viewer = new sap.ui.vk.Viewer({
+			showSceneTree: false,
+			height: "300px",
+			width: "300px",
+			enableToolbar: false,
+			contentResources: [
+				new sap.ui.vk.ContentResource({
+					source: "../internal/media/nodes_boxes.vds",
+					sourceType: "vds",
+					sourceId: "123"
+				})
+			]
+		}).placeAt("content");
+
+
+		viewer.attachSceneLoadingSucceeded(function(event) {
+			var viewport = viewer.getViewport(),
+				loco = viewport._loco;
+
+			// TODO: remove access to private members.
+
+			// removing the default handlers
+			if (viewport._viewportHandler) {
+				loco.removeHandler(viewport._viewportHandler);
+			}
+			if (viewport._smart2DHandler) {
+				loco.removeHandler(viewport._smart2DHandler);
+			}
+			// adding the new handler to loco
+			loco.addHandler(new CustomHandler(viewport, viewer.getViewStateManager()));
+		});
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h3>1. Click the viewport to put focus on it.</h3>
+	<h3>2. Use click for single node selection.</h3>
+	<h3>3. Use CTRL + click for node multi selection.</h3>
+	<div id="content"></div>
+</body>
+
+</html>

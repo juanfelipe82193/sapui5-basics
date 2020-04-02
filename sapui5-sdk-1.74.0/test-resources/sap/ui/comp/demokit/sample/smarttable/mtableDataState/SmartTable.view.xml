@@ -1,0 +1,83 @@
+<mvc:View xmlns="sap.m" 
+	xmlns:core="sap.ui.core" 
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:plugins="sap.m.plugins"
+	xmlns:smartTable="sap.ui.comp.smarttable"
+	controllerName="sap.ui.comp.sample.smarttable.mtableDataState.SmartTable"
+	height="100%">
+
+	<smartTable:SmartTable entitySet="LineItemsSet"
+		showRowCount="true" tableType="ResponsiveTable" placeToolbarInTable="true"
+		header="Line Items" persistencyKey="SmartTableDataState"
+		enableAutoBinding="true" useVariantManagement="false" demandPopin="true"
+		class="sapUiResponsiveContentPadding" ignoredFields="Bukrs,Hwaer,Kunnr">
+		<smartTable:customToolbar>
+			<OverflowToolbar>
+				<Button id="msgBtn" icon="sap-icon://message-popup" type="Emphasized"
+					visible="false" />
+				<ToolbarSpacer />
+				<ToggleButton text="Plugin Enabled" pressed="true"
+					press="onEnablePress" />
+				<ComboBox placeholder="Show message strip for" change=".onFilterChange">
+					<core:Item text="All messages" key="" />
+					<core:Item text="Error messages" key="Error" />
+					<core:Item text="Warning messages" key="Warning" />
+					<core:Item text="Success messages" key="Success" />
+					<core:Item text="Information messages" key="Information" />
+				</ComboBox>
+				<ToggleButton text="Custom Handling" press=".onCustomHandlingPress" />
+				<Button icon="sap-icon://paper-plane" text="Show Message"
+					press=".showRandomMessage" />
+				<ToolbarSeparator />
+			</OverflowToolbar>
+		</smartTable:customToolbar>
+		<Table id="table" growing="true" growingThreshold="15">
+			<dependents>
+				<plugins:DataStateIndicator id="dataStatePlugin"
+					filter=".dataStateFilter" dataStateChange=".onDataStateChange" />
+			</dependents>
+			<infoToolbar>
+				<OverflowToolbar design="Transparent" height="2.5rem">
+					<Label text="Add Table Message: " design="Bold" />
+					<Button type="Reject" icon="sap-icon://message-error"
+						tooltip="Add table error" press=".addTableMessage('Error')" />
+					<Button icon="sap-icon://message-warning" tooltip="Add table warning"
+						press=".addTableMessage('Warning')" />
+					<Button type="Accept" icon="sap-icon://message-success"
+						tooltip="Add table success" press=".addTableMessage('Success')" />
+					<Button icon="sap-icon://message-information" tooltip="Add table information"
+						press=".addTableMessage('Information')" />
+					<ToolbarSeparator />
+					<Label text="Add Input Message: " design="Bold" />
+					<Button type="Reject" icon="sap-icon://message-error"
+						tooltip="Add input error" press=".addInputMessage('Error')" />
+					<Button icon="sap-icon://message-warning" tooltip="Add input warning"
+						press=".addInputMessage('Warning')" />
+					<Button type="Accept" icon="sap-icon://message-success"
+						tooltip="Add input success" press=".addInputMessage('Success')" />
+					<Button icon="sap-icon://message-information" tooltip="Add input information"
+						press=".addInputMessage('Information')" />
+					<ToolbarSpacer />
+					<Button icon="sap-icon://delete" text="Clear all messages"
+						type="Emphasized" press=".clearMessages" />
+				</OverflowToolbar>
+			</infoToolbar>
+			<columns>
+				<Column>
+					<customData>
+						<core:CustomData key="p13nData"
+							value='\{"columnKey": "Name1", "columnIndex":"0", "leadingProperty": "Name1", "additionalProperty": "Kunnr"}' />
+					</customData>
+					<Text text="Customer" />
+				</Column>
+			</columns>
+			<items>
+				<ColumnListItem>
+					<cells>
+						<Input value="{Name1}" description="{Kunnr}" />
+					</cells>
+				</ColumnListItem>
+			</items>
+		</Table>
+	</smartTable:SmartTable>
+</mvc:View>

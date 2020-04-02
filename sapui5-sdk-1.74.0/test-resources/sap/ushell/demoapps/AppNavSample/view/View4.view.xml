@@ -1,0 +1,162 @@
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m" controllerName="sap.ushell.demo.AppNavSample.view.View4"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:l="sap.ui.layout"
+    xmlns:code="sap.ui.codeeditor"
+    xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page title="Get semanticObjectLinks and isIntentSupported">
+		<content>
+			<form:SimpleForm 
+                id="form"
+                width="auto"
+                layout="ResponsiveGridLayout"
+                editable="true"
+                labelSpanL="3"
+                labelSpanM="3"
+                emptySpanL="4"
+                emptySpanM="4"
+                columnsL="1"
+                columnsM="1"
+                title="Call Method"
+                minWidth="1024"
+                maxContainerCols="2">
+
+              <VBox>
+                  <HBox>
+                      <Label text="Method:" design="Bold" class="sapUiSmallMarginTop"/>
+                      <RadioButtonGroup select="onMethodSelected" columns="5">
+                        <buttons>
+                          <RadioButton id="getSemanticObjectLinks" text="getSemanticObjectLinks" />
+                          <RadioButton id="getLinks" text="getLinks"/>
+                        </buttons>
+                      </RadioButtonGroup>
+                  </HBox>
+                  <Label text="Call arguments:" design="Bold" class="sapUiSmallMarginTop sapUiSmallMarginBottom"/>
+
+                  <HBox>
+                      <Label textAlign="Right" width="100px" text="semanticObject" class="sapUiSmallMarginEnd sapUiSmallMarginTop"/>
+                      <Input id="f2" type="Text" value="{mdlInput>/SO}" placeholder="Semantic Object" liveChange="handleTextLiveChange" />
+                  </HBox>
+                  <HBox visible="{= ${v1>/callMethod} === 'getLinks' }">
+                      <Label textAlign="Right" width="100px" text="action" class="sapUiSmallMarginTop sapUiSmallMarginEnd"/>
+                      <Input id="f3" value="{mdlInput>/action}" type="Text" liveChange="handleTextLiveChange" />
+                  </HBox>
+                  <HBox>
+                      <Label textAlign="Right" width="100px" text="params" class="sapUiSmallMarginTop sapUiSmallMarginEnd"/>
+                      <VBox visible="{= !${mdlInput>/useExtendedParamSyntax} }">
+                          <Input 
+                              id="f4" value="{mdlInput>/params}" type="Text" placeholder="params" tooltip="parameter string" liveChange="handleTextLiveChange" />
+                      </VBox>
+                      <VBox visible="{mdlInput>/useExtendedParamSyntax}">
+                          <code:CodeEditor 
+                              editable="true"
+                              height="200px" 
+                              width="500px"
+                              id="extendedParams"
+                              type="javascript"
+                              value="{mdlInput>/paramsExtended}"
+                              lineNumbers="false"
+                          ></code:CodeEditor>
+                      </VBox>
+                      <HBox visible="{= ${v1>/callMethod} === 'getLinks'}">
+                          <Switch change="onParamSyntaxChanged" class="sapUiSmallMarginBegin" state="{mdlInput>/useExtendedParamSyntax}" />
+                          <Label text="use extended syntax" class="sapUiSmallMarginTop sapUiTinyMarginBegin"/>
+                      </HBox>
+                      <VBox visible="{= !${mdlInput>/useExtendedParamSyntax} }">
+                          <Button 
+                              id="btnAddParams" text="Add parameters" press="handleBtnAddParamsPress" class="sapUiSmallMarginBeginEnd"/>
+                      </VBox>
+                  </HBox>
+                  <HBox visible="{= ${v1>/callMethod} === 'getLinks' }">
+                      <Label textAlign="Right" width="100px" text="sortResultsBy" class="sapUiSmallMarginTop sapUiSmallMarginEnd"/>
+                      <ComboBox value="intent" change="onSortResultsByChanged">
+                          <core:Item key="default" text="intent" />
+                          <core:Item text="text" />
+                          <core:Item text="priority" />
+                      </ComboBox>
+                  </HBox>
+                  <HBox visible="{= ${v1>/callMethod} === 'getLinks' }">
+                      <Switch state="{mdlInput>/treatTechHintAsFilter}" />
+                      <Label class="sapUiTinyMarginBegin sapUiSmallMarginTop" text="treatTechHintAsFilter"/>
+                  </HBox>
+                  <HBox visible="{= ${v1>/callMethod} === 'getLinks' }">
+                      <Switch state="{mdlInput>/withAtLeastOneUsedParam}" />
+                      <Label class="sapUiTinyMarginBegin sapUiSmallMarginTop" text="withAtLeastOneUsedParam" />
+                  </HBox>
+                  <HBox>
+                      <Switch state="{mdlInput>/ignoreFormFactor}" />
+                      <Label class="sapUiTinyMarginBegin sapUiSmallMarginTop" text="ignoreFormFactor" />
+                  </HBox>
+                  <HBox>
+                      <Switch state="{mdlInput>/compactIntents}" />
+                      <Label class="sapUiTinyMarginBegin sapUiSmallMarginTop" text="compactIntents" />
+                  </HBox>
+
+                  <Button id="btnGSOLinks" text="Call {v1>/callMethod}" press="handleBtnGSOPress" class="testToView2Btn"/>
+              </VBox>
+			</form:SimpleForm>
+            <Panel expandable="true" expanded="false" headerText="Status">
+                <FlexBox direction="Column" alignItems="Start">
+                  <items>
+                    <HBox>
+                        <Label text="isIntentSupported?" class="sapUiTinyMarginEnd"/>
+                        <core:Icon src="sap-icon://status-error" color="{v1>/supportedColor}" />
+                        <Text text="{v1>/supported}"/>
+                    </HBox>
+                    <HBox>
+                        <Label text="isNavigationSupported?" class="sapUiTinyMarginEnd"/>
+                        <core:Icon src="sap-icon://status-error" color="{v1>/navSupportedColor}" />
+                        <Text text="{v1>/navSupported}"/>
+                    </HBox>
+                    <HBox>
+                        <Label text="Hash length:" class="sapUiTinyMarginEnd"/>
+                        <Text text="{v1>/hashFragmentLength} characters" />
+                    </HBox>
+                    <HBox>
+                        <Label text="Hash:" class="sapUiSmallMarginEnd"/>
+                        <Text text="{v1>/hashFragment}" />
+                    </HBox>
+                    <HBox>
+                        <Label text="Method Call Count:" class="sapUiSmallMarginEnd"/>
+                        <Text text="{v1>/callCount}" />
+                    </HBox>
+                    <VBox>
+                        <Label text="Method Call:" />
+                        <code:CodeEditor 
+                            editable="false"
+                            height="300px" 
+                            width="800px"
+                            id="callInfo"
+                            type="javascript"
+                            value="sap.ushell.Container.getService('CrossApplicationNavigation').{v1>/callMethod}({v1>/callArgs});"
+                            lineNumbers="false"
+                        ></code:CodeEditor>
+                    </VBox>
+                  </items>
+                </FlexBox>
+            </Panel>
+            <Panel expandable="true" expanded="true"
+                   class="sapUiNoMargin sapUiNoPadding"
+		        headerText="Results from call #{v1>/callCount} of {v1>/callMethod} ({= ${v1>/links}.length })">
+
+               <List id="categoryList"
+                   class="sapUiNoMargin"
+                   mode="SingleSelectMaster"
+                   items="{v1>/links}">
+                   <items>
+                       <InputListItem>
+                           <FlexBox alignItems="Center" justifyContent="SpaceBetween">
+                               <items>
+                                   <Text maxLines="2" width="250px" text="{v1>name}" />
+                                   <Link textAlign="Begin" text="{v1>link}" width="500px" href="{v1>escapedLink}" />
+                                   <Button icon="sap-icon://zoom-in" customData:linkText="{v1>link}" press="handleBtnExpandPress"/>
+                               </items>
+                           </FlexBox>
+                       </InputListItem>
+                   </items>
+                </List>
+            </Panel>
+		</content>
+	</Page>
+</core:View>

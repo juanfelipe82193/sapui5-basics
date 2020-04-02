@@ -1,0 +1,192 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		.col {
+			color: red;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 100%;
+			/*height: 400px;*/
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 100%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+	
+	// have some data
+	var oData = 
+		{
+			Spots :
+				[ { "key": "1", "pos": "-100; 0; 0"},
+				  { "key": "2", "pos": "-50; 0; 0"},
+				  { "key": "3", "pos": "0; 0; 0"},
+				  { "key": "4", "pos": "50; 0; 0"},
+				  { "key": "5", "pos": "100; 0; 0"},
+				]	
+		};
+	var activeSpot = 0;
+	var detailSpot = 0;
+	
+	// create model and set the data
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+		
+	// sample event handlers	
+	function onClick( evt )
+	{
+		detailSpot = this.getText();
+		this.openDetailWindow( "Spot " + detailSpot );
+	};
+
+	function onContextMenu( evt )
+	{
+		var activeSpot = this.getText();
+		var oMenu = evt.mParameters.menu;
+		oMenu.addItem( new sap.ui.unified.MenuItem( { text : "Spot " + activeSpot } ) );
+		oMenu.addItem( new sap.ui.unified.MenuItem( { text : "Remove", select : removeSpot.bind(undefined, activeSpot) } ) );
+		this.openContextMenu( oMenu );
+	};
+	function onCloseDetail(evt) {
+			detailSpot = 0;
+	};
+	// create map and bind to model
+	var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+	   width : "100%",
+    	height: "100%",
+		closeWindow : onCloseDetail,
+    	vos: [
+    	  	new sap.ui.vbm.Spots( {
+    	  		items: {
+    	  			path: "/Spots",
+    	  			template: new sap.ui.vbm.Spot( { key:      "{key}",
+    	  				                              type:     "Default", 
+    	  				                              text:     "{key}",
+    	  				                              position: "{pos}",
+    	  				                              click:    onClick,
+    	  				                              contextMenu: onContextMenu
+    	  				                             })
+    	  		}
+    	  	}
+    	  	)
+    	]
+	});
+
+	oVBI.setModel( oModel );
+	oVBI.placeAt("content");
+
+	oVBI.setMapConfiguration(JSON.parse(localStorage.getItem('map')));
+
+	// modification of the context
+	function onAddDT() {
+		oVBI.openDetailWindow( "8.5;49.5;0", { caption : "Unrelated Detail Window"});
+		activeSpot = 0;
+	};
+	function onDTClose() {
+       oVBI.closeAnyDetailWindow();
+		detailSpot = 0;
+	};	
+	function onRemoveSpot() {
+		removeSpot(detailSpot);
+		detailSpot = 0;
+	};
+	function onRemoveSpots() {
+		var aVO = oVBI.getVos();
+		oVBI.removeVo(aVO[0]);
+	};	
+	function onRemoveVOs() {
+		oVBI.removeAllVos();
+	};
+	
+	function removeSpot(key) {
+		oData = oModel.getData();
+		for (var nI = 0; nI < oData.Spots.length; ++nI) {
+			if (oData.Spots[nI].key === key) {
+				oData.Spots.splice(nI, 1); 
+			}
+		}
+		oModel.setData(oData);
+	};	
+	
+	
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business GeoMap Interaction Sample</h1>
+
+		<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test the Visual Business GeoMap Control with Detail Windows and Context Menus</p>
+		<br>
+		<h3> To test: </h3>
+			<ol>
+				<li> Check that on initial load you are able to see five spots on the map.</li>
+				<li> Click on each of the five spots and make sure you can see a detail window for each. </li>
+				<li> Using the cross on the upper right corner, check that you can close the detail window for each of the five spots.</li>
+				<li> Check that you can only open one detail window at a time.</li>
+				<li> Click "Add a Detail Window at a fixed position" and check that a detail window opens with the content "Unrelated Detail Window".You should be able to open a Detail Window at a given position without a relation to a Visual Object (spot).</li>
+				<li> Click on a spot to open its detail window and then click "Remove the Spot with open Detail Window". This should remove both the spot and the detail window.</li>
+				<li> Click a spot to open its detail window and then click "Close any open Detail Window". Check that any open detail window is closed.</li>
+				<li> Click a spot to open detail window and then click "Remove all Spots". Check that all five spots and their detail windows are removed.</li>
+				<li> Click "Remove all VOs" and check that all visual objects are removed <i>Similar result to 8 above</i> </li>
+				<li>With a right click on a Spot you get a Context Menu. It can be visible in addition to a Detail Window.</li>
+				<li> Right click on the visual object (spot) and check that a context menu opens.</li>
+				<li> In the context menu for each spot, check that when you click "remove" the spot is removed.</li>
+				<li> Click on each spot to open a detail window and then right click to <b>also</b> open the context menu. Check that you can see <b> both the detail window and the context menu</b></li>
+				<li> open a context menu and detail window for each spot. Clcik remove in the context menu and check that the detail window, context menu and spot are all removed.</li>
+			</ol>
+			</div>
+		<div id="description2">
+
+		 <br />
+		 <button id="addDetailWindow" onClick="onAddDT()">Add a Detail Window at a fixed position</button>
+		 <button id="CloseDetailWindow" onClick="onDTClose()">Close any open Detail Window</button>
+		 <button id="RemoveSpot" onClick="onRemoveSpot()">Remove the Spot with open Detail Window</button>
+		 <button id="RemoveSpots" onClick="onRemoveSpots()">Remove all Spots</button>
+		 <button id="RemoveVos" onClick="onRemoveVOs()">Remove all VOs</button>	 
+				 <div class="ratio_box">
+		 	<div class="content" id="content"></div></div>
+		 </div>
+	</body>
+</html>

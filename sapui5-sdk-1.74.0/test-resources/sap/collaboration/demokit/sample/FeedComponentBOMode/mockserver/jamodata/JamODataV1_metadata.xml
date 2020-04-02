@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx Version="1.0" 
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" 
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" 
+    xml:base="http://example.com" 
+    xml:id="">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="SAPJam" 
+            xmlns:d="http://schemas.microsoft.com/ado/2008/09/dataservices" 
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xml:id="Schema">
+            <EntityType Name="Folder">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                    <PropertyRef Name="FolderType"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false"/>
+                <Property Name="FolderType" Type="Edm.String" Nullable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false"/>
+                <Property Name="IsPrivate" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="LastModifiedAt" Type="Edm.DateTimeOffset" Nullable="false"/>
+                <NavigationProperty Name="ContentItems" Relationship="SAPJam.Folder_ContentItems" FromRole="Folder_Source" ToRole="ContentItem_Target"/>
+                <NavigationProperty Name="ContentListItems" Relationship="SAPJam.Folder_ContentListItems" FromRole="Folder_Source" ToRole="ContentListItem_Target"/>
+                <NavigationProperty Name="Creator" Relationship="SAPJam.Folder_Creator" FromRole="Folder_Source" ToRole="Member_Target"/>
+                <NavigationProperty Name="Folders" Relationship="SAPJam.Folder_Folders" FromRole="Folder_Source" ToRole="Folder_Target"/>
+                <NavigationProperty Name="Group" Relationship="SAPJam.Folder_Group" FromRole="Folder_Source" ToRole="Group_Target"/>
+                <NavigationProperty Name="ParentFolder" Relationship="SAPJam.Folder_ParentFolder" FromRole="Folder_Source" ToRole="Folder_Target"/>
+                <NavigationProperty Name="PrivateFolderMembers" Relationship="SAPJam.Folder_PrivateFolderMembers" FromRole="Folder_Source" ToRole="Member_Target"/>
+            </EntityType>
+            <EntityType Name="Group">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="true"/>
+                <Property Name="IsActive" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="AutoSubscribe" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="Announcement" Type="Edm.String" Nullable="true"/>
+                <Property Name="OverviewAsLanding" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="Participation" Type="Edm.String" Nullable="false"/>
+                <Property Name="InvitePolicy" Type="Edm.String" Nullable="true"/>
+                <Property Name="UploadPolicy" Type="Edm.String" Nullable="true"/>
+                <Property Name="ModerationPolicy" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="GroupType" Type="Edm.String" Nullable="false"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Nullable="false"/>
+                <Property Name="LastModifiedAt" Type="Edm.DateTimeOffset" Nullable="false"/>
+                <Property Name="LastActivityAt" Type="Edm.DateTimeOffset" Nullable="false"/>
+                <Property Name="MembersCount" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="AutoGroup" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="DisableAtNotify" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="TermsOfUse" Type="Edm.String" Nullable="true"/>
+                <Property Name="WebURL" Type="Edm.String" Nullable="false"/>
+                <Property Name="ContentsVisible" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="QuestionsVisible" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="IdeasVisible" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="DiscussionsVisible" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="TasksVisible" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="EventsVisible" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="LinksVisible" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="SubgroupsVisible" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="RecommendationsVisible" Type="Edm.Boolean" Nullable="false"/>
+                <NavigationProperty Name="Folders" Relationship="SAPJam.Group_Folders" FromRole="Group_Source" ToRole="Folder_Target"/>
+            </EntityType>
+            <EntityType Name="Comment">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Nullable="false"/>
+                <Property Name="LastModifiedAt" Type="Edm.DateTimeOffset" Nullable="false"/>
+                <Property Name="Text" Type="Edm.String" Nullable="false"/>
+                <Property Name="TextWithPlaceholders" Type="Edm.String" Nullable="true"/>
+                <Property Name="Liked" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="LikesCount" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="CanDelete" Type="Edm.Boolean" Nullable="false"/>
+                <NavigationProperty Name="AtMentions" Relationship="SAPJam.Comment_AtMentions" FromRole="Comment_Source" ToRole="Member_Target"/>
+                <NavigationProperty Name="Creator" Relationship="SAPJam.Comment_Creator" FromRole="Comment_Source" ToRole="Member_Target"/>
+                <NavigationProperty Name="Likers" Relationship="SAPJam.Comment_Likers" FromRole="Comment_Source" ToRole="Member_Target"/>
+                <NavigationProperty Name="ThumbnailImage" Relationship="SAPJam.Comment_ThumbnailImage" FromRole="Comment_Source" ToRole="ThumbnailImage_Target"/>
+            </EntityType>
+                        <EntityType Name="FeedEntry">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false"/>
+                <Property Name="Title" Type="Edm.String" Nullable="false"/>
+                <Property Name="Text" Type="Edm.String" Nullable="true"/>
+                <Property Name="TextWithPlaceholders" Type="Edm.String" Nullable="true"/>
+                <Property Name="Action" Type="Edm.String" Nullable="true"/>
+                <Property Name="ActionOnly" Type="Edm.String" Nullable="true"/>
+                <Property Name="ActionWithPlaceholders" Type="Edm.String" Nullable="true"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Nullable="false"/>
+                <Property Name="Bookmarked" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="Liked" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="LikesCount" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="RepliesCount" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="CanDelete" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="CanLike" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="CanReply" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="ConsolidatedCount" Type="Edm.Int32" Nullable="false"/>
+                <NavigationProperty Name="ActionObjectReferences" Relationship="SAPJam.FeedEntry_ActionObjectReferences" FromRole="FeedEntry_Source" ToRole="ObjectReference_Target"/>
+                <NavigationProperty Name="AtMentions" Relationship="SAPJam.FeedEntry_AtMentions" FromRole="FeedEntry_Source" ToRole="Member_Target"/>
+                <NavigationProperty Name="ConsolidatedEntries" Relationship="SAPJam.FeedEntry_ConsolidatedEntries" FromRole="FeedEntry_Source" ToRole="FeedEntry_Target"/>
+                <NavigationProperty Name="Creator" Relationship="SAPJam.FeedEntry_Creator" FromRole="FeedEntry_Source" ToRole="Member_Target"/>
+                <NavigationProperty Name="Group" Relationship="SAPJam.FeedEntry_Group" FromRole="FeedEntry_Source" ToRole="Group_Target"/>
+                <NavigationProperty Name="Likers" Relationship="SAPJam.FeedEntry_Likers" FromRole="FeedEntry_Source" ToRole="Member_Target"/>
+                <NavigationProperty Name="Replies" Relationship="SAPJam.FeedEntry_Replies" FromRole="FeedEntry_Source" ToRole="Comment_Target"/>
+                <NavigationProperty Name="TargetObjectReference" Relationship="SAPJam.FeedEntry_TargetObjectReference" FromRole="FeedEntry_Source" ToRole="ObjectReference_Target"/>
+                <NavigationProperty Name="ThumbnailImage" Relationship="SAPJam.FeedEntry_ThumbnailImage" FromRole="FeedEntry_Source" ToRole="ThumbnailImage_Target"/>
+            </EntityType>
+            <EntityType Name="MemberProfile">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false"/>
+                <Property Name="FollowersCount" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="FollowingCount" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="PrimaryEmailAddress" Type="Edm.String" Nullable="false"/>
+                <Property Name="Twitter" Type="Edm.String" Nullable="false"/>
+                <Property Name="Address" Type="Edm.String" Nullable="false"/>
+                <NavigationProperty Name="PhoneNumbers" Relationship="SAPJam.MemberProfile_PhoneNumbers" FromRole="MemberProfile_Source" ToRole="PhoneNumber_Target"/>
+                <NavigationProperty Name="SecondaryEmailAddresses" Relationship="SAPJam.MemberProfile_SecondaryEmailAddresses" FromRole="MemberProfile_Source" ToRole="SecondaryEmailAddress_Target"/>
+            </EntityType>
+            <EntityType Name="ExternalObject">
+                <Key>
+                    <PropertyRef Name="Id" />
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false"/>
+                <Property Name="Exid" Type="Edm.String" Nullable="true"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false"/>
+                <Property Name="Summary" Type="Edm.String" Nullable="true"/>
+                <Property Name="Permalink" Type="Edm.String" Nullable="true"/>
+                <Property Name="ODataAnnotations" Type="Edm.String" Nullable="true"/>
+                <Property Name="ODataMetadata" Type="Edm.String" Nullable="true"/>
+                <Property Name="ODataLink" Type="Edm.String" Nullable="false"/>
+                <Property Name="ObjectType" Type="Edm.String" Nullable="false"/>
+                <NavigationProperty Name="ExternalObjectType" Relationship="SAPJam.ExternalObject_ExternalObjectType" FromRole="ExternalObject_Source" ToRole="ExternalObjectType_Target" />
+                <NavigationProperty Name="FeedEntries" Relationship="SAPJam.ExternalObject_FeedEntries" FromRole="ExternalObject_Source" ToRole="FeedEntry_Target" />
+                <NavigationProperty Name="Groups" Relationship="SAPJam.ExternalObject_Groups" FromRole="ExternalObject_Source" ToRole="Group_Target" />
+            </EntityType>
+            <EntityType Name="ExternalObjectType">
+                <Key>
+                    <PropertyRef Name="Id" />
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false"/>
+                <NavigationProperty Name="ExternalApplication" Relationship="SAPJam.ExternalObjectType_ExternalApplication" FromRole="ExternalObjectType_Source" ToRole="ExternalApplication_Target" />
+                <NavigationProperty Name="ExternalObjects" Relationship="SAPJam.ExternalObjectType_ExternalObjects" FromRole="ExternalObjectType_Source" ToRole="ExternalObject_Target" />
+            </EntityType>
+            <EntityContainer Name="SAPJam" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="Folders" EntityType="SAPJam.Folder"/>
+                <EntitySet Name="Groups" EntityType="SAPJam.Group"/>
+                <FunctionImport Name="ExternalObjects_FindByExidAndObjectType" m:HttpMethod="GET" EntitySet="ExternalObjects" ReturnType="SAPJam.ExternalObject">
+                    <Parameter Name="Exid" Type="Edm.String" Nullable="false"/>
+                    <Parameter Name="ObjectType" Type="Edm.String" Nullable="false"/>
+                </FunctionImport>
+                <FunctionImport Name="Self" m:HttpMethod="GET" EntitySet="Members" ReturnType="SAPJam.Member"></FunctionImport>
+                <FunctionImport Name="Task_Unfollow" m:HttpMethod="POST">
+                    <Parameter Name="Id" Type="Edm.String" Nullable="false"/>
+                </FunctionImport>
+                <FunctionImport Name="Group_SinceLatestCount" m:HttpMethod="GET" ReturnType="Edm.Int32">
+                    <Parameter Name="Id" Type="Edm.String" />
+                    <Parameter Name="LatestTopLevelId" Type="Edm.String" />
+                </FunctionImport>
+                <FunctionImport Name="GroupExternalObject_SinceLatestCount" m:HttpMethod="GET" ReturnType="Edm.Int32">
+                    <Parameter Name="GroupId" Type="Edm.String" />
+                    <Parameter Name="ExternalObjectId" Type="Edm.String" />
+                    <Parameter Name="LatestTopLevelId" Type="Edm.String" />
+                </FunctionImport>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Responsiveness - sap.suite.ui.microchart.StackedBarMicroChart</title>
+
+<base href="../../../../../">
+<!--[if lte IE 9]><script>
+(function() {
+	var baseTag = document.getElementsByTagName('base')[0];
+	baseTag.href = baseTag.href;
+})();
+</script><![endif]-->
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout,sap.m,sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize" src="resources/sap-ui-core.js">
+</script>
+
+<script src="test-resources/sap/suite/ui/microchart/locationColor.js"></script>
+
+<script type="text/javascript">
+	jQuery.sap.initMobile();
+
+	var oStackedBarData = {
+		bars: [
+			{ value: 10, displayValue:"10M" },
+			{ value: 50, displayValue:"50M", valueColor: "sapUiChartPaletteSemanticGood" },
+			{ value: 20, valueColor: "Critical" }
+		]
+	};
+
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData(oStackedBarData);
+	sap.ui.getCore().setModel(oModel);
+
+	var fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The chart is pressed.");
+	};
+
+	var createStackedBarChart = function() {
+		var oStackedBarItemTmpl = new sap.suite.ui.microchart.StackedBarMicroChartBar({
+			value: "{value}",
+			valueColor: "{valueColor}",
+			displayValue: "{displayValue}"
+		});
+		var oStackedBarChartTmpl = new sap.suite.ui.microchart.StackedBarMicroChart({
+			bars: {
+				template : oStackedBarItemTmpl,
+				path : "/bars"
+			},
+			press: fnPress,
+			size: sap.m.Size.Responsive
+		});
+		return (oStackedBarChartTmpl);
+	};
+
+	// creates the charts
+	var oStackedBarChart1 = createStackedBarChart();
+	var oStackedBarChart2 = createStackedBarChart();
+	oStackedBarChart2.setMaxValue(110);
+
+	oStackedBarChart1.placeAt("content1");
+	oStackedBarChart2.placeAt("content2");
+
+	// vertical slider
+	var oHeightSlider = new sap.m.Slider({
+		value : 200,
+		step : 0.0001,
+		min : 10,
+		max : 600,
+		liveChange : function(oControlEvent) {
+			var height = oControlEvent.getParameter("value");
+			jQuery("#content1").css("height", height + "px");
+			jQuery("#content2").css("height", height + "px");
+			oStackedBarChart1.invalidate();
+			oStackedBarChart2.invalidate();
+		}
+	});
+
+	// horizontal slider
+	var oWidthSlider = new sap.m.Slider({
+		value : 300,
+		step : 0.0001,
+		min : 10,
+		max : 600,
+		liveChange : function(oControlEvent) {
+			var width = oControlEvent.getParameter("value");
+			jQuery("#content1").css("width", width + "px");
+			jQuery("#content2").css("width", width + "px");
+			oStackedBarChart1.invalidate();
+			oStackedBarChart2.invalidate();
+		}
+	});
+
+	new sap.ui.layout.form.SimpleForm("controls-sbmc", {
+		maxContainerCols : 4,
+		editable : true,
+		content : [ oHeightSlider, oWidthSlider ]
+	}).placeAt("modifiers");
+
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+	<script>
+		//set the contrast class for belize plus
+		if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+			jQuery("body").addClass("sapContrastPlus");
+		}
+	</script>
+	<div id="modifiers"></div>
+	<div id="content1" style="padding: 2px; height: 200px; width: 300px; border-color : black; border: 1px;border-style:solid;"></div>
+	<div id="content2" style="margin-top:2px; padding: 2px; height: 200px; width: 300px; border-color : black; border: 1px;border-style:solid;"></div>
+</body>
+</html>

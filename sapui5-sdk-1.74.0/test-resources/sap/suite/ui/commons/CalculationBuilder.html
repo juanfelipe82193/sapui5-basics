@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Condition Builder Test Page - sap.suite.ui.commons</title>
+
+	<!-- UI5 Bootstrap -->
+	<script src="../../../../../resources/sap-ui-core.js"
+			type="text/javascript"
+			id="sap-ui-bootstrap"
+			data-sap-ui-libs="sap.m,sap.ui.commons,sap.suite.ui.commons"
+			data-sap-ui-theme="sap_belize"></script>
+
+	<script type="text/javascript">
+		sap.ui.getCore().attachInit(function () {
+			"use strict";
+			sap.ui.require([
+				"sap/ui/model/json/JSONModel",
+				"sap/ui/core/CustomData",
+				"sap/ui/core/Item",
+				"sap/suite/ui/commons/CalculationBuilder",
+				"sap/suite/ui/commons/CalculationBuilderVariable",
+				"sap/suite/ui/commons/library",
+				"sap/suite/ui/commons/CalculationBuilderFunction",
+				"sap/suite/ui/commons/CalculationBuilderItem",
+				"sap/suite/ui/commons/CalculationBuilderGroup",
+				"sap/m/App",
+				"sap/m/Tree",
+				"sap/m/Select",
+				"sap/m/StandardTreeItem",
+				"sap/m/Button",
+				"sap/m/ToggleButton",
+				"sap/m/Input",
+				"sap/m/FlexBox",
+				"sap/m/Page",
+				"sap/m/Bar",
+				"sap/m/Label"
+			], function (JSONModel, CustomData, Item, CalculationBuilder, CalculationBuilderVariable, library,
+						 CalculationBuilderFunction, CalculationBuilderItem, CalculationBuilderGroup, App, Tree, Select,
+						 StandardTreeItem, Button, ToggleButton, Input, FlexBox, Page, Bar, Label) {
+
+			    var CalculationBuilderLayoutType = library.CalculationBuilderLayoutType;
+
+				var oApp = new App("myApp", {
+					height: "100%",
+					initialPage: "page1"
+				});
+
+				var oTreeData = [
+					{
+						text: "Custom Ref 1",
+						key: "Reference1",
+						ref: "sap-icon://attachment-audio",
+						nodes: [
+							{
+								text: "Custom Ref 2",
+								key: "Reference2",
+								ref: "sap-icon://attachment-e-pub",
+								nodes: [
+									{
+										text: "Custom Ref 3",
+										key: "Reference3",
+										ref: "sap-icon://attachment-html"
+									}
+								]
+							},
+							{
+								text: "Custom Ref 9",
+								key: "Reference9",
+								ref: "sap-icon://create"
+							}
+						]
+					},
+					{
+						text: "Custom Ref 10",
+						key: "Reference10",
+						ref: "sap-icon://customer-financial-fact-sheet"
+					}
+				];
+
+				var oGroupTree = new Tree({
+					id: "Tree",
+					select: function (oEvent) {
+						var oItem = oEvent.getSource().getSelectedItem(),
+							oData = oItem.getCustomData(),
+							sKey = oData[0].getKey();
+
+						oCalculationBuilder.updateOrCreateItem(sKey);
+					},
+					mode: "SingleSelectMaster",
+					includeItemInSelection: true
+				});
+
+				var oTreeModel = new JSONModel();
+				oGroupTree.setModel(oTreeModel);
+				oTreeModel.setData(oTreeData);
+				oGroupTree.bindItems("/", new StandardTreeItem({
+					title: "{text}",
+					icon: "{ref}",
+					customData: new CustomData({key: "{key}", value: "{key}"})
+				}));
+
+				var oCalculationBuilder = new CalculationBuilder("calculationBuilder", {
+					title: "Calculation Builder Title",
+					expression: "1/5 + 15 +abs(-52.2) - CustomFunction(2,3,6)",
+					tooltip: ["Calculation Builder Tooltip"],
+					functions: [
+						new CalculationBuilderFunction({
+							key: "CustomFunction",
+							label: "Custom Function Label",
+							description: "Custom Function Description",
+							items: [
+								new CalculationBuilderItem({key: ""}),
+								new CalculationBuilderItem({key: ","}),
+								new CalculationBuilderItem({key: ""}),
+								new CalculationBuilderItem({key: ","}),
+								new CalculationBuilderItem({key: "5"}),
+								new CalculationBuilderItem({key: "+"}),
+								new CalculationBuilderItem({key: ""})
+							]
+						})
+					],
+					groups: [
+						new CalculationBuilderGroup({
+							title: "Custom Group",
+							key: "customGroup",
+							icon: "sap-icon://account",
+							description: "Internal item references",
+							setSelection: function (oEvent) {
+								var oList = oGroupTree,
+									sKey = oEvent.getParameter("key");
+
+								if (!sKey) {
+									var oSelectedItemInVariablesList = oList.getSelectedItem();
+									if (oSelectedItemInVariablesList) {
+										oList.setSelectedItem(oSelectedItemInVariablesList, false);
+									}
+								} else {
+									var aItems = oList.getItems();
+									for (var k = 0; k < aItems.length; k++) {
+										var oItem = aItems[k],
+												sItemKey = aItems[k].getCustomData()[0].getValue();
+
+										if (sKey === sItemKey) {
+											oList.setSelectedItem(oItem, true);
+											return;
+										}
+									}
+								}
+
+							},
+							customView: [oGroupTree]
+						})
+					],
+					operators: [
+						new Item({key: "CustomOperator", text: "?"})
+					],
+					variables: [
+						new CalculationBuilderVariable({
+							"key": "Var_1",
+							"label": "Var-1-label",
+							"items": [ {"key": "Var3"}, {"key": "+"}, {"key": "Var2"} ]
+						}),
+						new CalculationBuilderVariable({
+							"key": "Var2",
+							"label": "Var-2-label"
+						}),
+						new CalculationBuilderVariable({
+							"key": "Var3",
+							"label": "Var-3-label",
+							"items": [ {"key": "6"}, {"key": "/"}, {"key": "20"} ]
+						}),
+						new CalculationBuilderVariable({
+							"label": "Custom Ref 1",
+							"key": "Reference1",
+							"group": "references"
+						}),
+						new CalculationBuilderVariable({
+							"label": "Custom Ref 2",
+							"key": "Reference2",
+							"group": "references"
+						}),
+						new CalculationBuilderVariable({
+							"label": "Custom Ref 3",
+							"key": "Reference3",
+							"group": "references"
+						}),
+						new CalculationBuilderVariable({
+							"label": "Custom Ref 9",
+							"key": "Reference9",
+							"group": "references"
+						}),
+						new CalculationBuilderVariable({
+							"label": "Custom Ref 10",
+							"key": "Reference10",
+							"group": "references"
+						})
+					],
+					validateFunction: function (oEvent) {
+						var oDefinition = oEvent.getParameter("definition"),
+							oResult = oEvent.getParameter("result"),
+							iFrom = 0,
+							aItems = oDefinition.items,
+							nParameters = 1;
+
+						for (var i = 0; i < aItems.length; i++) {
+							var oItem = aItems[i];
+
+							if (oItem.item.getKey() === ",") {
+								nParameters++;
+								oResult.addErrors(oCalculationBuilder.validateParts({
+									from: aItems[0].index,
+									to: aItems[i].index
+								}));
+
+								iFrom = i + 1;
+							}
+						}
+
+						if (nParameters !== 2) {
+							oResult.addError({
+								index: oDefinition.index,
+								title: "Custom Function supports only two parameters"
+							});
+						}
+
+						if (iFrom !== i) {
+							oResult.addErrors(oCalculationBuilder.validateParts({
+								from: aItems[0].index,
+								to: aItems[i - 1].index
+							}));
+						}
+
+						if (aItems[0].text !== "+") {
+							oResult.addError({
+								index: aItems[0].index,
+								title: "Example custom function error - first item of function have to be '+'"
+							});
+						}
+					}.bind(this),
+					afterValidation: function (oEvent) {
+						var aItems = oCalculationBuilder.getItems(),
+							oFirstItem = aItems[0];
+
+						if (!oFirstItem || oFirstItem.getKey() !== "-") {
+							oCalculationBuilder.appendError({
+								index: 0,
+								title: "Example custom error - expression has to start with '-'"
+							});
+						}
+					}.bind(this)
+				});
+
+				var oThemeSwitcher = new Select({
+					selectedKey: sap.ui.getCore().getConfiguration().getTheme(),
+					items: [
+						new Item({key: "sap_belize", text: "Belize"}),
+						new Item({key: "sap_belize_hcb", text: "HCB"}),
+						new Item({key: "sap_belize_hcw", text: "HCW"}),
+						new Item({key: "sap_bluecrystal", text: "BlueCrystal"}),
+						new Item({key: "sap_fiori_3", text: "Fiori 3"})
+					],
+					change: function(oEvent){
+						var sTheme = oEvent.getParameter("selectedItem").getKey();
+						sap.ui.getCore().applyTheme(sTheme);
+					}
+				});
+
+				var oLayoutTypeSwitcher = new Select({
+					selectedKey: sap.ui.getCore().getConfiguration().getTheme(),
+					items: [
+						new Item({key: CalculationBuilderLayoutType.Default, text: "Default"}),
+						new Item({key: CalculationBuilderLayoutType.VisualOnly, text: "VisualOnly"}),
+						new Item({key: CalculationBuilderLayoutType.VisualTextualReadOnly, text: "VisualTextualReadOnly"}),
+						new Item({key: CalculationBuilderLayoutType.TextualOnly, text: "TextualOnly"})
+					],
+					change: function (oEvent) {
+						var sLayoutType = oEvent.getParameter("selectedItem").getKey();
+						oCalculationBuilder.setLayoutType(sLayoutType);
+					}
+				});
+
+				var oInputToolbarSwitcher = new ToggleButton({
+					text: "Allow Input Toolbar",
+					press: function (oEvent) {
+						oCalculationBuilder.setShowInputToolbar(oEvent.getParameter("pressed"));
+					}
+				});
+
+				var oComparisonOperatorsSwitcher = new ToggleButton({
+					text: "Allow Comparison Operators",
+					pressed: true,
+					press: function (oEvent) {
+						oCalculationBuilder.setAllowComparisonOperators(oEvent.getParameter("pressed"));
+					}
+				});
+
+				var oLogicalOperatorsSwitcher = new ToggleButton({
+					text: "Allow Logical Operators",
+					pressed: true,
+					press: function (oEvent) {
+						oCalculationBuilder.setAllowLogicalOperators(oEvent.getParameter("pressed"));
+					}
+				});
+
+				var oStringConstantSwitcher = new ToggleButton({
+					text: "Allow String Constant",
+					press: function (oEvent) {
+						oCalculationBuilder.setAllowStringConstants(oEvent.getParameter("pressed"));
+					}
+				});
+
+				var oSuggestionsSwitcher = new ToggleButton({
+					text: "Allow Suggestions",
+					pressed: true,
+					press: function (oEvent) {
+						oCalculationBuilder.setAllowSuggestions(oEvent.getParameter("pressed"));
+					}
+				});
+
+				var oSetExpandableExpressionButton = new Button({
+					text: "Set Expandable Expression",
+					press: function (oEvent) {
+						oCalculationBuilder.setExpression("- 1 + 15 + abs(-25) + Var_1");
+					}
+				});
+
+				var oSetLongExpressionButton = new Button({
+					text: "Set Long Expression",
+					press: function (oEvent) {
+						oCalculationBuilder.setExpression("- 1 + 15 / abs(- 25) * Var_1 - RoundDown(0 <= 4, 10 != 50) - " +
+								"1 + 15 / abs(- 25) * Var_1 - RoundDown(0 <= 4, 10 != 50) - 1 + 15 / abs(- 25) * Var_1 " +
+								"- RoundDown(0 <= 4, 10 != 50) - 1 + 15 / abs(- 25) * Var_1 - RoundDown(0 <= 4, 10 != 50)");
+					}
+				});
+
+				var oDisabledTokens = new Input({
+					width: "200px",
+					placeholder: "Disabled Default Tokens"
+				});
+
+				var oSetDefaultTokensButton = new Button({
+					text: "Set Disabled Default Token",
+					press: function (oEvent) {
+						oCalculationBuilder.setDisabledDefaultTokens(oDisabledTokens.getValue());
+					}
+				});
+
+				var oReadOnlySwitcher = new ToggleButton({
+					text: "Read Only",
+					press: function (oEvent) {
+						oCalculationBuilder.setReadOnly(oEvent.getParameter("pressed"));
+					}
+				});
+
+				var oShowToolbarSwitcher = new ToggleButton({
+					text: "Show Toolbar",
+					pressed: true,
+					press: function (oEvent) {
+						oCalculationBuilder.setShowToolbar(oEvent.getParameter("pressed"));
+					}
+				});
+
+				var oWrapItemsSwitcher = new ToggleButton({
+					text: "Wrap Items",
+					pressed: true,
+					press: function (oEvent) {
+						oCalculationBuilder.setWrapItemsInExpression(oEvent.getParameter("pressed"));
+					}
+				});
+
+				var oValidationSwitcher = new Select({
+					selectedKey: sap.suite.ui.commons.CalculationBuilderValidationMode.LiveChange,
+					items: [
+						new Item({key: sap.suite.ui.commons.CalculationBuilderValidationMode.LiveChange, text: "LiveChange"}),
+						new Item({key: sap.suite.ui.commons.CalculationBuilderValidationMode.FocusOut, text: "FocusOut"})
+					],
+					change: function(oEvent){
+						var sValidationMode = oEvent.getParameter("selectedItem").getKey();
+						oCalculationBuilder.setValidationMode(sValidationMode);
+					}
+				});
+
+				var oAllowSupportedFunctionsSwitcher = new ToggleButton({
+					text: "Allow all supported functions",
+					pressed: false,
+					press: function (oEvent) {
+						var bIsPressed = oEvent.getParameter("pressed");
+
+						var fnProcessFunctions = function (bAllow) {
+							var aFunctions = Object.keys(sap.suite.ui.commons.CalculationBuilderFunctionType);
+
+							aFunctions.forEach(function (sFunction) {
+								oCalculationBuilder.allowFunction(sFunction, bAllow);
+							});
+						};
+
+						if (bIsPressed) {
+							oAllowSupportedFunctionsSwitcher.setText("Prevent all supported functions");
+							fnProcessFunctions(true);
+						} else {
+							oAllowSupportedFunctionsSwitcher.setText("Allow all supported functions");
+							fnProcessFunctions(false);
+						}
+					}
+				});
+
+				var oInvalidateButton = new Button({
+					text: "Fire Invalidate",
+					press: function (oEvent) {
+						oCalculationBuilder.invalidate();
+					}
+				});
+
+				var oSwitcherContainer = new FlexBox({
+					renderType: "Bare",
+					wrap: "Wrap",
+					alignItems: "Center",
+					items: [
+						new Label({
+							text: "Theme:"
+						}),
+						oThemeSwitcher,
+						new Label({
+							text: "Layout Type:"
+						}),
+						oLayoutTypeSwitcher,
+						oInputToolbarSwitcher,
+						oSetExpandableExpressionButton,
+						oSetLongExpressionButton,
+						oComparisonOperatorsSwitcher,
+						oLogicalOperatorsSwitcher,
+						oSuggestionsSwitcher,
+						oStringConstantSwitcher,
+						new Label({
+							text: "Disabled Default Tokens:"
+						}),
+						oDisabledTokens,
+						oSetDefaultTokensButton,
+						oReadOnlySwitcher,
+						oShowToolbarSwitcher,
+						oWrapItemsSwitcher,
+						new Label({
+							text: "Validation Mode:"
+						}),
+						oValidationSwitcher,
+						oAllowSupportedFunctionsSwitcher,
+						oInvalidateButton
+					]
+				});
+
+				// page
+				var oPage1 = new Page("page1", {
+					customHeader: new Bar({
+						contentMiddle: new Label({
+							text: "Calculation Builder Test Page"
+						})
+					}),
+					content: [oCalculationBuilder, oSwitcherContainer]
+				}).addStyleClass("sapUiContentPadding");
+
+				oApp.addPage(oPage1);
+				oApp.placeAt("content");
+			});
+		});
+	</script>
+</head>
+
+<body id="body" class="sapUiBody sapUiSizeCompact" role="application">
+	<div id="content" style="width: 100%; height: 100%;"></div>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+	<meta http-equiv='Content-Type' content='text/html;charset=UTF-8' />
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<title>The AnalyticVisual Business AnalyticMap with a XMLView</title>
+
+	<!-- Load UI5, select blue crystal theme,  and the "commons" control library -->
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#btnZoomIn {
+			margin-right: 10px;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 100%;
+			height: 300px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#margin {
+			margin-right: 50px;
+		}
+
+	</style>
+	<script id='sap-ui-bootstrap' type='text/javascript' src='../../../../resources/sap-ui-core.js' data-sap-ui-theme='sap_bluecrystal' data-sap-ui-libs='sap.ui.commons,sap.ui.table,sap.ui.vbm'></script>
+
+	<script>
+		// have some data
+		var oData = {
+			regionProperties: [{
+				"code": "EU",
+				"color": "rgba(100,128,245,1.0)",
+				"tooltip": "Europe\r\nBIP: 15.242 Mrd. USD\r\nPopulation: 505,73 Mio"
+			}, {
+				"code": "NA",
+				"color": "rgba(160,200,245,1.0)",
+				"tooltip": "North America\r\nBIP: 22.123 Mrd. USD\r\nPopulation: 565,27 Mio"
+			}]
+		};
+
+		// create model and set the data
+		var oModel = new sap.ui.model.json.JSONModel();
+		oModel.setData(oData);
+
+	</script>
+
+	<script id="view1" type="sapui5/xmlview">
+		<mvc:View height="100%" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.ui.commons" xmlns:vbm="sap.ui.vbm" controllerName="analyticmap.controller" xmlns:html="http://www.w3.org/1999/xhtml">
+			<Panel>
+				<title>
+					<core:Title text="Panel Title"></core:Title>
+				</title>
+				<content>
+					<vbm:AnalyticMap id="vbi" width="100%" height="500px" regions="{/regionProperties}">
+						<vbm:regions>
+							<vbm:Region code="{code}" color="{color}" tooltip="{tooltip}"></vbm:Region>
+						</vbm:regions>
+					</vbm:AnalyticMap>
+				</content>
+			</Panel>
+		</mvc:View>
+	</script>
+
+	<script>
+		sap.ui.controller("analyticmap.controller", {
+			onInit: function() {
+				// !! here it is too late to set the alternative geo json path
+			}
+		});
+
+		function typeCheck() {
+			var type = jQuery("#view1")[0].type;
+			document.getElementById('type').innerHTML = type;
+		};
+
+		// the alternate geo json path must be set before the xmlview is realized, e.g. here  
+		jQuery.sap.require("sap.ui.vbm.AnalyticMap");
+		sap.ui.vbm.AnalyticMap.GeoJSONURL = "demokit/media/analyticmap/continent.json";
+
+		// set the model on the view
+		var myView = sap.ui.xmlview({
+			viewContent: jQuery('#view1').html()
+		});
+		myView.setModel(oModel);
+
+		// put the view onto the screen
+		myView.placeAt('content');
+
+	</script>
+
+</head>
+
+<body class='sapUiBody'>
+	<h1>Visual Business AnalyticMap XMLView Sample</h1>
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test if The AnalyticMap is created using an XMLView. </p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+
+			<li> Check that the Analytic Map is created using xml views. You can do this by clicking the button "Check type". This will return the script type.</li>
+			<br>
+			<br>
+			<p id="type" style="color:red; font-size:30px"></p>
+		</ol>
+	</div>
+	<button id="typexml" onClick="typeCheck()" style="margin-left: 20px;">Check type</button>
+	<br><br>
+	<div id='content'></div>
+</body>
+
+</html>

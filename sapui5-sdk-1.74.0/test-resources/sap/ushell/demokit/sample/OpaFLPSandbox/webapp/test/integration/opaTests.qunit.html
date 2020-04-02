@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<!--This test is for internal resources only. Therefore not added to the Test suite-->
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Sample OPA setup with FLP sandbox</title>
+
+		<!-- copy the content of ./flpSandboxMockserver.html and add OPA specifics -->
+
+		<script>
+			window["sap-ushell-config"] = {
+				defaultRenderer : "fiori2",
+				renderers: {
+					fiori2: {
+						componentData: {
+							config: {
+								search: "hidden"
+							}
+						}
+					}
+				},
+				applications: {
+					"SampleApplication-display": {
+						additionalInformation: "SAPUI5.Component=sap.ushell.sample.OpaFLPSandbox",
+						applicationType: "URL",
+						url: "../../",
+						description: "Sample Application",
+						title: "Sample Application"
+					}
+				}
+			};
+		</script>
+
+		<!-- carefully modify the relative paths -->
+		<!-- in this case, opaTests.qunit.html is nested 1 level deeper than flpSandboxMockserver.html so we prepend "../" everywhere -->
+
+		<script id="sap-ushell-bootstrap"
+			src="../../../../../../bootstrap/sandbox.js">
+		</script>
+
+		<!-- Bootstrap the UI5 core library -->
+		<script id="sap-ui-bootstrap"
+			src="../../../../../../../../../resources/sap-ui-core.js"
+			data-sap-ui-language="en"
+			data-sap-ui-libs="sap.m, sap.ui.layout, sap.ui.table, sap.ui.comp, sap.ushell"
+			data-sap-ui-theme="sap_bluecrystal"
+			data-sap-ui-compatVersion="edge"
+			data-sap-ui-xx-bindingSyntax="complex"
+			data-sap-ui-resourceroots='{
+				"sap.ushell.sample.OpaFLPSandbox": "../../",
+				"sap.ushell.sample.OpaFLPSandbox.test": "../../test"
+			}'
+			data-sap-ui-frameOptions="allow"> 	// NON-SECURE setting for testing environment
+		</script>
+
+		<script>
+			// include OPA QUnit style
+			var sOpaStyleLocation = jQuery.sap.getModulePath("sap.ui.test.OpaCss", ".css");
+			jQuery.sap.includeStyleSheet(sOpaStyleLocation);
+
+			// include test journeys
+			jQuery.sap.require("sap.ushell.sample.OpaFLPSandbox.test.integration.AllJourneys");
+
+			sap.ui.getCore().attachInit(function() {
+				sap.ui.require([
+				 "sap/ui/fl/FakeLrepConnector",
+					"sap/ushell/sample/OpaFLPSandbox/localService/mockserver"
+				], function (FakeLrepConnector, mockserver) {
+					// enable 'mock' variant management
+					FakeLrepConnector.enableFakeConnector("sap/ushell/sample/OpaFLPSandbox/localService/component-changes.json");
+					// set up test service for local testing
+					mockserver.init();
+					// initialize the ushell sandbox component
+					sap.ushell.Container.createRenderer().placeAt("content");
+				});
+			});
+		</script>
+
+	</head>
+
+	<!-- add OPA style for FLP and QUnit elements -->
+	<body class="sapUiOpaBodyFLP">
+		<div id="content" class="sapUiBody"></div>
+		<div id="qunit">
+			<h1 id="qunit-header">Sample OPA setup with FLP sandbox</h1>
+			<h2 id="qunit-banner"></h2>
+			<h2 id="qunit-userAgent"></h2>
+			<ol id="qunit-tests"></ol>
+		</div>
+	</body>
+</html>

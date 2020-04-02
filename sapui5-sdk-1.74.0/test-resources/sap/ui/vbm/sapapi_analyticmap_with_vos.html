@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!-- <link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" /> -->
+
+
+	<script src="../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm"
+		data-sap-ui-theme="sap_bluecrystal" >
+	</script>
+
+	<script>
+
+	// for testing here are some event handlers
+	function onRegionClick( e )
+	{
+		alert( "onRegionClick "  + e.getParameter( "code" ) );
+	};
+
+	function onRegionContextMenu( e )
+	{
+		alert( "onRegionContextMenu: " + e.getParameter( "code" ) );
+	};
+	
+	function onClickItem( evt )
+	{
+	   	// click on item 
+		alert( "onClick" + this );
+	};
+
+	function onContextMenuItem( evt )
+	{
+	   	// context menu on item 
+		alert( "onContextMenu" + this );
+	};	
+
+	// have some data
+	var oData = 
+		{
+	       regionProperties :
+				[
+					{ "code": "DE", "color": "rgba(184,225,245,1.0)", "tooltip":"Germany\r\nBIP: 3.577 Mrd. USD\r\nPopulation: 80,716 Mio" },
+					{ "code": "FR", "color": "rgba(5,71,102,1.0)", 	},
+					{ "code": "IT", "color": "rgba(0,125,192,1.0)"	}
+				]
+		};
+	
+	// create model and set the data
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+
+	// change the L0 geojson location to internal folder, due it is not......//
+	// allowed for us to deliver it..........................................//
+	jQuery.sap.require( "sap.ui.vbm.AnalyticMap");
+	sap.ui.vbm.AnalyticMap.GeoJSONURL  =  "internal/media/analyticmap/L0.json";
+	
+	// create analytic map and bind to model
+	var oVBI = new sap.ui.vbm.AnalyticMap('vbi',
+			{
+					width : 1024,
+					height: 512,
+					plugin: false,
+					regions : {
+						path : "/regionProperties",
+						template: new sap.ui.vbm.Region(  { code: "{code}", color: '{color}', tooltip: '{tooltip}', click: onRegionClick, contextMenu: onRegionContextMenu  } )
+					},
+
+					legend : new sap.ui.vbm.Legend(
+					      {
+					        caption : "Analytic Legend",
+					        items : {
+									path : "/regionProperties",
+									template: new sap.ui.vbm.LegendItem(  { text: "{code}", color: '{color}', tooltip: '{tooltip}' } )
+								}
+					      }
+					),
+					
+					vos: [
+							// single instance item
+					   	 	new sap.ui.vbm.Routes( "routes", {
+					   	    	click: onClickItem.bind("Routes onClickItem" ),
+					   	       	contextMenu: onContextMenuItem.bind( "Routes onContextMenuItem" ),
+					   	       	// explicitly specify 
+					   	       	items:  [
+					                    new sap.ui.vbm.Route({ position: '-30;0;0;-30;-20;0;0;-20;0', tooltip: 'This is a Route', end: "1", start: "0", color: 'RGB(0,10,255)', click: onClickItem.bind("Route"), contextMenu: onContextMenuItem.bind("Route") })
+					   	       	]
+					   	 	}),
+					 		// single instance item
+					   	 	new sap.ui.vbm.Areas("areas", {
+					   	 	    click: onClickItem.bind("Areas onClickItem"),
+					   	 	    contextMenu: onContextMenuItem.bind("Areas onContextMenuItem"),
+					   	 	    // explicitly specify 
+					   	 	    items: [
+					                    new sap.ui.vbm.Area( { position: '-30;50;0;-30;30;0;0;30;0', tooltip: 'This is an Area', color: 'RGB(0,10,255)', click: onClickItem.bind("Area"), contextMenu: onContextMenuItem.bind("Area") } )
+					   	 	    ]
+					   	 	}),					   	 	
+					],
+					
+					regionClick : onRegionClick,
+					regionContextMenu : onRegionContextMenu
+			});
+
+	
+	oVBI.setModel( oModel );
+	oVBI.placeAt("content");
+
+	// just to test dynamic model changes
+	function onChangeModel1()
+	{
+		oModel.setProperty( "/regionProperties/2/color", "rgba(255,0,0,1.0)" );
+	};
+
+   // just to test dynamic model changes
+   function onChangeModel2()
+   {
+      if( oData.regionProperties.length )
+         oData.regionProperties = oData.regionProperties.splice( 0, oData.regionProperties.length - 1 );
+      
+      oModel.setData( oData );
+   };
+	
+	
+	function onZoomToRegions()
+	{
+	   // oVBI.zoomToGeoPosition( 0.0, 0.0, 0 );
+	     oVBI.zoomToRegions( [ 'DE','IT','FR' ] );
+		// oVBI.zoomToRegions( ['DE','IT','FR' ] );
+	};
+
+	function onRemoveAllRegions()
+	{
+	   // oVBI.destroyRegions();
+	   oVBI.unbindAggregation( "regions" ); //();
+	   // oVBI.removeAllRegions();
+	};
+	
+	function onGetCurrentZoomlevel()
+	{		
+		if( evtoutput.innerText !== undefined )
+			evtoutput.innerText = oVBI.mVBIContext.GetMainScene().GetCurrentZoomlevel();
+		else
+	  if( evtoutput.textContent !== undefined )
+			evtoutput.textContent = oVBI.mVBIContext.GetMainScene().GetCurrentZoomlevel();	// due to ff
+	};
+	
+	function onGetCentrePos()
+	{
+	   if( evtoutput.innerText !== undefined )
+			evtoutput.innerText = oVBI.mVBIContext.GetMainScene().GetCenterPos();
+		else
+	  if( evtoutput.textContent !== undefined )
+			evtoutput.textContent = oVBI.mVBIContext.GetMainScene().GetCenterPos();	// due to ff
+	};
+	
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business AnalyticMap Sample</h1>
+			<ul>
+				<li> Testing the new Visual Business AnalyticMap Control. </li>
+			</ul>
+		 <div id="content"></div>
+		 <button id="ChangeModel1" onclick="onChangeModel1()" >Change Model</button>
+		 <button id="ChangeModel2" onclick="onChangeModel2()" >Change Again</button>
+		 <button id="ZoomRegions" onclick="onZoomToRegions()" >Zoom Regions</button>
+		 <button id="removeAllRegions" onclick="onRemoveAllRegions()" >Remove all Regions</button>
+		 <br />
+		 <textarea style="width:100%;box-sizing:border-box" id="evtoutput" rows="5" ></textarea>
+	</body>
+</html>

@@ -1,0 +1,613 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>OData V4 Metadata JSON Format</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The OData V4 model provides access to metadata in a streamlined JSON format which is described in the section below."><meta name="description" content="The OData V4 model provides access to metadata in a streamlined JSON format which is described in the section below."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"5a0d286c5606424b8e0d663c87445733.html","previousTopicHref":"7f29fb3ce5964d8090038a9d3cdf5060.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio87aac894a40640f89920d7b2a414499b"><h1 class="title topictitle1" hidden>OData V4 Metadata JSON Format</h1><div class="body conbody"><p class="shortdesc" hidden>The OData V4 model provides access to metadata in a streamlined JSON format which is
+described in the section below.</p>
+<p class="p">It is different to the $metadata service&apos;s JSON format (see <a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata-json-format/v4.0/os/odata-json-format-v4.0-os.html" target="_blank" alt="http://docs.oasis-open.org/odata/odata-json-format/v4.0/os/odata-json-format-v4.0-os.html" title="http://docs.oasis-open.org/odata/odata-json-format/v4.0/os/odata-json-format-v4.0-os.html">OData JSON Format Version 4.0<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a>) and the OData
+JSON Format for Common Schema Definition Language (CSDL) Version 4.0 (see <a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/odata-json-csdl-v4.0.html" target="_blank" alt="http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/odata-json-csdl-v4.0.html" title="http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/odata-json-csdl-v4.0.html">corresponding specification<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a>), intended to
+simplify client-side processing. </p>
+<p class="p">In the sections below, angled brackets indicate variable parts. The numbers next to each
+expression correspond to the numbered sections in the official specification, see <a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/odata-json-csdl-v4.0.html" target="_blank" alt="http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/odata-json-csdl-v4.0.html" title="http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/odata-json-csdl-v4.0.html">OData Version 4.0 Part 3: Common Schema Definition
+Language (CSDL) Plus Errata 03<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a>. Comments highlight optional properties,
+especially those that have certain default values.</p>
+<div class="section"><section class="section" type="Design Rationale"><h2 class="section_title" style="font-size: 1.15em;">Design Rationale</h2>
+
+<p class="p">We have prefixed constant property names with <samp class="ph codeph">&quot;$&quot;</samp> as this is a legal first
+character for JavaScript identifiers, but not for OData simple identifiers. This
+way, <span class="ph emphasis emphasis">inline annotations</span> can be added via <samp class="ph codeph">&quot;@&lt;14.3.1 Annotation Term&gt;#&lt;14.3.2 Annotation Qualifier&gt;&quot; : &lt;value&gt;</samp> everywhere without resulting in any naming conflicts.
+This is shown as <samp class="ph codeph">&quot;@...&quot; : &lt;value&gt;</samp> below.</p>
+<p class="p">We assume that schema <span class="ph emphasis emphasis">aliases</span> have been resolved. We add a
+trailing dot after a schema&apos;s namespace, meaning qualified name &quot;A.B&quot; cannot clash
+with schema namespace &quot;A.B.&quot;, for example. This trailing dot is also present for
+<samp class="ph codeph">&quot;$Include&quot;</samp>, <samp class="ph codeph">&quot;$TermNamespace&quot;</samp> and
+<samp class="ph codeph">&quot;$TargetNamespace&quot;</samp> values.</p>
+<p class="p"><samp class="ph codeph"><span class="ph emphasis emphasis">$kind</span></samp> has been added to each object with a
+(qualified) OData name and to almost each object which can be annotated via external
+targeting, but not to enum members. Actions and functions are arrays of overloads
+and <samp class="ph codeph">$kind</samp> has been added to each overload.</p>
+<p class="p">We assume each <span class="ph emphasis emphasis">enum member</span> has a value via the fallback rule &quot;If
+no values are specified, the members are assigned consecutive integer values in the
+order of their appearance, starting with zero for the first member.&quot; </p>
+<p class="p">Facets like <samp class="ph codeph">MaxLength</samp>, <samp class="ph codeph">Precision</samp> and
+<samp class="ph codeph">Scale</samp> are represented as numbers if possible (<samp class="ph codeph">&quot;$Scale&quot; : &quot;variable&quot;</samp> is the only exception). <samp class="ph codeph">DefaultValue</samp> is
+represented as a string for lack of type information in the general case.
+<samp class="ph codeph">&quot;$MaxLength&quot; : &quot;max&quot;</samp> is omitted and will be treated the same as
+an unspecified length on the client-side.</p>
+<p class="p">A &quot;17.5 <span class="ph emphasis emphasis">TargetPath</span>&quot; used as &quot;13.4.1 Attribute Path&quot; or
+&quot;13.5.3/13.6.3 Attribute EntitySet&quot; is normalized in the following sense: a simple
+identifier is used instead of a target path for entity sets (or singletons) within
+the same container.</p>
+<p class="p">Each annotation specifies a value. Accordingly, <samp class="ph codeph">$DefaultValue</samp> has
+been omitted for the time being.</p>
+<p class="p">Normalization: For all EDM elements which allow both inline annotations and external
+targeting, only external targeting is used. This affects edm:ActionImport,
+edm:ComplexType, edm:EntityContainer, edm:EntitySet, edm:EntityType, edm:EnumType,
+edm:FunctionImport, edm:Member, edm:Singleton, edm:Term, edm:TypeDefinition,
+edm:NavigationProperty, edm:Property. The goal is to reduce cases that contain a
+mixture of inline annotations and external targeting to the bare minimum. External
+targeting is possible for edm:Action, edm:Function, edm:Parameter, and
+edm:ReturnType via 4.01 style annotation targets, either in a way that applies to
+all overloads of the action or function or all parameters of that name across all
+overloads, or in a way that identifies a single overload.</p>
+<div class="p">We use the <samp class="ph codeph">&quot;&lt;key&gt;@&lt;14.3.1 Annotation Term&gt;#&lt;14.3.2 Annotation Qualifier&gt;&quot; : &lt;value&gt;</samp> syntax for inline annotations in the following
+cases to avoid explicit object representations: <ul class="ul" id="loio87aac894a40640f89920d7b2a414499b__ul_pcy_mms_xv">
+<li class="li">
+<p class="p">&quot;7.2 Element ReferentialConstraint&quot; with key <samp class="ph codeph">&quot;&lt;7.2.1 ReferentialConstraint Property&gt;&quot;</samp></p>
+</li>
+<li class="li">
+<p class="p">&quot;7.3 Element OnDelete&quot; with key <samp class="ph codeph">&quot;$OnDelete&quot;</samp>
+</p>
+</li>
+<li class="li">
+<p class="p">&quot;14.3 Annotation&quot; with key <samp class="ph codeph">&quot;@&lt;14.3.1 Annotation Term&gt;#&lt;14.3.2 Annotation Qualifier&gt;&quot;</samp> (yes, this does
+lead to a double at-sign <samp class="ph codeph">&quot;@...#...@...#...&quot;</samp>)</p>
+</li>
+<li class="li">
+<p class="p">&quot;14.5.14.2 Element PropertyValue&quot; with key <samp class="ph codeph">&quot;&lt;14.5.14.2.1 PropertyValue Property&gt;&quot;</samp></p>
+</li>
+</ul></div>
+</section></div>
+<div class="section"><section class="section" type="Metadata JSON Structure"><h2 class="section_title" style="font-size: 1.15em;">Metadata JSON Structure</h2>
+
+<p class="p">The following JSON file represents the metadata document which corresponds to
+<samp class="ph codeph">GET &lt;serviceRoot&gt;/$metadata</samp>:</p>
+<pre class="pre codeblock prettyprint lang-js">
+{
+  &quot;$Version&quot; : &quot;&lt;3.1.1 Edmx Version&gt;&quot;,
+  &quot;$Annotations&quot; : {
+    &quot;&lt;14.2.1 Annotations Target&gt;&quot; : {
+      // Note: &quot;&lt;14.3.2 Annotation Qualifier&gt;&quot; defaults to &quot;&lt;14.2.2 Annotations Qualifier&gt;&quot;,
+      // qualifiers are optional, &quot;#&quot; is omitted then
+      &quot;@&lt;14.3.1 Annotation Term&gt;#&lt;14.3.2 Annotation Qualifier&gt;&quot; : &lt;value&gt; // constant or dynamic expression
+      &quot;@&lt;14.3.1 Annotation Term&gt;#&lt;14.3.2 Annotation Qualifier&gt;@...&quot; : &lt;value&gt; // annotation of an annotation
+    }
+  },
+  &quot;$EntityContainer&quot; : &quot;&lt;5.1.1 Schema Namespace&gt;.&lt;13.1.1 EntityContainer Name&gt;&quot;, // root entity container for this $metadata document
+  &quot;$Reference&quot; : {
+    // server-relative, dereferencable URLs (to $metadata) only!
+    &quot;&lt;3.3.1 Reference Uri&gt;&quot; : { &quot;@...&quot; : &lt;value&gt;,
+      &quot;$Include&quot; : [&quot;&lt;3.4.1 Include Namespace&gt;.&quot;, ...], // optional
+      &quot;$IncludeAnnotations&quot; : [{
+        &quot;$TermNamespace&quot; : &quot;&lt;3.5.1 IncludeAnnotations TermNamespace&gt;.&quot;,
+        &quot;$Qualifier&quot; : &quot;&lt;3.5.2 IncludeAnnotations Qualifier&gt;&quot;, // optional
+        &quot;$TargetNamespace&quot; : &quot;&lt;3.5.3 IncludeAnnotations TargetNamespace&gt;.&quot; // optional
+      }, ...] // optional
+    }
+  }, // optional
+  &quot;&lt;5.1.1 Schema Namespace&gt;&quot; : {
+    &quot;$kind&quot; : &quot;Schema&quot;,
+    &quot;@...&quot; : &lt;value&gt; // place inline annotations for schema itself here!
+  },
+  &quot;&lt;5.1.1 Schema Namespace&gt;.&lt;8.1.1 EntityType Name&gt;&quot; : {
+    &quot;$kind&quot; : &quot;EntityType&quot;,
+    &quot;$BaseType&quot; : &quot;&lt;8.1.2 EntityType BaseType&gt;&quot;, // optional
+    &quot;$Abstract&quot; : true, // omit in case of default value: false
+    &quot;$OpenType&quot; : true, // omit in case of default value: false
+    &quot;$HasStream&quot; : true, // omit in case of default value: false
+    &quot;$Key&quot; : [
+      &quot;&lt;8.3.1 PropertyRef Name&gt;&quot;, // in case no Alias is given
+      {&quot;&lt;8.3.1 PropertyRef Alias&gt;&quot; : &quot;&lt;8.3.1 PropertyRef Name&gt;&quot;},
+      ...
+    ], // optional
+    &quot;&lt;6.1.1 Property Name&gt;&quot; : {
+      &quot;$kind&quot; : &quot;Property&quot;,
+      &quot;$Type&quot; : &quot;&lt;6.1.2 Property Type&gt;&quot;,
+      &quot;$isCollection&quot; : true, // omit in case of default value: false
+      &quot;$Nullable&quot; : false, // omit in case of default value: true
+      &quot;$MaxLength&quot; : &lt;6.2.2 MaxLength&gt;, // optional, number
+      &quot;$Precision&quot; : &lt;6.2.3 Precision&gt;, // optional, number
+      &quot;$Scale&quot; : &lt;6.2.4 Scale&gt; | &quot;variable&quot;, // optional, number or fixed string
+      &quot;$Unicode&quot; : false, // omit in case of default value: true
+      &quot;$SRID&quot; : &quot;&lt;6.2.6 SRID&gt;&quot;, // optional
+      &quot;$DefaultValue&quot; : &quot;&lt;6.2.7 DefaultValue&gt;&quot; // optional
+    },
+    &quot;&lt;7.1.1 NavigationProperty Name&gt;&quot; : {
+      &quot;$kind&quot; : &quot;NavigationProperty&quot;,
+      &quot;$isCollection&quot; : true, // omit in case of default value: false
+      &quot;$Type&quot; : &quot;&lt;7.1.2 NavigationProperty Type&gt;&quot;,
+      &quot;$Nullable&quot; : false, // omit in case of default value: true
+      &quot;$Partner&quot; : &quot;&lt;7.1.4 NavigationProperty Partner&gt;&quot;, // optional
+      &quot;$ContainsTarget&quot; : true, // omit in case of default value: false
+      &quot;$ReferentialConstraint&quot; : {
+        &quot;&lt;7.2.1 ReferentialConstraint Property&gt;&quot; : &quot;&lt;7.2.2 ReferentialConstraint ReferencedProperty&gt;&quot;
+      }, // optional
+      &quot;$OnDelete&quot; : &quot;&lt;7.3.1. OnDelete Action&gt;&quot; // optional
+    },
+  },
+  &quot;&lt;5.1.1 Schema Namespace&gt;.&lt;9.1.1 ComplexType Name&gt;&quot; : {
+    &quot;$kind&quot; : &quot;ComplexType&quot;,
+    &quot;$BaseType&quot; : &quot;&lt;9.1.2 ComplexType BaseType&gt;&quot;, // optional
+    &quot;$Abstract&quot; : true, // omit in case of default value: false
+    &quot;$OpenType&quot; : true, // omit in case of default value: false
+    &quot;&lt;6.1.1 Property Name&gt;&quot; : {
+      // see above
+    },
+    &quot;&lt;7.1.1 NavigationProperty Name&gt;&quot; : {
+      // see above
+    }
+  },
+  &quot;&lt;5.1.1 Schema Namespace&gt;.&lt;10.1.1 EnumType Name&gt;&quot; : {
+    &quot;$kind&quot; : &quot;EnumType&quot;,
+    &quot;$UnderlyingType&quot; : &quot;&lt;10.1.2 EnumType UnderlyingType&gt;&quot;, // omit in case of default value: Edm.Int32
+    &quot;$IsFlags&quot; : true, // omit in case of default value: false
+    &quot;&lt;10.2.1 Member Name&gt;&quot; : &quot;&lt;10.2.2 Member Value&gt;&quot; // use string value in case of base type Edm.Int64, else number
+  },
+  &quot;&lt;5.1.1 Schema Namespace&gt;.&lt;11.1.1 TypeDefinition Name&gt;&quot; : {
+    &quot;$kind&quot; : &quot;TypeDefinition&quot;,
+    &quot;$UnderlyingType&quot; : &quot;&lt;11.1.2 TypeDefinition UnderlyingType&gt;&quot;,
+    &quot;$MaxLength&quot; : &lt;11.1.3 MaxLength&gt;, // optional, number
+    &quot;$Precision&quot; : &lt;11.1.3 Precision&gt;, // optional, number
+    &quot;$Scale&quot; : &lt;11.1.3 Scale&gt; | &quot;variable&quot;, // optional, number or fixed string
+    &quot;$Unicode&quot; : false, // omit in case of default value: true
+    &quot;$SRID&quot; : &quot;&lt;11.1.3 SRID&gt;&quot; // optional
+  },
+  &quot;&lt;5.1.1 Schema Namespace&gt;.&lt;12.1.1 Action Name&gt;&quot; : [{
+    &quot;$kind&quot; : &quot;Action&quot;,
+    &quot;$IsBound&quot; : true, // omit in case of default value: false
+    &quot;$EntitySetPath&quot; : &quot;&lt;12.1.3 Action EntitySetPath&gt;&quot;, // optional
+    &quot;$Parameter&quot; : [{
+      &quot;$Name&quot; : &quot;&lt;12.4.1 Parameter Name&gt;&quot;,
+      &quot;$isCollection&quot; : true, // omit in case of default value: false
+      &quot;$Type&quot; : &quot;&lt;12.4.2 Parameter Type&gt;&quot;,
+      &quot;$Nullable&quot; : false, // omit in case of default value: true
+      &quot;$MaxLength&quot; : &lt;12.4.4 MaxLength&gt;, // optional, number
+      &quot;$Precision&quot; : &lt;12.4.4 Precision&gt;, // optional, number
+      &quot;$Scale&quot; : &lt;12.4.4 Scale&gt; | &quot;variable&quot;, // optional, number or fixed string
+      &quot;$SRID&quot; : &quot;&lt;12.4.4 SRID&gt;&quot; // optional
+    }, ...], // optional
+    &quot;$ReturnType&quot; : {
+      &quot;$isCollection&quot; : true, // omit in case of default value: false
+      &quot;$Type&quot; : &quot;&lt;12.3.1 ReturnType Type&gt;&quot;,
+      &quot;$Nullable&quot; : false, // omit in case of default value: true
+      &quot;$MaxLength&quot; : &lt;11.1.3 MaxLength&gt;, // optional, number
+      &quot;$Precision&quot; : &lt;11.1.3 Precision&gt;, // optional, number
+      &quot;$Scale&quot; : &lt;11.1.3 Scale&gt; | &quot;variable&quot;, // optional, number or fixed string
+      &quot;$SRID&quot; : &quot;&lt;11.1.3 SRID&gt;&quot; // optional
+    } // optional
+  }, ...],
+  &quot;&lt;5.1.1 Schema Namespace&gt;.&lt;12.2.1 Function Name&gt;&quot; : [{
+    &quot;$kind&quot; : &quot;Function&quot;,
+    &quot;$IsBound&quot; : true, // omit in case of default value: false
+    &quot;$IsComposable&quot; : true, // omit in case of default value: false
+    &quot;$EntitySetPath&quot; : &quot;&lt;12.2.4 Function EntitySetPath&gt;&quot;, // optional
+    &quot;$Parameter&quot; : [{
+      // see above
+    }, ...], // optional
+    &quot;$ReturnType&quot; : {
+      // see above
+    }
+  }, ...],
+  &quot;&lt;5.1.1 Schema Namespace&gt;.&lt;13.1.1 EntityContainer Name&gt;&quot; : {
+    &quot;$kind&quot; : &quot;EntityContainer&quot;
+//      &quot;$Extends&quot; : &quot;&lt;13.1.2 EntityContainer Extends&gt;&quot;, // not in the 1st step
+    &quot;&lt;13.2.1 EntitySet Name&gt;&quot; : {
+      &quot;$kind&quot; : &quot;EntitySet&quot;,
+      &quot;$Type&quot; : &quot;&lt;13.2.2 EntitySet EntityType&gt;&quot;, // Note: renamed for consistency!
+      &quot;$IncludeInServiceDocument&quot; : false, // omit in case of default value: true
+      &quot;$NavigationPropertyBinding&quot; : {
+        &quot;&lt;13.4.1 NavigationPropertyBinding Path&gt;&quot; : &quot;&lt;13.4.2 NavigationPropertyBinding Target&gt;&quot; // normalized
+      } // optional
+    },
+    &quot;&lt;13.3.1 Singleton Name&gt;&quot; : {
+      &quot;$kind&quot; : &quot;Singleton&quot;,
+      &quot;$Type&quot; : &quot;&lt;13.3.2 Singleton Type&gt;&quot;,
+      &quot;$NavigationPropertyBinding&quot; : {
+        &quot;&lt;13.4.1 NavigationPropertyBinding Path&gt;&quot; : &quot;&lt;13.4.2 NavigationPropertyBinding Target&gt;&quot; // normalized
+      } // optional
+    },
+    &quot;&lt;13.5.1 ActionImport Name&gt;&quot; : {
+      &quot;$kind&quot; : &quot;ActionImport&quot;,
+      &quot;$Action&quot; : &quot;&lt;13.5.2 ActionImport Action&gt;&quot;,
+      &quot;$EntitySet&quot; : &quot;&lt;13.5.3 ActionImport EntitySet&gt;&quot; // optional, normalized
+    },
+    &quot;&lt;13.6.1 FunctionImport Name&gt;&quot; : {
+      &quot;$kind&quot; : &quot;FunctionImport&quot;,
+      &quot;$Function&quot; : &quot;&lt;13.6.2 FunctionImport Function&gt;&quot;,
+      &quot;$EntitySet&quot; : &quot;&lt;13.6.3 FunctionImport EntitySet&gt;&quot;, // optional, normalized
+      &quot;$IncludeInServiceDocument&quot; : true // omit in case of default value: false
+    }
+  },
+  &quot;&lt;5.1.1 Schema Namespace&gt;.&lt;14.1.1 Term Name&gt;&quot; : {
+    &quot;$kind&quot; : &quot;Term&quot;,
+    &quot;$isCollection&quot; : true, // omit in case of default value: false
+    &quot;$Type&quot; : &quot;&lt;14.1.2 Term Type&gt;&quot;,
+    &quot;$BaseTerm&quot; : &quot;&lt;14.1.3 Term BaseTerm&gt;&quot;, // optional
+//    &quot;$DefaultValue&quot; : &quot;&lt;14.1.4 Term DefaultValue&gt;&quot;, // omit in case of default value: null
+//    &quot;$AppliesTo&quot; : &quot;&lt;14.1.5 Term AppliesTo&gt;&quot;, // JSON clients need not validate
+    &quot;$Nullable&quot; : false, // omit in case of default value: true
+    &quot;$MaxLength&quot; : &lt;14.1.6 MaxLength&gt;, // optional, number
+    &quot;$Precision&quot; : &lt;14.1.6 Precision&gt;, // optional, number
+    &quot;$Scale&quot; : &lt;14.1.6 Scale&gt; | &quot;variable&quot;, // optional, number or fixed string
+    &quot;$SRID&quot; : &quot;&lt;14.1.6 SRID&gt;&quot; // optional
+  }
+}</pre>
+</section></div>
+<div class="section"><section class="section" type="Constant and Dynamic Expressions"><h2 class="section_title" style="font-size: 1.15em;">Constant and Dynamic Expressions</h2>
+
+<p class="p">Constant and dynamic expressions are used as values for annotations. Their JSON
+representation is shown in the following two tables.</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio87aac894a40640f89920d7b2a414499b__table_tyk_cqs_xv" class="table" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Constant Expressions</span></span></caption><colgroup><col width="33.333333333333336%"><col width="33.333333333333336%"><col width="33.333333333333336%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d210004e208">
+<p class="p">Expression</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d210004e214">
+<p class="p">Options</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d210004e220">
+<p class="p">Additional Information</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e208 ">
+<p class="p">14.4 Constant Expressions</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e214 ">
+<p class="p"><samp class="ph codeph">{&quot;$Binary&quot; : &quot;T0RhdGE&quot;}</samp></p>
+<p class="p"><samp class="ph codeph">{&quot;$Date&quot; : &quot;2000-01-01&quot;}</samp></p>
+<p class="p"><samp class="ph codeph">{&quot;$DateTimeOffset&quot; :
+&quot;2000-01-01T16:00:00.000-09:00&quot;}</samp></p>
+<p class="p"><samp class="ph codeph">{&quot;$Decimal&quot; : &quot;3.14&quot;}</samp></p>
+<p class="p"><samp class="ph codeph">{&quot;$Duration&quot; : &quot;P11D23H59M59.999999999999S&quot;}</samp></p>
+<p class="p"><samp class="ph codeph">{&quot;$Guid&quot; :
+&quot;21EC2020-3AEA-1069-A2DD-08002B30309D&quot;}</samp></p>
+<p class="p"><samp class="ph codeph">{&quot;$TimeOfDay&quot; : &quot;21:45:00&quot;}</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e220 ">
+<p class="p">&quot;Binary&quot;, &quot;Date&quot;, &quot;DateTimeOffset&quot;, &quot;Decimal&quot;, &quot;Duration&quot;,
+&quot;Guid&quot;, &quot;TimeOfDay&quot; are objects with a single property that has
+a string value.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e208 ">
+<p class="p">14.4.2 Expression <samp class="ph codeph">Bool</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e214 ">
+<p class="p"><samp class="ph codeph">false</samp></p>
+<p class="p"><samp class="ph codeph">true</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e220 ">
+<p class="p">Is represented by the JavaScript boolean literals.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e208 ">
+<p class="p">14.4.7 Expression <samp class="ph codeph">EnumMember</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e214 ">
+<p class="p"><samp class="ph codeph">{&quot;$EnumMember&quot; : 42}</samp></p>
+<p class="p"><samp class="ph codeph">{&quot;$EnumMember&quot; : &quot;1234567890123456789&quot;}</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e220 ">
+<p class="p">Is represented like above object notation, but with a JavaScript
+number literal as long as the value is a safe integer, else with
+a string value.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e208 ">
+<p class="p">14.4.8 Expression <samp class="ph codeph">Float</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e214 ">
+<p class="p"><samp class="ph codeph">3.1415926535</samp></p>
+<p class="p"><samp class="ph codeph">{&quot;$Float&quot; : &quot;-INF&quot;}</samp></p>
+<p class="p"><samp class="ph codeph">{&quot;$Float&quot; : &quot;INF&quot;}</samp></p>
+<p class="p"><samp class="ph codeph">{&quot;$Float&quot; : &quot;NaN&quot;}</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e220 ">
+<p class="p">Is represented by a JavaScript number literal (except for the
+<samp class="ph codeph">nanInfinity</samp> ABNF rule which needs an object
+notation with a string value).</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e208 ">
+<p class="p">14.4.10 Expression <samp class="ph codeph">Int</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e214 ">
+<p class="p"><samp class="ph codeph">42</samp></p>
+<p class="p"><samp class="ph codeph">{&quot;$Int&quot; : &quot;1234567890123456789&quot;}</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e220 ">
+<p class="p">Is represented by a JavaScript number literal as long as the
+value is a safe integer. Else the above object notation is
+used.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e208 ">
+<p class="p">14.4.11 Expression <samp class="ph codeph">String</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e214 ">
+<p class="p"><samp class="ph codeph">&quot;Product Catalog&quot;</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e220 ">
+<p class="p">Is represented by a JavaScript string literal.</p>
+</td>
+</tr>
+</tbody></table></div>
+<div class="table-wrapper tablenoborder"><table summary id="loio87aac894a40640f89920d7b2a414499b__table_erw_2rs_xv" class="table" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Dynamic Expressions</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d210004e443">
+<p class="p">Expression</p>
+</th>
+<th class="entry" style="vertical-align:top;" id="d210004e449">
+<p class="p">Options and Additional Information</p>
+</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.1 Comparison and Logical Operators</p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<p class="p">edm:Not is written as <samp class="ph codeph">{&quot;$Not&quot; : &lt;value&gt;, &quot;@...&quot; :
+&lt;value&gt;}</samp>. All others are written like
+<samp class="ph codeph">{&quot;$And&quot; : [&lt;value&gt;, &lt;value&gt;], &quot;@...&quot; :
+&lt;value&gt;}</samp> because they require two child
+expressions.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.2 Expression <samp class="ph codeph">AnnotationPath</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<p class="p"><samp class="ph codeph">{&quot;$AnnotationPath&quot; : &quot;...&quot;}</samp></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.3 Expression <samp class="ph codeph">Apply</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<p class="p"><samp class="ph codeph">{&quot;$Apply&quot; : [&lt;value&gt;, ...], &quot;$Function&quot; :
+&quot;&lt;14.5.3.1 Apply Function&gt;&quot;, &quot;@...&quot; :
+&lt;value&gt;}</samp></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.4 Expression <samp class="ph codeph">Cast</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<div class="p">
+<pre class="pre codeblock prettyprint lang-js">
+{
+&quot;$Cast&quot; : &lt;value&gt;,
+&quot;$isCollection&quot; : true, // omit in case of default value: false
+&quot;$Type&quot; : &quot;&lt;14.5.4.1 Cast Type&gt;&quot;,
+&quot;$MaxLength&quot; : &lt;6.2.2 MaxLength&gt;, // optional, number
+&quot;$Precision&quot; : &lt;6.2.3 Precision&gt;, // optional, number
+&quot;$Scale&quot; : &lt;6.2.4 Scale&gt; | &quot;variable&quot;, // optional, number or fixed string
+&quot;$SRID&quot; : &quot;&lt;6.2.6 SRID&gt;&quot;, // optional
+&quot;@...&quot; : &lt;value&gt;
+}</pre>
+</div>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.5 Expression <samp class="ph codeph">Collection</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<p class="p"><samp class="ph codeph">[&lt;value&gt;, ...]</samp></p>
+<p class="p">Simply an array. No additional properties, no annotations
+possible.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.6 Expression <samp class="ph codeph">If</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<p class="p"><samp class="ph codeph">{&quot;$If&quot; : [&lt;value&gt;, &lt;value&gt;, &lt;value&gt;], &quot;@...&quot; :
+&lt;value&gt;}</samp></p>
+<p class="p">Condition, then, else (which is optional inside a &quot;14.5.5
+Expression Collection&quot; only).</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.7 Expression <samp class="ph codeph">IsOf</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<div class="p">
+<pre class="pre codeblock prettyprint lang-js">
+{
+&quot;$IsOf&quot; : &lt;value&gt;,
+&quot;$isCollection&quot; : true, // omit in case of default value: false
+&quot;$Type&quot; : &quot;&lt;14.5.7.1 IsOf Type&gt;&quot;,
+&quot;$MaxLength&quot; : &lt;6.2.2 MaxLength&gt;, // optional, number
+&quot;$Precision&quot; : &lt;6.2.3 Precision&gt;, // optional, number
+&quot;$Scale&quot; : &lt;6.2.4 Scale&gt; | &quot;variable&quot;, // optional, number or fixed string
+&quot;$SRID&quot; : &quot;&lt;6.2.6 SRID&gt;&quot;, // optional
+&quot;@...&quot; : &lt;value&gt;
+}</pre>
+</div>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.8 Expression <samp class="ph codeph">LabeledElement</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<p class="p"><samp class="ph codeph">{&quot;$LabeledElement&quot; : &lt;value&gt;, &quot;$Name&quot; : &quot;&lt;5.1.1
+Schema Namespace&gt;.&lt;14.5.8.1 LabeledElement Name&gt;&quot;, &quot;@...&quot;
+: &lt;value&gt;}</samp></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.9 Expression <samp class="ph codeph">LabeledElementReference</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<p class="p"><samp class="ph codeph">{&quot;$LabeledElementReference&quot; : &quot;&lt;QualifiedName name of
+a labeled element expression in scope&gt;&quot;}</samp></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.10 Expression <samp class="ph codeph">Null</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<p class="p"><samp class="ph codeph">null</samp></p>
+<p class="p"><samp class="ph codeph">{&quot;$Null&quot; : null, &quot;@...&quot; : &lt;value&gt;}</samp></p>
+<p class="p">The object notation is needed in case of inline annotations.</p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.11 Expression <samp class="ph codeph">NavigationPropertyPath</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<p class="p"><samp class="ph codeph">{&quot;$NavigationPropertyPath&quot; : &quot;...&quot;}</samp></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.12 Expression <samp class="ph codeph">Path</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<p class="p"><samp class="ph codeph">{&quot;$Path&quot; : &quot;...&quot;}</samp></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.13 Expression <samp class="ph codeph">PropertyPath</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<p class="p"><samp class="ph codeph">{&quot;$PropertyPath&quot; : &quot;...&quot;}</samp></p>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.14 Expression <samp class="ph codeph">Record</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<p class="p">The record itself is a map:</p>
+<div class="p">
+<pre class="pre codeblock prettyprint lang-js">
+{
+  &quot;$Type&quot; : &quot;&lt;14.5.14.1 Record Type&gt;&quot;,
+  &quot;&lt;14.5.14.2.1 PropertyValue Property&gt;&quot; : &lt;value&gt;,
+  &quot;@...&quot; : &lt;value&gt;
+}</pre>
+</div>
+</td>
+</tr>
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d210004e443 ">
+<p class="p">14.5.15 Expression <samp class="ph codeph">UrlRef</samp></p>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d210004e449 ">
+<p class="p"><samp class="ph codeph">{&quot;$UrlRef&quot; : &lt;value&gt;, &quot;@...&quot; :
+&lt;value&gt;}</samp></p>
+</td>
+</tr>
+</tbody></table></div>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata-json-format/v4.0/os/odata-json-format-v4.0-os.html" target="_blank" alt="http://docs.oasis-open.org/odata/odata-json-format/v4.0/os/odata-json-format-v4.0-os.html" title="http://docs.oasis-open.org/odata/odata-json-format/v4.0/os/odata-json-format-v4.0-os.html">OData JSON Format Version 4.0<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></div><div><a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/odata-json-csdl-v4.0.html" target="_blank" alt="http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/odata-json-csdl-v4.0.html" title="http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/odata-json-csdl-v4.0.html">OData JSON Format for Common Schema Definition Language (CSDL) Version
+4.0<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></div><div><a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/odata-json-csdl-v4.0.html" target="_blank" alt="http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/odata-json-csdl-v4.0.html" title="http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/odata-json-csdl-v4.0.html">OData Version 4.0 Part 3: Common Schema Definition Language (CSDL) Plus Errata
+02<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

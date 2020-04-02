@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Rendering Unusual Data test</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="json/TESTDATA_PLAINTABLE.js"></script>
+<script type="text/javascript" src="json/TESTDATA_CSVTABLE.js"></script>
+<script type="text/javascript" src="json/TESTDATA_CSNQUERY.js"></script>
+<script type="text/javascript" src="json/TESTDATA_BICS_C03_BICSTEST_Q0000.js"></script>
+<script type="text/javascript" src="json/TESTDATA_MSG_IN_TABLE.js"></script>
+<script type="text/javascript" src="json/TESTDATA_MEASURES_IN_ROWS.js"></script>
+<script type="text/javascript" src="testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Rendering Unusual Data test</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+
+		module("Crosstab Rendering tests", {
+			setup : function() {
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				this.oCrosstab.setWidth("1600px");
+				this.oCrosstab.setHeight("1200px");
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+
+			},
+			teardown : function() {
+				this.oCrosstab = null;
+			}
+		});
+
+		test("Check rendering of CSV table", function() {
+			var oCsvTableControl = sapzen.crosstab.test.jsonTestData.csvTable.control;
+			this.oCrosstab.updateControlProperties(oCsvTableControl);
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+			
+			var oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+			var oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+
+			sap.zen.crosstab.testutils.TestUtils.checkCell(oDataArea, 0, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkCell(oColumnHeaderArea, 0, 0);
+			
+			ok(!oDimensionHeaderArea.hasContent(),"The Dimension Header Area should not have content");
+			ok(!oRowHeaderArea.hasContent(),"The Row Header Area should not have content");
+			ok(oColumnHeaderArea.hasContent(),"The Column Header Area should have content");
+			ok(oDataArea.hasContent(),"The Data Area should have content");
+			
+			var oDomDimensionHeader = jQuery.sap.byId(oDimensionHeaderArea.getId());
+			equals(oDomDimensionHeader.children().length, 0, "The Dimension Header Area should not have any children");
+			
+			var oDomRowHeader = jQuery.sap.byId(oRowHeaderArea.getId());
+			equals(oDomRowHeader.children().length, 0, "The Row Header Area should not have any children");
+		});
+		
+		test("Check rendering of HG_1234", function() {
+			this.oCrosstab.updateControlProperties(sapzen.crosstab.test.jsonTestData.CsnQuery.control);
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+			
+			var oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+			var oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+			
+			var oDimHeaderCell = oDimensionHeaderArea.getCell(0, 0);
+			var oDomDimHeaderAreaCell = jQuery.sap.byId(oDimHeaderCell.getId());
+			ok(oDomDimHeaderAreaCell, "Dimension header area cell (0,0) must be rendered");
+			
+			var iDimHeaderAreaCellWidth = oDomDimHeaderAreaCell.outerWidth();
+			
+			var oRowHeaderAreaCell1 = oRowHeaderArea.getCell(0, 0);
+			var oDomRowHeaderAreaCell1 = jQuery.sap.byId(oRowHeaderAreaCell1.getId());
+			ok(oDomRowHeaderAreaCell1, "Row header area cell (0,0) must be rendered");
+
+			var oRowHeaderAreaCell2 = oRowHeaderArea.getCell(0, 1);
+			var oDomRowHeaderAreaCell2 = jQuery.sap.byId(oRowHeaderAreaCell2.getId());
+			ok(oDomRowHeaderAreaCell2, "Row header area cell (0,1) must be rendered");
+			
+			var iRowHeaderCell1Width = oDomRowHeaderAreaCell1.outerWidth();
+			var iRowHeaderCell2Width = oDomRowHeaderAreaCell2.outerWidth();
+			
+			var iRowHeaderWidth = iRowHeaderCell1Width + iRowHeaderCell2Width;
+			ok(iDimHeaderAreaCellWidth === iRowHeaderWidth, "Two row header cells must have same width as dim header cell");
+			
+			var oRowHeaderAreaCell3 = oRowHeaderArea.getCell(4, 0);
+			var oDomRowHeaderAreaCell3 = jQuery.sap.byId(oRowHeaderAreaCell3.getId());
+			
+			ok(oDomRowHeaderAreaCell3, "row header area cell (4,0) must be rendered");
+			var iRowHeaderCell3Width = oDomRowHeaderAreaCell3.outerWidth();
+			ok(iRowHeaderCell3Width === iDimHeaderAreaCellWidth, "row header area cell (4,0) must have same size as dim header area cell");
+		});
+		
+		test("Check rendering of 0BICS_C03_BICSTEST_Q0000", function() {
+			this.oCrosstab.updateControlProperties(sapzen.crosstab.test.jsonTestData.BICS_C03_BICSTEST_Q0000.control);
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+			
+			var oColHeaderArea = this.oCrosstab.getColumnHeaderArea();
+			var oDataArea = this.oCrosstab.getDataArea();
+			
+			var oColHeaderAreaCell = oColHeaderArea.getCell(0, 0);
+			ok(oColHeaderAreaCell, "Col header area cell 0/0 exists");
+			
+			var oDomColHeaderAreaCell = jQuery.sap.byId(oColHeaderAreaCell.getId());
+			ok(oDomColHeaderAreaCell, "Col header area cell 0/0 is rendered in DOM");
+			
+			oColHeaderAreaCell = oColHeaderArea.getCell(1, 5);
+			ok(oColHeaderAreaCell, "Col header area cell 1/5 exists");
+			
+			oDomColHeaderAreaCell = jQuery.sap.byId(oColHeaderAreaCell.getId());
+			ok(oDomColHeaderAreaCell, "Col header area cell 1/5 is rendered in DOM");
+			
+			var oDataAreaCell = oDataArea.getCell(0, 0);
+			ok(oDataAreaCell, "Data area cell 0/0 exists");
+			
+			var oDomDataAreaCell = jQuery.sap.byId(oDataAreaCell.getId());
+			ok(oDomDataAreaCell, "Data area cell 0/0 is rendered in DOM");
+			
+			oDataAreaCell = oDataArea.getCell(0, 5);
+			ok(oDataAreaCell, "Data area cell 0/5 exists");
+			
+			oDomDataAreaCell = jQuery.sap.byId(oDataAreaCell.getId());
+			ok(oDomDataAreaCell, "Data area cell 0/5 is rendered in DOM");
+		});
+		
+		test("Check rendering of Message in Table", function() {
+			this.oCrosstab.updateControlProperties(sapzen.crosstab.test.jsonTestData.MSG_IN_TABLE.control);
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+			
+			var oDimHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+			ok(oDimHeaderArea.getRowCnt() === 2, "Dimension header must have two rows");
+			ok(oDimHeaderArea.getColCnt() === 1, "Dimension header must have one column");
+			
+			var oColHeaderArea = this.oCrosstab.getColumnHeaderArea();
+			ok(!oColHeaderArea.hasContent(), "Col Header Area must not have any content");
+			
+			var oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+			ok (!oRowHeaderArea.hasContent(), "Row Header Area must not have any content");
+			
+			var oDataArea = this.oCrosstab.getDataArea();
+			ok (!oDataArea.hasContent(), "Data Area must not have any content");
+			
+			var oTitleCell = oDimHeaderArea.getCell(0, 0);
+			ok(oTitleCell, "Title cell must exist in 0/0");
+			
+			var oMsgCell = oDimHeaderArea.getCell(1, 0);
+			ok(oMsgCell, "Message cell must exist in 1/0");
+		});
+		
+		test("Check rendering of Measures in Rows", function() {
+			this.oCrosstab.updateControlProperties(sapzen.crosstab.test.jsonTestData.TESTDATA_MEASURES_IN_ROWS.control);
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+			
+			var oDimHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+			ok(oDimHeaderArea.hasContent() === false, "Dimension Header Area must not have any content");
+			
+			var oColHeaderArea = this.oCrosstab.getColumnHeaderArea();
+			ok(!oColHeaderArea.hasContent(), "Col Header Area must not have any content");
+			
+			var oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+			ok (oRowHeaderArea.getRowCnt() === 1, "Row Header Area must have one row");
+			ok(oRowHeaderArea.getColCnt() === 2, "Row Header Area must have two columns");
+			
+			var oDataArea = this.oCrosstab.getDataArea();
+			ok (oDataArea.getRowCnt(), "Data area must have one row");
+			ok (oDataArea.getColCnt(), "Data area must have one column");
+			
+			var oDataCell = oDataArea.getCell(0, 0);
+			var oDomDataCell = $('#' + oDataCell.getId());
+			ok (oDomDataCell && oDomDataCell.length > 0, "Data cell must be rendered");
+			
+			var iWidth = oDomDataCell.outerWidth();
+			ok(iWidth > 10, "Data cell must be rendered with at least 10px width");
+			
+			var iHeight = oDomDataCell.outerHeight();
+			ok(iHeight > 10, "Data cell must be rendered with at least 10px height");
+		});
+		
+	</script>
+
+</body>
+
+</html>

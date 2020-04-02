@@ -1,0 +1,124 @@
+<View controllerName="sap.ushell.components.shell.UserSettings.ThemeSelector"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<IconTabBar id="idIconTabBar" applyContentPadding="true" expandable="false">
+		<items>
+			<IconTabFilter text="{i18n>AppearanceThemeMenu}">
+				<List items="{path: '/options'}"
+					includeItemInSelection="true"
+					mode="SingleSelectMaster"
+					selectionChange="onSelectHandler"
+					id="themeList">
+					<items>
+						<CustomListItem selected="{isSelected}" visible="{isVisible}" class="sapUshellAppearanceCustomListItem">
+							<customData>
+								<core:CustomData key="themeid" value="{id}" writeToDom="true" />
+							</customData>
+							<HBox>
+								<HBox class="sapUshellAppearanceItemViewLeft">
+									<core:Icon src="{parts:[{path:'id'}], formatter:'.getIconFormatter'}"
+										color="{config>/sapUiContentIconColor}"
+										size="1.75rem"
+										class="sapUshellAppearanceIcon" />
+									<Text text="{name}" class="sapUshellAppearanceItemText">
+										<layoutData>
+											<FlexItemData styleClass="sapUshellAppearanceFlexItemText" />
+										</layoutData>
+									</Text>
+								</HBox>
+								<HBox class="sapUshellAppearanceItemViewRight">
+									<core:Icon src="sap-icon://sys-enter-2"
+										visible="{isSelected}"
+										color="{config>/sapUiContentIconColor}"
+										size="1.375rem" />
+								</HBox>
+							</HBox>
+						</CustomListItem>
+					</items>
+				</List>
+			</IconTabFilter>
+			<IconTabFilter text="{i18n>AppearanceLayoutAndBehaviorMenu}" id="DisplaySettingsTab">
+				<HBox alignItems="Start" justifyContent="End" class="sapUshellAppearanceBox">
+					<Label
+						labelFor="contentDensitySwitch"
+						text="{i18n>AppearanceContentDensityLabel}:"
+						class="sapUshellAppearanceLabel"
+						width="{config>/labelWidth}"
+						textAlign="{config>/textAlign}" />
+					<VBox alignItems="Baseline" class="sapUshellAppearanceContentDensityText">
+						<Switch
+							type="Default"
+							id="contentDensitySwitch"
+							class="sapUshellAppearanceSwitchButton"
+							tooltip="{i18n>AppearanceContentDensityTooltip}"
+							change="setCurrentContentDensity"
+							state="{config>/isCozyContentMode}"
+							enabled="{config>/isContentDensitySwitchEnable}" />
+						<Text text="{i18n>appearanceCompactCozyDescriptionText}" class="sapUshellFlpSettingsDescription" />
+					</VBox>
+				</HBox>
+				<HBox visible="{config>/sizeBehaviorConfigurable}" alignItems="Start" justifyContent="End" class="sapUshellAppearanceBox">
+					<Label text="{i18n>AppearanceTileSizeLabel}:"
+						class="sapUshellAppearanceLabel"
+						width="{config>/labelWidth}"
+						textAlign="{config>/textAlign}"
+						labelFor="setCurrentTileSize"
+						id="sapUshellAppearanceTileSizeLabel" />
+					<VBox class="sapUshellAppearanceTileSizeText">
+						<RadioButtonGroup select="setCurrentTileSize" selectedIndex="{config>/tileSize}" id="tileSizeRadioButtonGroup">
+							<buttons>
+								<RadioButton text="{i18n>AppearanceTileSizeSmall}"
+									class="sapUshellAppearanceTileSizeSmall"
+									ariaLabelledBy="sapUshellAppearanceTileSizeLabel" />
+								<RadioButton text="{i18n>AppearanceTileSizeLarge}"
+									class="sapUshellAppearanceTileSizeLarge"
+									ariaLabelledBy="sapUshellAppearanceTileSizeLabel" />
+							</buttons>
+						</RadioButtonGroup>
+						<Text text="{i18n>appearanceTileSizeDescriptionText}" class="sapUshellFlpSettingsDescription" />
+					</VBox>
+				</HBox>
+				<HBox visible="{darkMode>/enabled}" alignItems="Start" justifyContent="End" class="sapUshellAppearanceBox">
+					<Label
+						labelFor="{= ${darkMode>/detectionSupported} ? 'darkModeDetectionSwitcher' : 'darkModeSwitcher'}"
+						text="{i18n>AppearanceDarkModeLabel}:"
+						class="sapUshellAppearanceLabel"
+						width="{config>/labelWidth}"
+						textAlign="{config>/textAlign}" />
+
+					<VBox visible="{darkMode>/detectionSupported}" alignItems="Baseline" class="sapUshellAppearanceContentDensityText">
+						<Switch
+							type="Default"
+							id="darkModeDetectionSwitcher"
+							class="sapUshellAppearanceSwitchButton"
+							tooltip="{i18n>AppearanceDarkModeDetectionTooltip}"
+							change="changeSystemModeDetection"
+							state="{darkMode>/detectionEnabled}" />
+						<Text text="{i18n>appearanceDarkModeDetectionText}" class="sapUshellFlpSettingsDescription" />
+						<MessageStrip
+							text="{i18n>appearanceDarkModeWarning}"
+							type="Warning"
+							showIcon="true"
+							class="sapUshellFlpSettingsWarning" />
+					</VBox>
+
+					<VBox visible="{=!${darkMode>/detectionSupported}}" alignItems="Baseline" class="sapUshellAppearanceContentDensityText">
+						<Switch
+							type="Default"
+							id="darkModeSwitcher"
+							class="sapUshellAppearanceSwitchButton"
+							tooltip="{i18n>AppearanceDarkModeSwitchTooltip}"
+							change="changeThemeMode"
+							state="{darkMode>/isDarkThemeApplied}" />
+						<Text text="{i18n>appearanceDarkModeSwitchText}" class="sapUshellFlpSettingsDescription" />
+						<MessageStrip
+							text="{i18n>appearanceDarkModeWarning}"
+							type="Warning"
+							showIcon="true"
+							class="sapUshellFlpSettingsWarning" />
+					</VBox>
+				</HBox>
+			</IconTabFilter>
+		</items>
+	</IconTabBar>
+</View>

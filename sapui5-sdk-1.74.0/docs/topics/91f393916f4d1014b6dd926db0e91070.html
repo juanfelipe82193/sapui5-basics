@@ -1,0 +1,147 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Writing a Control Renderer</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="SAPUI5 provides three classes for control rendering: sap.ui.core.Control, sap.ui.core.RenderManager, and sap.ui.core.Renderer."><meta name="description" content="SAPUI5 provides three classes for control rendering: sap.ui.core.Control, sap.ui.core.RenderManager, and sap.ui.core.Renderer."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"4de64e2e191f4a7297d4fd2d1e233a2d.html","previousTopicHref":"bcee26a4801748f39bf5698d83d903aa.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loio91f393916f4d1014b6dd926db0e91070"><h1 class="title topictitle1" hidden>Writing a Control Renderer</h1><div class="body"><p class="shortdesc" hidden><span class="ph"><span class="ph pname">SAPUI5</span></span> provides three classes for control rendering:
+<samp class="ph codeph">sap.ui.core.Control</samp>, <samp class="ph codeph">sap.ui.core.RenderManager</samp>, and
+<samp class="ph codeph">sap.ui.core.Renderer</samp>.</p><div class="section" id="loio91f393916f4d1014b6dd926db0e91070__section_B946B1C4760F4A619D34055C49017F77"><section class="section" type="Control Class (sap.ui.core.Control)"><h2 class="section_title" style="font-size: 1.15em;">Control Class (<samp class="ph codeph">sap.ui.core.Control</samp>)</h2>
+
+<div class="p">The control class contains the control for rendering. A control consists of properties, events,
+aggregations, associations, and methods. They define the behavior of the control.
+The appearance and data of the control is determined by properties, associations,
+and aggregations. The <samp class="ph codeph">get...</samp> methods of the control are used to
+access this information during the execution of the <samp class="ph codeph">render()</samp>
+method:<ul class="ul" id="loio91f393916f4d1014b6dd926db0e91070__ul_tbr_3rf_bn">
+<li class="li">
+<p class="p">Accessing properties:</p>
+<pre class="pre codeblock prettyprint lang-js">
+// var oValue = oControl.get&lt;Property&gt;();
+// for example for the &apos;text&apos;-property
+var oValue = oControl.getText();</pre>
+</li>
+<li class="li">
+<p class="p">Accessing 1..1 aggregations</p>
+<pre class="pre codeblock prettyprint lang-js">
+// var oAggregation = oControl.get&lt;Aggregation&gt;();
+// for example for content-aggregation
+var oAggregation = oControl.getContent();</pre>
+</li>
+<li class="li">
+<p class="p">Accessing 1..n aggregrations:</p>
+<pre class="pre codeblock prettyprint lang-js">
+// var aAggregations = oControl.get&lt;Aggregation&gt;s();
+// for example for rows-aggregation
+var aAggregations = oControl.getRows();</pre>
+</li>
+<li class="li">
+<p class="p">Accessing associations:</p>
+<pre class="pre codeblock prettyprint lang-js">
+// var sAssociatedControlId = oControl.get&lt;Association&gt;();
+// for example labelFor-association
+var sAssociatedControlId = oControl.getLabelFor();</pre>
+</li>
+</ul></div>
+</section></div><div class="section" id="loio91f393916f4d1014b6dd926db0e91070__section_EE2A2957C19D4C6DA8E0AE811D87623A"><section class="section" type="RenderManager Class (sap.ui.core.RenderManager)"><h2 class="section_title" style="font-size: 1.15em;">RenderManager Class (<samp class="ph codeph">sap.ui.core.RenderManager</samp>)</h2>
+
+<p class="p">The render manager class collects pieces of HTML and injects the generated markup into the DOM.
+The <samp class="ph codeph">RenderManager</samp> determines and loads the corresponding renderer
+and delegates the control rendering to the renderer. The
+<samp class="ph codeph">RenderManager</samp> also provides, amongst others, the following
+helper functions for rendering:</p>
+<div class="table-wrapper"><table summary border="1" class="simpletable"><thead><tr class="sthead"><th style="vertical-align:bottom;text-align:left;" id="d458660e99" class="stentry">Method</th><th style="vertical-align:bottom;text-align:left;" id="d458660e101" class="stentry">Description</th></tr></thead><tbody><tr class="strow"><td style="vertical-align:top;" headers="d458660e99" class="stentry"><samp class="ph codeph">write()</samp></td><td style="vertical-align:top;" headers="d458660e101" class="stentry">Writes
+string information to the HTML</td></tr><tr class="strow"><td style="vertical-align:top;" headers="d458660e99" class="stentry"><samp class="ph codeph">writeControlData()</samp>
+</td><td style="vertical-align:top;" headers="d458660e101" class="stentry">Writes the ID and the recognition data of the
+control to the HTML</td></tr><tr class="strow"><td style="vertical-align:top;" headers="d458660e99" class="stentry"><samp class="ph codeph">renderControl()</samp>
+</td><td style="vertical-align:top;" headers="d458660e101" class="stentry">Converts the specified control into HTML representation and adds it to the HTML; used for
+rendering child controls</td></tr></tbody></table></div>
+<p class="p"><span class="ph">For more information, see <a class="xref" href="../../#/api/sap.ui.core.RenderManager" target="_top" alt="#/api/sap.ui.core.RenderManager" title="#/api/sap.ui.core.RenderManager">sap.ui.core.RenderManager</a></span>.</p>
+</section></div><div class="section" id="loio91f393916f4d1014b6dd926db0e91070__section_A9C3AEFF8AC94677BAE58BFF59FAE84A"><section class="section" type="Renderer Class (sap.ui.core.Renderer)"><h2 class="section_title" style="font-size: 1.15em;">Renderer Class (<samp class="ph codeph">sap.ui.core.Renderer</samp>)</h2>
+
+<p class="p">The renderer class is the base class for control renderers. The <samp class="ph codeph">Renderer</samp>
+implements the static <samp class="ph codeph">render</samp> method that is called when a control
+is added to the DOM. To render a control, the <samp class="ph codeph">RenderManager</samp>
+executes the <samp class="ph codeph">render</samp> method on the corresponding
+<samp class="ph codeph">Renderer</samp> of the respective control and passes the reference to
+itself and to the control.</p>
+<p class="p">For notepad controls, the renderer class is normally not directly used, the &quot;renderer&quot; method
+is directly part of the control implementation and will be added to a renderer class
+behind the scenes.</p>
+</section></div></div><div class="related-links"> <br><div class="childtopics"><strong>In this section:</strong></div><ul class="ullinks"><div><strong><a class="link" href="../../#/topic/4de64e2e191f4a7297d4fd2d1e233a2d.html" title="Cross-site scripting (XSS) can be prevented by ensuring that it is not possible to inject script code into an application page that runs in a browser." target="_top">Prevention of Cross-site Scripting</a></strong><br></div></ul><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/4de64e2e191f4a7297d4fd2d1e233a2d.html" title="Cross-site scripting (XSS) can be prevented by ensuring that it is not possible to inject script code into an application page that runs in a browser." target="_top">Prevention of Cross-site Scripting</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

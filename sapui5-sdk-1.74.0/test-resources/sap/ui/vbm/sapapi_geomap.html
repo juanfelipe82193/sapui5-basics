@@ -1,0 +1,368 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js" id="Script1" data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal" data-sap-ui-xx-bindingSyntax="complex">
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+
+		h4 {
+			margin: 1em 0;
+		}
+
+		i {
+			color: blue
+		}
+
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+	</style>
+	<script>
+
+		// query for charts library, the microchart is positioned in a container vo
+		jQuery.sap.require("sap.suite.ui.microchart.ColumnMicroChart");
+
+		// have some data
+		var oData = {
+			Spots:[
+				{ "key": "1", "pos": "0;0;0", "tooltip": "Spot1", "type": sap.ui.vbm.SemanticType.Default },
+				{ "key": "2", "pos": "0;30;0", "tooltip": "Spot2", "type": sap.ui.vbm.SemanticType.Default },
+				{ "key": "3", "pos": "0;60;0", "tooltip": "Spot3", "type": sap.ui.vbm.SemanticType.Default }
+			],
+			Circles:[
+				{ "key": "1", "pos": "35;0;0", "tooltip": "Circle1" },
+				{ "key": "2", "pos": "35;30;0", "tooltip": "Circle2" },
+				{ "key": "3", "pos": "35;60;0", "tooltip": "Circle3" }
+			],
+			OtherSpots:[
+				{ "key": "4", "pos": "20;0;0", "tooltip": "Spot4" },
+				{ "key": "5", "pos": "20;30;0", "tooltip": "Spot5" },
+				{ "key": "6", "pos": "20;60;0", "tooltip": "Spot6" }
+			],
+			PieSeries:[
+				{ "key": "7", "value": "10", "tooltip": "10 Items" },
+				{ "key": "8", "value": "20", "tooltip": "20 Items" },
+				{ "key": "9", "value": "30", "tooltip": "30 Items" }
+			],
+			Containers:[
+				{
+					"key": "10", "pos": "70;0;0", "tooltip": "Container1",
+					ChartCols: [{ "value": 60, "color": "Neutral" },
+					{ "value": 10, "color": "Error" },
+					{ "value": 20, "color": "Error" }]
+				},
+				{
+					"key": "11", "pos": "70;30;0", "tooltip": "Container2",
+					ChartCols: [{ "value": 50, "color": "Neutral" },
+					{ "value": 8, "color": "Error" },
+					{ "value": 16, "color": "Error" },
+					{ "value": 24, "color": "Error" }]
+				},
+				{
+					"key": "12", "pos": "70;60;0", "tooltip": "Container3",
+					ChartCols: [{ "value": 70, "color": "Neutral" },
+					{ "value": 5, "color": "Error" },
+					{ "value": 20, "color": "Error" },
+					{ "value": 45, "color": "Error" }]
+				}
+			]
+		};
+
+		// create model and set the data
+		var oModel = new sap.ui.model.json.JSONModel();
+		oModel.setData(oData);
+		//sap.ui.getCore().setModel( oModel );
+
+		// named model for i18n
+		var oTexts = {
+			Label1: "Label",
+			Label2: "Blub"
+		};
+		var oNamedModel = new sap.ui.model.json.JSONModel();
+		oNamedModel.setData(oTexts);
+		//sap.ui.getCore().setModel( oNamedModel, "i18n" );
+
+		// sample event handlers
+		function onClickSpot(evt) {
+			// click on spot
+			alert("onClickSpot " + this);
+		};
+
+		function onContextMenuSpot(evt) {
+			// click on spot
+			alert("onContextMenuSpot" + this);
+		};
+
+		function onClickSpots(evt) {
+			// click on spot
+			alert("onClickSpots");
+		};
+
+		function onContextMenuSpots(evt) {
+			// click on spot
+			alert("onContextMenuSpots");
+		};
+
+		function onClickItem(evt) {
+			// click on item
+			alert("onClick" + this);
+		};
+
+		function onContextMenuItem(evt) {
+			// context menu on item
+			alert("onContextMenu" + this);
+		};
+
+		function onClickPie(evt) {
+			var pieItem;
+			evt.mParameters.data.Action.AddActionProperties.AddActionProperty.forEach(function (item) {
+				if (item.name === "pieitem") {
+					pieItem = item["#"];
+				}
+			});
+			alert("click on" + this + ": " + evt.oSource.getId() + " and pie item is: " + pieItem);
+		};
+
+		function onContextMenuPie(evt) {
+			var pieItem;
+			evt.mParameters.data.Action.AddActionProperties.AddActionProperty.forEach(function (item) {
+				if (item.name === "pieitem") {
+					pieItem = item["#"];
+				}
+			});
+			alert("context menu on " + this + ": " + evt.oSource.getId() + " and pie item is: " + pieItem);
+		};
+
+		// create analytic map and bind to model
+		var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+			width: "1024px",
+			height: "600px",
+			ariaLabel: "Map",
+			resources: [new sap.ui.vbm.Resource({ name: "smiley", src: "demokit/media/images/smiley.png" })
+			],
+			vos: [
+				new sap.ui.vbm.Containers("containers", {
+					click: onClickItem.bind("Container onClickItem"),
+					contextMenu: onContextMenuItem.bind("Container onContextMenuItem"),
+					// bind to an array in the model
+					items: {
+						path: "/Containers",
+						template: new sap.ui.vbm.Container({
+							position: '{pos}', tooltip: '{tooltip}',
+							click: onClickItem.bind("Container"),
+							contextMenu: onContextMenuItem.bind("Container"),
+							item: new sap.suite.ui.microchart.ColumnMicroChart({
+								size: "S",
+								columns: {
+									path: "ChartCols",
+									template: new sap.suite.ui.microchart.ColumnMicroChartData({ value: '{value}', color: '{color}' })
+								},
+								rightTopLabel: new sap.suite.ui.microchart.ColumnMicroChartLabel({ label: '{i18n>/Label1}' })
+							}).addStyleClass("chart-bg")
+						})
+					}
+				}),
+				new sap.ui.vbm.Spots("spots1", {
+					click: onClickSpots,
+					contextMenu: onContextMenuSpot,
+					// bind to an array in the model
+					items: {
+						path: "/Spots",
+						template: new sap.ui.vbm.Spot({ text: '{key}', position: '{pos}', tooltip: '{tooltip}', type: '{type}', click: onClickSpot, contextMenu: onContextMenuSpot })
+					}
+				}),
+				new sap.ui.vbm.Spots("spots2", {
+					click: onClickItem.bind("Bla onClickItem"),
+					contextMenu: onContextMenuItem.bind("Bla onContextMenuItem"),
+					// bind to an array in the model
+					items: {
+						path: "/OtherSpots",
+						template: new sap.ui.vbm.Spot({ type: sap.ui.vbm.SemanticType.Default, position: '{pos}', tooltip: '{tooltip}', click: onClickSpot, contextMenu: onContextMenuSpot })
+					}
+				}),
+				new sap.ui.vbm.Circles("circles", {
+					click: onClickItem.bind("Circles onClickItem"),
+					contextMenu: onContextMenuItem.bind("Circles onContextMenuItem"),
+					// bind to an array in the model
+					items: {
+						path: "/Circles",
+						template: new sap.ui.vbm.Circle({ position: '{pos}', tooltip: '{tooltip}', color: 'RGB(0,0,120)', colorBorder: 'RGB(0,0,255)', click: onClickItem.bind("Circle"), contextMenu: onContextMenuItem.bind("Circle") })
+					}
+				}),
+				// single instance
+				new sap.ui.vbm.GeoCircles("geocircles", {
+					click: onClickItem.bind("GeoCircles onClickItem"),
+					contextMenu: onContextMenuItem.bind("GeoCircles onContextMenuItem"),
+					// explicitly specify
+					items: [
+						new sap.ui.vbm.GeoCircle({ radius: "1000000", slices: "40", position: '-10;0;0', tooltip: 'This is a GeoCircle', color: 'RGB(100,0,120)', colorBorder: 'RGB(0,0,255)', click: onClickItem.bind("GeoCircle"), contextMenu: onContextMenuItem.bind("GeoCircle") })
+					]
+				}),
+				// single instance item
+				new sap.ui.vbm.Routes("routes", {
+					click: onClickItem.bind("Routes onClickItem"),
+					contextMenu: onContextMenuItem.bind("Routes onContextMenuItem"),
+					// explicitly specify
+					items: [
+						new sap.ui.vbm.Route({ position: '-30;0;0;-30;-20;0;0;-20;0', tooltip: 'This is a Route', end: "1", start: "0", color: 'RGB(0,10,255)', click: onClickItem.bind("Route"), contextMenu: onContextMenuItem.bind("Route") })
+					]
+				}),
+				// single instance item
+				new sap.ui.vbm.Areas("areas", {
+					click: onClickItem.bind("Areas onClickItem"),
+					contextMenu: onContextMenuItem.bind("Areas onContextMenuItem"),
+					// explicitly specify
+					items: [
+						new sap.ui.vbm.Area({ position: '-30;50;0;-30;30;0;0;30;0', tooltip: 'This is an Area', color: 'RGB(0,10,255)', click: onClickItem.bind("Area"), contextMenu: onContextMenuItem.bind("Area") })
+					]
+				}),
+				// single instance item
+				new sap.ui.vbm.Boxes("boxes", {
+					click: onClickItem.bind("Boxes onClickItem"),
+					contextMenu: onContextMenuItem.bind("Boxes onContextMenuItem"),
+					// explicitly specify
+					items: [
+						new sap.ui.vbm.Box({ scale: '0.1;0.1;0.1', position: '-40;50;0', tooltip: 'This is a Box', color: 'RGB(0,255,0)', click: onClickItem.bind("Boxes"), contextMenu: onContextMenuItem.bind("Boxes") })
+					]
+				}),
+
+				new sap.ui.vbm.Spots("smileys", {
+					click: onClickItem.bind("Smileys onClickItem"),
+					contextMenu: onContextMenuItem.bind("Smileys onContextMenuItem"),
+					// bind to an array in the model
+					items: [
+						new sap.ui.vbm.Spot({ image: 'smiley', text: '', position: '-60;0;0', tooltip: '{i18n>/Label1}', labelText: 'Hello Smiley', click: onClickSpot, contextMenu: onContextMenuSpot })
+					]
+				}),
+
+				// single instance item
+				new sap.ui.vbm.Pies("pies", {
+					click: onClickPie.bind("Pie(s)"),
+					contextMenu: onContextMenuPie.bind("Pie(s)"),
+					// explicitly specify
+					items: [
+						new sap.ui.vbm.Pie({
+							scale: '1;1;1',
+							position: '-40;-50;0',
+							tooltip: 'This is a Pie',
+							click: onClickPie.bind("Pie"),
+							contextMenu: onContextMenuPie.bind("Pie"),
+							items: {
+								path: "/PieSeries",
+								template: new sap.ui.vbm.PieItem({ value: '{value}', tooltip: '{tooltip}' })
+							}
+						})]
+				})
+			]
+		});
+
+		oVBI.setModel(oModel);
+		oVBI.setModel(oNamedModel, "i18n");
+		oVBI.placeAt("content");
+		oVBI.setMapConfiguration(JSON.parse(localStorage.getItem('map')));
+
+		// modification of the context
+		function onRemoveChart() {
+			if (oData.Containers.length)
+				oData.Containers = oData.Containers.splice(0, oData.Containers.length - 1);
+
+			oModel.setData(oData);
+		};
+
+		function onRemoveChart2() {
+			if (oData.Containers.length)
+				oData.Containers = oData.Containers.splice(0, oData.Containers.length - 1);
+
+			var oNewModel = new sap.ui.model.json.JSONModel();
+			oNewModel.setData(oData);
+			oVBI.setModel(oNewModel);
+			oModel = oNewModel;
+		};
+
+		function onRemoveCharts() {
+			cont = oVBI.removeVo("containers");
+		};
+
+		function onAddCharts() {
+			if (cont)
+				oVBI.addVo(cont);
+		};
+
+		function onRemoveSpots() {
+			spot = oVBI.removeVo("spots2");
+		};
+
+		function onAddSpots() {
+			if (spot)
+				oVBI.addVo(spot);
+		};
+
+	</script>
+
+	<body class="sapUiBody">
+		<h1>Visual Business GeoMap Sample</h1>
+		<div id="description1">
+			<h3> The aim: </h3>
+			<p> To test the Visual Business GeoMap Control with a bunch of VOs.</p>
+			<br>
+			<h3> To test: </h3>
+			<ol>
+				<li> Click "Remove a Chart (change Model data)" and test the option to remove a chart by changing model data (control needs to keep state).
+					<i>Container objects should be removed one by one.</i>
+				</li>
+				<!--<li> Option to remove a chart by replacing the model (control needs to keep state). </li>-->
+				<li> Click on Remove Charts (remove VO) and check that all containers are memoved from the map.</li>
+				<li> Click on Remove Charts (remove VO) and check that all containers are memoved from the map. Now click "Add Charts (add VO)" and check that all the container that were removed with the previous button you clicked have been added again.</li>
+				<li> Click "Remove Spots (remove VO)" and test the option to remove Spots by removing the VO aggregation (control needs to keep state).
+					<i> Clicking on this should remove 3 spots from the map. Only the spots with spot type will be removed.</i>
+				</li>
+				<li> Click "Remove Spots (remove VO)" and test the option to remove Spots by removing the VO aggregation (control needs to keep state). Once the spots are removed, Click on "Add Spots (ad VO)" and check that you can see the spots again. </li>
+			</ol>
+			<i>
+				<p>
+					<b>Remarks:</b> Model changes can only be undone by reloading the page. Removing and Adding VOs should be repeatable!</p>
+			</i>
+		</div>
+		<div id="description2">
+
+			<br />
+			<button id="onRemoveChart" onClick="onRemoveChart()">Remove a Chart (change Model data)</button>
+			<!--<button id="onRemoveChart2" onClick="onRemoveChart2()">Remove a Chart (replace Model)</button>-->
+			<button id="onRemoveCharts" onClick="onRemoveCharts()">Remove Charts (remove VO)</button>
+			<button id="onAddCharts" onClick="onAddCharts()">Add Charts (add VO)</button>
+			<button id="onRemoveSpots" onClick="onRemoveSpots()">Remove Spots (remove VO)</button>
+			<button id="onAddSpots" onClick="onAddSpots()">Add Spots (add VO)</button>
+			<br>
+			<br>
+			<div id="content"></div>
+		</div>
+	</body>
+
+</html>

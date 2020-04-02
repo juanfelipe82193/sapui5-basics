@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Paging Tests</title>
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="../../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize"
+	data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet"
+	href="../../../../../resources/sap/ui/thirdparty/qunit.css"
+	type="text/css" media="screen" />
+<script type="text/javascript"
+	src="../../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript"
+	src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript"
+	src="../../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="../json/TESTDATA_PLAINTABLE.js"></script>
+<script type="text/javascript" src="../testutils/TestUtils.js"></script>
+<script type="text/javascript"
+	src="../json/hierarchies/TESTDATA_CL_2_HIER_IN_COL_0_0.js"></script>
+<script type="text/javascript"
+	src="../json/hierarchies/TESTDATA_CL_2_HIER_IN_COL_0_3.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Paging Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Paging Tests", {
+			setup: function () {
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				// var oTableControl = sapzen.crosstab.test.jsonTestData.PAGING_Q1_FULL.control;
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.TESTDATA_CL_2_HIER_IN_COL_0_0.control;
+				this.oCrosstab.setWidth("300px");
+				this.oCrosstab.setHeight("300px");
+				this.iRequestCounter = 0;
+				var that = this;
+
+				this.oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+				this.oDataArea = this.oCrosstab.getDataArea();
+				this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+				this.oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+				
+				this.checkVScrollbarSize = function() {
+					start();
+					var oDomUpperScrollDiv = $('#'+that.oCrosstab.getId() + '_upperRight_scrollDiv');
+					var oDomUpperRightPad = $('#'+that.oCrosstab.getId() + '_upperRightPad');
+					ok(oDomUpperScrollDiv.outerHeight() === oDomUpperRightPad.outerHeight(), "Vertical Scrollbar has the appropriate size");
+				};
+
+				this.oCrosstab.registerPageRequestHandler(function (iRow, iCol) {
+					var sPageString = iRow + "_" + iCol;
+					var oData = sapzen.crosstab.test.jsonTestData["TESTDATA_CL_2_HIER_IN_COL_" + sPageString].control;
+
+					that.iRequestCounter++;
+					sendResponse();
+
+					function sendResponse () {
+						that.oCrosstab.updateControlProperties(oData);
+						sap.zen.crosstab.testutils.TestUtils.triggerCrosstabUpdate(that.oCrosstab);
+					}
+				});
+
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+
+				setTimeout(function () {
+					start();
+				}, 2000);
+				stop();
+			}
+		});
+
+		test("Vertical Scrollbar Size", function () {
+			// Message Number 0120031469 0002652499 2012
+			this.oCrosstab.scrollHorizontal(96);
+			
+			setTimeout((function(that) {
+				return function() {
+					that.checkVScrollbarSize();
+				}
+			})(this), 2000);
+		
+			stop();	
+		});
+	</script>
+
+</body>
+
+</html>

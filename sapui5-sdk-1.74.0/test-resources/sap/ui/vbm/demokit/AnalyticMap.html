@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html data-sap-ui-dk-controls="sap.ui.vbm.AnalyticMap">
+   <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta charset="UTF-8"/>
+      <style>
+      </style>
+
+      <title>Visual Business Mobile - SAPUI5 Demo Kit</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../theme/default.css" />
+
+      <script id="sap-ui-bootstrap"
+            src="../../../../../resources/sap-ui-core.js"
+            data-sap-ui-theme="sap_bluecrystal"
+            data-sap-ui-libs="sap.ui.vbm,sap.ui.commons,sap.ui.demokit"
+            >
+      </script>
+      <script src="../../../../../js/utils.js"></script>
+      <script>
+          var oModel = new sap.ui.model.json.JSONModel();
+      </script>
+      <script id="DataModel">
+
+      // create some dummy data
+      var oData = 
+         {
+            regionProperties :
+               [
+                  { "code": "EU", "legend": "Europe",         "color": "rgba(184,225,245,1.0)", "tooltip":"Europe\r\n\r\nPopulation: 743 Mio" },
+                  { "code": "NA", "legend": "North America",  "color": "rgba(5,71,102,1.0)",  },
+                  { "code": "OC", "legend": "Oceania",        "color": "rgba(0,125,192,1.0)"  }
+               ]
+         };
+      
+         // set the data in the into a json model
+         oModel.setData( oData );
+         
+      </script>
+      <script id="Elements">
+         // for testing here are some event handlers
+	      function onRegionClick( e )
+	      {
+	         alert( "onRegionClick "  + e.getParameter( "code" ) );
+	      };
+	
+	      function onRegionContextMenu( e )
+	      {
+	         alert( "onRegionContextMenu: " + e.getParameter( "code" ) );
+	      };
+
+      
+         // set the geojson location to some data
+         jQuery.sap.require( "sap.ui.vbm.AnalyticMap");
+         sap.ui.vbm.AnalyticMap.GeoJSONURL  =  "media/analyticmap/continent.json";
+   
+         // create analytic map and bind to model
+         var oVBI1 = new sap.ui.vbm.AnalyticMap('vbi',
+               {
+                     width : "100%",
+                     height: 512,
+                     plugin: false,
+                     regions : {
+                        path : "/regionProperties",
+                        template: new sap.ui.vbm.Region(  { code: "{code}", color: '{color}', tooltip: '{tooltip}', click: onRegionClick, contextMenu: onRegionContextMenu  } )
+                     },
+
+                     regionClick : onRegionClick,
+                     regionContextMenu : onRegionContextMenu
+               });
+
+         oVBI1.setModel( oModel );
+         oVBI1.placeAt("sample1");
+
+      </script>
+
+      <script id="Legend">
+   
+         // set the geojson location to some data
+         jQuery.sap.require( "sap.ui.vbm.AnalyticMap");
+         sap.ui.vbm.AnalyticMap.GeoJSONURL  =  "media/analyticmap/continent.json";
+   
+         // create analytic map with legend and bind to model
+         var oVBI2 = new sap.ui.vbm.AnalyticMap('legend',
+               {
+                     width : "100%",
+                     height: 512,
+                     plugin: false,
+                     regions : {
+                        path : "/regionProperties",
+                        template: new sap.ui.vbm.Region(  { code: "{code}", color: '{color}', tooltip: '{tooltip}' } )
+                     },
+                     
+                     legend : new sap.ui.vbm.Legend(
+                           {
+                             caption : "Analytic Legend",
+                             items : {
+                                 path : "/regionProperties",
+                                 template: new sap.ui.vbm.LegendItem(  { text: "{legend}", color: '{color}', tooltip: '{tooltip}' } )
+                              }
+                           }
+                     )
+               });
+
+         oVBI2.setModel( oModel );
+         oVBI2.placeAt("sample3");
+      </script>
+
+
+      <script id="Zoom">
+      // create the button which should soom to a region
+      var oButton = new sap.ui.commons.Button("zoom",{
+               text: "Zoom To Europe", 
+               press:function(){
+                  oVBI1.zoomToRegions(["EU"]);
+                  oVBI2.zoomToRegions(["EU"]);
+               }
+      });
+
+      // Attach the button to the page
+      oButton.placeAt("sample2");
+      </script>
+
+   </head>
+
+   <body class="sapUiDemokitBody" role="application">
+      <h1 icon="media/images/vbi_analyticmap_icon.png">VBI AnalyticMap</h1>
+      <h2>Introduction</h2>
+      <p>The Visual Business AnalyticMap control uses GeoJSON as a source to render maps. The control exposes a simplified programming interface for coloring and zooming to regions. The GeoJSON content is not part of the Visual Business delivery and must be provided by the customer.
+      </p>
+      
+      <h2>Examples</h2>
+
+      <h3>Data Model Example</h3>
+      <p>This is the Data Model that is used for the samples.</p>
+      <div code-sample="model" script="DataModel" >
+      </div>
+      
+      <h3>Control Example</h3>
+      <p>This sample shows the control creation, data binding and event subscription for the regions aggregation.</p>
+      <div code-sample="sample1" script="Elements" >
+         <div id="sample1"></div>
+      </div>
+      
+      <h3>Zoom Example</h3>
+      <p>This sample shows the usage of the zoomToRegions function.</p>
+      <div code-sample="sample2" script="Zoom">
+          <div id="sample2"></div>  
+      </div>
+      
+      <h3>Legend Example</h3>
+      <p>This sample shows the usage of a legend in the AnalyticMap. In the sample the LegendItems are bound to the same model entries as in the control example.</p>
+      <div code-sample="sample3" script="Legend" >
+         <div id="sample3"></div>
+      </div>
+
+      <p>
+      <h2>API Documentation</h2>
+         See <a class="sapUiDemokitSrcLink" href="../../../../../docs/api/symbols/sap.ui.vbm.AnalyticMap.html">API documentation</a>
+      </p>
+   </body>
+</html>

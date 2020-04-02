@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+           xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+           xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference
+            Uri="http://example.corp.com:50033/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='YI3_LOCAL')/$value"
+            xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZNS_NOTIFICATIONS_SRV" xml:lang="en" sap:schema-version="1"
+                xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+                <EntityType Name="NS_Channel"><Key><PropertyRef Name="ChannelId"/></Key><Property Name="ChannelId" Type="Edm.String" Nullable="false" MaxLength="21"/><Property Name="IsActive" Type="Edm.Boolean" Nullable="false"/><Property Name="Description" Type="Edm.String" MaxLength="60"/></EntityType>
+
+            <EntityType Name="NS_ActionsType" sap:label="DDL View for Actions for Consumer API"
+                        sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="typeId"/>
+                    <PropertyRef Name="actionId"/>
+                </Key>
+                <Property Name="typeId" Type="Edm.Guid" Nullable="false" sap:label="GUID"
+                          sap:creatable="false"/>
+                <Property Name="actionId" Type="Edm.String" Nullable="false" MaxLength="50"
+                          sap:label="Character field length 50" sap:creatable="false"/>
+                <Property Name="actionText" Type="Edm.String" sap:label="S-STRING with Length 100"
+                          sap:creatable="false" sap:updatable="false"/>
+                <Property Name="actionBulkText" Type="Edm.String"
+                          sap:label="S-STRING with Length 100" sap:creatable="false"
+                          sap:updatable="false"/>
+                <Property Name="nature" Type="Edm.String" MaxLength="20" sap:label="Nature"
+                          sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="NS_NotificationsType"
+                        sap:label="DDL View for Notifications for Consumer API"
+                        sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="id"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"
+                          sap:label="Time Stamp" sap:creatable="false"/>
+                <Property Name="navigationTargetObject" Type="Edm.String"
+                          sap:label="S-STRING with Length 100" sap:creatable="false"/>
+                <Property Name="navigationTargetAction" Type="Edm.String"
+                          sap:label="S-STRING with Length 100" sap:creatable="false"/>
+                <Property Name="isStackable" Type="Edm.Boolean" sap:label="TRUE"
+                          sap:creatable="false"/>
+                <Property Name="stackedTitle" Type="Edm.String" sap:creatable="false"/>
+                <Property Name="isActionable" Type="Edm.Boolean" sap:label="TRUE"
+                          sap:creatable="false"/>
+                <Property Name="isRead" Type="Edm.Boolean" sap:label="TRUE" sap:creatable="false"/>
+                <Property Name="notificationTypeId" Type="Edm.Guid" sap:label="GUID"
+                          sap:creatable="false"/>
+                <Property Name="notificationTypeText" Type="Edm.String"
+                          sap:label="S-STRING with Length 100" sap:creatable="false"/>
+                <Property Name="recipient" Type="Edm.String" MaxLength="12" sap:label="User Name"
+                          sap:creatable="false"/>
+                <Property Name="language" Type="Edm.String" MaxLength="2" sap:label="Language Key"
+                          sap:creatable="false"/>
+                <Property Name="id" Type="Edm.Guid" Nullable="false" sap:label="GUID"
+                          sap:creatable="false"/>
+                <Property Name="title" Type="Edm.String" sap:creatable="false"/>
+                <Property Name="text" Type="Edm.String" sap:creatable="false"/>
+                <Property Name="priority" Type="Edm.String" MaxLength="20" sap:label="Priority"
+                          sap:creatable="false"/>
+                <NavigationProperty Name="toactions"
+                                    Relationship="ZNS_NOTIFICATIONS_SRV.assoc_A72E94E07928AAC8FC15DF63D02F9961"
+                                    FromRole="FromRole_assoc_A72E94E07928AAC8FC15DF63D02F9961"
+                                    ToRole="ToRole_assoc_A72E94E07928AAC8FC15DF63D02F9961"
+                                    sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="NS_Notifications_AllType"
+                        sap:label="DDL View for Notifications for Consumer API"
+                        sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="id"/>
+                </Key>
+                <Property Name="id" Type="Edm.Guid" Nullable="false" sap:label="GUID"
+                          sap:creatable="false"/>
+                <Property Name="title" Type="Edm.String" sap:creatable="false"
+                          sap:updatable="false"/>
+                <Property Name="text" Type="Edm.String" sap:creatable="false"
+                          sap:updatable="false"/>
+                <Property Name="priority" Type="Edm.String" MaxLength="20" sap:label="Priority"
+                          sap:creatable="false" sap:updatable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"
+                          sap:label="Time Stamp" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="navigationTargetObject" Type="Edm.String"
+                          sap:label="S-STRING with Length 100" sap:creatable="false"
+                          sap:updatable="false"/>
+                <Property Name="navigationTargetAction" Type="Edm.String"
+                          sap:label="S-STRING with Length 100" sap:creatable="false"
+                          sap:updatable="false"/>
+                <Property Name="isStackable" Type="Edm.Boolean" sap:label="TRUE"
+                          sap:creatable="false" sap:updatable="false"/>
+                <Property Name="isActionable" Type="Edm.Boolean" sap:label="TRUE"
+                          sap:creatable="false" sap:updatable="false"/>
+                <Property Name="isRead" Type="Edm.Boolean" sap:label="TRUE" sap:creatable="false"
+                          sap:updatable="false"/>
+                <Property Name="notificationTypeId" Type="Edm.Guid" sap:label="GUID"
+                          sap:creatable="false" sap:updatable="false"/>
+                <Property Name="notificationTypeText" Type="Edm.String"
+                          sap:label="S-STRING with Length 100" sap:creatable="false"
+                          sap:updatable="false"/>
+                <Property Name="recipient" Type="Edm.String" MaxLength="12" sap:label="User Name"
+                          sap:creatable="false" sap:updatable="false"/>
+                <NavigationProperty Name="toactions"
+                                    Relationship="ZNS_NOTIFICATIONS_SRV.assoc_4AB35516BC8F8FF35D7D35F3DA1833A6"
+                                    FromRole="FromRole_assoc_4AB35516BC8F8FF35D7D35F3DA1833A6"
+                                    ToRole="ToRole_assoc_4AB35516BC8F8FF35D7D35F3DA1833A6"
+                                    sap:filterable="false"/>
+            </EntityType>
+            <ComplexType Name="ResultType">
+                <Property Name="Success" Type="Edm.Boolean" Nullable="false" sap:label="Indicator"
+                          sap:creatable="false" sap:updatable="false" sap:sortable="false"
+                          sap:filterable="false"/>
+            </ComplexType>
+            <ComplexType Name="ResultType2">
+                <Property Name="Success" Type="Edm.Boolean" sap:label="TRUE"/>
+            </ComplexType>
+            <ComplexType Name="BadgeNumber">
+                <Property Name="Number" Type="Edm.Int16"/>
+            </ComplexType>
+            <Association Name="assoc_4AB35516BC8F8FF35D7D35F3DA1833A6" sap:content-version="1">
+                <End Type="ZNS_NOTIFICATIONS_SRV.NS_Notifications_AllType" Multiplicity="1"
+                     Role="FromRole_assoc_4AB35516BC8F8FF35D7D35F3DA1833A6"/>
+                <End Type="ZNS_NOTIFICATIONS_SRV.NS_ActionsType" Multiplicity="*"
+                     Role="ToRole_assoc_4AB35516BC8F8FF35D7D35F3DA1833A6"/>
+            </Association>
+            <Association Name="assoc_A72E94E07928AAC8FC15DF63D02F9961" sap:content-version="1">
+                <End Type="ZNS_NOTIFICATIONS_SRV.NS_NotificationsType" Multiplicity="1"
+                     Role="FromRole_assoc_A72E94E07928AAC8FC15DF63D02F9961"/>
+                <End Type="ZNS_NOTIFICATIONS_SRV.NS_ActionsType" Multiplicity="*"
+                     Role="ToRole_assoc_A72E94E07928AAC8FC15DF63D02F9961"/>
+            </Association>
+            <EntityContainer Name="ZNS_NOTIFICATIONS_SRV_Entities" m:IsDefaultEntityContainer="true"
+                             sap:supported-formats="atom json xlsx">
+                <EntitySet Name="NS_Channels" EntityType="ZNS_NOTIFICATIONS_SRV.NS_Channel"/>
+                <EntitySet Name="NS_Actions" EntityType="ZNS_NOTIFICATIONS_SRV.NS_ActionsType"
+                           sap:creatable="false" sap:updatable="false" sap:deletable="false"
+                           sap:content-version="1"/>
+                <EntitySet Name="NS_Notifications"
+                           EntityType="ZNS_NOTIFICATIONS_SRV.NS_NotificationsType"
+                           sap:creatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="NS_Notifications_All"
+                           EntityType="ZNS_NOTIFICATIONS_SRV.NS_Notifications_AllType"
+                           sap:creatable="false" sap:updatable="false" sap:deletable="false"
+                           sap:content-version="1"/>
+                <AssociationSet Name="assoc_4AB35516BC8F8FF35D7D35F3DA1833A6"
+                                Association="ZNS_NOTIFICATIONS_SRV.assoc_4AB35516BC8F8FF35D7D35F3DA1833A6"
+                                sap:creatable="false" sap:updatable="false" sap:deletable="false"
+                                sap:content-version="1">
+                    <End EntitySet="NS_Notifications_All"
+                         Role="FromRole_assoc_4AB35516BC8F8FF35D7D35F3DA1833A6"/>
+                    <End EntitySet="NS_Actions"
+                         Role="ToRole_assoc_4AB35516BC8F8FF35D7D35F3DA1833A6"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_A72E94E07928AAC8FC15DF63D02F9961"
+                                Association="ZNS_NOTIFICATIONS_SRV.assoc_A72E94E07928AAC8FC15DF63D02F9961"
+                                sap:creatable="false" sap:updatable="false" sap:deletable="false"
+                                sap:content-version="1">
+                    <End EntitySet="NS_Notifications"
+                         Role="FromRole_assoc_A72E94E07928AAC8FC15DF63D02F9961"/>
+                    <End EntitySet="NS_Actions"
+                         Role="ToRole_assoc_A72E94E07928AAC8FC15DF63D02F9961"/>
+                </AssociationSet>
+                <FunctionImport Name="ExecuteAction" ReturnType="ZNS_NOTIFICATIONS_SRV.ResultType"
+                                m:HttpMethod="GET">
+                    <Parameter Name="actionId" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="notificationId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetBadgeNumber" ReturnType="ZNS_NOTIFICATIONS_SRV.BadgeNumber"
+                                m:HttpMethod="GET"/>
+                <FunctionImport Name="ResetBadgeNumber"
+                                ReturnType="ZNS_NOTIFICATIONS_SRV.BadgeNumber" m:HttpMethod="POST"/>
+                <FunctionImport Name="MarkAsRead" m:HttpMethod="POST">
+                    <Parameter Name="notificationId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="MarkAllAsRead" m:HttpMethod="POST"/>
+            </EntityContainer>
+            <atom:link rel="self"
+                       href="http://example.corp.com:50033/sap/opu/odata/SAP/ZNS_NOTIFICATIONS_SRV/$metadata"
+                       xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version"
+                       href="http://example.corp.com:50033/sap/opu/odata/SAP/ZNS_NOTIFICATIONS_SRV/$metadata"
+                       xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

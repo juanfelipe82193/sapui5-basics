@@ -1,0 +1,34 @@
+<core:FragmentDefinition
+		xmlns="sap.m"
+		xmlns:core="sap.ui.core"
+		xmlns:mdc="sap.ui.mdc.experimental"
+		xmlns:unittest="http://schemas.sap.com/sapui5/preprocessorextension/sap.fe.unittesting/1"
+		xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+		template:require="{
+			OP: 'sap/fe/templates/ObjectPage/AnnotationHelper',
+			MODEL: 'sap/ui/model/odata/v4/AnnotationHelper'
+		}">
+	<VBox>
+		<Title level="H3" text="{dataPoint>Title@@MODEL.value}"
+			   visible="{= !!${dataPoint>Title}}"/>
+		<Label text="{path:'dataPoint>Description@@MODEL.value'}"
+				visible="{= !!${dataPoint>Description@@MODEL.value}}"/>
+		<template:with path="dataPoint>Value" var="valueProperty">
+			<ProgressIndicator
+					unittest:id="a"
+					displayValue="{ parts: [{path:'dataPoint>'}, {path:'valueProperty>$Path@Org.OData.Measures.V1.Unit@@MODEL.value'}], formatter: 'OP.buildExpressionForProgressIndicatorDisplayValue'}"
+					showValue="true"
+					percentValue="{ parts: [{path:'dataPoint>'}, {path:'valueProperty>$Path@Org.OData.Measures.V1.Unit@@MODEL.value'}], formatter: 'OP.buildExpressionForProgressIndicatorPercentValue' }"
+					state="{path:'dataPoint>', formatter:'OP.buildExpressionForCriticality'}">
+				<customData>
+					<core:CustomData key="Target" value="{= ${path: 'dataPoint>TargetValue@@MODEL.value'} }" />
+					<core:CustomData key="UoM" value="{= ${path: 'valueProperty>$Path@Org.OData.Measures.V1.Unit@@MODEL.value'} }" />
+				</customData>
+			</ProgressIndicator>
+			<Label
+				unittest:id="b"
+				text="{path:'valueProperty>$Path@com.sap.vocabularies.Common.v1.Label@@MODEL.value'}"
+				visible="{= !!${valueProperty>$Path@com.sap.vocabularies.Common.v1.Label@@MODEL.value} }"/>
+		</template:with>
+	</VBox>
+</core:FragmentDefinition>

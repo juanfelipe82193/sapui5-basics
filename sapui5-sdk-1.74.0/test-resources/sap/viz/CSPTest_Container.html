@@ -1,0 +1,350 @@
+<!DOCTYPE HTML>
+<html data-sap-ui-dk-category="Controls/Complex"
+    data-sap-ui-dk-controls="sap.viz.ui5.VizContainer">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta charset="UTF-8" />
+        <title>Table - SAPUI5 Demo Kit</title>
+
+        <!--
+To test the page for the "onkeypress" issue:
+1. Must use Apache
+2. Must set Content-Security-Policy read only mode
+3. Must use firefox
+        -->
+<!--
+        <meta http-equiv="Content-Security-Policy" content=" default-src 'self' http://10.58.95.210:8080/; script-src 'self' 'unsafe-eval' http://10.58.95.210:8080/; style-src 'self' 'unsafe-inline' http://10.58.95.210:8080/; font-src 'self' data: http://10.58.95.210:8080/; img-src 'self' * data: blob: http://10.58.95.210:8080/; frame-src 'self' https: data: blob: http://10.58.95.210:8080/; child-src 'self' https: data: blob: http://10.58.95.210:8080/; connect-src 'self' https: wss: http://10.58.95.210:8080/; report-uri https://t  ">
+-->
+
+        <meta name="keywords" content="Control Table" />
+        <link rel="stylesheet" type="text/css"
+            href="http://10.58.95.210:8080/master/uilib-sample/resources/sap/viz/ui5/controls/css/controls.css"/>
+        <script id="sap-ui-bootstrap" src="http://10.58.95.210:8080/master/uilib-sample/resources/sap-ui-core.js"
+            data-sap-ui-theme="sap_bluecrystal"
+            data-sap-ui-libs="sap.ui.core,sap.viz,sap.ui.demokit">
+        </script>
+
+        <script id='horizontal_VizContainerSimpleExample'>
+             var oVizContainer ;
+            (function(){
+                // Prepare business data
+                var oModel = new sap.ui.model.json.JSONModel({
+                    businessData : [ {
+                        Country : "Country1",
+                        profit : -141.25
+                    }, {
+                        Country : "Country2",
+                        profit : 133.82
+                    }, {
+                        Country : "Country3",
+                        profit : 348.76
+                    }, {
+                        Country : "Country4",
+                        profit : 217.29
+                    }, {
+                        Country : "Country5",
+                        profit : 117.00
+                    }, {
+                        Country : "Country6",
+                        profit : 609.16
+                    } ]
+                });
+
+                // A Dataset defines how the model data is mapped to the chart
+                var oDataset = new sap.viz.ui5.data.FlattenedDataset({
+                    // a Bar Chart requires exactly one dimension (x-axis)
+                    dimensions : [ {
+                        axis : 1, // must be one for the x-axis, 2 for y-axis
+                        name : 'Country',
+                        value : "{Country}"
+                    } ],
+                    // it can show multiple measures, each results in a new set of bars in a new color
+                    measures : [
+                    // measure 1
+                    {
+                        name : 'Profit', // 'name' is used as label in the Legend
+                        value : '{profit}' // 'value' defines the binding for the displayed value
+                    } ],
+                    // 'data' is used to bind the whole data collection that is to be displayed in the chart
+                    data : {
+                        path : "/businessData"
+                    }
+                });
+
+                // create a VizContainer
+                oVizContainer = new sap.viz.ui5.VizContainer({
+                    'uiConfig' : {
+                        'layout' : 'horizontal',
+                        'enableMorphing' : true
+                    },
+                    'width': '100%',
+                    'height': '100%'
+                });
+
+                // oVizContainer.
+                // attach the model to the chart and display it
+                oVizContainer.setVizData(oDataset)
+                oVizContainer.setModel(oModel);
+
+                // set feeds
+                var aobjCountry = new sap.viz.ui5.controls.common.feeds.AnalysisObject({
+		            uid : "Country_id",
+                    name : "Country",
+                    type : "Dimension"
+                }), aobjProfit = new sap.viz.ui5.controls.common.feeds.AnalysisObject({
+		            uid : "Profit_id",
+                    name : "Profit",
+                    type : "Measure"
+                });
+                var feedPrimaryValues = new sap.viz.ui5.controls.common.feeds.FeedItem({
+		            uid : "primaryValues",
+                    type : "Measure",
+                    values : [ aobjProfit ]
+                }), feedAxisLabels = new sap.viz.ui5.controls.common.feeds.FeedItem({
+		            uid : "axisLabels",
+                    type : "Dimension",
+                    values : [ aobjCountry ]
+                });
+
+                oVizContainer.addFeed(feedPrimaryValues);
+                oVizContainer.addFeed(feedAxisLabels);
+
+                oVizContainer.addAnalysisObjectsForPicker(aobjCountry);
+                oVizContainer.addAnalysisObjectsForPicker(aobjProfit);
+                oVizContainer.addAnalysisObjectsForPicker(new sap.viz.ui5.controls.common.feeds.AnalysisObject({
+		            uid : "Revenue_id",
+                    name : "Revenue",
+                    type : "Measure"
+                }));
+                oVizContainer.addAnalysisObjectsForPicker(new sap.viz.ui5.controls.common.feeds.AnalysisObject({
+		            uid : "Population_id",
+                    name : "Population",
+                    type : "Measure"
+                }));
+                oVizContainer.addAnalysisObjectsForPicker(new sap.viz.ui5.controls.common.feeds.AnalysisObject({
+		            uid : "Gender_id",
+                    name : "Gender",
+                    type : "Dimension"
+                }));
+
+                // Below compressed code is to fetch the data bindding logic.
+                ut={};ut.du={cd:{},vizContainer:null,};ut.du.createAnalysisObjectsForDataPicker=function(e){var d=e;ut.du.cd.dataset=d;ut.du.cd.category={};
+                var b=d[0];var c=b.length;var j=[];for(var f=0;f<c;f++){var g=b[f].type;var a=b[f].name;var h=new sap.viz.ui5.controls.common.feeds.AnalysisObject({uid:a+"_id",name:a,type:g});j.push(h);
+                ut.du.cd.category[a]=f}return j};ut.du.onFeedsChange=function(b,d){ut.du.resetFeeding(b);
+                var c=new sap.viz.ui5.data.FlattenedDataset({dimensions:ut.du.cd.dimensions,measures:ut.du.cd.measures,data:{path:"/rawData"}});d.vizUpdate({data:c,feeds:b});var a=new sap.ui.model.json.JSONModel();
+                a.setData({rawData:ut.du.rebuildDataset(),});d.setModel(a)};ut.du.resetFeeding=function(f){var e=f.length;var h=0;var b=0;ut.du.cleanDataset();for(var d=0;d<e;d++){var l=f[d];var g=l.getType();
+                var k=l.getValues();var a=k.length;if(g=="Dimension"&&a){h++}else{if(g=="Measure"&&a){b++}}for(var c=0;c<a;c++){if(g=="Measure"){ut.du.addMeasure(k[c].getName(),b)}else{
+                    if(g=="Dimension"){if(k[c].getName()==""&&k[c].getType()=="mnd"){h--;continue}else{ut.du.addDimension(k[c].getName(),h)}}}}}};ut.du.cleanDataset=function(){
+                        ut.du.cd.dimensions=[];ut.du.cd.dn=[];ut.du.cd.measures=[];ut.du.cd.measureNames=[]};ut.du.addMeasure=function(c,b){var a={group:b,name:c,value:"{"+c+"}"};
+               ut.du.cd.measures.push(a);ut.du.cd.measureNames.push(c)};ut.du.addDimension=function(a,b){var c={axis:b,name:a,value:"{"+a+"}"};ut.du.cd.dimensions.push(c);
+               ut.du.cd.dn.push(a)};ut.du.rebuildDataset=function(){var g=[];var f=ut.du.cd.dataset;var e=ut.du.cd.category;for(var a=1;a<f.length;a++){var c={};var d=f[a];
+               for(var b=0;b<ut.du.cd.measureNames.length;b++){c[ut.du.cd.measureNames[b]]=d[e[ut.du.cd.measureNames[b]]]}for(var b=0;b<ut.du.cd.dn.length;b++){c[ut.du.cd.dn[b]]=d[e[ut.du.cd.dn[b]]]}g.push(c)}
+               if(ut.du.cd.dn.length==0){g=[ut.du.aggregateMeasures(g)]}return g};
+
+                var loadDataSet = function(dataset) {
+                    var anaObjs = ut.du.createAnalysisObjectsForDataPicker(dataset);
+                    oVizContainer.destroyAnalysisObjectsForPicker();
+                    for (var i = 0; i < anaObjs.length; i++) {
+                        oVizContainer.addAnalysisObjectsForPicker(anaObjs[i]);
+                    }
+                };
+
+                var  data =  [[{"name":"Country","type":"Dimension"},{"name":"Quarter","type":"Dimension"},{"name":"Profit","type":"Measure"}, {"name":"Revenue","type":"Measure"}],
+                                 ["Country1","Q1" -141.25, 35],
+                                 ["Country1","Q2", 41, 25],
+                                 ["Country2", "Q1", 133.82, 45],
+                                 ["Country2", "Q2", 33.82, 89],
+                                 ["Country3","Q1" , 348.76, 90],
+                                 ["Country3", "Q2", 48.76, 23],
+                                 ["Country4", "Q1" ,217.29, 43],
+                                 ["Country4","Q2", 17.29, 23],
+                                 ["Country5","Q1" , 117.00, 11],
+                                 ["Country5", "Q2",17.00, 34],
+                                 ["Country6","Q1" , 609.16, 343],
+                                 ["Country6","Q2", 209.16, 34],
+                                 ];
+                loadDataSet(data);
+
+                // attach event listener for feedschange
+                oVizContainer.attachEvent('feedsChanged', function(e) {
+                    jQuery('#horizontal_sample')
+                        .height(oVizContainer.$().height() + 'px')
+                        .width(oVizContainer.$().width() + 'px');
+                    ut.du.onFeedsChange(e.mParameters.feeds, oVizContainer);
+                });
+
+                oVizContainer.placeAt("horizontal_sample");
+            })();
+        </script>
+
+        <script id='Vertical_VizContainerSimpleExample'>
+            (function(){
+                // Prepare business data
+                var oModel = new sap.ui.model.json.JSONModel({
+                    businessData : [ {
+                        Country : "Country1",
+                        profit : -141.25
+                    }, {
+                        Country : "Country2",
+                        profit : 133.82
+                    }, {
+                        Country : "Country3",
+                        profit : 348.76
+                    }, {
+                        Country : "Country4",
+                        profit : 217.29
+                    }, {
+                        Country : "Country5",
+                        profit : 117.00
+                    }, {
+                        Country : "Country6",
+                        profit : 609.16
+                    } ]
+                });
+
+                // A Dataset defines how the model data is mapped to the chart
+                var oDataset = new sap.viz.ui5.data.FlattenedDataset({
+                    // a Bar Chart requires exactly one dimension (x-axis)
+                    dimensions : [ {
+                        axis : 1, // must be one for the x-axis, 2 for y-axis
+                        name : 'Country',
+                        value : "{Country}"
+                    } ],
+                    // it can show multiple measures, each results in a new set of bars in a new color
+                    measures : [
+                    // measure 1
+                    {
+                        name : 'Profit', // 'name' is used as label in the Legend
+                        value : '{profit}' // 'value' defines the binding for the displayed value
+                    } ],
+                    // 'data' is used to bind the whole data collection that is to be displayed in the chart
+                    data : {
+                        path : "/businessData"
+                    }
+                });
+
+                // create a VizContainer
+                var oVizContainer = new sap.viz.ui5.VizContainer({
+                    'uiConfig' : {
+                        'layout' : 'vertical',
+                        'enableMorphing' : true
+                    },
+                    'width': '100%',
+                    'height': '100%'
+                });
+
+                // attach the model to the chart and display it
+                oVizContainer.setVizData(oDataset)
+                oVizContainer.setModel(oModel);
+
+                // set feeds
+                var aobjCountry = new sap.viz.ui5.controls.common.feeds.AnalysisObject({
+		            uid : "Country_id",
+                    name : "Country",
+                    type : "Dimension"
+                }), aobjProfit = new sap.viz.ui5.controls.common.feeds.AnalysisObject({
+		            uid : "Profit_id",
+                    name : "Profit",
+                    type : "Measure"
+                });
+                var feedPrimaryValues = new sap.viz.ui5.controls.common.feeds.FeedItem({
+		            uid : "primaryValues",
+                    type : "Measure",
+                    values : [ aobjProfit ]
+                }), feedAxisLabels = new sap.viz.ui5.controls.common.feeds.FeedItem({
+		            uid : "axisLabels",
+                    type : "Dimension",
+                    values : [ aobjCountry ]
+                });
+
+                oVizContainer.addFeed(feedPrimaryValues);
+                oVizContainer.addFeed(feedAxisLabels);
+
+                // attach event listener for feedschange
+                oVizContainer.attachEvent('feedsChanged', function(e) {
+                    // You could add your own logic to handle feedsChanged to set new dataset to vizContainer.
+                    // Reset current data for demo purpose.
+                    oVizContainer.setVizData(new sap.viz.ui5.data.FlattenedDataset({
+                        dimensions : [ {
+                            axis : 1,
+                            name : 'Country',
+                            value : "{Country}"
+                        } ], measures : [ {
+                            name : 'Profit',
+                            value : '{profit}'
+                        } ], data : {
+                            path : "/businessData"
+                        }
+                    }));
+                    oVizContainer.setModel(oModel);
+                });
+
+                oVizContainer.placeAt("vertical_sample");
+
+
+
+            })();
+        </script>
+
+        <script type="text/javascript">
+            jQuery(window).resize(function() {
+                jQuery('#vertical_sample').height('').width('');
+                jQuery('#horizontal_sample').height('').width('');
+            });
+
+
+
+
+
+        </script>
+    </head>
+    <body class="sapUiDemokitBody">
+	    <style>
+			#deprecatedBanner {
+				display: block;
+				padding: 10px;
+				border: 3px solid red;
+				border-radius: 10px;
+				opacity: 0.75;
+				color: red;
+				font-weight: bold;
+				font-size: 0.8rem;
+				z-index: 99999;
+				background-color: white;
+				overflow-y: hidden;
+			}
+		</style>
+
+<h1>This is a test page to verify CSP issue. Please do use Firefox.</h1>
+
+        <h2>Introduction</h2>
+
+        <p>The VIZContainer provides a set of reusable HTML5 based UI controls that easily enable application developers to create an analytical application using a generic UX pattern. With VIZContainer, you are able to switch the visualization types to see the data from a different point of view, or feed data on the fly to the visualization that helps get new insights.</p>
+
+        <h2>Example</h2>
+        <p>The following code snippet shows the basic capabilities of the
+            VizContainer control:</p>
+        <h3>Sample1</h3>
+        <div code-sample="vertical_sample" script="Vertical_VizContainerSimpleExample"></div>
+
+        <h3>Sample2</h3>
+        <div code-sample="horizontal_sample" script="horizontal_VizContainerSimpleExample"></div>
+        <h2>API Documentation</h2>
+        <p>
+            See <a class="sapUiDemokitSrcLink"
+                href="../../../../docs/api/symbols/sap.viz.ui5.VizContainer.html">VizContainer</a>,
+            <a class="sapUiDemokitSrcLink"
+                href="../../../../docs/api/symbols/sap.viz.ui5.data.FlattenedDataset.html">FlattenedDataset</a>
+            and <a class="sapUiDemokitSrcLink"
+                href="../../../../docs/api/symbols/sap.viz.ui5.html">general
+                sap.viz</a> API documentation
+        </p>
+
+
+        <script>
+
+        setTimeout(function(){                            oVizContainer._vizFrame.chart()._chartView()._editAxisView.show("info/bar") ;
+document.getElementById('minValue').onkeypress;}, 1000)
+        </script>
+    </body>
+</html>

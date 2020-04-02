@@ -1,0 +1,137 @@
+<core:View xmlns:core="sap.ui.core" xmlns="sap.ui.comp.smarttable"
+		   xmlns:smartField="sap.ui.comp.smartfield" xmlns:smartForm="sap.ui.comp.smartform"
+		   xmlns:sl="sap.ui.comp.navpopover" xmlns:m="sap.m" xmlns:l="sap.ui.layout"
+		   controllerName="sap.ui.comp.sample.smartlink.example_02.Example">
+
+	<l:VerticalLayout width="100%">
+		<l:content>
+			<m:Text class="sapUiSmallMarginTop,	sapUiLargeMarginBottom"
+					text="The Name and ProductId properties are annotated with the com.sap.vocabularies.Common.v1.SemanticObject annotation."/>
+			<m:Text class="sapUiSmallMarginTop, sapUiLargeMarginBottom"
+					text="Link personalization is disabled."/>
+		</l:content>
+	</l:VerticalLayout>
+
+	<l:VerticalLayout class="sapUiContentPadding" width="100%">
+		<l:content>
+			<m:Text text="Buttons linked to Name and ProductId properties"/>
+		</l:content>
+	</l:VerticalLayout>
+	<m:Button id="IDButtonOfName" class="sapUiTinyMarginBeginEnd"
+			  text="Show Details" press="onPressControl">
+	</m:Button>
+	<m:Button id="IDButtonOfProductId" class="sapUiTinyMarginBeginEnd"
+			  text="Show Details" press="onPressControl">
+	</m:Button>
+
+
+	<l:VerticalLayout class="sapUiContentPadding" width="100%">
+		<l:content>
+			<m:Text class="sapUiLargeMarginTop" text="Images linked to Name and ProductId properties"/>
+		</l:content>
+	</l:VerticalLayout>
+	<m:Image id="IDImageOfName" class="sapUiTinyMarginBeginEnd"
+			 src="test-resources/sap/ui/documentation/sdk/images/HT-6100.jpg" width="150px"
+			 press="onPressControl">
+	</m:Image>
+	<m:Image id="IDImageOfProductId" class="sapUiTinyMarginBeginEnd"
+			 src="test-resources/sap/ui/documentation/sdk/images/HT-6100.jpg" width="150px"
+			 press="onPressControl">
+	</m:Image>
+
+
+	<l:VerticalLayout class="sapUiContentPadding" width="100%">
+		<l:content>
+			<m:Text class="sapUiLargeMarginTop" text="Default behaviour of SmartField"/>
+		</l:content>
+	</l:VerticalLayout>
+	<smartForm:SmartForm>
+		<smartForm:Group>
+			<smartForm:GroupElement>
+				<smartField:SmartField value="{Name}">
+					<smartField:controlProposal>
+						<smartField:ControlProposal
+								controlType="ObjectIdentifier"/>
+					</smartField:controlProposal>
+				</smartField:SmartField>
+				<smartField:SmartField value="{ProductId}">
+					<smartField:controlProposal>
+						<smartField:ControlProposal
+								controlType="ObjectIdentifier"/>
+					</smartField:controlProposal>
+				</smartField:SmartField>
+			</smartForm:GroupElement>
+		</smartForm:Group>
+		<smartForm:semanticObjectController>
+			<sl:SemanticObjectController entitySet="ProductCollection"
+										 enableAvailableActionsPersonalization='\{"Name":false, "ProductId":false\}'/>
+		</smartForm:semanticObjectController>
+	</smartForm:SmartForm>
+
+
+	<l:VerticalLayout class="sapUiContentPadding" width="100%">
+		<l:content>
+			<m:Text class="sapUiLargeMarginTop" text="Default behaviour of SmartTable"/>
+		</l:content>
+	</l:VerticalLayout>
+	<SmartTable tableType="ResponsiveTable" enableAutoBinding="true"
+				entitySet="ProductCollection" useVariantManagement="false"
+				useTablePersonalisation="false" showRowCount="false" useExportToExcel="false">
+		<semanticObjectController>
+			<sl:SemanticObjectController
+					enableAvailableActionsPersonalization='\{"Name":false, "ProductId":false\}'/>
+		</semanticObjectController>
+	</SmartTable>
+
+
+	<l:VerticalLayout class="sapUiContentPadding" width="100%">
+		<l:content>
+			<m:Text class="sapUiLargeMarginTop" text="SmartField embedded into SmartTable"/>
+		</l:content>
+	</l:VerticalLayout>
+	<SmartTable tableType="ResponsiveTable" entitySet="ProductCollection" useVariantManagement="false"
+				useTablePersonalisation="false" showRowCount="false" useExportToExcel="false">
+		<m:Table items="{/ProductCollection}">
+			<m:columns>
+				<m:Column>
+					<m:customData>
+						<core:CustomData key="p13nData"
+										 value='\{"columnKey": "Name", "leadingProperty": "Name"}'/>
+					</m:customData>
+					<m:Label text="Name"/>
+				</m:Column>
+				<m:Column>
+					<m:customData>
+						<core:CustomData key="p13nData"
+										 value='\{"columnKey": "ProductId", "leadingProperty": "ProductId"}'/>
+					</m:customData>
+					<m:Text text="Product ID"/>
+				</m:Column>
+			</m:columns>
+			<m:items>
+				<m:ColumnListItem>
+					<m:cells>
+						<smartField:SmartField value="{Name}">
+							<smartField:controlProposal>
+								<smartField:ControlProposal
+										controlType="ObjectIdentifier"/>
+							</smartField:controlProposal>
+						</smartField:SmartField>
+						<smartField:SmartField value="{ProductId}">
+							<smartField:controlProposal>
+								<smartField:ControlProposal
+										controlType="ObjectIdentifier"/>
+							</smartField:controlProposal>
+						</smartField:SmartField>
+					</m:cells>
+				</m:ColumnListItem>
+			</m:items>
+		</m:Table>
+		<semanticObjectController>
+			<sl:SemanticObjectController
+					enableAvailableActionsPersonalization='\{"Name":false, "ProductId":false\}'/>
+		</semanticObjectController>
+	</SmartTable>
+
+
+</core:View>

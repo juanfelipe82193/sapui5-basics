@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="../style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm,sap.m"
+		data-sap-ui-theme="sap_bluecrystal" >
+	</script>
+
+	<script>
+
+
+	function onLegendClick( e )
+	{
+		sap.m.MessageToast.show( "LegendClick; clicked on  " + e.getParameters().id );
+	};
+	
+   function onClickItem( e )
+   {
+      // click on item 
+      sap.m.MessageToast.show( "Click " + this );
+   };
+
+   function onContextMenuItem( e )
+   {
+      // context menu on item 
+      sap.m.MessageToast.show( "ContextMenu " + this );
+   };
+
+	function onRegionClick( e )
+	{
+		var ccode = e.getParameter( "code" );
+		sap.m.MessageToast.show( "RegionClick " + ccode );
+	};
+
+	function onRegionContextMenu( e )
+	{
+		sap.m.MessageToast.show( "RegionContextMenu: " + e.getParameter( "code" ) );
+	};
+
+	// have some data
+	var oData = 
+		{
+	       regionProperties :
+					[
+						{ "code": "DE", "region" : "Germany" , "color": "rgb(92,186,230)",  "text": "Central Europe", "select":true },
+						{ "code": "CZ", "region" : "Czech Republic" , "color": "rgb(92,186,230)",  "text": "Central Europe", "select":false },
+						{ "code": "PL", "region" : "Poland" , "color": "rgb(92,186,230)",  "text": "Central Europe", "select":false },
+						{ "code": "SK", "region" : "Slovakia" , "color": "rgb(92,186,230)",  "text": "Central Europe", "select":false },
+						{ "code": "HU", "region" : "Hungary" , "color": "rgb(92,186,230)",  "text": "Central Europe", "select":false },
+						{ "code": "AT", "region" : "Austria" , "color": "rgb(92,186,230)",  "text": "Central Europe", "select":false },
+						{ "code": "SI", "region" : "Slovenia" , "color": "rgb(92,186,230)",  "text": "Central Europe", "select":false },
+						{ "code": "CH", "region" : "Switzerland" , "color": "rgb(92,186,230)",  "text": "Central Europe", "select":false },
+						{ "code": "LI", "region" : "Liechtenstein" , "color": "rgb(92,186,230)",  "text": "Central Europe" },
+						
+						{ "code": "EE", "region" : "Estonia" , "color": "rgb(182,217,87)", "text": "Eastern Europe" },
+						{ "code": "LV", "region" : "Latvia" , "color": "rgb(182,217,87)",  "text": "Eastern Europe" },
+						{ "code": "LT", "region" : "Lithuania" , "color": "rgb(182,217,87)",  "text": "Eastern Europe"},
+						{ "code": "BY", "region" : "Belarus" , "color": "rgb(182,217,87)",  "text": "Eastern Europe"},
+						{ "code": "RU", "region" : "Russia" , "color": "rgb(182,217,87)",  "text": "Eastern Europe"},
+						{ "code": "UA", "region" : "Ukraine" , "color": "rgb(182,217,87)",  "text": "Eastern Europe"},
+						
+						
+						{ "code": "PT", "region" : "Portugal" , "color": "rgb(250,195,100)", "text": "Southern Europe" },
+						{ "code": "ES", "region" : "Spain" , "color": "rgb(250,195,100)",  "text": "Southern Europe"},
+						{ "code": "IT", "region" : "Italy" , "color": "rgb(250,195,100)",  "text": "Southern Europe"},
+						{ "code": "GR", "region" : "Greece" , "color": "rgb(250,195,100)",  "text": "Southern Europe"},
+						{ "code": "MK", "region" : "Macedonia" , "color": "rgb(250,195,100)",  "text": "Southern Europe"},
+					
+	               		{ "code": "IE", "region" : "Ireland" , "color": "rgb(140,211,255)",  "text": "Western Europe" },
+	               		{ "code": "GB", "region" : "United Kingdom" , "color": "rgb(140,211,255)",  "text": "Western Europe" },
+	               		{ "code": "FR", "region" : "France" , "color": "rgb(140,211,255)",  "text": "Western Europe" },
+	               		{ "code": "BE", "region" : "Belgium" , "color": "rgb(140,211,255)",  "text": "Western Europe" },
+	               		{ "code": "NL", "region" : "Netherlands" , "color": "rgb(140,211,255)",  "text": "Western Europe" },
+	               		{ "code": "LU", "region" : "Luxembourg" , "color": "rgb(140,211,255)",  "text": "Western Europe" }
+					],
+           LegendItems :
+				[
+		            { "color" : "rgb(92,186,230)",  "text": "Central Europe" },
+		            { "color" : "rgb(182,217,87)",  "text": "Eastern Europe" },
+		            { "color" : "rgb(250,195,100)",  "text": "Southern Europe" },
+		            { "color" : "rgb(140,211,255)",  "text": "Western Europe" }
+				]	
+		
+		};
+	
+	// create model and set the data
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+
+	// change the L0 geojson location to internal folder, due it is not......//
+	// allowed for us to deliver it..........................................//
+	jQuery.sap.require( "sap.ui.vbm.AnalyticMap");
+	sap.ui.vbm.AnalyticMap.GeoJSONURL = "../internal/media/analyticmap/L0.json";
+	
+	// create analytic map and bind to model
+	var oVBI = new sap.ui.vbm.AnalyticMap('vbi',
+			{
+					width : 1024,
+					height: 512,
+					plugin: false,
+					regions : {
+						path : "/regionProperties",
+						template: new sap.ui.vbm.Region(  {  text: "{text}", code: "{code}", color: '{color}', select: "{select}", click: onRegionClick, contextMenu: onRegionContextMenu  } )
+					},					
+					legend : new sap.ui.vbm.Legend(
+					      {
+					        caption : "Select regions",
+					        click : onLegendClick,
+					        items : {
+									path : "/LegendItems",
+									template: new sap.ui.vbm.LegendItem(  { text: "{text}", color: '{color}', click: onLegendItemClick } )
+								}
+					      }
+					),
+					regionClick : onRegionClick,
+					regionContextMenu : onRegionContextMenu
+			});
+
+	
+	oVBI.setModel( oModel );
+	oVBI.placeAt("content");
+
+	function onLegendItemClick( e )
+	{
+		sap.m.MessageToast.show( "onLegendItemClick; clicked on  " + e.getParameters().id  );
+		
+		for ( var nJ = 0; nJ < oModel.oData.regionProperties.length; ++nJ )
+		{
+		   var txt = "/regionProperties/" + nJ + "/text";
+		   var sel = "/regionProperties/" + nJ + "/select";
+		   var test = oModel.getProperty( txt ); 
+		   var row = e.oSource.getText();
+		   if ( test == row ){
+			   oModel.setProperty( sel, true );
+		   }
+		   else{
+			   oModel.setProperty( sel, false );
+		   }
+		}
+	};
+	
+	
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business AnalyticMap Sample</h1>
+			<ul>
+				<li> Testing the Visual Business Analytic Map Control and interaction with legend items. </li>
+				<li> The click on a legend row leads to a selection of the corresponding regions, while all the other regions get unselected </li>
+			</ul>
+		 <div id="content"></div>
+		 <br />
+	</body>
+</html>
+

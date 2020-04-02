@@ -1,0 +1,67 @@
+<core:FragmentDefinition
+		xmlns="sap.m"
+		xmlns:core="sap.ui.core"
+		xmlns:macro="sap.fe.macros"
+		xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+		template:require="{
+		MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+		CORE: 'sap/fe/core/AnnotationHelper',
+		OP: 'sap/fe/templates/ObjectPage/AnnotationHelper',
+		COMMON: 'sap/fe/macros/CommonHelper'
+}">
+
+
+	<HBox class="sapUiMediumMarginEnd sapUiSmallMarginBottom" binding="{= ( ${headerFacet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.Chart') === -1 &amp;&amp; ${headerFacet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Contact') === -1)  ? OP.getElementBinding(${headerFacet>Target/$AnnotationPath}) : undefined }" visible="{= ${headerFacet>./@com.sap.vocabularies.UI.v1.Hidden} === false ? true : %{headerFacet>./@com.sap.vocabularies.UI.v1.Hidden@@MODEL.value} &amp;&amp;'{= !%' + %{headerFacet>./@com.sap.vocabularies.UI.v1.Hidden@@MODEL.value} + '}'}">
+		<template:if test="{=${headerFacet>Target/$AnnotationPath}.indexOf('DataPoint') >= 0}">
+			<template:then>
+				<template:with path="headerFacet>Target/$AnnotationPath/" var="dataPoint">
+					<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.HeaderDataPoint"
+									type="XML"/>
+				</template:with>
+			</template:then>
+			<template:elseif
+				test="{= ${headerFacet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.Chart') >= 0}">
+				<template:with path="headerFacet>Target/$AnnotationPath" var="collection" helper="MODEL.resolve$Path">
+					<template:with path="collection>" var="collection" helper="CORE.getNavigationContext">
+						<macro:MicroChart
+							id="{= COMMON.getStableId(['fe', 'OPHeaderContent', ${collection>@sapui.name}, ${headerFacet>Target/$AnnotationPath/@sapui.name}.replace(RegExp('.*\\.'), '')]) }"
+							groupId="$auto.microCharts"
+							collection="{collection>}"
+							chartAnnotation="{headerFacet>Target/$AnnotationPath/}"/>
+					</template:with>
+				</template:with>
+			</template:elseif>
+			<template:elseif
+					test="{= ${headerFacet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.Identification') >= 0}">
+				<template:with path="headerFacet>Target" var="form">
+					<Text text="Identification in header facet"/>
+				</template:with>
+			</template:elseif>
+			<template:elseif
+					test="{= ${headerFacet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Contact') >= 0}">
+				<template:with path="headerFacet>Target/$AnnotationPath" var="collection" helper="MODEL.resolve$Path">
+					<template:with path="collection>" var="collection" helper="CORE.getNavigationContext">
+						<VBox displayInline="true">
+							<template:if test="{headerFacet>@@.MODEL.label}">
+								<Title text="{headerFacet>@@.MODEL.label}" class="sapUiSmallMarginBottom"></Title>
+							</template:if>
+							<macro:Contact metadataContexts="{ model: 'headerFacet', path:'Target/$AnnotationPath',  name: 'contact'}" id="{= COMMON.getStableId(['fe', 'OPHeaderContent', ${collection>@sapui.name}, ${headerFacet>Target/$AnnotationPath/@sapui.name}.replace(RegExp('.*\\.'), '')]) }" />
+						</VBox>
+					</template:with>
+				</template:with>
+			</template:elseif>
+			<template:elseif
+					test="{= ${headerFacet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Address') >= 0}">
+				<template:with path="headerFacet>Target" var="contact">
+					<Text text="Address in header facet"/>
+				</template:with>
+			</template:elseif>
+			<template:elseif
+					test="{= ${headerFacet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.FieldGroup') >= 0}">
+				<template:with path="headerFacet>" var="headerForm">
+					<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.ObjectPageHeaderForm" type="XML" />
+				</template:with>
+			</template:elseif>
+		</template:if>
+	</HBox>
+</core:FragmentDefinition>

@@ -1,0 +1,499 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.suite.ui.microchart.ColumnMicroChart</title>
+
+<base href="../../../../../">
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout, sap.m, sap.ui.ux3, sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize"
+	src="resources/sap-ui-core.js">
+</script>
+
+<script id="view1" type="sapui5/xmlview">
+	<core:View controllerName="test" xmlns="sap.suite.ui.microchart" xmlns:core="sap.ui.core" xmlns:m="sap.m">
+		<m:Table items="{/items}">
+			<m:columns>
+				<m:Column demandPopin="true" minScreenWidth="Tablet">
+					<m:Text text="Chart" />
+				</m:Column>
+			</m:columns>
+			<m:items>
+				<m:ColumnListItem>
+					<m:cells>
+						<m:FlexBox height="100px" width="100px">
+							<ColumnMicroChart id="chart"
+												press="press"
+												isResponsive="true"
+												columns="{columns}"
+												tooltip="{tooltip}">
+								<columns>
+									<ColumnMicroChartData label="{label}" value="{value}" color="{color}" />
+								</columns>
+							</ColumnMicroChart>
+						</m:FlexBox>
+					</m:cells>
+				</m:ColumnListItem>
+			</m:items>
+		</m:Table>
+	</core:View>
+</script>
+<script>
+	// define a new (simple) Controller type
+	sap.ui.controller("test", {
+		onInit: function () {
+			var data = {
+				items : [{
+					columns: [
+						{ label: "Afghanistan", value: 0, color: "Good" },
+						{ label: "Albania", value: 50, color: "Critical" },
+						{ label: "Algeria", value: -20, color: "Error" },
+						{ label: "Andorra", value: 30, color: "Critical" },
+						{ value: -10, color: "Error" },
+						{ label: "Angola", value: 30, color: "Critical" },
+						{ label: "Antigua and Barbuda", value: -10, color: "Error" },
+						{ label: "Argentina", value: 10, color: "Good" },
+						{ label: "Armenia", value: 50 },
+						{ label: "Aruba", value: -20, color: "Error" },
+						{ label: "Australia", value: 30, color: "Critical" },
+						{ label: "Austria", value: -10, color: "Error" },
+						{ value: 30, color: "Critical" },
+						{ label: "Azerbaijan", value: -50, color: "Error" }
+					],
+					tooltip: "Cumulative Totals\n((AltText))\ncalculated in EURO"
+				}]
+			};
+			var oModel = new sap.ui.model.json.JSONModel(data);
+			this.getView().setModel(oModel);
+		}
+	});
+
+	// instantiate the View
+	var oView = sap.ui.xmlview({
+		viewContent:jQuery('#view1').html()
+	});
+</script>
+<script type="text/javascript">
+	jQuery.sap.initMobile();
+
+	var oCMCData = {
+		columns: [
+			{ label: "Afghanistan", value: 40, color: "Error" },
+			{ label: "Albania", value: 50, color: "Error" },
+			{ label: "Algeria", value: 60, color: "Error" },
+			{ label: "Andorra", value: 40, color: "Neutral" },
+			{ label: "Angola", value: 35, color: "Neutral" },
+			{ label: "Antigua and Barbuda", value: 10, color: "Neutral" }
+		],
+		tooltip: "Cumulative Totals\n((AltText))\ncalculated in EURO",
+		leftTopLabel: { label: "June 1", color: "Good"	},
+		leftBottomLabel: { label: "0M", color: "Good" },
+		rightTopLabel: { label: "June 30", color: "Critical" },
+		rightBottomLabel: { label: "80M", color: "Critical" }
+	};
+
+	var oConfModel = new sap.ui.model.json.JSONModel();
+	oConfModel.setData(oCMCData);
+	sap.ui.getCore().setModel(oConfModel);
+
+	function fnPress(oEvent) {
+		sap.m.MessageToast.show("The chart is pressed.");
+	};
+
+	function fnBarPress(oEvent) {
+		sap.m.MessageToast.show("The " + oEvent.getSource().getLabel() + " bar is pressed.");
+	};
+
+	var oClmnData = new sap.suite.ui.microchart.ColumnMicroChartData({
+		label: "{label}",
+		value: "{value}",
+		color: "{color}",
+		press: fnBarPress
+	});
+
+	var buildLabel = function(sName) {
+		return new sap.suite.ui.microchart.ColumnMicroChartLabel({
+			label: "{/"+sName+"/label}",
+			color: "{/"+sName+"/color}"
+		});
+	};
+
+	var buildCmc = function (sSize, sText) {
+		var bFixedSizeGiven = !sSize;
+		var sIdSuffix, sWidth, sHeight;
+		if (!bFixedSizeGiven){
+			sIdSuffix = sText + sHeight + sWidth;
+			sWidth = sSize.width;
+			sHeight = sSize.height;
+		}
+
+		var oClmnDataTmpl = new sap.suite.ui.microchart.ColumnMicroChartData({
+			label: "{label}",
+			value: "{value}",
+			color: "{color}",
+			press: fnBarPress
+		});
+
+		var oCmcTmpl = new sap.suite.ui.microchart.ColumnMicroChart("cmc" + sText, {
+			width: "{/width}",
+			height: "{/height}",
+			size: "{/size}",
+			columns: {
+				path: "/columns",
+				template: oClmnDataTmpl
+			},
+			press: fnPress,
+			isResponsive: !bFixedSizeGiven,
+			tooltip: "{/tooltip}",
+			leftBottomLabel: buildLabel("leftBottomLabel"),
+			rightBottomLabel: buildLabel("rightBottomLabel"),
+			leftTopLabel: buildLabel("leftTopLabel"),
+			rightTopLabel: buildLabel("rightTopLabel")
+		});
+
+		if (bFixedSizeGiven) {
+			oCmc = oCmcTmpl;
+			oCmc.addStyleClass("sapUiTinyMargin");
+			oClmnData = oClmnDataTmpl;
+			return;
+		}
+
+		var oFlexBox = new sap.m.FlexBox("cmc-fb" + sIdSuffix, {
+			items: [oCmcTmpl],
+			layoutData: new sap.ui.layout.ResponsiveFlowLayoutData({ minWidth: 200 }),
+			height: sHeight,
+			width: sWidth
+		});
+		oFlexBox.addStyleClass("sapUiTinyMargin");
+
+		return oFlexBox;
+	}
+
+	buildCmc(null, "fixed");
+	var oFixedFormLabel = new sap.m.Label({
+		text: "Fixed control",
+		width: "100%",
+		textAlign: "Center"
+	});
+
+	var oResponsiveFormLabel = new sap.m.Label({
+		text: "Responsive controls in a FlexBox",
+		labelFor: "cmc-responsive-form",
+		width: "100%",
+		textAlign: "Center"
+	});
+
+	var oCmcResponsiveForm = new sap.ui.layout.form.SimpleForm("cmc-responsive-form", {
+		content:[
+			buildCmc({width: "190px", height: "140px"}, "largeResponsive"),
+			buildCmc({width: "178px", height: "82px"}, "mediumResponsive"),
+			buildCmc({width: "132px", height: "76px"}, "smallResponsive")
+		]
+	});
+
+	function _fnIsNumber(n) {
+		return typeof n == 'number' && !isNaN(n) && isFinite(n);
+	};
+
+	var oSizeLbl = new sap.m.Label({
+		text : "Size",
+		labelFor : "size-value"
+	});
+
+	var oSizeSlct = new sap.m.Select("size-value", {
+		width : "10rem",
+		change : function (oE) {
+			var selectedItem = oE.getParameter("selectedItem");
+			oCMCData.size = selectedItem.getKey();
+			oConfModel.checkUpdate();
+		},
+		items : [
+			new sap.ui.core.Item({key: "Auto", text: "Auto"}),
+			new sap.ui.core.Item({key: "L", text: "Large"}),
+			new sap.ui.core.Item({key: "M", text: "Middle"}),
+			new sap.ui.core.Item({key: "S", text: "Small"}),
+			new sap.ui.core.Item({key: "XS", text: "Extra small"})
+		]
+	});
+
+	var patt = new RegExp("^\\d+(px|rem|%|in|cm|mm|em|ex|pt|pc)$");
+
+	var oWidthLbl = new sap.m.Label({
+		text: "Width",
+		labelFor: "scale-width"
+	});
+
+	var oWidthInput = new sap.m.Input("scale-width", {
+		width: "10rem",
+		placeholder: 'Enter width ...',
+		liveChange : function(e) {
+			var sEnteredText = e.getParameter("newValue");
+			var oItem = jQuery.sap.byId("scale-width-inner");
+			if (patt.test(sEnteredText)) {
+				oCMCData.width = sEnteredText;
+				oItem.css("color", "black");
+			} else {
+				oCMCData.width = "";
+				if (sEnteredText) {
+					oItem.css("color", "red");
+				} else {
+					oItem.css("color", "black");
+				}
+			}
+			oConfModel.checkUpdate();
+		}
+	});
+
+	var oHeightLbl = new sap.m.Label({
+		text: "Height",
+		labelFor: "scale-height"
+	});
+
+	var oHeightInput = new sap.m.Input("scale-height", {
+		width: "10rem",
+		placeholder: 'Enter height ...',
+		liveChange : function(e) {
+			var sEnteredText = e.getParameter("newValue");
+			var oItem = jQuery.sap.byId("scale-height-inner");
+			if (patt.test(sEnteredText)) {
+				oCMCData.height = sEnteredText;
+				oItem.css("color", "black");
+			} else {
+				oCMCData.height = "";
+				if (sEnteredText) {
+					oItem.css("color", "red");
+				} else {
+					oItem.css("color", "black");
+				}
+			}
+			oConfModel.checkUpdate();
+		}
+	});
+
+	var oTooltipLbl = new sap.m.Label({
+		text : "Tooltip",
+		labelFor : "tooltip"
+	});
+
+	var oTooltipInput = new sap.m.TextArea("tooltip", {
+		rows: 3,
+		placeholder: 'Enter tooltip (use ((AltText)) for inserting the default text) ...',
+		value: "{/tooltip}"
+	});
+
+	var oTooltipSwtchLbl = new sap.m.Label({
+		text : "QuickView Tooltip",
+		labelFor : "tooltip-swtch"
+	});
+
+	var oTooltipSwtch = new sap.m.Switch({
+		id: "tooltip-swtch",
+		state: false,
+		name: "QuickView tooltip",
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			oCmc.setTooltip(bState ?
+					new sap.ui.ux3.QuickView({	content: new sap.m.Text({ text: oTooltipInput.getValue().split("((AltText))").join(oCmc.getAltText()) })})
+					: oTooltipInput.getValue());
+		}
+	});
+	var iBIndex = 0;
+
+	var oBAddButton = new sap.m.Button("add-button-b", {
+		width: "10rem",
+		text: "Add Column",
+		press: function(oEvent) {
+			iBIndex = 0;
+			oCMCData.columns.push( { value: 0, color: "Neutral" } );
+			oConfModel.checkUpdate();
+		}
+	});
+
+	var oPressLbl = new sap.m.Label({ text: "Chart Press Action", labelFor: "press-action" });
+
+	var oPressSwtch = new sap.m.Switch({
+		id: "press-action",
+		state: true,
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			if(bState) {
+				oCmc.attachPress(fnPress);
+			} else {
+				oCmc.detachPress(fnPress);
+			}
+		}
+	});
+
+	var buildLabelInputs = function(sName, sText) {
+		return new sap.m.VBox(sName+"-inputs", {
+			items: [
+				new sap.m.Label(sName+"-label", { text: sText, labelFor: sName+"-input" }),
+				new sap.m.Input(sName+"-input", {
+					width: "10rem",
+					placeholder: "Enter value ...",
+					value: "{/"+sName+"/label}"
+				}),
+				new sap.m.Label(sName+"-color-label", { text: sText+" color", labelFor: sName+"-color-select" }),
+				new sap.m.Select(sName+"-color-select", {
+					width: "10rem",
+					items: [
+						new sap.ui.core.Item(sName+"-"+sap.m.ValueColor.Neutral, { key: sap.m.ValueColor.Neutral, text: sap.m.ValueColor.Neutral }),
+						new sap.ui.core.Item(sName+"-"+sap.m.ValueColor.Good, { key: sap.m.ValueColor.Good, text: sap.m.ValueColor.Good }),
+						new sap.ui.core.Item(sName+"-"+sap.m.ValueColor.Error, { key: sap.m.ValueColor.Error, text: sap.m.ValueColor.Error }),
+						new sap.ui.core.Item(sName+"-"+sap.m.ValueColor.Critical, { key: sap.m.ValueColor.Critical, text: sap.m.ValueColor.Critical })
+					],
+					selectedItemId: sName + "-" + oCMCData[sName].color,
+					change: function(oEvent) {
+						var oSelectedItem = oEvent.getParameter("selectedItem");
+						oCMCData[sName].color = oSelectedItem.getKey();
+						oConfModel.checkUpdate();
+					}
+				})
+			]
+		});
+	};
+
+	var oSimpleForm = new sap.ui.layout.form.SimpleForm("controls-cc", {
+		maxContainerCols: 4,
+		editable: true,
+		content: [oSizeLbl, oSizeSlct, oWidthLbl, oWidthInput, oHeightLbl, oHeightInput, oTooltipLbl, oTooltipInput,  oTooltipSwtchLbl, oTooltipSwtch, oPressLbl, oPressSwtch,
+				  new sap.m.Label({ text: "" }), buildLabelInputs("rightTopLabel", "RightTopLabel"), buildLabelInputs("leftTopLabel", "LeftTopLabel"),
+				  /*new sap.m.Label({ text: "" }),*/ buildLabelInputs("rightBottomLabel", "RightBottomLabel"), buildLabelInputs("leftBottomLabel", "LeftBottomLabel"),
+				  new sap.m.Label({ text: "" }), oBAddButton]
+	});
+
+	function fnFormFactory(sId, oContext) {
+		var sColor = oContext.getProperty("color");
+		var oBRemoveBtn = new sap.m.Button(sId+"-cc-remove-button", {
+			width: "10rem",
+			text: "Remove Column",
+			press: function(oEvent) {
+				oCMCData.columns.splice(this._index, 1)
+				iBIndex = 0;
+				oConfModel.checkUpdate();
+			}
+		});
+		oBRemoveBtn._index = iBIndex;
+
+		var oBLabelInput = new sap.m.Input(sId+"-bar-label", {
+			width: "10rem",
+			placeholder: "Enter label ...",
+			value: "{label}"
+		});
+		oBLabelInput._index = iBIndex;
+
+		var oBValueInput = new sap.m.Input(sId+"-bar-value", {
+			width: "10rem",
+			placeholder: "Enter value ...",
+			value: { path: "value", type: new sap.ui.model.type.Float({groupingEnabled: false})},
+			liveChange: function(oControlEvent) {
+				var fVal = parseFloat(oControlEvent.getParameter("newValue"));
+				oCMCData.columns[this._index].value = _fnIsNumber(fVal) ? fVal : undefined;
+				oConfModel.checkUpdate();
+			}
+		});
+		oBValueInput._index = iBIndex;
+
+		var oBColorSelect = new sap.m.Select(sId+"-bar-color", {
+			width: "10rem",
+			items : [
+				new sap.ui.core.Item(sId+"-"+sap.m.ValueColor.Neutral, {
+					key: sap.m.ValueColor.Neutral,
+					text: sap.m.ValueColor.Neutral
+				}),
+				new sap.ui.core.Item(sId+"-"+sap.m.ValueColor.Good, {
+					key: sap.m.ValueColor.Good,
+					text: sap.m.ValueColor.Good
+				}),
+				new sap.ui.core.Item(sId+"-"+sap.m.ValueColor.Error, {
+					key: sap.m.ValueColor.Error,
+					text: sap.m.ValueColor.Error
+				}),
+				new sap.ui.core.Item(sId+"-"+sap.m.ValueColor.Critical, {
+					key: sap.m.ValueColor.Critical,
+					text: sap.m.ValueColor.Critical
+				})
+			],
+			selectedItem: sId+"-"+sColor,
+			change: function(oEvent) {
+				var oSelectedItem = oEvent.getParameter("selectedItem");
+				oCMCData.columns[this._index].color = oSelectedItem.getKey();
+				oConfModel.checkUpdate();
+			}
+		});
+		oBColorSelect._index = iBIndex;
+
+		var oBPressSwtch = new sap.m.Switch({
+			id: sId + "-press-action",
+			state: true,
+			change: function(oE) {
+				if(oE.getParameter("state")) {
+					oCmc.getColumns()[this._index].attachPress(fnBarPress);
+				} else {
+					oCmc.getColumns()[this._index].detachPress(fnBarPress);
+				}
+			}
+		});
+		oBPressSwtch._index = iBIndex;
+
+		var oBVBox = new sap.m.VBox(sId+"-bar-box", {
+			height: "320px",
+			items: [
+				oBRemoveBtn,
+				new sap.m.Label({ text: "Label", labelFor: sId+"-bar-label" }),
+				oBLabelInput,
+				new sap.m.Label({ text: "Value", labelFor: sId+"-bar-value" }),
+				oBValueInput,
+				new sap.m.Label({ text : "Color", labelFor : sId+"-bar-color" }),
+				oBColorSelect,
+				new sap.m.Label({ text: "Bar Press Action", labelFor: sId + "-press-action" }),
+				oBPressSwtch
+			],
+			layoutData: new sap.ui.layout.ResponsiveFlowLayoutData({ minWidth: 170 })
+		});
+
+		iBIndex++;
+		return oBVBox;
+	};
+
+	var oBarBoxSimpleForm = new sap.ui.layout.form.SimpleForm("bar-box-form", {
+		content: {
+			path: "/columns",
+			factory: fnFormFactory
+		}
+	});
+
+	var oPage = new sap.m.Page("vbox-cc", {
+		showHeader: false,
+		content: [
+			oResponsiveFormLabel,
+			oCmcResponsiveForm,
+			oFixedFormLabel,
+			oCmc,
+			oSimpleForm,
+			oBarBoxSimpleForm,
+			oView
+		]
+	});
+
+	var oApp = new sap.m.App({
+		pages: [
+			oPage
+		]
+	}).placeAt("content");
+
+	//set the contrast class for belize plus
+	if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+		oApp.addStyleClass("sapContrastPlus");
+	}
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+	<div id="content"></div>
+</body>
+</html>

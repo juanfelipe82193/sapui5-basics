@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define(["sap/ushell/utils/type"],function(t){"use strict";function h(v){return v!==null&&typeof v!=="undefined";}function r(p){return Object.keys(p).reduce(function(o,P){var v=p[P];if(Object.prototype.toString.apply(v)==="[object Array]"){o[P]=v[0];}else if(typeof v==="string"){o[P]=v;}else{throw new Error("Parameters should be passed as strings or array of strings");}return o;},{});}return{hasValue:h,removeArrayParameterNotation:r};},false);

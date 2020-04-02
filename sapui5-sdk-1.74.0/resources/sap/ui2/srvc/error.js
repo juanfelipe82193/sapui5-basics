@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+this.sap=this.sap||{};(function(){"use strict";sap.ui2=sap.ui2||{};sap.ui2.srvc=sap.ui2.srvc||{};if(typeof jQuery==="function"&&jQuery.sap){jQuery.sap.declare("sap.ui2.srvc.error");jQuery.sap.require("sap.ui2.srvc.utils");}sap.ui2.srvc.Error=function(m,c,l){var e=new Error(m);l=l===undefined?true:l;e.name="sap.ui2.srvc.Error";if(l===true){sap.ui2.srvc.log.error(m,null,c);}return e;};}());

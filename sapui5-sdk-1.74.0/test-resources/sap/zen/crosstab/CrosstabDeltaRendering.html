@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Delta Rendering test</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="json/TESTDATA_PLAINTABLE.js"></script>
+<script type="text/javascript" src="json/TESTDATA_DELTATABLE.js"></script>
+<script type="text/javascript" src="testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Delta Rendering Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Delta Rendering tests", {
+			setup : function() {
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				this.oCrosstab.setWidth("1600px");
+				this.oCrosstab.setHeight("1200px");
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+				
+				this.checkAreaSizeChanged = function(oArea){
+					var oOldAreaRowCount = oArea.getRowCnt();
+					var oOldAreaColCount = oArea.getColCnt();
+					
+					this.oCrosstab.updateControlProperties(sapzen.crosstab.test.jsonTestData.deltaTable.control);
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					var oNewAreaRowCount = oArea.getRowCnt();
+					var oNewAreaColCount = oArea.getColCnt();
+					
+					ok(oOldAreaRowCount !== oNewAreaRowCount, "The old and new "+oArea.getAreaType()+" should have different rowcounts");
+					ok(oOldAreaColCount !== oNewAreaColCount, "The old and new "+oArea.getAreaType()+" should have different colcounts");
+				
+					this.oCrosstab.updateControlProperties(sapzen.crosstab.test.jsonTestData.plainTable.control);
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);	
+				}
+
+			},
+			teardown : function() {
+				this.oCrosstab = null;
+			}
+		});
+
+		test("Spotcheck the rendering of new table cells", function() {
+			var oOldCell = this.oCrosstab.getDataArea().getCell(0, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkCell(this.oCrosstab.getDataArea(), 0, 0);
+
+			this.oCrosstab.updateControlProperties(sapzen.crosstab.test.jsonTestData.deltaTable.control);
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+
+			var oNewCell = this.oCrosstab.getDataArea().getCell(0, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkCell(this.oCrosstab.getDataArea(), 0, 0);
+
+			ok(oNewCell.getText() !== oOldCell.getText(),
+					"The cells in the old and the new data model must have different content.");
+		});
+		
+		test("Check the size properties of the data area", function() {
+			this.checkAreaSizeChanged(this.oCrosstab.getDataArea());
+		});
+	</script>
+
+</body>
+
+</html>

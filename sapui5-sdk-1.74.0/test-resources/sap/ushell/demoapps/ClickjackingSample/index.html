@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+    <!--
+    This is an example HTML page demonstrating how to embed the SAP Fiori launchpad in an iframe and switch off the click-jacking protection mechanism
+    using the post message interface. This is only required if the embedding HTML page performs domain relaxation. In any case, the SAP Fiori launchpad
+    (at least for the ABAP platform) only allows embedding on a page from the same origin. For hints how to weaken the click-jacking protection and enable
+    embedding across different domains see SAP note 2057847.
+    
+    This page does not use SAPUI5 by intention in order to demonstrate the framing behaviour of SAP Fiori launchpad in general.
+     -->
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>
+
+        <style>
+            html, body {
+                height: 100%;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+        </style>
+
+        <script src="//code.jquery.com/jquery-1.7.1.min.js"></script>
+        <script type="text/javascript">
+            // simulate domain relaxation in outer page
+            document.domain = document.domain.substring(document.domain.indexOf(".") + 1);
+
+            // disable clickjacking protection of embedded Fiori app by sending a reply
+            // to the message sent by the FLP page
+            // if the FLP recieves an answer from a window with the same origin than itself,
+            // the clickjacking protection is disabled (even if the outer window has set document.domain)
+            var fnClickjackingMessageHandler = function (oEvent) {
+                var oFioriFrame = document.getElementById("fiori-frame");
+
+                if (oEvent.source === oFioriFrame.contentWindow) {
+                    // message sent from the embedded frame; we send a reply 
+                    console.log("Received message event from Fiori frame: origin=" + oEvent.origin + "; data=" + oEvent.data)
+                    oEvent.source.postMessage("SAPFrameProtection*parent-unlocked", "*");
+                    // TODO: this message is required by ui5 impl; clarify with EP colleagues if they send it that way
+                }
+            }
+            window.addEventListener("message", fnClickjackingMessageHandler);
+
+            function loadFrame() {
+               var sLocation = $("#location").val(),
+                   oFrame = $("#fiori-frame"),
+                   sCurrentFrameSrc = oFrame.attr("src"),
+                   oMainDiv;
+
+               console.log("Loading URL: " + sLocation);
+               $("#fiori-frame").attr("src", sLocation);
+               if (sLocation === sCurrentFrameSrc) {
+                   oMainDiv = document.getElementById("main");
+                   oMainDiv.innerHTML = oMainDiv.innerHTML;
+               }
+
+               return false;    // avoid submit of form
+            }
+
+        </script>
+    </head>
+    <body>
+        <h2>Test page for embedding SAP Fiori launchpad in an IFRAME</h2>
+        <p>
+            <form autocomplete="on" onsubmit="return loadFrame();">
+	            Location:&nbsp;
+		        <input type="text" id="location" size="80" placeholder="Enter URL of embedded site"/>
+		        <button type="submit" title="Load the URL in the frame">Load</button>
+		    </form> 
+        </p>
+        <p>
+	        <div id="main" style="height: 100%; width: 100%;">
+	            <iframe id="fiori-frame" style="height: 100%; width: 100%;"></iframe>
+	        </div>
+        </p>
+    </body>
+</html>

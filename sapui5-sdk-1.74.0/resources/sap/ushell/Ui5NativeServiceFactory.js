@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define(["sap/ui/core/service/ServiceFactory"],function(S){"use strict";var u={_servicePromises:{},createServiceFactory:function(s){var o=this._servicePromises;var U=S.extend("sap.ushell.ui5Service."+s+"Factory",{createInstance:function(){var a=o[s];if(!a){a=new Promise(function(r,b){sap.ui.require(["sap/ushell/ui5service/"+s],function(c){var d;if(!c){b();}d=new c();r(d);});});o[s]=a;}return a;}});return new U();}};return u;});

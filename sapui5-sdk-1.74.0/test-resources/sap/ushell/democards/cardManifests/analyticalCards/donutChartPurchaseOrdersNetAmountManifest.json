@@ -1,0 +1,84 @@
+{
+    "sap.flp": {
+        "columns": "4",
+        "rows": "4"
+    },
+    "sap.app": {
+        "type": "card"
+    },
+    "sap.ui5": {
+        "services": {
+            "CardNavigationService": {
+                "factoryName": "sap.ushell.ui5service.CardNavigation"
+            }
+        }
+    },
+    "sap.card": {
+        "type": "Analytical",
+        "header": {
+            "type": "Numeric",
+            "data": {
+                "path": "/d/results/0/",
+                "request": {
+                    "url": "/sap/opu/odata/sap/SEPMRA_OVW/SEPMRA_C_OVW_PurOrdItemCube?sap-client=120&$format=json&sap-language=EN&$select=NetAmount,Currency&$inlinecount=allpages"
+                }
+            },
+            "title": "Purchase Orders",
+            "subTitle": "in Local Currency",
+            "unitOfMeasurement": "{Currency}",
+            "mainIndicator": {
+                "number": "{= parseFloat(${NetAmount}||0)/1000}",
+                "unit": "K"
+            },
+            "actions": [
+                {
+                    "type": "Navigation",
+                    "service": "CardNavigationService",
+                    "parameters": {
+                        "intentSemanticObject": "EPMSalesOrder",
+                        "intentAction": "manage_st"
+                    }
+                }
+            ]
+        },
+        "content": {
+            "chartType": "Donut",
+            "legend": {
+                "visible": true,
+                "position": "Right",
+                "alignment": "Top"
+            },
+            "plotArea": {
+                "dataLabel": {
+                    "visible": true,
+                    "showTotal": true
+                }
+            },
+            "title": {
+                "visible": true,
+                "text": "Net Amout by Top 5 Supplier",
+                "alignment": "Bottom"
+            },
+            "measureAxis": "size",
+            "dimensionAxis": "color",
+            "data": {
+                "path": "/d/results/",
+                "request": {
+                    "url": "/sap/opu/odata/sap/SEPMRA_OVW/SEPMRA_C_OVW_PurOrdItemCube?sap-client=120&$top=5&$format=json&sap-language=EN&$select=SupplierCompanyName,NetAmount,Currency&$inlinecount=allpages&$orderby=NetAmount desc"
+                }
+            },
+            "dimensions": [
+                {
+                    "label": "Supplier",
+                    "value": "{SupplierCompanyName}"
+                }
+            ],
+            "measures": [
+                {
+                    "label": "Amount",
+                    "value": "{NetAmount}"
+                }
+            ]
+        }
+    }
+}

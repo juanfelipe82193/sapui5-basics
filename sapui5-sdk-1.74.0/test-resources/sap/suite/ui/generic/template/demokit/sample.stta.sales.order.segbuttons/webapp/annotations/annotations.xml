@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+	<edmx:Reference Uri="/sap/bc/ui5_ui5/ui2/ushell/resources/sap/ushell/components/factsheet/vocabularies/UI.xml">
+		<edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/sap/STTA_SALES_ORDER_WD_20_SRV/$metadata">
+		<edmx:Include Alias="STTA_SALES_ORDER_WD_20_SRV" Namespace="STTA_SALES_ORDER_WD_20_SRV"/>
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="ManageSalesOrderWithSegButtons.STTA_SALES_ORDER_WD_20_SRV">
+			<!--===============================================================================
+                Entity Type from chosen collection 
+                ================================================================================-->
+			<Annotations Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrder_WD_20Type">
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="{@i18n>@SalesOrderItemLabel}"/>
+							<PropertyValue Property="Target" AnnotationPath="to_Item/@UI.LineItem"/>
+						</Record>
+					</Collection>
+				</Annotation>
+
+				<!-- BEGIN Table Tab Annotations -->
+				<Annotation Term="UI.LineItem" Qualifier="Reduced">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="SalesOrderItem"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Product"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="GrossAmount"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.SelectionVariant" Qualifier="Expensive">
+					<Record>
+						<PropertyValue Property="Text" String="{@i18n>@Expensive}">
+						</PropertyValue>
+						<PropertyValue Property="SelectOptions">
+							<Collection>
+								<Record Type="UI.SelectOptionType">
+									<PropertyValue Property="PropertyName"
+										PropertyPath="GrossAmount" />
+									<PropertyValue Property="Ranges">
+										<Collection>
+											<Record Type="UI.SelectionRangeType">
+												<PropertyValue Property="Option"
+													EnumMember="UI.SelectionRangeOptionType/GE" />
+												<PropertyValue Property="Low" String="5000" />
+											</Record>
+										</Collection>
+									</PropertyValue>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.SelectionPresentationVariant"
+					Qualifier="Cheap">
+					<Record>
+						<PropertyValue Property="Text" String="{@i18n>@Cheap}">
+						</PropertyValue>
+						<PropertyValue Property="SelectionVariant">
+							<Record>
+								<PropertyValue Property="Text" String="Cheap">
+								</PropertyValue>
+								<PropertyValue Property="SelectOptions">
+									<Collection>
+										<Record Type="UI.SelectOptionType">
+											<PropertyValue Property="PropertyName"
+												PropertyPath="GrossAmount" />
+											<PropertyValue Property="Ranges">
+												<Collection>
+													<Record Type="UI.SelectionRangeType">
+														<PropertyValue Property="Option"
+															EnumMember="UI.SelectionRangeOptionType/LT" />
+														<PropertyValue Property="Low" String="5000" />
+													</Record>
+												</Collection>
+											</PropertyValue>
+										</Record>
+									</Collection>
+								</PropertyValue>
+							</Record>
+						</PropertyValue>
+						<PropertyValue Property="PresentationVariant">
+							<Record>
+								<PropertyValue Property="Visualizations">
+									<Collection>
+										<AnnotationPath>@UI.LineItem#Reduced</AnnotationPath>
+									</Collection>
+								</PropertyValue>
+								<PropertyValue Property="SortOrder">
+									<Collection>
+										<Record>
+											<PropertyValue Property="Property"
+												PropertyPath="GrossAmount" />
+											<PropertyValue Property="Descending" Bool="false" />
+										</Record>
+									</Collection>
+								</PropertyValue>
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<!-- END Table Tab Annotations -->
+			
+			<!--===============================================================================
+                Entity Type from chosen navigation property
+                ================================================================================-->
+			<Annotations Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItem_WD_20Type">
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.CollectionFacet">
+							<PropertyValue Property="ID" String="GeneralInformation"/>
+							<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+							<PropertyValue Property="Facets">
+								<Collection>
+									<Record Type="UI.ReferenceFacet">
+										<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+										<PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+									</Record>
+								</Collection>
+							</PropertyValue>
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Schedule Lines"/>
+							<PropertyValue Property="Target" AnnotationPath="to_SalesOrderItemSL/@UI.LineItem"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.SelectionVariant" Qualifier="Test">
+                    <Record>
+                        <PropertyValue Property="Text" String="Net Amount greater than  1000 and Tax Amount less than equal to 600"/>
+                        <PropertyValue Property="SelectOptions">
+                            <Collection>
+                                <Record Type="UI.SelectOptionType">
+                                    <PropertyValue Property="PropertyName" PropertyPath="NetAmount"/>
+                                    <PropertyValue Property="Ranges">
+                                        <Collection>
+                                            <Record Type="UI.SelectionRangeType">
+                                                <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/GT"/>
+                                                <PropertyValue Property="Low" String="1000"/>
+                                                <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                                <Record Type="UI.SelectOptionType">
+                                    <PropertyValue Property="PropertyName" PropertyPath="TaxAmount"/>
+                                    <PropertyValue Property="Ranges">
+                                        <Collection>
+                                            <Record Type="UI.SelectionRangeType">
+                                                <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                                                <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/LE"/>
+                                                <PropertyValue Property="Low" String="600"/>
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+				<Annotation Term="UI.SelectionVariant" Qualifier="Expensive">
+					<Record>
+						<PropertyValue Property="Text" String="Greater than 3000 and Less than 5000">
+						</PropertyValue>
+						<PropertyValue Property="SelectOptions">
+							<Collection>
+								<Record Type="UI.SelectOptionType">
+									<PropertyValue Property="PropertyName"
+										PropertyPath="GrossAmount" />
+									<PropertyValue Property="Ranges">
+										<Collection>
+                                            <Record>
+                                                <PropertyValue Property="Sign"
+                                                               EnumMember="com.sap.vocabularies.UI.v1.SelectionRangeSignType/I" />
+                                                <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/BT"/>
+                                                <PropertyValue Property="Low" String="3000" />
+                                                <PropertyValue Property="High" String="5000" />
+                                            </Record>
+                                        </Collection>
+									</PropertyValue>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.SelectionVariant" Qualifier="HighlyExpensive">
+					<Record>
+						<PropertyValue Property="Text" String="Greater than 5000">
+						</PropertyValue>
+						<PropertyValue Property="SelectOptions">
+							<Collection>
+								<Record Type="UI.SelectOptionType">
+									<PropertyValue Property="PropertyName"
+										PropertyPath="GrossAmount" />
+									<PropertyValue Property="Ranges">
+										<Collection>
+											<Record Type="UI.SelectionRangeType">
+												<PropertyValue Property="Option"
+													EnumMember="UI.SelectionRangeOptionType/GE" />
+												<PropertyValue Property="Low" String="5000" />
+											</Record>
+										</Collection>
+									</PropertyValue>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.SelectionVariant" Qualifier="HighlyCheap">
+					<Record>
+						<PropertyValue Property="Text" String="Less than 1000">
+						</PropertyValue>
+						<PropertyValue Property="SelectOptions">
+							<Collection>
+								<Record Type="UI.SelectOptionType">
+									<PropertyValue Property="PropertyName"
+										PropertyPath="GrossAmount" />
+									<PropertyValue Property="Ranges">
+										<Collection>
+											<Record Type="UI.SelectionRangeType">
+												<PropertyValue Property="Option"
+													EnumMember="UI.SelectionRangeOptionType/LE" />
+												<PropertyValue Property="Low" String="1000" />
+											</Record>
+										</Collection>
+									</PropertyValue>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.SelectionPresentationVariant" Qualifier="Cheap">
+					<Record>
+						<PropertyValue Property="Text" String="Greater than 1000 and Less than 3000">
+						</PropertyValue>
+						<PropertyValue Property="SelectionVariant">
+							<Record>
+								<PropertyValue Property="Text" String="Greater than 1000 and Less than 3000">
+								</PropertyValue>
+								<PropertyValue Property="SelectOptions">
+									<Collection>
+										<Record Type="UI.SelectOptionType">
+											<PropertyValue Property="PropertyName" PropertyPath="GrossAmount" />
+											<PropertyValue Property="Ranges">
+												<Collection>
+													<Record>
+														<PropertyValue Property="Sign"
+																	EnumMember="com.sap.vocabularies.UI.v1.SelectionRangeSignType/I" />
+														<PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/BT"/>
+														<PropertyValue Property="Low" String="1000" />
+														<PropertyValue Property="High" String="3000" />
+													</Record>
+												</Collection>
+											</PropertyValue>
+										</Record>
+									</Collection>
+								</PropertyValue>
+							</Record>
+						</PropertyValue>
+						<PropertyValue Property="PresentationVariant">
+							<Record>
+								
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+
+			<Annotations Target="STTA_SALES_ORDER_WD_20_SRV.C_STTA_SalesOrderItemSL_WD_20Type">
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.CollectionFacet">
+							<PropertyValue Property="ID" String="GeneralInformation"/>
+							<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+							<PropertyValue Property="Facets">
+								<Collection>
+									<Record Type="UI.ReferenceFacet">
+										<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+										<PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+									</Record>
+								</Collection>
+							</PropertyValue>
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>			
+
+<!--  Empty Target ????? 
+			<Annotations Target="">
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.CollectionFacet">
+							<PropertyValue Property="ID" String="GeneralInformation"/>
+							<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+							<PropertyValue Property="Facets">
+								<Collection>
+									<Record Type="UI.ReferenceFacet">
+										<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+										<PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+									</Record>
+								</Collection>
+							</PropertyValue>
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+-->			
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

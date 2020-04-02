@@ -1,0 +1,294 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.gantt.Gantt</title>
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.gantt, sap.m"
+	data-sap-ui-theme="sap_bluecrystal" src="../../../../resources/sap-ui-core.js">
+</script>
+
+<script>
+
+	jQuery.sap.require("sap/ui/thirdparty/d3");
+	// test data path
+	var sPath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf("/")) + "/qunit/data/";
+
+	jQuery.sap.require("sap.gantt.control.Toolbar");
+	jQuery.sap.require("sap.gantt.legend.ListLegend");
+
+	// create legend 
+	var oLegendContainer = new sap.gantt.legend.LegendContainer();
+
+	var aListLegendShapes = [new sap.gantt.config.Shape({
+		key: "order_overlap_shortage",
+		shapeDataName: "order_overlap_shortage",
+		modeKeys: ["A", "D"],
+		level: 9,
+		shapeClassName: "sap.gantt.shape.Rectangle",
+		switchOfCheckBox: "checked",
+		shapeProperties: {
+			legend: "order overlap shortage",
+			title: "order overlap shortage",
+			rx: 0,
+			ry: 0,
+			isDuration: true,
+			yBias: 7,
+			strokeWidth: 1,
+			fill:"red",
+			stroke:"#FFF",
+			height: 3
+		}
+	}), new sap.gantt.config.Shape({
+		key: "ubc_overcapacity_projection",
+		shapeDataName: "ubc_overcapacity",
+		modeKeys: ["C"],
+		level: 8,
+		shapeClassName: "sap.gantt.shape.Path",
+		shapeProperties: {
+			legend: "ubc overcapacity projection",
+			title: "ubc overcapacity projection",
+			time: "{startTime}",
+			endTime: "{endTime}",
+			rx: 0,
+			ry: 0,
+			isDuration: true,
+			fillOpacity: 0.1,
+			stroke: "@sapUiChartBad",
+			fill: "@sapUiChartBad"
+		}
+	}), new sap.gantt.config.Shape({
+		key: "phase",
+		shapeDataName: "phase",
+		modeKeys: ["D"],
+		level: 30,
+		shapeClassName: "sap.gantt.shape.ext.Chevron",
+		shapeProperties: {
+			legend: "phase",
+			title: "phase",
+			time: "{startTime}",
+			endTime: "{endTime}",
+			title: "{tooltip}",
+			fill: "#B6D957",
+			isDuration: true
+		}
+	})];
+
+	var oListLegend = new sap.gantt.legend.ListLegend({
+		fontSize: 15,
+		shapes: aListLegendShapes
+	});
+	oListLegend.attachCheckBoxChange(onCheckboxSelect, this);
+
+	oLegendContainer.addLegendSection(new sap.m.Page({
+		title : 'Shapes',
+		content : oListLegend
+	}));
+
+	function onCheckboxSelect (oEvent) {
+		var oParameters = oEvent.getParameters();
+		var sValue = oParameters.value ? "checked" : "unchecked";
+		sap.m.MessageToast.show("The checkbox of " + oParameters.legendType + " is " + sValue + "\n", {width: "50em", my: "center center", at: "center center", duration: 2000 });
+	};
+
+	var oZoomInfo = {
+			base: {
+				fScale: 3840000,
+				sGranularity: "4day"
+			},
+			determinedByChartWidth: {
+				fMinRate: 0.05659875635251411,
+				fSuitableRate: 1.5979355938783355
+			},
+			determinedByConfig: {
+				fMaxRate: 384,
+				fMinRate: 0.02185792349726776,
+				fRate: 1
+			},
+			iChartWidth: 1312
+	};
+
+	var aModesConfig = [
+		sap.gantt.config.DEFAULT_MODE,
+		new sap.gantt.config.Mode({
+			key: "D",
+			text: "Activity Mode",
+			icon: "sap-icon://activity-items"
+		}), new sap.gantt.config.Mode({
+			key: "A",
+			text: "Document Mode",
+			icon: "sap-icon://document"
+		})
+	];
+
+	var aToolbarSchemesConfig = [ 
+		new sap.gantt.config.ToolbarScheme({
+			key: "GLOBAL_TOOLBAR",
+			sourceSelect: new sap.gantt.config.ToolbarGroup({
+				position: "L1",
+				overflowPriority: sap.m.OverflowToolbarPriority.High
+			}),
+			layout: new sap.gantt.config.LayoutGroup({
+				position: "L2",
+				overflowPriority: sap.m.OverflowToolbarPriority.Low,
+				enableRichStyle: false
+			}),
+			customToolbarItems: new sap.gantt.config.ToolbarGroup({
+				position: "L3",
+				overflowPriority: sap.m.OverflowToolbarPriority.High
+			}),
+			expandChart: new sap.gantt.config.ExpandChartGroup({
+				position: "L4",
+				overflowPriority: sap.m.OverflowToolbarPriority.Low,
+				expandCharts: [
+					new sap.gantt.config.ExpandChart({
+						isExpand: true,
+						icon: "sap-icon://expand",
+						tooltip: "Show Utilization.",
+						chartSchemeKeys: ["ulc_main"]
+					}),
+					new sap.gantt.config.ExpandChart({
+						isExpand: false,
+						icon: "sap-icon://collapse",
+						tooltip: "Hide Utilization.",
+						chartSchemeKeys: ["ulc_main"]
+					}),
+					new sap.gantt.config.ExpandChart({
+						isExpand: true,
+						icon: "sap-icon://arrow-bottom",
+						tooltip: "Show Detail.",
+						chartSchemeKeys: ["ac_expand_overlap", "bc_hr"]
+					}),
+					new sap.gantt.config.ExpandChart({
+						isExpand: false,
+						icon: "sap-icon://arrow-top",
+						tooltip: "Hide Detail.",
+						chartSchemeKeys: ["ac_expand_overlap", "bc_hr"]
+					})
+				],
+			}),
+			expandTree: new sap.gantt.config.ToolbarGroup({
+				position: "L3",
+				overflowPriority: sap.m.OverflowToolbarPriority.Low
+			}),
+			timeZoom: new sap.gantt.config.ToolbarGroup({
+				position: "R4",
+				overflowPriority: sap.m.OverflowToolbarPriority.NeverOverflow
+			}),
+			legend: new sap.gantt.config.ToolbarGroup({
+				position: "R3",
+				overflowPriority: sap.m.OverflowToolbarPriority.Low
+			}),
+			settings: new sap.gantt.config.SettingGroup({
+				position: "R2",
+				overflowPriority: sap.m.OverflowToolbarPriority.Low,
+				items: sap.gantt.config.DEFAULT_TOOLBAR_SETTING_ITEMS.concat(new sap.gantt.config.SettingItem({
+					key: "CUST_SETTING1",
+					checked: true,
+					displayText: "Customized Setting 1",
+					tooltip: "Narrow Down"
+					}))
+				}),
+			mode: new sap.gantt.config.ModeGroup({
+				position: "R1",
+				overflowPriority: sap.m.OverflowToolbarPriority.Low,
+				modeKeys: ["A", "D"]
+			})
+		})];
+
+	var aHierarchiesConfig = [];
+	// Hierarchy for TOL orders
+	aHierarchiesConfig.push(new sap.gantt.config.Hierarchy({
+		key: "TOL",
+		text: "Freight Order",
+		toolbarSchemeKey: "LOCAL_TOOLBAR",
+		activeModeKey: "D"
+	}));
+	aHierarchiesConfig.push(new sap.gantt.config.Hierarchy({
+		key: "TRUCK",
+		text: "Truck",
+		toolbarSchemeKey: "LOCAL_TOOLBAR",
+		activeModeKey: "A",
+	}));
+	aHierarchiesConfig.push(new sap.gantt.config.Hierarchy({
+		key: "RESOURCES",
+		text: "Resources",
+		toolbarSchemeKey: "LOCAL_TOOLBAR",
+		activeModeKey: "A"
+	}));
+	
+	var aContainerLayouts = [
+		new sap.gantt.config.ContainerLayout({
+			key: "d1",
+			text: "Single: Resources",
+			toolbarSchemeKey: "GLOBAL_TOOLBAR",
+			ganttChartLayouts: [new sap.gantt.config.GanttChartLayout({
+								activeModeKey: "D",
+								hierarchyKey: "RESOURCES"
+							})]
+						}), 
+		new sap.gantt.config.ContainerLayout({
+			key: "d2",
+			text: "Dual: Resources & Orders",
+			toolbarSchemeKey: "GLOBAL_TOOLBAR",
+			ganttChartLayouts: [new sap.gantt.config.GanttChartLayout({
+					activeModeKey: "A",
+					hierarchyKey: "RESOURCES"
+				}), new sap.gantt.config.GanttChartLayout({
+					activeModeKey: "D",
+					hierarchyKey: "TOL"
+				})]
+			}),
+		new sap.gantt.config.ContainerLayout({
+			key: "d3",
+			text: "Single: Freight Order",
+			toolbarSchemeKey: "GLOBAL_TOOLBAR",
+			ganttChartLayouts: [new sap.gantt.config.GanttChartLayout({
+						activeModeKey: "D",
+						hierarchyKey: "TOL"
+					})]
+				})
+			];
+
+	var oToolBar = new sap.gantt.control.Toolbar({
+		sourceId: "d2",
+		modes: aModesConfig,
+		toolbarSchemes: aToolbarSchemesConfig,
+		hierarchies: aHierarchiesConfig,
+		containerLayouts: aContainerLayouts,
+		zoomInfo: oZoomInfo,
+		legend: new sap.gantt.control.AssociateContainer({
+			content: oLegendContainer.getId()
+		}),
+		type:"GLOBAL"
+	});
+	oToolBar.placeAt("content");
+	oToolBar.attachSourceChange(printEvent, this);
+	oToolBar.attachSourceChange(changeSource, this);
+	oToolBar.attachLayoutChange(printEvent, this);
+	oToolBar.attachSettingsChange(printEvent, this);
+	oToolBar.attachExpandChartChange(printEvent, this);
+	oToolBar.attachExpandTreeChange(printEvent, this);
+	oToolBar.attachZoomRateChange(printEvent, this);
+	oToolBar.attachModeChange(printEvent, this);
+	function printEvent (oEvent) {
+		jQuery.sap.require("sap.m.MessageToast");
+		sap.m.MessageToast.show(oEvent.getId() + ":" + JSON.stringify(oEvent.getParameters()));
+	};
+
+	function changeSource (oEvent) {
+		oToolBar.setSourceId(oEvent.getParameters().id);
+	};
+</script>
+</head>
+<body id="body" class="sapUiBody">
+	<h1 id="header">
+		Test Page for
+		<code>sap.gantt.control.ToolBar</code>
+	</h1>
+	<div id="content" style="width: 98vw" class="sapUiSizeCompact"></div>
+</body>
+</html>

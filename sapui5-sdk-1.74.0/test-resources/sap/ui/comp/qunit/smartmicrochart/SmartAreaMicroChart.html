@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.suite.ui.microchart.SmartAreaMicroChart</title>
+
+<!--[if lte IE 9]><script>
+(function() {
+	var baseTag = document.getElementsByTagName('base')[0];
+	baseTag.href = baseTag.href;
+})();
+</script><![endif]-->
+
+<script src="../../shared-config.js"></script>
+<script id="sap-ui-bootstrap"
+	src="../../../../../../resources/sap-ui-core.js"
+	data-sap-ui-noConflict="true"
+	data-sap-ui-libs="sap.ui.comp,sap.suite.ui.microchart,sap.m">
+</script>
+
+<script>
+	sap.ui.require([
+		"sap/ui/core/util/MockServer",
+		"sap/ui/comp/smartmicrochart/SmartAreaMicroChart",
+		"sap/ui/model/odata/v2/ODataModel",
+		"sap/ui/core/Item",
+		"sap/m/VBox",
+		"sap/m/App",
+		"sap/m/Panel",
+		"sap/m/Page",
+		"sap/m/Label",
+		"sap/m/Select"
+	], function (MockServer, SmartAreaMicroChart, ODataModel, Item, VBox, App, Panel, Page, Label, Select) {
+		"use strict";
+
+		var oMockServerNeutralCriticality = new MockServer({
+			rootUri : "smartmicrochart.SmartAreaMicroChart/neutral/"
+		});
+		var oMockServerTargetCriticality = new MockServer({
+			rootUri : "smartmicrochart.SmartAreaMicroChart/target/"
+		});
+		var oMockServerMinimizeCriticality = new MockServer({
+			rootUri : "smartmicrochart.SmartAreaMicroChart/minimize/"
+		});
+		var oMockServerMaximizeCriticality = new MockServer({
+			rootUri : "smartmicrochart.SmartAreaMicroChart/maximize/"
+		});
+		var oMockServerMaximizeCalendar = new MockServer({
+			rootUri : "smartmicrochart.SmartAreaMicroChart/calendar/"
+		});
+		var oMockServerMaximizeSemantic = new MockServer({
+			rootUri : "smartmicrochart.SmartAreaMicroChart/semantic/"
+		});
+		var oMockServerMaximizeSaptext= new MockServer({
+			rootUri : "smartmicrochart.SmartAreaMicroChart/saptext/"
+		});
+		oMockServerNeutralCriticality.simulate("mockserver/metadataNeutral.xml", {
+			sMockdataBaseUrl : "mockserver"
+		});
+		oMockServerTargetCriticality.simulate("mockserver/metadataTarget.xml", {
+			sMockdataBaseUrl : "mockserver"
+		});
+		oMockServerMinimizeCriticality.simulate("mockserver/metadataMinimize.xml", {
+			sMockdataBaseUrl : "mockserver"
+		});
+		oMockServerMaximizeCriticality.simulate("mockserver/metadataMaximize.xml", {
+			sMockdataBaseUrl : "mockserver"
+		});
+		oMockServerMaximizeCalendar.simulate("mockserver/metadataIsCalenderYear.xml", {
+			sMockdataBaseUrl : "mockserver"
+		});
+		oMockServerMaximizeSemantic.simulate("mockserver/metadataSapSemantics.xml", {
+			sMockdataBaseUrl : "mockserver"
+		});
+		oMockServerMaximizeSaptext.simulate("mockserver/metadataSapText.xml", {
+			sMockdataBaseUrl : "mockserver"
+		});
+		oMockServerNeutralCriticality.start();
+		oMockServerTargetCriticality.start();
+		oMockServerMinimizeCriticality.start();
+		oMockServerMaximizeCriticality.start();
+		oMockServerMaximizeCalendar.start();
+		oMockServerMaximizeSemantic.start();
+		oMockServerMaximizeSaptext.start();
+
+		var oPage = new Page({
+			title: "SmartAreaMicroChart Testpage",
+			enableScrolling: false
+		}).addStyleClass("sapUiContentPadding");
+
+		var oPanel = new Panel();
+
+		function fBuildSamc(sText, sEntitySet, sModelUri, bHasQualifier) {
+			var oLabel = new Label();
+			oLabel.setText(sText);
+			var oSAMC = new SmartAreaMicroChart({
+				entitySet: sEntitySet,
+				chartBindingPath: "/" + sEntitySet
+			}).addStyleClass("sapUiSmallMarginBottom");
+			if (bHasQualifier) {
+				oSAMC.data("chartQualifier", "AreaChartQualifier");
+			}
+			oSAMC._bIsInitialized = false;
+			oSAMC.setModel(new ODataModel(sModelUri, true));
+			oPanel.addContent(oLabel);
+			oPanel.addContent(oSAMC);
+		}
+
+		var oModes = {
+			none: "Show none",
+			all: "Show all",
+			neutral: "Neutral - No Criticality Calculation",
+			target: "Target Criticality",
+			maximize: "Maximize Criticality",
+			minimize: "Minimize Criticality",
+			calendar: "Example with isCalendarYear annotation",
+			semantic: "Example with sap semantic annotation",
+			saptext: "Example with sap text"
+		};
+
+		var oFactories = {
+			neutral : fBuildSamc.bind(null, oModes.neutral, "Series", "smartmicrochart.SmartAreaMicroChart/neutral/", true),
+			target : fBuildSamc.bind(null, oModes.target, "Series", "smartmicrochart.SmartAreaMicroChart/target/", false),
+			maximize : fBuildSamc.bind(null, oModes.maximize, "Series", "smartmicrochart.SmartAreaMicroChart/maximize/", false),
+			minimize : fBuildSamc.bind(null, oModes.minimize, "Series", "smartmicrochart.SmartAreaMicroChart/minimize/", false),
+			calendar : fBuildSamc.bind(null, oModes.calendar, "seriesIsCalendarYear", "smartmicrochart.SmartAreaMicroChart/calendar/", false),
+			semantic : fBuildSamc.bind(null, oModes.semantic, "seriesSapSemantics", "smartmicrochart.SmartAreaMicroChart/semantic/", false),
+			saptext : fBuildSamc.bind(null, oModes.saptext, "seriesSapText", "smartmicrochart.SmartAreaMicroChart/saptext/", false)
+		};
+
+		var reloadModels = function(sKey) {
+			oPanel.destroyContent();
+			if (oFactories.hasOwnProperty(sKey)) {
+				oFactories[sKey]();
+			} else if (sKey === "all") {
+				for (var fnKey in oFactories) {
+					oFactories[fnKey]();
+				}
+			}
+		};
+
+		var oModeSelect = new Select("mode", {
+			change: function(oEvt) {
+				reloadModels(oEvt.getParameter("selectedItem").getKey());
+			}
+		});
+
+		for (var oMode in oModes) {
+			oModeSelect.addItem(new Item("mode-" + oMode, {
+				key: oMode,
+				text: oModes[oMode]
+			}))
+		}
+
+		oPage.addContent(new VBox({
+			items: [oPanel, oModeSelect]
+		}));
+
+		var oApp = new App({
+			pages: [
+				oPage
+			]
+		});
+		oApp.placeAt("content");
+	});
+
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+	<div id="content"></div>
+</body>
+</html>

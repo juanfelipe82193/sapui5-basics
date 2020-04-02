@@ -1,0 +1,230 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Control Development Guidelines: Theming/CSS</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="For themes and CSS for control development in SAPUI5, the following guidelines apply."><meta name="description" content="For themes and CSS for control development in SAPUI5, the following guidelines apply."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"bafc6867041644a9b596370e48a106ee.html","previousTopicHref":"4549da61e2d949d6a3d20ad8a9d17a6f.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio5e08ff90b7434990bcb459513d8c52c4"><h1 class="title topictitle1" hidden>Control Development Guidelines: Theming/CSS </h1><div class="body conbody"><p class="shortdesc" hidden>For themes and CSS for control development in <span class="ph"><span class="ph pname">SAPUI5</span></span>, the following
+guidelines apply.</p>
+<div class="section"><section class="section" type="General Guidelines"><h2 class="section_title" style="font-size: 1.15em;">General Guidelines</h2>
+
+<div class="p">
+<ul class="ul" id="loio5e08ff90b7434990bcb459513d8c52c4__ul_r1y_z1w_np">
+<li class="li">
+<p class="p">Write semicolons, even where optional.</p>
+</li>
+<li class="li">
+<p class="p">Use <samp class="ph codeph">rem</samp> for dimensions; use <samp class="ph codeph">px</samp> only for dimensions that do not depend on the font size.</p>
+</li>
+<li class="li">
+<p class="p">The root element of a control should come without outer margins; add any required padding inside. Root margins are owned by the
+parent control.</p>
+</li>
+<li class="li">
+<p class="p">Do not hard-code any colors, use LESS parameters and color calculations instead; this is also recommended for other significant theme
+aspects such as fonts and background images.</p>
+</li>
+<li class="li">
+<p class="p">Use other LESS features moderately. The more LESS processing happens, the less clear it is where the runtime CSS originates from.</p>
+</li>
+<li class="li">
+<p class="p">Do <strong class="ph b">not</strong> style HTML elements directly; all selectors must include a <span class="ph"><span class="ph pname">SAPUI5</span></span>-specific CSS class to avoid affecting non-owned HTML.</p>
+</li>
+<li class="li">
+<p class="p">Avoid the star selector (such as: <samp class="ph codeph">* { color: black;}</samp>) in CSS, in particular without a &quot;direct child&quot; selector
+(&quot;&gt;&quot;) in front of it (for performance reasons).</p>
+</li>
+<li class="li">
+<p class="p">Only use inline CSS for control-instance specific style, for example the button width.</p>
+</li>
+<li class="li">
+<p class="p">Do <strong class="ph b">not</strong> use <samp class="ph codeph">!important</samp> as it makes custom adaptations more difficult; use more specific selectors instead.</p>
+<p class="p">There are rare justified exceptions, but they need to be documented.</p>
+</li>
+<li class="li">
+<p class="p">Put browser-prefixed properties before the un-prefixed variant.</p>
+</li>
+<li class="li">
+<p class="p">When the visuals of certain controls are different depending on the context/container where they are used, use CSS cascades along
+with marker CSS classes in the parent control:</p>
+<ul class="ul" id="loio5e08ff90b7434990bcb459513d8c52c4__ul_mb2_lbw_np">
+<li class="li">
+<p class="p">The area/container should write a certain marker CSS class to the HTML and document this CSS class in its JSDoc.</p>
+</li>
+<li class="li">
+<p class="p">The documentation should mention the purpose and contract/meaning of this class, for example, that it is meant to modify the
+appearance of children in a way that better fits table cells, toolbars, or headers.</p>
+</li>
+<li class="li">
+<p class="p">This CSS class may not have any CSS styles attached. It is a pure marker.</p>
+</li>
+<li class="li">
+<p class="p">This CSS class has the suffix <samp class="ph codeph">-CTX</samp> (e.g. <samp class="ph codeph">sapUiTable-CTX</samp> or
+<samp class="ph codeph">sapUiBorderless-CTX</samp>) to make it distinguishable from &quot;normal&quot; CSS class names.</p>
+</li>
+<li class="li">
+<p class="p">Controls that want to modify their appearance in such an area use the marker class in a cascade: <samp class="ph codeph">.sapUiTable-CTX .sapUiInput { border: none; }</samp></p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section></div>
+<div class="section"><section class="section" type="Naming"><h2 class="section_title" style="font-size: 1.15em;">Naming</h2>
+
+<p class="p">The following naming guidelines apply:</p>
+<ul class="ul" id="loio5e08ff90b7434990bcb459513d8c52c4__ul_o4r_tbw_np">
+<li class="li">
+<p class="p">All CSS classes must begin with the <samp class="ph codeph">sapUi</samp> prefix (or <samp class="ph codeph">sapM</samp> in the sap.m library). Exception: some global CSS classes
+used in the core start with &quot;sap-&quot;.</p>
+</li>
+<li class="li">
+<p class="p">For each control there must be one unique control-specific prefix for CSS classes.</p>
+<p class="p">For example, <samp class="ph codeph">sapUiBtn</samp> for a <samp class="ph codeph">Button</samp> control, or <samp class="ph codeph">sapMITB</samp> for an <samp class="ph codeph">IconTabBar</samp> in the
+<samp class="ph codeph">sap.m</samp> library. This class must be written to the HTML root element of the control. All CSS classes within the HTML
+of this control must append a suffix to this class name, for example: <samp class="ph codeph">sapUiBtnInner</samp> or
+<samp class="ph codeph">sapMITBHeader</samp>.</p>
+</li>
+</ul>
+</section></div>
+<div class="section"><section class="section" type="Images"><h2 class="section_title" style="font-size: 1.15em;">Images</h2>
+
+<p class="p">Themes (including &quot;base&quot;) should only refer to existing images inside that theme. Images will be loaded relative to the theme where they are
+referenced (see LESS option <samp class="ph codeph">&quot;relativeUrls&quot;</samp>)</p>
+<p class="p">If an image URL defined in <samp class="ph codeph">base</samp> stays active in another theme <samp class="ph codeph">&apos;mytheme&apos;</samp>, derived from <samp class="ph codeph">base</samp>,
+LESS will calculate a relative URL that points from the <samp class="ph codeph">mytheme/library.css</samp> to the <samp class="ph codeph">base/library.css</samp>.</p>
+<p class="p">Similar path calculation is necessary when the URL is defined in another library (e.g. from <samp class="ph codeph">sap/m/themes/mytheme/library.css</samp>
+to<samp class="ph codeph"> sap/ui/core/themes/base/image.png</samp>). </p>
+<p class="p">These URL transformations assume a single repository for all sources. When resources for different themes or libraries are located in different
+libraries, such relative URLs might not work. </p>
+<p class="p">To override an image within the base theme an additional rule has to be added to the individual theme referencing the image. Otherwise the base
+image will be loaded.</p>
+</section></div>
+<div class="section"><section class="section" type="LESS Theme Parameters"><h2 class="section_title" style="font-size: 1.15em;">LESS Theme Parameters</h2>
+
+<div class="p">For LESS theme parameters, the following guidelines apply:<ul class="ul" id="loio5e08ff90b7434990bcb459513d8c52c4__ul_grr_ybw_np">
+<li class="li">
+<p class="p">Use the correct theme parameter - do not find by color value, but by semantics. In general, let the visual designers give the correct
+parameter to use.</p>
+<p class="p">If finding a color for a text, do not use any border or background color parameter. Start with <samp class="ph codeph">@sapUiText</samp> and try to
+find something more specific such as <samp class="ph codeph">@sapUiHeaderText</samp>. Use parameters such as <samp class="ph codeph">@sapUiTextInverted</samp>
+for bright-on-dark scenarios.</p>
+<p class="p">If no suitable parameter exists, derive the color by calculation from a suitable parameter.</p>
+</li>
+<li class="li">
+<p class="p">Do <strong class="ph b">not</strong> add parameters to the public API (using annotations) without sufficient clarification with designers and product
+owners.</p>
+</li>
+<li class="li">
+<p class="p">If you create your own local parameters, you must ensure that the names
+you define are unique by using name(space) prefixes.</p>
+<p class="p">For <span class="ph emphasis emphasis">control-specific</span> parameters in
+<samp class="ph codeph">*.less</samp> files, use a combination of the library name
+and the <samp class="ph codeph">*.less</samp> file name for the prefix. Start with an
+underscore. Separate each part of the library namespace and the file
+name from each other using underscores as well.</p>
+<aside class="note tip" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Tip</strong></div>
+<p class="p">For example, you can define the following prefix:</p><p class="p"><span class="ph emphasis emphasis">Library</span>: <samp class="ph codeph">sap.ui.core</samp></p><p class="p"><span class="ph emphasis emphasis">File</span>:
+<samp class="ph codeph">sap/ui/core/themes/base/MyControl.less</samp></p><p class="p"><span class="ph emphasis emphasis">Prefix</span>:
+<samp class="ph codeph">@_sap_ui_core_MyControl_</samp></p></aside>
+<p class="p">For <span class="ph emphasis emphasis">library-specific</span> parameters in
+<samp class="ph codeph">library.source.less</samp> files, use the library name for
+the prefix. Start with an underscore. Separate each part of the library
+namespace from each other using underscores.</p>
+<aside class="note tip" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Tip</strong></div>
+<p class="p">For example, you can define the following prefix:</p><p class="p"><span class="ph emphasis emphasis">Library</span>: <samp class="ph codeph">sap.ui.core</samp></p><p class="p"><span class="ph emphasis emphasis">File</span>:
+<samp class="ph codeph">sap/ui/core/themes/base/library.source.less</samp></p><p class="p"><span class="ph emphasis emphasis">Prefix</span>: <samp class="ph codeph">@_sap_ui_core_</samp></p></aside>
+<aside class="note caution" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Caution</strong></div>
+<p>Local parameters themselves must
+<span class="ph emphasis emphasis">not</span> contain underscores. For example, do not
+write <samp class="ph codeph">@_sap_ui_core_MyControl_Some_Color</samp>, but write
+<samp class="ph codeph">@_sap_ui_core_MyControl_<span class="ph emphasis emphasis">SomeColor</span></samp>
+instead.</p></aside>
+</li>
+<li class="li">When defining URLs as parameters use the proper <samp class="ph codeph">url()</samp> format: <samp class="ph codeph">@sapUiMyUrl: url(./path/to/img.png)</samp><ul class="ul" id="loio5e08ff90b7434990bcb459513d8c52c4__ul_qzf_cmv_mx">
+<li class="li">
+<p class="p"> Do <span class="ph emphasis emphasis">not</span> use escaped strings (~): <samp class="ph codeph">@sapUiMyUrl: ~&quot;path/to/img.png&quot; </samp></p>
+</li>
+<li class="li">
+<p class="p">Do <span class="ph emphasis emphasis">not</span> use absolute URLs: <samp class="ph codeph">@sapUiMyUrl: url(/absolute/path/to/img.png)</samp></p>
+</li>
+</ul></li>
+</ul></div>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,150 @@
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="/sap/opu/odata/iwfnd/CatalogService;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='QJ9_601')/$value">
+    <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="/sap/opu/odata/iwfnd/CatalogService;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='QJ9_601')/$value">
+    <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="/sap/opu/odata/iwfnd/CatalogService;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='QJ9_601')/$value">
+    <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="/sap/opu/odata/SAP/IZ_EASIPROJECT_CDS/$metadata">
+    <edmx:Include Namespace="sap.com.cds_iz_easiproject" Alias="SAP"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="iz_easiproject_cds_van.v1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+
+		<Annotations Target="CZ_EASILINEITEM_CDS.CZ_EASILINEITEMS_SADLType/CompanyCode">
+			<Annotation Term="Common.ValueList">
+				<Record>
+					<PropertyValue Property="CollectionPath" String="CZ_EASILINEITEMS_SADL"/>
+					<PropertyValue Bool="false" Property="SearchSupported"/>
+					<PropertyValue Property="Parameters">
+						<Collection>
+							<Record Type="Common.ValueListParameterOut">
+								<PropertyValue Property="LocalDataProperty" PropertyPath="CompanyCode"/>
+								<PropertyValue Property="ValueListProperty" String="CompanyCode"/>
+							</Record>
+						</Collection>
+					</PropertyValue>
+					<PropertyValue Property="PresentationVariantQualifier" String="Top3"/>
+				</Record>
+			</Annotation>
+		</Annotations>
+
+		<Annotations Target="CZ_EASILINEITEM_CDS.CZ_EASILINEITEMS_SADLType/CostCenter">
+			<Annotation Term="Common.ValueList">
+				<Record>
+					<PropertyValue Property="CollectionPath" String="CZ_EASILINEITEMS_SADL"/>
+					<PropertyValue Bool="false" Property="SearchSupported"/>
+					<PropertyValue Property="Parameters">
+						<Collection>
+							<Record Type="Common.ValueListParameterOut">
+								<PropertyValue Property="LocalDataProperty" PropertyPath="CostCenter"/>
+								<PropertyValue Property="ValueListProperty" String="CostCenter"/>
+							</Record>
+							<Record Type="Common.ValueListParameterIn">
+								<PropertyValue Property="LocalDataProperty" PropertyPath="CompanyCode"/>
+								<PropertyValue Property="ValueListProperty" String="CompanyCode"/>
+							</Record>
+						</Collection>
+					</PropertyValue>
+					<PropertyValue Property="PresentationVariantQualifier" String="Donut"/>
+				</Record>
+			</Annotation>
+		</Annotations>
+
+      <Annotations Target="CZ_EASILINEITEM_CDS.CZ_EASILINEITEMS_SADLType">
+
+
+        <Annotation Term="com.sap.vocabularies.UI.v1.PresentationVariant" Qualifier="Donut">
+            <Record>
+                <PropertyValue Property="SortOrder" >
+                	<Collection>
+                		<Record Type="Common.SortOrderType">
+                			<PropertyValue Property="Property" PropertyPath="AmountInCompanyCodeCurrency"/>
+                			<PropertyValue Property="Descending" Bool="false"/>
+						</Record>
+					</Collection>
+                </PropertyValue>
+                <PropertyValue Property="Visualizations">
+                    <Collection>
+                        <AnnotationPath>@com.sap.vocabularies.UI.v1.Chart#Donut</AnnotationPath>
+                    </Collection>
+                </PropertyValue>
+            </Record>
+        </Annotation>
+        <Annotation Term="UI.Chart" Qualifier="Donut">
+    		<Record>
+    			<PropertyValue Property="Measures">
+    				<Collection>
+    					<PropertyPath>AmountInCompanyCodeCurrency</PropertyPath>
+    				</Collection>
+    			</PropertyValue>
+    			<PropertyValue Property="Dimensions">
+    				<Collection>
+    					<PropertyPath>CostCenter</PropertyPath>
+    				</Collection>
+    			</PropertyValue>
+    			<PropertyValue Property="ChartType" EnumMember="UI.ChartType/Donut"/>
+    		</Record>
+    	</Annotation>
+
+        <Annotation Term="com.sap.vocabularies.UI.v1.PresentationVariant" Qualifier="Top3">
+            <Record>
+                <PropertyValue Property="SortOrder" >
+                	<Collection>
+                		<Record Type="Common.SortOrderType">
+                			<PropertyValue Property="Property" PropertyPath="AmountInCompanyCodeCurrency"/>
+                			<PropertyValue Property="Descending" Bool="false"/>
+						</Record>
+					</Collection>
+                </PropertyValue>
+                <PropertyValue Property="Visualizations">
+                    <Collection>
+                        <AnnotationPath>@com.sap.vocabularies.UI.v1.Chart#ActualCostsTop3</AnnotationPath>
+                    </Collection>
+                </PropertyValue>
+            </Record>
+        </Annotation>
+        <Annotation Term="UI.Chart" Qualifier="ActualCostsTop3">
+    		<Record>
+    			<PropertyValue Property="Measures">
+    				<Collection>
+    					<PropertyPath>AmountInCompanyCodeCurrency</PropertyPath>
+    				</Collection>
+    			</PropertyValue>
+    			<PropertyValue Property="Dimensions">
+    				<Collection>
+    					<PropertyPath>CompanyCode</PropertyPath>
+    				</Collection>
+    			</PropertyValue>
+    			<PropertyValue Property="ChartType" EnumMember="UI.ChartType/Bar"/>
+    		</Record>
+    	</Annotation>
+
+		<Annotation Term="UI.SelectionFields">
+			<Collection>
+				<PropertyPath>AmountInCompanyCodeCurrency</PropertyPath>
+				<PropertyPath>PostingDate</PropertyPath>
+				<PropertyPath>CompanyCode</PropertyPath>
+				<PropertyPath>CostCenter</PropertyPath>
+			</Collection>
+		</Annotation>
+		<!-- <Annotation Term="UI.LineItem">
+			<Collection>
+				<Record Type="UI.DataField">
+					<PropertyValue Property="Value" Path="PostingDate"/>
+				</Record>
+				<Record Type="UI.DataField">
+					<PropertyValue Property="Value" Path="AmountInCompanyCodeCurrency"/>
+				</Record>
+				<Record Type="UI.DataField">
+					<PropertyValue Property="Value" Path="CompanyCode"/>
+				</Record>
+			</Collection>
+		</Annotation> -->
+	  </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

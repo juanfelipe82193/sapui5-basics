@@ -1,0 +1,6 @@
+/*!
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+
+(c) Copyright 2009-2017 SAP SE. All rights reserved
+ */
+sap.ui.define(["sap/ui/core/mvc/JSView","sap/m/Page","sap/m/List","sap/m/StandardListItem","sap/m/library"],function(J,P,L,S,m){"use strict";var a=m.ListType;sap.ui.jsview("sap.collaboration.components.fiori.feed.splitApp.FeedTypeMaster",{getControllerName:function(){return"sap.collaboration.components.fiori.feed.splitApp.FeedTypeMaster";},createContent:function(c){this.oLangBundle=this.getViewData().langBundle;this.sPrefixId=this.getViewData().controlId;return new P(this.sPrefixId+"feedTypePage",{title:this.oLangBundle.getText("FEED_MASTER_PAGE_TITLE"),content:[new L(this.sPrefixId+"FeedTypes",{inset:true,items:[new S({title:this.oLangBundle.getText("FRV_DOMAIN_DATA_FEED_TYPES_FOLLOWS"),type:a.Active,selected:true,press:function(){c.listItemPress("follows");}}),new S({title:this.oLangBundle.getText("FRV_DOMAIN_DATA_FEED_TYPES_COMPANY"),type:a.Active,press:function(){c.listItemPress("company");}}),new S({title:this.oLangBundle.getText("FRV_DOMAIN_DATA_FEED_TYPES_GROUP"),type:a.Active,press:function(){c.listItemPress("group");}}),new S({title:this.oLangBundle.getText("FRV_DOMAIN_DATA_FEED_TYPES_BO"),type:a.Active,press:function(){c.listItemPress("context");}})]})]});}});});

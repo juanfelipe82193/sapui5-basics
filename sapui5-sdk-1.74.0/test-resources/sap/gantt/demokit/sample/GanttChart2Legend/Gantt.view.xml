@@ -1,0 +1,81 @@
+<mvc:View
+		controllerName="sap.gantt.sample.GanttChart2Legend.Gantt"
+		height="100%"
+		xmlns="sap.gantt.simple"
+		xmlns:axistime="sap.gantt.axistime"
+		xmlns:config="sap.gantt.config"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:shapes="sap.gantt.simple.shapes"
+		xmlns:table="sap.ui.table">
+	<GanttChartContainer>
+		<toolbar>
+			<ContainerToolbar showLegendButton="true">
+				<legendContainer>
+					<LegendContainer height="400px" width="300px">
+						<ListLegend title="List Legend">
+							<ListLegendItem legendName="project1">
+								<shapes:Task title="Project 1" color="sapUiLegend18" type="SummaryExpanded"/>
+							</ListLegendItem>
+							<ListLegendItem legendName="project1">
+								<shapes:Task title="Task in project 1" color="sapUiLegend18" type="Normal"/>
+							</ListLegendItem>
+							<ListLegendItem legendName="project2">
+								<shapes:Task title="Project 2" color="sapUiLegend15" type="SummaryExpanded"/>
+							</ListLegendItem>
+							<ListLegendItem legendName="project2">
+								<shapes:Task title="Task in project 2" color="sapUiLegend15" type="Normal"/>
+							</ListLegendItem>
+							<ListLegendItem legendName="project2">
+								<shapes:Task title="Error task" color="sapUiLegend15" type="Error"/>
+							</ListLegendItem>
+						</ListLegend>
+					</LegendContainer>
+				</legendContainer>
+			</ContainerToolbar>
+		</toolbar>
+		<GanttChartWithTable id="gantt" shapeSelectionMode="Single">
+			<axisTimeStrategy>
+				<axistime:ProportionZoomStrategy>
+					<axistime:totalHorizon>
+						<config:TimeHorizon
+								startTime="20171001000000"
+								endTime="20191129000000"/>
+					</axistime:totalHorizon>
+					<axistime:visibleHorizon>
+						<config:TimeHorizon
+								startTime="20181001000000"
+								endTime="20181129000000"/>
+					</axistime:visibleHorizon>
+				</axistime:ProportionZoomStrategy>
+			</axisTimeStrategy>
+			<table>
+				<table:TreeTable
+						selectionMode="Single"
+						visibleRowCountMode="Auto"
+						minAutoRowCount="12"
+						selectionBehavior="RowSelector"
+						enableColumnReordering="true"
+						rows="{
+						path: '/root',
+						parameters: {
+							arrayNames: ['children'],
+							numberOfExpandedLevels: 1
+						}
+					}">
+					<table:columns>
+						<table:Column label="" template="text" />
+					</table:columns>
+					<table:rowSettingsTemplate>
+						<GanttRowSettings rowId="{id}" shapes1="{path: 'tasks', templateShareable:false}">
+							<shapes1>
+								<shapes:Task time="{path: 'startTime', formatter: '.fnTimeConverter'}"
+											 endTime="{path: 'endTime', formatter: '.fnTimeConverter'}"
+											 type="{type}" color="{= ${projectId} === 1 ? 'sapUiLegend18' : 'sapUiLegend15'}"/>
+							</shapes1>
+						</GanttRowSettings>
+					</table:rowSettingsTemplate>
+				</table:TreeTable>
+			</table>
+		</GanttChartWithTable>
+	</GanttChartContainer>
+</mvc:View>

@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+(function(){"use strict";if(typeof jQuery==="function"&&jQuery.sap){jQuery.sap.declare("sap.ui2.srvc.contracts.url");jQuery.sap.require("sap.ui2.srvc.chip");}sap.ui2.srvc.Chip.addContract("url",function(c){this.addSystemToServiceUrl=function(s,S){return c.getChip().getCatalog().addSystemToServiceUrl(s,S);};this.getApplicationSystem=function(){return c.getChip().getCatalog().getSystemAlias();};this.toAbsoluteUrl=function(u){return c.getChip().toAbsoluteUrl(u);};});}());

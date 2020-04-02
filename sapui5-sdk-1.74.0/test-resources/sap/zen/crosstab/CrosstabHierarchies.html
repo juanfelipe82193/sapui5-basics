@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Hierarchy Tests</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="json/hierarchies/Both_ZTC_0BICS_C03_BICSTEST_Q0030_2_Mixed.js"></script>
+<script type="text/javascript" src="json/hierarchies/TESTDATA_BPW_COLHIER_TEST.js"></script>
+<script type="text/javascript" src="testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Hierarchy Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module(
+				"Crosstab Hierarchy Tests",
+				{
+					setup : function() {
+						this.oTableControl = sapzen.crosstab.test.jsonTestData.Both_ZTC_0BICS_C03_BICSTEST_Q0030_2_Mixed.control;
+						this.oCrosstab = new sap.zen.crosstab.Crosstab();
+						this.oCrosstab.setWidth("1600px");
+						this.oCrosstab.setHeight("1200px");
+						this.oCrosstab.applyControlProperties(this.oTableControl);
+						sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+						sap.ui.getCore().applyChanges();
+
+						this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+						this.oColHeaderArea = this.oCrosstab.getColumnHeaderArea();
+
+						this.checkCellStyle = function(oCell, sStateToCheck, sClassToCheck) {
+							var oDomCell = null;
+							if (oCell) {
+								oDomCell = jQuery.sap.byId(oCell.getId());
+								ok(oDomCell.attr("class").indexOf(sClassToCheck) !== -1, "Cell: " + oCell.getId()
+										+ " with total style in model must have corresponding CSS style: "
+										+ sClassToCheck);
+							}
+						};
+
+						this.checkColHeaderCell = function(iRow, iCol, iRowCnt, bIsCollapseNode) {
+							var oCell = this.oColHeaderArea.getCell(iRow, iCol);
+							var oDomCell = jQuery.sap.byId(oCell.getId());
+							var oDomRows = oDomCell.find("tr");
+							ok(oDomRows.length === iRowCnt, "Cell contains table with " + iRowCnt + " row(s)");
+
+							var oDomCells = $(oDomRows[oDomRows.length - 1]).find("td");
+							ok(oDomCells.length === 2, "Contained table has two cells");
+
+							var oHierarchyImageDiv = $(oDomCells[0]).children("div");
+							ok(oHierarchyImageDiv.hasClass("sapzencrosstab-HeaderCellDivHierarchy"),
+									"Image div must have class 'sapzencrosstab-HeaderCellDivHierarchy'");
+
+							var sClass = bIsCollapseNode ? "sapzencrosstab-CollapseNode" : "sapzencrosstab-ExpandNode";
+							ok(oHierarchyImageDiv.hasClass(sClass), "Image div must have class '" + sClass + "'");
+
+							var oHierarchyTextDiv = $(oDomCells[1]).children("div");
+							ok(sap.zen.crosstab.utils.Utils.escapeDisplayString(oHierarchyTextDiv.text()) === oCell.getText(),
+									"Text in content div must match the cell text: '" + oCell.getText() + "'");
+						};
+
+						this.checkRowHeaderCell = function(iRow, iCol, iColCnt, sClassName) {
+							var oCell = this.oRowHeaderArea.getCell(iRow, iCol);
+							var iLevel = oCell.getLevel();
+							var oDomCell = jQuery.sap.byId(oCell.getId());
+							var oDomRows = oDomCell.find("tr");
+							ok(oDomRows.length === 1, "Cell contains table with 1 row");
+
+							var oDomCells = $(oDomRows[0]).find("td");
+							ok(oDomCells.length === iColCnt, "Contained table has " + iColCnt + " cells");
+
+							var iIndexIconCell = 0;
+							if (iLevel > 0) {
+								iIndexIconCell = 1;
+							}
+							var oIconDiv = $(oDomCells[iIndexIconCell]).children("div");
+							if (sClassName) {
+								ok(oIconDiv.hasClass(sClassName), "Image div must have class '" + sClassName + "'");
+							}
+							ok(oIconDiv.hasClass("sapzencrosstab-HeaderCellDivHierarchy"),
+									"Image div must have class 'sapzencrosstab-HeaderCellDivHierarchy'");
+
+							var oTextDiv = $(oDomCells[iIndexIconCell + 1]).children("div");
+							ok(sap.zen.crosstab.utils.Utils.escapeDisplayString(oTextDiv.text()) === oCell.getText(), "Text in content div must match the cell text: '"
+									+ oCell.getText() + "'");
+						};
+
+					},
+					teardown : function() {
+						this.oCrosstab = null;
+					}
+				});
+
+		test("Test Col Hierarchy Layout in Cells", function() {
+			this.checkColHeaderCell(0, 0, 1, true);
+			this.checkColHeaderCell(0, 2, 2, false);
+			this.checkColHeaderCell(0, 4, 2, false);
+			this.checkColHeaderCell(0, 6, 2, false);
+		});
+
+		test("Test Row Hierarchy Layout in Cells", function() {
+			this.checkRowHeaderCell(0, 0, 2, "sapzencrosstab-CollapseNode");
+			this.checkRowHeaderCell(2, 0, 3, null);
+			this.checkRowHeaderCell(7, 0, 3, "sapzencrosstab-ExpandNode");
+		});
+		
+		test("Test Row Height Adjustment with Hierarchies in Column Header", function() {
+			this.oTableControl = sapzen.crosstab.test.jsonTestData.TESTDATA_BPW_COLHIER_TEST.control;
+			this.oCrosstab = new sap.zen.crosstab.Crosstab();
+			this.oCrosstab.setWidth("1400px");
+			this.oCrosstab.setHeight("300px");
+			this.oCrosstab.applyControlProperties(this.oTableControl);
+			sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+			sap.ui.getCore().applyChanges();
+
+			this.oDimHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+			this.oColHeaderArea = this.oCrosstab.getColumnHeaderArea();
+			
+			// cell1
+			var oDomDimHeaderCell = $('#' + this.oDimHeaderArea.getCell(1, 2).getId());
+			var iDimHeaderCellHeight1 = oDomDimHeaderCell.outerHeight();
+			
+			// cell2
+			var oDomColHeaderCell = $('#' + this.oColHeaderArea.getCell(1, 1).getId());
+			var iColHeaderCellHeight1 = oDomColHeaderCell.outerHeight();
+			
+			ok(iDimHeaderCellHeight1 === iColHeaderCellHeight1, "DimHeaderCellHeight and ColHeaderCellheight must be equal");
+			
+			this.oCrosstab.scrollHorizontal(16);
+			
+			// cell1
+			var oDomDimHeaderCell = $('#' + this.oDimHeaderArea.getCell(1, 2).getId());
+			var iDimHeaderCellHeight2 = oDomDimHeaderCell.outerHeight();
+			
+			// cell2
+			var oDomColHeaderCell = $('#' + this.oColHeaderArea.getCell(1, 14).getId());
+			var iColHeaderCellHeight2 = oDomColHeaderCell.outerHeight();
+			
+			ok(iDimHeaderCellHeight2 === iColHeaderCellHeight2, "DimHeaderCellHeight and ColHeaderCellheight must be equal");
+			ok(iDimHeaderCellHeight2 > iDimHeaderCellHeight1, "DimHeaderCellHeight and ColHeaderCellheight must have grown");
+			
+			this.oCrosstab.scrollHorizontal(0);
+			
+			// cell1
+			var oDomDimHeaderCell = $('#' + this.oDimHeaderArea.getCell(1, 2).getId());
+			var iDimHeaderCellHeight = oDomDimHeaderCell.outerHeight();
+			
+			// cell2
+			var oDomColHeaderCell = $('#' + this.oColHeaderArea.getCell(1, 1).getId());
+			var iColHeaderCellHeight = oDomColHeaderCell.outerHeight();
+			
+			ok(iDimHeaderCellHeight === iColHeaderCellHeight, "DimHeaderCellHeight and ColHeaderCellheight must be equal");
+			ok(iDimHeaderCellHeight === iDimHeaderCellHeight2, "DimHeaderCellHeight and ColHeaderCellheight must not shrink again");
+		});
+	</script>
+
+</body>
+
+</html>

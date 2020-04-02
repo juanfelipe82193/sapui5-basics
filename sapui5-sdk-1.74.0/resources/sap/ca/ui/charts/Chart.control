@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>charts/Chart</name>
+    <derived/>
+    <documentation>Chart implementation on top of sap.viz that takes care of common functionality.
+- Embedding in a scroll container
+- Common color palette
+- Minimum bar / dot / blip ... size
+- Integration with ChartToolbar and ChartPopover</documentation>
+    <deprecation since="1.24">Sap.ca charts have been replaced with sap.viz and vizFrame in 1.24.
+The UI5 control "sap.viz.ui5.controls.VizFrame" serves as a single point of entry for all the new charts.
+Now that 1.24 is available you are asked to use sap.viz charts and the VizFrame instead!
+This control will not be supported anymore from 1.24.</deprecation>
+    <baseType>sap.ui.core/Control</baseType>
+    <properties>
+        <property name="width" type="sap.ui.core/CSSSize" defaultValue="100%" group="Dimension">
+            <documentation>Target width for the charting area</documentation>
+        </property>
+        <property name="height" type="sap.ui.core/CSSSize" defaultValue="100%" group="Dimension">
+            <documentation>Target height for the charting area</documentation>
+        </property>
+        <property name="dataset" type="sap.ui.core/object" group="Data">
+            <documentation>Viz Dataset that will hold the data to be displayed.</documentation>
+        </property>
+        <property name="chartType" type="sap.ui.core/string" defaultValue="Bar" group="Data">
+            <documentation>Type of viz chart that will be displayed.</documentation>
+        </property>
+        <property name="minShapeSize" type="sap.ui.core/CSSSize" defaultValue="48px" group="Data">
+            <documentation>Minimum shape size for touch enabled actions, default and minimum to 48px !</documentation>
+        </property>
+        <property name="label" type="sap.ui.core/string" defaultValue="" group="Data" bindable="bindable">
+            <documentation>User friendly name for the current chart type</documentation>
+        </property>
+        <property name="title" type="sap.ui.core/string" defaultValue="" group="Appearance">
+            <documentation>Title of the chart</documentation>
+        </property>
+        <property name="icon" type="sap.ui.core/string" defaultValue="" group="Appearance">
+            <documentation>Icon of the Chart</documentation>
+        </property>
+        <property name="secondAxisVisible" type="sap.ui.core/boolean" defaultValue="true" group="Appearance">
+            <documentation>Flag to show the second axis. Default is true</documentation>
+        </property>
+        <property name="showLegend" type="sap.ui.core/boolean" defaultValue="true" group="Behavior">
+            <documentation>Hide / Show the legend of the chart</documentation>
+        </property>
+        <property name="selectionMode" type="sap.ca.ui/charts/ChartSelectionMode" defaultValue="Multiple" group="Behavior">
+            <documentation>Define the selection mode for the chart</documentation>
+        </property>
+        <property name="showHoverBackground" type="sap.ui.core/boolean" defaultValue="false" group="Behavior">
+            <documentation>Hide / Show the hover background</documentation>
+        </property>
+        <property name="showTooltip" type="sap.ui.core/boolean" defaultValue="false" group="Behavior">
+            <documentation>Hide / Show the CVOM tooltip</documentation>
+        </property>
+        <property name="showPopover" type="sap.ui.core/boolean" defaultValue="true" group="Behavior">
+            <documentation>Hide / Show the sap.ca popover that gives information about what is available</documentation>
+        </property>
+        <property name="showDataLabel" type="sap.ui.core/boolean" defaultValue="true" group="Behavior">
+            <documentation>Flag to display data values on the bar, default is set to true</documentation>
+        </property>
+        <property name="yAxisLabelFormatter" type="sap.ui.core/string" group="Data">
+            <documentation>Formatter for Y Axis Label</documentation>
+        </property>
+        <property name="yAxis2LabelFormatter" type="sap.ui.core/string" group="Data">
+            <documentation>Formatter for Y Axis 2 Label</documentation>
+        </property>
+        <property name="xAxisLabelFormatter" type="sap.ui.core/string" group="Data">
+            <documentation>Formatter for X Axis Label</documentation>
+        </property>
+        <property name="xAxis2LabelFormatter" type="sap.ui.core/string" group="Data">
+            <documentation>Formatter for X Axis 2 Label</documentation>
+        </property>
+        <property name="plotAreaAxisTooltipFormatter" type="sap.ui.core/object" group="Data">
+            <documentation>Formatter for plotArea Axis Tooltip in bubble charts</documentation>
+        </property>
+        <property name="tooltipFormatter" type="sap.ui.core/object" group="Data">
+            <documentation>Formatter for toolTip</documentation>
+        </property>
+        <property name="dataLabelFormatter" type="sap.ui.core/object" group="Data">
+            <documentation>Formatter for Data Label</documentation>
+        </property>
+        <property name="popoverFormatter" type="sap.ui.core/object" group="Data">
+            <documentation>Formatter for popover</documentation>
+        </property>
+        <property name="popoverGroupFormatter" type="sap.ui.core/string" group="Data">
+            <documentation>Formatter for group label in the popover</documentation>
+        </property>
+        <property name="chartSemanticColorFormatter" type="sap.ui.core/object" group="Data">
+            <documentation>Function that will be called when the chart is rendered in order to let the
+application decide which color should be use for each bar.
+The method should take the following parameter as input :
+- The data context of the current datashape
+And as output :
+- One of sap.ca.ui.charts.ChartSemanticColor type</documentation>
+        </property>
+        <property name="internalVizChart" type="sap.ui.core/Control" group="Data">
+            <documentation>Retrieve the internal viz chart to allow some operation on it.</documentation>
+        </property>
+        <property name="chartPopOver" type="sap.ui.core/Control" group="Data">
+            <documentation>Retrieve the chart popover instance to allow some operation on it.</documentation>
+        </property>
+        <property name="popoverSubHeader" type="sap.ui.core/Control" group="Appearance">
+            <documentation>custom subHeader for popover</documentation>
+        </property>
+        <property name="popoverFooter" type="sap.ui.core/Control" group="Appearance">
+            <documentation>custom footer for popover</documentation>
+        </property>
+        <property name="advancedChartSettings" type="sap.ui.core/object" group="Appearance">
+            <documentation>You can specify here any advanced viz chart settings that have not been exposed as a chart
+property.</documentation>
+        </property>
+        <property name="stackedChartWidthEnhancer" type="sap.ui.core/boolean" defaultValue="false" group="Appearance">
+            <documentation>You can use it if stacked bar width are to big. Disabled by default</documentation>
+        </property>
+        <property name="noData" type="sap.ui.core/Control" group="Appearance">
+            <documentation>Control tree to display when there is no data available</documentation>
+        </property>
+    </properties>
+    <events>
+        <event name="selectDataPoint" allowPreventDefault="false">
+            <documentation>Event is fired when the data point is selected/unselected on the chart</documentation>
+        </event>
+        <event name="popoverBeforeOpen" allowPreventDefault="false">
+            <documentation>Event is fired before the popover is opened</documentation>
+        </event>
+        <event name="popoverAfterOpen" allowPreventDefault="false">
+            <documentation>Event is fired after the popover is opened</documentation>
+        </event>
+    </events>
+    <aggregations>
+        <aggregation name="internalContent" type="sap.ui.core/Control" cardinality="0..1" visibility="hidden"/>
+        <aggregation name="chartPopover" type="sap.ui.core/Control" cardinality="0..1" visibility="hidden"/>
+    </aggregations>
+</control>

@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+	<edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="1.0">
+		<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:sap="http://www.sap.com/Protocols/SAPData" Namespace="VOCABULARY_SRV"
+			sap:schema-version="1">
+			<EntityType Name="Vocabulary">
+				<Key>
+					<PropertyRef Name="Id"/>
+				</Key>
+				<Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="275"/>
+				<Property Name="Type" Type="Edm.String" Nullable="false" MaxLength="2"/>
+				<Property Name="Version" Type="Edm.String" Nullable="false" MaxLength="18"/>
+				<NavigationProperty Name="DataObjects" Relationship="VOCABULARY_SRV.VocabularyToDataObjects" FromRole="FromRole_VocabularyToDataObjects"
+					ToRole="ToRole_VocabularyToDataObjects"/>
+				<NavigationProperty Name="ValueSources" Relationship="VOCABULARY_SRV.VocabularyToValueSources" FromRole="FromRole_VocabularyToValueSources"
+					ToRole="ToRole_VocabularyToValueSources"/>
+				<NavigationProperty Name="Enumerations" Relationship="VOCABULARY_SRV.VocabularyToEnumerations" FromRole="FromRole_VocabularyToEnumerations"
+					ToRole="ToRole_VocabularyToEnumerations"/>
+				<NavigationProperty Name="Rules" Relationship="VOCABULARY_SRV.VocabularyToRules" FromRole="FromRole_VocabularyToRules"
+					ToRole="ToRole_VocabularyToRules"/>
+			</EntityType>
+			<EntityType Name="DataObject">
+				<Key>
+					<PropertyRef Name="VocabularyId"/>
+					<PropertyRef Name="Id"/>
+				</Key>
+				<Property Name="VocabularyId" Type="Edm.String" Nullable="false" MaxLength="275"/>
+				<Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="255"/>
+				<Property Name="Usage" Type="Edm.String" Nullable="false" MaxLength="30"/>
+				<Property Name="Name" Type="Edm.String" Nullable="true" MaxLength="255"/>
+				<Property Name="Description" Type="Edm.String" Nullable="true" MaxLength="255"/>
+				<Property Name="Label" Type="Edm.String" Nullable="true" MaxLength="50"/>
+				<Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="10"/>
+				<Property Name="Type" Type="Edm.String" Nullable="false" MaxLength="255"/>
+				<Property Name="Version" Type="Edm.String" Nullable="false" MaxLength="18"/>
+				<NavigationProperty Name="Associations" Relationship="VOCABULARY_SRV.DataObjectToAssociations" FromRole="FromRole_DataObjectToAssociations"
+					ToRole="ToRole_DataObjectToAssociations"/>
+				<NavigationProperty Name="Attributes" Relationship="VOCABULARY_SRV.DataObjectToAttributes" FromRole="FromRole_DataObjectToAttributes"
+					ToRole="ToRole_DataObjectToAttributes"/>
+				<NavigationProperty Name="ValueSources" Relationship="VOCABULARY_SRV.DataObjectToValueSource" FromRole="FromRole_DataObjecToValueSources"
+					ToRole="ToRole_DataObjecToValueSources"/>
+				<NavigationProperty Name="Enumerations" Relationship="VOCABULARY_SRV.DataObjectToEnumerations" FromRole="FromRole_DataObjecyToEnumerations"
+					ToRole="ToRole_DataObjecToEnumerations"/>
+			</EntityType>
+			<EntityType Name="Association">
+				<Key>
+					<PropertyRef Name="VocabularyId"/>
+					<PropertyRef Name="Name"/>
+					<PropertyRef Name="Label"/>
+					<PropertyRef Name="DataObjectId"/>
+					<PropertyRef Name="TargetDataObjectId"/>
+				</Key>
+				<Property Name="VocabularyId" Type="Edm.String" Nullable="false" MaxLength="275"/>
+				<Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="255"/>
+				<Property Name="Label" Type="Edm.String" Nullable="true" MaxLength="50"/>
+				<Property Name="DataObjectId" Type="Edm.String" Nullable="false" MaxLength="255"/>
+				<Property Name="TargetDataObjectId" Type="Edm.String" Nullable="false" MaxLength="255"/>
+				<Property Name="Cardinality" Type="Edm.String" Nullable="false" MaxLength="255"/>
+				<Property Name="Version" Type="Edm.String" Nullable="false" MaxLength="18"/>
+				<NavigationProperty Name="TARGETDATAOBJECTID" Relationship="VOCABULARY_SRV.AssociationToTargetDataObject"
+					FromRole="FromRole_AssociationToTargetDataObject" ToRole="ToRole_AssociationToTargetDataObject"/>
+			</EntityType>
+			<EntityType Name="Attribute">
+				<Key>
+					<PropertyRef Name="Id"/>
+					<PropertyRef Name="VocabularyId"/>
+					<PropertyRef Name="DataObjectId"/>
+				</Key>
+				<Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="255"/>
+				<Property Name="VocabularyId" Type="Edm.String" Nullable="false" MaxLength="275"/>
+				<Property Name="DataObjectId" Type="Edm.String" Nullable="false" MaxLength="255"/>
+				<Property Name="Name" Type="Edm.String" Nullable="true" MaxLength="255"/>
+				<Property Name="Description" Type="Edm.String" Nullable="true" MaxLength="255"/>
+				<Property Name="Label" Type="Edm.String" Nullable="true" MaxLength="50"/>
+				<Property Name="BusinessDataType" Type="Edm.String" Nullable="false" MaxLength="20"/>
+				<Property Name="HasValueSource" Type="Edm.Boolean" Nullable="false"/>
+				<Property Name="Version" Type="Edm.String" Nullable="false" MaxLength="18"/>
+				<NavigationProperty Name="ValueSources" Relationship="VOCABULARY_SRV.AttributeToValueSource" FromRole="FromRole_AttributeToValueSources"
+					ToRole="ToRole_AttributeToValueSources"/>
+				<NavigationProperty Name="Enumerations" Relationship="VOCABULARY_SRV.AttributeToEnumerations" FromRole="FromRole_AttributeyToEnumerations"
+					ToRole="ToRole_AttributeToEnumerations"/>
+			</EntityType>
+			<EntityType Name="ValueSource">
+				<Key>
+					<PropertyRef Name="AttributeId"/>
+					<PropertyRef Name="VocabularyId"/>
+					<PropertyRef Name="DataObjectId"/>
+				</Key>
+				<Property Name="VocabularyId" Type="Edm.String" Nullable="false" MaxLength="275"/>
+				<Property Name="DataObjectId" Type="Edm.String" Nullable="false" MaxLength="255"/>
+				<Property Name="AttributeId" Type="Edm.String" Nullable="false" MaxLength="255"/>
+				<Property Name="SourceType" Type="Edm.String" Nullable="false" MaxLength="3"/>
+				<Property Name="Version" Type="Edm.String" Nullable="false" MaxLength="18"/>
+			</EntityType>
+			<EntityType Name="Enumeration">
+				<Key>
+					<PropertyRef Name="AttributeId"/>
+					<PropertyRef Name="VocabularyId"/>
+					<PropertyRef Name="DataObjectId"/>
+					<PropertyRef Name="Value"/>
+				</Key>
+				<Property Name="VocabularyId" Type="Edm.String" Nullable="false" MaxLength="275" sap:filterable="true" sap:sortable="false"/>
+				<Property Name="DataObjectId" Type="Edm.String" Nullable="false" MaxLength="255" sap:filterable="true" sap:sortable="false"/>
+				<Property Name="AttributeId" Type="Edm.String" Nullable="false" MaxLength="255" sap:filterable="true" sap:sortable="false"/>
+				<Property Name="Version" Type="Edm.String" Nullable="false" MaxLength="18" sap:filterable="true" sap:sortable="false"/>
+				<Property Name="Value" Type="Edm.String" Nullable="false" MaxLength="255" sap:filterable="true" sap:sortable="true"/>
+				<Property Name="Description" Type="Edm.String" Nullable="true" MaxLength="255" sap:filterable="True" sap:sortable="false"/>
+			</EntityType>
+			<EntityType Name="ExternalValue">
+				<Key>
+					<PropertyRef Name="AttributeId"/>
+					<PropertyRef Name="VocabularyId"/>
+					<PropertyRef Name="DataObjectId"/>
+					<PropertyRef Name="Value"/>
+				</Key>
+				<Property Name="VocabularyId" Type="Edm.String" Nullable="false" MaxLength="275" sap:filterable="true" sap:sortable="false"
+					sap:filter-restriction="single-value" sap:updatable="false" sap:creatable="false" sap:pageable="false" sap:deletable="false"/>
+				<Property Name="DataObjectId" Type="Edm.String" Nullable="false" MaxLength="255" sap:filterable="true" sap:sortable="false"
+					sap:filter-restriction="single-value" sap:updatable="false" sap:creatable="false" sap:pageable="false" sap:deletable="false"/>
+				<Property Name="AttributeId" Type="Edm.String" Nullable="false" MaxLength="255" sap:filterable="true" sap:sortable="false"
+					sap:filter-restriction="single-value" sap:updatable="false" sap:creatable="false" sap:pageable="false" sap:deletable="false"/>
+				<Property Name="Version" Type="Edm.String" Nullable="false" MaxLength="18"/>
+				<Property Name="Value" Type="Edm.String" Nullable="false" MaxLength="255" sap:filterable="true" sap:sortable="true" sap:updatable="false"
+					sap:creatable="false" sap:pageable="false" sap:deletable="false"/>
+				<Property Name="Description" Type="Edm.String" Nullable="true" MaxLength="255" sap:filterable="true" sap:sortable="true"
+					sap:updatable="false" sap:creatable="false" sap:pageable="false" sap:deletable="false"/>
+			</EntityType>
+			<EntityType Name="Rule">
+				<Key>
+					<PropertyRef Name="VocabularyId"/>
+					<PropertyRef Name="ResultDataObjectId"/>
+				</Key>
+				<Property Name="VocabularyId" Type="Edm.String" Nullable="false" MaxLength="275"/>
+				<Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="255"/>
+				<Property Name="Name" Type="Edm.String" Nullable="true" MaxLength="255"/>
+				<Property Name="Description" Type="Edm.String" Nullable="true" MaxLength="255"/>
+				<Property Name="Label" Type="Edm.String" Nullable="true" MaxLength="255"/>
+				<Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="10"/>
+				<Property Name="ResultDataObjectId" Type="Edm.String" Nullable="false" MaxLength="275"/>
+				<Property Name="Version" Type="Edm.String" Nullable="false" MaxLength="18"/>
+				<NavigationProperty Name="DataObjects" Relationship="VOCABULARY_SRV.RuleToDataObjects" FromRole="FromRole_RuleToDataObjects"
+					ToRole="ToRole_RuleToDataObjects"/>
+			</EntityType>
+			<Association Name="VocabularyToDataObjects" sap:content-version="1">
+				<End Type="VOCABULARY_SRV.Vocabulary" Multiplicity="*" Role="FromRole_VocabularyToDataObjects"/>
+				<End Type="VOCABULARY_SRV.DataObject" Multiplicity="*" Role="ToRole_VocabularyToDataObjects"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_VocabularyToDataObjects">
+						<PropertyRef Name="Id"/>
+					</Principal>
+					<Dependent Role="ToRole_VocabularyToDataObjects">
+						<PropertyRef Name="VocabularyId"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="VocabularyToValueSources" sap:content-version="1">
+				<End Type="VOCABULARY_SRV.Vocabulary" Multiplicity="1" Role="FromRole_VocabularyToValueSources"/>
+				<End Type="VOCABULARY_SRV.ValueSource" Multiplicity="*" Role="ToRole_VocabularyToValueSources"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_VocabularyToValueSources">
+						<PropertyRef Name="Id"/>
+					</Principal>
+					<Dependent Role="ToRole_VocabularyToValueSources">
+						<PropertyRef Name="VocabularyId"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="VocabularyToEnumerations" sap:content-version="1">
+				<End Type="VOCABULARY_SRV.Vocabulary" Multiplicity="1" Role="FromRole_VocabularyToEnumerations"/>
+				<End Type="VOCABULARY_SRV.Enumeration" Multiplicity="*" Role="ToRole_VocabularyToEnumerations"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_VocabularyToEnumerations">
+						<PropertyRef Name="Id"/>
+					</Principal>
+					<Dependent Role="ToRole_VocabularyToEnumerations">
+						<PropertyRef Name="VocabularyId"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="VocabularyToRules" sap:content-version="1">
+				<End Type="VOCABULARY_SRV.Vocabulary" Multiplicity="1" Role="FromRole_VocabularyToRules"/>
+				<End Type="VOCABULARY_SRV.Rule" Multiplicity="*" Role="ToRole_VocabularyToRules"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_VocabularyToRules">
+						<PropertyRef Name="Id"/>
+					</Principal>
+					<Dependent Role="ToRole_VocabularyToRules">
+						<PropertyRef Name="VocabularyId"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="DataObjectToAttributes" sap:content-version="1">
+				<End Type="VOCABULARY_SRV.DataObject" Multiplicity="*" Role="FromRole_DataObjectToAttributes"/>
+				<End Type="VOCABULARY_SRV.Attribute" Multiplicity="*" Role="ToRole_DataObjectToAttributes"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_DataObjectToAttributes">
+						<PropertyRef Name="Id"/>
+						<PropertyRef Name="VocabularyId"/>
+					</Principal>
+					<Dependent Role="ToRole_DataObjectToAttributes">
+						<PropertyRef Name="DataObjectId"/>
+						<PropertyRef Name="VocabularyId"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="DataObjectToAssociations" sap:content-version="1">
+				<End Type="VOCABULARY_SRV.DataObject" Multiplicity="*" Role="FromRole_DataObjectToAssociations"/>
+				<End Type="VOCABULARY_SRV.Association" Multiplicity="*" Role="ToRole_DataObjectToAssociations"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_DataObjectToAssociations">
+						<PropertyRef Name="Id"/>
+						<PropertyRef Name="VocabularyId"/>
+					</Principal>
+					<Dependent Role="ToRole_DataObjectToAssociations">
+						<PropertyRef Name="DataObjectId"/>
+						<PropertyRef Name="VocabularyId"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="DataObjectToValueSource" sap:content-version="1">
+				<End Type="VOCABULARY_SRV.DataObject" Multiplicity="1" Role="FromRole_DataObjecToValueSources"/>
+				<End Type="VOCABULARY_SRV.ValueSource" Multiplicity="*" Role="ToRole_DataObjecToValueSources"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_DataObjecToValueSources">
+						<PropertyRef Name="Id"/>
+						<PropertyRef Name="VocabularyId"/>
+					</Principal>
+					<Dependent Role="ToRole_DataObjecToValueSources">
+						<PropertyRef Name="DataObjectId"/>
+						<PropertyRef Name="VocabularyId"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="DataObjectToEnumerations" sap:content-version="1">
+				<End Type="VOCABULARY_SRV.DataObject" Multiplicity="1" Role="FromRole_DataObjecyToEnumerations"/>
+				<End Type="VOCABULARY_SRV.Enumeration" Multiplicity="*" Role="ToRole_DataObjecToEnumerations"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_DataObjecyToEnumerations">
+						<PropertyRef Name="Id"/>
+						<PropertyRef Name="VocabularyId"/>
+					</Principal>
+					<Dependent Role="ToRole_DataObjecToEnumerations">
+						<PropertyRef Name="DataObjectId"/>
+						<PropertyRef Name="VocabularyId"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="AssociationToTargetDataObject" sap:content-version="1">
+				<End Type="VOCABULARY_SRV.Association" Multiplicity="1" Role="FromRole_AssociationToTargetDataObject"/>
+				<End Type="VOCABULARY_SRV.DataObject" Multiplicity="1" Role="ToRole_AssociationToTargetDataObject"/>
+			</Association>
+			<Association Name="AttributeToValueSource" sap:content-version="1">
+				<End Type="VOCABULARY_SRV.Attribute" Multiplicity="1" Role="FromRole_AttributeToValueSources"/>
+				<End Type="VOCABULARY_SRV.ValueSource" Multiplicity="1" Role="ToRole_AttributeToValueSources"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_AttributeToValueSources">
+						<PropertyRef Name="DataObjectId"/>
+						<PropertyRef Name="VocabularyId"/>
+						<PropertyRef Name="Id"/>
+					</Principal>
+					<Dependent Role="ToRole_AttributeToValueSources">
+						<PropertyRef Name="DataObjectId"/>
+						<PropertyRef Name="VocabularyId"/>
+						<PropertyRef Name="AttributeId"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="AttributeToEnumerations" sap:content-version="1">
+				<End Type="VOCABULARY_SRV.Attribute" Multiplicity="1" Role="FromRole_AttributeyToEnumerations"/>
+				<End Type="VOCABULARY_SRV.Enumeration" Multiplicity="*" Role="ToRole_AttributeToEnumerations"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_AttributeyToEnumerations">
+						<PropertyRef Name="DataObjectId"/>
+						<PropertyRef Name="VocabularyId"/>
+						<PropertyRef Name="Id"/>
+					</Principal>
+					<Dependent Role="ToRole_AttributeToEnumerations">
+						<PropertyRef Name="DataObjectId"/>
+						<PropertyRef Name="VocabularyId"/>
+						<PropertyRef Name="AttributeId"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="RuleToDataObjects" sap:content-version="1">
+				<End Type="VOCABULARY_SRV.Rule" Multiplicity="1" Role="FromRole_RuleToDataObjects"/>
+				<End Type="VOCABULARY_SRV.DataObject" Multiplicity="1" Role="ToRole_RuleToDataObjects"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_RuleToDataObjects">
+						<PropertyRef Name="VocabularyId"/>
+						<PropertyRef Name="ResultDataObjectId"/>
+					</Principal>
+					<Dependent Role="ToRole_RuleToDataObjects">
+						<PropertyRef Name="VocabularyId"/>
+						<PropertyRef Name="Id"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<EntityContainer Name="VOCABULARY_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xslx">
+				<EntitySet Name="Vocabularies" EntityType="VOCABULARY_SRV.Vocabulary" sap:content-version="1" sap:updatable="false" sap:creatable="false"
+					sap:pageable="false" sap:deletable="false"/>
+				<EntitySet Name="DataObjects" EntityType="VOCABULARY_SRV.DataObject" sap:content-version="1" sap:updatable="false" sap:creatable="false"
+					sap:pageable="false" sap:deletable="false"/>
+				<EntitySet Name="Associations" EntityType="VOCABULARY_SRV.Association" sap:content-version="1" sap:updatable="false" sap:creatable="false"
+					sap:pageable="false" sap:deletable="false"/>
+				<EntitySet Name="Attributes" EntityType="VOCABULARY_SRV.Attribute" sap:content-version="1" sap:updatable="false" sap:creatable="false"
+					sap:pageable="false" sap:deletable="false"/>
+				<EntitySet Name="ValueSources" EntityType="VOCABULARY_SRV.ValueSource" sap:content-version="1" sap:updatable="false" sap:creatable="false"
+					sap:pageable="false" sap:deletable="false"/>
+				<EntitySet Name="Enumerations" EntityType="VOCABULARY_SRV.Enumeration" sap:content-version="1" sap:updatable="false" sap:creatable="false"
+					sap:pageable="false" sap:deletable="false"/>
+				<EntitySet Name="ExternalValues" EntityType="VOCABULARY_SRV.ExternalValue" sap:content-version="1" sap:updatable="false"
+					sap:creatable="false" sap:pageable="false" sap:deletable="false"/>
+				<EntitySet Name="Rules" EntityType="VOCABULARY_SRV.Rule" sap:content-version="1" sap:updatable="false" sap:creatable="false"
+					sap:pageable="false" sap:deletable="false"/>
+				<AssociationSet Name="VocabularyToDataObjects_AssocSet" Association="VOCABULARY_SRV.VocabularyToDataObjects" sap:content-version="1"
+					sap:updatable="false" sap:creatable="false" sap:deletable="false">
+					<End EntitySet="Vocabularies" Role="FromRole_VocabularyToDataObjects"/>
+					<End EntitySet="DataObjects" Role="ToRole_VocabularyToDataObjects"/>
+				</AssociationSet>
+				<AssociationSet Name="VocabularyToValueSources_AssocSet" Association="VOCABULARY_SRV.VocabularyToValueSources" sap:content-version="1"
+					sap:updatable="false" sap:creatable="false" sap:deletable="false">
+					<End EntitySet="Vocabularies" Role="FromRole_VocabularyToValueSources"/>
+					<End EntitySet="ValueSources" Role="ToRole_VocabularyToValueSources"/>
+				</AssociationSet>
+				<AssociationSet Name="VocabularyToEnumerations_AssocSet" Association="VOCABULARY_SRV.VocabularyToEnumerations" sap:content-version="1"
+					sap:updatable="false" sap:creatable="false" sap:deletable="false">
+					<End EntitySet="Vocabularies" Role="FromRole_VocabularyToEnumerations"/>
+					<End EntitySet="Enumerations" Role="ToRole_VocabularyToEnumerations"/>
+				</AssociationSet>
+				<AssociationSet Name="VocabularyToRules_AssocSet" Association="VOCABULARY_SRV.VocabularyToRules" sap:content-version="1"
+					sap:updatable="false" sap:creatable="false" sap:deletable="false">
+					<End EntitySet="Vocabularies" Role="FromRole_VocabularyToRules"/>
+					<End EntitySet="Rules" Role="ToRole_VocabularyToRules"/>
+				</AssociationSet>
+				<AssociationSet Name="DataObjectToAssociations_AssocSet" Association="VOCABULARY_SRV.DataObjectToAssociations" sap:content-version="1"
+					sap:updatable="false" sap:creatable="false" sap:deletable="false">
+					<End EntitySet="DataObjects" Role="FromRole_DataObjectToAssociations"/>
+					<End EntitySet="Associations" Role="ToRole_DataObjectToAssociations"/>
+				</AssociationSet>
+				<AssociationSet Name="DataObjectToAttributes_AssocSet" Association="VOCABULARY_SRV.DataObjectToAttributes" sap:content-version="1"
+					sap:updatable="false" sap:creatable="false" sap:deletable="false">
+					<End EntitySet="DataObjects" Role="FromRole_DataObjectToAttributes"/>
+					<End EntitySet="Attributes" Role="ToRole_DataObjectToAttributes"/>
+				</AssociationSet>
+				<AssociationSet Name="DataObjectToValueSources_AssocSet" Association="VOCABULARY_SRV.DataObjectToValueSource" sap:content-version="1"
+					sap:updatable="false" sap:creatable="false" sap:deletable="false">
+					<End EntitySet="DataObjects" Role="FromRole_DataObjecToValueSources"/>
+					<End EntitySet="ValueSources" Role="ToRole_DataObjecToValueSources"/>
+				</AssociationSet>
+				<AssociationSet Name="DataObjectToEnumerations_AssocSet" Association="VOCABULARY_SRV.DataObjectToEnumerations" sap:content-version="1"
+					sap:updatable="false" sap:creatable="false" sap:deletable="false">
+					<End EntitySet="DataObjects" Role="FromRole_DataObjecyToEnumerations"/>
+					<End EntitySet="Enumerations" Role="ToRole_DataObjecToEnumerations"/>
+				</AssociationSet>
+				<AssociationSet Name="AssociationToTargetDataObjectSet" Association="VOCABULARY_SRV.AssociationToTargetDataObject" sap:content-version="1"
+					sap:updatable="false" sap:creatable="false" sap:deletable="false">
+					<End EntitySet="Associations" Role="FromRole_AssociationToTargetDataObject"/>
+					<End EntitySet="DataObjects" Role="ToRole_AssociationToTargetDataObject"/>
+				</AssociationSet>
+				<AssociationSet Name="AttributeToValueSources_AssocSet" Association="VOCABULARY_SRV.AttributeToValueSource" sap:content-version="1"
+					sap:updatable="false" sap:creatable="false" sap:deletable="false">
+					<End EntitySet="Attributes" Role="FromRole_AttributeToValueSources"/>
+					<End EntitySet="ValueSources" Role="ToRole_AttributeToValueSources"/>
+				</AssociationSet>
+				<AssociationSet Name="AttributeToEnumerations_AssocSet" Association="VOCABULARY_SRV.AttributeToEnumerations" sap:content-version="1"
+					sap:updatable="false" sap:creatable="false" sap:deletable="false">
+					<End EntitySet="Attributes" Role="FromRole_AttributeyToEnumerations"/>
+					<End EntitySet="Enumerations" Role="ToRole_AttributeToEnumerations"/>
+				</AssociationSet>
+				<AssociationSet Name="RuleToDataObjects_AssocSet" Association="VOCABULARY_SRV.RuleToDataObjects" sap:content-version="1"
+					sap:updatable="false" sap:creatable="false" sap:deletable="false">
+					<End EntitySet="Rules" Role="FromRole_RuleToDataObjects"/>
+					<End EntitySet="DataObjects" Role="ToRole_RuleToDataObjects"/>
+				</AssociationSet>
+			</EntityContainer>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

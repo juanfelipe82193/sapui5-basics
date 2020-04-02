@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2009-2017 SAP SE, All Rights Reserved -->
+
+<!-- Local CDM test page  for the ABAP runtime agent platform
+
+    Uses ABAP RA specific configuration (e.g. resource URLs, classic ABAP adaptes for enduser feedback). Requires
+    a proxy for local testing.
+-->
+<html class="sapUShellFullHeight">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+        <!-- Runtime Agent platform-independent default settings -->
+        <meta name="sap.ushellConfig.crossPlatformDefaults" content='{
+        "services": {
+            "PluginManager": {
+                "config": {
+                    "loadPluginsFromSite": true
+                }
+            },
+            "Container": {
+                "adapter": {
+                    "config": {
+                        "systemProperties": {
+                        },
+                        "userProfile": {
+                            "metadata": {},
+                            "defaults": {
+                                "email": "john.doe@sap.com",
+                                "firstName": "John",
+                                "lastName": "Doe",
+                                "fullName": "John Doe",
+                                "id": "DOEJ",
+                                "language": "EN",
+                                "languageBcp47": "en",
+                                "dateFormat": "1",
+                                "tislcal": [],
+                                "numberFormat": "",
+                                "rtl": false,
+                                "timeFormat": "0",
+                                "timeZone": "CET"
+                            }
+                        },
+                        "userProfilePersonalization": {
+                            "dateFormat": "1",
+                            "theme": "sap_belize_plus",
+                            "timeFormat": "0",
+                            "timeZone": "CET",
+                            "contentDensity": "cozy"
+                        }
+                    }
+                }
+            },
+            "CommonDataModel": {
+                "adapter": {
+                    "config": {
+                        "ignoreSiteDataPersonalization": true,
+                        "siteDataUrl": "../../cdmSiteData/3.0/CommonDataModelAdapterData.json"
+                    }
+                }
+            },
+            "LaunchPage": {
+                "adapter": {
+                    "module": "sap.ushell.adapters.cdm.v3.LaunchPageAdapter"
+                }
+            },
+            "Ui5ComponentLoader": {
+                "config": {
+                    "amendedLoading": true
+                }
+            }
+        }
+    }' />
+
+        <!-- Runtime Agent platform-specific default settings -->
+        <!-- TODO this config should NOT be hard-coded, but should be added
+        during packaging time, as (A) the settings may be different on
+        every Runtime Agent platform (e.g. RAG@ABAP) and (B) the
+        performance will be better compared to resolving it at
+        runtime. -->
+        <meta name="sap.ushellConfig.platformSpecificDefaults" content='{
+        "renderers": {
+            "fiori2": {
+                "componentData": {
+                    "config": {
+                        "enableSearch": true
+                    }
+                }
+            }
+        },
+        "services": {
+            "Container": {
+                "adapter": {
+                    "config": {
+                        "systemProperties": {
+                            "client": "120",
+                            "SID": "UR5",
+                            "alias": "UR5_120",
+                            "logoutUrl": "/sap/public/bc/icf/logoff"
+                        }
+                    }
+                }
+            },
+            "SupportTicket": {
+                "config": {
+                    "enabled": true
+                },
+                "adapter": {
+                    "module": "sap.ushell_abap.adapters.abap.SupportTicketAdapter"
+                }
+            },
+            "EndUserFeedback": {
+                "adapter": {
+                    "config": {
+                        "enabled": true
+                    },
+                    "module": "sap.ushell_abap.adapters.abap.EndUserFeedbackAdapter"
+                }
+            },
+            "AppState": {
+                "adapter": {
+                    "module": "sap.ushell_abap.adapters.abap.AppStateAdapter"
+                }
+            },
+            "Personalization": {
+                "adapter": {
+                    "config": {
+                        "storageResourceRoot": "/sap/bc/ra/flp/user/store/flp/",
+                        "relativeUrlReadOptimized": "p",
+                        "relativeUrlWriteOptimized": "u"
+                    },
+                    "module": "sap.ushell.adapters.cdm.PersonalizationAdapter"
+                }
+            },
+            "Search": {
+                "adapter": {
+                    "module": "sap.ushell_abap.adapters.abap.SearchAdapter"
+                }
+            }
+        },
+        "ui5": {
+            "libs": {
+                "sap.ushell_abap": true
+            }
+        }
+    }' />
+
+        <title>Fiori Launchpad CDM with ABAP Adapters</title>
+
+        <script id="sap-ui-bootstrap" src="../../../../../resources/sap/ushell/bootstrap/cdm.js">
+
+        </script>
+    </head>
+
+    <body class="sapUiBody sapUShellFullHeight" role="application">
+        <div id="canvas" class="sapUShellFullHeight"></div>
+    </body>
+
+</html>

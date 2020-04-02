@@ -1,0 +1,78 @@
+<mvc:View
+		controllerName="sap.suite.ui.commons.sample.CalculationBuilder.CalculationBuilder"
+		xmlns="sap.suite.ui.commons"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:core="sap.ui.core"
+		xmlns:m="sap.m"
+		height="100%">
+
+	<m:Page showHeader="false"
+			enableScrolling="false"
+			class="sapUiContentPadding">
+		<m:subHeader>
+			<m:OverflowToolbar>
+				<m:Label wrapping="true" text="Layout Type:"/>
+				<m:content>
+					<m:Select id="layoutType" tooltip="Layout Types" change="layoutTypeChanged"
+							  selectedKey="{settings>/layoutType}">
+						<core:Item key="Default" text="Default"/>
+						<core:Item key="VisualTextualReadOnly" text="Visual Textual Read Only"/>
+						<core:Item key="VisualOnly" text="Visual Only"/>
+						<core:Item key="TextualOnly" text="Textual Only"/>
+					</m:Select>
+				</m:content>
+				<m:ToggleButton text="Read only" pressed="{settings>/readOnly}" press="readOnlyChanged"/>
+			</m:OverflowToolbar>
+		</m:subHeader>
+		<m:content>
+			<CalculationBuilder
+					allowStringConstants="true"
+					id="builder"
+					layoutType="{settings>/layoutType}"
+					expression="{/expression}"
+					readOnly="{settings>/readOnly}"
+					allowComparisonOperators="{settings>/allowComparison}"
+					allowLogicalOperators="{settings>/allowLogical}"
+					validateFunction="validateFunction"
+					afterValidation="afterValidation"
+					title="{/title}"
+					variables="{/variables}">
+				<variables>
+					<CalculationBuilderVariable
+							key="{key}"
+							group="{group}"
+							label="{label}"
+							items="{path:'items', templateShareable:true}">
+						<items>
+							<CalculationBuilderItem
+									key="{key}">
+							</CalculationBuilderItem>
+						</items>
+					</CalculationBuilderVariable>
+				</variables>
+				<operators>
+					<core:Item key="Contains" text="Contains" />
+				</operators>
+				<groups>
+					<CalculationBuilderGroup setSelection="setSelection"
+							title="References" key="references" icon="sap-icon://account" description="Internal item references">
+						<customView >
+							 	<m:Tree
+									id="Tree"
+									select="handleChange"
+									mode="SingleSelectMaster"
+		 							items="{/references}"
+									includeItemInSelection="true">
+										<m:StandardTreeItem	title="{text}" icon="{ref}">
+											<m:customData>
+												<core:CustomData key="{key}" value="{key}"/>
+											</m:customData>
+										</m:StandardTreeItem>
+								</m:Tree>
+						</customView>
+					</CalculationBuilderGroup>
+				</groups>
+			</CalculationBuilder>
+		</m:content>
+	</m:Page>
+</mvc:View>

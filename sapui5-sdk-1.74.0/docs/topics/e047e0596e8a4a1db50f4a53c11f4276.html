@@ -1,0 +1,202 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 3: Catch Invalid Hashes</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Sometimes it is important to display an indication that the requested resource was not found. To give you an example: If a user tries to access an invalid pattern which does not match any of the configured routes, the user is notified that something went wrong. You might also know this as a &#x201C;404&#x201D; or Not Found Page from traditional web pages. In this step, we will implement a feature that detects invalid hashes and visualizes this in a nice way."><meta name="description" content="Sometimes it is important to display an indication that the requested resource was not found. To give you an example: If a user tries to access an invalid pattern which does not match any of the configured routes, the user is notified that something went wrong. You might also know this as a &#x201C;404&#x201D; or Not Found Page from traditional web pages. In this step, we will implement a feature that detects invalid hashes and visualizes this in a nice way."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"66670b0aab3948469d5cc8276113e9ea.html","previousTopicHref":"cf3c57c89ef0491793d1ce327ab4f9b2.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/1b6dcd39a6a74f528b27ddb22f15af0d.html" title="SAPUI5 comes with a powerful routing API that helps you control the state of your application efficiently. This tutorial will illustrate all major features and APIs related to navigation and routing in SAPUI5 apps by creating a simple and easy to understand mobile app. It represents a set of best practices for applying the navigation and routing features of SAPUI5 to your applications." target="_top">Navigation and Routing</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/cf3c57c89ef0491793d1ce327ab4f9b2.html" title="In this step we will modify the app and introduce routing. Instead of having the home page of the app hard coded we will configure a router to wire multiple views together when our app is called. The routing configuration controls the application flow when the user triggers a navigation action or opens a link to the application directly." target="_top">Step 2: Enable Routing</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/66670b0aab3948469d5cc8276113e9ea.html" title="When we are on the Not Found page because of an invalid hash, we want to get back to our app to select another page. Therefore, we will add a Back button to the Not Found view and make sure that the user gets redirected to either the previous page or the overview page when the Back button is pressed." target="_top">Step 4: Add a Back Button to Not Found Page</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loioe047e0596e8a4a1db50f4a53c11f4276"><h1 class="title topictitle1" hidden>Step 3: Catch Invalid Hashes</h1><div class="body conbody"><p class="shortdesc" hidden>Sometimes it is important to display an indication that the requested resource was not found. To give you an example: If a user tries to access an invalid pattern which does not match any of the configured routes, the user is notified that something went wrong. You might also know this as a <span class="q">&#x201C;404&#x201D;</span> or <span class="ph uicontrol">Not Found Page</span> from traditional web pages. In this step, we will implement a feature that detects invalid hashes and visualizes this in a nice way.</p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loioe047e0596e8a4a1db50f4a53c11f4276__fig_r1j_pst_mr"><div class="figbody">
+
+<img class="inline  " id="loioe047e0596e8a4a1db50f4a53c11f4276__image_nf1_dxw_ls" src="loio81506b2d46e440e09921911289e74570_LowRes.png">
+</div><span class="figcap"><span class="ph uicontrol">Not Found</span> page</span></div>
+</section></div>
+<div class="section"><section class="section" type="Coding"><h2 class="section_title" style="font-size: 1.15em;">Coding</h2>
+
+<p class="p">You can view and download all files in the <span class="ph uicontrol">Samples</span> in the Demo Kit
+<span class="ph">at <a class="xref" href="../../#/sample/sap.ui.core.tutorial.navigation.03/preview" target="_top" alt="#/sample/sap.ui.core.tutorial.navigation.03/preview" title="#/sample/sap.ui.core.tutorial.navigation.03/preview">Routing and Navigation - Step
+3</a></span>.</p>
+<div class="fig fignone" id="loioe047e0596e8a4a1db50f4a53c11f4276__fig_chm_4jp_ls"><div class="figbody">
+
+<img class="inline  " id="loioe047e0596e8a4a1db50f4a53c11f4276__image_r4v_qqh_ns" src="loio0b225d6d91d142a2b44a164193121700_HiRes.png">
+</div><span class="figcap">Folder structure for this step</span></div>
+</section></div>
+<div class="section"><section class="section" type="webapp/manifest.json"><h2 class="section_title" style="font-size: 1.15em;">webapp/manifest.json</h2>
+
+<pre class="pre codeblock prettyprint lang-js">{
+   ...
+   &quot;sap.ui5&quot;: {
+      ...
+      &quot;routing&quot;: {
+         &quot;config&quot;: {
+            &quot;routerClass&quot;: &quot;sap.m.routing.Router&quot;,
+            &quot;viewType&quot;: &quot;XML&quot;,
+            &quot;viewPath&quot;: &quot;sap.ui.demo.nav.view&quot;,
+            &quot;controlId&quot;: &quot;app&quot;,
+            &quot;controlAggregation&quot;: &quot;pages&quot;,
+            &quot;transition&quot;: &quot;slide&quot;,
+            <span class="ph emphasis emphasis">&quot;bypassed&quot;: {
+               &quot;target&quot;: &quot;notFound&quot;
+            },</span>
+            &quot;async&quot;: true
+         },
+         &quot;routes&quot;: [{
+            &quot;pattern&quot;: &quot;&quot;,
+            &quot;name&quot;: &quot;appHome&quot;,
+            &quot;target&quot;: &quot;home&quot;
+         }],
+         &quot;targets&quot;: {
+            &quot;home&quot;: {
+               &quot;viewId&quot;: &quot;home&quot;,
+               &quot;viewName&quot;: &quot;Home&quot;,
+               &quot;viewLevel&quot; : 1
+            }<span class="ph emphasis emphasis">,
+            &quot;notFound&quot;: {
+               &quot;viewId&quot;: &quot;notFound&quot;,
+               &quot;viewName&quot;: &quot;NotFound&quot;,
+               &quot;transition&quot;: &quot;show&quot;
+            }</span>
+         }
+      }
+   }
+}</pre>
+<p class="p">Let&#x2019;s extend the routing configuration in the descriptor by adding a
+<samp class="ph codeph">bypassed</samp> property and setting its <samp class="ph codeph">target</samp> to
+<samp class="ph codeph">notFound</samp>. This configuration tells the router to display the
+<samp class="ph codeph">notFound</samp> target in case no route was matched to the current
+hash. Next, we add a <samp class="ph codeph">notFound</samp> target to the
+<samp class="ph codeph">bypassed</samp> section. The <samp class="ph codeph">notFound</samp> target simply
+configures a <samp class="ph codeph">notFound</samp> view with a <samp class="ph codeph">show</samp> transition.
+</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/view/NotFound.view.xml (New)"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/NotFound.view.xml (New)</h2>
+
+<pre class="pre codeblock prettyprint lang-xml"><span class="ph emphasis emphasis">&lt;mvc:View
+   controllerName=&quot;sap.ui.demo.nav.controller.NotFound&quot;
+   xmlns=&quot;sap.m&quot;
+   xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+   &lt;MessagePage
+      title=&quot;{i18n&gt;NotFound}&quot;
+      text=&quot;{i18n&gt;NotFound.text}&quot;
+      description=&quot;{i18n&gt;NotFound.description}&quot;/&gt;
+&lt;/mvc:View&gt;</span></pre>
+<p class="p">Now we create the view referenced above in a new file <samp class="ph codeph">NotFound.view.xml</samp> in the <samp class="ph codeph">webapp/view folder</samp>. It uses a
+<samp class="ph codeph">sap.m.MessagePage</samp> control to display an error message to the user. In a real app you might use a dynamic message
+matching the current error situation. Here, we simply display a preconfigured text from our resource bundle.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/controller/NotFound.controller.js (New)"><h2 class="section_title" style="font-size: 1.15em;">webapp/controller/NotFound.controller.js (New)</h2>
+
+<pre class="pre codeblock prettyprint lang-js"><span class="ph emphasis emphasis">sap.ui.define([
+   &quot;sap/ui/core/mvc/Controller&quot;
+], function (Controller) {
+   &quot;use strict&quot;;
+   return Controller.extend(&quot;sap.ui.demo.nav.controller.NotFound&quot;, {
+      onInit: function () {
+      }
+   });
+});</span></pre>
+<p class="p">Now we create the controller for the <samp class="ph codeph">NotFound</samp> view and save it into
+the <samp class="ph codeph">webapp/controller</samp> folder. This controller will be extended
+later.</p>
+</section></div>
+<div class="section"><section class="section" type="webapp/i18n/i18n.properties"><h2 class="section_title" style="font-size: 1.15em;">webapp/i18n/i18n.properties</h2>
+
+<pre class="pre codeblock prettyprint lang-js">...
+<span class="ph emphasis emphasis">NotFound=Not Found
+NotFound.text=Sorry, but the requested resource is not available.
+NotFound.description=Please check the URL and try again</span>.</pre>
+<p class="p">Add the new properties to the <samp class="ph codeph">i18n.properties</samp> file.</p>
+<p class="p">Open the URL <samp class="ph codeph">index.html#/thisIsInvalid</samp> in your browser. From now on the user will see a nice <span class="ph uicontrol">Not Found</span> page if a hash could not be matched to one of our routes.</p>
+</section></div>
+<div class="section"><section class="section" type="Conventions"><h2 class="section_title" style="font-size: 1.15em;"> Conventions</h2>
+
+<ul class="ul" id="loioe047e0596e8a4a1db50f4a53c11f4276__ul_nh5_ybb_nr">
+<li class="li">
+<p class="p">Always configure the <samp class="ph codeph">bypassed</samp> property and a corresponding
+target</p>
+</li>
+<li class="li">
+<p class="p">Use the <samp class="ph codeph">sap.m.MessagePage</samp> control to display routing related
+error messages</p>
+</li>
+</ul>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/1b6dcd39a6a74f528b27ddb22f15af0d.html" title="SAPUI5 comes with a powerful routing API that helps you control the state of your application efficiently. This tutorial will illustrate all major features and APIs related to navigation and routing in SAPUI5 apps by creating a simple and easy to understand mobile app. It represents a set of best practices for applying the navigation and routing features of SAPUI5 to your applications." target="_top">Navigation and Routing</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/cf3c57c89ef0491793d1ce327ab4f9b2.html" title="In this step we will modify the app and introduce routing. Instead of having the home page of the app hard coded we will configure a router to wire multiple views together when our app is called. The routing configuration controls the application flow when the user triggers a navigation action or opens a link to the application directly." target="_top">Step 2: Enable Routing</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/66670b0aab3948469d5cc8276113e9ea.html" title="When we are on the Not Found page because of an invalid hash, we want to get back to our app to select another page. Therefore, we will add a Back button to the Not Found view and make sure that the user gets redirected to either the previous page or the overview page when the Back button is pressed." target="_top">Step 4: Add a Back Button to Not Found Page</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/api/sap.m.MessagePage" target="_top" alt="#/api/sap.m.MessagePage" title="#/api/sap.m.MessagePage">API Reference: <samp class="ph codeph">sap.m.MessagePage</samp></a></div><div><a class="link" href="../../#/entity/sap.m.MessagePage" target="_top" alt="#/entity/sap.m.MessagePage" title="#/entity/sap.m.MessagePage">API Overview and Samples: <samp class="ph codeph">sap.m.MessagePage</samp>
+</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

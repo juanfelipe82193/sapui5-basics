@@ -1,0 +1,133 @@
+<sap.ui.core:View controllerName="AppScflTest.view.S5" xmlns="sap.m" xmlns:sap.ui.layout.form="sap.ui.layout.form" xmlns:sap.ui.layout="sap.ui.layout" xmlns:sap.ui.core="sap.ui.core">
+	<Page id="GoodsReceiptPage">
+		<content>
+			<ObjectHeader id="GoodsReceiptObjectHeader" title="{i18n>XTIT_GoodsReceipt}" number="{GoodsReceiptNumberFormatted}" introActive="false" titleActive="false" iconActive="false">
+				<attributes>
+					<ObjectAttribute text="{path : 'CreatedAt', formatter : 'AppScflTest.util.Conversions.formatCreatedOn'}" active="false"></ObjectAttribute>
+					<ObjectAttribute press="showEmployeeBusinessCard" text="{parts:[{path : 'i18n>XFLD_By'},{path : 'CreatedByName'}], formatter : 'AppScflTest.util.Conversions.concatString'}" active="true"></ObjectAttribute>
+				</attributes>
+				<firstStatus>
+					<ObjectStatus text="{Status}" state="Success"></ObjectStatus>
+				</firstStatus>
+			</ObjectHeader>
+			<sap.ui.layout.form:Form class="purchaseOrderForm">
+				<sap.ui.layout.form:formContainers>
+					<sap.ui.layout.form:FormContainer title="{i18n>XTIT_Information}">
+						<sap.ui.layout.form:layoutData>
+							<sap.ui.layout:ResponsiveFlowLayoutData linebreak="true" margin="false"></sap.ui.layout:ResponsiveFlowLayoutData>
+						</sap.ui.layout.form:layoutData>
+						<sap.ui.layout.form:formElements>
+							<sap.ui.layout.form:FormElement>
+								<sap.ui.layout.form:layoutData>
+									<sap.ui.layout:ResponsiveFlowLayoutData linebreak="true" margin="false"></sap.ui.layout:ResponsiveFlowLayoutData>
+								</sap.ui.layout.form:layoutData>
+								<sap.ui.layout.form:label>
+									<Label text="{i18n>XFLD_Supplier}">
+										<layoutData>
+											<sap.ui.layout:ResponsiveFlowLayoutData weight="3"></sap.ui.layout:ResponsiveFlowLayoutData>
+										</layoutData>
+									</Label>
+								</sap.ui.layout.form:label>
+								<sap.ui.layout.form:fields>
+									<Link press="showSupplierBusinessCard" text="{SupplierName}">
+										<layoutData>
+											<sap.ui.layout:ResponsiveFlowLayoutData weight="5"></sap.ui.layout:ResponsiveFlowLayoutData>
+										</layoutData>
+									</Link>
+								</sap.ui.layout.form:fields>
+							</sap.ui.layout.form:FormElement>
+							<sap.ui.layout.form:FormElement>
+								<sap.ui.layout.form:layoutData>
+									<sap.ui.layout:ResponsiveFlowLayoutData linebreak="true" margin="false"></sap.ui.layout:ResponsiveFlowLayoutData>
+								</sap.ui.layout.form:layoutData>
+								<sap.ui.layout.form:label>
+									<Label text="{i18n>XFLD_DeliveryNoteID}">
+										<layoutData>
+											<sap.ui.layout:ResponsiveFlowLayoutData weight="3"></sap.ui.layout:ResponsiveFlowLayoutData>
+										</layoutData>
+									</Label>
+								</sap.ui.layout.form:label>
+								<sap.ui.layout.form:fields>
+									<Text text="{ExternalReference}" maxLines="0">
+										<layoutData>
+											<sap.ui.layout:ResponsiveFlowLayoutData weight="5"></sap.ui.layout:ResponsiveFlowLayoutData>
+										</layoutData>
+									</Text>
+								</sap.ui.layout.form:fields>
+							</sap.ui.layout.form:FormElement>
+							<sap.ui.layout.form:FormElement>
+								<sap.ui.layout.form:layoutData>
+									<sap.ui.layout:ResponsiveFlowLayoutData linebreak="true" margin="false"></sap.ui.layout:ResponsiveFlowLayoutData>
+								</sap.ui.layout.form:layoutData>
+								<sap.ui.layout.form:label>
+									<Label text="{i18n>XFLD_PostingDate}">
+										<layoutData>
+											<sap.ui.layout:ResponsiveFlowLayoutData weight="3"></sap.ui.layout:ResponsiveFlowLayoutData>
+										</layoutData>
+									</Label>
+								</sap.ui.layout.form:label>
+								<sap.ui.layout.form:fields>
+									<Text text="{path : 'PostingDate', formatter : 'AppScflTest.util.Conversions.formatDate'}" maxLines="0">
+										<layoutData>
+											<sap.ui.layout:ResponsiveFlowLayoutData weight="5"></sap.ui.layout:ResponsiveFlowLayoutData>
+										</layoutData>
+									</Text>
+								</sap.ui.layout.form:fields>
+							</sap.ui.layout.form:FormElement>
+						</sap.ui.layout.form:formElements>
+					</sap.ui.layout.form:FormContainer>
+				</sap.ui.layout.form:formContainers>
+				<sap.ui.layout.form:layout>
+					<sap.ui.layout.form:ResponsiveLayout></sap.ui.layout.form:ResponsiveLayout>
+				</sap.ui.layout.form:layout>
+			</sap.ui.layout.form:Form>
+			<sap.ui.layout:VerticalLayout class="detailControlPadding" width="100%">
+				<sap.ui.layout:content>
+					<Table id="Items" headerText="{i18n>XCAP_Items}" items="{GoodsReceiptItems}">
+						<items>
+							<ColumnListItem counter="0">
+								<cells>
+									<VBox direction="Column">
+										<items>
+											<ObjectIdentifier title="{Description}" text="{MaterialID}" badgeNotes="false" badgePeople="false" badgeAttachments="false"></ObjectIdentifier>
+											<Text text="{PONumber}-{POItemNumber}" maxLines="0"></Text>
+										</items>
+									</VBox>
+									<VBox direction="Column">
+										<items>
+											<ObjectNumber number="{path: 'QuantityOrdered', formatter: 'AppScflTest.util.Conversions.formatNumber'}" numberUnit="{UnitOrdered}"></ObjectNumber>
+										</items>
+									</VBox>
+									<VBox direction="Column">
+										<items>
+											<ObjectNumber number="{path: 'QuantityDelivered', formatter: 'AppScflTest.util.Conversions.formatNumber'}" numberUnit="{UnitDelivered}"></ObjectNumber>
+											<Label text="{path : 'DeliveredDate', formatter : 'AppScflTest.util.Conversions.formatDate'}"></Label>
+											<ObjectStatus text="{PlantName}" icon="sap-icon://factory"></ObjectStatus>
+										</items>
+									</VBox>
+								</cells>
+							</ColumnListItem>
+						</items>
+						<columns>
+							<Column width="40%" hAlign="Left" minScreenWidth="large" demandPopin="true">
+								<header>
+									<Label text="{i18n>XFLD_Material}" textAlign="Left" width="100%"></Label>
+								</header>
+							</Column>
+							<Column width="30%" hAlign="Right" minScreenWidth="large" demandPopin="true">
+								<header>
+									<Label text="{i18n>XCAP_Ordered}" textAlign="Right" width="100%"></Label>
+								</header>
+							</Column>
+							<Column width="30%" hAlign="Right" minScreenWidth="large" demandPopin="true">
+								<header>
+									<Label text="{i18n>XCAP_Delivered}" textAlign="Right" width="100%"></Label>
+								</header>
+							</Column>
+						</columns>
+					</Table>
+				</sap.ui.layout:content>
+			</sap.ui.layout:VerticalLayout>
+		</content>
+	</Page>
+</sap.ui.core:View>

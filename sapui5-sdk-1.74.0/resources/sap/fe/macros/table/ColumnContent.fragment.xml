@@ -1,0 +1,57 @@
+<core:FragmentDefinition
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns:mdc="sap.ui.mdc"
+	xmlns:mdcTable="sap.ui.mdc.table"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:macro="sap.fe.macros"
+	template:require="{
+		FIELD: 'sap/fe/macros/field/FieldHelper',
+		TABLE: 'sap/fe/macros/table/TableHelper',
+		ID: 'sap/fe/macros/StableIdHelper'
+	}"
+>
+	<template:if test="{= (${dataField>$Type}.indexOf('DataFieldForAnnotation') > -1) &amp;&amp; (${dataField>Target/$AnnotationPath}.indexOf('FieldGroup') > -1)}">
+		<template:then>
+			<VBox >
+				<template:with path="dataField>Target/$AnnotationPath/Data/" var="dataFieldCollections">
+					<template:repeat list="{dataFieldCollections>}" var="dataField">
+						<macro:Field editMode="{= ${this>editMode} ? ${this>editMode} : 'Display'}"
+							createMode="{this>createMode}"
+							idPrefix="{= ID.generate([${this>id}]) }"
+							vhIdPrefix="{= ID.generate([${this>id}, 'TableVH']) }"
+							metadataContexts="{ model: 'collection', path:'',  name: 'entitySet'},{ model: 'dataField', path:'',  name: 'dataField'}"
+							onCallAction="{= ${this>onCallAction} ? ${this>onCallAction} : null}"
+							parentControl="Table"
+							wrap="{= ${this>type} === 'ResponsiveTable' ? true : false }"
+							class="{= TABLE.getMarginClass( ${dataFieldCollections>}  , ${dataField>} , ${dataField>Target/$AnnotationPath/Visualization/$EnumMember}) }"
+							onChange="{= ${this>onChange}}" />
+					</template:repeat>
+				</template:with>
+			</VBox>
+		</template:then>
+		<template:else>
+			<macro:Field editMode="{= ${this>editMode} ? ${this>editMode} : 'Display'}"
+				createMode="{this>createMode}"
+				idPrefix="{= ID.generate([${this>id}]) }"
+				vhIdPrefix="{= ID.generate([${this>id}, 'TableVH']) }"
+				metadataContexts="{ model: 'collection', path:'',  name: 'entitySet'},{ model: 'dataField', path:'',  name: 'dataField'}"
+				onCallAction="{= ${this>onCallAction} ? ${this>onCallAction} : null}"
+				parentControl="Table"
+				wrap="{= ${this>type} === 'ResponsiveTable' ? true : false }"
+				onChange="{= ${this>onChange}}" />
+			<mdcTable:creationTemplate>
+				<!-- TODO: for the first version we add it to every table later we will change it and will add it only in case creation row is active -->
+				<!-- the creation row shall use the form visualization (to be checked with UX)-->
+				<macro:Field editMode="{= ${this>editMode} ? ${this>editMode} : 'Display'}"
+					createMode="{this>createMode}"
+					vhIdPrefix="{= ID.generate([${this>id}, 'TableVH']) }"
+					metadataContexts="{ model: 'collection', path:'',  name: 'entitySet'},{ model: 'dataField', path:'',  name: 'dataField'}"
+					parentControl="Table"
+					wrap="{= ${this>type} === 'ResponsiveTable' ? true : false }"
+					onChange="{= ${this>onChange}}"/>
+			</mdcTable:creationTemplate>
+		</template:else>
+	</template:if>
+
+</core:FragmentDefinition>

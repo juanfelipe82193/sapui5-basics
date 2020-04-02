@@ -1,0 +1,111 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Reusing UI Parts: Fragments</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Fragments are light-weight UI parts (UI sub-trees) which can be reused, defined similar to views, but do not have any controller or other behavior code involved."><meta name="description" content="Fragments are light-weight UI parts (UI sub-trees) which can be reused, defined similar to views, but do not have any controller or other behavior code involved."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"08d220676c1c4de38fa8bbc515e2477f.html","previousTopicHref":"f1ee7a8b2102415bb0d34268046cd3ea.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio36a5b130076e4b4aac2c27eebf324909"><h1 class="title topictitle1" hidden>Reusing UI Parts: Fragments</h1><div class="body conbody"><p class="shortdesc" hidden>Fragments are light-weight UI parts (UI sub-trees) which can be reused, defined similar
+to views, but do not have any controller or other behavior code involved.</p>
+<p class="p">UI parts which are to be used in several views cannot be easily defined. They either have to be
+created as new controls, or they have to be created as views. Creating them as new
+controls results in a development overhead, while creating them as separate views
+results in a runtime overhead. In the latter case they would have a separate controller
+instead of having the same controller as the view does. Also, views and popup controls
+like dialogs do not go well together. The dialog content can be defined as a view but
+the dialog control itself always has to be written in the program.</p>
+<p class="p">To solve these issues, fragments have been introduced. They can be reused and, if source code is required and for event handler methods, they can connect
+to existing controllers of the &quot;owning&quot; view. This means that one important characteristic of fragments is that they are independent of the
+model-view-controller (MVC) concept and can be used without using MVC. However, if fragments are used together with views and controllers, fragments
+can make use of them and integrate them neatly.</p>
+<p class="p">Similar to <samp class="ph codeph">DocumentFragments</samp> in HTML, the fragment itself has no HTML
+representation when it is inserted into the UI tree. Instead, its content is inserted.
+This means that fragments are not like controls, but more like a factory creating the
+contained controls. They support reuse and view modularization without adding
+overhead.</p>
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> provides different types of fragments:</p>
+<ul class="ul" id="loio36a5b130076e4b4aac2c27eebf324909__ul_zgg_rgv_3m">
+<li class="li">XML fragments</li>
+<li class="li">HTML fragments</li>
+<li class="li">JS fragments</li>
+</ul>
+<p class="p">More fragment types can be implemented and plugged in.</p>
+<p class="p">Defining a fragment is similar to defining views within a separate file. The fragments
+simply end with <span class="ph filepath">*.fragment</span> instead of <span class="ph filepath">*.view</span>.
+Also, the same rules for file location apply.</p>
+</div><div class="related-links"> <br><div class="childtopics"><strong>In this section:</strong></div><ul class="ullinks"><div><strong><a class="link" href="../../#/topic/08d220676c1c4de38fa8bbc515e2477f.html" title="HTML fragments have a similar syntax as HTML views, but without the &lt;template&gt; tag." target="_top">HTML Fragments</a></strong><br></div><div><strong><a class="link" href="../../#/topic/2c677b574ea2486a8d5f5414d15e21c5.html" title="XML fragments are similar to XML view, but have no &lt;View&gt; tag as root element. Instead, there is an SAPUI5 control." target="_top">XML Fragments</a></strong><br></div><div><strong><a class="link" href="../../#/topic/9c069828d0064136ac6a499aa2cdace3.html" title="The structure of JS fragments is similar to the structure of the respective views: They have a name and an object with a createContent() function." target="_top">JS Fragments</a></strong><br></div><div><strong><a class="link" href="../../#/topic/04129b2798c447368f4c8922c3c33cd7.html" title="SAPUI5 provides the generic function sap.ui.fragment() to instantiate fragments." target="_top">Instantiation of Fragments</a></strong><br></div><div><strong><a class="link" href="../../#/topic/5da591c5a5a54740948acfe56b22fbc3.html" title="You can use a unique ID for a fragment that will be used as a prefix for all controls in a fragment instance." target="_top">Unique IDs</a></strong><br></div><div><strong><a class="link" href="../../#/topic/448c6418153149a79c8ff4370808f9c1.html" title="You can use fragments to declaratively define dialogs and other popup controls which are not part of the normal page UI structure." target="_top">Dialogs and other Popups as Fragments</a></strong><br></div><div><strong><a class="link" href="../../#/topic/23b9c779c2274213a281c1fc46b4962b.html" title="XML fragments and JS fragments can have more than one root control." target="_top">Fragments with Multiple Root Nodes</a></strong><br></div></ul><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/91f233476f4d1014b6dd926db0e91070.html" title="The Model View Controller (MVC) concept is used in SAPUI5 to separate the representation of information from the user interaction. This separation facilitates development and the changing of parts independently." target="_top">Model View Controller (MVC)</a></div><div><a class="link" href="../../#/topic/4da72985139b4b83b5f1c1e0c0d2ed5a.html" title="In this step, we will take a closer look at another element which can be used to assemble views: the fragment." target="_top">Walkthrough Step 16: Dialogs and Fragments</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

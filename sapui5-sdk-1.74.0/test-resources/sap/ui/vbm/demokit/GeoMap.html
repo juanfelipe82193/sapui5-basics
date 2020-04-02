@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html data-sap-ui-dk-controls="sap.ui.vbm.GeoMap">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta charset="UTF-8"/>
+		<style>
+		</style>
+
+		<title>Visual Business - SAPUI5 Demo Kit</title>
+		<link rel="stylesheet" type="text/css" href="../../../../../theme/default.css" />
+
+		<script id="sap-ui-bootstrap"
+				src="../../../../../resources/sap-ui-core.js"
+				data-sap-ui-theme="sap_bluecrystal"
+				data-sap-ui-libs="sap.ui.vbm,sap.ui.demokit"
+				>
+		</script>
+		<script src="../../../../../js/utils.js"></script>
+		
+		<script id="BaseMap">
+ // create a map
+ new sap.ui.vbm.GeoMap({ 
+  width : 400, 
+  height: 250,
+  centerPosition: "-0.06317138671875;51.47626961872827",
+  zoomlevel: "9"
+}).placeAt("BaseMap");
+		
+		</script>		
+		
+		<script id="Spots">
+// have some data
+var oData = 
+	{
+		Spots :
+			[
+				{ "value" : "8", "pos": "37.622882;55.755202;0",  "tooltip": "Moscow", "type":"Inactive"  },
+				{ "value":  "23", "pos": "-74.013327;40.705395;0", "tooltip": "New York", "type":"Error"  },
+				{ "value":  "2", "pos": "8.641568;49.293789;0", "tooltip": "SAP Walldorf", "type":"Success"  }
+			]
+	};
+
+// create model and set the data
+var oModel = new sap.ui.model.json.JSONModel();
+oModel.setData( oData );
+
+// create map and bind to model
+var oVBI = new sap.ui.vbm.GeoMap({
+   width : "100%",
+   	height: 250,
+   	centerPosition: "-5;48.8",
+   	zoomlevel: 3,
+   	vos: [
+   	  	new sap.ui.vbm.Spots({
+           // bind to an array in the model
+           items: { 
+            	path : "/Spots",
+             	template: new sap.ui.vbm.Spot(  { text: '{value}', position: '{pos}', tooltip: '{tooltip}', type: '{type}'}  )
+          	} } )
+   	  	]
+});		
+oVBI.setModel( oModel );
+
+//add explicite object
+oVBI.addVo( new sap.ui.vbm.Spots({ 
+                items: [
+                  new sap.ui.vbm.Spot({ 
+                	   position: "2.35107421875;48.85908634945168;0", 
+                	   type: "Default", 
+                	   tooltip: "Paris"
+                	   })
+                ]
+  }) 
+);
+
+oVBI.placeAt("Spots");
+		</script>		
+
+	</head>
+
+	<body class="sapUiDemokitBody" role="application">
+		<h1 icon="media/images/vbi_geomap_icon.png">VBI GeoMap</h1>
+		<h2>Introduction</h2>
+		<p>The Visual Business GeoMap control wraps the VBI control and exposes a simple UI5 interface. For UI5 developers it is easier to use, but it fits only for client side applications.</p>
+		
+		<h2>Examples</h2>
+		<h3>Plain Map</h3>
+		<p> This example shows the creation of an plain map focus on a given position. In the example we define only the width and height of the control. If ommited the default size of 800x600 pixels would be chosen. The size can also be given relative.</p>
+		<p> The map data comes per default from MapQuest and is based on OpenStreetMap data. The used map can be changed by providing a dedicated map configuration to the control.</p>					
+		<div code-sample="BaseMap" script="BaseMap" >
+			<div id="BaseMap"></div>
+		</div>
+						
+		<h3>Objects on the map</h3>
+		<p>This sample shows the control creation with additional object placed on the map. The most common object to use is a Spot based on a given location. The sample shows the template based cration of spots with aggregation binding as well as the exlicite creation of a spots.</p>
+		<div code-sample="Spots" script="Spots" >
+			<div id="Spots"></div>
+		</div>
+		<p>
+		<h2>Best Practices</h2>
+			See <a class="sapUiDemokitSrcLink" href="../bestpractices.html">Visual Business Best Practices</a>
+		<h2>API Documentation</h2>
+			See <a class="sapUiDemokitSrcLink" href="../../../../../docs/api/symbols/sap.ui.vbm.GeoMap.html">API documentation</a>
+		</p>
+	</body>
+</html>

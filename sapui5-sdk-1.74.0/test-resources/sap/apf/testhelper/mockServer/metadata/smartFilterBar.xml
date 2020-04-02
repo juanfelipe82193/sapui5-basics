@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<edmx:Edmx Version="1.0"
+	xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+	xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+	xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="ZJH_TESTAPP" xml:lang="en"
+			sap:schema-version="0000" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="testEntityType" sap:content-version="1" sap:label="LabelForRevenue">
+				<Key>
+					<PropertyRef Name="ID" />
+				</Key>
+				<Property Name="ID" Type="Edm.Int32" Nullable="false"
+					sap:label="ID" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+				<Property Name="Company" Type="Edm.String"
+					MaxLength="100" sap:label="Company"
+					sap:filterable="true" sap:required-in-filter="true" sap:filter-restriction="multi-value"/>
+				<Property Name="Revenue" Type="Edm.Int32" Nullable="false"
+					sap:label="Revenue" sap:creatable="false"
+					sap:updatable="false" sap:sortable="true" sap:filterable="false" />
+				<Property Name="Date" Type="Edm.DateTime" sap:label="Date" sap:filterable="true" sap:display-format="Date" sap:required-in-filter="false" sap:filter-restriction = "interval" />
+				<Property Name="Country" Type="Edm.String" 
+					MaxLength="100" sap:label="CountryCode of Customer" 
+					sap:filterable="true" sap:text="CountryName"/>
+				<Property Name="CountryName" Type="Edm.String" Nullable="false"
+					MaxLength="100" sap:label="Country of Customer" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="true" sap:required-in-filter="false"/>
+				<Property Name="City" Type="Edm.String" 
+					MaxLength="100" sap:label="City of Customer" 
+					sap:filterable="true" sap:required-in-filter="false" sap:filter-restriction="single-value"/>
+				<Property Name="Customer" Type="Edm.String" Nullable="false"
+					MaxLength="100" sap:label="Customer" sap:creatable="false"
+					sap:updatable="false" sap:sortable="true" sap:filterable="true" />
+			</EntityType>
+			<EntityType Name="VL_Country" sap:content-version="1" sap:label="Value list for Country">
+				<Key>
+					<PropertyRef Name="ID" />
+				</Key>
+				<Property Name="ID" Type="Edm.Int32" sap:label="ID" sap:filterable="false"/>
+				<Property Name="Continent" Type="Edm.String" sap:label="Continent" sap:filter-restriction="multi-value" sap:semantics="aggregate" sap:aggregation-role="dimension"/>
+				<Property Name="Country" Type="Edm.String" sap:label="Country" sap:filter-restriction="multi-value" sap:semantics="aggregate" sap:aggregation-role="dimension"/>
+				<Property Name="CountryName" Type="Edm.String" Nullable="false"
+					MaxLength="100" sap:label="Country of Customer" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" />
+			</EntityType>
+			
+			<EntityType Name="VL_City" sap:content-version="1" sap:label="Value list for City">
+				<Key>
+					<PropertyRef Name="ID" />
+				</Key>
+				<Property Name="ID" Type="Edm.Int32" sap:label="ID" sap:filterable="false"/>
+				<Property Name="Country" Type="Edm.String" sap:label="Country" sap:filter-restriction="multi-value" sap:semantics="aggregate" sap:aggregation-role="dimension"/>
+				<Property Name="CountryName" Type="Edm.String" Nullable="false"
+					MaxLength="100" sap:label="Country of Customer" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false"/>
+				<Property Name="City" Type="Edm.String" 
+					MaxLength="100" sap:label="City of Customer" 
+					sap:filterable="true" sap:required-in-filter="false" sap:filter-restriction="multi-value"/>
+			</EntityType>
+			<EntityContainer Name="ZJH_TESTAPP_Entities"
+				m:IsDefaultEntityContainer="true">
+				<EntitySet Name="testEntitySet" EntityType="ZJH_TESTAPP.testEntityType"
+					sap:pageable="false" sap:content-version="1" />
+				<EntitySet Name="VL_CountrySet" EntityType="ZJH_TESTAPP.VL_Country"
+					sap:pageable="true" sap:content-version="1" sap:searchable="true" />
+				<EntitySet Name="VL_CitySet" EntityType="ZJH_TESTAPP.VL_City"
+					sap:pageable="true" sap:content-version="1" sap:searchable="true" />
+			</EntityContainer>
+			<Annotations Target="ZJH_TESTAPP.Revenue/Country"
+			xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+					<Record>
+						<PropertyValue Property="Label" String="Country (general)"/>
+						<PropertyValue Property="CollectionPath" String="VL_CountrySet"/>
+						<PropertyValue Property="SearchSupported" Bool="true"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty" String="CountryName"/>
+								</Record>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="Continent"/>
+									<PropertyValue Property="ValueListProperty" String="Continent"/>
+								</Record>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="Country"/>
+									<PropertyValue Property="ValueListProperty" String="Country"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="ZJH_TESTAPP.Revenue/City"
+			xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+					<Record>
+						<PropertyValue Property="Label" String="CountryName (general)"/>
+						<PropertyValue Property="CollectionPath" String="VL_CitySet"/>
+						<PropertyValue Property="SearchSupported" Bool="true"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<!--Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="Country"/>
+									<PropertyValue Property="ValueListProperty" String="Country"/>
+								</Record-->
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="Country"/>
+									<PropertyValue Property="ValueListProperty" String="Country"/>
+								</Record>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+									<PropertyValue Property="LocalDataProperty" PropertyPath="City"/>
+									<PropertyValue Property="ValueListProperty" String="City"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

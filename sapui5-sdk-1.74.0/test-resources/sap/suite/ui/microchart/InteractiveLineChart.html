@@ -1,0 +1,364 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.suite.ui.microchart.InteractiveLineChart</title>
+
+<base href="../../../../../">
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout, sap.m, sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize"
+	src="resources/sap-ui-core.js">
+</script>
+
+<script type="text/javascript">
+	jQuery.sap.initMobile();
+
+	function _fnParseFloat(fValue) {
+		if (!fValue || fValue.length == 0 || fValue == '-') {
+			return undefined;
+		} if (/[.,]$/.test(fValue)) {
+			return sap.ui.core.format.NumberFormat.getFloatInstance().parse(fValue.slice(0, -1));
+		} else {
+			return sap.ui.core.format.NumberFormat.getFloatInstance().parse(fValue);
+		}
+	};
+
+	var fnSelectionChanged = function (oEvent) {
+		sap.m.MessageToast.show("The number of selected points is: " + oEvent.getParameter("selectedPoints").length + "\nThe selected point is: " + oEvent.getParameter("point").getId());
+	};
+
+	var fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The chart is pressed.");
+	};
+
+	var oLineChartData = {
+		displayedPoints: 6,
+		selectionEnabled: true,
+		points: [
+			{label: "May", value: 33.1, color: sap.m.ValueColor.Neutral, selected: true},
+			{label: "June", value: 2.2, color: sap.m.ValueColor.Critical, selected: false},
+			{label: "Juli", value: 51.4, color: sap.m.ValueColor.Good, selected: false},
+			{label: "Aug", value: 19.9, color: sap.m.ValueColor.Neutral, selected: false},
+			{label: "Sep", value: 69.9, color: sap.m.ValueColor.Good, selected: false},
+			{label: "Oct", value: 0.9, color: sap.m.ValueColor.Critical, selected: false}
+		],
+		colors: Object.keys(sap.m.ValueColor)
+	};
+
+	var oLineChartModel = new sap.ui.model.json.JSONModel();
+	oLineChartModel.setData(oLineChartData);
+	sap.ui.getCore().setModel(oLineChartModel);
+
+	var buildLineChart = function (sSize, sText) {
+		var sIdSuffix, sHeight, sWidth;
+		sHeight = sSize.height;
+		sWidth = sSize.width;
+		sIdSuffix = sText;
+
+		var oLineChart = new sap.suite.ui.microchart.InteractiveLineChart("line-chart-" + sIdSuffix, {
+			tooltip: "{/tooltip}",
+			displayedPoints: "{/displayedPoints}",
+			selectionEnabled: "{/selectionEnabled}",
+			points: {
+				template: new sap.suite.ui.microchart.InteractiveLineChartPoint({
+					label: "{label}",
+					value: "{value}",
+					displayedValue: "{displayedValue}",
+					tooltip: "{areatooltip}",
+					color: "{color}",
+					selected: "{selected}"
+				}),
+				path: "/points"
+			},
+			selectionChanged: fnSelectionChanged,
+			press: fnPress
+		}).addStyleClass("sapUiTinyMargin");
+
+		return new sap.m.FlexBox("flex-box-" + sIdSuffix, {
+			items: [oLineChart],
+			layoutData : new sap.ui.layout.ResponsiveFlowLayoutData({
+				minWidth : 400
+			}),
+			height: sHeight,
+			width: sWidth
+		});
+	}
+
+	var oLCFormLabel = new sap.m.Label({
+		text: "Responsive controls in FlexBox",
+		labelFor: "linechart-responsive-layout",
+		width: "100%",
+		textAlign: "Center",
+		design: "Bold"
+	});
+
+	var oLCResponsiveLayout = new sap.ui.layout.ResponsiveFlowLayout("linechart-responsive-layout", {
+		content:[
+			buildLineChart({width: "380px", height: "220px"}, "largeResponsive"),
+			buildLineChart({width: "320px", height: "180px"}, "mediumResponsive"),
+			buildLineChart({width: "200px", height: "140px"}, "smallResponsive")
+		]
+	});
+
+	var oDisplayedPointsLabel = new sap.m.Label({
+		text: "DisplayedPoints",
+		labelFor: "displayedPoints"
+	});
+
+	var oDisplayedPointsInput = new sap.m.Input("displayedPoints", {
+		placeholder: "Input the number of points to be displayed ...",
+		width: "10rem",
+		value: {
+			path: "/displayedPoints",
+			type: new sap.ui.model.type.Float({groupingEnabled: false})
+		},
+		liveChange: function(oEvent) {
+			var fValue = _fnParseFloat(oEvent.getParameter("newValue"));
+			if (typeof fValue == "undefined" || !isNaN(fValue)) {
+				oLineChartData.displayedPoints = fValue;
+				oLineChartModel.checkUpdate();
+			}
+		}
+	});
+
+	var oSelectionEnabledSwitchLbl = new sap.m.Label({
+		text : "Selection enabled",
+		labelFor : "selection-enabled"
+	});
+
+	var oSelectionEnabledSwitch = new sap.m.Switch({
+		id: "selection-enabled",
+		state: true,
+		name: "Selection enabled",
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			oLineChartData.selectionEnabled = bState;
+			oLineChartModel.checkUpdate();
+		}
+	});
+
+	var iIndex = 0;
+	var oPointAddLabel = new sap.m.Label({
+		text: "Points",
+		labelFor: "point-add-button"
+	});
+
+	var oPointAddButton = new sap.m.Button("point-add-button", {
+		width: "10rem",
+		text: "Add Point Element",
+		press: function(oEvent) {
+			iIndex = 0;
+			oLineChartData.points.push({label: "", value: null});
+			oLineChartModel.checkUpdate();
+		}
+	});
+
+	var oSettingsLabel = new sap.m.Label({
+		text: "Settings",
+		labelFor: "linechart-setting-form",
+		width: "100%",
+		textAlign: "Center",
+		design: "Bold"
+	});
+
+	var oCompactLbl = new sap.m.Label({
+		text: "Compact Mode",
+		labelFor: "compactMode"
+	});
+
+	var oCompactSwitch = new sap.m.Switch({
+		id: "compactMode",
+		state: false,
+		name: "Compact Mode",
+		change: function(oEvent) {
+			var bState = oEvent.getParameter("state");
+			oLineChartData.compact = bState;
+			oLineChartModel.checkUpdate();
+
+			if (bState) {
+				jQuery(".sapSuiteILC").each(function() {
+					var oControl = sap.ui.getCore().byId(jQuery(this).data("sap-ui"));
+					if (oControl) {
+						oControl.addStyleClass("sapUiSizeCompact");
+						oControl.rerender();
+					}
+				});
+			} else {
+				jQuery(".sapSuiteILC").each(function() {
+					var oControl = sap.ui.getCore().byId(jQuery(this).data("sap-ui"));
+					if (oControl) {
+						oControl.removeStyleClass("sapUiSizeCompact");
+						oControl.rerender();
+					}
+				});
+			}
+		}
+	});
+
+	// tooltip
+	var oTooltipLbl = new sap.m.Label({
+		text : "Tooltip",
+		labelFor : "tooltip"
+	});
+	var oTooltipInput = new sap.m.TextArea("tooltip", {
+		rows: 2,
+		width: "15rem",
+		placeholder: 'Enter tooltip (keep empty for inserting the internal text) ...',
+		value: "{/tooltip}"
+	});
+
+	var oLCSettingsForm = new sap.ui.layout.form.SimpleForm("linechart-setting-form", {
+		maxContainerCols: 2,
+		editable: true,
+		content: [
+			oDisplayedPointsLabel, oDisplayedPointsInput,
+			oTooltipLbl, oTooltipInput,
+			oSelectionEnabledSwitchLbl, oSelectionEnabledSwitch,
+			oCompactLbl, oCompactSwitch,
+			oPointAddLabel, oPointAddButton
+		]
+	});
+
+//******************* Point Form ********************************************************
+
+	fnFormFactoryLC = function(sId) {
+		var oRemoveButton = new sap.m.Button(sId + "lc-remove-button", {
+			width: "10rem",
+			text: "Remove point",
+			press: function(oEvent) {
+				oLineChartData.points.splice(this._index, 1);
+				iIndex = 0;
+				oLineChartModel.checkUpdate();
+			}
+		});
+		oRemoveButton._index = iIndex;
+
+		var oLabelLabel = new sap.m.Label(sId + "-label-label", {text: "Label", labelFor: sId + "-label-input"});
+		var oLabelInput = new sap.m.Input(sId + "-label-input", {
+			width: "10rem",
+			placeholder: "Enter label ...",
+			value: {path: "label"},
+			liveChange: function(oEvent) {
+				var sLabel = oEvent.getParameter("newValue");
+				oLineChartData.points[this._index].label = sLabel;
+				oLineChartModel.checkUpdate();
+			}
+		});
+		oLabelInput._index = iIndex
+
+		var oValueLabel = new sap.m.Label(sId + "-value-label", {text: "Value", labelFor: sId + "-value-input"});
+		var oValueInput = new sap.m.Input(sId + "-value-input", {
+			width: "10rem",
+			placeholder: "Enter value ...",
+			value: { path: "value",	type: new sap.ui.model.type.Float({groupingEnabled: false})	},
+			liveChange: function(oEvent) {
+				var fValue = _fnParseFloat(oEvent.getParameter("newValue"));
+				if (typeof fValue == "undefined" || !isNaN(fValue)) {
+					oLineChartData.points[this._index].value = fValue;
+					oLineChartModel.checkUpdate();
+				}
+			}
+		});
+		oValueInput._index = iIndex;
+
+		var oDisplayedValueLabel = new sap.m.Label(sId + "-displayedValue-label", {text: "Displayed Value", labelFor: sId + "-displayedValue-input"});
+		var oDisplayedValueInput = new sap.m.Input(sId + "-displayedValue-input", {
+			width: "10rem",
+			placeholder: "Enter displayedValue ...",
+			value: {path: "displayedValue"},
+			liveChange: function(oEvent) {
+				var sDisplayedValue = oEvent.getParameter("newValue");
+				oLineChartData.points[this._index].displayedValue = sDisplayedValue;
+				oLineChartModel.checkUpdate();
+			}
+		});
+		oDisplayedValueInput._index = iIndex;
+
+		var oColorLabel = new sap.m.Label(sId + "-color-label", {text: "Color", labelFor: sId + "-color-select"});
+		var oColorSelect = new sap.m.Select(sId + "-color-select", {
+			width: "10rem",
+			items: {
+				path : "/colors",
+				template: new sap.ui.core.Item({
+					key: "{}",
+					text: "{}"
+				})
+			},
+			selectedKey: "{color}"
+		});
+
+		var oSelectedLabel = new sap.m.Label(sId + "-selected-label", {text: "Selected", labelFor: sId + "-selected-switch"})
+		var oSelectedSwitch = new sap.m.Switch({
+			id: sId + "-selected-switch",
+			state: "{selected}",
+			change: function(oEvent) {
+				oLineChartData.points[this._index].selected = oEvent.getParameter("state");
+				oLineChartModel.checkUpdate();
+			}
+		});
+		oSelectedSwitch._index = iIndex;
+
+		// tooltip
+		var oAreaTooltipLbl = new sap.m.Label(sId + "-areatooltip-", {
+			text : "Tooltip",
+			labelFor : sId + "-areatooltip-input"
+		});
+		var oAreaTooltipInput = new sap.m.TextArea(sId + "-areatooltip-input", {
+			rows: 2,
+			width: "10rem",
+			placeholder: 'Enter tooltip ...',
+			value: "{areatooltip}"
+		});
+		oTooltipInput._index = iIndex;
+
+		var oFormTempl = new sap.m.VBox(sId, {
+			alignItems: sap.m.FlexAlignItems.Inherit,
+			items: [oRemoveButton, oValueLabel, oValueInput, oLabelLabel, oLabelInput, oDisplayedValueLabel, oDisplayedValueInput,
+				oColorLabel, oColorSelect, oAreaTooltipLbl, oAreaTooltipInput, oSelectedLabel, oSelectedSwitch],
+			layoutData: new sap.ui.layout.ResponsiveFlowLayoutData({ minWidth: 170 })
+		}).addStyleClass("sapUiSmallMarginBeginEnd");
+
+		iIndex++;
+		return oFormTempl;
+	};
+
+	var oAreaBoxLayout = new sap.ui.layout.ResponsiveFlowLayout("point-element-layout", {
+		content: {
+			path: "/points",
+			factory: fnFormFactoryLC
+		}
+	});
+
+	var oPage = new sap.m.Page("initial-page", {
+		showHeader: false,
+		content: [
+			oLCFormLabel,
+			oLCResponsiveLayout,
+			oSettingsLabel,
+			oLCSettingsForm,
+			oAreaBoxLayout
+		]
+	});
+
+	var oApp = new sap.m.App("myApp", {
+		pages: [
+			oPage
+		]
+	}).placeAt("content");
+
+	//set the contrast class for belize plus
+	if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+		oApp.addStyleClass("sapContrastPlus");
+	}
+</script>
+</head>
+
+<body id="body" class="sapUiBody" role="application">
+	<div id="content"></div>
+</body>
+
+</html>

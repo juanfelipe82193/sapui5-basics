@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:sap="http://www.sap.com/Protocols/SAPData" Namespace="USER_MENU" xml:lang="en" sap:schema-version="1">
+            <EntityType Name="MenuItem" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false" m:FC_TargetPath="SyndicationTitle" m:FC_KeepInContent="true"/>
+                <Property Name="parentId" Type="Edm.String"/>
+                <Property Name="type" Type="Edm.String"/>
+                <Property Name="level" Type="Edm.String"/>
+                <Property Name="url" Type="Edm.String"/>
+                <Property Name="text" Type="Edm.String"/>
+                <Property Name="subtitle" Type="Edm.String"/>
+                <NavigationProperty Name="Children" Relationship="USER_MENU.Children" FromRole="FromRole_Children" ToRole="ToRole_Children"/>
+                <NavigationProperty Name="AllChildren" Relationship="USER_MENU.Children" FromRole="FromRole_Children" ToRole="ToRole_Children"/>
+                <NavigationProperty Name="Folders" Relationship="USER_MENU.Children" FromRole="FromRole_Children" ToRole="ToRole_Children"/>
+                <NavigationProperty Name="AllFolders" Relationship="USER_MENU.Children" FromRole="FromRole_Children" ToRole="ToRole_Children"/>
+                <NavigationProperty Name="Links" Relationship="USER_MENU.Children" FromRole="FromRole_Children" ToRole="ToRole_Children"/>
+                <NavigationProperty Name="AllLinks" Relationship="USER_MENU.Children" FromRole="FromRole_Children" ToRole="ToRole_Children"/>
+                <NavigationProperty Name="Parent" Relationship="USER_MENU.Children" FromRole="FromRole_Children" ToRole="ToRole_Children"/>
+            </EntityType>
+            <Association Name="Children" sap:content-version="1">
+                <End Type="USER_MENU.MenuItem" Multiplicity="1" Role="FromRole_Children"/>
+                <End Type="USER_MENU.MenuItem" Multiplicity="*" Role="ToRole_Children"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_Children">
+                        <PropertyRef Name="Id"/>
+                    </Principal>
+                    <Dependent Role="ToRole_Children">
+                        <PropertyRef Name="parentId"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <EntityContainer Name="USER_MENU_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="MenuItems" EntityType="USER_MENU.MenuItem" sap:content-version="1"/>
+                <AssociationSet Name="Children_AssocSet" Association="USER_MENU.Children" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="MenuItems" Role="FromRole_Children"/>
+                    <End EntitySet="MenuItems" Role="ToRole_Children"/>
+                </AssociationSet>
+            </EntityContainer>
+            <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="https://example.corp.com:44355/sap/opu/odata/UI2/USER_MENU;o=LOCAL/$metadata"/>
+            <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="https://example.corp.com:44355/sap/opu/odata/UI2/USER_MENU;o=LOCAL/$metadata"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

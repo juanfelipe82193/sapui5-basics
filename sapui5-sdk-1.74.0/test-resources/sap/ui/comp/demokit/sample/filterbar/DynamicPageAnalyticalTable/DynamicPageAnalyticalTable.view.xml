@@ -1,0 +1,133 @@
+<mvc:View
+		xmlns:c="sap.ui.core"
+		controllerName="sap.ui.comp.sample.filterbar.DynamicPageAnalyticalTable.DynamicPageAnalyticalTable"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns="sap.m"
+		xmlns:t="sap.ui.table"
+		xmlns:f="sap.f"
+		xmlns:fb="sap.ui.comp.filterbar"
+		xmlns:layout="sap.ui.layout"
+		xmlns:vm="sap.ui.comp.variants"
+		height="100%">
+		<f:DynamicPage id="dynamicPageId" preserveHeaderStateOnScroll="true" headerExpanded="{/headerExpanded}">
+			<!-- DynamicPage Title -->
+			<f:title>
+				<f:DynamicPageTitle>
+					<f:heading>
+						<vm:VariantManagement standardItemText="My Products">
+						</vm:VariantManagement>
+					</f:heading>
+					<f:actions>
+						<ToolbarSpacer/>
+						<Button
+								text="Global Action"
+								type="Transparent"/>
+						<Button
+								text="{path:'/headerExpanded', formatter:'.formatToggleButtonText'}"
+								type="Transparent"
+								press="onToggleHeader"/>
+						<Button
+								icon="sap-icon://action"
+								type="Transparent"/>
+						<Button
+								text="Toggle Footer"
+								type="Transparent"
+								press="onToggleFooter"/>
+					</f:actions>
+				</f:DynamicPageTitle>
+			</f:title>
+
+			<!-- DynamicPage Header -->
+			<f:header>
+				<f:DynamicPageHeader pinnable="true">
+					<f:content>
+						<fb:FilterBar reset="onReset" search="onSearch" useToolbar="false">
+							<fb:filterItems>
+								<fb:FilterItem name="A" label="Name">
+									<fb:control>
+										<Select
+										id="slName"
+										forceSelection="true"
+										change="onSelectChange"
+										items="{
+                                                    path: '/ProductNames'
+                                                }">
+										<c:Item key="{key}" text="{name}"/>
+										</Select>
+									</fb:control>				
+								</fb:FilterItem>								
+								<fb:FilterItem name="B" label="Category">
+									<fb:control>
+										<Select
+										id="slCategory"
+										change="onSelectChange"
+										forceSelection="true"
+										items="{
+                                                    path: '/ProductCategories'
+                                                 }">
+										<c:Item key="{key}" text="{name}"/>
+										</Select>
+									</fb:control>				
+								</fb:FilterItem>				
+								<fb:FilterItem name="C" label="SupplierName">
+									<fb:control>
+										<Select
+										id="slSupplierName"
+										width="200px"
+										change="onSelectChange"
+										forceSelection="true"
+										items="{
+                                                    path: '/ProductSuppliers'
+                                                }">
+										<c:Item key="{key}" text="{name}"/>
+										</Select>
+									</fb:control>				
+								</fb:FilterItem>
+							</fb:filterItems>
+						</fb:FilterBar>
+					</f:content>
+				</f:DynamicPageHeader>
+			</f:header>
+
+			<f:content>
+				<t:AnalyticalTable visibleRowCountMode="Auto" selectionMode="MultiToggle" rowHeight="32">
+					<t:toolbar>
+						<OverflowToolbar>
+							<Title text="Products"/>
+							<ToolbarSpacer/>
+							<SearchField width="12rem"/>
+							<SegmentedButton>
+								<buttons>
+									<Button icon="sap-icon://table-view"/>
+									<Button icon="sap-icon://bar-chart"/>
+								</buttons>
+							</SegmentedButton>
+							<Button icon="sap-icon://group-2" type="Transparent"/>
+							<Button icon="sap-icon://action-settings" type="Transparent"/>
+						</OverflowToolbar>
+					</t:toolbar>
+					<t:columns>
+						<t:AnalyticalColumn/>
+						<t:AnalyticalColumn/>
+						<t:AnalyticalColumn/>
+					</t:columns>
+					<t:layoutData>
+						<FlexItemData growFactor="1" baseSize="0%" styleClass="sapUiResponsiveContentPadding"/>
+					</t:layoutData>
+				</t:AnalyticalTable>
+			</f:content>
+			<!-- DynamicPage Footer -->
+			<f:footer>
+				<OverflowToolbar>
+					<Button icon="sap-icon://message-popup"
+							text="{/messagesLength}"
+							type="Emphasized"
+							press="onMessageButtonPress"
+							visible="{= !!${/messagesLength}}"/>
+					<ToolbarSpacer/>
+					<Button type="Accept" text="Accept"/>
+					<Button type="Reject" text="Reject"/>
+				</OverflowToolbar>
+			</f:footer>
+		</f:DynamicPage>
+</mvc:View>

@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Paging Tests From Traces</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="../testutils/TestUtils.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/001.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/002.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/003.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/004.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/005.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/006.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/007.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/008.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/009.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/010.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/011.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/012.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/013.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/014.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/015.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/016.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/017.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/018.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/019.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/020.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/021.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/022.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/023.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/024.Response.js"></script>
+<script type="text/javascript"
+	src="/aad/zen.rt.components.crosstab/resources/traces/PAGING_BIGHEADER/025.Response.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Paging Tests From Traces</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Paging Tests From Traces", {
+			setup : function() {
+
+				this.prepareRequestData = function(iMaxRequestNumber, sVarName) {
+					var i = 0;
+					var oCurrentRequest = null;
+					var oCrosstab = null;
+					var iPageRow = 0;
+					var iPageCol = 0;
+					var sKey = "";
+					var oPageData = {};
+					var oContent = null;
+
+					for (i = 1; i <= iMaxRequestNumber; i++) {
+						oCurrentRequest = eval(sVarName + i);
+						oCrosstab = null;
+						if (oCurrentRequest.component && oCurrentRequest.component.type === "GRID_LAYOUT_COMPONENT") {
+							oCrosstab = oCurrentRequest.component.content.control.content[0].component.content.control;
+						} else if (oCurrentRequest.delta) {
+							oContent = oCurrentRequest.delta[0].component.content;
+							if (oContent) {
+								oCrosstab = oCurrentRequest.delta[0].component.content.control;
+							}
+						}
+						if (oCrosstab) {
+							iPageRow = 0;
+							iPageCol = 0;
+							if (oCrosstab.h_pos) {
+								iPageCol = Math.floor((oCrosstab.h_pos - 1) / oCrosstab.tilecols);
+							}
+							if (oCrosstab.v_pos) {
+								iPageRow = Math.floor((oCrosstab.v_pos - 1) / oCrosstab.tilerows);
+							}
+							sKey = iPageRow + "_" + iPageCol;
+							oPageData[sKey] = oCrosstab;
+						}
+					}
+					return oPageData;
+				};
+
+				// prepare paging data
+				this.oPageData = this.prepareRequestData(25, "zentrace_PAGING_BIGHEADER_");
+
+				// make crosstab
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				// var oTableControl = sapzen.crosstab.test.jsonTestData.PAGING_Q1_FULL.control;
+				this.oTableControl = this.oPageData["0_0"];
+				this.oCrosstab.setWidth("1600px");
+				this.oCrosstab.setHeight("1200px");
+				this.iRequestCounter = 0;
+				var that = this;
+
+				this.oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+				this.oDataArea = this.oCrosstab.getDataArea();
+				this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+				this.oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+
+				this.oCrosstab.registerPageRequestHandler(function(iRow, iCol) {
+					var sPageString = iRow + "_" + iCol;
+					var oData = that.oPageData[sPageString];
+
+					// setTimeout(sendResponse, 2000);
+					that.iRequestCounter++;
+					sendResponse();
+
+					function sendResponse() {
+						that.oCrosstab.updateControlProperties(oData);
+						sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(that.oCrosstab);
+					}
+				});
+
+				this.checkCellWidth = function(oCell1, oCell2) {
+					var oDomCell1 = jQuery.sap.byId(oCell1.getId());
+					var oDomCell2 = jQuery.sap.byId(oCell2.getId());
+
+					ok(oDomCell1.outerWidth() === oDomCell2.outerWidth(), "Both cells must have the same width!");
+				};
+
+				this.checkAllCells = function(oArea) {
+					var iStartCol = oArea.getRenderStartCol();
+					var iEndCol = oArea.getRenderColCnt() + iStartCol - 1;
+
+					var iStartRow = oArea.getRenderStartRow();
+					var iEndRow = oArea.getRenderRowCnt() + iStartRow - 1;
+
+					var iRow = 0, iCol = 0;
+					var oCell = null;
+
+					for (iRow = iStartRow; iRow <= iEndRow; iRow++) {
+						for (iCol = iStartCol; iCol <= iEndCol; iCol++) {
+							oCell = oArea.getCellDirect(iRow, iCol);
+							if (oCell) {
+								ok(!oCell.isLoading(), "Cell: " + iRow + "/" + iCol + " in Area: "
+										+ oArea.getAreaType() + " must not be loading");
+								sap.zen.crosstab.testutils.TestUtils.checkCellbyId(oArea, iRow, iCol);
+							}
+						}
+					}
+				};
+
+				this.checkCellHeight = function(oCell1, oCell2) {
+					var oDomCell1 = jQuery.sap.byId(oCell1.getId());
+					var oDomCell2 = jQuery.sap.byId(oCell2.getId());
+
+					ok(oDomCell1.outerHeight() === oDomCell2.outerHeight(), "Both cells must have the same height!");
+				};
+
+				this.checkCellStyle = function(oCell, sStateToCheck, sClassToCheck) {
+					var oDomCell = null;
+					if (oCell) {
+						oDomCell = jQuery.sap.byId(oCell.getId());
+						ok(oDomCell.attr("class").indexOf(sClassToCheck) !== -1, "Cell: " + oCell.getId()
+								+ " with total style in model must have corresponding CSS style: " + sClassToCheck);
+					}
+				};
+
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+
+				setTimeout(function() {
+					start();
+				}, 2000);
+				stop();
+			},
+
+			teardown : function() {
+				this.oCrosstab = null;
+				this.oTableControl = null;
+			}
+		});
+
+		test("Number of page requests", function() {
+			ok(this.iRequestCounter === 23, "23 page requests are expected for full table");
+		});
+
+ 		test("Check all cells loaded in DataArea", function() {
+			this.checkAllCells(this.oDataArea);
+		});
+		
+		test("Check all cells loaded in ColumnHeaderArea", function() {
+			this.checkAllCells(this.oColumnHeaderArea);
+		});
+		
+		test("Check all cells loaded in RowHeaderArea", function() {
+			this.checkAllCells(this.oRowHeaderArea);
+		});
+		
+		test("Check all cells loaded in DimensionHeaderArea", function() {
+			this.checkAllCells(this.oDimensionHeaderArea);
+		});
+		
+	</script>
+
+</body>
+
+</html>

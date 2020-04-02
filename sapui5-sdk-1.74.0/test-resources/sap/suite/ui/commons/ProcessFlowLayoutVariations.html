@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html><head>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+  <meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+  <title>Layout controls usage demo for the Process Flow control</title>
+
+    <!-- UI5 Bootstrap -->
+    <script src="../../../../../resources/sap-ui-core.js"
+            type="text/javascript"
+            id="sap-ui-bootstrap"
+            data-sap-ui-libs="sap.ui.commons, sap.suite.ui.commons, sap.m"
+            data-sap-ui-theme="sap_belize"></script>
+  <style type="text/css">
+    .LayoutVariationsView > .sapMPage > section {
+      top: 6rem;
+    }
+    .LayoutVariationsView > .sapMPage > header {
+      height: 6rem;
+      line-height: 1rem;
+    }
+    .LayoutVariationsView > .sapMPage > header .sapMITBFilter .sapMITBText,
+    .LayoutVariationsView > .sapMPage > header .sapMITBFilter .sapMITBTab {
+      width: 6rem;
+    }
+    .LayoutVariationsPage > section, .LayoutVariationsPage > section > .sapMPageScroll {
+      height: 100%;
+    }
+  </style>
+
+  <script id="view1" type="sapui5/xmlview">
+    <mvc:View
+      xmlns="sap.m"
+      xmlns:mvc="sap.ui.core.mvc"
+      class="LayoutVariationsView"
+      controllerName="sap.ui.suite.commons.ProcessFlowLayoutVariations">
+      <Page id="pfLayoutVariationsPage" class="LayoutVariationsPage">
+        <customHeader>
+          <!--<Toolbar>-->
+          <Bar>
+          <contentLeft>
+          <IconTabBar
+            id="pfLayoutVariationsBar"
+            select="handleLayoutVariantSelection">
+            <items>
+              <IconTabFilter
+                icon="sap-icon://vertical-grip"
+                iconColor="Positive"
+                text="Splitter"
+                key="Splitter" />
+              <IconTabFilter
+                icon="sap-icon://grid"
+                iconColor="Positive"
+                text="Grid Layout"
+                key="Grid"/>
+              <IconTabFilter
+                icon="sap-icon://up"
+                iconColor="Positive"
+                text="Vertical Layout"
+                key="Vertical" />
+              <IconTabFilter
+                icon="sap-icon://media-play"
+                iconColor="Positive"
+                text="Horizontal Layout"
+                key="Horizontal" />
+              <IconTabFilter
+                icon="sap-icon://display-more"
+                iconColor="Positive"
+                text="Responsive Flow"
+                key="ResponsiveFlow" />
+            </items>
+          </IconTabBar>
+          </contentLeft>
+          </Bar>
+          <!--</Toolbar>-->
+        </customHeader>
+      </Page>
+    </mvc:View>
+  </script>
+
+  <style type="text/css">
+    .PFCustomSplitterSpec > section {
+      overflow: hidden;
+    }
+
+    .PFCustomSplitterSpec > .sapUiLoSplitterContent:nth-child(1) {
+      background-color: #F5F5DC;
+    }
+
+    .PFCustomSplitterSpec > .sapUiLoSplitterContent:nth-child(3) {
+      background-color: #FFE4C4;
+    }
+
+    .horizontalScrollbarForPF12 {
+      overflow-x: scroll;
+    }
+  </style>
+
+  <script id="splitter1" type="sapui5/xmlfragment">
+    <layout:Splitter
+      xmlns="sap.suite.ui.commons"
+      xmlns:layout="sap.ui.layout"
+      height="100%"
+      width="100%"
+      class="PFCustomSplitterSpec">
+      <ProcessFlow id="pf11" zoomLevel="Four" scrollable="false">
+        <lanes>
+          <ProcessFlowLaneHeader laneId="0" text="Lane 1" position="0"/>
+          <ProcessFlowLaneHeader laneId="1" text="Lane 2" position="1"/>
+        </lanes>
+        <nodes>
+          <ProcessFlowNode nodeId="0" laneId="0" title="Node 1" children="1,2"/>
+          <ProcessFlowNode nodeId="1" laneId="1" title="Node 2"/>
+          <ProcessFlowNode title="Node 3" nodeId="2" laneId="1"/>
+        </nodes>
+        <layoutData>
+          <layout:SplitterLayoutData size="400px" />
+        </layoutData>
+      </ProcessFlow>
+      <ProcessFlow id="pf12" nodes="{data>/flows}" lanes="{data>/columns}" scrollable="true" class="horizontalScrollbarForPF12">
+        <lanes>
+          <ProcessFlowLaneHeader laneId="{data>id}" iconSrc="{data>icon}" text="{data>label}" position="{data>position}"/>
+        </lanes>
+        <nodes>
+          <ProcessFlowNode laneId="{data>lane}" nodeId="{data>id}" title="{data>title}" children="{data>children}"/>
+        </nodes>
+        <layoutData>
+          <layout:SplitterLayoutData size="auto" />
+        </layoutData>
+      </ProcessFlow>
+    </layout:Splitter>
+  </script>
+
+  <style type="text/css">
+    /* Height setting is mandatory, the width is controlled by the Grid control */
+    .PFCustomGridLayoutSpec {
+      height: 62%;
+    }
+
+    .PFCustomGridLayoutSpec > div:nth-child(1) {
+      background-color: #F5F5DC;
+      height: 100%;
+    }
+    .PFCustomGridLayoutSpec > div:nth-child(2) {
+      background-color: #FFE4C4;
+      height: 100%;
+    }
+  </style>
+
+  <script id="grid1" type="sapui5/xmlfragment">
+    <layout:Grid
+      xmlns="sap.suite.ui.commons"
+      xmlns:layout="sap.ui.layout"
+      class="PFCustomGridLayoutSpec">
+      <layout:content>
+        <ProcessFlow id="pf21" zoomLevel="Four" scrollable="false">
+          <lanes>
+            <ProcessFlowLaneHeader laneId="0" text="Lane 1" position="0"/>
+            <ProcessFlowLaneHeader laneId="1" text="Lane 2" position="1"/>
+          </lanes>
+          <nodes>
+            <ProcessFlowNode nodeId="0" laneId="0" title="Node 1" children="1,2"/>
+            <ProcessFlowNode nodeId="1" laneId="1" title="Node 2"/>
+            <ProcessFlowNode title="Node 3" nodeId="2" laneId="1"/>
+          </nodes>
+          <layoutData>
+            <layout:GridData span="L4 M4 S12" />
+          </layoutData>
+        </ProcessFlow>
+        <ProcessFlow id="pf22" nodes="{data>/flows}" lanes="{data>/columns}" scrollable="true">
+          <lanes>
+            <ProcessFlowLaneHeader laneId="{data>id}" iconSrc="{data>icon}" text="{data>label}" position="{data>position}"/>
+          </lanes>
+          <nodes>
+            <ProcessFlowNode laneId="{data>lane}" nodeId="{data>id}" title="{data>title}" children="{data>children}"/>
+          </nodes>
+          <layoutData>
+            <layout:GridData
+              span="L7 M7 S12"
+              indent="L1 M1 S0" />
+          </layoutData>
+        </ProcessFlow>
+      </layout:content>
+    </layout:Grid>
+  </script>
+
+  <style type="text/css">
+    .PFCustomVerticalLayoutSpec {
+      width: 50%;
+      height: 70%;
+    }
+    .PFCustomVerticalLayoutSpec > .sapUiVltCell {
+      width: 100%;
+    }
+    .PFCustomVerticalLayoutSpec > .sapUiVltCell:nth-child(1) {
+      overflow: hidden;
+      background-color: #F5F5DC;
+      height: 60%;
+    }
+    .PFCustomVerticalLayoutSpec > .sapUiVltCell:nth-child(2) {
+      background-color: #FFE4C4;
+      height: 40%;
+    }
+  </style>
+
+  <script id="vertical1" type="sapui5/xmlfragment">
+    <layout:VerticalLayout
+      xmlns="sap.suite.ui.commons"
+      xmlns:layout="sap.ui.layout"
+      class="PFCustomVerticalLayoutSpec">
+      <layout:content>
+        <ProcessFlow id="pf31" zoomLevel="Four" scrollable="false">
+          <lanes>
+            <ProcessFlowLaneHeader laneId="0" text="Lane 1" position="0"/>
+            <ProcessFlowLaneHeader laneId="1" text="Lane 2" position="1"/>
+          </lanes>
+          <nodes>
+            <ProcessFlowNode nodeId="0" laneId="0" title="Node 1" children="1,2"/>
+            <ProcessFlowNode nodeId="1" laneId="1" title="Node 2"/>
+            <ProcessFlowNode title="Node 3" nodeId="2" laneId="1"/>
+          </nodes>
+        </ProcessFlow>
+        <ProcessFlow id="pf32" nodes="{data>/flows}" lanes="{data>/columns}" scrollable="true">
+          <lanes>
+            <ProcessFlowLaneHeader laneId="{data>id}" iconSrc="{data>icon}" text="{data>label}" position="{data>position}"/>
+          </lanes>
+          <nodes>
+            <ProcessFlowNode laneId="{data>lane}" nodeId="{data>id}" title="{data>title}" children="{data>children}"/>
+          </nodes>
+        </ProcessFlow>
+      </layout:content>
+    </layout:VerticalLayout>
+  </script>
+
+  <style type="text/css">
+    .PFCustomHorizontalLayoutSpec {
+      width: 50%;
+      height: 65%;
+    }
+    .PFCustomHorizontalLayoutSpec > .sapUiHLayoutChildWrapper {
+      height: 100%;
+    }
+    .PFCustomHorizontalLayoutSpec > .sapUiHLayoutChildWrapper:nth-child(1) {
+      width: 420px;
+      overflow: hidden;
+      background-color: #F5F5DC;
+    }
+    .PFCustomHorizontalLayoutSpec > .sapUiHLayoutChildWrapper:nth-child(2) {
+      width: 100%;
+      background-color: #FFE4C4;
+    }
+  </style>
+
+  <script id="horizontal1" type="sapui5/xmlfragment">
+    <layout:HorizontalLayout
+      xmlns="sap.suite.ui.commons"
+      xmlns:layout="sap.ui.layout"
+      class="PFCustomHorizontalLayoutSpec">
+      <layout:content>
+        <ProcessFlow id="pf41" zoomLevel="Four" scrollable="false">
+          <lanes>
+            <ProcessFlowLaneHeader laneId="0" text="Lane 1" position="0"/>
+            <ProcessFlowLaneHeader laneId="1" text="Lane 2" position="1"/>
+          </lanes>
+          <nodes>
+            <ProcessFlowNode nodeId="0" laneId="0" title="Node 1" children="1,2"/>
+            <ProcessFlowNode nodeId="1" laneId="1" title="Node 2"/>
+            <ProcessFlowNode title="Node 3" nodeId="2" laneId="1"/>
+          </nodes>
+        </ProcessFlow>
+        <ProcessFlow id="pf42" nodes="{data>/flows}" lanes="{data>/columns}" scrollable="true">
+          <lanes>
+            <ProcessFlowLaneHeader laneId="{data>id}" iconSrc="{data>icon}" text="{data>label}" position="{data>position}"/>
+          </lanes>
+          <nodes>
+            <ProcessFlowNode laneId="{data>lane}" nodeId="{data>id}" title="{data>title}" children="{data>children}"/>
+          </nodes>
+        </ProcessFlow>
+      </layout:content>
+    </layout:HorizontalLayout>
+  </script>
+
+  <style type="text/css">
+      /* Height setting is mandatory, the width is controlled by the Responsive Flow Layout control */
+    .PFCustomResponsiveFlowLayoutSpec {
+      height: 62%;
+    }
+    .PFCustomResponsiveFlowLayoutSpec .sapUiRFLRow,
+    .PFCustomResponsiveFlowLayoutSpec .sapUiRFLContainer,
+    .PFCustomResponsiveFlowLayoutSpec .sapUiRFLContainerContent {
+       height: 100%;
+    }
+    .PFCustomResponsiveFlowLayoutSpec .sapUiRFLContainer:nth-child(1) .sapUiRFLContainerContent {
+      background-color: #F5F5DC;
+    }
+    .PFCustomResponsiveFlowLayoutSpec .sapUiRFLContainer:nth-child(2) .sapUiRFLContainerContent {
+      background-color: #FFE4C4;
+    }
+  </style>
+
+  <script id="responsiveFlow1" type="sapui5/xmlfragment">
+    <layout:ResponsiveFlowLayout
+      xmlns="sap.suite.ui.commons"
+      xmlns:layout="sap.ui.layout"
+      class="PFCustomResponsiveFlowLayoutSpec">
+      <layout:content>
+        <ProcessFlow id="pf51" zoomLevel="Four" scrollable="false">
+          <lanes>
+            <ProcessFlowLaneHeader laneId="0" text="Lane 1" position="0"/>
+            <ProcessFlowLaneHeader laneId="1" text="Lane 2" position="1"/>
+          </lanes>
+          <nodes>
+            <ProcessFlowNode nodeId="0" laneId="0" title="Node 1" children="1,2"/>
+            <ProcessFlowNode nodeId="1" laneId="1" title="Node 2"/>
+            <ProcessFlowNode title="Node 3" nodeId="2" laneId="1"/>
+          </nodes>
+          <layoutData>
+            <layout:ResponsiveFlowLayoutData minWidth="300px" weight="1"/>
+          </layoutData>
+        </ProcessFlow>
+        <ProcessFlow id="pf52" nodes="{data>/flows}" lanes="{data>/columns}" scrollable="true">
+          <lanes>
+            <ProcessFlowLaneHeader laneId="{data>id}" iconSrc="{data>icon}" text="{data>label}" position="{data>position}"/>
+          </lanes>
+          <nodes>
+            <ProcessFlowNode laneId="{data>lane}" nodeId="{data>id}" title="{data>title}" children="{data>children}"/>
+          </nodes>
+          <layoutData>
+            <layout:ResponsiveFlowLayoutData minWidth="300px" weight="2"/>
+          </layoutData>
+        </ProcessFlow>
+      </layout:content>
+    </layout:ResponsiveFlowLayout>
+  </script>
+
+  <script>
+    sap.ui.controller("sap.ui.suite.commons.ProcessFlowLayoutVariations", {
+      onInit: function () {
+        var oDataNodes = {
+            foo: "test test",
+            flows:
+            [
+              {id: "1",  lane: "0",  title: "title 1",  children: [10, 11, 12]},
+              {id: "10", lane: "3" , title: "title 10", children: null },
+              {id: "11", lane: "2" , title: "title 11", children: null },
+              {id: "12", lane: "1" , title: "title 12", children: [5] },
+              {id: "5",  lane: "2" , title: "title 5",  children: null },
+            ],
+            columns:
+            [
+              {id: "0", icon: "sap-icon://order-status", label: "Id 0", position: 0},
+              {id: "1", icon: "sap-icon://order-status", label: "Id 1", position: 1},
+              {id: "2", icon: "sap-icon://order-status", label: "Id 2", position: 2},
+              {id: "3", icon: "sap-icon://order-status", label: "Id 3", position: 3}
+            ]
+          }
+        , oModel
+        , oBar
+        ;
+
+        // create a Model and assign it to the View
+        oModel = new sap.ui.model.json.JSONModel();
+        oModel.setData(oDataNodes);
+        this.getView().setModel(oModel, "data");
+        oBar = this.byId("pfLayoutVariationsBar");
+        //oBar.setSelectedKey("Splitter");
+        oBar.fireSelect();
+      },
+
+      handleLayoutVariantSelection: function (oEvent) {
+        var sKey = oEvent.getParameter("selectedKey")
+          , myPage = this.getView().byId("pfLayoutVariationsPage");
+        myPage.removeAllContent();
+
+        if (sKey === "Grid") {
+          if (!this.oGrid) {
+            this.oGrid = sap.ui.xmlfragment({fragmentContent:jQuery('#grid1').html()});
+          }
+          myPage.addContent(this.oGrid);
+        } else if (sKey === "Vertical") {
+          if (!this.oVertical) {
+            this.oVertical = sap.ui.xmlfragment({fragmentContent:jQuery('#vertical1').html()});
+          }
+          myPage.addContent(this.oVertical);
+        } else if (sKey === "Horizontal") {
+          if (!this.oHorizontal) {
+            this.oHorizontal = sap.ui.xmlfragment({fragmentContent:jQuery('#horizontal1').html()});
+          }
+          myPage.addContent(this.oHorizontal);
+        } else if (sKey === "ResponsiveFlow") {
+          if (!this.oResponsiveFlow) {
+            this.oResponsiveFlow = sap.ui.xmlfragment({fragmentContent:jQuery('#responsiveFlow1').html()});
+          }
+          myPage.addContent(this.oResponsiveFlow);
+        } else { // if (sKey === "Splitter")
+          if (!this.oSplitter) {
+            this.oSplitter = sap.ui.xmlfragment({fragmentContent:jQuery('#splitter1').html()});
+          }
+          myPage.addContent(this.oSplitter);
+        }
+      }
+    });
+
+    // instantiate the View
+    this.myView = sap.ui.xmlview({viewContent:jQuery('#view1').html()});
+
+    // put the View onto the screen
+    var app = new sap.m.App("App");
+    app.addPage(myView);
+    var shell = new sap.m.Shell("shell", {title: "ProcessFlow application layout variations"});
+    shell.setApp(app);
+    shell.placeAt("content");
+
+  </script>
+
+  </head>
+  <body id="content" class='sapUiBody'>
+  </body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Rendering test</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="json/TESTDATA_QD_EXCEPTIONS.js"></script>
+<script type="text/javascript" src="testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Rendering Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+
+		module("Crosstab Rendering tests", {
+			setup : function() {
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.qdExceptions.control;
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				this.oCrosstab.setWidth("1600px");
+				this.oCrosstab.setHeight("1200px");
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+
+				this.checkCellStyle = function(oCell, sClassToCheck) {
+					var oDomCell = null;
+					if (oCell) {
+						oDomCell = jQuery.sap.byId(oCell.getId());
+						ok(oDomCell.attr("class").indexOf(sClassToCheck) !== -1, "Cell: " + oCell.getId() + " " + oCell.getText() 
+								+ " with exception style in model must have corresponding CSS style: " + sClassToCheck);
+					}
+				};
+
+			},
+			teardown : function() {
+				this.oCrosstab = null;
+			}
+		});
+
+		test("Check background color exceptions", function () {
+			var oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+			var oDataArea = this.oCrosstab.getDataArea();
+			var oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+			var oColumnHeaderArea = this.oCrosstab.getColumnHeaderArea();
+
+			var oCell = oRowHeaderArea.getCell(0, 1);
+			this.checkCellStyle(oCell, "sapzencrosstab-HeaderCellAlert9Background");
+
+			var oCell = oDataArea.getCell(2, 0);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert9Background");
+
+			oCell = oDataArea.getCell(7, 0);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert8Background");
+
+			oCell = oDataArea.getCell(5, 1);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert7Background");
+
+			oCell = oDataArea.getCell(6, 0);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert6Background");
+
+			oCell = oDataArea.getCell(4, 1);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert5Background");
+
+			oCell = oDataArea.getCell(17, 5);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert4Background");
+
+			oCell = oDataArea.getCell(8, 5);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert3Background");
+
+			oCell = oDataArea.getCell(8, 0);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert2Background");
+
+			oCell = oDataArea.getCell(17, 2);
+			this.checkCellStyle(oCell, "sapzencrosstab-DataCellAlert1Background");
+		});
+	</script>
+
+</body>
+
+</html>

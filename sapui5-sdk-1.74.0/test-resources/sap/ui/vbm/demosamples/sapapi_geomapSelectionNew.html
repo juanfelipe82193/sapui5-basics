@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta charset="UTF-8">
+		<title>SAP Visual Business - Application Samples Preview</title>
+		<script
+				id="sap-ui-bootstrap"
+				src="../../../../../resources/sap-ui-core.js"
+				data-sap-ui-theme="sap_bluecrystal"
+				data-sap-ui-libs="sap.m, sap.ui.vbm, sap.ui.layout"
+				data-sap-ui-bindingSyntax="complex"
+				data-sap-ui-compatVersion="edge"
+				data-sap-ui-preload="async"
+				data-sap-ui-resourceroots='{
+					"sap.ui.vbdemos": "./",
+					"sap.ui.mapconfigs" : "../internal/media/mapconfigs/"
+				}'>
+		</script>
+<style>
+
+</style>
+		<script>
+			sap.ui.getCore().attachInit(function () {
+				sap.ui.require([
+					"sap/m/Shell",
+					"sap/m/App",
+					"sap/ui/core/ComponentContainer"
+				], function ( Shell, App, ComponentContainer) {
+					 new ComponentContainer({
+								name: "sap.ui.vbdemos.selection",
+								height: "100%"
+							}).placeAt("content");
+				}
+			)})
+
+			// create geo map and bind to model
+			var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+				width: "1024px",
+				height: "600px",
+				initialPosition: "30.512982;50.445636;0.0",
+				initialZoom: "4",
+				vos: [
+					new sap.ui.vbm.Spots("spots1", {
+						select: onSelectionChanged,
+						deselect: onSelectionChanged,
+						items: {
+							path: "/Spots",
+							template: new sap.ui.vbm.Spot({
+								key: '{key}',
+								position: '{pos}',
+								tooltip: '{tooltip}',
+								type: '{type}',
+								select: '{select}',
+								selectColor: 'RHLSA(0;1.0;3.0;1.0)'
+							})
+						}
+					})
+				]
+			});
+		</script>
+	</head>
+	<body id="content" class="sapUiBody">
+	</body>
+</html>

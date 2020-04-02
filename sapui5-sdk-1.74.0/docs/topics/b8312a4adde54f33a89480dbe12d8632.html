@@ -1,0 +1,477 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Adding a Smart Micro Chart to a Table</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="You can add a smart micro chart to a column within a SmartTable control in both the list report and the object page."><meta name="description" content="You can add a smart micro chart to a column within a SmartTable control in both the list report and the object page."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"677fbde43a324f36aa9398b7f04e9896.html","previousTopicHref":"43f6f0faa1b64c5aa92bcde379be9054.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loiob8312a4adde54f33a89480dbe12d8632"><h1 class="title topictitle1" hidden>Adding a Smart Micro Chart to a Table</h1><div class="body conbody"><p class="shortdesc" hidden>You can add a smart micro chart to a column within a <samp class="ph codeph">SmartTable</samp>
+control in both the list report and the object page.</p>
+<p class="p">To add a smart micro chart to a smart table, use the annotation term
+<samp class="ph codeph">UI.LineItem</samp> and the complex type
+<samp class="ph codeph">DataFieldForAnnotation</samp>. The smart micro charts are then displayed
+within the table column as shown below:</p>
+<div class="fig fignone" id="loiob8312a4adde54f33a89480dbe12d8632__fig_lzy_ntp_mx"><div class="figbody">
+
+<img class="inline  " id="loiob8312a4adde54f33a89480dbe12d8632__image_ypz_ptp_mx" src="loioe885d9811dc44bd1966603ecf47105d5_LowRes.png">
+</div><span class="figcap">Smart Micro Chart in List Report</span></div>
+<div class="section"><section class="section" type="Code Samples"><h2 class="section_title" style="font-size: 1.15em;">Code Samples</h2><div class="sectiondiv subsection">
+<p class="p subsectiontitle">UI.LineItem and UI.DataFieldForAnnotation</p>
+<div class="p">The <samp class="ph codeph">Label</samp> property of the
+<samp class="ph codeph">UI.DataFieldForAnnotation</samp> is used for the text of the table
+column
+header.<pre class="pre codeblock prettyprint lang-xml">
+&lt;Annotations Target=&quot;STTA_PROD_MAN.STTA_C_MP_ProductType&quot;&gt;
+  &lt;Annotation Term=&quot;UI.LineItem&quot;&gt;
+    &lt;Collection&gt;
+      &lt;Record Type=&quot;UI.DataFieldForAction&quot;&gt;
+        &lt;PropertyValue Property=&quot;Label&quot; String=&quot;Copy with new Supplier&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Action&quot; String=&quot;STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductCopywithparams&quot;/&gt;
+        &lt;Annotation Term=&quot;UI.OperationGrouping&quot; EnumMember=&quot;UI.OperationGroupingType/Isolated&quot;/&gt;
+      &lt;/Record&gt;
+      &lt;Record Type=&quot;UI.DataFieldForAction&quot;&gt;
+        &lt;PropertyValue Property=&quot;Label&quot; String=&quot;Activate&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Action&quot; String=&quot;STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductActivation&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Determining&quot; Bool=&quot;true&quot;/&gt;
+        &lt;Annotation Term=&quot;UI.OperationGrouping&quot; EnumMember=&quot;UI.OperationGroupingType/ChangeSet&quot;/&gt;
+      &lt;/Record&gt;
+      &lt;Record Type=&quot;UI.DataField&quot;&gt;
+        &lt;PropertyValue Property=&quot;Value&quot; Path=&quot;Product&quot;/&gt;
+        &lt;Annotation Term=&quot;UI.Importance&quot; EnumMember=&quot;UI.ImportanceType/High&quot;/&gt;
+      &lt;/Record&gt;
+      &lt;Record Type=&quot;UI.DataField&quot;&gt;
+        &lt;PropertyValue Property=&quot;Value&quot; Path=&quot;ProductCategory&quot;/&gt;
+        &lt;Annotation Term=&quot;UI.Importance&quot; EnumMember=&quot;UI.ImportanceType/High&quot;/&gt;
+      &lt;/Record&gt;
+      &lt;Record Type=&quot;UI.DataField&quot;&gt;
+        &lt;PropertyValue Property=&quot;Value&quot; Path=&quot;to_Supplier/CompanyName&quot;/&gt;
+        &lt;Annotation Term=&quot;UI.Importance&quot; EnumMember=&quot;UI.ImportanceType/High&quot;/&gt;
+      &lt;/Record&gt;
+      &lt;Record Type=&quot;UI.DataField&quot;&gt;
+        &lt;PropertyValue Property=&quot;Criticality&quot; Path=&quot;to_StockAvailability/StockAvailability&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Value&quot; Path=&quot;to_StockAvailability/StockAvailability&quot;/&gt;
+        &lt;Annotation Term=&quot;UI.Importance&quot; EnumMember=&quot;UI.ImportanceType/High&quot;/&gt;
+      &lt;/Record&gt;
+      &lt;Record Type=&quot;UI.DataField&quot;&gt;
+        &lt;PropertyValue Property=&quot;Value&quot; Path=&quot;Price&quot;/&gt;
+        &lt;Annotation Term=&quot;UI.Importance&quot; EnumMember=&quot;UI.ImportanceType/High&quot;/&gt;
+      &lt;/Record&gt;
+      &lt;Record Type=&quot;UI.DataFieldForAction&quot;&gt;
+        &lt;PropertyValue Property=&quot;Label&quot; String=&quot;Copy&quot;/&gt;
+        &lt;PropertyValue Property=&quot;IconUrl&quot; String=&quot;sap-icon://copy&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Action&quot; String=&quot;STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductCopy&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Inline&quot; Bool=&quot;true&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Determining&quot; Bool=&quot;true&quot;/&gt;
+        &lt;Annotation Term=&quot;UI.OperationGrouping&quot; EnumMember=&quot;UI.OperationGroupingType/Isolated&quot;/&gt;
+      &lt;/Record&gt;
+      &lt;Record Type=&quot;UI.DataFieldForIntentBasedNavigation&quot;&gt;
+        &lt;PropertyValue Property=&quot;Label&quot; String=&quot;Manage Products (ST)&quot;/&gt;
+        &lt;PropertyValue Property=&quot;SemanticObject&quot; String=&quot;EPMProduct&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Action&quot; String=&quot;manage_st&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Inline&quot; Bool=&quot;true&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Determining&quot; Bool=&quot;true&quot;/&gt;
+      &lt;/Record&gt;
+      &lt;Record Type=&quot;UI.DataFieldForAnnotation&quot;&gt;
+        &lt;PropertyValue Property=&quot;Label&quot; String=&quot;Rating&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Target&quot; AnnotationPath=&quot;@UI.DataPoint#Rating&quot;/&gt;
+      &lt;/Record&gt;
+      &lt;Record Type=&quot;UI.DataFieldForAnnotation&quot;&gt;
+        &lt;PropertyValue Property=&quot;Label&quot; String=&quot;Progress&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Criticality&quot; Path=&quot;to_StockAvailability/Quantity&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Target&quot; AnnotationPath=&quot;@UI.DataPoint#Progress&quot;/&gt;
+      &lt;/Record&gt;
+      &lt;Record Type=&quot;UI.DataFieldForAnnotation&quot;&gt;
+        &lt;PropertyValue Property=&quot;Label&quot; String=&quot;Sales&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Target&quot; AnnotationPath=&quot;to_ProductSalesPrice/@UI.Chart#AreaChartQualifier&quot;/&gt;
+      &lt;/Record&gt;
+      &lt;Record Type=&quot;UI.DataFieldForAnnotation&quot;&gt;
+        &lt;PropertyValue Property=&quot;Label&quot; String=&quot;Revenue&quot;/&gt;
+        &lt;PropertyValue Property=&quot;Target&quot; AnnotationPath=&quot;to_ProductSalesRevenue/@UI.Chart#BulletChartQualifier&quot;/&gt;
+      &lt;/Record&gt;
+    &lt;/Collection&gt;
+  &lt;/Annotation&gt;
+&lt;/Annotations&gt;</pre></div>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">UI.Chart Annotations</p>
+<div class="p"><span class="ph emphasis emphasis">Smart Area Micro
+Chart</span><pre class="pre codeblock prettyprint lang-xml">
+&lt;Annotation Term=&quot;UI.Chart&quot; Qualifier=&quot;AreaChartQualifier&quot;&gt;
+    &lt;Record Type=&quot;UI.ChartDefinitionType&quot;&gt;
+        &lt;PropertyValue Property=&quot;Title&quot; String=&quot;Sales Price&quot; /&gt;
+        &lt;PropertyValue Property=&quot;Description&quot; String=&quot;Area Micro Chart&quot; /&gt;
+        &lt;PropertyValue Property=&quot;ChartType&quot; EnumMember=&quot;UI.ChartType/Area&quot; /&gt;
+        &lt;PropertyValue Property=&quot;Dimensions&quot;&gt;
+            &lt;Collection&gt;
+                &lt;PropertyPath&gt;PriceDay&lt;/PropertyPath&gt;
+            &lt;/Collection&gt;
+        &lt;/PropertyValue&gt;
+        &lt;PropertyValue Property=&quot;Measures&quot;&gt;
+            &lt;Collection&gt;
+                &lt;PropertyPath&gt;AreaChartPrice&lt;/PropertyPath&gt;
+            &lt;/Collection&gt;
+        &lt;/PropertyValue&gt;
+        &lt;PropertyValue Property=&quot;MeasureAttributes&quot;&gt;
+            &lt;Collection&gt;
+                &lt;Record Type=&quot;UI.ChartMeasureAttributeType&quot;&gt;
+                    &lt;PropertyValue Property=&quot;Measure&quot; PropertyPath=&quot;AreaChartPrice&quot; /&gt;
+                    &lt;PropertyValue Property=&quot;Role&quot; EnumMember=&quot;UI.ChartMeasureRoleType/Axis1&quot; /&gt;
+                    &lt;PropertyValue Property=&quot;DataPoint&quot; AnnotationPath=&quot;@UI.DataPoint#AreaChartPrice&quot; /&gt;
+                &lt;/Record&gt;
+            &lt;/Collection&gt;
+        &lt;/PropertyValue&gt;
+    &lt;/Record&gt;
+&lt;/Annotation&gt;</pre></div>
+<div class="p"><span class="ph emphasis emphasis">Smart Bullet Micro
+Chart</span><pre class="pre codeblock prettyprint lang-xml">
+&lt;Annotation Term=&quot;UI.Chart&quot; Qualifier=&quot;BulletChartQualifier&quot;&gt;
+    &lt;Record Type=&quot;UI.ChartDefinitionType&quot;&gt;
+        &lt;PropertyValue Property=&quot;Title&quot; String=&quot;Sales Revenue&quot; /&gt;
+        &lt;PropertyValue Property=&quot;Description&quot; String=&quot;Bullet Micro Chart&quot; /&gt;
+        &lt;PropertyValue Property=&quot;ChartType&quot; EnumMember=&quot;UI.ChartType/Bullet&quot; /&gt;
+        &lt;PropertyValue Property=&quot;Measures&quot;&gt;
+            &lt;Collection&gt;
+                &lt;PropertyPath&gt;BulletChartRevenue&lt;/PropertyPath&gt;
+            &lt;/Collection&gt;
+        &lt;/PropertyValue&gt;
+        &lt;PropertyValue Property=&quot;MeasureAttributes&quot;&gt;
+            &lt;Collection&gt;
+                &lt;Record Type=&quot;UI.ChartMeasureAttributeType&quot;&gt;
+                    &lt;PropertyValue Property=&quot;Measure&quot; PropertyPath=&quot;BulletChartRevenue&quot; /&gt;
+                    &lt;PropertyValue Property=&quot;Role&quot; EnumMember=&quot;UI.ChartMeasureRoleType/Axis1&quot; /&gt;
+                    &lt;PropertyValue Property=&quot;DataPoint&quot; AnnotationPath=&quot;@UI.DataPoint#BulletChartRevenue&quot; /&gt;
+                &lt;/Record&gt;
+            &lt;/Collection&gt;
+        &lt;/PropertyValue&gt;
+    &lt;/Record&gt;
+&lt;/Annotation&gt;</pre></div>
+<p class="p"><span class="ph emphasis emphasis">Limitation</span></p>
+<div class="p">The template does not currently support the use of navigation properties within
+the <samp class="ph codeph">UI.Chart</samp> term for the smart micro chart (see example
+below).<div class="fig fignone" id="loiob8312a4adde54f33a89480dbe12d8632__fig_khh_pfx_kx"><div class="figbody">
+
+<img class="inline  " id="loiob8312a4adde54f33a89480dbe12d8632__image_occ_4fx_kx" src="loio02debb6e41424ba09ea3cc6ef0005ff7_LowRes.png">
+</div><span class="figcap">Navigation Property</span></div></div>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">UI.DataPoint Annotation</p>
+<p class="p">The <samp class="ph codeph">DataPoint</samp> property of the <samp class="ph codeph">MeasureAttributes</samp>
+of the <samp class="ph codeph">UI.Chart</samp> annotation should point to the
+<samp class="ph codeph">UI.DataPoint</samp> annotation.</p>
+<div class="p">The <samp class="ph codeph">SmartMicroChart</samp> control supports the
+<samp class="ph codeph">Criticality</samp> and <samp class="ph codeph">CriticalityCalculation</samp>
+properties of a <samp class="ph codeph">UI.DataPoint</samp>. For an example of how to use the
+<samp class="ph codeph">CriticalityCalculation</samp>, see the smart area micro chart
+annotation example. For an example of how to use the
+<samp class="ph codeph">Criticality</samp> property, see the smart bullet micro chart
+annotation example.<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">Although the <samp class="ph codeph">Title</samp> for the <samp class="ph codeph">UI.DataPoint</samp>
+is mandatory, it is not used by the smart micro chart.</p></aside></div>
+<div class="p"><span class="ph emphasis emphasis">Smart Area Micro
+Chart</span><pre class="pre codeblock prettyprint lang-xml">
+&lt;Annotation Term=&quot;UI.DataPoint&quot; Qualifier=&quot;AreaChartPrice&quot;&gt;
+    &lt;Record&gt;
+        &lt;PropertyValue Property=&quot;Title&quot; String=&quot;Sales Price&quot; /&gt;
+        &lt;PropertyValue Property=&quot;Value&quot; Path=&quot;AreaChartPrice&quot; /&gt;
+        &lt;PropertyValue Property=&quot;TargetValue&quot; Path=&quot;TargetPrice&quot; /&gt;
+        &lt;PropertyValue Property=&quot;CriticalityCalculation&quot;&gt;
+            &lt;Record&gt;
+                &lt;PropertyValue Property=&quot;ImprovementDirection&quot; EnumMember=&quot;UI.ImprovementDirectionType/Target&quot; /&gt;
+                &lt;PropertyValue Property=&quot;DeviationRangeHighValue&quot; Path=&quot;DeviationUpperBoundPrice&quot; /&gt;
+                &lt;PropertyValue Property=&quot;DeviationRangeLowValue&quot; Path=&quot;DeviationLowerBoundPrice&quot; /&gt;
+                &lt;PropertyValue Property=&quot;ToleranceRangeHighValue&quot; Path=&quot;ToleranceUpperBoundPrice&quot; /&gt;
+                &lt;PropertyValue Property=&quot;ToleranceRangeLowValue&quot; Path=&quot;ToleranceLowerBoundPrice&quot; /&gt;
+            &lt;/Record&gt;
+        &lt;/PropertyValue&gt;
+    &lt;/Record&gt;
+&lt;/Annotation&gt;</pre></div>
+<div class="p"><span class="ph emphasis emphasis">Smart Bullet Micro Chart</span><pre class="pre codeblock prettyprint lang-xml">
+&lt;Annotation Term=&quot;UI.DataPoint&quot; Qualifier=&quot;BulletChartRevenue&quot;&gt;
+    &lt;Record&gt;
+        &lt;PropertyValue Property=&quot;Title&quot; String=&quot;Sales Revenue&quot; /&gt;
+        &lt;PropertyValue Property=&quot;Value&quot; Path=&quot;BulletChartRevenue&quot; /&gt;
+        &lt;PropertyValue Property=&quot;TargetValue&quot; Path=&quot;TargetRevenue&quot; /&gt;
+        &lt;PropertyValue Property=&quot;ForecastValue&quot; Path=&quot;ForecastRevenue&quot; /&gt;
+        &lt;PropertyValue Property=&quot;MinimumValue&quot; Decimal=&quot;100&quot; /&gt;
+        &lt;PropertyValue Property=&quot;MaximumValue&quot; Decimal=&quot;300&quot; /&gt;
+        &lt;PropertyValue Property=&quot;Criticality&quot; Path=&quot;Criticality&quot; /&gt;
+    &lt;/Record&gt;
+&lt;/Annotation&gt;</pre><aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<div class="p">The following must all point to the same property in the
+<samp class="ph codeph">entityType</samp>:<ul class="ul" id="loiob8312a4adde54f33a89480dbe12d8632__ul_ysg_ms4_mx">
+<li class="li">
+<p class="p"><samp class="ph codeph">Measures</samp> the property of the
+<samp class="ph codeph">Chart</samp> annotation</p>
+</li>
+<li class="li"><samp class="ph codeph">Measure</samp> property of the
+<samp class="ph codeph">MeasureAttributes</samp> property of the
+<samp class="ph codeph">Chart</samp> annotation</li>
+<li class="li">Value property of the <samp class="ph codeph">DataPoint</samp> annotation</li>
+</ul>
+</div></aside></div>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">CDS Annotations</p>
+<div class="p"><span class="ph emphasis emphasis">CDS Annotation Definition for
+UI.Chart</span><pre class="pre codeblock prettyprint lang-xml">
+chart : array of
+{
+    qualifier : String(120);
+    @LanguageDependency.maxLength : 40
+    title : String(60);
+    @LanguageDependency.maxLength : 80
+    description : String(120);
+    chartType : String enum
+    {
+       COLUMN;
+       COLUMN_STACKED;
+       COLUMN_STACKED_100;
+       COLUMN_DUAL;
+       COLUMN_STACKED_DUAL;
+       COLUMN_STACKED_DUAL_100;
+       BAR;
+       BAR_STACKED;
+       BAR_STACKED_100;
+       BAR_DUAL;
+       BAR_STACKED_DUAL;
+       BAR_STACKED_DUAL_100;
+       AREA;
+       AREA_STACKED;
+       AREA_STACKED_100;
+       HORIZONTAL_AREA;
+       HORIZONTAL_AREA_STACKED;
+       HORIZONTAL_AREA_STACKED_100;
+       LINE;
+       LINE_DUAL;
+       COMBINATION;
+       COMBINATION_STACKED;
+       COMBINATION_STACKED_DUAL;
+       HORIZONTAL_COMBINATION_STACKED;
+       HORIZONTAL_COMBINATION_STACKED_DUAL;
+       PIE;
+       DONUT;
+       SCATTER;
+       BUBBLE;
+       RADAR;
+       HEAT_MAP;
+       TREE_MAP;
+       WATERFALL;
+       BULLET;
+       VERTICAL_BULLET;
+    };
+    dimensions : array of elementRef;
+    measures : array of elementRef;
+    dimensionAttributes : array of
+    {
+       dimension : elementRef;
+       role : String(10) enum
+       {
+           CATEGORY;
+           SERIES;
+       };
+    };
+    measureAttributes : array of
+    {
+       measure : elementRef;
+       role : String(10) enum
+       {
+           AXIS_1;
+           AXIS_2;
+           AXIS_3;
+       };
+       asDataPoint : Boolean default true;
+    };
+}</pre></div>
+<div class="p"><span class="ph emphasis emphasis">CDS Annotation for UI.Chart: Smart Area Micro
+Chart</span><pre class="pre codeblock prettyprint lang-xml">
+@UI.chart:[{
+  title: &apos;Sales Price&apos;,
+  description: &apos;Area Micro Chart&apos;,
+  chartType: #AREA,
+  dimensions:[&apos;PriceDay&apos;],
+  measures:[&apos;AreaChartPrice&apos;],
+  measureAttributes: [
+    { measure: &apos;AreaChartPrice&apos;, role: #AXIS_1, asDataPoint: true }
+  ],
+  qualifier: &apos;AreaChartQualifier&apos;
+}]</pre></div>
+<div class="p"><span class="ph emphasis emphasis">CDS Annotation for UI.Chart: Smart Bullet Micro
+Chart</span><pre class="pre codeblock prettyprint lang-xml">
+@UI.chart:[{
+  title:&apos;Sales Revenue&apos;,
+  description: &apos;Bullet Micro Chart&apos;,
+  chartType: #BULLET,
+  measures:[&apos;BulletChartRevenue&apos;],
+  measureAttributes: [
+    { measure: &apos;BulletChartRevenue&apos;, role: #AXIS_1, asDataPoint: true }
+  ],
+  qualifier: &apos;BulletChartQualifier&apos;
+}]</pre></div>
+<div class="p"><span class="ph emphasis emphasis">CDS Annotation Definition for
+UI.DataPoint</span><pre class="pre codeblock prettyprint lang-xml">
+dataPoint
+{
+    @LanguageDependency.maxLength : 40
+    title : String(60);
+    @LanguageDependency.maxLength : 80
+    description : String(120);
+    @LanguageDependency.maxLength : 190
+    longDescription : String(250);
+    targetValue : DecimalFloat;
+    targetValueElement : elementRef;
+    forecastValue : elementRef;
+    minimumValue : DecimalFloat;
+    maximumValue : DecimalFloat;
+    visualization : String enum
+    {
+        NUMBER;
+        BULLET_CHART;
+        DONUT;
+        PROGRESS;
+        RATING;
+    };
+    valueFormat
+    {
+        scaleFactor : DecimalFloat;
+        numberOfFractionalDigits : Integer;
+    };
+    referencePeriod
+    {
+        @LanguageDependency.maxLength : 80
+        description : String(120);
+        start : elementRef;
+        end : elementRef;
+    };
+    criticality : elementRef;
+    criticalityCalculation
+    {
+        improvementDirection : String enum { MINIMIZE; TARGET; MAXIMIZE; };
+        toleranceRangeLowValue : DecimalFloat;
+        toleranceRangeLowValueElement : elementRef;
+        toleranceRangeHighValue : DecimalFloat;
+        toleranceRangeHighValueElement : elementRef;
+        deviationRangeLowValue : DecimalFloat;
+        deviationRangeLowValueElement : elementRef;
+        deviationRangeHighValue : DecimalFloat;
+        deviationRangeHighValueElement : elementRef;
+    };
+    trend : elementRef;
+    trendCalculation
+    {
+        referenceValue : elementRef;
+        isRelativeDifference : Boolean default false;
+        upDifference : DecimalFloat;
+        upDifferenceElement : elementRef;
+        strongUpDifference : DecimalFloat;
+        strongUpDifferenceElement : elementRef;
+        downDifference : DecimalFloat;
+        downDifferenceElement : elementRef;
+        strongDownDifference : DecimalFloat;
+        strongDownDifferenceElement : elementRef;
+    };
+    responsible : elementRef;
+    responsibleName : String(120);
+};</pre></div>
+<div class="p"><span class="ph emphasis emphasis">CDS Annotation for UI.DataPoint: Smart Area Micro
+Chart</span><pre class="pre codeblock prettyprint lang-xml">
+@UI.dataPoint: {
+   title: &apos;Sales Price&apos;,
+   targetValueElement: &apos;TargetPrice&apos;,
+   criticalityCalculation: {
+      improvementDirection: #TARGET,
+      toleranceRangeLowValueElement: &apos;ToleranceLowerBoundPrice&apos;,
+      toleranceRangeHighValueElement: &apos;ToleranceUpperBoundPrice&apos;,
+     deviationRangeLowValueElement: &apos;DeviationLowerBoundPrice&apos;,
+     deviationRangeHighValueElement: &apos;DeviationUpperBoundPrice&apos;
+   }
+}
+ProductSalesPrice.Price as AreaChartPrice</pre></div>
+<div class="p"><span class="ph emphasis emphasis">CDS Annotation for UI.DataPoint: Smart Bullet Micro Chart</span><pre class="pre codeblock prettyprint lang-xml">
+@UI.dataPoint: {
+   title:&apos;Sales Revenue&apos;,
+   targetValueElement: &apos;TargetRevenue&apos;,
+   forecastValue: &apos;ForecastRevenue&apos;,
+   minimumValue: 100,
+   maximumValue: 300,
+   criticality: &apos;Criticality&apos;   
+}
+ProductSalesRevenue.Revenue as BulletChartRevenue
+</pre><aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p class="p">Currently, the <samp class="ph codeph">UI.DataPoint</samp> in the CDS views does not
+support <samp class="ph codeph">elementRef</samp> for <samp class="ph codeph">minimumValue</samp>
+and <samp class="ph codeph">maximumValue</samp>. The values for these properties are
+hard-coded as in the example above.</p></aside></div>
+</div></section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

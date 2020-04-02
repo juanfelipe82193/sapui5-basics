@@ -1,0 +1,231 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Model Instantiation and Data Access</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="One OData V4 model instance can only cover one OData service. This section describes the creation of a model instance in more detail."><meta name="description" content="One OData V4 model instance can only cover one OData service. This section describes the creation of a model instance in more detail."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"54e0ddf695af4a6c978472cecb01c64d.html","previousTopicHref":"5de13cf4dd1f4a3480f7e2eaaee3f5b8.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio9613f1f2d88747cab21896f7216afdac"><h1 class="title topictitle1" hidden>Model Instantiation and Data Access</h1><div class="body conbody"><p class="shortdesc" hidden>One OData V4 model instance can only cover one OData service. This section describes the
+creation of a model instance in more detail.</p>
+<p class="p">The OData V4 model is primarily designed for OData V4 services. Nevertheless, OData V2
+services may be used through an adapter as well. For more information see: <a class="xref" href="../../#/topic/365bdbd737034334a38a6fef07345196.html" title="The SAPUI5 framework can consume OData V2 Services in a non-intrusive way as if working directly with OData V4." target="_top">Consuming OData V2 Services with the OData V4 Model</a></p>
+<p class="p">When creating an OData V4 model instance, the only parameter you actually need is a map. This
+map must contain at least the properties <samp class="ph codeph">serviceUrl</samp> and
+<samp class="ph codeph">synchronizationMode</samp>. For more information, <span class="ph">see the <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/constructor" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/constructor" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/constructor">sap.ui.model.odata.v4.ODataModel
+constructor</a></span> API
+documentation in the Demo Kit.</p>
+<p class="p"><span class="ph emphasis emphasis">OData V4 model instantiation:</span></p>
+<pre class="pre codeblock prettyprint lang-js">
+sap.ui.define([&quot;sap/ui/model/odata/v4/ODataModel&quot;], function (ODataModel) {
+    var oModel = new ODataModel({
+        serviceUrl : &quot;/sap/opu/odata4/IWBEP/V4_SAMPLE/default/IWBEP/V4_GW_SAMPLE_BASIC/0001/&quot;,
+        synchronizationMode : &quot;None&quot;
+    });
+});</pre>
+<div class="section"><section class="section" type="OData Custom Query Options"><h2 class="section_title" style="font-size: 1.15em;">OData Custom Query Options</h2>
+
+<div class="p">An OData service accepts query options placed in the service URL query part, as explained on
+the URL conventions page <a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html" target="_blank" alt="http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html" title="http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html">OData Version 4.0 Part 2: URL Conventions<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a> in chapter 2
+<em class="ph i">URL Components</em>. The OData V4 model accepts OData custom query options
+only as explained in section 5.2 <em class="ph i">Custom Query Options</em> of the URL conventions
+page; you must not provide OData system query options (starting with &quot;$&quot;) or OData
+parameter aliases (starting with &quot;@&quot;) at model level, see sections 5.1 <em class="ph i">System
+Query Options</em> and 5.3 <em class="ph i">Parameter Aliases</em> in the URL conventions page.
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>Note that it&apos;s possible to specify certain system query options for OData
+V4 model bindings. For more information, see <a class="xref" href="../../#/topic/54e0ddf695af4a6c978472cecb01c64d.html" title="Bindings connect SAPUI5 view elements to model data, allowing changes in the model to be reflected in the view element and vice versa." target="_top">Bindings</a>.</p></aside></div>
+<p class="p"><span class="ph emphasis emphasis">OData V4 model instantiation with service URL parameters:</span></p>
+<pre class="pre codeblock prettyprint lang-js">
+sap.ui.define([&quot;sap/ui/model/odata/v4/ODataModel&quot;], function (ODataModel) {
+    var oModel = new ODataModel({
+    	serviceUrl : &quot;/sap/opu/odata4/IWBEP/V4_SAMPLE/default/IWBEP/V4_GW_SAMPLE_BASIC/0001/?customParam=foo&quot;, 
+    	synchronizationMode : &quot;None&quot;
+    });
+});</pre>
+</section></div>
+<div class="section"><section class="section" type="Default Groups for Batch Control"><h2 class="section_title" style="font-size: 1.15em;">Default Groups for Batch Control</h2>
+
+<p class="p">The OData V4 model allows you to specify whether or not requests are bundled and sent
+as a batch request, and when the requests are sent. For more information, see <a class="xref" href="../../#/topic/74142a38e3d4467c8d6a70b28764048f.html" title="OData V4 allows you to group multiple operations into a single HTTP request payload, as described in the official OData V4 specification Part 1, Batch Requests (see the link under Related Information for more details)." target="_top">Batch Control</a>.</p>
+<p class="p">The parameter <samp class="ph codeph">groupId</samp> specifies the default batch group and defaults
+to <samp class="ph codeph">&quot;$auto&quot;</samp>. You can use the parameter
+<samp class="ph codeph">updateGroupId</samp> to set a batch group for update requests only. If
+you do not set this parameter, the <samp class="ph codeph">groupId</samp> will be used.</p>
+<p class="p">The following code instantiates a model that bundles all update requests in the batch
+group <samp class="ph codeph">&quot;myAppUpdateGroup&quot;</samp>; the batch request can then be sent using
+<samp class="ph codeph">oModel.submitBatch(&quot;myAppUpdateGroup&quot;)</samp>.</p>
+<p class="p"><span class="ph emphasis emphasis">OData V4 model with <samp class="ph codeph">updateGroupId</samp>:</span></p>
+<pre class="pre codeblock prettyprint lang-js">
+sap.ui.define([&quot;sap/ui/model/odata/v4/ODataModel&quot;], function (ODataModel) {
+    var oModel = new ODataModel({
+        serviceUrl : &quot;/sap/opu/odata4/IWBEP/V4_SAMPLE/default/IWBEP/V4_GW_SAMPLE_BASIC/0001/&quot;,
+        synchronizationMode : &quot;None&quot;,
+        updateGroupId : &quot;myAppUpdateGroup&quot;
+    });
+});</pre>
+</section></div>
+<div class="section"><section class="section" type="Instantiating an OData V4 Model Using the Descriptor File (manifest.json)"><h2 class="section_title" style="font-size: 1.15em;">Instantiating an OData V4 Model Using the Descriptor File (<span class="ph filepath">manifest.json</span>)</h2>
+
+<p class="p">The code sample below shows the parts of a <a class="xref" href="../../#/topic/be0cf40f61184b358b5faedaec98b2da.html" title="The descriptor for applications, components, and libraries is inspired by the Web Application Manifest concept introduced by the W3C. The descriptor provides a central, machine-readable and easy-to-access location for storing metadata associated with an application, an application component, or a library." target="_top">Descriptor for Applications, Components, and Libraries</a> (<span class="ph filepath">manifest.json</span>) that are relevant for instantiating an OData
+V4 model:</p>
+<pre class="pre codeblock prettyprint lang-js">
+{
+    &quot;sap.app&quot; : {
+        &quot;dataSources&quot; : {
+            &quot;default&quot; : {
+                &quot;uri&quot; : &quot;/sap/opu/odata4/IWBEP/V4_SAMPLE/default/IWBEP/V4_GW_SAMPLE_BASIC/0001/&quot;,
+                &quot;type&quot; : &quot;OData&quot;,
+                &quot;settings&quot; : {
+                    &quot;odataVersion&quot; : &quot;4.0&quot;
+                }
+            }
+        }
+    },
+    &quot;sap.ui5&quot; : {
+        &quot;models&quot; : {
+            &quot;&quot; : {
+                &quot;dataSource&quot; : &quot;default&quot;,
+                &quot;settings&quot; : {
+                    &quot;synchronizationMode&quot; : &quot;None&quot;,
+                    &quot;updateGroupId&quot; : &quot;myAppUpdateGroup&quot;
+                }
+            }
+        }
+    }
+}</pre>
+</section></div>
+<div class="section"><section class="section" type="Data Access"><h2 class="section_title" style="font-size: 1.15em;">Data Access</h2>
+
+<p class="p">The OData V4 model only supports data access using bindings. It does not provide any direct
+access to the data. For more information, see <a class="xref" href="../../#/topic/1232241b99d7437ba3614698d53dfa4b.html" title="Certain methods derived from SAPUI5 model and binding superclasses are not supported in OData V4 model classes or have limited support." target="_top">Unsupported Superclass Methods and Events</a>. One exception is <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.Context/methods/setProperty" target="_top" alt="#/api/sap.ui.model.odata.v4.Context/methods/setProperty" title="#/api/sap.ui.model.odata.v4.Context/methods/setProperty">sap.ui.model.odata.v4.Context#setProperty</a></span>. It allows
+to update a property without using a property binding, even without reading the data
+first.</p>
+</section></div>
+<div class="section"><section class="section" type="Language"><h2 class="section_title" style="font-size: 1.15em;">Language</h2>
+
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> uses the concept
+of a &quot;current language&quot; (see <a class="xref" href="../../#/topic/91f21f176f4d1014b6dd926db0e91070.html" title="For the identification of languages, the framework uses a language code of type string." target="_top">Identifying the Language Code / Locale</a>).
+This language is automatically propagated to the OData service by the OData V4
+model. For this reason, applications must not hard code the language themselves,
+e.g. they must not specify the <samp class="ph codeph">&quot;sap-language&quot;</samp> URL parameter as a
+custom query option.</p>
+</section></div>
+<div class="section" id="loio9613f1f2d88747cab21896f7216afdac__section_oyf_bpb_fjb"><section class="section" type="Set HTTP Header Fields"><h2 class="section_title" style="font-size: 1.15em;">Set HTTP Header Fields</h2>
+
+<p class="p">You can set headers for HTTP requests sent by the OData V4 model: This is possible statically
+by adding them to the <samp class="ph codeph">manifest.json</samp>, or dynamically with the method
+<span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel" title="#/api/sap.ui.model.odata.v4.ODataModel">ODataModel#changeHttpHeaders</a></span>.
+These headers are applied to data and metadata requests sent by the model. The
+<samp class="ph codeph">ODataModel</samp> propagates its HTTP headers to value list models
+created via <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataMetaModel" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataMetaModel" title="#/api/sap.ui.model.odata.v4.ODataMetaModel">ODataMetaModel#createValueListInfo</a></span>;
+when changing HTTP headers for the model, however, these changes are not applied to
+existing value list models: If value list models require the new headers, you have
+to additionally call <samp class="ph codeph">ODataModel#changeHttpHeaders</samp> for each of them.
+For details, see <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel" title="#/api/sap.ui.model.odata.v4.ODataModel">ODataModel#changeHttpHeaders</a></span>.</p>
+<p class="p">Sample: Set HTTP header <samp class="ph codeph">custom</samp> in manifest.json:</p>
+<pre class="pre codeblock prettyprint lang-js">{
+    &quot;sap.app&quot; : {
+        &quot;dataSources&quot; : {
+            &quot;default&quot; : {
+                &quot;uri&quot; : &quot;/sap/opu/odata4/IWBEP/V4_SAMPLE/default/IWBEP/V4_GW_SAMPLE_BASIC/0001/&quot;,
+                &quot;type&quot; : &quot;OData&quot;,
+                &quot;settings&quot; : {
+                    &quot;odataVersion&quot; : &quot;4.0&quot;
+                }
+            }
+        }
+    },
+    &quot;sap.ui5&quot; : {
+        &quot;models&quot; : {
+            &quot;&quot; : {
+                &quot;dataSource&quot; : &quot;default&quot;,
+                &quot;settings&quot; : {
+                    &quot;autoExpandSelect&quot; : true,
+                    &quot;httpHeaders&quot; : {
+                        &quot;custom&quot; : &quot;foo&quot;
+                    },
+                    &quot;synchronizationMode&quot; : &quot;None&quot;,
+                     
+                }
+            }
+        }
+    }
+}
+</pre>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/constructor" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/constructor" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/constructor">Constructor: sap.ui.model.odata.v4.ODataModel</a></div><div><a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html" target="_blank" alt="http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html" title="http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html">OData Version 4.0 Part 2: URL Conventions<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></div><div><a class="link" href="../../#/topic/54e0ddf695af4a6c978472cecb01c64d.html" title="Bindings connect SAPUI5 view elements to model data, allowing changes in the model to be reflected in the view element and vice versa." target="_top">Bindings</a></div><div><a class="link" href="../../#/topic/74142a38e3d4467c8d6a70b28764048f.html" title="OData V4 allows you to group multiple operations into a single HTTP request payload, as described in the official OData V4 specification Part 1, Batch Requests (see the link under Related Information for more details)." target="_top">Batch Control</a></div><div><a class="link" href="../../#/topic/be0cf40f61184b358b5faedaec98b2da.html" title="The descriptor for applications, components, and libraries is inspired by the Web Application Manifest concept introduced by the W3C. The descriptor provides a central, machine-readable and easy-to-access location for storing metadata associated with an application, an application component, or a library." target="_top">Descriptor for Applications, Components, and Libraries</a></div><div><a class="link" href="../../#/topic/1232241b99d7437ba3614698d53dfa4b.html" title="Certain methods derived from SAPUI5 model and binding superclasses are not supported in OData V4 model classes or have limited support." target="_top">Unsupported Superclass Methods and Events</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

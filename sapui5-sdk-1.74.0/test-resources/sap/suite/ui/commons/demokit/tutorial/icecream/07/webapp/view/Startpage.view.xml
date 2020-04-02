@@ -1,0 +1,147 @@
+<mvc:View
+	controllerName="sap.suite.ui.commons.demokit.tutorial.icecream.07.controller.Startpage"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	xmlns:layout="sap.ui.layout"
+	xmlns:microchart="sap.suite.ui.microchart">
+	<Page title="{i18n>title}">
+		<layout:VerticalLayout class="sapUiResponsiveMargin">
+			<Title
+				titleStyle="H2"
+				text="{i18n>startpageTilesGroupTitle}"
+				class="sapUiTinyMarginBegin"/>
+			<layout:HorizontalLayout allowWrapping="true">
+				<GenericTile
+					class="sapUiTinyMarginBegin sapUiTinyMarginTop"
+					header="{i18n>startpagePFTileTitle}"
+					subheader="{i18n>startpagePFTileSubTitle}"
+					press=".onNavToProcessFlow">
+					<tileContent>
+						<TileContent>
+							<content>
+								<NumericContent
+									scale="%"
+									value="{
+										path: 'process>/Nodes',
+										formatter: '.getProgress'
+									}"
+									icon="sap-icon://factory"/>
+							</content>
+						</TileContent>
+					</tileContent>
+				</GenericTile>
+				<GenericTile
+					class="sapUiTinyMarginBegin sapUiTinyMarginTop"
+					header="{
+						parts: [
+							'i18n>startpageCCTileTitle',
+							'business>/year',
+							'business>/currency'
+						],
+						formatter: '.formatMessage'
+					}">
+					<tileContent>
+						<TileContent>
+							<content>
+								<microchart:BulletMicroChart
+									size="Responsive"
+									targetValue="{business>/plannedExpenses}"
+									targetValueLabel="{
+										path: 'business>/plannedExpenses',
+										formatter: '.formatNumber'
+									}"
+									actualValueLabel="{
+										path: 'business>/expenses',
+										formatter: '.formatNumber'
+									}"
+									minValue="0">
+									<microchart:actual>
+										<microchart:BulletMicroChartData
+											value="{business>/expenses}"
+											color="Critical"/>
+									</microchart:actual>
+									<microchart:thresholds>
+										<microchart:BulletMicroChartData
+											value="{business>/expensesCritical}"
+											color="Critical"/>
+										<microchart:BulletMicroChartData
+											value="{business>/budget}"
+											color="Error"/>
+									</microchart:thresholds>
+								</microchart:BulletMicroChart>
+							</content>
+						</TileContent>
+					</tileContent>
+				</GenericTile>
+				<GenericTile
+					class="sapUiTinyMarginBegin sapUiTinyMarginTop"
+					header="{i18n>startpageUserReviewsTileTitle}">
+					<tileContent>
+						<TileContent>
+							<content>
+								<NumericContent
+									value="{
+										path: 'reviews>/UserReviews',
+										formatter: '.getEntityCount'
+									}"
+									indicator="None"
+									valueColor="Neutral"/>
+							</content>
+						</TileContent>
+					</tileContent>
+				</GenericTile>
+				<GenericTile
+					class="sapUiTinyMarginBegin sapUiTinyMarginTop"
+					header="{i18n>startpageTestResultsTileTitle}"
+					subheader="{i18n>startpageTestResultsTileSubTitle}"
+					press=".onNavToChartContainer">
+					<tileContent>
+						<TileContent>
+							<content>
+								<ImageContent src="sap-icon://temperature"/>
+							</content>
+						</TileContent>
+					</tileContent>
+				</GenericTile>
+				<SlideTile
+					class="sapUiTinyMarginBegin sapUiTinyMarginTop"
+					tiles="{news>/News}">
+					<GenericTile
+						backgroundImage="{news>image}"
+						state="{news>state}"
+						frameType="TwoByOne">
+						<tileContent>
+							<TileContent
+								footer="{
+									path: 'news>date',
+									formatter: '.formatJSONDate'
+								}">
+								<content>
+									<NewsContent
+										contentText="{news>content}"
+										subheader="{news>subheader}">
+									</NewsContent>
+								</content>
+							</TileContent>
+						</tileContent>
+					</GenericTile>
+				</SlideTile>
+			</layout:HorizontalLayout>
+			<Title
+				titleStyle="H2"
+				text="{i18n>startpageLinksGroupTitle}"
+				class="sapUiTinyMarginBegin sapUiMediumMarginTop"/>
+			<layout:HorizontalLayout allowWrapping="true">
+				<GenericTile
+					header="{i18n>startpageLineTile1Title}"
+					subheader="{i18n>startpageLineTile1SubTitle}"
+					mode="LineMode"
+					class="sapUiTinyMarginBegin"/>
+				<GenericTile
+					header="{i18n>startpageLineTile2Title}"
+					mode="LineMode"
+					class="sapUiTinyMarginBegin"/>
+			</layout:HorizontalLayout>
+		</layout:VerticalLayout>
+	</Page>
+</mvc:View>

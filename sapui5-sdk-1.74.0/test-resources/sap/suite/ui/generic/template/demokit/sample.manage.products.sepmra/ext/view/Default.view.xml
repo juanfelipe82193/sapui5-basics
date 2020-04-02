@@ -1,0 +1,59 @@
+<core:View controllerName="sap.ui.demoapps.rta.fiorielements.ext.view.Default" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core" xmlns:smartField="sap.ui.comp.smartfield" xmlns:microchart="sap.ui.comp.smartmicrochart">
+	<!-- /core:View>xmlns:microchart="sap.suite.ui.microchart">-->
+	<Table id="storageBinTable" class="sapUiResponsiveMargin" width="auto" growing="true" growingScrollToLoad="false" noDataText="No Data Text"
+		items="{path: 'to_StorageBin', parameters: { expand: 'to_OrganizationalUnit' }}" >
+		<headerToolbar>
+			<Toolbar id="tableHeaderBar">
+				<Title text="{i18n>xtit.storageBinOverview}"/>
+				<ToolbarSpacer/>
+				<Button
+					icon="sap-icon://sort"
+					tooltip="Sort Categories"
+					press="onOpenSortDialog"/>
+			</Toolbar>
+		</headerToolbar>
+		<columns>
+			<Column>
+				<header>
+					<Label text="{/#SEPMRA_C_PD_StorageBinTPType/Bin/@sap:label}"/>
+				</header>
+			</Column>
+			<Column	sortProperty="OrganizationalUnitName">
+				<header>
+					<Label text="{/#SEPMRA_C_PD_StorageBinTPType/to_OrganizationalUnit/OrganizationalUnitName/@sap:label}"/>
+				</header>
+			</Column>
+			<Column>
+				<header>
+					<Label text="{18n>xtit.miniChartTitle}" visible="false" />
+				</header>
+			</Column>
+			<Column>
+				<header>
+					<Label text="{/#SEPMRA_C_PD_StorageBinTPType/LotSizeQuantity/@sap:label}"/>
+				</header>
+			</Column>
+			<Column>
+				<header>
+					<Label text="{i18n>xtit.reorderedQunatity}"/>
+				</header>
+			</Column>
+		</columns>
+		<ColumnListItem>
+			<cells >
+				<ObjectIdentifier title="{Bin}"/>
+				<Text text="{to_OrganizationalUnit/OrganizationalUnitName}"/>
+				<microchart:SmartBulletMicroChart entitySet='SEPMRA_C_PD_StorageBinTP' chartBindingPath='to_StorageBin'/>
+				<smartField:SmartField value="{parts: [ {path: 'LotSizeQuantity'}],
+                                type : 'sap.ui.model.type.Quantity',
+                                formatOptions: {
+                                    parseAsString: true,
+                                    showMeasure: false }
+                            }" wrapping="true" enabled="{= ${component>/uiMode} === 'Edit' }"/>
+
+				<smartField:SmartField value="{PoItmQuantity}" wrapping="true" enabled="false"></smartField:SmartField>
+			</cells>
+		</ColumnListItem>
+	</Table>
+</core:View>

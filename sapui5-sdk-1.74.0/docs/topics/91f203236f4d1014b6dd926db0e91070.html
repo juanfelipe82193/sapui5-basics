@@ -1,0 +1,101 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Item Navigation - Supporting Keyboard Handling in List-like Controls</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The helper class sap.ui.core.delegate.ItemNavigation supports item navigation in lists."><meta name="description" content="The helper class sap.ui.core.delegate.ItemNavigation supports item navigation in lists."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"7e245247aef949ac84785c56deb8baac.html","previousTopicHref":"1f2d73b86e414d35970e405986f07e76.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loio91f203236f4d1014b6dd926db0e91070"><h1 class="title topictitle1" hidden>Item Navigation - Supporting Keyboard Handling in List-like Controls</h1><div class="body"><p class="shortdesc" hidden>The helper class <samp class="ph codeph">sap.ui.core.delegate.ItemNavigation</samp> supports item
+navigation in lists.</p><p class="p">The helper class can be used for keyboard events in controls that need the ability to navigate
+with arrow keys over a one- or two-dimensional list of DOM nodes. The delegate hooks
+into the browser events for arrow up/down/left/right, page up/down and home/end keys.
+With a list of DOM nodes provided by the control, it sets the focus to the relevant DOM
+node in the list while handling the events.</p><p class="p">For item navigation handling, the control has to provide a DOM node that surrounds the DOM nodes
+of all items and a list of the DOM nodes of the items. When the control is entered, the
+initial focus should be set on the surrounding DOM node. The <samp class="ph codeph">setCycling</samp>
+method determines whether the focus automatically moves to the top after the end of the
+list was reached. To use the page up/down keys, a page size must be set via the
+<samp class="ph codeph">setPageSize</samp> method on the delegate.</p><p class="p">To specify a preselected item for the delegate, use the <samp class="ph codeph">setSelectedIndex</samp> method.
+On reentering a control with a selected item, the method sets the focus on the list item
+that had been selected before the control was ended. If no selected index is given, the
+method sets the focus on the first item when the control is entered again.</p><p class="p">If item navigation has to trigger a control before a focus is set, the
+<samp class="ph codeph">BeforeFocus</samp> and <samp class="ph codeph">AfterFocus</samp> events can be used to
+do, for example, preparation tasks for the controls visibility.</p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">Using the item navigation does not prevent you from reacting on the events handled by the
+delegate in your control.</p></aside></div><div class="related-links"> <br><div class="childtopics"><strong>In this section:</strong></div><ul class="ullinks"><div><strong><a class="link" href="../../#/topic/7e245247aef949ac84785c56deb8baac.html" title="To integrate the item navigation in your control, apply the delegate in the onAfterRendering hook of your control." target="_top">Integrating Item Navigation</a></strong><br></div></ul></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		   Version="4.0">
+	<edmx:Reference
+			Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/vocabularies/Org.OData.Measures.V1.xml">
+		<edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+	</edmx:Reference>
+	<edmx:Reference
+			Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/vocabularies/Org.OData.Core.V1.xml">
+		<edmx:Include Namespace="Org.OData.Core.V1" Alias="Core"/>
+	</edmx:Reference>
+	<edmx:Reference
+			Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
+	</edmx:Reference>
+	<edmx:Reference
+			Uri="http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs02/vocabularies/Org.OData.Aggregation.V1.xml">
+		<edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_XJG',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+	</edmx:Reference>
+	<edmx:Reference
+			Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_XJG',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.UI.v1"  Alias="UI" />
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema Namespace="com.odata.v4.mathias.BusinessPartnerTest" Alias="Self">
+			<EntityType Name="BusinessPartnerType">
+				<Key>
+					<PropertyRef Name="Id"/>
+				</Key>
+				<Property Name="Id" Type="Edm.Int16" Nullable="false">
+					<Annotation Term="Common.Label">
+						<String>Business Partner Id</String>
+					</Annotation>
+				</Property>
+				<Property Name="Name" Type="Edm.String" Nullable="false">
+					<Annotation Term="Aggregation.Groupable">
+						<Bool>true</Bool>
+					</Annotation>
+					<Annotation Term="Aggregation.Aggregatable">
+						<Bool>true</Bool>
+					</Annotation>
+					<Annotation Term="Aggregation.SupportedAggregationMethods">
+						<Collection>
+							<String>countdistinct</String>
+						</Collection>
+					</Annotation>
+					<Annotation Term="Aggregation.RecommendedAggregationMethod">
+						<String>countdistinct</String>
+					</Annotation>
+					<Annotation Term="Common.Label">
+						<String>Business Partner</String>
+					</Annotation>
+				</Property>
+				<Property Name="Country" Type="Edm.String" Nullable="false">
+					<Annotation Term="Aggregation.Groupable">
+						<Bool>true</Bool>
+					</Annotation>
+					<Annotation Term="Common.Label">
+						<String>Country</String>
+					</Annotation>
+				</Property>
+				<Property Name="Region" Type="Edm.String" Nullable="false">
+					<Annotation Term="Aggregation.Groupable">
+						<Bool>true</Bool>
+					</Annotation>
+					<Annotation Term="Common.Label">
+						<String>Region</String>
+					</Annotation>
+				</Property>
+				<Property Name="AccountResponsible" Type="Edm.String" Nullable="false">
+					<Annotation Term="Aggregation.Groupable">
+						<Bool>true</Bool>
+					</Annotation>
+					<Annotation Term="Common.Label">
+						<String>Account Responsible</String>
+					</Annotation>
+					<Annotation Term="Aggregation.SupportedAggregationMethods">
+						<Collection>
+							<String>countdistinct</String>
+						</Collection>
+					</Annotation>
+					<Annotation Term="Aggregation.RecommendedAggregationMethod">
+						<String>countdistinct</String>
+					</Annotation>
+				</Property>
+				<Property Name="SalesAmount" Type="Edm.Decimal" Precision="16">
+					<Annotation Term="Measures.ISOCurrency">
+						<PropertyPath>Currency</PropertyPath>
+					</Annotation>
+					<Annotation Term="Analytics.Measure"><!--inherit from Aggregatable.Aggregatable-->
+						<Bool>true</Bool>
+					</Annotation>
+					<Annotation Term="Aggregation.Aggregatable">
+						<Bool>true</Bool>
+					</Annotation>
+					<Annotation Term="Aggregation.SupportedAggregationMethods">
+						<Collection>
+							<String>sum</String>
+							<String>min</String>
+							<String>max</String>
+							<String>average</String>
+						</Collection>
+					</Annotation>
+					<Annotation Term="Aggregation.RecommendedAggregationMethod">
+						<String>average</String>
+					</Annotation>
+					<Annotation Term="Common.Label">
+						<String>Sales Amount</String>
+					</Annotation>
+					<Annotation Term="Aggregation.ContextDefiningProperties">
+						<Collection>
+							<PropertyPath>Currency</PropertyPath>
+						</Collection>
+					</Annotation>
+				</Property>
+				<Property Name="Currency" Type="Edm.String" Nullable="false">
+					<Annotation Term="Analytics.Dimension"><!--inherit from Aggregation.Groupable-->
+						<Bool>true</Bool>
+					</Annotation>
+					<Annotation Term="Aggregation.Groupable">
+						<Bool>true</Bool>
+					</Annotation>
+					<Annotation Term="Common.Label">
+						<String>Currency</String>
+					</Annotation>
+				</Property>
+				<Property Name="Info" Type="Edm.String" Nullable="false">
+					<Annotation Term="Common.Label">
+						<String>Additional Info</String>
+					</Annotation>
+				</Property>
+				<Property Name="Friendliness" Type="Edm.String" Nullable="false">
+					<Annotation Term="Common.Label">
+						<String>Friendliness</String>
+					</Annotation>
+					<Annotation Term="Aggregation.Groupable">
+						<Bool>true</Bool>
+					</Annotation>
+					<Annotation Term="UI.ValueCriticality">
+						<Collection>
+							<Record>
+								<PropertyValue Property="Value">
+									<String>Unpolite</String>
+								</PropertyValue>
+								<PropertyValue Property="Criticality">
+									<EnumMember>UI.CriticalityType/Negative</EnumMember>
+								</PropertyValue>
+							</Record>
+							<Record>
+								<PropertyValue Property="Value">
+									<String>Demanding</String>
+								</PropertyValue>
+								<PropertyValue Property="Criticality">
+									<EnumMember>UI.CriticalityType/Critical</EnumMember>
+								</PropertyValue>
+							</Record>
+							<Record>
+								<PropertyValue Property="Value">
+									<String>Polite</String>
+								</PropertyValue>
+								<PropertyValue Property="Criticality">
+									<EnumMember>UI.CriticalityType/Positive</EnumMember>
+								</PropertyValue>
+							</Record>
+						</Collection>
+					</Annotation>
+				</Property>
+			</EntityType>
+			<EntityContainer Name="Container">
+				<EntitySet Name="BusinessPartners" EntityType="Self.BusinessPartnerType" />
+				<Annotation Term="Aggregation.ApplySupported">
+					<Record>
+						<PropertyValue Property="Transformations">
+							<Collection>
+								<String>aggregate</String>
+								<String>topcount</String>
+								<String>bottomcount</String>
+								<String>identity</String>
+								<String>concat</String>
+								<String>groupby</String>
+								<String>filter</String>
+								<String>expand</String>
+								<String>top</String>
+								<String>skip</String>
+								<String>orderby</String>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="CustomAggregationMethods">
+							<Collection>
+								<String>Custom.concat</String>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Rollup">
+							<EnumMember>Aggregation.RollupType/None</EnumMember>
+						</PropertyValue>
+						<PropertyValue Property="PropertyRestrictions">
+							<Bool>true</Bool>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</EntityContainer>
+			<Annotations Target="Self.BusinessPartnerType">
+				<Annotation Term="Analytics.AggregatedProperties">
+					<Collection>
+						<Record> <!-- Note: Name omitted, because determined from annotation target (=> MinRevenue) -->
+							<PropertyValue Property="Value" String="minSalesMount" />
+							<PropertyValue Property="AggregationMethod" String="min" />
+							<PropertyValue Property="AggregatableProperty" PropertyPath="SalesAmount" />
+						</Record>
+						<Record> <!-- Note: Name omitted, because determined from annotation target (=> MinRevenue) -->
+							<PropertyValue Property="Value" String="maxSalesMount" />
+							<PropertyValue Property="AggregationMethod" String="max" />
+							<PropertyValue Property="AggregatableProperty" PropertyPath="SalesAmount" />
+							<Annotation Term="Common.Label" String="Maximum Sales Amount" /> <!-- label for the dynamic property -->
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="Org.OData.Capabilities.V1.FilterRestrictions">
+					<Record>
+						<PropertyValue Property="NonFilterableProperties">
+							<Collection>
+								<PropertyPath>Region</PropertyPath>
+								<PropertyPath>Info</PropertyPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.Chart">
+					<PropertyValue Property="ChartType"
+								   EnumMember="com.sap.vocabularies.UI.v1.ChartType/Column"/>
+					<PropertyValue Property="Dimensions">
+						<Collection>
+							<PropertyPath>Name</PropertyPath>
+						</Collection>
+					</PropertyValue>
+					<PropertyValue Property="DimensionAttributes">
+						<Collection>
+							<Record>
+								<PropertyValue Property="Dimension" PropertyPath="Name"/>
+								<PropertyValue Property="Role"
+											   EnumMember="com.sap.vocabularies.UI.v1.ChartDimensionRoleType/Series"/>
+							</Record>
+						</Collection>
+					</PropertyValue>
+					<PropertyValue Property="Measures">
+						<Collection>
+							<Record>
+								<PropertyPath>minSalesAmount</PropertyPath>
+								<PropertyPath>maxSalesAmount</PropertyPath>
+							</Record>
+						</Collection>
+					</PropertyValue>
+					<PropertyValue Property="MeasureAttributes">
+						<Collection>
+							<Record> <!-- of type UI.ChartMeasureAttributeType -->
+								<PropertyValue Property="Measure" PropertyPath="MinRevenue" />
+								<PropertyValue Property="Role" EnumMember="com.sap.vocabularies.UI.v1.ChartMeasureRoleType/Axis1" />
+							</Record>
+							<Record> <!-- of type UI.ChartMeasureAttributeType -->
+								<PropertyValue Property="Measure" PropertyPath="MaxRevenue" />
+								<PropertyValue Property="Role" EnumMember="com.sap.vocabularies.UI.v1.ChartMeasureRoleType/Axis2" />
+							</Record>
+						</Collection>
+					</PropertyValue>
+				</Annotation>
+
+				<Annotation Term="Aggregation.CustomAggregate" Qualifier="Sales">
+					<Annotation Term="Aggregation.ContextDefiningProperties">
+						<Collection>
+							<PropertyPath>Currency</PropertyPath>
+						</Collection>
+					</Annotation>
+					<String>Edm.Decimal</String>
+					<Annotation Term="Common.Label" String="The average sales amount" />
+				</Annotation>
+				<Annotation Term="Aggregation.CustomAggregate" Qualifier="SalesAmountTotal">
+					<Annotation Term="Aggregation.ContextDefiningProperties">
+						<Collection>
+							<PropertyPath>Currency</PropertyPath>
+						</Collection>
+					</Annotation>
+					<String>Edm.Decimal</String>
+				</Annotation>
+				<Annotation Term="Aggregation.CustomAggregate" Qualifier="SalesNumber">
+					<String>Edm.Int32</String>
+					<Annotation Term="Common.Label">
+						<String>The sales number</String>
+					</Annotation>
+				</Annotation>
+				<Annotation Term="Aggregation.CustomAggregate" Qualifier="NumberOfCustomers">
+					<String>Edm.Int32</String>
+				</Annotation>
+			</Annotations>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,125 @@
+<core:FragmentDefinition
+		xmlns="sap.m"
+		xmlns:l="sap.ui.layout"
+		xmlns:f="sap.ui.layout.form"
+		xmlns:core="sap.ui.core"
+		xmlns:custom="sap.ui.documentation.sdk.controls">
+	<Dialog
+			id="aboutDialog"
+			resizable="true"
+			draggable="true"
+			title="About"
+			contentWidth="42rem"
+			contentHeight="50rem"
+			showHeader="false"
+			stretch="{appView>/bPhoneSize}"
+			class="aboutDialog">
+		<NavContainer
+			id="aboutNavCon">
+			<Page
+				id="aboutMaster"
+				title="About">
+				<VBox class="sapUiSmallMargin">
+					<Image id="aboutLogoSAP" src="./resources/sap/ui/documentation/sdk/images/Logo_B_SAPUI5_H.png" densityAware="false" width="100%" class="sapUiSmallMarginBottom" visible="{=!${versionData>/isOpenUI5}}"/>
+					<Image id="aboutLogoUI5" src="./resources/sap/ui/documentation/sdk/images/Logo_B_OpenUI5_H.png" densityAware="false" width="100%" class="sapUiSmallMarginBottom" visible="{versionData>/isOpenUI5}"/>
+					<Text text="UI5 Demo Kit - UI Development Toolkit for HTML5" class="sapMTitleStyleH2 sapUiSmallMarginBottom" />
+					<Text text="© Copyright 2009-2020 SAP SE. All rights reserved." class="sapUiMediumMarginBottom" visible="{=!${versionData>/isOpenUI5}}"/>
+					<Text text="© 2009-2020 SAP SE or an SAP affiliate company." visible="{versionData>/isOpenUI5}"/>
+					<custom:JSDocText class="sapUiMediumMarginBottom" visible="{versionData>/isOpenUI5}" text="Licensed under the Apache License, Version 2.0 – see &lt;a href='LICENSE.txt' target='_blank' class='sapMLnk sapMLnkMaxWidth aboutLink'&gt;LICENSE.txt&lt;/a&gt;"/>
+					<Text text="{versionData>/versionName} Version {versionData>/fullVersion}" class="sapMTitleStyleH4 sapUiSmallMarginBottom"/>
+					<Text text="Open UI5 Version {versionData>/openUi5Version}" class="sapMTitleStyleH5 sapUiSmallMarginBottom" visible="{=!${versionData>/isOpenUI5}}"/>
+					<Text text="This software includes the following library versions"/>
+					<custom:JSDocText class="sapUiTinyMarginBottom" text="(a full change log for all libraries can be found &lt;a href='releasenotes.html' target='_blank' class='sapMLnk sapMLnkMaxWidth aboutLink'&gt;here&lt;/a&gt;)."/>
+					<Link text="Version Details" press="onAboutVersionDetails" class="sapUiSmallMarginBottom"/>
+					<Text text="This software includes third-party open source software." class="sapUiTinyMarginBottom" visible="{=!${versionData>/isOpenUI5}}"/>
+					<Link text="Included Third-Party Software" press="onAboutThirdParty" class="sapUiSmallMarginBottom" visible="{=!${versionData>/isOpenUI5}}"/>
+					<MessageStrip showIcon="true" text="{= ${versionData>/isOpenUI5} ? ${appView>/sAboutInfoOpenUI5} : ${appView>/sAboutInfoSAPUI5}}" class="sapUiSmallMarginBottom" enableFormattedText="true"/>
+				</VBox>
+			</Page>
+			<Page
+				id="aboutDetail"
+				showNavButton="true"
+				navButtonPress="onAboutNavBack"
+				title="Version Details">
+				<l:VerticalLayout class="sapUiSmallMargin" content="{path: 'appView>/oVersionInfo/libs'}">
+					<f:Form width="100%" editable="false">
+						<f:title>
+							<core:Title text="{appView>library}"/>
+						</f:title>
+						<f:layout>
+							<f:ResponsiveGridLayout/>
+						</f:layout>
+						<f:formContainers>
+							<f:FormContainer>
+								<f:formElements>
+									<f:FormElement label="Version">
+										<f:fields>
+											<Text text="{appView>version}" class="sapUiSmallMarginBottom"/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement label="Description">
+										<f:fields>
+											<Text text="{appView>documentation}" class="sapUiSmallMarginBottom"/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement label="Change Log" visible="{=!!${appView>releasenotes}}">
+										<f:fields>
+											<Link text="Open Change Log" press="onReleaseDialogOpen" class="sapUiSmallMarginBottom">
+												<customData>
+													<core:CustomData key="library" value="{appView>library}" />
+													<core:CustomData key="version" value="{versionData>/version}" />
+												</customData>
+											</Link>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement label="Component" visible="{=!!${appView>libDefaultComponent}}">
+										<f:fields>
+											<Text text="{appView>libDefaultComponent}" class="sapUiSmallMarginBottom"/>
+										</f:fields>
+									</f:FormElement>
+								</f:formElements>
+							</f:FormContainer>
+						</f:formContainers>
+					</f:Form>
+				</l:VerticalLayout>
+			</Page>
+			<Page
+				id="aboutThirdParty"
+				showNavButton="true"
+				navButtonPress="onAboutNavBack"
+				title="Included Third-Party Software">
+				<l:VerticalLayout class="sapUiSmallMargin" content="{path: 'appView>/oThirdPartyInfo/thirdparty'}">
+					<f:Form width="100%" editable="false">
+						<f:title>
+							<core:Title text="{appView>displayName}"/>
+						</f:title>
+						<f:layout>
+							<f:GridLayout/>
+						</f:layout>
+						<f:formContainers>
+							<f:FormContainer>
+								<f:formElements>
+									<f:FormElement>
+										<f:fields>
+											<Link text="Web Site" target="_blank" href="{appView>homepage}" class="sapUiSmallMarginBottom"/>
+											<Link text="License Conditions" target="_blank" href="{appView>license/url}" class="sapUiSmallMarginBottom"/>
+										</f:fields>
+									</f:FormElement>
+									<f:FormElement>
+										<f:fields>
+											<Link text="Licensed by SAP under '{appView>license/type}'" target="_blank" href="{appView>license/file}" class="sapUiSmallMarginBottom"/>
+										</f:fields>
+									</f:FormElement>
+								</f:formElements>
+							</f:FormContainer>
+						</f:formContainers>
+					</f:Form>
+				</l:VerticalLayout>
+			</Page>
+		</NavContainer>
+		<beginButton>
+			<Button id="aboutDialogCloseButton" text="Close" press="aboutDialogClose"/>
+		</beginButton>
+	</Dialog>
+
+</core:FragmentDefinition>

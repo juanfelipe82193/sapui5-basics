@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+		   xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+		   xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+		   xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="SmartMultiInput"
+				sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+
+			<EntityType Name="Product" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="ProductId"/>
+				</Key>
+				<Property Name="ProductId" Type="Edm.String" Nullable="false"
+						  MaxLength="20" sap:label="Product ID" sap:creatable="false"
+						  sap:updatable="false" sap:sortable="true"/>
+				<NavigationProperty Name="to_Categories" Relationship="SmartMultiInput.FK_Products_Categories"
+									ToRole="Categories" FromRole="Products"/>
+			</EntityType>
+
+			<Association Name="FK_Products_Categories" sap:content-version="1">
+				<End Type="SmartMultiInput.Product" Multiplicity="1" Role="Products"/>
+				<End Type="SmartMultiInput.Category" Multiplicity="*" Role="Categories"/>
+				<ReferentialConstraint>
+					<Principal Role="Products">
+						<PropertyRef Name="ProductId"/>
+					</Principal>
+					<Dependent Role="Categories">
+						<PropertyRef Name="ProductId"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+
+			<EntityType Name="Category" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="CategoryId"/>
+					<PropertyRef Name="ProductId"/>
+				</Key>
+				<Property Name="CategoryId" Type="Edm.String" Nullable="false"
+						  MaxLength="4" sap:display-format="UpperCase" sap:label="Category"
+						  sap:text="Description"/>
+				<Property Name="Description" Type="Edm.String" Nullable="true"
+						  sap:label="Category Description" sap:creatable="true"
+						  sap:updatable="true" sap:sortable="true"/>
+				<Property Name="Price" Type="Edm.Decimal" Nullable="true"
+						  MaxLength="5" sap:label="Category product value"/>
+				<Property Name="ProductId" Type="Edm.String" Nullable="false"
+						  MaxLength="20" sap:label="Product ID" sap:creatable="false"
+						  sap:updatable="false" sap:sortable="true"/>
+
+
+				<Property Name="Boolean"
+						  Type="Edm.Boolean"
+						  Nullable="true"
+						  sap:label="Boolean"/>
+				<Property Name="DateTime"
+						  Type="Edm.DateTime"
+						  Nullable="true"
+						  Precision="0"
+						  sap:display-format="Date"
+						  sap:label="DateTime"/>
+				<Property Name="Decimal"
+						  Type="Edm.Decimal"
+						  Precision="7"
+						  Scale="3"
+						  sap:label="Decimal (7x3)"/>
+				<Property Name="DateTimeOffset"
+						  Type="Edm.DateTimeOffset"
+						  Precision="0"
+						  sap:label="DateTimeOffset"/>
+				<Property Name="Guid"
+						  Type="Edm.Guid"
+						  Nullable="true"
+						  sap:label="GUID"/>
+
+
+				<NavigationProperty Name="Product" Relationship="SmartMultiInput.FK_Products_Categories"
+									ToRole="Products" FromRole="Categories"/>
+			</EntityType>
+
+
+			<EntityType Name="CategoryVH" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="CategoryId"/>
+				</Key>
+				<Property Name="CategoryId" Type="Edm.String" Nullable="false"
+						  MaxLength="4" sap:display-format="UpperCase" sap:label="Category"
+						  sap:text="Description"/>
+				<Property Name="Description" Type="Edm.String" Nullable="true"
+						  sap:label="Category Description" sap:creatable="true"
+						  sap:updatable="true" sap:sortable="true"/>
+				<Property Name="Price" Type="Edm.Decimal" Nullable="false"
+						  MaxLength="5" sap:label="Product value"/>
+
+				<Property Name="DateTime"
+						  Type="Edm.DateTime"
+						  Nullable="true"
+						  Precision="0"
+						  sap:display-format="Date"
+						  sap:label="DateTime"/>
+
+			</EntityType>
+
+			<EntityContainer Name="SmartMultiInput_Entities"
+							 m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+				<EntitySet Name="Products" EntityType="SmartMultiInput.Product"
+						   sap:creatable="true" sap:updatable="true" sap:deletable="true"
+						   sap:pageable="true" sap:content-version="1"/>
+				<EntitySet Name="Categories" EntityType="SmartMultiInput.Category"
+						   sap:creatable="true" sap:updatable="true" sap:deletable="true"
+						   sap:content-version="1" sap:countable="true"/>
+				<EntitySet Name="CategoriesVH" EntityType="SmartMultiInput.CategoryVH"
+						   sap:creatable="true" sap:updatable="true" sap:deletable="true"
+						   sap:content-version="1" sap:countable="true"/>
+
+				<AssociationSet Name="FK_Products_Categories" Association="SmartMultiInput.FK_Products_Categories"
+								sap:creatable="true" sap:updatable="true" sap:deletable="true" sap:content-version="1">
+					<End EntitySet="Products" Role="Products"/>
+					<End EntitySet="Categories" Role="Categories"/>
+				</AssociationSet>
+			</EntityContainer>
+
+			<Annotations Target="SmartMultiInput.Category/CategoryId"
+						 xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+					<Record>
+						<PropertyValue Property="Label" String="Value help for categories"/>
+						<PropertyValue Property="CollectionPath" String="CategoriesVH"/>
+						<PropertyValue Property="SearchSupported" Bool="true"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterOut">
+									<PropertyValue Property="LocalDataProperty"
+												   PropertyPath="CategoryId"/>
+									<PropertyValue Property="ValueListProperty"
+												   String="CategoryId"/>
+								</Record>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty"
+												   String="Description"/>
+									<PropertyValue Property="LocalDataProperty"
+												   PropertyPath="Description"/>
+								</Record>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty"
+												   String="Price"/>
+									<PropertyValue Property="LocalDataProperty"
+												   PropertyPath="Price"/>
+								</Record>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty"
+												   String="DateTime"/>
+									<PropertyValue Property="LocalDataProperty"
+												   PropertyPath="DateTime"/>
+								</Record>
+
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+
+			<Annotations Target="SmartMultiInput.Category/Description"
+						 xmlns="http://docs.oasis-open.org/odata/ns/edm">
+
+				<Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+					<Record>
+						<PropertyValue Property="Label" String="Value help for categories"/>
+						<PropertyValue Property="CollectionPath" String="CategoriesVH"/>
+						<PropertyValue Property="SearchSupported" Bool="true"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+									<PropertyValue Property="LocalDataProperty"
+												   PropertyPath="CategoryId"/>
+									<PropertyValue Property="ValueListProperty"
+												   String="CategoryId"/>
+								</Record>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterOut">
+									<PropertyValue Property="ValueListProperty"
+												   String="Description"/>
+									<PropertyValue Property="LocalDataProperty"
+												   PropertyPath="Description"/>
+								</Record>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty"
+												   String="Price"/>
+									<PropertyValue Property="LocalDataProperty"
+												   PropertyPath="Price"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.Common.v1.ValueListWithFixedValues" Bool="true"/>
+			</Annotations>
+
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

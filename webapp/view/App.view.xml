@@ -1,0 +1,93 @@
+<!-- The root node of the XML structure is the view -->
+<!-- Here we reference the default namespace sap.m where the majority of our UI assets is located -->
+<!-- We define an additional sap.ui.core.mvc namespace with alias mvc, where the SAPUI5 views and all other Model-View-Controller (MVC) assets are located -->
+<mvc:View displayBlock="true" xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout"
+	xmlns="sap.m" controllerName="opensap.myapp.controller.App">
+	<App>
+		<pages>
+			<Page title="openSAP - Developing with SAPUI5">
+				<content>
+					<IconTabBar id="idTopLevelIconTabBar" selectedKey="db" class="sapUiResponsiveContentPadding">
+						<items>
+							<IconTabFilter id="start" text="{i18n>gettingStartedFilter}">
+								<Carousel class="myAppCrsl">
+									<pages>
+										<Image src="https://dummyimage.com/600x400/000/fff" height="400px"/>
+										<Image src="https://dummyimage.com/600x400/000/fff" height="400px"/>
+									</pages>
+								</Carousel>
+								<Button text="{i18n>showHelloButtonText}" press="onShowHello"/>
+								<Input
+									value="{ path: 'helloPanel>/recipient/amount', type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2}, constraints: {maximum : 3000} }"
+									description="This is {helloPanel>/recipient/name}" valueLiveUpdate="false" width="60%"/>
+							</IconTabFilter>
+							<IconTabFilter id="layouts" text="{i18n>layoutFilter}">
+								<MessageStrip type="Information" showIcon="true"
+									text="Here's a form Layout inside an Icon Tab bar. The labels on the right hand-side are aligned to the right, while the input fields are aligned to the left. The icons of 'Publish' and 'Save Draft' button are taken from the UI5 Icon library. You can find them, in the icon explorer by their names 'save' and 'outbox'. Finally, please note the usage of predefined margins to create a space below this MessageStrip control and above the Toolbar control"/>
+								<!--<core:Icon src="sap-icon://hello-world" size="8rem"/>-->
+								<f:SimpleForm id="simpleFormChange" title="Address" editable="true" class="editableForm">
+									<f:content>
+										<Label text="{i18n>layoutFormName}"/>
+										<Input value="{address>/Name}"/>
+										<Label text="{i18n>layoutFormStreet}"/>
+										<Input value="{address>/Street}"/>
+										<Label text="{i18n>layoutFormHouseNumber}"/>
+										<Input value="{address>/HouseNumber}"/>
+										<Label text="{i18n>layoutFormZIPCode}"/>
+										<Input value="{address>/ZIPCode}"/>
+										<Label text="{i18n>layoutFormCity}"/>
+										<Input value="{address>/City}"/>
+										<Label text="{i18n>layoutFormCountry}"/>
+										<Select>
+											<items>
+												<core:Item text="{i18n>layoutCountryGermany}"/>
+												<core:Item text="{i18n>layoutCountryUSA}"/>
+												<core:Item text="{i18n>layoutCountryEngland}"/>
+											</items>
+										</Select>
+									</f:content>
+								</f:SimpleForm>
+								<Toolbar class="sapUiSmallMarginTopBottom">
+									<ToolbarSpacer/>
+									<Button text="{i18n>layoutPublishButton}" type="Accept" icon="sap-icon://complete"/>
+									<Button text="{i18n>layoutDraftButton}" icon="sap-icon://save"/>
+								</Toolbar>
+							</IconTabFilter>
+							<IconTabFilter text="{i18n>dataBindingFilter}" key="db">
+								<content>
+									<List items="{ path: '/Products', sorter: { path: 'CategoryID', group: true } }" id="invoiceList" growing="true" growingThreshold="5"
+										growingScrollToLoad="false" mode="SingleSelectMaster" selectionChange="onItemSelected">
+										<headerToolbar>
+											<Toolbar>
+												<Title text="{i18n>listHeader}"/>
+												<ToolbarSpacer/>
+												<SearchField width="50%" search="onFilterProducts"/>
+											</Toolbar>
+										</headerToolbar>
+										<items>
+											<ObjectListItem title="{ProductName}"
+												number="{ parts: [ {path: 'UnitPrice'}, {path: 'CurrencyCode'} ], type:'sap.ui.mode.type.Float', formatOptions: { showMeasure: false }, formatter: '.formatter.numberFormat' }"
+												numberState="{= ${UnitPrice} > 100 ? 'Error' : 'Success'}" intro="{CategoryID}" numberUnit="USD">
+												<firstStatus>
+													<!--<ObjectStatus text="{ parts: [ {path: 'WeightUnit'}, {path: 'WeightMeasure'} ], formatter: '.formatter.delivery' }"/>-->
+												</firstStatus>
+											</ObjectListItem>
+										</items>
+									</List>
+									<Panel id="productDetailsPanel" headerText="Product Details" visible="false">
+										<l:Grid>
+											<Text text="Product ID: {ProductID}"/>
+											<Text text="Product Name: {ProductName}"/>
+											<Text text="Price: {UnitPrice} USD"/>
+											<Text text="Discontinued: {Discontinued}"/>
+										</l:Grid>
+									</Panel>
+								</content>
+							</IconTabFilter>
+						</items>
+					</IconTabBar>
+				</content>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

@@ -1,0 +1,4198 @@
+{
+	"$schema-ref": "http://schemas.sap.com/sapui5/designtime/api.json/1.0",
+	"version": "1.74.0",
+	"library": "sap.ui.integration",
+	"symbols": [
+		{
+			"kind": "namespace",
+			"name": "sap.ui.integration",
+			"basename": "integration",
+			"resource": "sap/ui/integration/library.js",
+			"module": "sap/ui/integration/library",
+			"export": "",
+			"static": true,
+			"visibility": "public",
+			"description": "SAPUI5 library with controls specialized for SAP Fiori apps."
+		},
+		{
+			"kind": "enum",
+			"name": "sap.ui.integration.CardActionType",
+			"basename": "CardActionType",
+			"resource": "sap/ui/integration/library.js",
+			"module": "sap/ui/integration/library",
+			"export": "CardActionType",
+			"static": true,
+			"visibility": "public",
+			"description": "Enumeration of possible card action types.",
+			"experimental": {
+				"since": "1.64",
+				"text": "Disclaimer: this property is in a beta state - incompatible API changes may be done before its official public release. Use at your own discretion."
+			},
+			"ui5-metamodel": true,
+			"ui5-metadata": {
+				"stereotype": "enum"
+			},
+			"properties": [
+				{
+					"name": "Navigation",
+					"visibility": "public",
+					"static": true,
+					"type": "string",
+					"description": "Used for navigation actions"
+				},
+				{
+					"name": "Submit",
+					"visibility": "public",
+					"static": true,
+					"type": "string",
+					"description": "Used for navigation actions"
+				}
+			]
+		},
+		{
+			"kind": "enum",
+			"name": "sap.ui.integration.CardDataMode",
+			"basename": "CardDataMode",
+			"resource": "sap/ui/integration/library.js",
+			"module": "sap/ui/integration/library",
+			"export": "CardDataMode",
+			"static": true,
+			"visibility": "public",
+			"since": "1.65",
+			"description": "Possible data modes for <code>{@link sap.ui.integration.widgets.Card}</code>.",
+			"experimental": {
+				"since": "1.65"
+			},
+			"ui5-metamodel": true,
+			"ui5-metadata": {
+				"stereotype": "enum"
+			},
+			"properties": [
+				{
+					"name": "Active",
+					"visibility": "public",
+					"static": true,
+					"type": "string",
+					"description": "When in this mode, the card can make requests."
+				},
+				{
+					"name": "Inactive",
+					"visibility": "public",
+					"static": true,
+					"type": "string",
+					"description": "When in this mode, the card cannot make requests."
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+			"basename": "BaseEditor",
+			"resource": "sap/ui/integration/designtime/baseEditor/BaseEditor.js",
+			"module": "sap/ui/integration/designtime/baseEditor/BaseEditor",
+			"export": "",
+			"static": true,
+			"visibility": "restricted",
+			"since": "1.70.0",
+			"extends": "sap.ui.core.Control",
+			"description": "<h3>Overview</h3> Configurable JSON editor <h4>Example</h4> <pre>\nsap.ui.require([\"sap/ui/integration/designtime/baseEditor/BaseEditor\"], function (Editor) {\n    var oJson = {\n        root: {\n            context: {\n                id: \"404\",\n                name: \"Kate\",\n                role: \"End User\"\n            },\n            foo: {\n                bar: true\n            }\n        }\n    };\n    var oEditor = new Editor();\n    oEditor.setJson(oJson);\n    oEditor.setConfig({\n        \"context\": \"root/context\",\n        \"properties\" : {\n            \"name\": {\n                \"label\": \"Name\",\n                \"path\": \"name\",\n                \"type\": \"string\"\n            },\n            \"role\": {\n                \"label\": \"Role\",\n                \"path\": \"role\",\n                \"type\": \"enum\",\n                \"enum\": [\"Developer\", \"Key User\", \"End User\"]\n            },\n            \"department\": {\n                \"label\": \"Department\",\n                \"path\": \"department\",\n                \"type\": \"enum\",\n                \"enum\": [\"Sales\", \"HR\", \"Development\"],\n                \"visible\": \"{= ${context>/role} === 'Key User'}\"\n            }\n        },\n        \"propertyEditors\": {\n            \"enum\" : \"sap/ui/integration/designtime/baseEditor/propertyEditors/enumStringEditor/EnumStringEditor\",\n            \"string\" : \"sap/ui/integration/designtime/baseEditor/propertyEditors/stringEditor/StringEditor\"\n        }\n    });\n    oEditor.attachJsonChange(function(oEvent) {\n        var oJson = oEvent.getParameter(\"json\");\n        // live change\n    })\n    oEditor.placeAt(\"content\");\n})\n</pre>",
+			"experimental": {
+				"since": "1.70.0"
+			},
+			"ui5-metadata": {
+				"stereotype": "control",
+				"properties": [
+					{
+						"name": "json",
+						"type": "object",
+						"defaultValue": null,
+						"group": "Misc",
+						"visibility": "public",
+						"methods": [
+							"getJson",
+							"setJson"
+						]
+					},
+					{
+						"name": "config",
+						"type": "object",
+						"defaultValue": null,
+						"group": "Misc",
+						"visibility": "public",
+						"methods": [
+							"getConfig",
+							"setConfig"
+						]
+					},
+					{
+						"name": "_defaultConfig",
+						"type": "object",
+						"defaultValue": "{i18n:\"sap/ui/integration/designtime/baseEditor/i18n/i18n.properties\"}",
+						"group": "Misc",
+						"visibility": "hidden",
+						"methods": [
+							"get_defaultConfig",
+							"set_defaultConfig"
+						]
+					}
+				],
+				"aggregations": [
+					{
+						"name": "_propertyEditors",
+						"singularName": "_propertyEditor",
+						"type": "sap.ui.core.Control",
+						"cardinality": "0..n",
+						"visibility": "hidden",
+						"methods": [
+							"get_propertyEditors",
+							"destroy_propertyEditors",
+							"insert_propertyEditor",
+							"add_propertyEditor",
+							"remove_propertyEditor",
+							"indexOf_propertyEditor",
+							"removeAll_propertyEditors"
+						]
+					},
+					{
+						"name": "content",
+						"singularName": "content",
+						"type": "sap.ui.core.Control",
+						"cardinality": "0..n",
+						"visibility": "public",
+						"methods": [
+							"getContent",
+							"destroyContent",
+							"insertContent",
+							"addContent",
+							"removeContent",
+							"indexOfContent",
+							"removeAllContent"
+						]
+					}
+				],
+				"defaultAggregation": "content",
+				"events": [
+					{
+						"name": "jsonChange",
+						"visibility": "public",
+						"parameters": {
+							"json": {
+								"name": "json",
+								"type": "object"
+							}
+						},
+						"methods": [
+							"attachJsonChange",
+							"detachJsonChange",
+							"fireJsonChange"
+						]
+					},
+					{
+						"name": "propertyEditorsReady",
+						"visibility": "public",
+						"parameters": {
+							"propertyEditors": {
+								"name": "propertyEditors",
+								"type": "array"
+							}
+						},
+						"methods": [
+							"attachPropertyEditorsReady",
+							"detachPropertyEditorsReady",
+							"firePropertyEditorsReady"
+						]
+					}
+				]
+			},
+			"constructor": {
+				"visibility": "restricted",
+				"description": "Accepts an object literal <code>mSettings</code> that defines initial property values, aggregated and associated objects as well as event handlers. See {@link sap.ui.base.ManagedObject#constructor} for a general description of the syntax of the settings object."
+			},
+			"events": [
+				{
+					"name": "jsonChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false,
+									"parameterProperties": {
+										"json": {
+											"name": "json",
+											"type": "object",
+											"optional": false
+										}
+									}
+								}
+							}
+						}
+					],
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "propertyEditorsReady",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false,
+									"parameterProperties": {
+										"propertyEditors": {
+											"name": "propertyEditors",
+											"type": "any[]",
+											"optional": false
+										}
+									}
+								}
+							}
+						}
+					],
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			],
+			"methods": [
+				{
+					"name": "addContent",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oContent",
+							"type": "sap.ui.core.Control",
+							"optional": false,
+							"description": "The content to add; if empty, nothing is inserted"
+						}
+					],
+					"description": "Adds some content to the aggregation {@link #getContent content}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "attachJsonChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.designtime.baseEditor.BaseEditor</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:jsonChange jsonChange} event of this <code>sap.ui.integration.designtime.baseEditor.BaseEditor</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.designtime.baseEditor.BaseEditor</code> itself.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "attachPropertyEditorsReady",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.designtime.baseEditor.BaseEditor</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:propertyEditorsReady propertyEditorsReady} event of this <code>sap.ui.integration.designtime.baseEditor.BaseEditor</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.designtime.baseEditor.BaseEditor</code> itself.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "destroyContent",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"description": "Destroys all the content in the aggregation {@link #getContent content}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "detachJsonChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:jsonChange jsonChange} event of this <code>sap.ui.integration.designtime.baseEditor.BaseEditor</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "detachPropertyEditorsReady",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:propertyEditorsReady propertyEditorsReady} event of this <code>sap.ui.integration.designtime.baseEditor.BaseEditor</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "extend",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "Function",
+						"description": "Created class / constructor function"
+					},
+					"parameters": [
+						{
+							"name": "sClassName",
+							"type": "string",
+							"optional": false,
+							"description": "Name of the class being created"
+						},
+						{
+							"name": "oClassInfo",
+							"type": "object",
+							"optional": true,
+							"description": "Object literal with information about the class"
+						},
+						{
+							"name": "FNMetaImpl",
+							"type": "Function",
+							"optional": true,
+							"description": "Constructor function for the metadata object; if not given, it defaults to the metadata implementation used by this class"
+						}
+					],
+					"description": "Creates a new subclass of class sap.ui.integration.designtime.baseEditor.BaseEditor with name <code>sClassName</code> and enriches it with the information contained in <code>oClassInfo</code>.\n\n<code>oClassInfo</code> might contain the same kind of information as described in {@link C.extend}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "fireJsonChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"parameterProperties": {
+								"json": {
+									"name": "json",
+									"type": "object",
+									"optional": true
+								}
+							},
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:jsonChange jsonChange} to attached listeners.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "firePropertyEditorsReady",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"parameterProperties": {
+								"propertyEditors": {
+									"name": "propertyEditors",
+									"type": "any[]",
+									"optional": true
+								}
+							},
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:propertyEditorsReady propertyEditorsReady} to attached listeners.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getConfig",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "object",
+						"description": "Value of property <code>config</code>"
+					},
+					"description": "Gets current value of property {@link #getConfig config}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getContent",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.core.Control[]"
+					},
+					"description": "Gets content of aggregation {@link #getContent content}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getJson",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "object",
+						"description": "Value of property <code>json</code>"
+					},
+					"description": "Gets current value of property {@link #getJson json}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getMetadata",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "sap.ui.core.ElementMetadata",
+						"description": "Metadata object describing this class"
+					},
+					"description": "Returns a metadata object for class sap.ui.integration.designtime.baseEditor.BaseEditor.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "indexOfContent",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "number",
+						"description": "The index of the provided control in the aggregation if found, or -1 otherwise"
+					},
+					"parameters": [
+						{
+							"name": "oContent",
+							"type": "sap.ui.core.Control",
+							"optional": false,
+							"description": "The content whose index is looked for"
+						}
+					],
+					"description": "Checks for the provided <code>sap.ui.core.Control</code> in the aggregation {@link #getContent content}. and returns its index if found or -1 otherwise.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "insertContent",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oContent",
+							"type": "sap.ui.core.Control",
+							"optional": false,
+							"description": "The content to insert; if empty, nothing is inserted"
+						},
+						{
+							"name": "iIndex",
+							"type": "number",
+							"optional": false,
+							"description": "The <code>0</code>-based index the content should be inserted at; for a negative value of <code>iIndex</code>, the content is inserted at position 0; for a value greater than the current size of the aggregation, the content is inserted at the last position"
+						}
+					],
+					"description": "Inserts a content into the aggregation {@link #getContent content}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "removeAllContent",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.core.Control[]",
+						"description": "An array of the removed elements (might be empty)"
+					},
+					"description": "Removes all the controls from the aggregation {@link #getContent content}.\n\nAdditionally, it unregisters them from the hosting UIArea.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "removeContent",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.core.Control",
+						"description": "The removed content or <code>null</code>"
+					},
+					"parameters": [
+						{
+							"name": "vContent",
+							"type": "number|string|sap.ui.core.Control",
+							"optional": false,
+							"description": "The content to remove or its index or id"
+						}
+					],
+					"description": "Removes a content from the aggregation {@link #getContent content}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setConfig",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oConfig",
+							"type": "object",
+							"optional": false,
+							"description": "New value for property <code>config</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getConfig config}.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setJson",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oJson",
+							"type": "object",
+							"optional": false,
+							"description": "New value for property <code>json</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getJson json}.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+			"basename": "PropertyEditor",
+			"resource": "sap/ui/integration/designtime/baseEditor/PropertyEditor.js",
+			"module": "sap/ui/integration/designtime/baseEditor/PropertyEditor",
+			"export": "",
+			"static": true,
+			"visibility": "restricted",
+			"since": "1.73.0",
+			"extends": "sap.ui.core.Control",
+			"description": "Renders one of the {@link sap.ui.integration.designtime.baseEditor.propertyEditor property editors} based on a specified <code>propertyName</code> or custom <code>config</code>.",
+			"experimental": {
+				"since": "1.73.0"
+			},
+			"ui5-metadata": {
+				"stereotype": "control",
+				"properties": [
+					{
+						"name": "propertyName",
+						"type": "string",
+						"defaultValue": null,
+						"group": "Misc",
+						"visibility": "public",
+						"methods": [
+							"getPropertyName",
+							"setPropertyName"
+						]
+					},
+					{
+						"name": "renderLabel",
+						"type": "boolean",
+						"defaultValue": null,
+						"group": "Misc",
+						"visibility": "public",
+						"methods": [
+							"getRenderLabel",
+							"setRenderLabel"
+						]
+					},
+					{
+						"name": "config",
+						"type": "object",
+						"defaultValue": null,
+						"group": "Misc",
+						"visibility": "public",
+						"methods": [
+							"getConfig",
+							"setConfig"
+						]
+					}
+				],
+				"aggregations": [
+					{
+						"name": "propertyEditor",
+						"singularName": "propertyEditor",
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+						"cardinality": "0..1",
+						"visibility": "hidden",
+						"methods": [
+							"getPropertyEditor",
+							"destroyPropertyEditor",
+							"setPropertyEditor"
+						]
+					}
+				],
+				"associations": [
+					{
+						"name": "editor",
+						"singularName": "editor",
+						"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+						"cardinality": "0..1",
+						"visibility": "public",
+						"methods": [
+							"getEditor",
+							"setEditor"
+						]
+					}
+				],
+				"events": [
+					{
+						"name": "editorChange",
+						"visibility": "public",
+						"parameters": {
+							"previousEditor": {
+								"name": "previousEditor",
+								"type": "sap.ui.integration.designtime.baseEditor.BaseEditor"
+							},
+							"editor": {
+								"name": "editor",
+								"type": "sap.ui.integration.designtime.baseEditor.BaseEditor"
+							}
+						},
+						"methods": [
+							"attachEditorChange",
+							"detachEditorChange",
+							"fireEditorChange"
+						]
+					},
+					{
+						"name": "propertyEditorChange",
+						"visibility": "public",
+						"parameters": {
+							"previousPropertyEditor": {
+								"name": "previousPropertyEditor",
+								"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor"
+							},
+							"propertyEditor": {
+								"name": "propertyEditor",
+								"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor"
+							}
+						},
+						"methods": [
+							"attachPropertyEditorChange",
+							"detachPropertyEditorChange",
+							"firePropertyEditorChange"
+						]
+					},
+					{
+						"name": "configChange",
+						"visibility": "public",
+						"parameters": {
+							"previousConfig": {
+								"name": "previousConfig",
+								"type": "object"
+							},
+							"config": {
+								"name": "config",
+								"type": "object"
+							}
+						},
+						"methods": [
+							"attachConfigChange",
+							"detachConfigChange",
+							"fireConfigChange"
+						]
+					},
+					{
+						"name": "propertyNameChange",
+						"visibility": "public",
+						"parameters": {
+							"previousPropertyName": {
+								"name": "previousPropertyName",
+								"type": "string"
+							},
+							"propertyName": {
+								"name": "propertyName",
+								"type": "string"
+							}
+						},
+						"methods": [
+							"attachPropertyNameChange",
+							"detachPropertyNameChange",
+							"firePropertyNameChange"
+						]
+					}
+				]
+			},
+			"constructor": {
+				"visibility": "restricted",
+				"description": "Accepts an object literal <code>mSettings</code> that defines initial property values, aggregated and associated objects as well as event handlers. See {@link sap.ui.base.ManagedObject#constructor} for a general description of the syntax of the settings object."
+			},
+			"events": [
+				{
+					"name": "configChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false,
+									"parameterProperties": {
+										"previousConfig": {
+											"name": "previousConfig",
+											"type": "object",
+											"optional": false
+										},
+										"config": {
+											"name": "config",
+											"type": "object",
+											"optional": false
+										}
+									}
+								}
+							}
+						}
+					],
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "editorChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false,
+									"parameterProperties": {
+										"previousEditor": {
+											"name": "previousEditor",
+											"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+											"optional": false
+										},
+										"editor": {
+											"name": "editor",
+											"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+											"optional": false
+										}
+									}
+								}
+							}
+						}
+					],
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "propertyEditorChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false,
+									"parameterProperties": {
+										"previousPropertyEditor": {
+											"name": "previousPropertyEditor",
+											"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+											"optional": false
+										},
+										"propertyEditor": {
+											"name": "propertyEditor",
+											"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+											"optional": false
+										}
+									}
+								}
+							}
+						}
+					],
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "propertyNameChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false,
+									"parameterProperties": {
+										"previousPropertyName": {
+											"name": "previousPropertyName",
+											"type": "string",
+											"optional": false
+										},
+										"propertyName": {
+											"name": "propertyName",
+											"type": "string",
+											"optional": false
+										}
+									}
+								}
+							}
+						}
+					],
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			],
+			"methods": [
+				{
+					"name": "attachConfigChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:configChange configChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code> itself.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "attachEditorChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:editorChange editorChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code> itself.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "attachPropertyEditorChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:propertyEditorChange propertyEditorChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code> itself.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "attachPropertyNameChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:propertyNameChange propertyNameChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code> itself.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "detachConfigChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:configChange configChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "detachEditorChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:editorChange editorChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "detachPropertyEditorChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:propertyEditorChange propertyEditorChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "detachPropertyNameChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:propertyNameChange propertyNameChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditor</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "extend",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "Function",
+						"description": "Created class / constructor function"
+					},
+					"parameters": [
+						{
+							"name": "sClassName",
+							"type": "string",
+							"optional": false,
+							"description": "Name of the class being created"
+						},
+						{
+							"name": "oClassInfo",
+							"type": "object",
+							"optional": true,
+							"description": "Object literal with information about the class"
+						},
+						{
+							"name": "FNMetaImpl",
+							"type": "Function",
+							"optional": true,
+							"description": "Constructor function for the metadata object; if not given, it defaults to the metadata implementation used by this class"
+						}
+					],
+					"description": "Creates a new subclass of class sap.ui.integration.designtime.baseEditor.PropertyEditor with name <code>sClassName</code> and enriches it with the information contained in <code>oClassInfo</code>.\n\n<code>oClassInfo</code> might contain the same kind of information as described in {@link C.extend}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "fireConfigChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"parameterProperties": {
+								"previousConfig": {
+									"name": "previousConfig",
+									"type": "object",
+									"optional": true
+								},
+								"config": {
+									"name": "config",
+									"type": "object",
+									"optional": true
+								}
+							},
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:configChange configChange} to attached listeners.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "fireEditorChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"parameterProperties": {
+								"previousEditor": {
+									"name": "previousEditor",
+									"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+									"optional": true
+								},
+								"editor": {
+									"name": "editor",
+									"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+									"optional": true
+								}
+							},
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:editorChange editorChange} to attached listeners.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "firePropertyEditorChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"parameterProperties": {
+								"previousPropertyEditor": {
+									"name": "previousPropertyEditor",
+									"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+									"optional": true
+								},
+								"propertyEditor": {
+									"name": "propertyEditor",
+									"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+									"optional": true
+								}
+							},
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:propertyEditorChange propertyEditorChange} to attached listeners.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "firePropertyNameChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"parameterProperties": {
+								"previousPropertyName": {
+									"name": "previousPropertyName",
+									"type": "string",
+									"optional": true
+								},
+								"propertyName": {
+									"name": "propertyName",
+									"type": "string",
+									"optional": true
+								}
+							},
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:propertyNameChange propertyNameChange} to attached listeners.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getConfig",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "object",
+						"description": "Value of property <code>config</code>"
+					},
+					"description": "Gets current value of property {@link #getConfig config}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getEditor",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.core.ID"
+					},
+					"description": "ID of the element which is the current target of the association {@link #getEditor editor}, or <code>null</code>.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getMetadata",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "sap.ui.core.ElementMetadata",
+						"description": "Metadata object describing this class"
+					},
+					"description": "Returns a metadata object for class sap.ui.integration.designtime.baseEditor.PropertyEditor.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getPropertyName",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "string",
+						"description": "Value of property <code>propertyName</code>"
+					},
+					"description": "Gets current value of property {@link #getPropertyName propertyName}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getRenderLabel",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "boolean",
+						"description": "Value of property <code>renderLabel</code>"
+					},
+					"description": "Gets current value of property {@link #getRenderLabel renderLabel}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setConfig",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oConfig",
+							"type": "object",
+							"optional": false,
+							"description": "New value for property <code>config</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getConfig config}.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setEditor",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oEditor",
+							"type": "sap.ui.core.ID|sap.ui.integration.designtime.baseEditor.BaseEditor",
+							"optional": false,
+							"description": "ID of an element which becomes the new target of this editor association; alternatively, an element instance may be given"
+						}
+					],
+					"description": "Sets the associated {@link #getEditor editor}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setPropertyName",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "sPropertyName",
+							"type": "string",
+							"optional": false,
+							"description": "New value for property <code>propertyName</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getPropertyName propertyName}.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setRenderLabel",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "bRenderLabel",
+							"type": "boolean",
+							"optional": false,
+							"description": "New value for property <code>renderLabel</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getRenderLabel renderLabel}.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "sap.ui.integration.designtime.baseEditor.propertyEditor.arrayEditor.ArrayEditor",
+			"basename": "ArrayEditor",
+			"resource": "sap/ui/integration/designtime/baseEditor/propertyEditor/arrayEditor/ArrayEditor.js",
+			"module": "sap/ui/integration/designtime/baseEditor/propertyEditor/arrayEditor/ArrayEditor",
+			"export": "",
+			"static": true,
+			"visibility": "restricted",
+			"since": "1.72",
+			"extends": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+			"description": "Constructor for a new <code>ArrayEditor</code>.\n\nThis property editor allows you to edit arrays in a flat way.\n\nTo get notified about changes made with the editor, you can use the <code>propertyChange</code> event.",
+			"experimental": {
+				"text": "1.72"
+			},
+			"ui5-metadata": {
+				"stereotype": "control",
+				"properties": [
+					{
+						"name": "value",
+						"type": "any",
+						"defaultValue": null,
+						"group": "Misc",
+						"visibility": "public",
+						"methods": [
+							"getValue",
+							"setValue"
+						]
+					}
+				]
+			},
+			"constructor": {
+				"visibility": "restricted",
+				"description": "Accepts an object literal <code>mSettings</code> that defines initial property values, aggregated and associated objects as well as event handlers. See {@link sap.ui.base.ManagedObject#constructor} for a general description of the syntax of the settings object."
+			},
+			"methods": [
+				{
+					"name": "extend",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "Function",
+						"description": "Created class / constructor function"
+					},
+					"parameters": [
+						{
+							"name": "sClassName",
+							"type": "string",
+							"optional": false,
+							"description": "Name of the class being created"
+						},
+						{
+							"name": "oClassInfo",
+							"type": "object",
+							"optional": true,
+							"description": "Object literal with information about the class"
+						},
+						{
+							"name": "FNMetaImpl",
+							"type": "Function",
+							"optional": true,
+							"description": "Constructor function for the metadata object; if not given, it defaults to the metadata implementation used by this class"
+						}
+					],
+					"description": "Creates a new subclass of class sap.ui.integration.designtime.baseEditor.propertyEditor.arrayEditor.ArrayEditor with name <code>sClassName</code> and enriches it with the information contained in <code>oClassInfo</code>.\n\n<code>oClassInfo</code> might contain the same kind of information as described in {@link B.extend}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getMetadata",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "sap.ui.core.ElementMetadata",
+						"description": "Metadata object describing this class"
+					},
+					"description": "Returns a metadata object for class sap.ui.integration.designtime.baseEditor.propertyEditor.arrayEditor.ArrayEditor.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getValue",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "any",
+						"description": "Value of property <code>value</code>"
+					},
+					"description": "Gets current value of property {@link #getValue value}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setValue",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.arrayEditor.ArrayEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oValue",
+							"type": "any",
+							"optional": false,
+							"description": "New value for property <code>value</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getValue value}.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+			"basename": "BasePropertyEditor",
+			"resource": "sap/ui/integration/designtime/baseEditor/propertyEditor/BasePropertyEditor.js",
+			"module": "sap/ui/integration/designtime/baseEditor/propertyEditor/BasePropertyEditor",
+			"export": "",
+			"static": true,
+			"visibility": "restricted",
+			"since": "1.70",
+			"extends": "sap.ui.core.Control",
+			"description": "Base class for property editor implementations.",
+			"experimental": {
+				"text": "1.70"
+			},
+			"ui5-metadata": {
+				"stereotype": "control",
+				"properties": [
+					{
+						"name": "renderLabel",
+						"type": "boolean",
+						"defaultValue": true,
+						"group": "Misc",
+						"visibility": "public",
+						"methods": [
+							"getRenderLabel",
+							"setRenderLabel"
+						]
+					},
+					{
+						"name": "config",
+						"type": "any",
+						"defaultValue": null,
+						"group": "Misc",
+						"visibility": "public",
+						"methods": [
+							"getConfig",
+							"setConfig"
+						]
+					}
+				],
+				"aggregations": [
+					{
+						"name": "_label",
+						"singularName": "_label",
+						"type": "sap.m.Label",
+						"cardinality": "0..1",
+						"visibility": "hidden",
+						"methods": [
+							"get_label",
+							"destroy_label",
+							"set_label"
+						]
+					},
+					{
+						"name": "content",
+						"singularName": "content",
+						"type": "sap.ui.core.Control",
+						"cardinality": "0..1",
+						"visibility": "public",
+						"methods": [
+							"getContent",
+							"destroyContent",
+							"setContent"
+						]
+					}
+				],
+				"associations": [
+					{
+						"name": "editor",
+						"singularName": "editor",
+						"type": "sap.ui.integration.designtime.BaseEditor",
+						"cardinality": "0..1",
+						"visibility": "public",
+						"methods": [
+							"getEditor",
+							"setEditor"
+						]
+					}
+				],
+				"events": [
+					{
+						"name": "propertyChange",
+						"visibility": "public",
+						"parameters": {
+							"path": {
+								"name": "path",
+								"type": "string"
+							},
+							"value": {
+								"name": "value",
+								"type": "any"
+							}
+						},
+						"methods": [
+							"attachPropertyChange",
+							"detachPropertyChange",
+							"firePropertyChange"
+						]
+					},
+					{
+						"name": "ready",
+						"visibility": "public",
+						"methods": [
+							"attachReady",
+							"detachReady",
+							"fireReady"
+						]
+					}
+				]
+			},
+			"constructor": {
+				"visibility": "restricted",
+				"description": "Accepts an object literal <code>mSettings</code> that defines initial property values, aggregated and associated objects as well as event handlers. See {@link sap.ui.base.ManagedObject#constructor} for a general description of the syntax of the settings object."
+			},
+			"events": [
+				{
+					"name": "propertyChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false,
+									"parameterProperties": {
+										"path": {
+											"name": "path",
+											"type": "string",
+											"optional": false
+										},
+										"value": {
+											"name": "value",
+											"type": "any",
+											"optional": false
+										}
+									}
+								}
+							}
+						}
+					],
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "ready",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false
+								}
+							}
+						}
+					],
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			],
+			"methods": [
+				{
+					"name": "attachPropertyChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:propertyChange propertyChange} event of this <code>sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor</code> itself.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "attachReady",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:ready ready} event of this <code>sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor</code> itself.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "destroyContent",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"description": "Destroys the content in the aggregation {@link #getContent content}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "detachPropertyChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:propertyChange propertyChange} event of this <code>sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "detachReady",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:ready ready} event of this <code>sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "extend",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "Function",
+						"description": "Created class / constructor function"
+					},
+					"parameters": [
+						{
+							"name": "sClassName",
+							"type": "string",
+							"optional": false,
+							"description": "Name of the class being created"
+						},
+						{
+							"name": "oClassInfo",
+							"type": "object",
+							"optional": true,
+							"description": "Object literal with information about the class"
+						},
+						{
+							"name": "FNMetaImpl",
+							"type": "Function",
+							"optional": true,
+							"description": "Constructor function for the metadata object; if not given, it defaults to the metadata implementation used by this class"
+						}
+					],
+					"description": "Creates a new subclass of class sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor with name <code>sClassName</code> and enriches it with the information contained in <code>oClassInfo</code>.\n\n<code>oClassInfo</code> might contain the same kind of information as described in {@link C.extend}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "firePropertyChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"parameterProperties": {
+								"path": {
+									"name": "path",
+									"type": "string",
+									"optional": true
+								},
+								"value": {
+									"name": "value",
+									"type": "any",
+									"optional": true
+								}
+							},
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:propertyChange propertyChange} to attached listeners.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "fireReady",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:ready ready} to attached listeners.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getConfig",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "any",
+						"description": "Value of property <code>config</code>"
+					},
+					"description": "Gets current value of property {@link #getConfig config}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getContent",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.core.Control"
+					},
+					"description": "Gets content of aggregation {@link #getContent content}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getEditor",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.core.ID"
+					},
+					"description": "ID of the element which is the current target of the association {@link #getEditor editor}, or <code>null</code>.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getMetadata",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "sap.ui.core.ElementMetadata",
+						"description": "Metadata object describing this class"
+					},
+					"description": "Returns a metadata object for class sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getRenderLabel",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "boolean",
+						"description": "Value of property <code>renderLabel</code>"
+					},
+					"description": "Gets current value of property {@link #getRenderLabel renderLabel}.\n\nDefault value is <code>true</code>.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setConfig",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oConfig",
+							"type": "any",
+							"optional": false,
+							"description": "New value for property <code>config</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getConfig config}.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setContent",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oContent",
+							"type": "sap.ui.core.Control",
+							"optional": false,
+							"description": "The content to set"
+						}
+					],
+					"description": "Sets the aggregated {@link #getContent content}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setEditor",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oEditor",
+							"type": "sap.ui.core.ID|sap.ui.integration.designtime.BaseEditor",
+							"optional": false,
+							"description": "ID of an element which becomes the new target of this editor association; alternatively, an element instance may be given"
+						}
+					],
+					"description": "Sets the associated {@link #getEditor editor}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setRenderLabel",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "bRenderLabel",
+							"type": "boolean",
+							"optional": false,
+							"description": "New value for property <code>renderLabel</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getRenderLabel renderLabel}.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.\n\nDefault value is <code>true</code>.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "sap.ui.integration.designtime.baseEditor.propertyEditor.booleanEditor.BooleanEditor",
+			"basename": "BooleanEditor",
+			"resource": "sap/ui/integration/designtime/baseEditor/propertyEditor/booleanEditor/BooleanEditor.js",
+			"module": "sap/ui/integration/designtime/baseEditor/propertyEditor/booleanEditor/BooleanEditor",
+			"export": "",
+			"static": true,
+			"visibility": "restricted",
+			"since": "1.72",
+			"extends": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+			"description": "Constructor for a new <code>BooleanEditor</code>. This allows you to set boolean values or binding strings for a specified property of a JSON object. The editor is rendered as a {@link sap.m.ComboBox}. To get notified about changes made with the editor, you can use the <code>attachPropertyChange</code> method, which passes the current property state as a boolean or binding string to the provided callback function when the state changes.",
+			"experimental": {
+				"text": "1.72"
+			},
+			"ui5-metadata": {
+				"stereotype": "control"
+			},
+			"constructor": {
+				"visibility": "restricted"
+			},
+			"methods": [
+				{
+					"name": "extend",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "Function",
+						"description": "Created class / constructor function"
+					},
+					"parameters": [
+						{
+							"name": "sClassName",
+							"type": "string",
+							"optional": false,
+							"description": "Name of the class being created"
+						},
+						{
+							"name": "oClassInfo",
+							"type": "object",
+							"optional": true,
+							"description": "Object literal with information about the class"
+						},
+						{
+							"name": "FNMetaImpl",
+							"type": "Function",
+							"optional": true,
+							"description": "Constructor function for the metadata object; if not given, it defaults to the metadata implementation used by this class"
+						}
+					],
+					"description": "Creates a new subclass of class sap.ui.integration.designtime.baseEditor.propertyEditor.booleanEditor.BooleanEditor with name <code>sClassName</code> and enriches it with the information contained in <code>oClassInfo</code>.\n\n<code>oClassInfo</code> might contain the same kind of information as described in {@link B.extend}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getMetadata",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "sap.ui.core.ElementMetadata",
+						"description": "Metadata object describing this class"
+					},
+					"description": "Returns a metadata object for class sap.ui.integration.designtime.baseEditor.propertyEditor.booleanEditor.BooleanEditor.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "sap.ui.integration.designtime.baseEditor.propertyEditor.enumStringEditor.EnumStringEditor",
+			"basename": "EnumStringEditor",
+			"resource": "sap/ui/integration/designtime/baseEditor/propertyEditor/enumStringEditor/EnumStringEditor.js",
+			"module": "sap/ui/integration/designtime/baseEditor/propertyEditor/enumStringEditor/EnumStringEditor",
+			"export": "",
+			"static": true,
+			"visibility": "restricted",
+			"since": "1.70",
+			"extends": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+			"description": "Constructor for a new <code>EnumStringEditor</code>. This allows to select from predefined string values or to provide binding strings for a specified property of a JSON object. The editor is rendered as a {@link sap.m.ComboBox}. To get notified about changes made with the editor, you can use the <code>attachPropertyChange</code> method, which passes the current property state as a string representing a valid option value or as a binding string to the provided callback function when the user selects a value or edits the input.",
+			"experimental": {
+				"text": "1.70"
+			},
+			"ui5-metadata": {
+				"stereotype": "control"
+			},
+			"constructor": {
+				"visibility": "restricted"
+			},
+			"methods": [
+				{
+					"name": "extend",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "Function",
+						"description": "Created class / constructor function"
+					},
+					"parameters": [
+						{
+							"name": "sClassName",
+							"type": "string",
+							"optional": false,
+							"description": "Name of the class being created"
+						},
+						{
+							"name": "oClassInfo",
+							"type": "object",
+							"optional": true,
+							"description": "Object literal with information about the class"
+						},
+						{
+							"name": "FNMetaImpl",
+							"type": "Function",
+							"optional": true,
+							"description": "Constructor function for the metadata object; if not given, it defaults to the metadata implementation used by this class"
+						}
+					],
+					"description": "Creates a new subclass of class sap.ui.integration.designtime.baseEditor.propertyEditor.enumStringEditor.EnumStringEditor with name <code>sClassName</code> and enriches it with the information contained in <code>oClassInfo</code>.\n\n<code>oClassInfo</code> might contain the same kind of information as described in {@link B.extend}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getMetadata",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "sap.ui.core.ElementMetadata",
+						"description": "Metadata object describing this class"
+					},
+					"description": "Returns a metadata object for class sap.ui.integration.designtime.baseEditor.propertyEditor.enumStringEditor.EnumStringEditor.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "sap.ui.integration.designtime.baseEditor.propertyEditor.iconEditor.IconEditor",
+			"basename": "IconEditor",
+			"resource": "sap/ui/integration/designtime/baseEditor/propertyEditor/iconEditor/IconEditor.js",
+			"module": "sap/ui/integration/designtime/baseEditor/propertyEditor/iconEditor/IconEditor",
+			"export": "",
+			"static": true,
+			"visibility": "restricted",
+			"since": "1.70",
+			"extends": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+			"description": "Constructor for a new <code>IconEditor</code>. This allows to set icon URIs or binding strings for a specified property of a JSON object. The editor is rendered as a {@link sap.m.Input} with a {@link sap.m.SelectDialog} value help. To get notified about changes made with the editor, you can use the <code>attachPropertyChange</code> method, which passes the current property state as a string containing an icon URI or as a binding string to the provided callback function when the user edits the input or selects an item in the dialog.",
+			"experimental": {
+				"text": "1.70"
+			},
+			"ui5-metadata": {
+				"stereotype": "control"
+			},
+			"constructor": {
+				"visibility": "restricted"
+			},
+			"methods": [
+				{
+					"name": "extend",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "Function",
+						"description": "Created class / constructor function"
+					},
+					"parameters": [
+						{
+							"name": "sClassName",
+							"type": "string",
+							"optional": false,
+							"description": "Name of the class being created"
+						},
+						{
+							"name": "oClassInfo",
+							"type": "object",
+							"optional": true,
+							"description": "Object literal with information about the class"
+						},
+						{
+							"name": "FNMetaImpl",
+							"type": "Function",
+							"optional": true,
+							"description": "Constructor function for the metadata object; if not given, it defaults to the metadata implementation used by this class"
+						}
+					],
+					"description": "Creates a new subclass of class sap.ui.integration.designtime.baseEditor.propertyEditor.iconEditor.IconEditor with name <code>sClassName</code> and enriches it with the information contained in <code>oClassInfo</code>.\n\n<code>oClassInfo</code> might contain the same kind of information as described in {@link B.extend}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getMetadata",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "sap.ui.core.ElementMetadata",
+						"description": "Metadata object describing this class"
+					},
+					"description": "Returns a metadata object for class sap.ui.integration.designtime.baseEditor.propertyEditor.iconEditor.IconEditor.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "sap.ui.integration.designtime.baseEditor.propertyEditor.jsonEditor.JsonEditor",
+			"basename": "JsonEditor",
+			"resource": "sap/ui/integration/designtime/baseEditor/propertyEditor/jsonEditor/JsonEditor.js",
+			"module": "sap/ui/integration/designtime/baseEditor/propertyEditor/jsonEditor/JsonEditor",
+			"export": "",
+			"static": true,
+			"visibility": "restricted",
+			"since": "1.72",
+			"extends": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+			"description": "Constructor for a new <code>JsonEditor</code>. This allows to set json text values for a specified property of a JSON object. The editor is rendered as a {@link sap.ui.CodeEditor} inside a {@link sap.m.Dialog}. To get notified about changes made with the editor, you can use the <code>attachPropertyChange</code> method, which passes the current property state as an object to the provided callback function when the user saves changes in the dialog.",
+			"experimental": {
+				"text": "1.72"
+			},
+			"ui5-metadata": {
+				"stereotype": "control"
+			},
+			"constructor": {
+				"visibility": "restricted"
+			},
+			"methods": [
+				{
+					"name": "extend",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "Function",
+						"description": "Created class / constructor function"
+					},
+					"parameters": [
+						{
+							"name": "sClassName",
+							"type": "string",
+							"optional": false,
+							"description": "Name of the class being created"
+						},
+						{
+							"name": "oClassInfo",
+							"type": "object",
+							"optional": true,
+							"description": "Object literal with information about the class"
+						},
+						{
+							"name": "FNMetaImpl",
+							"type": "Function",
+							"optional": true,
+							"description": "Constructor function for the metadata object; if not given, it defaults to the metadata implementation used by this class"
+						}
+					],
+					"description": "Creates a new subclass of class sap.ui.integration.designtime.baseEditor.propertyEditor.jsonEditor.JsonEditor with name <code>sClassName</code> and enriches it with the information contained in <code>oClassInfo</code>.\n\n<code>oClassInfo</code> might contain the same kind of information as described in {@link B.extend}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getMetadata",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "sap.ui.core.ElementMetadata",
+						"description": "Metadata object describing this class"
+					},
+					"description": "Returns a metadata object for class sap.ui.integration.designtime.baseEditor.propertyEditor.jsonEditor.JsonEditor.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "sap.ui.integration.designtime.baseEditor.propertyEditor.mapEditor.MapEditor",
+			"basename": "MapEditor",
+			"resource": "sap/ui/integration/designtime/baseEditor/propertyEditor/mapEditor/MapEditor.js",
+			"module": "sap/ui/integration/designtime/baseEditor/propertyEditor/mapEditor/MapEditor",
+			"export": "",
+			"static": true,
+			"visibility": "restricted",
+			"since": "1.74",
+			"extends": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+			"description": "Constructor for a new <code>MapEditor</code>. This allows you to edit key-value pairs. To get notified about changes made with the editor, you can attach a handler to the <code>propertyChange</code> event.",
+			"experimental": {
+				"text": "1.74"
+			},
+			"ui5-metadata": {
+				"stereotype": "control"
+			},
+			"constructor": {
+				"visibility": "restricted"
+			},
+			"methods": [
+				{
+					"name": "extend",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "Function",
+						"description": "Created class / constructor function"
+					},
+					"parameters": [
+						{
+							"name": "sClassName",
+							"type": "string",
+							"optional": false,
+							"description": "Name of the class being created"
+						},
+						{
+							"name": "oClassInfo",
+							"type": "object",
+							"optional": true,
+							"description": "Object literal with information about the class"
+						},
+						{
+							"name": "FNMetaImpl",
+							"type": "Function",
+							"optional": true,
+							"description": "Constructor function for the metadata object; if not given, it defaults to the metadata implementation used by this class"
+						}
+					],
+					"description": "Creates a new subclass of class sap.ui.integration.designtime.baseEditor.propertyEditor.mapEditor.MapEditor with name <code>sClassName</code> and enriches it with the information contained in <code>oClassInfo</code>.\n\n<code>oClassInfo</code> might contain the same kind of information as described in {@link B.extend}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getMetadata",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "sap.ui.core.ElementMetadata",
+						"description": "Metadata object describing this class"
+					},
+					"description": "Returns a metadata object for class sap.ui.integration.designtime.baseEditor.propertyEditor.mapEditor.MapEditor.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "sap.ui.integration.designtime.baseEditor.propertyEditor.numberEditor.NumberEditor",
+			"basename": "NumberEditor",
+			"resource": "sap/ui/integration/designtime/baseEditor/propertyEditor/numberEditor/NumberEditor.js",
+			"module": "sap/ui/integration/designtime/baseEditor/propertyEditor/numberEditor/NumberEditor",
+			"export": "",
+			"static": true,
+			"visibility": "restricted",
+			"since": "1.72",
+			"extends": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+			"description": "Constructor for a new <code>NumberEditor</code>. This allows you to set numeric values or binding paths for a specified property of a JSON object. The editor is rendered as a {@link sap.m.Input}, which prevents non-numeric user input unless it is a valid binding path. To get notified about changes made with the editor, you can use the <code>attachPropertyChange</code> method, which passes the current property value as a number or binding string to the provided callback function when the state changes.",
+			"experimental": {
+				"text": "1.72"
+			},
+			"ui5-metadata": {
+				"stereotype": "control"
+			},
+			"constructor": {
+				"visibility": "restricted"
+			},
+			"methods": [
+				{
+					"name": "extend",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "Function",
+						"description": "Created class / constructor function"
+					},
+					"parameters": [
+						{
+							"name": "sClassName",
+							"type": "string",
+							"optional": false,
+							"description": "Name of the class being created"
+						},
+						{
+							"name": "oClassInfo",
+							"type": "object",
+							"optional": true,
+							"description": "Object literal with information about the class"
+						},
+						{
+							"name": "FNMetaImpl",
+							"type": "Function",
+							"optional": true,
+							"description": "Constructor function for the metadata object; if not given, it defaults to the metadata implementation used by this class"
+						}
+					],
+					"description": "Creates a new subclass of class sap.ui.integration.designtime.baseEditor.propertyEditor.numberEditor.NumberEditor with name <code>sClassName</code> and enriches it with the information contained in <code>oClassInfo</code>.\n\n<code>oClassInfo</code> might contain the same kind of information as described in {@link B.extend}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getMetadata",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "sap.ui.core.ElementMetadata",
+						"description": "Metadata object describing this class"
+					},
+					"description": "Returns a metadata object for class sap.ui.integration.designtime.baseEditor.propertyEditor.numberEditor.NumberEditor.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "sap.ui.integration.designtime.baseEditor.propertyEditor.stringEditor.StringEditor",
+			"basename": "StringEditor",
+			"resource": "sap/ui/integration/designtime/baseEditor/propertyEditor/stringEditor/StringEditor.js",
+			"module": "sap/ui/integration/designtime/baseEditor/propertyEditor/stringEditor/StringEditor",
+			"export": "",
+			"static": true,
+			"visibility": "restricted",
+			"since": "1.70",
+			"extends": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+			"description": "Constructor for a new <code>StringEditor</code>. This allows to set string values or binding strings for a specified property of a JSON object. The editor is rendered as a {@link sap.m.Input}. To get notified about changes made with the editor, you can use the <code>attachPropertyChange</code> method, which passes the current property state as a string or binding string to the provided callback function when the user edits the input.",
+			"experimental": {
+				"text": "1.70"
+			},
+			"ui5-metadata": {
+				"stereotype": "control"
+			},
+			"constructor": {
+				"visibility": "restricted"
+			},
+			"methods": [
+				{
+					"name": "extend",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "Function",
+						"description": "Created class / constructor function"
+					},
+					"parameters": [
+						{
+							"name": "sClassName",
+							"type": "string",
+							"optional": false,
+							"description": "Name of the class being created"
+						},
+						{
+							"name": "oClassInfo",
+							"type": "object",
+							"optional": true,
+							"description": "Object literal with information about the class"
+						},
+						{
+							"name": "FNMetaImpl",
+							"type": "Function",
+							"optional": true,
+							"description": "Constructor function for the metadata object; if not given, it defaults to the metadata implementation used by this class"
+						}
+					],
+					"description": "Creates a new subclass of class sap.ui.integration.designtime.baseEditor.propertyEditor.stringEditor.StringEditor with name <code>sClassName</code> and enriches it with the information contained in <code>oClassInfo</code>.\n\n<code>oClassInfo</code> might contain the same kind of information as described in {@link B.extend}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getMetadata",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "sap.ui.core.ElementMetadata",
+						"description": "Metadata object describing this class"
+					},
+					"description": "Returns a metadata object for class sap.ui.integration.designtime.baseEditor.propertyEditor.stringEditor.StringEditor.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+			"basename": "PropertyEditors",
+			"resource": "sap/ui/integration/designtime/baseEditor/PropertyEditors.js",
+			"module": "sap/ui/integration/designtime/baseEditor/PropertyEditors",
+			"export": "",
+			"static": true,
+			"visibility": "restricted",
+			"since": "1.73.0",
+			"extends": "sap.ui.core.Control",
+			"description": "Renders a group of {@link sap.ui.integration.designtime.baseEditor.propertyEditor property editors} based on specified <code>tags</code> or custom <code>config</code>.",
+			"experimental": {
+				"since": "1.73.0"
+			},
+			"ui5-metadata": {
+				"stereotype": "control",
+				"properties": [
+					{
+						"name": "tags",
+						"type": "any",
+						"defaultValue": null,
+						"group": "Misc",
+						"visibility": "public",
+						"methods": [
+							"getTags",
+							"setTags"
+						]
+					},
+					{
+						"name": "renderLabels",
+						"type": "boolean",
+						"defaultValue": null,
+						"group": "Misc",
+						"visibility": "public",
+						"methods": [
+							"getRenderLabels",
+							"setRenderLabels"
+						]
+					},
+					{
+						"name": "config",
+						"type": "any[]",
+						"defaultValue": null,
+						"group": "Misc",
+						"visibility": "public",
+						"methods": [
+							"getConfig",
+							"setConfig"
+						]
+					}
+				],
+				"aggregations": [
+					{
+						"name": "propertyEditors",
+						"singularName": "propertyEditor",
+						"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+						"cardinality": "0..n",
+						"visibility": "hidden",
+						"methods": [
+							"getPropertyEditors",
+							"destroyPropertyEditors",
+							"insertPropertyEditor",
+							"addPropertyEditor",
+							"removePropertyEditor",
+							"indexOfPropertyEditor",
+							"removeAllPropertyEditors"
+						]
+					}
+				],
+				"associations": [
+					{
+						"name": "editor",
+						"singularName": "editor",
+						"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+						"cardinality": "0..1",
+						"visibility": "public",
+						"methods": [
+							"getEditor",
+							"setEditor"
+						]
+					}
+				],
+				"events": [
+					{
+						"name": "editorChange",
+						"visibility": "public",
+						"parameters": {
+							"previousEditor": {
+								"name": "previousEditor",
+								"type": "sap.ui.integration.designtime.baseEditor.BaseEditor"
+							},
+							"editor": {
+								"name": "editor",
+								"type": "sap.ui.integration.designtime.baseEditor.BaseEditor"
+							}
+						},
+						"methods": [
+							"attachEditorChange",
+							"detachEditorChange",
+							"fireEditorChange"
+						]
+					},
+					{
+						"name": "propertyEditorsChange",
+						"visibility": "public",
+						"parameters": {
+							"previousPropertyEditors": {
+								"name": "previousPropertyEditors",
+								"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor"
+							},
+							"propertyEditors": {
+								"name": "propertyEditors",
+								"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor"
+							}
+						},
+						"methods": [
+							"attachPropertyEditorsChange",
+							"detachPropertyEditorsChange",
+							"firePropertyEditorsChange"
+						]
+					},
+					{
+						"name": "configChange",
+						"visibility": "public",
+						"parameters": {
+							"previousConfig": {
+								"name": "previousConfig",
+								"type": "array"
+							},
+							"config": {
+								"name": "config",
+								"type": "array"
+							}
+						},
+						"methods": [
+							"attachConfigChange",
+							"detachConfigChange",
+							"fireConfigChange"
+						]
+					},
+					{
+						"name": "tagsChange",
+						"visibility": "public",
+						"parameters": {
+							"previousTags": {
+								"name": "previousTags",
+								"type": "string"
+							},
+							"tags": {
+								"name": "tags",
+								"type": "string"
+							}
+						},
+						"methods": [
+							"attachTagsChange",
+							"detachTagsChange",
+							"fireTagsChange"
+						]
+					}
+				]
+			},
+			"constructor": {
+				"visibility": "restricted",
+				"description": "Accepts an object literal <code>mSettings</code> that defines initial property values, aggregated and associated objects as well as event handlers. See {@link sap.ui.base.ManagedObject#constructor} for a general description of the syntax of the settings object."
+			},
+			"events": [
+				{
+					"name": "configChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false,
+									"parameterProperties": {
+										"previousConfig": {
+											"name": "previousConfig",
+											"type": "any[]",
+											"optional": false
+										},
+										"config": {
+											"name": "config",
+											"type": "any[]",
+											"optional": false
+										}
+									}
+								}
+							}
+						}
+					],
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "editorChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false,
+									"parameterProperties": {
+										"previousEditor": {
+											"name": "previousEditor",
+											"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+											"optional": false
+										},
+										"editor": {
+											"name": "editor",
+											"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+											"optional": false
+										}
+									}
+								}
+							}
+						}
+					],
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "propertyEditorsChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false,
+									"parameterProperties": {
+										"previousPropertyEditors": {
+											"name": "previousPropertyEditors",
+											"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+											"optional": false
+										},
+										"propertyEditors": {
+											"name": "propertyEditors",
+											"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+											"optional": false
+										}
+									}
+								}
+							}
+						}
+					],
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "tagsChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false,
+									"parameterProperties": {
+										"previousTags": {
+											"name": "previousTags",
+											"type": "string",
+											"optional": false
+										},
+										"tags": {
+											"name": "tags",
+											"type": "string",
+											"optional": false
+										}
+									}
+								}
+							}
+						}
+					],
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			],
+			"methods": [
+				{
+					"name": "attachConfigChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:configChange configChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code> itself.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "attachEditorChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:editorChange editorChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code> itself.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "attachPropertyEditorsChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:propertyEditorsChange propertyEditorsChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code> itself.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "attachTagsChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:tagsChange tagsChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code> itself.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "detachConfigChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:configChange configChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "detachEditorChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:editorChange editorChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "detachPropertyEditorsChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:propertyEditorsChange propertyEditorsChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "detachTagsChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:tagsChange tagsChange} event of this <code>sap.ui.integration.designtime.baseEditor.PropertyEditors</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "extend",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "Function",
+						"description": "Created class / constructor function"
+					},
+					"parameters": [
+						{
+							"name": "sClassName",
+							"type": "string",
+							"optional": false,
+							"description": "Name of the class being created"
+						},
+						{
+							"name": "oClassInfo",
+							"type": "object",
+							"optional": true,
+							"description": "Object literal with information about the class"
+						},
+						{
+							"name": "FNMetaImpl",
+							"type": "Function",
+							"optional": true,
+							"description": "Constructor function for the metadata object; if not given, it defaults to the metadata implementation used by this class"
+						}
+					],
+					"description": "Creates a new subclass of class sap.ui.integration.designtime.baseEditor.PropertyEditors with name <code>sClassName</code> and enriches it with the information contained in <code>oClassInfo</code>.\n\n<code>oClassInfo</code> might contain the same kind of information as described in {@link C.extend}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "fireConfigChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"parameterProperties": {
+								"previousConfig": {
+									"name": "previousConfig",
+									"type": "any[]",
+									"optional": true
+								},
+								"config": {
+									"name": "config",
+									"type": "any[]",
+									"optional": true
+								}
+							},
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:configChange configChange} to attached listeners.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "fireEditorChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"parameterProperties": {
+								"previousEditor": {
+									"name": "previousEditor",
+									"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+									"optional": true
+								},
+								"editor": {
+									"name": "editor",
+									"type": "sap.ui.integration.designtime.baseEditor.BaseEditor",
+									"optional": true
+								}
+							},
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:editorChange editorChange} to attached listeners.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "firePropertyEditorsChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"parameterProperties": {
+								"previousPropertyEditors": {
+									"name": "previousPropertyEditors",
+									"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+									"optional": true
+								},
+								"propertyEditors": {
+									"name": "propertyEditors",
+									"type": "sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor",
+									"optional": true
+								}
+							},
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:propertyEditorsChange propertyEditorsChange} to attached listeners.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "fireTagsChange",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"parameterProperties": {
+								"previousTags": {
+									"name": "previousTags",
+									"type": "string",
+									"optional": true
+								},
+								"tags": {
+									"name": "tags",
+									"type": "string",
+									"optional": true
+								}
+							},
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:tagsChange tagsChange} to attached listeners.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getConfig",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "any[]",
+						"description": "Value of property <code>config</code>"
+					},
+					"description": "Gets current value of property {@link #getConfig config}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getEditor",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.core.ID"
+					},
+					"description": "ID of the element which is the current target of the association {@link #getEditor editor}, or <code>null</code>.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getMetadata",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "sap.ui.core.ElementMetadata",
+						"description": "Metadata object describing this class"
+					},
+					"description": "Returns a metadata object for class sap.ui.integration.designtime.baseEditor.PropertyEditors.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getRenderLabels",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "boolean",
+						"description": "Value of property <code>renderLabels</code>"
+					},
+					"description": "Gets current value of property {@link #getRenderLabels renderLabels}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "getTags",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "any",
+						"description": "Value of property <code>tags</code>"
+					},
+					"description": "Gets current value of property {@link #getTags tags}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setConfig",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "sConfig",
+							"type": "any[]",
+							"optional": false,
+							"description": "New value for property <code>config</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getConfig config}.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setEditor",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oEditor",
+							"type": "sap.ui.core.ID|sap.ui.integration.designtime.baseEditor.BaseEditor",
+							"optional": false,
+							"description": "ID of an element which becomes the new target of this editor association; alternatively, an element instance may be given"
+						}
+					],
+					"description": "Sets the associated {@link #getEditor editor}.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setRenderLabels",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "bRenderLabels",
+							"type": "boolean",
+							"optional": false,
+							"description": "New value for property <code>renderLabels</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getRenderLabels renderLabels}.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				},
+				{
+					"name": "setTags",
+					"module": "sap/ui/integration/designtime/library-preload.designtime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.designtime.baseEditor.PropertyEditors",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oTags",
+							"type": "any",
+							"optional": false,
+							"description": "New value for property <code>tags</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getTags tags}.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.",
+					"resource": "sap/ui/integration/designtime/library-preload.designtime.js"
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "sap.ui.integration.widgets.Card",
+			"basename": "Card",
+			"resource": "sap/ui/integration/widgets/Card.js",
+			"module": "sap/ui/integration/widgets/Card",
+			"export": "",
+			"static": true,
+			"visibility": "public",
+			"since": "1.62",
+			"extends": "sap.ui.core.Control",
+			"implements": [
+				"sap.ui.core.Control"
+			],
+			"description": "A control that represents a container with a header and content.\n\n<h3>Overview</h3> Cards are small user interface elements which provide the most important information from an app, related to a specific role or task. The information is represented in a compact manner, allowing for actions to be executed. Cards can be described as small representations of an app which can be integrated in different systems.\n\nThe integration card is defined in a declarative way, using a manifest.json to be: <ul> <li>Easily integrated into apps</li> <li>Easily reused across apps</li> <li>Understandable by other technologies</li> <li>Self-contained (has a built-in functionality and doesn't need external configuration)</li> <li>Dynamic parameter handling</li> <li>Clear separation of the roles of the card and app developers</li> </ul>\n\nThe role of the card developer is to describe the card in a manifest.json file and define: <ul> <li>Header</li> <li>Content</li> <li>Data source</li> <li>Possible actions</li> </ul>\n\nThe role of the app developer is to integrate the card into the app and define: <ul> <li>The dimensions of the card inside a layout of choice, using the <code>width</code> and <code>height</code> properties</li> <li>The behavior for the actions described in the manifest.json file, using the action event</li> </ul>\n\n<strong>You can learn more about integration cards in the <a href=\"test-resources/sap/ui/integration/demokit/cardExplorer/index.html\">Card Explorer</a></strong>\n\n<i>When to use</i> <ul> <li>When you want to reuse the card across apps.</li> <li>When you need easy integration and configuration.</li> </ul>\n\n<i>When not to use</i> <ul> <li>When you need more header and content flexibility.</li> <li>When you have to achieve simple card visualization. For such cases, use: {@link sap.f.Card Card}.</li> <li>When you have to use an application model. For such cases, use: {@link sap.f.Card Card}.</li> <li>When you need complex behavior. For such cases, use: {@link sap.f.Card Card}.</li> </ul>",
+			"ui5-metamodel": true,
+			"ui5-metadata": {
+				"stereotype": "control",
+				"properties": [
+					{
+						"name": "manifest",
+						"type": "any",
+						"defaultValue": "",
+						"group": "Misc",
+						"visibility": "public",
+						"description": "The URL of the manifest or an object.",
+						"methods": [
+							"getManifest",
+							"setManifest"
+						]
+					},
+					{
+						"name": "parameters",
+						"type": "object",
+						"defaultValue": null,
+						"group": "Misc",
+						"visibility": "public",
+						"description": "The parameters used in the manifest.",
+						"experimental": {
+							"since": "1.65",
+							"text": "This property might be changed in future."
+						},
+						"methods": [
+							"getParameters",
+							"setParameters"
+						]
+					},
+					{
+						"name": "width",
+						"type": "sap.ui.core.CSSSize",
+						"defaultValue": "100%",
+						"group": "Appearance",
+						"visibility": "public",
+						"description": "Defines the width of the card.",
+						"methods": [
+							"getWidth",
+							"setWidth"
+						]
+					},
+					{
+						"name": "height",
+						"type": "sap.ui.core.CSSSize",
+						"defaultValue": "auto",
+						"group": "Appearance",
+						"visibility": "public",
+						"description": "Defines the height of the card.",
+						"methods": [
+							"getHeight",
+							"setHeight"
+						]
+					},
+					{
+						"name": "dataMode",
+						"type": "sap.ui.integration.CardDataMode",
+						"defaultValue": "Active",
+						"group": "Behavior",
+						"visibility": "public",
+						"since": "1.65",
+						"description": "Defines the state of the <code>Card</code>. When set to <code>Inactive</code>, the <code>Card</code> doesn't make requests.",
+						"experimental": {
+							"since": "1.65"
+						},
+						"methods": [
+							"getDataMode",
+							"setDataMode"
+						]
+					},
+					{
+						"name": "baseUrl",
+						"type": "sap.ui.core.URI",
+						"defaultValue": null,
+						"group": "Misc",
+						"visibility": "public",
+						"since": "1.70",
+						"description": "Defines the base URL of the Card Manifest. It should be used when manifest property is an object instead of a URL.",
+						"experimental": {
+							"since": "1.70"
+						},
+						"methods": [
+							"getBaseUrl",
+							"setBaseUrl"
+						]
+					}
+				],
+				"aggregations": [
+					{
+						"name": "_header",
+						"singularName": "_header",
+						"type": "sap.f.cards.IHeader",
+						"cardinality": "0..1",
+						"visibility": "hidden",
+						"description": "Defines the header of the card.",
+						"methods": [
+							"get_header",
+							"destroy_header",
+							"set_header"
+						]
+					},
+					{
+						"name": "_content",
+						"singularName": "_content",
+						"type": "sap.ui.core.Control",
+						"cardinality": "0..1",
+						"visibility": "hidden",
+						"description": "Defines the content of the card.",
+						"methods": [
+							"get_content",
+							"destroy_content",
+							"set_content"
+						]
+					}
+				],
+				"associations": [
+					{
+						"name": "hostConfigurationId",
+						"singularName": "hostConfigurationId",
+						"type": "sap.ui.core.Control",
+						"cardinality": "0..1",
+						"visibility": "public",
+						"description": "The ID of the host configuration.",
+						"methods": [
+							"getHostConfigurationId",
+							"setHostConfigurationId"
+						]
+					}
+				],
+				"events": [
+					{
+						"name": "action",
+						"visibility": "public",
+						"description": "Fired when an action is triggered on the card.",
+						"experimental": {
+							"since": "1.64",
+							"text": "Disclaimer: this property is in a beta state - incompatible API changes may be done before its official public release. Use at your own discretion."
+						},
+						"parameters": {
+							"actionSource": {
+								"name": "actionSource",
+								"type": "sap.ui.core.Control",
+								"description": "The action source."
+							},
+							"manifestParameters": {
+								"name": "manifestParameters",
+								"type": "object",
+								"description": "The manifest parameters related to the triggered action."
+							},
+							"type": {
+								"name": "type",
+								"type": "sap.ui.integration.CardActionType",
+								"description": "The type of the action."
+							}
+						},
+						"methods": [
+							"attachAction",
+							"detachAction",
+							"fireAction"
+						]
+					},
+					{
+						"name": "manifestReady",
+						"visibility": "public",
+						"description": "Fired when the manifest is loaded.",
+						"experimental": {
+							"since": "1.72"
+						},
+						"methods": [
+							"attachManifestReady",
+							"detachManifestReady",
+							"fireManifestReady"
+						]
+					}
+				]
+			},
+			"constructor": {
+				"visibility": "public",
+				"parameters": [
+					{
+						"name": "sId",
+						"type": "string",
+						"optional": true,
+						"description": "ID for the new control, generated automatically if no ID is given"
+					},
+					{
+						"name": "mSettings",
+						"type": "object",
+						"optional": true,
+						"description": "Initial settings for the new control"
+					}
+				],
+				"description": "Constructor for a new <code>Card</code>.\n\nAccepts an object literal <code>mSettings</code> that defines initial property values, aggregated and associated objects as well as event handlers. See {@link sap.ui.base.ManagedObject#constructor} for a general description of the syntax of the settings object.",
+				"references": [
+					"{@link topic:5b46b03f024542ba802d99d67bc1a3f4 Cards}"
+				]
+			},
+			"events": [
+				{
+					"name": "action",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false,
+									"parameterProperties": {
+										"actionSource": {
+											"name": "actionSource",
+											"type": "sap.ui.core.Control",
+											"optional": false,
+											"description": "The action source."
+										},
+										"manifestParameters": {
+											"name": "manifestParameters",
+											"type": "object",
+											"optional": false,
+											"description": "The manifest parameters related to the triggered action."
+										},
+										"type": {
+											"name": "type",
+											"type": "sap.ui.integration.CardActionType",
+											"optional": false,
+											"description": "The type of the action."
+										}
+									}
+								}
+							}
+						}
+					],
+					"description": "Fired when an action is triggered on the card.",
+					"experimental": {
+						"since": "1.64",
+						"text": "Disclaimer: this property is in a beta state - incompatible API changes may be done before its official public release. Use at your own discretion."
+					}
+				},
+				{
+					"name": "manifestReady",
+					"visibility": "public",
+					"parameters": [
+						{
+							"name": "oControlEvent",
+							"type": "sap.ui.base.Event",
+							"parameterProperties": {
+								"getSource": {
+									"name": "getSource",
+									"type": "sap.ui.base.EventProvider",
+									"optional": false
+								},
+								"getParameters": {
+									"name": "getParameters",
+									"type": "object",
+									"optional": false
+								}
+							}
+						}
+					],
+					"description": "Fired when the manifest is loaded.",
+					"experimental": {
+						"since": "1.72"
+					}
+				}
+			],
+			"methods": [
+				{
+					"name": "attachAction",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.widgets.Card",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.widgets.Card</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:action action} event of this <code>sap.ui.integration.widgets.Card</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.widgets.Card</code> itself.\n\nFired when an action is triggered on the card.",
+					"experimental": {
+						"since": "1.64",
+						"text": "Disclaimer: this property is in a beta state - incompatible API changes may be done before its official public release. Use at your own discretion."
+					}
+				},
+				{
+					"name": "attachManifestReady",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.widgets.Card",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oData",
+							"type": "object",
+							"optional": true,
+							"description": "An application-specific payload object that will be passed to the event handler along with the event object when firing the event"
+						},
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object to call the event handler with. Defaults to this <code>sap.ui.integration.widgets.Card</code> itself"
+						}
+					],
+					"description": "Attaches event handler <code>fnFunction</code> to the {@link #event:manifestReady manifestReady} event of this <code>sap.ui.integration.widgets.Card</code>.\n\nWhen called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener</code> if specified, otherwise it will be bound to this <code>sap.ui.integration.widgets.Card</code> itself.\n\nFired when the manifest is loaded.",
+					"experimental": {
+						"since": "1.72"
+					}
+				},
+				{
+					"name": "detachAction",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.widgets.Card",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:action action} event of this <code>sap.ui.integration.widgets.Card</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"experimental": {
+						"since": "1.64",
+						"text": "Disclaimer: this property is in a beta state - incompatible API changes may be done before its official public release. Use at your own discretion."
+					}
+				},
+				{
+					"name": "detachManifestReady",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.widgets.Card",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "fnFunction",
+							"type": "Function",
+							"optional": false,
+							"description": "The function to be called, when the event occurs"
+						},
+						{
+							"name": "oListener",
+							"type": "object",
+							"optional": true,
+							"description": "Context object on which the given function had to be called"
+						}
+					],
+					"description": "Detaches event handler <code>fnFunction</code> from the {@link #event:manifestReady manifestReady} event of this <code>sap.ui.integration.widgets.Card</code>.\n\nThe passed function and listener object must match the ones used for event registration.",
+					"experimental": {
+						"since": "1.72"
+					}
+				},
+				{
+					"name": "extend",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "Function",
+						"description": "Created class / constructor function"
+					},
+					"parameters": [
+						{
+							"name": "sClassName",
+							"type": "string",
+							"optional": false,
+							"description": "Name of the class being created"
+						},
+						{
+							"name": "oClassInfo",
+							"type": "object",
+							"optional": true,
+							"description": "Object literal with information about the class"
+						},
+						{
+							"name": "FNMetaImpl",
+							"type": "Function",
+							"optional": true,
+							"description": "Constructor function for the metadata object; if not given, it defaults to the metadata implementation used by this class"
+						}
+					],
+					"description": "Creates a new subclass of class sap.ui.integration.widgets.Card with name <code>sClassName</code> and enriches it with the information contained in <code>oClassInfo</code>.\n\n<code>oClassInfo</code> might contain the same kind of information as described in {@link sap.ui.core.Control.extend}."
+				},
+				{
+					"name": "fireAction",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.widgets.Card",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"parameterProperties": {
+								"actionSource": {
+									"name": "actionSource",
+									"type": "sap.ui.core.Control",
+									"optional": true,
+									"description": "The action source."
+								},
+								"manifestParameters": {
+									"name": "manifestParameters",
+									"type": "object",
+									"optional": true,
+									"description": "The manifest parameters related to the triggered action."
+								},
+								"type": {
+									"name": "type",
+									"type": "sap.ui.integration.CardActionType",
+									"optional": true,
+									"description": "The type of the action."
+								}
+							},
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:action action} to attached listeners.",
+					"experimental": {
+						"since": "1.64",
+						"text": "Disclaimer: this property is in a beta state - incompatible API changes may be done before its official public release. Use at your own discretion."
+					}
+				},
+				{
+					"name": "fireManifestReady",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.integration.widgets.Card",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "mParameters",
+							"type": "object",
+							"optional": true,
+							"description": "Parameters to pass along with the event"
+						}
+					],
+					"description": "Fires event {@link #event:manifestReady manifestReady} to attached listeners.",
+					"experimental": {
+						"since": "1.72"
+					}
+				},
+				{
+					"name": "getBaseUrl",
+					"visibility": "public",
+					"since": "1.70",
+					"returnValue": {
+						"type": "sap.ui.core.URI",
+						"description": "Value of property <code>baseUrl</code>"
+					},
+					"description": "Gets current value of property {@link #getBaseUrl baseUrl}.\n\nDefines the base URL of the Card Manifest. It should be used when manifest property is an object instead of a URL.",
+					"experimental": {
+						"since": "1.70"
+					}
+				},
+				{
+					"name": "getCardContent",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.ui.core.Control",
+						"description": "The content of the card"
+					},
+					"description": "Implements sap.f.ICard interface."
+				},
+				{
+					"name": "getCardHeader",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.f.cards.IHeader",
+						"description": "The header of the card"
+					},
+					"description": "Implements sap.f.ICard interface."
+				},
+				{
+					"name": "getCardHeaderPosition",
+					"visibility": "protected",
+					"returnValue": {
+						"type": "sap.f.cards.HeaderPosition",
+						"description": "The position of the header of the card."
+					},
+					"description": "Implements sap.f.ICard interface."
+				},
+				{
+					"name": "getDataMode",
+					"visibility": "public",
+					"since": "1.65",
+					"returnValue": {
+						"type": "sap.ui.integration.CardDataMode",
+						"description": "Value of property <code>dataMode</code>"
+					},
+					"description": "Gets current value of property {@link #getDataMode dataMode}.\n\nDefines the state of the <code>Card</code>. When set to <code>Inactive</code>, the <code>Card</code> doesn't make requests.\n\nDefault value is <code>Active</code>.",
+					"experimental": {
+						"since": "1.65"
+					}
+				},
+				{
+					"name": "getHeight",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.core.CSSSize",
+						"description": "Value of property <code>height</code>"
+					},
+					"description": "Gets current value of property {@link #getHeight height}.\n\nDefines the height of the card.\n\nDefault value is <code>auto</code>."
+				},
+				{
+					"name": "getHostConfigurationId",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.core.ID"
+					},
+					"description": "ID of the element which is the current target of the association {@link #getHostConfigurationId hostConfigurationId}, or <code>null</code>."
+				},
+				{
+					"name": "getManifest",
+					"visibility": "public",
+					"returnValue": {
+						"type": "string|Object",
+						"description": "Cloned of the parameters."
+					},
+					"description": "Overwrites getter for card manifest."
+				},
+				{
+					"name": "getMetadata",
+					"visibility": "public",
+					"static": true,
+					"returnValue": {
+						"type": "sap.ui.core.ElementMetadata",
+						"description": "Metadata object describing this class"
+					},
+					"description": "Returns a metadata object for class sap.ui.integration.widgets.Card."
+				},
+				{
+					"name": "getParameters",
+					"visibility": "public",
+					"returnValue": {
+						"type": "Object",
+						"description": "A Clone of the parameters."
+					},
+					"description": "Overwrites getter for card parameters."
+				},
+				{
+					"name": "getWidth",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.core.CSSSize",
+						"description": "Value of property <code>width</code>"
+					},
+					"description": "Gets current value of property {@link #getWidth width}.\n\nDefines the width of the card.\n\nDefault value is <code>100%</code>."
+				},
+				{
+					"name": "isReady",
+					"visibility": "public",
+					"returnValue": {
+						"type": "boolean",
+						"description": "If the card is ready or not."
+					},
+					"experimental": {
+						"since": "1.65",
+						"text": "The API might change."
+					}
+				},
+				{
+					"name": "loadDesigntime",
+					"visibility": "public",
+					"returnValue": {
+						"type": "Promise<any>",
+						"description": "Promise resolves after the designtime configuration is loaded."
+					},
+					"description": "Loads the module designtime/Card.designtime or the module given in \"sap.card\": { \"designtime\": \"designtime/Own.designtime\" } This file should contain the designtime configuration for the card.\n\nReturns a promise that resolves with an object { designtime: the designtime modules response manifest: the complete manifest json } The promise is rejected if the module cannot be loaded with an object: { error: \"Card.designtime not found\" }",
+					"experimental": {
+						"since": "1.73"
+					}
+				},
+				{
+					"name": "refresh",
+					"visibility": "public",
+					"description": "Refreshes the card by re-applying the manifest settings and triggering all data requests.",
+					"experimental": {
+						"since": "1.65",
+						"text": "The API might change."
+					}
+				},
+				{
+					"name": "setBaseUrl",
+					"visibility": "public",
+					"since": "1.70",
+					"returnValue": {
+						"type": "sap.ui.integration.widgets.Card",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "sBaseUrl",
+							"type": "sap.ui.core.URI",
+							"optional": false,
+							"description": "New value for property <code>baseUrl</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getBaseUrl baseUrl}.\n\nDefines the base URL of the Card Manifest. It should be used when manifest property is an object instead of a URL.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.",
+					"experimental": {
+						"since": "1.70"
+					}
+				},
+				{
+					"name": "setDataMode",
+					"visibility": "public",
+					"since": "1.65",
+					"returnValue": {
+						"type": "sap.ui.integration.widgets.Card",
+						"description": "Pointer to the control instance to allow method chaining."
+					},
+					"parameters": [
+						{
+							"name": "sMode",
+							"type": "sap.ui.integration.CardDataMode",
+							"optional": false,
+							"description": "The mode to set to the Card."
+						}
+					],
+					"description": "Sets a new value for the <code>dataMode</code> property.",
+					"experimental": {
+						"since": "1.65",
+						"text": "API might change."
+					}
+				},
+				{
+					"name": "setHeight",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.widgets.Card",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "sHeight",
+							"type": "sap.ui.core.CSSSize",
+							"optional": false,
+							"description": "New value for property <code>height</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getHeight height}.\n\nDefines the height of the card.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.\n\nDefault value is <code>auto</code>."
+				},
+				{
+					"name": "setHostConfigurationId",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.widgets.Card",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oHostConfigurationId",
+							"type": "sap.ui.core.ID|sap.ui.core.Control",
+							"optional": false,
+							"description": "ID of an element which becomes the new target of this hostConfigurationId association; alternatively, an element instance may be given"
+						}
+					],
+					"description": "Sets the associated {@link #getHostConfigurationId hostConfigurationId}."
+				},
+				{
+					"name": "setManifest",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.widgets.Card",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oManifest",
+							"type": "any",
+							"optional": false,
+							"description": "New value for property <code>manifest</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getManifest manifest}.\n\nThe URL of the manifest or an object.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.\n\nDefault value is <code>empty string</code>."
+				},
+				{
+					"name": "setParameters",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.widgets.Card",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "oParameters",
+							"type": "object",
+							"optional": false,
+							"description": "New value for property <code>parameters</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getParameters parameters}.\n\nThe parameters used in the manifest.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.",
+					"experimental": {
+						"since": "1.65",
+						"text": "This property might be changed in future."
+					}
+				},
+				{
+					"name": "setWidth",
+					"visibility": "public",
+					"returnValue": {
+						"type": "sap.ui.integration.widgets.Card",
+						"description": "Reference to <code>this</code> in order to allow method chaining"
+					},
+					"parameters": [
+						{
+							"name": "sWidth",
+							"type": "sap.ui.core.CSSSize",
+							"optional": false,
+							"description": "New value for property <code>width</code>"
+						}
+					],
+					"description": "Sets a new value for property {@link #getWidth width}.\n\nDefines the width of the card.\n\nWhen called with a value of <code>null</code> or <code>undefined</code>, the default value of the property will be restored.\n\nDefault value is <code>100%</code>."
+				}
+			]
+		},
+		{
+			"kind": "class",
+			"name": "Service",
+			"basename": "Service",
+			"resource": "sap/ui/integration/services/Service.js",
+			"module": "sap/ui/integration/services/Service",
+			"visibility": "restricted",
+			"experimental": {},
+			"constructor": {
+				"visibility": "restricted",
+				"description": "Base class for all services. To inherit use the extend method <code>Service.extend</code>"
+			}
+		}
+	]
+}

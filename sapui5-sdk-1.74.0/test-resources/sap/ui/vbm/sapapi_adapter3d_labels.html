@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="UTF-8">
+
+		<title>Testpage - Adapter3D Decals</title>
+
+		<!-- This is to test internal camera save/restore state functionality only, so private objects/methods used -->
+
+		<script id="sap-ui-bootstrap"
+				data-sap-ui-libs="sap.ui.vbm, sap.ui.unified, sap.m, sap.ui.layout"
+				data-sap-ui-theme="sap_belize"
+				src="../../../../resources/sap-ui-core.js"
+		>
+		</script>
+
+		<script>
+			sap.ui.getCore().attachInit(function() {
+				sap.ui.require([
+					"sap/ui/vbm/Viewport", "sap/ui/vbm/Adapter3D",
+					"sap/ui/layout/Splitter", "sap/ui/layout/SplitterLayoutData",
+					"sap/ui/layout/form/GridLayout", "sap/ui/layout/form/FormElement",
+					"sap/ui/layout/form/GridElementData", "sap/ui/layout/form/FormContainer",
+					"sap/ui/layout/form/Form", "sap/m/Button", "sap/m/Input",
+					"sap/m/Label", "sap/m/Page", "sap/m/App", "sap/m/MessageToast", "sap/m/TextArea"
+				], function(
+					Viewport, Adapter3D,
+					Splitter, SplitterLayoutData,
+					GridLayout, FormElement,
+					GridElementData, FormContainer,
+					Form, Button, Input, Label, Page, App, MessageToast, TextArea
+				) {
+					var viewport = new Viewport({
+						id: "lso-viewport",
+						height: "600px",
+						layoutData: new SplitterLayoutData({
+							size: "100%"
+						})
+					});
+
+					var adapter3D = new Adapter3D("adapter3d", {viewport: viewport});
+
+					function load(url) {
+						$.ajax({
+							url: url,
+							dataType: "json",
+							success: function(data, status, xhr) {
+								try
+								{
+									adapter3D.load(JSON.stringify(data));
+								} catch(ex) {
+									alert(ex);
+								}
+							}
+						});
+					}
+
+					var mouseDown = false;
+					var geometry = new THREE.BufferGeometry();
+					geometry.setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+					var hint = new THREE.Line(geometry, new THREE.LineBasicMaterial({color:0}));
+					hint.visible = false;
+					viewport._scene.add(hint);
+
+					viewportEventDelegate = {
+						onkeydown: function(event) {
+							if (event.key === "d" && !event.originalEvent.repeat && hint.visible) {
+								var m = new THREE.Matrix4().getInverse(hint.decalMatrix);
+
+								var from = hint.decalFrom.clone().applyMatrix4(m);
+								var to = hint.decalTo.clone().applyMatrix4(m);
+
+								to.sub(from).normalize();
+
+								var rotation = sap.ui.getCore().byId("rotation").getValue();
+								var size = sap.ui.getCore().byId("size").getValue();
+								var image = sap.ui.getCore().byId("image").getValue();
+								var target = hint.decalTarget;
+
+								var htmlText = sap.ui.getCore().byId("decalHtmlText").getValue();
+								if (htmlText !== "") {
+									htmlText = JSON.stringify(htmlText);
+								}
+
+								var payload = {
+									"SAPVB": {
+										"version": "2.0",
+										"xmlns:VB": "VB",
+										"Data": {
+											"Remove": {
+												"name": "Decals",
+												"type": "E",
+												"N": {
+													"name": "Decals"
+												}
+											},
+											"Set": [{
+												"name": "Decals",
+												"type": "N",
+												"N": {
+													"name": "Decals",
+													"E": [
+														{
+															"K": "decal",
+															"P": from.x + ";" + from.y + ";" + from.z,
+															"D": to.x + ";" + to.y + ";" + to.z,
+															"R": rotation,
+															"S": size,
+															"I": image,
+															"H": htmlText,
+															"T": target
+														}
+													]
+												}
+											}]
+										}
+									}
+								};
+								var payload = JSON.stringify(payload, null, 2);
+								sap.ui.getCore().byId("adapter3d").load(payload).then(function() {
+									sap.ui.getCore().byId("customPayload").setValue(payload);
+									MessageToast.show("Placement succeeded");
+								}).catch(function() {
+									MessageToast.show("Placement failed");
+								});
+							}
+						},
+						onmousedown: function(event) {
+							mouseDown = true;
+							hint.visible = false;
+						},
+						onmouseup: function(event) {
+							mouseDown = false;
+						},
+						onhover: function(event) {
+							if(!mouseDown) {
+								var hit = adapter3D._hitTest(event);
+								if (hit && hit.instance && hit.instance.dataInstance) {
+									var keyAttribute = hit.instance.voGroup.keyAttributeName;
+									if (keyAttribute) {
+										var key = hit.instance.dataInstance[keyAttribute];
+										if (key) {
+											var position = hit.info.point;
+											var normal = hit.info.face.normal.clone();
+
+											if (normal.length() < 1E-6) {
+												var cb = new THREE.Vector3(), ab = new THREE.Vector3();
+												var va = hit.info.object.geometry.vertices[hit.info.face.a];
+												var vb = hit.info.object.geometry.vertices[hit.info.face.b];
+												var vc = hit.info.object.geometry.vertices[hit.info.face.c];
+												cb.subVectors(vc,vb);
+												ab.subVectors(va,vb);
+												cb.cross(ab);
+												cb.normalize();
+												normal.copy(cb);
+											}
+											var box = new THREE.Box3().setFromObject(hit.info.object);
+											var size = box.max.clone().sub(box.min).length();
+
+											normal.transformDirection(hit.info.object.matrixWorld);
+											normal.multiplyScalar(size/4);
+											normal.add(position);
+
+											var positions = hint.geometry.attributes.position;
+											positions.setXYZ(0, position.x, position.y, position.z );
+											positions.setXYZ(1, normal.x, normal.y, normal.z);
+											positions.needsUpdate = true;
+
+											hint.visible = true;
+											hint.decalTarget = key;
+											hint.decalMatrix = hit.info.object.matrixWorld;
+											hint.decalFrom = normal;
+											hint.decalTo = position;
+
+											return;
+										}
+									}
+								}
+							}
+							hint.visible = false;
+						},
+						onAfterRendering: function(event) {
+							viewport.$().on(sap.ui.Device.browser.msie || sap.ui.Device.browser.edge ? "pointermove" : "mousemove", viewportEventDelegate.onhover);
+
+							if (sap.ui.Device.browser.msie || sap.ui.Device.browser.edge) {
+								viewport.$().on("pointerdown", viewportEventDelegate.onmousedown);
+								viewport.$().on("pointerup", viewportEventDelegate.onmouseup);
+							}
+						}
+					};
+
+					viewport.addEventDelegate(viewportEventDelegate);
+
+					var oLayout = new GridLayout();
+
+					var page = new Page({
+						title: "Adapter3D Decals",
+						content: [
+							new Form({
+								editable: true,
+								layout: oLayout,
+								formContainers: [
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+													new Label({
+														layoutData: new GridElementData({ hCells: "2" }),
+														text: "Initial payload",
+														textAlign: "Center"
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" })
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Position",
+														textAlign: "Center"
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Direction",
+														textAlign: "Center"
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Rotation",
+														textAlign: "Center"
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Size",
+														textAlign: "Center"
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" })
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Image",
+														textAlign: "Center"
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Target",
+														textAlign: "Center"
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" })
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Plane origin",
+														textAlign: "Center"
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Plane normal",
+														textAlign: "Center"
+													})
+												]
+											})
+										]
+									}),
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+												new Button({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Barrel",
+														press: function() {
+															load("media/threejs/Decal_Barrel_Initial.json");
+														}
+													}),
+												new Button({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Truck",
+														press: function() {
+															load("media/threejs/Decal_Truck_Initial.json");
+														}
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" })
+													}),
+													new Input("position", {
+														layoutData: new GridElementData({ hCells: "1" }),
+														type: sap.m.InputType.Text,
+														placeholder: "10;0;0",
+														value: "10;0;0"
+													}),
+													new Input("direction", {
+														layoutData: new GridElementData({ hCells: "1" }),
+														type: sap.m.InputType.Text,
+														placeholder: "-1;0;0",
+														value: "-1;0;0"
+													}),
+													new Input("rotation", {
+														layoutData: new GridElementData({ hCells: "1" }),
+														type: sap.m.InputType.Text,
+														placeholder: "0",
+														value: "0"
+													}),
+													new Input("size", {
+														layoutData: new GridElementData({ hCells: "1" }),
+														type: sap.m.InputType.Text,
+														placeholder: "1;1;1",
+														value: "1;1;1"
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" })
+													}),
+													new Input("image", {
+														layoutData: new GridElementData({ hCells: "1" }),
+														type: sap.m.InputType.Text,
+														placeholder: "decal1.png",
+														value: "decal1.png"
+													}),
+													new Input("target", {
+														layoutData: new GridElementData({ hCells: "1" }),
+														type: sap.m.InputType.Text,
+														placeholder: "target key",
+														value: "barrel"
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" })
+													}),
+													new Input("planeOrigin", {
+														layoutData: new GridElementData({ hCells: "1" }),
+														type: sap.m.InputType.Text,
+														placeholder: "0;0;0",
+														value: "0;0;0"
+													}),
+													new Input("planeNormal", {
+														layoutData: new GridElementData({ hCells: "1" }),
+														type: sap.m.InputType.Text,
+														placeholder: "1;0;0",
+														value: "0;0;-1"
+													}),
+													new Label({
+														layoutData: new GridElementData({ hCells: "1" })
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Create",
+														press: function() {
+															var position = sap.ui.getCore().byId("position").getValue();
+															var direction = sap.ui.getCore().byId("direction").getValue();
+															var rotation = sap.ui.getCore().byId("rotation").getValue();
+															var size = sap.ui.getCore().byId("size").getValue();
+															var image = sap.ui.getCore().byId("image").getValue();
+															var target = sap.ui.getCore().byId("target").getValue();
+															var planeOrigin = sap.ui.getCore().byId("planeOrigin").getValue();
+															var planeNormal = sap.ui.getCore().byId("planeNormal").getValue();
+															var htmlText = sap.ui.getCore().byId("decalHtmlText").getValue();
+
+															if (htmlText !== "") {
+																htmlText = btoa(htmlText);
+															}
+
+															if (position !== "" && direction !== "" && size !== "" && image !== "" &&
+															   (target != "" || (planeOrigin != "" && planeNormal != ""))) {
+																// execute json which creates decals VO
+																var payload = {
+																	"SAPVB": {
+																		"version": "2.0",
+																		"xmlns:VB": "VB",
+																		"Data": {
+																			"Remove": {
+																				"name": "Decals",
+																				"type": "E",
+																				"N": {
+																					"name": "Decals"
+																				}
+																			},
+																			"Set": [{
+																				"name": "Decals",
+																				"type": "N",
+																				"N": {
+																					"name": "Decals",
+																					"E": [
+																						{
+																							"K": "decal",
+																							"P": position,
+																							"D": direction,
+																							"R": rotation,
+																							"S": size,
+																							"I": image,
+																							"H": htmlText,
+																							"T": target,
+																							"X": planeOrigin,
+																							"Y": planeNormal
+																						}
+																					]
+																				}
+																			}]
+																		}
+																	}
+																};
+																var payload = JSON.stringify(payload, null, 2);
+																sap.ui.getCore().byId("adapter3d").load(payload).then(function() {
+																	sap.ui.getCore().byId("customPayload").setValue(payload);
+																	MessageToast.show("Load succeeded");
+																}).catch(function(){
+																	MessageToast.show("Load failed");
+																});
+															} else {
+																MessageToast.show("Unable to create Decal, please enter all parameters");
+															}
+														}
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "1" }),
+														text: "Clear",
+														press: function() {
+															// execute json which deletes decals VO
+															var payload = {
+																"SAPVB": {
+																	"version": "2.0",
+																	"xmlns:VB": "VB",
+																	"Data": {
+																		"Remove": {
+																			"name": "Decals",
+																			"type": "E",
+																			"N": {
+																				"name": "Decals",
+																				"E": {
+																					"K": "decal"
+																				}
+																			}
+																		}
+																	}
+																}
+															};
+															sap.ui.getCore().byId("adapter3d").load(JSON.stringify(payload, null, 2)).then(function() {
+																MessageToast.show("Succeeded");
+															}).catch(function(){
+																MessageToast.show("Failed");
+															})
+														}
+													})
+												]
+											})
+										]
+									}),
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+													new Splitter({
+														layoutData: new GridElementData({ vCells: 4 }),
+														height: "600px",
+														width: "100%",
+														contentAreas: [
+															viewport
+														]
+													})
+												]
+											})
+										]
+									}),
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+													new TextArea("customPayload",{
+														layoutData: new GridElementData({ vCells: 2 }),
+														placeholder: "Custom Payload",
+														height: "260px"
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "2" }),
+														text: "Custom Load",
+														press: function(event) {
+															var payload = sap.ui.getCore().byId("customPayload").getValue();
+															sap.ui.getCore().byId("adapter3d").load(payload).then(function() {
+																MessageToast.show("Succeeded");
+															}).catch(function(){
+																MessageToast.show("Failed");
+															})
+														}
+													}),
+													new TextArea("decalHtmlText",{
+														layoutData: new GridElementData({ vCells: 2 }),
+														placeholder: "Decal HTML Text",
+														height: "260px"
+													})
+												]
+											})
+										]
+									})
+								]
+							})
+						]
+					});
+
+					var app = new App();
+					app.addPage(page);
+					app.placeAt("body");
+				});
+			});
+		</script>
+	</head>
+	<body id="body" class="sapUiBody">
+	</body>
+</html>

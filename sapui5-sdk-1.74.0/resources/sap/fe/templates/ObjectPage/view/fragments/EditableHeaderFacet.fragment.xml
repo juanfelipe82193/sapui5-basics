@@ -1,0 +1,57 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:macro="sap.fe.macros"
+    xmlns:core="sap.ui.core"
+    xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+    template:require="{OP: 'sap/fe/templates/ObjectPage/AnnotationHelper', MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',FIELD: 'sap/fe/macros/field/FieldHelper'}">
+    <HBox binding="{path: ''}" visible="{= OP.isReadOnlyFromStaticAnnotations(${entityType>@com.sap.vocabularies.UI.v1.HeaderInfo/Title/Value/$Path@},${entityType>@com.sap.vocabularies.UI.v1.HeaderInfo/Title/Value/$Path@@FIELD.fieldControl}) &amp;&amp; OP.isReadOnlyFromDynamicAnnotations(${entityType>@com.sap.vocabularies.UI.v1.HeaderInfo/Title/Value/$Path@@FIELD.fieldControl})}">
+        <f:Form editable="true">
+            <f:layout>
+                <f:ColumnLayout/>
+            </f:layout>
+            <f:formContainers>
+                <f:FormContainer>
+                    <f:formElements>
+                        <f:FormElement>
+                            <f:label>
+                                <Label text="{entityType>@com.sap.vocabularies.UI.v1.HeaderInfo/Title/@@MODEL.label}">
+                                    <layoutData>
+                                        <f:ColumnElementData cellsLarge="12" />
+                                    </layoutData>
+                                </Label>
+                            </f:label>
+                            <f:fields>
+                                <macro:Field editMode="Editable" idPrefix="EditableHeaderTitle" parentControl="Form" metadataContexts="{ model: 'entitySet', path:'',  name: 'entitySet'},{ model: 'entityType', path:'@com.sap.vocabularies.UI.v1.HeaderInfo/Title',  name: 'dataField'}" />
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement>
+                            <f:label>
+                                <Label text="{entityType>@com.sap.vocabularies.UI.v1.HeaderInfo/Description/@@MODEL.label}">
+                                    <layoutData>
+                                        <f:ColumnElementData cellsLarge="12" />
+                                    </layoutData>
+                                </Label>
+                            </f:label>
+                            <f:fields>
+                                <macro:Field editMode="Editable" idPrefix="EditableHeaderDescription" parentControl="Form" metadataContexts="{ model: 'entitySet', path:'',  name: 'entitySet'},{ model: 'entityType', path:'@com.sap.vocabularies.UI.v1.HeaderInfo/Description',  name: 'dataField'}" />
+                            </f:fields>
+                        </f:FormElement>
+                    </f:formElements>
+                </f:FormContainer>
+            </f:formContainers>
+        </f:Form>
+    </HBox>
+    <template:repeat list="{entityType>@com.sap.vocabularies.UI.v1.HeaderFacets}" var="facet">
+        <template:if test="{facet>Facets}">
+            <template:then>
+                <template:repeat list="{facet>Facets}" var="facet">
+					<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.FormAndContact" type="XML"/>
+                </template:repeat>
+            </template:then>
+            <template:else>
+                <core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.FormAndContact" type="XML"/>
+            </template:else>
+        </template:if>
+    </template:repeat>
+</core:FragmentDefinition>

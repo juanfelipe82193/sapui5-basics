@@ -1,0 +1,527 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.suite.ui.microchart.HarveyBallMicroChart</title>
+
+<base href="../../../../../">
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout, sap.m, sap.ui.ux3, sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize"
+	src="resources/sap-ui-core.js">
+</script>
+
+<script id="view1" type="sapui5/xmlview">
+	<core:View controllerName="test" xmlns="sap.suite.ui.microchart" xmlns:core="sap.ui.core" xmlns:m="sap.m">
+		<m:Table items="{/items}">
+			<m:columns>
+				<m:Column demandPopin="true" minScreenWidth="Tablet">
+					<m:Text text="Chart" />
+				</m:Column>
+			</m:columns>
+			<m:items>
+				<m:ColumnListItem>
+					<m:cells>
+						<m:FlexBox height="100px" width="100px">
+							<HarveyBallMicroChart id="chart"
+								press="press"
+								isResponsive="true"
+								total="{total}"
+								totalLabel ="{totalLabel}"
+								totalScale="{totalScale}"
+								items="{items}">
+								<items>
+									<HarveyBallMicroChartItem fraction="{fraction}" fractionLabel="{fractionLabel}" fractionScale="{fractionScale}" />
+								</items>
+							</HarveyBallMicroChart>
+						</m:FlexBox>
+					</m:cells>
+				</m:ColumnListItem>
+			</m:items>
+		</m:Table>
+	</core:View>
+</script>
+<script>
+	// define a new (simple) Controller type
+	sap.ui.controller("test", {
+		onInit: function () {
+			var data = {
+				items : [{
+					total : 420,
+					totalLabel : "420",
+					totalScale: "M",
+					items: [{
+						fraction: 42,
+						fractionLabel: "42",
+						fractionScale: "M"
+					}]
+				}]
+			};
+			var oModel = new sap.ui.model.json.JSONModel(data);
+			this.getView().setModel(oModel);
+		}
+	});
+
+	// instantiate the View
+	var oView = sap.ui.xmlview({
+		viewContent:jQuery('#view1').html()
+	});
+
+	jQuery.sap.initMobile();
+
+	function _fnParseFloat(value) {
+		if (!value || 0 === value.length || "-" === value) {
+			return undefined;
+		} if (/[.,]$/.test(value)) {
+			return sap.ui.core.format.NumberFormat.getFloatInstance().parse(value.slice(0, -1));
+		} else {
+			return sap.ui.core.format.NumberFormat.getFloatInstance().parse(value);
+		}
+	};
+
+	var fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The HarveyBallMicroChart is pressed.");
+	};
+
+	var oConfHBMCData = {
+		sizes: {
+			L: sap.m.Size.L,
+			M: sap.m.Size.M,
+			S: sap.m.Size.S,
+			XS: sap.m.Size.XS,
+			Auto: sap.m.Size.Auto
+		},
+		total: 360,
+		totalLabel: "360",
+		totalScale: "Mrd",
+		formattedLabel: false,
+		showTotal: true,
+		showFractions: true,
+		items: [{
+			fraction: 130,
+			color: sap.m.ValueColor.Good,
+			fractionLabel: "130",
+			fractionScale: "Mln",
+			formattedLabel: false
+		}],
+		tooltip: "Cumulative Totals\n((AltText))\ncalculated in EURO"
+	};
+
+	var oConfModel = new sap.ui.model.json.JSONModel();
+	oConfModel.setData(oConfHBMCData);
+	sap.ui.getCore().setModel(oConfModel);
+
+	var aHBMCs = [];
+	var aColorSelects = [];
+	var buildHBMC = function(sSize, sText) {
+
+		var bFixedSizeGiven = sSize && sap.m.Size.hasOwnProperty(sSize);
+		var sIdSuffix, sWidth, sHeight;
+		if (bFixedSizeGiven) {
+			sIdSuffix = sSize;
+			sWidth = "210px";
+			sHeight = "110px";
+		} else {
+			sIdSuffix = sText;
+			sWidth = sSize.width;
+			sHeight = sSize.height;
+		}
+		var oHBMCItemTmpl = new sap.suite.ui.microchart.HarveyBallMicroChartItem({
+			fraction: "{fraction}",
+			color: "{color}",
+			fractionLabel: "{fractionLabel}",
+			fractionScale: "{fractionScale}",
+			formattedLabel: "{formattedLabel}"
+		});
+
+		var oHBMCTmpl = new sap.suite.ui.microchart.HarveyBallMicroChart("hbmc-" + sIdSuffix, {
+			totalScale: "Mrd",
+			formattedLabel: "{/formattedLabel}",
+			showTotal: "{/showTotal}",
+			showFractions: "{/showFractions}",
+			colorPalette: "{/colorPalette}",
+			size: bFixedSizeGiven ? "{/sizes/"+ sSize + "}" : null,
+			isResponsive: !bFixedSizeGiven,
+			total: "{/total}",
+			totalLabel: "{/totalLabel}",
+			totalScale: "{/totalScale}",
+			width: "{/width}",
+			items: {
+				template: oHBMCItemTmpl,
+				path: "/items"
+			},
+			tooltip: "{/tooltip}",
+			press: fnPress
+		});
+
+		aHBMCs.push(oHBMCTmpl);
+
+		return new sap.m.FlexBox("hbmc-fb" + sIdSuffix, {
+			items: [oHBMCTmpl],
+			layoutData: new sap.ui.layout.ResponsiveFlowLayoutData({ minWidth: 200 }),
+			height: sHeight,
+			width: sWidth,
+			renderType: "Bare"
+		}).addStyleClass("sapUiTinyMargin");
+	};
+
+	var oShowValuesLbl = new sap.m.Label({
+		text: "Show Fractions",
+		labelFor: "show-values-cb"
+	});
+
+	var oShowValuesCheckBox = new sap.m.CheckBox("show-values-cb");
+	oShowValuesCheckBox.bindProperty("selected", "/showFractions");
+
+	var oShowTotalLbl = new sap.m.Label({
+		text: "Show Total",
+		labelFor: "show-total-cb"
+	});
+
+	var oShowTotalCheckBox = new sap.m.CheckBox("show-total-cb");
+	oShowTotalCheckBox.bindProperty("selected", "/showTotal");
+
+	var oFormatterTotalLbl = new sap.m.Label({
+		text: "Formatted Total Label",
+		labelFor: "formatted-total-cb"
+	});
+
+	var oFormatterTotalCheckBox = new sap.m.CheckBox("formatted-total-cb");
+	oFormatterTotalCheckBox.bindProperty("selected", "/formattedLabel");
+
+	var oTotalLbl = new sap.m.Label({
+		text: "Total",
+		labelFor: "total"
+	});
+
+	var oTotalInput = new sap.m.Input("total", {
+		placeholder: 'Enter total ...',
+		value: {
+			path: "/total",
+			type: new sap.ui.model.type.Float({groupingEnabled: false})
+		},
+		liveChange: function(oControlEvent) {
+			var fValue = _fnParseFloat(oControlEvent.getParameter("newValue"));
+			if (typeof fValue == "undefined" || !isNaN(fValue)) {
+				oConfHBMCData.total = fValue;
+				oConfModel.checkUpdate();
+			}
+		}
+	});
+
+	var oTotalLabelLbl = new sap.m.Label({
+		text : "Total Label",
+		labelFor : "total-value-label"
+	});
+
+	var oTotalLabelInput = new sap.m.Input("total-value-label", {
+		placeholder: 'Enter total value label...',
+		value: "{/totalLabel}"
+	});
+
+	var oTotalScaleLbl = new sap.m.Label({
+		text : "Total Scale",
+		labelFor : "total-scale"
+	});
+
+	var oTotalScaleInput = new sap.m.Input("total-scale", {
+		placeholder: 'Enter total value scale...',
+		value: "{/totalScale}"
+	});
+
+	var oTooltipLbl = new sap.m.Label({
+		text : "Tooltip",
+		labelFor : "tooltip"
+	});
+
+	var oTooltipInput = new sap.m.TextArea("tooltip", {
+		rows: 3,
+		placeholder: 'Enter tooltip (use ((AltText)) for inserting the default text) ...',
+		value: "{/tooltip}"
+	});
+
+	var oTooltipSwtchLbl = new sap.m.Label({
+		text : "QuickView Tooltip",
+		labelFor : "tooltip-swtch"
+	});
+
+	var oTooltipSwtch = new sap.m.Switch({
+		id: "tooltip-swtch",
+		state: false,
+		name: "QuickView tooltip",
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			for (var i = 0; i < aHBMCs.length; i++) {
+				aHBMCs[i].setTooltip(bState ?
+					new sap.ui.ux3.QuickView({content: new sap.m.Text({ text: oTooltipInput.getValue().split("((AltText))").join(aHBMCs[i].getAltText()) })})
+					: oTooltipInput.getValue());
+			}
+		}
+	});
+
+	var oCPSwtchLbl = new sap.m.Label({ text: "Color Palette", labelFor: "cp-switch" });
+
+	var oCPSwtch = new sap.m.Switch({
+		id: "cp-switch",
+		state: false,
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			oCPInput.setEnabled(bState);
+
+			if (bState) {
+				oConfHBMCData.colorPalette = oCPInput.getValue().split(" ");
+			} else {
+				oConfHBMCData.colorPalette = [];
+			}
+			oConfModel.checkUpdate();
+		}
+	});
+
+	var oCPLbl = new sap.m.Label({
+		text: "Palette Color",
+		labelFor: "cp-value"
+	});
+
+	var oCPInput = new sap.m.Input("cp-value", {
+		width: "100%",
+		enabled: false,
+		placeholder: 'Enter color ...',
+		value: "#5cbae6",
+		liveChange : function(e) {
+			var sEnteredText = e.getParameter("value");
+			oConfHBMCData.colorPalette = sEnteredText ? sEnteredText.split(" ") : [];
+			oConfModel.checkUpdate();
+		}
+	});
+
+	var oPressLbl = new sap.m.Label({ text: "Press Action", labelFor: "press-action" });
+
+	var oPressSwtch = new sap.m.Switch({
+		id: "press-action",
+		state: true,
+		change: function(oE) {
+			var bState = oE.getParameter("state");
+			for (var i = 0; i < aHBMCs.length; i++) {
+				if(bState) {
+					aHBMCs[i].attachPress(fnPress);
+				} else {
+					aHBMCs[i].detachPress(fnPress);
+				}
+			}
+		}
+	});
+
+	var iSIndex = 0;
+
+	var buildColorItem = function(sId, sColor) {
+		return new sap.ui.core.Item(sId + "-" + sColor, { key: sColor, text: sColor });
+	};
+
+	var fnFormFactoryRMC = function(sId, oContext) {
+		var sColor = oContext.getProperty("color");
+		var sValue = oContext.getProperty("value");
+
+		var oSValueLabel = new sap.m.Label(sId+"-fraction-label", { text: "Fraction", labelFor: sId+"-fraction-input" });
+
+		var oSValueInput = new sap.m.Input(sId+"-fraction-input", {
+			width: "10rem",
+			placeholder: "Enter fraction ...",
+			value: { path: "fraction", type: new sap.ui.model.type.Float({groupingEnabled: false})},
+			liveChange: function(oControlEvent) {
+				var fValue = _fnParseFloat(oControlEvent.getParameter("newValue"));
+				if (typeof fValue == "undefined" || !isNaN(fValue)) {
+					oConfHBMCData.items[this._index].fraction = fValue;
+					oConfModel.checkUpdate();
+				}
+			}
+		});
+		oSValueInput._index = iSIndex;
+
+		var oSColorLabel = new sap.m.Label(sId+"-color-label", { text: "Color", labelFor: sId+"-color-select"  });
+
+		var oSColorSelect = new sap.m.Select(sId+"-color-select", {
+			width: "10rem",
+			items: [
+				buildColorItem(sId+"-color-select", sap.m.ValueColor.Neutral),
+				buildColorItem(sId+"-color-select", sap.m.ValueColor.Good),
+				buildColorItem(sId+"-color-select", sap.m.ValueColor.Error),
+				buildColorItem(sId+"-color-select", sap.m.ValueColor.Critical)
+			],
+			selectedItemId: sId + "-color-select-" + sColor,
+			change: function(oEvent) {
+				var oSelectedItem = oEvent.getParameter("selectedItem");
+				oConfHBMCData.items[this._index].color = oSelectedItem.getKey();
+				oConfModel.checkUpdate();
+			}
+		});
+		oSColorSelect._index = iSIndex;
+
+		aColorSelects.push(oSColorSelect);
+
+		var oSValueLabelLbl = new sap.m.Label(sId+"-fraction-label-lbl", { text: "Fraction label", labelFor: sId+"-fraction-label-input" });
+
+		var oSValueLabelInput = new sap.m.Input(sId+"-fraction-label-input", {
+			width: "10rem",
+			placeholder: "Enter fraction label...",
+			value: "{fractionLabel}",
+			liveChange: function(oControlEvent) {
+				var fVal = oControlEvent.getParameter("newValue");
+				oConfHBMCData.items[this._index].fractionLabel = fVal;
+				oConfModel.checkUpdate();
+			}
+		});
+		oSValueLabelInput._index = iSIndex;
+
+		var oSValueScaleLbl = new sap.m.Label(sId+"-fraction-scale-lbl", { text: "Fraction scale", labelFor: sId+"-fraction-scale-input" });
+
+		var oSValueScaleInput = new sap.m.Input(sId+"-fraction-scale-input", {
+			width: "10rem",
+			placeholder: "Enter fraction scale...",
+			value: "{fractionScale}",
+			liveChange: function(oControlEvent) {
+				var fVal = oControlEvent.getParameter("newValue");
+				oConfHBMCData.items[this._index].fractionScale = fVal;
+				oConfModel.checkUpdate();
+			}
+		});
+		oSValueScaleInput._index = iSIndex;
+
+		var oSFormatterValueLbl = new sap.m.Label(sId+"-formatted-label-lbl", {
+			text: "Formatted Label",
+			labelFor: "formatted-label-cb"
+		});
+
+		var oSFormatterValueCheckBox = new sap.m.CheckBox(sId+"-formatted-label-cb");
+		oSFormatterValueCheckBox.bindProperty("selected", "formattedLabel");
+		oSFormatterValueCheckBox._index = iSIndex;
+
+		var oSFormTempl = new sap.m.VBox(sId, {
+		height: "420px",
+		alignItems: sap.m.FlexAlignItems.Inherit,
+			items: [oSValueLabel, oSValueInput, oSColorLabel, oSColorSelect, oSValueLabelLbl, oSValueLabelInput,
+					oSValueScaleLbl, oSValueScaleInput, oSFormatterValueLbl, oSFormatterValueCheckBox],
+			layoutData: new sap.ui.layout.ResponsiveFlowLayoutData({ minWidth: 170 })
+		});
+		iSIndex++;
+		return oSFormTempl;
+	};
+
+	var oWidthLbl = new sap.m.Label({
+		text: "Width",
+		labelFor: "scale-width"
+	});
+
+	var patt = new RegExp("^\\d+(px|rem|%|in|cm|mm|em|ex|pt|pc)$");
+	var oWidthInput = new sap.m.Input("scale-width", {
+		width: "10rem",
+		placeholder: 'Enter width ...',
+		liveChange : function(e) {
+			var sEnteredText = e.getParameter("newValue");
+			var oItem = jQuery.sap.byId("scale-width-inner");
+			if (patt.test(sEnteredText)) {
+				oConfHBMCData.width = sEnteredText;
+				oItem.css("color", "black");
+			} else {
+				oConfModel.width = "";
+				if (sEnteredText) {
+					oItem.css("color", "red");
+				} else {
+					oItem.css("color", "black");
+				}
+			}
+			oConfModel.checkUpdate();
+		}
+	});
+
+	var oSBoxContForm = new sap.ui.layout.form.SimpleForm("slice-form", {
+		content: {
+			path: "/items",
+			factory: fnFormFactoryRMC
+		}
+	});
+
+	var oHBMCSimpleForm = new sap.ui.layout.form.SimpleForm("controls-hbmc", {
+		maxContainerCols: 2,
+		editable: true,
+		content: [
+			oShowValuesLbl, oShowValuesCheckBox,
+			oShowTotalLbl, oShowTotalCheckBox,
+			oFormatterTotalLbl, oFormatterTotalCheckBox,
+			oTotalLbl, oTotalInput,
+			oTotalLabelLbl, oTotalLabelInput,
+			oTotalScaleLbl, oTotalScaleInput,
+			oTooltipLbl, oTooltipInput,
+			oTooltipSwtchLbl, oTooltipSwtch,
+			new sap.m.Label({ text: "" }),
+			oCPSwtchLbl,oCPSwtch,
+			oCPLbl, oCPInput,
+			oPressLbl, oPressSwtch,
+			oWidthLbl, oWidthInput
+		]
+	});
+
+	var oSettingsPanelLabel = new sap.m.Label({
+		text: "Settings:",
+		labelFor: "controls-hbmc"
+	});
+
+	var oHBMCVBox = new sap.m.VBox("vbox-hbmc", { items: [oSettingsPanelLabel, oHBMCSimpleForm, oSBoxContForm]});
+
+	var oFixedSizeFormLabel = new sap.m.Label({
+		text: "fixed-sizes:",
+		labelFor: "hbmc-form"
+	});
+
+	var oHBMCForm = new sap.ui.layout.form.SimpleForm("hbmc-form", {
+		content: [
+			buildHBMC(sap.m.Size.L, "large"),
+			buildHBMC(sap.m.Size.M, "medium"),
+			buildHBMC(sap.m.Size.S, "small"),
+			buildHBMC(sap.m.Size.XS, "extrasmall"),
+			buildHBMC(sap.m.Size.Auto, "auto"),
+		]
+	});
+
+	var oResponsiveFormLabel = new sap.m.Label({
+		text: "Responsive controls in FlexBox:",
+		labelFor: "hbmc-responsive-form"
+	});
+
+	var oHBMCResponsiveForm = new sap.ui.layout.form.SimpleForm("hbmc-responsive-form", {
+		content: [
+			buildHBMC({width: "190px", height: "140px"}, "largeResponsive"),
+			buildHBMC({width: "178px", height: "82px"}, "mediumResponsive"),
+			buildHBMC({width: "128px", height: "36px"}, "smallResponsive")
+		]
+	});
+
+	var oPage = new sap.m.Page("initial-page", {
+		showHeader: false,
+		content: [
+			oFixedSizeFormLabel,
+			oHBMCForm,
+			oResponsiveFormLabel,
+			oHBMCResponsiveForm,
+			oHBMCVBox,
+			oView
+		]
+	});
+
+	var oApp = new sap.m.App({
+		pages: oPage
+	}).placeAt("content");
+
+	//set the contrast class for belize plus
+	if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+		oApp.addStyleClass("sapContrastPlus");
+	}
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+	<div id="content"></div>
+</body>
+</html>

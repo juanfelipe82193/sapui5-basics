@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+   <edmx:DataServices m:DataServiceVersion="2.0">
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="catalogservice" xml:lang="en" sap:schema-version="0">
+         <EntityType Name="Service" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="ID" />
+            </Key>
+            <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="60" sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+            <Property Name="Title" Type="Edm.String" Nullable="false" MaxLength="40" sap:creatable="false" sap:updatable="false" />
+            <Property Name="Author" Type="Edm.String" Nullable="false" MaxLength="12" sap:creatable="false" sap:updatable="false" />
+            <Property Name="TechnicalServiceVersion" Type="Edm.Int16" Nullable="false" sap:creatable="false" />
+            <Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="40" sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+            <Property Name="MetadataUrl" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+            <Property Name="TechnicalServiceName" Type="Edm.String" Nullable="false" MaxLength="35" sap:creatable="false" />
+            <Property Name="ImageUrl" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+            <Property Name="ServiceUrl" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+            <Property Name="UpdatedDate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:creatable="false" sap:updatable="false" sap:filterable="false" />
+         </EntityType>
+          <EntityType Name="ServiceCollection" sap:content-version="1">
+            <Key>
+               <PropertyRef Name="ID" />
+            </Key>
+            <Property Name="Url" Type="Edm.String" Nullable="false" sap:creatable="false" sap:filterable="false" />
+            <Property Name="UpdatedDate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:creatable="false" sap:filterable="false" />
+            <Property Name="ImageUrl" Type="Edm.String" Nullable="false" sap:creatable="false" sap:filterable="false" />
+            <Property Name="ID" Type="Edm.String" Nullable="false" sap:creatable="false" sap:filterable="false" />
+            <Property Name="Description" Type="Edm.String" Nullable="false" sap:creatable="false" sap:filterable="false" />
+            <Property Name="Title" Type="Edm.String" Nullable="false" sap:creatable="false" sap:filterable="false" />
+            <NavigationProperty Name="Services" Relationship="catalogservice.Services" FromRole="FromRole_Services" ToRole="ToRole_Services" />
+         </EntityType>
+         <Association Name="Services" sap:content-version="1">
+            <End Type="catalogservice.Catalog" Multiplicity="1" Role="FromRole_Services" />
+            <End Type="catalogservice.Service" Multiplicity="*" Role="ToRole_Services" />
+         </Association>
+         <EntityContainer Name="catalogservice_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+            <EntitySet Name="ServiceCollection" EntityType="catalogservice.Service" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1" />
+            <AssociationSet Name="AssocSet_Services" Association="catalogservice.Services" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+               <End EntitySet="CatalogCollection" Role="FromRole_Services" />
+               <End EntitySet="ServiceCollection" Role="ToRole_Services" />
+            </AssociationSet>
+            <FunctionImport Name="BestMatchingService" ReturnType="catalogservice.Service" EntitySet="ServiceCollection" m:HttpMethod="GET">
+               <Parameter Name="TechnicalServiceVersionMin" Type="Edm.Int16" Mode="In" Nullable="false" />
+               <Parameter Name="TechnicalServiceName" Type="Edm.String" Mode="In" Nullable="false" />
+               <Parameter Name="TechnicalServiceVersionMax" Type="Edm.Int16" Mode="In" Nullable="false" />
+            </FunctionImport>
+         </EntityContainer>
+         <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="https://localhost:8081/sap/opu/odata/iwfnd/catalogservice/$metadata" />
+         <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="https://localhost:8081/sap/opu/odata/iwfnd/catalogservice;v=2/$metadata" />
+      </Schema>
+   </edmx:DataServices>
+</edmx:Edmx>

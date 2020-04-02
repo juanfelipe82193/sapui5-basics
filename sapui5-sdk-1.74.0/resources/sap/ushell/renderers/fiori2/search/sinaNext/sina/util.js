@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sinaDefine(['./ComparisonOperator'],function(C){"use strict";var m={};m.convertOperator2Wildcards=function(v,o){if(o===C.Eq){return v;}var r=[];var a=v.split(' ');for(var i=0;i<a.length;i++){var t=a[i].trim();if(t.length===0){continue;}switch(o){case C.Co:t='*'+t+'*';break;case C.Bw:t=t+'*';break;case C.Ew:t='*'+t;break;default:break;}r.push(t);}return r.join(' ');};return m;});

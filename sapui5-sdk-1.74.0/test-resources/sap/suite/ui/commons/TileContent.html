@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TileContent - sap.suite.ui.commons</title>
+
+    <!-- UI5 Bootstrap -->
+    <script src="../../../../../resources/sap-ui-core.js"
+            type="text/javascript"
+            id="sap-ui-bootstrap"
+            data-sap-ui-libs="sap.ui.layout,sap.suite.ui.commons,sap.m"
+            data-sap-ui-theme="sap_bluecrystal"></script>
+
+<style type="text/css">
+	.sapSuiteInfoTile {
+		margin-left:1rem;
+	}
+	
+	#controls {
+		margin-top:1rem;
+	}
+	.sapMFlexItem {
+	   border:1px solid green;
+	   margin-left:1rem;
+	}
+
+</style>
+<script type="text/javascript">
+    jQuery.sap.initMobile();
+
+    var oConfData = {
+		scale: "MM",
+		unit: "EUR",
+		state: sap.suite.ui.commons.LoadState.Loaded,
+		valueColor:sap.suite.ui.commons.InfoTileValueColor.Error,
+		indicator: sap.suite.ui.commons.DeviationIndicator.None,
+		value : "2435",
+		size : "Auto",
+		title : "US Profit Margin",
+		footer : "Current Quarter",
+		description: "Maximum deviation",
+        data: [
+               { title: "Americas", value: 10, color: "Good" },
+               { title: "EMEA", value: 50, color: "Good" },
+               { title: "APAC", value: -20, color: "Error" }
+           ],
+        mac: {
+	   		chart: {
+	   			points: [
+	   				{day: 0, balance: 0},
+	   				{day: 30, balance: 20},
+	   				{day: 60, balance: 20},
+	   				{day: 100, balance: 80}
+	   			]
+	   		},
+	   		target: {
+	   			points: [
+	   				{day: 0, balance: 0},
+	   				{day: 30, balance: 30},
+	   				{day: 60, balance: 40},
+	   				{day: 100, balance: 90}
+	   			]
+	   		},
+	   		maxThreshold: {
+	   			color: "Good",
+	   			points: [
+	   				{day: 0, balance: 0},
+	   				{day: 30, balance: 40},
+	   				{day: 60, balance: 50},
+	   				{day: 100, balance: 100}
+	   			]
+	   		},
+	   		minThreshold: {
+	   			color: "Error",
+	   			points: [
+	   				{day: 0, balance: 0},
+	   				{day: 30, balance: 20},
+	   				{day: 60, balance: 30},
+	   				{day: 100, balance: 70},
+	   			]
+	   		}
+        },
+        bc: {
+            actual: { value: 120, color: sap.suite.ui.commons.InfoTileValueColor.Good},
+            targetValue: 100,
+            thresholds: [
+            	{ value: 0, color: sap.suite.ui.commons.InfoTileValueColor.Error },
+    			{ value: 50, color: sap.suite.ui.commons.InfoTileValueColor.Critical },
+    			{ value: 150, color: sap.suite.ui.commons.InfoTileValueColor.Critical },
+    			{ value: 200, color: sap.suite.ui.commons.InfoTileValueColor.Error }
+    		],
+    		showActualValue: true,
+    		showTargetValue: true
+        },
+        jc: {
+			contentText: "@@notify Great outcome of the Presentation today. The new functionality and the design was well received. Berlin, Tokyo, Rome, Budapest, New York, Munich, London",
+			subheader: "about 1 minute ago in Computer Market",
+			value: "9"
+        },
+        nc: {
+			contentText: "SAP Unveils Powerful New Player Comparison Tool Exclusively on NFL.com",
+			subheader: "SAP News"
+        }
+    };
+    
+	var oNewsTileContent = new sap.suite.ui.commons.TileContent({
+		footer: "{/footer}",
+		unit : "{/unit}",
+		size :"{/size}",
+		content: new sap.suite.ui.commons.NewsContent({
+			size :"{/size}",
+			contentText: "{/nc/contentText}",
+			subheader: "{/nc/subheader}"
+		})
+	});
+    
+	var oJamTileContent = new sap.suite.ui.commons.TileContent({
+		footer: "{/footer}",
+		unit : "{/unit}",
+		size :"{/size}",
+		content: new sap.suite.ui.commons.JamContent({
+			size :"{/size}",
+			contentText: "{/jc/contentText}",
+			subheader: "{/jc/subheader}",
+			value: "{/jc/value}"
+		})
+	});
+    
+    var oBCDataTmpl = new sap.suite.ui.commons.BulletChartData({
+        value: "{value}",
+        color: "{color}"
+    });
+    
+	var oBCTileContent = new sap.suite.ui.commons.TileContent({
+		unit : "{/unit}",
+		size :"{/size}",
+		footer: "{/footer}",
+		content: new sap.suite.ui.commons.BulletChart("bullet-chart", {
+	        size: "{/size}",
+	        scale: "{/scale}",
+	        actual: {
+	            value: "{/bc/actual/value}",
+	            color: "{/bc/actual/color}"
+	        },
+	        targetValue: "{/bcS/targetValue}",
+			thresholds: {
+	        	template: oBCDataTmpl,
+	        	path: "/bc/thresholds"
+	        },
+	        showActualValue: "{/bc/showActualValue}",
+	        showTargetValue: "{/bc/showTargetValue}" 
+	   	})
+	});
+		
+	var oMACPoint = sap.suite.ui.commons.MicroAreaChartPoint({
+        x: "{day}",
+        y: "{balance}"
+    });
+
+	var oMACTileContent = new sap.suite.ui.commons.TileContent({
+		unit : "{/unit}",
+		size :"{/size}",
+		footer: "{/footer}",
+		content: new sap.suite.ui.commons.MicroAreaChart({
+			height: "100%",
+			width: "100%",
+			chart: new sap.suite.ui.commons.MicroAreaChartItem({
+				points: {
+		        	path: "/mac/chart/points",
+		        	template: oMACPoint
+		        }
+			}),
+			target: new sap.suite.ui.commons.MicroAreaChartItem({
+				points: {
+		        	path: "/mac/target/points",
+		        	template: oMACPoint
+		        }
+			}),
+			maxThreshold: new sap.suite.ui.commons.MicroAreaChartItem({
+				color: "{/mac/maxThreshold/color}",
+				points: {
+		        	path: "/mac/maxThreshold/points",
+		        	template: oMACPoint
+		        }
+			}),
+			minThreshold: new sap.suite.ui.commons.MicroAreaChartItem({
+				color: "{/mac/minThreshold/color}",
+				points: {
+		        	path: "/mac/minThreshold/points",
+		        	template: oMACPoint
+		        }
+			})
+		})
+	});
+
+   var oNVConfContS = new sap.suite.ui.commons.NumericContent("configurable-tile-cont-S", {
+        value : "{/value}",
+        scale : "{/scale}",
+        unit : "{/unit}",
+        indicator : "{/indicator}",
+        size :"{/size}",
+        formatterValue : "{/isFormatterValue}",
+        truncateValueTo : "{/truncateValueTo}"
+    });
+	
+	var oConfModel = new sap.ui.model.json.JSONModel();
+	oConfModel.setData(oConfData);
+	sap.ui.getCore().setModel(oConfModel);
+
+	var oNVConfS = new sap.suite.ui.commons.TileContent("configurable-tile-num-cont-S", {
+		unit : "{/unit}",
+		size :"{/size}",
+		footer : "{/footer}",
+		content: oNVConfContS
+	});
+
+	
+    var oCmprsDataTmpl = new sap.suite.ui.commons.ComparisonData( {
+        title: "{title}",
+        value: "{value}",
+        color: "{color}"
+    });
+    
+    var oCmprsChrtTmpl = new sap.suite.ui.commons.ComparisonChart("comp-chart-S", {
+    	size :"{/size}",
+        scale: "{/scale}",
+        data: {
+            template : oCmprsDataTmpl,
+            path : "/data"
+        },
+    });
+	
+	var oCCConfS = new sap.suite.ui.commons.TileContent("configurable-tile-S", {
+		unit : "{/unit}",
+		size :"{/size}",
+		footer : "{/footer}",
+		content: oCmprsChrtTmpl
+	});
+
+	var oPage = new sap.m.Page("initial-page", {
+		showHeader : false,
+		content : [ new sap.suite.ui.commons.HeaderContainer("hc", {items: [oNVConfS, oCCConfS,  oMACTileContent, oBCTileContent, oJamTileContent, oNewsTileContent]})]
+	});
+	
+   var oSizeLbl = new sap.m.Label({
+        text : "Size",
+        labelFor : "size-value"
+    });
+
+    var oSizeInput = new sap.m.Input("size-value", {
+        type : sap.m.InputType.Text,
+        placeholder : 'Enter Size ...'
+    });   
+    oSizeInput.bindValue("/size");
+
+	var oUnitLbl = new sap.m.Label({
+		text : "Unit",
+		labelFor : "unit-value"
+	});
+	var oUnitInput = new sap.m.Input("unit-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter unit ...'
+	});
+	oUnitInput.bindValue("/unit");
+
+	var oFooterLbl = new sap.m.Label({
+		text : "Footer",
+		labelFor : "footer-value"
+	});
+
+	var oFooterInput = new sap.m.Input("footer-value", {
+		type : sap.m.InputType.Text,
+		placeholder : 'Enter footer ...'
+	});
+	oFooterInput.bindValue("/footer");
+
+   var oSizeChangeLbl = new sap.m.Label({
+        text : "Size",
+        labelFor : "size-change"
+    });
+
+    var oSizeChangeSlct = new sap.m.Select("size-change", {
+        change : function(oE) {
+            var selectedItem = oE.getParameter("selectedItem");
+            oConfData.size = selectedItem.getKey();
+            oConfModel.checkUpdate();  
+        },
+        items : [ new sap.ui.core.Item({
+            key : "Auto",
+            text : "Auto"
+        }), new sap.ui.core.Item({
+            key : "M",
+            text : "Middle"
+        }), new sap.ui.core.Item({
+            key : "S",
+            text : "Small"
+        }) ]
+    });
+	
+	var editableSimpleForm = new sap.ui.layout.form.SimpleForm("controls", {
+		maxContainerCols : 2,
+		editable : true,
+		content : [ new sap.ui.core.Title({ // this starts a new group
+			text : "Modify Tiles"
+		}), oSizeChangeLbl, oSizeChangeSlct, 
+			oUnitLbl, oUnitInput, oFooterLbl, oFooterInput
+		]
+	});
+	oPage.addContent(editableSimpleForm);
+
+	oPage.placeAt("content");
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+    <div id="content" style="height:100%"></div>
+</body>
+</html>

@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define(["sap/ui/thirdparty/jquery"],function(q){"use strict";function S(){this.oLastPromise=new q.Deferred();this.oLastPromise.resolve();}S.prototype.addToQueue=function(f){var n=new q.Deferred();this.oLastPromise.always(function(){var r=f();r.done(function(){n.resolve.apply(n,arguments);}).fail(function(){n.reject.apply(n,arguments);});});this.oLastPromise=n;return n.promise();};return S;});

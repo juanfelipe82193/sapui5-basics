@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="../style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons, sap.m, sap.ui.table,sap.ui.vbm"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+	
+  <style type="text/css">
+  .vbi-map-active, .vbi-map-inactive {
+-webkit-filter: grayscale(70%);
+-moz-filter: grayscale(70%);
+-ms-filter: grayscale(70%);
+-o-filter: grayscale(70%);
+filter: grayscale(70%);
+}
+</style>
+
+	<script>
+	
+	// have some data
+	var oData = 
+	{
+		Features :
+			[ { "id": "DEU", "tooltip": "Germany", "color": "rgba(92,186,230,0.4)"}
+			]	
+	};
+	var oDataDetail = 
+	{
+		Features :
+			[ 
+			  { "id": "DE-BB", "tooltip": "Brandenburg", "color": "rgba(92,186,230,0.4)"},
+			  { "id": "DE-BE", "tooltip": "Berlin", "color": "rgba(182,217,87,0.4)"},
+			  { "id": "DE-BW", "tooltip": "Baden-W\u00FCrttemberg", "color": "rgba(217,152,203,0.4)"},
+			  { "id": "DE-BY", "tooltip": "Bayern", "color": "rgba(140,211,255,0.4)"},
+			  { "id": "DE-HB", "tooltip": "Bremen", "color": "rgba(217,152,203,0.4)"},
+			  { "id": "DE-HE", "tooltip": "Hessen", "color": "rgba(242,210,73,0.4)"},
+			  { "id": "DE-HH", "tooltip": "Hamburg", "color": "rgba(152,170,251,0.4)"},
+			  { "id": "DE-MV", "tooltip": "Mecklenburg-Vorpommern", "color": "rgba(204,197,168,0.4)"},
+			  { "id": "DE-NI", "tooltip": "Niedersachsen", "color": "rgba(82,186,204,0.4)"},
+			  { "id": "DE-NW", "tooltip": "Nordrhein-Westfalen", "color": "rgba(219,219,70,0.4)"},
+			  { "id": "DE-RP", "tooltip": "Rheinland-Pfalz", "color": "rgba(152,170,251,0.4)"},
+			  { "id": "DE-SH", "tooltip": "Schleswig-Holstein", "color": "rgba(152,170,251,0.4)"},
+			  { "id": "DE-SL", "tooltip": "Saarland", "color": "rgba(182,217,87,0.4)"},
+			  { "id": "DE-SN", "tooltip": "Sachsen", "color": "rgba(250,195,100,0.4)"},
+			  { "id": "DE-ST", "tooltip": "Sachsen-Anhalt", "color": "rgba(217,152,203,0.4)"},
+			  { "id": "DE-TH", "tooltip": "Th\u00FCringen", "color": "rgba(152,170,251,0.4)"}
+			]	
+	};   
+ 
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+	
+	
+	var FCRef;
+	function addFeatureCollection( currentDetailLevel ) {
+		FCRef = new sap.ui.vbm.FeatureCollection( {
+ 	  		srcURL: (!currentDetailLevel) ? "media/L0_DE.json" : "media/L1_DE.json",
+ 	  		click : onClickFC, 	  			
+ 	  		items: {
+ 	  			path: "/Features",
+ 	  			template: new sap.ui.vbm.Feature( { color: '{color}', 
+ 	  				                                featureId:'{id}',
+ 	  				                                tooltip:'{tooltip}',
+ 	  				                             	featureId : '{id}'
+ 	  				                             })
+ 	  				}
+ 	  	}
+ 	  	)
+
+		oVBI.addFeatureCollection(FCRef);
+
+	};
+	
+	
+	var currentDetailLevel = 0;
+	var switchZoomLevel = 5;
+	function onZoomChanged( e )
+	{
+		var zl = e.getParameter( "zoomLevel" );
+		var src = oVBI.getFeatureCollections()[0].getProperty("srcURL");
+		
+		if (zl > switchZoomLevel && !currentDetailLevel ){
+			oVBI.removeFeatureCollection(FCRef);
+			addFeatureCollection(1);
+			oModel.setData( oDataDetail );
+			currentDetailLevel = 1;
+		}else if (zl <= switchZoomLevel && currentDetailLevel == 1 ){
+			oVBI.removeFeatureCollection(FCRef);
+			addFeatureCollection(0);
+			oModel.setData( oData );
+			currentDetailLevel = 0;
+		}		
+	};
+
+	function onClickFC(e){
+		var id = e.getParameter("featureId");
+		var FeatureIds = [id];
+		var datas = FCRef.getFeaturesInfo(FeatureIds);
+		var bbs = [datas[id].BBox];
+		oVBI.zoomToAreas(bbs, 0.95);
+		
+	}
+	
+	
+	
+	// create geo map and bind to model
+	var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+	    width : "1024px",
+    	height: "600px",
+    	initialPosition: "10.298404;50.829142;0",
+		initialZoom: "4",
+		zoomChanged: onZoomChanged
+	});
+	// create model and set the data
+	addFeatureCollection(0);
+
+	oVBI.setModel( oModel );
+	oVBI.placeAt("content");
+	
+	
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business GeoMap Control: Click on Area and Drilldown to Detail Level</h1>
+		  <br></br>
+          <div id="content"></div>
+		 <br />
+	</body>
+</html>

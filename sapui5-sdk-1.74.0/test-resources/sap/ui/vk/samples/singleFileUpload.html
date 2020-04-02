@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="UTF-8">
+		<title>Single File Upload</title>
+		<base href="../../../../../">
+
+	<script id="sap-ui-bootstrap"
+		src="resources/sap-ui-core.js"
+		data-sap-ui-libs="sap.ui.vk, sap.m, sap.ui.unified"
+		data-sap-ui-theme="sap_bluecrystal">
+	</script>
+<script>
+	var viewer = new sap.ui.vk.Viewer(); //creates a new viewer instance. The sap.ui.vk library provides controls for the visualization and manipulation of 2D and 3D models in your browser.
+
+	//use the above function viewer and set its title and size
+	//toolbar title
+	viewer.setToolbarTitle("Single file upload");
+	//size of viewer
+	viewer.setWidth("100%");
+	viewer.setHeight("525px");
+
+	//code to display the local file + scene tree
+	var sourceData = {
+		localFile: undefined,
+		remoteUrl: undefined
+	};
+	//Create a new JSON model passing the data as object literal and store the resulting model instance in a local variable called sourceData
+	var model = new sap.ui.model.json.JSONModel();
+	model.setData(sourceData);
+	sap.ui.getCore().setModel(model, "source");
+
+	//grids for the browse file / remote model URL
+	//FormLayout renders a Form using a HTML-table based grid.
+	//single column for the grid layout
+	var layout = new sap.ui.layout.form.GridLayout({
+		singleColumn: true
+	});
+	//this is the container for remote model URL
+	//A FormElement represents a row in a FormContainer
+	//input - where user inserts path.- button one - load. button two - load image
+	//horizontal cells (hCells) auto - left over spave after placing the 2 buttons with cell size 1
+	//placeholders- in place when no option is chosen
+	//properties: layout - placement. text: text to appear on button. press: fires event.
+	//source: chosen file is set as model. type: this is 3d only hence allows vds types.
+
+	var container1 = sap.ui.layout.form.FormElement({
+		fields: [
+			new sap.m.Input({
+				layoutData: new sap.ui.layout.form.GridElementData({ hCells: "auto" }),
+				placeholder: "Remote model URL",
+				value: "{source>/remoteUrl}" //defines the value of the input
+			}),
+			new sap.m.Button({
+				layoutData: new sap.ui.layout.form.GridElementData({ hCells: "1" }),
+				text: "Load",
+				press: function(event) {//Event is fired when the user clicks on the control.
+					if (sourceData.remoteUrl) {
+						viewer.destroyContentResources(); //what is currently loaded in the view is destroyed
+						var contentResource = new sap.ui.vk.ContentResource({ //content of viewer is replaced with new data
+							source: sourceData.remoteUrl,
+							sourceType: "vds",
+							sourceId: "abc"
+						});
+						viewer.addContentResource(contentResource); //content: chosen path. content added to the view
+					}
+				}
+			}),
+			//2d image. file types allowed: jpg only (as specified in the sourceType property)
+			new sap.m.Button({
+				layoutData: new sap.ui.layout.form.GridElementData({ hCells: "1" }),
+				text: "Load Image",
+				press: function(event) { //Event is fired when the user clicks on the control.
+					if (sourceData.remoteUrl) {
+						viewer.destroyContentResources();
+						var contentResource = new sap.ui.vk.ContentResource({
+							source: sourceData.remoteUrl,
+							sourceType: "jpg",
+							sourceId: "abc"
+						});
+					viewer.addContentResource(contentResource);
+					}
+				}
+			})
+		]
+	});
+
+	//container for local files - browse
+	//sap.ui.unified.FileUploader: generates an input field and a button with text "Browse ..."
+	var container2 = new sap.ui.layout.form.FormElement({
+		fields: [
+			new sap.ui.unified.FileUploader({
+				layoutData: new sap.ui.layout.form.GridElementData({ hCells: "auto" }),
+				width: "100%",
+				//supports multiple file types 3d and 2d
+				placeholder: "Local filename",
+				fileType: [ "vds", "png", "jpg", "jpeg", "gif" ],
+				change: function(event) {
+					sourceData.localFile = event.getParameter("files")[0];
+					if (sourceData.localFile) { //if user selects a local file:
+						viewer.destroyContentResources();//destroy the viewers current content
+						var filename = sourceData.localFile.name; //Unique control name for identification on the server side after sending data to the server.
+						var index = filename.lastIndexOf("."); //The lastIndexOf() method returns the position of the last occurrence of a specified value in a string
+						//if position of '.' greater than o equal 0 AND position of '.' is less than the total count of characters (starting 0) hence -1)
+						//than the type of file = position of '.' + 1 (exc. '.' character)
+						if (index >= 0 && index < filename.length - 1) {
+							sourceType = filename.substr(index + 1);
+						}
+						var contentResource = new sap.ui.vk.ContentResource({
+							source: sourceData.localFile,
+							sourceType: sourceType,
+							sourceId: "abc"
+							});
+						viewer.addContentResource(contentResource);
+					}
+				}
+			})
+		]
+	});
+	//layout loads the grid for the container browse and remote url
+	//this variable specifies what is actually placed on the page. create a new instance of a sap.m.Page. a page is a basic container for an application
+	var page = new sap.m.Page({
+		title: "Sample viewer",
+		content: [ //The content is the viewer and the forms at the bottom for selecting remote/local files.
+			viewer,
+			new sap.ui.layout.form.Form({
+				layout: layout,
+				formContainers: new sap.ui.layout.form.FormContainer({
+					formElements: [ container1, container2 ]
+				})
+			})
+		]
+	});
+
+	//app is the root element of the application
+	var app = new sap.m.App();
+	app.addPage(page); //adds a page (above variable)
+	app.placeAt("body"); //places the application in the body of the html page
+</script>
+</head>
+<body id="body" class="sapUiBody">
+</body>
+</html>

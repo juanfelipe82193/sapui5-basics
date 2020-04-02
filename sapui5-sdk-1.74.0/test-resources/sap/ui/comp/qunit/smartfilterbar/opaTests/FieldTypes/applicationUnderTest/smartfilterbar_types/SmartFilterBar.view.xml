@@ -1,0 +1,134 @@
+<core:View controllerName="sap.ui.comp.sample.smartfilterbar_types.SmartFilterBar"
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m"
+	xmlns:f="sap.f"
+	xmlns:l="sap.ui.layout"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+	xmlns:sv="sap.ui.comp.smartvariants"
+	xmlns:ce="sap.ui.codeeditor"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" height="100%">
+
+	<App>
+		<pages>
+			<f:DynamicPage id="dynamicPage" class="sapUiSizeCompact">
+				<f:title>
+					<f:DynamicPageTitle>
+						<f:actions>
+							<Button id="showAllFilterFields" text="Show All Filters" press="onShowAllFilterFields" />
+							<Label text="UTC Mode ('on' is default):"/>
+							<Switch id="UtcModeSwitch" customTextOn="On" customTextOff="Off" change="onUtcModeChange">
+								<layoutData>
+									<FlexItemData growFactor="1" />
+								</layoutData>
+							</Switch>
+						</f:actions>
+						<f:heading>
+							<sv:SmartVariantManagement id="__SVM01" persistencyKey="smartfilterbar_types" showShare="true" entitySet="ZEPM_C_SALESORDERITEMQUERYResults" showExecuteOnSelection="true" />
+						</f:heading>
+						<f:snappedContent>
+							<Text id="statusText" />
+						</f:snappedContent>
+
+					</f:DynamicPageTitle>
+				</f:title>
+				<f:header>
+					<f:DynamicPageHeader>
+						<f:content>
+							<smartFilterBar:SmartFilterBar id="smartFilterBar" advancedMode="false" smartVariant="__SVM01" persistencyKey="smartfilterbar_types_sfb" initialized="onInitialized" clear="onClear" reset="onRestore" cancel="onCancel" search="onSearch" liveMode="false" considerAnalyticalParameters="true" considerSelectionVariants="true" showClearButton="true" assignedFiltersChanged="onAssignedFiltersChanged" entitySet="ZEPM_C_SALESORDERITEMQUERYResults" useToolbar="false" enableBasicSearch="true">
+
+								<smartFilterBar:customData>
+									<core:CustomData key="dateFormatSettings" value='\{"UTC":true, "style":"short"\}' />
+								</smartFilterBar:customData>
+
+								<smartFilterBar:layoutData>
+									<FlexItemData shrinkFactor="0" />
+								</smartFilterBar:layoutData>
+
+								<smartFilterBar:controlConfiguration>
+									<!-- <smartFilterBar:ControlConfiguration key="DTR_SINGLE" conditionType="sap.ui.comp.config.condition.DateRangeType" /> -->
+									<smartFilterBar:ControlConfiguration key="DTR_MULTIPLE" conditionType="sap.ui.comp.config.condition.DateRangeType" />
+									<smartFilterBar:ControlConfiguration key="DTR_INTERVAL" conditionType="sap.ui.comp.config.condition.DateRangeType" />
+									<smartFilterBar:ControlConfiguration key="DTR_AUTO" conditionType="sap.ui.comp.config.condition.DateRangeType" />
+									<smartFilterBar:ControlConfiguration key="TooltipMultiCombobox" index="31" label="Custom MultiComboBox" width="300px" visibleInAdvancedArea="true">
+										<smartFilterBar:customControl>
+											<MultiComboBox  id="multiComboBoxWithTooltip" customData:hasValue="true" placeholder="Custom MultiComboBox" tooltip="Tooltip View overwrite" >
+												<core:Item key="1" text="ONE" /> <core:Item key="2" text="TWO" />  <core:Item key="3" text="THREE" />
+											</MultiComboBox>
+										</smartFilterBar:customControl>
+									</smartFilterBar:ControlConfiguration>
+								</smartFilterBar:controlConfiguration>
+							</smartFilterBar:SmartFilterBar>
+
+						</f:content>
+					</f:DynamicPageHeader>
+				</f:header>
+				<f:content>
+
+					<VBox>
+						<Panel expandable="true" expanded="false" width="auto" class="sapUiResponsiveMargin" headerText="FilterProvider">
+							<l:Grid containerQuery="true" defaultSpan="XL6 L6 M12">
+								<l:VerticalLayout width="100%">
+									<Title text="FilterProvider.model.oData:" />
+									<ce:CodeEditor id="filterProviderOdata" width="100%" height="300px" type="jsoniq" value=""/>
+								</l:VerticalLayout>
+								<l:VerticalLayout width="100%">
+									<HBox fitContainer="true">
+										<Title text="get/setFilterData:" />
+										<Button id="setfilterDataAsString" text="setFilterDataAsString" press="onSetFilterDataAsString" />
+										<Button id="setfilterData" text="Test setFilterData(getFilterData()))" press="onSetFilterData" />
+									</HBox>
+									<ce:CodeEditor id="outputAreagetFilterData" width="100%" height="300px" type="jsoniq" value=""/>
+								</l:VerticalLayout>
+							</l:Grid>
+						</Panel>
+
+						<Panel expandable="false" expanded="true" width="auto" class="sapUiResponsiveMargin">
+							<Title text="Request URL (including Parameters):" />
+							<Text id="outputAreaUrl" width="100%" />
+
+							<Title text="Filters:" />
+							<Text id="outputAreaFilters" width="100%" />
+						</Panel>
+						<Panel expandable="true" expanded="true" width="auto" class="sapUiResponsiveMargin" headerText="UIState and TextValues">
+							<l:Grid containerQuery="true" defaultSpan="XL6 L6 M12">
+								<l:VerticalLayout width="100%">
+									<Title text="UIState (DateSuiteFormat):" />
+									<ce:CodeEditor id="outputAreaDataSuite" width="100%" height="300px" type="jsoniq" value=""/>
+								</l:VerticalLayout>
+								<l:VerticalLayout width="100%">
+									<Title text="Values:" />
+									<ce:CodeEditor id="outputAreaValueTexts" width="100%" height="300px" type="jsoniq" value=""/>
+								</l:VerticalLayout>
+							</l:Grid>
+						</Panel>
+
+						<Panel expandable="true" expanded="false" width="auto" class="sapUiResponsiveMargin">
+							<l:Grid containerQuery="true" defaultSpan="XL6 L6 M12">
+								<l:VerticalLayout width="100%">
+									<Text text="SelectionVariant:" />
+									<HBox fitContainer="true">
+										<Button id="toSelectionVariant" text="Convert to SelectionVariant" press="onCreateToSelectionVariant" />
+									</HBox>
+									<ce:CodeEditor id="outputAreaToSelectionVariant" width="100%" height="300px" type="jsoniq" value=""/>
+								</l:VerticalLayout>
+
+								<l:VerticalLayout width="100%">
+									<Text text="Applied SelectionVariant:" />
+									<HBox fitContainer="true">
+										<Button id="fromSelectionVariant" text="Assign to FilterBar" press="onCreatetFromSelectionVariant" />
+									</HBox>
+									<ce:CodeEditor id="outputAreaFromSelectionVariant" width="100%" height="300px" type="jsoniq" value=""/>
+								</l:VerticalLayout>
+							</l:Grid>
+						</Panel>
+					</VBox>
+
+
+				</f:content>
+
+			</f:DynamicPage>
+
+		</pages>
+	</App>
+</core:View>

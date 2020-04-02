@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <title>Example - sap.rules.ui.ExpressionBasic</title>
+	   <script id="sap-ui-bootstrap" type="text/javascript" data-sap-ui-theme="sap_fiori_3"
+			   src="../../../../resources/sap-ui-core.js"
+			   data-sap-ui-libs="sap.m, sap.rules.ui">
+	   </script>
+      
+      <script type="text/javascript">
+          sap.ui.define(
+            [
+                "jquery.sap.global",
+                "sap/rules/ui/services/ExpressionLanguage",
+                "sap/rules/ui/ExpressionBasic"
+            ],
+            function (jQuery, ExpressionLanguage, ExpressionBasic) {
+
+                //Get vocabulary data
+                var oVocaGaming = (function getTestData() {
+                    return jQuery.sap.sjax({
+                        url: './qunit/data/parser/vocabulary/flightValueHelp.txt',
+                        dataType: "json"
+                    }).data;
+                })();
+
+                var oExpressionLanguage = new ExpressionLanguage();
+                oExpressionLanguage.setData(oVocaGaming);
+                var  callback = function (valueHelpInfo){
+					var i;
+					var serviceInfo;
+					for(i=0 ; i< valueHelpInfo.length ; i++){
+						serviceInfo = valueHelpInfo[i].metadata;
+						valueHelpInfo[i].model = new sap.ui.model.odata.v2.ODataModel({
+							serviceUrl: serviceInfo.serviceURL,
+            				defaultBindingMode: sap.ui.model.BindingMode.OneWay	,
+                            editable: true
+						});
+						// Uncomment the next line to test valuehelp error handling - V2 oData model isn't returned;
+						//valueHelpInfo[i].model = new sap.m.Input();
+					}
+				}
+				// Uncomment the next line to test valuehelp error handling - callback is not a function
+				//callback = {"stam":false};
+				oExpressionLanguage.setValueHelpCallback(callback);
+                
+                var oExpressionBasic = new ExpressionBasic({
+                    expressionLanguage: oExpressionLanguage,
+                    value: ""
+                });
+
+                //Create App
+                var oApp = new sap.m.App("myApp", { initialPage: "myPage1" });
+
+                //Create Page
+                var oPage = new sap.m.Page("myPage1", { title: "Basic Editor" }).addStyleClass("sapUiSizeCozy");
+
+                /*var addInstruction = new sap.m.Button({
+                text: "Add",
+                press: function() {
+                oModel.submitChanges();
+                }
+                });*/
+
+                var toolBarSpacer1 = new sap.m.ToolbarSpacer({ width: "1em" });
+                var toolBarSpacer2 = new sap.m.ToolbarSpacer({ width: "1em" });
+                var toolBarSpacer3 = new sap.m.ToolbarSpacer({ width: "1em" });
+
+                var oFlexBox = new sap.m.FlexBox({
+                    height: "50px",
+                    items: [toolBarSpacer1/*, addInstruction*/]
+                });
+                
+                var oExpressionAdvances = new sap.rules.ui.ExpressionAdvanced({
+                    expressionLanguage: oExpressionLanguage,
+                    placeholder: "Please enter a gaming relevant expression",
+                    value: "",
+                    editable: true,
+                    validateOnLoad: true
+                });
+                
+                var oAdvanceToBasicButton = new sap.m.Button({
+                    text: "Put advance in basic form",
+                    press: function () {
+                        var sExpressionAdvancedValue = oExpressionAdvances.getValue();
+                        oExpressionBasic.setValue(sExpressionAdvancedValue);
+
+                    }
+                });
+                
+                 var oBasicToAdvanceButton = new sap.m.Button({
+                    text: "Put basic in advance form",
+                    press: function () {
+                        
+                        var basicExpression = oExpressionBasic.getValue();
+
+                        oExpressionAdvances.setValue(basicExpression);
+                    }
+                });
+                
+                oPage.addContent(oFlexBox)
+                     .addContent(oExpressionAdvances)
+                     .addContent (new sap.ui.core.HTML({content: "<br>"}))
+                     .addContent(oAdvanceToBasicButton)
+                     .addContent (new sap.ui.core.HTML({content: "<span style='padding-left:20px'></span>"}))
+                     .addContent(oBasicToAdvanceButton).addContent(oExpressionBasic);
+                oApp.addPage(oPage);
+                oApp.placeAt("content");
+            });
+      </script>
+   </head>
+   <body class="sapUiBody" role="application">
+      <h1 id="header">Test Page for <code> sap.rules.ui.oExpressionBasic</code></h1>
+       <div id="content1"></div>
+      <div id="content"></div>
+   </body>
+</html>

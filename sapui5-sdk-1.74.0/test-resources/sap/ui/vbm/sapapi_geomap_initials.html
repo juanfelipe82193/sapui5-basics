@@ -1,0 +1,458 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#btnZoomIn{
+			margin-right: 10px;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 100%;
+			height: 400px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#margin{
+			margin-right: 50px;
+		}
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 56.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+
+	// query for charts library, the microchart is positioned in a container vo
+    jQuery.sap.require( "sap.suite.ui.microchart.ColumnMicroChart" );
+	
+	// have some data
+	var oData = 
+		{
+				Spots :
+				[
+					{ "key" : "1", "pos": "0;0;0",  "tooltip": "Spot1", "type":sap.ui.vbm.SemanticType.Default },
+					{ "key":  "2", "pos": "0;30;0", "tooltip": "Spot2", "type":sap.ui.vbm.SemanticType.Default },
+					{ "key":  "3", "pos": "0;60;0", "tooltip": "Spot3", "type":sap.ui.vbm.SemanticType.Default }
+				],
+
+				Circles :
+					[
+						{ "key" : "1", "pos": "30;0;0",  "tooltip": "Circle1" },
+						{ "key":  "2", "pos": "30;30;0", "tooltip": "Circle2" },
+						{ "key":  "3", "pos": "30;60;0", "tooltip": "Circle3" }
+					],
+			
+				OtherSpots :
+				[
+					{ "key":  "4", "pos": "20;0;0",  "tooltip": "Spot4", "contentOffset": "0;-7" 	},
+					{ "key":  "5", "pos": "20;30;0", "tooltip": "Spot5", "contentOffset": "0;-7"  },
+					{ "key":  "6", "pos": "20;60;0", "tooltip": "Spot6", "contentOffset": "0;-7" 	}
+				],
+				PieSeries :
+					[
+						{ "key":  "7", "value": "10",  	"tooltip": "10 Items" 	},
+						{ "key":  "8", "value": "20", 	"tooltip": "20 Items"	},
+						{ "key":  "9", "value": "30", 	"tooltip": "30 Items" 	}
+					],
+
+				Containers :
+					[
+						{ "key":  "10", "pos": "70;0;0",  "tooltip": "Container1",
+						  ChartCols: [ { "value": 60, "color": "Neutral" },
+						               { "value": 10, "color": "Error" },
+						               { "value": 20, "color": "Error" } ]
+						},
+						{ "key":  "11", "pos": "70;30;0", "tooltip": "Container2",
+						  ChartCols: [ { "value": 50, "color": "Neutral" },
+							           { "value": 8, "color": "Error" },
+							           { "value": 16, "color": "Error" },
+							           { "value": 24, "color": "Error" } ]
+						},
+						{ "key":  "12", "pos": "70;60;0", "tooltip": "Container3",
+						  ChartCols: [ { "value": 70, "color": "Neutral" },
+							           { "value": 5, "color": "Error" },
+							           { "value": 20, "color": "Error" },
+							           { "value": 45, "color": "Error" } ]
+						}	    
+					]	
+		};
+
+		var oMapConfig = JSON.parse(localStorage.getItem("map"));
+
+	// create model and set the data
+	var oVBI;
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+	//sap.ui.getCore().setModel( oModel );
+	
+	// named model for i18n
+	var oTexts = {
+			Label1: "Label",
+			Label2: "Blub"
+	};
+	var oNamedModel = new sap.ui.model.json.JSONModel();
+	oNamedModel.setData( oTexts );
+	//sap.ui.getCore().setModel( oNamedModel, "i18n" );
+	
+	
+	// sample event handlers
+	function onClickSpot( evt )
+	{
+	   	// click on spot 
+		alert( "onClickSpot " + this );
+	};
+
+	function onContextMenuSpot( evt )
+	{
+	   	// click on spot 
+		alert( "onContextMenuSpot" + this );
+	};
+	
+	function onClickSpots( evt )
+	{
+	   	// click on spot 
+		alert( "onClickSpots" );
+	};
+
+	function onContextMenuSpots( evt )
+	{
+	   	// click on spot 
+		alert( "onContextMenuSpots" );
+	};
+
+	function onClickItem( evt )
+	{
+	   	// click on item 
+		alert( "onClick" + this );
+	};
+
+	function onContextMenuItem( evt )
+	{
+	   	// context menu on item 
+		alert( "onContextMenu" + this );
+	};
+	
+	function createVBI() {
+		//destroy if existing
+		var old = sap.ui.getCore().byId("vbi");
+		if (old)
+			old.destroy();	
+
+		var oVisualFrame;
+		if (this.useVisualFrame.checked){
+		   var sminLOD = $("#minLOD").val() 
+         var smaxLOD = $("#maxLOD").val() 
+         var sminLON   = $("#minLON").val();
+         var smaxLON   = $("#maxLON").val();
+         var sminLAT   = $("#minLAT").val();
+         var smaxLAT   = $("#maxLAT").val();
+         var smaxFraction = $("#fraction").val();
+
+         var minLOD   = parseInt(sminLOD); 
+         var maxLOD   = parseInt(smaxLOD); 
+         var minLON   = parseFloat(sminLON);
+         var maxLON   = parseFloat(smaxLON);
+         var minLAT   = parseFloat(sminLAT);
+         var maxLAT   = parseFloat(smaxLAT);
+         var maxFraction = parseFloat(smaxFraction);
+         
+		   if ( minLAT != "" && maxLAT !="" && minLAT >= maxLAT){
+		      alert ("Invalid y coordinates used in Visual Frame. Please correct.");
+		      return;
+		   }
+		   
+		   if ( minLOD != "" && maxLOD != "" && minLOD > maxLOD ){
+		      alert ("Invalid LOD definition. Please correct!");
+		      return
+		   }
+		      
+		   
+         if ( minLON >= maxLON && minLON!="" && maxLON !=""){
+            maxLON += 360;
+         }
+         
+         oVisualFrame = {
+               minLOD:   (sminLOD=="" ? undefined : minLOD),
+               maxLOD:   (smaxLOD=="" ? undefined : maxLOD),
+               minLon:   (sminLON=="" ? undefined : minLON),
+               maxLon:   (smaxLON=="" ? undefined : maxLON),
+               minLat:   (sminLAT=="" ? undefined : minLAT),
+               maxLat:   (smaxLAT=="" ? undefined : maxLAT),
+               maxFraction: ( smaxFraction=="" ? undefined: maxFraction) 
+         };
+		   
+		}
+			
+		// create analytic map and bind to model
+		oVBI = new sap.ui.vbm.GeoMap('vbi', {
+		    width : "100%",
+	    	height: "100%",
+	    	scaleVisible: $("#scaleVisible").get(0).checked,
+	    	legendVisible: $("#legendVisible").get(0).checked,
+	    	navcontrolVisible: $("#navVisible").get(0).checked,
+	    	centerPosition: $("#position").val(),
+	    	zoomlevel: parseInt($("#zoom").val(),10),
+	    	refMapLayerStack: $("#map").val(),
+	    	disableZoom: $("#disableZoom").get(0).checked,
+	    	disablePan: $("#disablePan").get(0).checked,
+	    	visualFrame : oVisualFrame,
+	    	submit : onSubmit,
+	    	mapConfiguration : oMapConfig,
+	    	resources: 
+	    	   [
+	 		],
+			legend : new sap.ui.vbm.Legend(
+				      {
+				        caption : "Legend",
+				        items : {
+								path : "/Spots",
+								template: new sap.ui.vbm.LegendItem(  { text: "{key}", image: '{pin}', tooltip: '{tooltip}' } )
+							}
+				      }
+		    ),	 		
+	    	vos: [
+	 	         new sap.ui.vbm.Containers( "containers", {
+		               click: onClickItem.bind("Container onClickItem"),
+		               contextMenu: onContextMenuItem.bind("Container onContextMenuItem"),
+			            // bind to an array in the model
+		         	    items: { 
+		                   	path : "/Containers",
+		                    template: new sap.ui.vbm.Container( { 
+		                    	 position: '{pos}', tooltip: '{tooltip}', 
+		                    	 click: onClickItem.bind( "Container"),  
+		                    	 contextMenu: onContextMenuItem.bind( "Container" ),
+		                    	 item: new sap.suite.ui.microchart.ColumnMicroChart( { 
+		                             	 size : "S",
+		                             	 columns: { path: "ChartCols",
+		                             	            template: new sap.suite.ui.microchart.ColumnMicroChartData( { value: '{value}', color: '{color}' } )         
+		                             	 },
+		                    	         rightTopLabel: new sap.suite.ui.microchart.ColumnMicroChartLabel( { label: '{i18n>/Label1}' } )   
+		                          	   }).addStyleClass("chart-bg")
+		                    } )
+		          	    }
+		         } ),
+	    	  	new sap.ui.vbm.Spots( "spots1", {
+	            click: onClickSpots,
+	            contextMenu: onContextMenuSpot,
+	            // bind to an array in the model
+	            items: { 
+	             	path : "/Spots",
+	              	template: new sap.ui.vbm.Spot(  { text: '{key}', position: '{pos}', tooltip: '{tooltip}', type: '{type}', click: onClickSpot, contextMenu: onContextMenuSpot }  )
+	           	} } )
+	    	]
+		});
+
+		oVBI.setModel( oModel );
+		oVBI.setModel( oNamedModel, "i18n" );
+
+		oVBI.placeAt("content");
+	};
+	
+	
+	function destroyVBI() {
+		//destroy if existing
+		var old = sap.ui.getCore().byId("vbi");
+		if (old)
+			old.destroy();
+		oVBI = undefined;
+	}
+	
+	function onSubmit( e )
+	{
+		if( evtoutput.innerText !== undefined ){
+			evtoutput.innerText = e.getParameter( "data" );
+		}			
+		else if( evtoutput.textContent !== undefined ){
+  			evtoutput.textContent = e.getParameter( "data" );	// due to ff
+  		}
+	};
+   
+	function onTerrainMap()
+   {
+	   if (oVBI)
+        oVBI.setRefMapLayerStack("Terrain");
+	   else
+	     alert("create a map control first to change the displayed map online");
+   };
+   function onSatteliteMap()
+   {
+      if (oVBI)
+         oVBI.setRefMapLayerStack("Sattelite");
+      else
+         alert("create a map control first to change the displayed map online");
+   };
+   function onDefaultMap()
+   {
+      if (oVBI)
+         oVBI.setRefMapLayerStack("Default");
+      else
+         alert("create a map control first to change the displayed map online");
+   };
+   
+   function ToggleVisFrameMode(val)
+   {
+      minLON.readOnly = !val;
+      minLON.style.backgroundColor = val ? "white" : "lightgrey";
+      maxLON.readOnly = !val;
+      maxLON.style.backgroundColor = val ? "white" : "lightgrey";
+      minLAT.readOnly = !val;
+      minLAT.style.backgroundColor = val ? "white" : "lightgrey";
+      maxLAT.readOnly = !val;
+      maxLAT.style.backgroundColor = val ? "white" : "lightgrey";
+      minLOD.readOnly = !val;
+      minLOD.style.backgroundColor = val ? "white" : "lightgrey";
+      maxLOD.readOnly = !val;
+      maxLOD.style.backgroundColor = val ? "white" : "lightgrey";
+      fraction.readOnly = !val;
+      fraction.style.backgroundColor = val ? "white" : "lightgrey";      
+   };   
+   
+   function OnDocumentReady()
+   {
+      ToggleVisFrameMode( useVisualFrame.checked );
+   };
+   
+   function onSetZoom()
+   {
+	   if (oVBI)
+		   oVBI.setZoomlevel(parseInt($("#zoom").val(),10));
+   };
+   
+   function onSetPosition()
+   {
+	   if (oVBI)
+		   oVBI.setCenterPosition($("#position").val());
+   };   
+   
+	</script>
+	<body class="sapUiBody" onload="OnDocumentReady()">
+		  <h1>Visual Business GeoMap Sample for initial settings</h1>
+		<div id="description1">
+				   		<h3> The aim: </h3>
+		<p> <ul><li>To test visibility settings for legend, scale, and nav control.</li><li>To test initial settings position and zoom.</li></ul></p>
+		<br>
+		<h3> To test: </h3>
+			<ol>
+				<li>Click "(Re) Create VBI Control" and check that a GeoMap control is created.</li>
+				<li> Check the various options in the check box list work. Create combinations and test each option.</li>
+				<li> Change the Center position and check that the GeoMap results match your selections.</li>
+				<li> Define a zoom level and check that the GeoMap results match you selections.</li>
+				<li> Test each of the three map types provided in the list: Default, Sattelite and terrain</li>
+				<li> Test option Visual Frame.</li>
+				<li> Test different combinations of minimum and maximum latitude/longitude. Check that the GeoMap displays the correct results.</li>
+				<li> Remove the Map using "Remove VBI Control". Check that there is no map displayed.</li>
+				<li> Test each of the 3 map types in "Switch current map to ...' Make sure that the selected map is displayed.</li>
+			</ol>
+		</div>
+		 <div style="width:100%; padding:20px; box-sizing:border-box">
+			 <div id="setting" style="width:300px; float:left">
+			 	<input type="checkbox" id="scaleVisible" checked="checked" value="true"> scaleVisible</input><br>
+			 	<input type="checkbox" id="legendVisible" value="true"> legendVisible</input><br>
+			 	<input type="checkbox" id="navVisible" checked="checked" value="true"> navcontrolVisible</input><br>
+			 	<input type="checkbox" id="disableZoom" value="true"> disableZoom</input><br>
+			 	<input type="checkbox" id="disablePan" value="true"> disablePan</input><br>
+			 	<label for="position">Center Position</label>
+			 	<input id="position" value="11.5;48" size="8"></input>
+			 	<button onClick="onSetPosition()">Set</button><br>
+			 	<label for="zoom">Zoomlevel........</label>
+			 	<input id="zoom" value="7" size="8"></input>
+			 	<button onClick="onSetZoom()">Set</button><br>
+			 	<br>
+			 	<form>
+				  <select name="map" id="map" size="3" >
+				    <option selected value="Default">Default Map</option>
+				    <option value="Sattelite">Sattelite Map</option>
+				    <option value="Terrain">Terrain Map</option>
+				 </select>
+ 				 </form>
+ 				 <br>
+ 				 <input type="checkbox" id="useVisualFrame"  value="true" onchange="ToggleVisFrameMode(this.checked)"> useVisualFrame</input><br>
+ 				 <label for="minLOD">minLOD....</label>
+ 				 <input id="minLOD" value="3" size="4"></input>
+             <label for="maxLOD">maxLOD...</label>
+             <input id="maxLOD" value="15" size="4"></input><br>
+ 				 <label for="minLON">minLON....</label>
+ 				 <input id="minLON" value="10.9" size="4"></input>
+             <label for="maxLON">maxLON...</label>
+ 				 <input id="maxLON" value="12.1" size="4"></input><br>
+             <label for="minLAT">minLAT.....</label>
+ 				 <input id="minLAT" value="47.7" size="4"></input>
+             <label for="maxLAT">maxLAT....</label>
+ 				 <input id="maxLAT" value="48.6" size="4"></input>
+             <label for="fraction">acceptable minLOD fraction......</label>
+             <input id="fraction" value="0.4" size="4"></input><br>
+ 				 <br>
+			    <button id="createVBI" onClick="createVBI()">(Re)Create VBI Control</button> 	
+			    <button id="destroyVBI" onClick="destroyVBI()">Remove VBI Control</button>
+			    <br><br> 
+			    
+			    
+			    Switch current map to ...
+			    <br><br>
+              <button id="btnDefault"  onClick="onDefaultMap()"> Default Map </button>
+              <button id="btnSattelite"  onClick="onSatteliteMap()"> Sattelite  Map </button>
+			     <button id="btnTerrain"  onClick="onTerrainMap()"> Terrain Map </button>
+          
+			 </div>
+			 <div id="content" style="padding-left:300px; width:100%; height: 500px; box-sizing:border-box"></div>
+			 <br />
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+		<textarea style="width:1024px;box-sizing:border-box" id="evtoutput" rows="15" ></textarea>
+		</div>
+	</body>
+</html>

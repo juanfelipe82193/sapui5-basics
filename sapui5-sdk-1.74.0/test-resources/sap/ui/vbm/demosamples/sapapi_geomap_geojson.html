@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="../style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm,sap.m"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+
+	<script>
+	
+	// have some data
+	var oData = 
+		{
+			Features :
+				[ { "id": "DE-BE", "color": "rgba(204, 197, 168, 0.5)"}
+				]	
+		};
+	
+	// create model and set the data
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData( oData );
+	//sap.ui.getCore().setModel( oModel );
+		
+	// sample event handlers
+	function onClickFeature( evt )
+	{
+		this.openDetailWindow( this.getFeatureId() );
+	};
+
+	function onContextMenuFeature( evt )
+	{
+		var oMenu = evt.mParameters.menu;
+		oMenu.addItem( new sap.ui.unified.MenuItem( { text : this.getFeatureId() } ) );
+		this.openContextMenu( oMenu );
+	};
+	
+	function onClickFC( evt )
+	{
+		sap.m.MessageToast.show( "onClickFC " + evt.mParameters.featureId );
+	};
+
+	function onContextMenuFC( evt )
+	{
+		sap.m.MessageToast.show( "onContextMenuFC " + evt.mParameters.featureId );
+	};
+	
+	// create map and bind to model
+	var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+	    width : "100%",
+    	height: "100%",
+    	initialZoom: "7",
+    	initialPosition: "11.7;52.9;0.0",
+    	featureCollections: [
+    	  	new sap.ui.vbm.FeatureCollection( {
+    	  		click: onClickFC,
+    	  		contextMenu: onContextMenuFC,
+    	  		srcURL: "../media/vbarea/brandenburg.geojson",
+    	  		items: {
+    	  			path: "/Features",
+    	  			template: new sap.ui.vbm.Feature( { color: '{color}', 
+    	  				                                featureId:'{id}',
+    	  				                                click: onClickFeature,
+    	  				                                contextMenu: onContextMenuFeature
+    	  				                             })
+    	  		}
+    	  	}
+    	  	)
+    	]
+	});
+
+	oVBI.setModel( oModel );
+	oVBI.placeAt("content");
+	
+	
+	// modification of the context
+	function onRemoveFeature()
+	{
+      if( oData.Features.length )
+          oData.Features = oData.Features.splice( 0, oData.Features.length - 1 );
+	       
+		oModel.setData( oData );
+	};
+	
+	function onAddFeature(){
+		oData.Features.push({ "id": "DE-BB", "color": "rgba(250, 195, 100, 0.7)"});
+		oModel.setData( oData );
+	}
+	
+	function onRemoveFC()
+	{
+		cont = oVBI.removeFeatureCollection("NI");
+	};
+	
+	function onAddFC()
+	{
+       if (typeof(cont) === "undefined")
+    	   cont = new sap.ui.vbm.FeatureCollection("NI", {srcURL: "../media/vbarea/DE-NI.geojson"})
+	   oVBI.addFeatureCollection(cont);
+
+	};
+	
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business GeoMap with GeoJSON Sample</h1>
+			<ul>
+				<li> Testing the Visual Business GeoMap Control with FeatureCollections </li>
+				<li> You see a FeatureCollection based on a GeoJSON file including Brandenburh and Berlin </li>
+				<li> There is a Feature Overlay for Berlin changing the color </li>
+				<li> You can add and remove a further FeatureCollection for Niedersachsen </li>
+				<li> You can add and remove a Feature Overlay for Brandenburg changing the default color </li>	
+				<li> You can test click and contextMenu event </li>		
+			</ul>
+		 <div class="ratio_box">
+		 	<div class="content" id="content"></div>
+		 </div>
+		 <br />
+		 <button id="onAddFC" onClick="onAddFC()">Add a FeatureCollection</button>
+		 <button id="onRemoveFC" onClick="onRemoveFC()">Remove a FeatureCollection</button>	
+		 <button id="onAddFeature" onClick="onAddFeature()">Add a Feature (change model)</button>
+         <button id="onRemoveFeature" onClick="onRemoveFeature()">Remove a Feature (change model)</button>  
+	</body>
+</html>

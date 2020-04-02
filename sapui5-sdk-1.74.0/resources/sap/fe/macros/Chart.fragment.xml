@@ -1,0 +1,43 @@
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+						 xmlns:mdc="sap.ui.mdc"
+						 xmlns:core="sap.ui.core"
+						 xmlns:chart="sap.ui.mdc.chart"
+						 template:require="{
+							HELPER: 'sap/fe/macros/ChartHelper'
+						}">
+
+	<mdc:Chart
+			id="{this>id}"
+			data="{= ${this>data} || '{path: \'/' + ${collection>@sapui.name} + '\''} }"
+			chartType="{= ${this>chartType} || HELPER.formatChartType(${$presentation>ChartType})}"
+			header="{= ${this>header} || ${presentation>Title} }"
+			height="{this>height}"
+			width="{this>width}"
+			selectionMode="{this>selectionMode}"
+			delegate="{name: 'sap/fe/macros/ChartDelegate'}">
+		<mdc:items>
+			<template:if test="{= ${presentation>Dimensions} }">
+				<template:with path="presentation>" helper="HELPER.formatDimensions" var="dimensions">
+					<template:repeat list="{dimensions>}" var="dimension">
+						<chart:DimensionItem
+								id="{= ID.generate([${this>id},${dimension>key}])}"
+								key="{dimension>key}"
+								label="{dimension>label}"
+								role="{dimension>role}"
+								criticality="{dimension>criticality}"/>
+					</template:repeat>
+				</template:with>
+			</template:if>
+			<template:with path="presentation>" helper="HELPER.formatMeasures" var="measures">
+				<template:repeat list="{measures>}" var="measure">
+					<chart:MeasureItem
+							id="{= ID.generate([${this>id},${measure>key}])}"
+							key="{measure>key}" propertyPath="{measure>propertyPath}"
+							label="{measure>label}"
+							role="{measure>role}" aggregationMethod="{measure>aggregationMethod}"
+							dataPoint="{measure>dataPoint}" />
+				</template:repeat>
+			</template:with>
+		</mdc:items>
+	</mdc:Chart>
+</core:FragmentDefinition>

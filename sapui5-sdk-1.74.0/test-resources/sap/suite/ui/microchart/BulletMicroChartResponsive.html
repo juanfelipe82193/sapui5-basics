@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.suite.ui.microchart.BulletMicroChart</title>
+
+<base href="../../../../../">
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout, sap.m, sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize"
+	src="resources/sap-ui-core.js">
+</script>
+
+<script type="text/javascript">
+	jQuery.sap.initMobile();
+	var oData = {
+			sizes: {
+				L: sap.m.Size.L,
+				M: sap.m.Size.M,
+				S: sap.m.Size.S,
+				XS: sap.m.Size.XS,
+				Auto: sap.m.Size.Auto
+			},
+			scale: "M",
+			actual: {
+				value: 120,
+				color: sap.m.ValueColor.Good
+			},
+			forecastValue: 110,
+			targetValue: 100,
+			thresholds: [
+				{ value: 0, color: sap.m.ValueColor.Error },
+				{ value: 50, color: sap.m.ValueColor.Critical },
+				{ value: 150, color: sap.m.ValueColor.Critical },
+				{ value: 200, color: sap.m.ValueColor.Error }
+			],
+			showActualValue: true,
+			showTargetValue: true,
+			showDeltaValue: true,
+			showValueMarker: true,
+			mode: sap.suite.ui.microchart.BulletMicroChartModeType.Actual,
+			tooltip: "Cumulative Totals\n((AltText))\ncalculated in EURO"
+		};
+
+	var oConfModel = new sap.ui.model.json.JSONModel();
+	oConfModel.setData(oData);
+	sap.ui.getCore().setModel(oConfModel);
+
+	var buildChart = function(sSize) {
+		return new sap.suite.ui.microchart.BulletMicroChart({
+			size: sSize ? "{/sizes/" + sSize +"}" : null,
+			scale: "{/scale}",
+			width: "{/width}",
+			targetValue: "{/targetValue}",
+			forecastValue: "{/forecastValue}",
+			minValue: "{/minValue}",
+			maxValue: "{/maxValue}",
+			showActualValue: "{/showActualValue}",
+			showTargetValue: "{/showTargetValue}",
+			showDeltaValue: "{/showDeltaValue}",
+			showValueMarker: "{/showValueMarker}",
+			mode: "{/mode}",
+			actualValueLabel: "{/actualValueLabel}",
+			deltaValueLabel: "{/deltaValueLabel}",
+			targetValueLabel: "{/targetValueLabel}",
+			isResponsive: !sSize,
+			tooltip: "{/tooltip}",
+			scaleColor: "{/scaleColor}",
+			actual: {
+				value: "{/actual/value}",
+				color: "{/actual/color}"
+			},
+			thresholds: {
+				template: new sap.suite.ui.microchart.BulletMicroChartData({
+					value: "{value}",
+					color: "{color}"
+				}),
+				path: "/thresholds"
+			}
+		});
+	};
+
+	var oMediumSizeBulletChart = buildChart(sap.m.Size.M);
+	var oSmallSizeBulletChart = buildChart(sap.m.Size.S);
+	var oResponsiveBulletChart = buildChart();
+
+	oResponsiveBulletChart.placeAt("content");
+
+	oHeightSlider = new sap.m.Slider({
+		value : 72,
+		step : 1,
+		min : 10,
+		max : 400,
+		liveChange : function(oControlEvent) {
+			var height = oControlEvent.getParameter("value");
+			jQuery("#content").css("height", height + "px");
+			oResponsiveBulletChart.invalidate();
+		}
+	});
+
+	oWidthSlider = new sap.m.Slider({
+		value : 168,
+		step : 1,
+		min : 10,
+		max : 600,
+		liveChange : function(oControlEvent) {
+			var width = oControlEvent.getParameter("value");
+			jQuery("#content").css("width", width + "px");
+			oResponsiveBulletChart.invalidate();
+		}
+	});
+
+	var oSimpleForm = new sap.ui.layout.form.SimpleForm("controls-cc", {
+		maxContainerCols : 4,
+		editable : true,
+		content : [ oHeightSlider, oWidthSlider ]
+	});
+
+	oSimpleForm.placeAt("modifiers");
+
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+	<script>
+		//set the contrast class for belize plus
+		if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+			jQuery("body").addClass("sapContrastPlus");
+		}
+	</script>
+	<div id="modifiers"></div>
+	<div id="content" style="height: 72px; width: 168px; border-color : black; border: 1px;border-style:solid;"></div>
+	<div id="oldExampleS"></div>
+	<div id="oldExampleM"></div>
+</body>
+</html>

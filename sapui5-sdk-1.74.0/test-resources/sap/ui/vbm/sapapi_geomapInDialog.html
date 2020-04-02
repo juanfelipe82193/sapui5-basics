@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#btnZoomIn{
+			margin-right: 10px;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 98%;
+			height: 200px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#margin {
+			margin-right: 50px;
+		}
+
+
+	</style>
+	<script>
+		var oMap, oAreas, oArea;
+
+		oArea = new sap.ui.vbm.Area({
+			position: "-12.65625;18.979034953717857;0;-50.4686647;20.9152589;0;-79.6021797;-4.8035256;0;-58.7084469;-31.3778753;0;21.0408719;-31.3778753;0;55.4713897;0.490725;0;-39.8746594;0.1962919;0;-25.4550408;-17.7671106;0;23.203125;-10.833311252656364;0",
+			hotScale: "1;1;1",
+			color: "rgba(0,124,192,.7)",
+			colorBorder: 'rgba(0,124,192,.8)',
+		});
+		
+		oAreas = new sap.ui.vbm.Areas({
+			items: [oArea]
+		});
+		
+		getAreas = function(){
+			var oArea = new sap.ui.vbm.Area({
+				position: "-12.65625;18.979034953717857;0;-50.4686647;20.9152589;0;-79.6021797;-4.8035256;0;-58.7084469;-31.3778753;0;21.0408719;-31.3778753;0;55.4713897;0.490725;0;-39.8746594;0.1962919;0;-25.4550408;-17.7671106;0;23.203125;-10.833311252656364;0",
+				hotScale: "1;1;1",
+				color: "rgba(0,124,192,.7)",
+				colorBorder: 'rgba(0,124,192,.8)',
+			});
+			
+			return new sap.ui.vbm.Areas({
+				items: [oArea]
+			});
+		};
+		
+		
+		oMap = new sap.ui.vbm.GeoMap({
+			width : "500px",
+			height: "500px",
+			vos: [oAreas]
+		});
+		
+		oMap.setMapConfiguration(JSON.parse(localStorage.getItem('map')));
+		var oDialog = new sap.ui.commons.Dialog({
+			content: [oMap]	
+		});		
+		
+		closeDialog = function(){
+			oDialog.close();
+			var scene = oMap.mVBIContext.GetMainScene();
+			var myDiv = scene.m_Div;
+			myDiv.bAreasVisible = ( myDiv == undefined ? true : !myDiv.bAreasVisible );
+			if (myDiv.bAreasVisible){
+				oAreas.removeAllItems();
+				VBI.Trace("removing VOs");
+			} else {
+				oAreas.addItem(new sap.ui.vbm.Area({
+					position: "-12.65625;18.979034953717857;0;-50.4686647;20.9152589;0;-79.6021797;-4.8035256;0;-58.7084469;-31.3778753;0;21.0408719;-31.3778753;0;55.4713897;0.490725;0;-39.8746594;0.1962919;0;-25.4550408;-17.7671106;0;23.203125;-10.833311252656364;0",
+					hotScale: "1;1;1",
+					color: "rgba(0,124,192,.7)",
+					colorBorder: 'rgba(0,124,192,.8)',
+				}));	
+				VBI.Trace("Adding VO");
+			}
+
+			//myDiv.style.height = (myDiv.bAreasVisible ? "501px" : "500px" );
+			window.setTimeout(function() {
+				openDialog();
+			}, 1000);			
+		};
+		
+		openDialog = function(){
+			oDialog.open();
+			// var scene = oMap.mVBIContext.GetMainScene();
+			// var oldHeight = scene.m_Div.parentElement.style.height;
+			// scene.m_Div.parentElement.style.height = (scene.m_Div.bAreasVisible ? "501px" : "500px" );
+			// VBI.Trace("Changing height from "+oldHeight+" to "+scene.m_Div.parentElement.style.height);
+			//scene.resizeCanvas(0);			
+			window.setTimeout(function() {
+				closeDialog();
+			}, 2000);			
+		}
+			
+		sap.ui.getCore().attachInit(function() {
+			openDialog();
+		});
+		
+		
+			
+	</script>
+
+</head>
+<body class='sapUiBody'>
+	<div id="description1">
+			  <h3> The aim: </h3>
+		<p> To test loading the GeoMap inside a dialog box.</p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+		<li> Check that a Dialog box has loaded in the center of the page and that it includes a geomap control. <i>You should notice it flash</i></li>
+		</ol>
+	</div>
+	<div id='content'></div>
+</body>
+</html>

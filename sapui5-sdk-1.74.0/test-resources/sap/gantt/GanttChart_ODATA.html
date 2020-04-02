@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>GanttChart ODATA</title>
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.gantt, sap.m"
+	src="../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize"
+	data-sap-ui-resourceroots='{ "sap.gantt.test.shape": "./shape" }'>
+</script>
+<script src="./test.js"></script>
+
+<script>
+	sap.ui.require([
+		"sap/ui/core/util/MockServer",
+		"sap/gantt/test/shape/RectangleGroup",
+		"sap/gantt/shape/Rectangle",
+		"sap/gantt/shape/ext/rls/Relationship"
+	], function(MockServer){
+		createPage("Test Page for sap.gantt.Chart ODATA");
+
+		var sServiceUrl = "http://my.test.service.com/";
+		var oMockServer = new MockServer({
+			rootUri : sServiceUrl
+		});
+		oMockServer.simulate("../../sap/gantt/qunit/data/odata/metadata.xml", {
+			sMockdataBaseUrl : "../../sap/gantt/qunit/data/odata/",
+			bGenerateMissingMockData : true
+		});
+		oMockServer.start();
+		var aShapeConfig = [
+			new sap.gantt.config.Shape({
+				key: "task",
+				shapeDataName: "Task",
+				modeKeys: ["D"],
+				level: 10,
+				shapeClassName: "sap.gantt.test.shape.RectangleGroup",
+				shapeProperties: {
+					time: "{StartDate}",
+					endTime: "{EndDate}",
+					isDuration: true
+				},
+				groupAggregation: [
+					new sap.gantt.config.Shape({
+						shapeClassName: "sap.gantt.shape.Rectangle",
+						shapeProperties: {
+							time: "{StartDate}",
+							endTime: "{EndDate}",
+							fill: "orange",
+							isDuration: true
+						}
+					})
+				]
+			}),
+			new sap.gantt.config.Shape({
+				key: "relationship",
+				level: 30,
+				shapeDataName: "relationship",
+				shapeClassName: "sap.gantt.shape.ext.rls.Relationship",
+				shapeProperties: {
+					isDuration: false,
+					lShapeforTypeFS: true,
+					showStart: false,
+					showEnd: true,
+					stroke: "#000000",
+					strokeWidth: 1,
+					type: "{RelationType}",
+					fromObjectPath:"{PredecRowGuid}",
+					toObjectPath:"{SuccRowGuid}",
+					fromDataId:"{PredecTaskGuid}",
+					toDataId:"{SuccTaskGuid}",
+					fromShapeId:"{FromShape}",
+					toShapeId:"{ToShape}",
+					title: "{Tooltip}",
+					id: "{Guid}"
+				}
+			})
+		];
+
+		// create data model
+		var oDataModel = new sap.ui.model.odata.v2.ODataModel(sServiceUrl);
+
+		// create control
+		var oGanttChart = new sap.gantt.GanttChart({
+			shapes: aShapeConfig,
+			shapeDataNames:["Task"],
+			timeAxis: new sap.gantt.config.TimeAxis({
+				planHorizon: new sap.gantt.config.TimeHorizon({
+					startTime: "20140628000000",
+					endTime: "20170101000000"
+				}),
+				initHorizon: new sap.gantt.config.TimeHorizon({
+					startTime: "20150101000000",
+					endTime: "20150615000000"
+				})
+			}),
+			rows: {
+				path: "data>/ProjectElmSet",
+				parameters: {
+					/*navigation: {
+						"ProjectElmSet": "Children"
+					},*/
+					treeAnnotationProperties: {
+	            		hierarchyLevelFor: "Level",
+	    				hierarchyParentNodeFor: "SuperiorGuid",
+	    				hierarchyNodeFor: "Guid",
+						hierarchyDrillStateFor: "DrillDownState"//this option doesn't work
+	            	},
+	            	expand: "Task",
+				}
+			},
+			relationships:{
+				path: "data>/RelationshipSet"
+			}
+		});
+		var oModeSegmentedButton = sap.ui.jsfragment("sap.gantt.test.CSSModeButton", oGanttChart);
+		oDataModel.attachBatchRequestCompleted(function(){
+			oGanttChart._oTT.expandToLevel(1);
+		});
+		oGanttChart.setModel(oDataModel, "data");
+		addFooterContentsToPage(oModeSegmentedButton);
+		window.oPage.addContent(oGanttChart);
+	});
+</script>
+</head>
+<body id="body" class="sapUiBody sapUiSizeCompact">
+	<div id="content" style="width: 100%; height: 100vh;"></div>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<bi:biapp bi:version="1600" xmlns:bi="http://xml.sap.com/2011/biml/biapp" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/TR/REC-html40" xmlns:h="http://www.w3.org/TR/REC-html40">
+	<bi:component name="APPLICATION_PROPERTIES" type="APPLICATION_PROPERTIES">
+		<bi:property name="THEME" value="sap_bluecrystal"/>
+		<bi:property name="UI5_MAIN" value="X"/>
+		<bi:property name="COMPACT_MODE" value="X"/>
+		<bi:property name="GLOBALVARIABLES" type="UNORDEREDLIST">
+			<bi:property name="GLOBALVARIABLE" index="0">
+				<bi:property name="NAME" value="g_filter_map"/>
+				<bi:property name="GLOBAL_VAR_TYPE" value="String"/>
+				<bi:property name="VALUE" value="&apos;&apos;"/>
+			</bi:property>
+			<bi:property name="GLOBALVARIABLE" index="1">
+				<bi:property name="NAME" value="g_NavPanelOpen"/>
+				<bi:property name="GLOBAL_VAR_TYPE" value="boolean"/>
+				<bi:property name="VALUE" value="true"/>
+			</bi:property>
+			<bi:property name="GLOBALVARIABLE" index="2">
+				<bi:property name="NAME" value="g_measure_selection"/>
+				<bi:property name="GLOBAL_VAR_TYPE" value="String"/>
+				<bi:property name="VALUE" value="&apos;&apos;"/>
+			</bi:property>
+			<bi:property name="GLOBALVARIABLE" index="3">
+				<bi:property name="NAME" value="XQUERY"/>
+				<bi:property name="GLOBAL_VAR_TYPE" value="String"/>
+				<bi:property name="VALUE" value="&apos;&apos;"/>
+				<bi:property name="URL_PARAM" value="X"/>
+			</bi:property>
+			<bi:property name="GLOBALVARIABLE" index="4">
+				<bi:property name="NAME" value="XPROMPT"/>
+				<bi:property name="GLOBAL_VAR_TYPE" value="String"/>
+				<bi:property name="VALUE" value="&apos;&apos;"/>
+				<bi:property name="URL_PARAM" value="X"/>
+			</bi:property>
+		</bi:property>
+		<bi:property name="ON_VAR_SUBMIT">
+			<bi:value><![CDATA[//var aNavParamNames = APPLICATION.getNavigationParameterNames();
+//
+//
+///* Disable Prompts if requested via URL Parmeter */
+//
+//if (XPROMPT == 'false' ) {
+//	APPLICATION.setForcePrompts(false);	
+//}
+//
+///* if XPROMPT is not specified, disable Prompts, when NavigationParmaeters are available */
+//else if (XPROMPT =='') {
+//	var navParamsExists = false;
+//	aNavParamNames.forEach(function(navParamName, index) {
+//        if (Convert.subString(navParamName, 0,1) != 'X'  && navParamName != 'appName') {
+//          	 navParamsExists = true;
+//        }
+//	});
+//	if (navParamsExists) {
+//	   	APPLICATION.setForcePrompts(false);	
+//	}
+//	else  {
+//		APPLICATION.setForcePrompts(true);	
+//	}
+//}
+///* Otherwise enable Prompts */
+//else {
+//	   	APPLICATION.setForcePrompts(true);	
+//}
+//
+//
+if (XQUERY != ""  ) {
+// set data source 	
+	DS_1.assignDataSource("local", DataSourceType.QUERY, XQUERY);	
+}
+//
+//
+//var aVariables = DS_1.getVariables();
+//var found = false;
+//
+//aNavParamNames.forEach(function(navParamName, index) {
+//       aVariables.forEach(function(variable, index) {
+//             if (variable.dimensionName == navParamName && !found && variable.inputEnabled && variable.type=="DimensionMember") {
+//					var paramValue = APPLICATION.getNavigationParameterValue(navParamName);
+//
+//                    if (APPLICATION.setVariableValueFromFilterArray(variable.name, paramValue) === true) {
+//                    	g_applied_variables = g_applied_variables + " " + variable.name;
+//	               	    found = true;
+//                    }
+//             }
+//                
+//       });
+//       found = false;
+//}); 
+]]></bi:value>
+		</bi:property>
+		<bi:property name="ON_STARTUP">
+			<bi:value><![CDATA[if (DS_1.isInitialized()) {
+	//DS_1.moveDimensionToColumns("2CO7GLHZ0YEBA4SSIOK5T3IPYPU");
+	//DS_1.moveDimensionAfter("2CO7GLHZ0YEBA4SSIOK5T3IPYPU","ELTUIDSTRREPM_SOANLYQ1");
+//	DS_1.moveDimensionToRows("ELTUIDSTRCZPROJECTKPIS");
+//	DS_1.moveDimensionToRows("2CT7578WRH2I4PUI74ZGR2LTJ2R");
+////	DS_1.moveDimensionToColumns("2CIZPROMARGINPA-WBSELEMENT");
+//	DS_1.moveDimensionToColumns("2CICALENDARMONTH");
+//	DS_1.moveDimensionBefore("2CT7578WRH2I4PUI74ZGR2LTJ2R", "2CICALENDARMONTH");
+//	DS_1.moveDimensionAfter("2CIZPROMARGINPA-WBSELEMENT", "2CICALENDARMONTH");
+	
+//	// check variables and disable Prompt Settings, if necessary
+//	var variables = DS_1.getVariables();
+//	var prompt_possible = false;
+//	variables.forEach(function(variable, index) {
+//		if (variable.inputEnabled == true) {
+//			prompt_possible = true;
+//		}
+//	});
+//	if (!prompt_possible) {
+//		//BUTTON_PROMPTS.setEnabled(false);
+//	}
+//	
+//	/* Set Filters for Navigation Params without variables */
+//	var dims = DS_1.getDimensions();
+//	var aNavParamNames = APPLICATION.getNavigationParameterNames();
+//	var fVariables = DS_1.getVariables();
+//	var aAppliedVariables = g_applied_variables.split(" ");
+//	var varfound = false;
+//	
+//	aNavParamNames.forEach(function(navParamName, index) {
+//	
+//		fVariables.forEach(function(variable, index) {
+//			if (variable.dimensionName == navParamName && !varfound && variable.inputEnabled && variable.type=="DimensionMember") {
+//				//Only mark it as "found" if the value was also applied to the variable succesfully.
+//				aAppliedVariables.forEach(function(appliedVariable, index) {
+//					if (variable.name == appliedVariable) {
+//						varfound = true;
+//					}
+//				});
+//			}
+//	
+//			if (variable.dimensionName == navParamName && !varfound && variable.inputEnabled && variable.type=="DimensionMember") {
+//	        	varfound = true;
+//	        }
+//	                
+//		});
+//	    if (!varfound) {
+//			dims.forEach(function(dimension, index) {
+//				if (dimension.name == navParamName) {
+//					var paramValue = APPLICATION.getNavigationParameterValue(navParamName);
+//	
+//					DS_1.setFilter(dimension.name, paramValue);
+//				}
+//			});
+//	    }
+//	    varfound = false;
+//	}); 	
+} 
+//else {
+//	// Data Souce is not assigned: Hide Table, disable buttons
+//	CROSSTAB.setVisible(false);
+//	CHART.setVisible(false);
+//}
+////FIORI_HELPER.fetchJumpTargets(DS_1);
+
+/* Set Initial Layout Options Provided by URL Parameters */
+//GLOBAL_SCRIPT_ACTIONS.ChartTableAction();
+//GLOBAL_SCRIPT_ACTIONS.NavPanelAction();
+//if (XCHART_TYPE != "") {
+//	CHART.setChartType(XCHART_TYPE);
+//}
+//DD_CHART_TYPE.setSelectedValue(CHART.getChartType());
+//
+//if (XBOOKMARKID != "") {
+//	BookmarkInternal.loadSfinBookmark(XBOOKMARKID);
+//	GLOBAL_SCRIPT_ACTIONS.LoadBookmarkAction();
+//} 
+//
+//if (DS_1.getInfo().queryDescription) { 
+//	TEXT_APPLICATION_HEADER.setText(DS_1.getInfo().queryDescription);
+//}
+//else if (DS_1.getInfo().queryTechnicalName) {  
+//	
+//	TEXT_APPLICATION_HEADER.setText(DS_1.getInfo().queryTechnicalName);
+//}
+//else if (XQUERY != "") {
+//	TEXT_APPLICATION_HEADER.setText(XQUERY);
+//}]]></bi:value>
+		</bi:property>
+	</bi:component>
+	<bi:data_source_alias name="DS_1" type="QUERY_DATA_SOURCE">
+		<bi:property name="DATA_SOURCE_DEFINITION">
+			<bi:property name="DATA_SOURCE_CONNECTION" value="local"/>
+			<bi:property name="DATA_SOURCE_TYPE" type="CHOICE" value="INFOPROVIDER"/>
+			<bi:property name="DATA_SOURCE_NAME" value=""/>
+		</bi:property>
+		<bi:property name="LOAD_IN_SCRIPT" value="X"/>
+	</bi:data_source_alias>
+	<bi:component name="ROOT" type="ABSOLUTE_LAYOUT_COMPONENT">
+		<bi:component name="PANEL_BODY" type="PANEL_COMPONENT">
+			<bi:property name="WIDTH" value="auto"/>
+			<bi:property name="RIGHT_MARGIN" value="0"/>
+			<bi:property name="BOTTOM_MARGIN" value="0"/>
+			<bi:property name="HEIGHT" value="auto"/>
+			<bi:component name="PANEL_NAV" type="PANEL_COMPONENT">
+				<bi:property name="WIDTH" value="350"/>
+				<bi:property name="HEIGHT" value="auto"/>
+				<bi:property name="BOTTOM_MARGIN" value="0"/>
+				<bi:component name="NAVIGATIONPANEL_1" type="NAVIGATIONPANEL_COMPONENT">
+					<bi:property name="BOTTOM_MARGIN" value="0"/>
+					<bi:property name="RIGHT_MARGIN" value="0"/>
+					<bi:property name="HEIGHT" value="auto"/>
+					<bi:property name="WIDTH" value="auto"/>
+					<bi:property name="DATA_SOURCE_ALIAS_REF" value="DS_1"/>
+				</bi:component>
+			</bi:component>
+			<bi:component name="PANEL_TABLE" type="PANEL_COMPONENT">
+				<bi:property name="WIDTH" value="auto"/>
+				<bi:property name="RIGHT_MARGIN" value="0"/>
+				<bi:property name="HEIGHT" value="auto"/>
+				<bi:property name="BOTTOM_MARGIN" value="0"/>
+				<bi:property name="LEFT_MARGIN" value="354"/>
+				<bi:component name="CROSSTAB_1" type="CROSSTAB_COMPONENT">
+					<bi:property name="RIGHT_MARGIN" value="0"/>
+					<bi:property name="WIDTH" value="auto"/>
+					<bi:property name="CROSSTAB_DISPLAY_ALWAYS_FILL" value="X"/>
+					<bi:property name="CROSSTAB_DD_ENABLED" value=""/>
+					<bi:property name="HEIGHT" value="auto"/>
+					<bi:property name="CROSSTAB_ZEBRA_MODE" value="OFF"/>
+					<bi:property name="BOTTOM_MARGIN" value="1"/>
+					<bi:property name="CROSSTAB_ENABLE_SELECTION" value="MULTI"/>
+					<bi:property name="SCALING_FACTORS_VISIBLE" value="NO_DISPLAY"/>
+					<bi:property name="TOP_MARGIN" value="-1"/>
+					<bi:property name="DATA_SOURCE_ALIAS_REF" value="DS_1"/>
+				</bi:component>
+			</bi:component>
+			<bi:component name="NAVPANEL_CLOSED" type="PANEL_COMPONENT">
+				<bi:property name="HEIGHT" value="auto"/>
+				<bi:property name="BOTTOM_MARGIN" value="0"/>
+				<bi:property name="WIDTH" value="40"/>
+				<bi:property name="VISIBLE" value=""/>
+				<bi:property name="CSS_CLASS" value="alr_navPanelClosed"/>
+			</bi:component>
+			<bi:component name="NAVPANEL_BUTTON" type="BUTTON_COMPONENT">
+				<bi:property name="LEFT_MARGIN" value="315"/>
+				<bi:property name="TOP_MARGIN" value="-2"/>
+				<bi:property name="WIDTH" value="30"/>
+				<bi:property name="ICON" value="sap-icon://close-command-field"/>
+				<bi:property name="ON_CLICK">
+					<bi:value><![CDATA[DISPLAY_ACTION.TOGGLE_NAVPANEL();]]></bi:value>
+				</bi:property>
+			</bi:component>
+		</bi:component>
+		<bi:component name="CONTEXT_MENU" type="CONTEXT_MENU_COMPONENT"/>
+		<bi:component name="FILTER_ACTION" type="GLOBAL_SCRIPTS_COMPONENT">
+			<bi:property name="FUNCTIONS" type="ORDEREDLIST">
+				<bi:property name="FUNCTION" index="0">
+					<bi:property name="NAME" value="APPLY_FILTER"/>
+					<bi:property name="FUNCTION_DESC" value="Apply Filter To Crosstab"/>
+					<bi:property name="FUNCTION_BODY">
+						<bi:value><![CDATA[try {
+	//debugger;
+	var s = '';
+	var dimensionNameMatched = false;
+
+	if(filterJSON) {
+		var filterObj = JSON.parse(filterJSON);
+	
+		if (g_filter_map=="") {
+	        if (DS_1) {
+	        	var sFieldMap = "{";
+	            for (var i=0; i<DS_1.getDimensions().length; i++) {
+	                var dim = DS_1.getDimensions()[i];
+
+	                if (dim.dimension.getExternalName()!="")
+		                sFieldMap += ("\""+dim.dimension.getExternalName() +"\":\""+ dim.getName() +"\",");
+		            else
+		                sFieldMap += ("\""+dim.getName() +"\":\""+ dim.getName() +"\",");
+	            }
+	            if (sFieldMap.length>=2 && sFieldMap.substr(-1)==',')
+	                sFieldMap = sFieldMap.substr(0, sFieldMap.length-1);
+	            g_filter_map = (sFieldMap+'}');
+	        }
+		}
+		
+		var fieldMap;
+		if (g_filter_map!="")
+			fieldMap = JSON.parse(g_filter_map);
+	
+		DS_1.clearAllFilters();
+
+		for(var keyFieldName in filterObj) {
+			var filter = filterObj[keyFieldName];
+			var value;
+			if (filter.ranges) {
+				if (filter.ranges.length==1) {
+					value = filter.ranges[0].value1;
+				}
+				else {
+					value = [];
+					for(var i=0; i<filter.ranges.length; i++) {
+						var range = filter.ranges[i];
+						//value.push("{\"from\":\""+range.value1+"\"}");
+						value.push(range.value1);
+						//s += keyFieldName + '(' + mappedField + ')' + ': ' + range.value1 + '; ';
+					}				
+				}				
+			}
+			else {
+				value = filter;
+			}
+			
+			if (fieldMap) {
+				var mappedField = fieldMap[keyFieldName];
+				if (mappedField) {
+					DS_1.setFilter(mappedField, value);				
+				}			
+			}
+		}		
+	}
+	
+	// apply measure selection if available
+	if (g_measure_selection!='') {
+		FILTER_ACTION.APPLY_MEASURE_FILTER();
+	}
+	
+}
+catch(ex) {
+	debugger;
+}]]></bi:value>
+					</bi:property>
+					<bi:property name="INPUT_PARAMETERS" type="ORDEREDLIST">
+						<bi:property name="INPUT_PARAMETER" index="0">
+							<bi:property name="NAME" value="filterJSON"/>
+							<bi:property name="PARAMETER_TYPE" value="String"/>
+						</bi:property>
+						<bi:property name="INPUT_PARAMETER" index="1">
+							<bi:property name="NAME" value="fieldMapJSON"/>
+							<bi:property name="PARAMETER_TYPE" value="String"/>
+						</bi:property>
+					</bi:property>
+				</bi:property>
+				<bi:property name="FUNCTION" index="1">
+					<bi:property name="NAME" value="APPLY_MEASURE_FILTER"/>
+					<bi:property name="FUNCTION_BODY">
+						<bi:value><![CDATA[if (g_measure_selection!='') {
+	var selArray = [];
+	var measureSelectionJSON = JSON.parse(g_measure_selection);
+	if (measureSelectionJSON) {
+		for (var sel in measureSelectionJSON)
+			selArray.push(sel);
+		DS_1.setFilter(DS_1.getMeasuresDimension().getName(), selArray);
+	}
+}
+
+]]></bi:value>
+					</bi:property>
+				</bi:property>
+			</bi:property>
+		</bi:component>
+		<bi:component name="BOOKMARK_ACTION" type="GLOBAL_SCRIPTS_COMPONENT">
+			<bi:property name="FUNCTIONS" type="ORDEREDLIST">
+				<bi:property name="FUNCTION" index="0">
+					<bi:property name="NAME" value="LOAD_BOOKMARK"/>
+					<bi:property name="FUNCTION_DESC" value="Load Bookmark"/>
+					<bi:property name="FUNCTION_BODY">
+						<bi:value><![CDATA[try {
+	//debugger;
+	var content = atob(content);
+	BookmarkInternal.loadSfinBookmarkContent(content);
+}
+catch(ex) {
+	debugger;
+}]]></bi:value>
+					</bi:property>
+					<bi:property name="INPUT_PARAMETERS" type="ORDEREDLIST">
+						<bi:property name="INPUT_PARAMETER" index="0">
+							<bi:property name="NAME" value="content"/>
+							<bi:property name="PARAMETER_TYPE" value="String"/>
+						</bi:property>
+					</bi:property>
+				</bi:property>
+			</bi:property>
+		</bi:component>
+		<bi:component name="DISPLAY_ACTION" type="GLOBAL_SCRIPTS_COMPONENT">
+			<bi:property name="FUNCTIONS" type="ORDEREDLIST">
+				<bi:property name="FUNCTION" index="0">
+					<bi:property name="NAME" value="CONFIG_DIM"/>
+					<bi:property name="FUNCTION_BODY">
+						<bi:value><![CDATA[try {
+	//debugger;
+	var dimJSON = JSON.parse(configJSON);
+	if (dimJSON && dimJSON.row) {
+		// remove existing dim from row
+		var rowDims = DS_1.getDimensions(Axis.ROWS);
+		for (var i=0; i<rowDims.length; i++) {
+			if (!rowDims[i].getIsMeasuresDimension())
+				DS_1.removeDimension(rowDims[i].getName());
+		}
+		
+		for (var i=0; i<dimJSON.row.length; i++) {
+			DS_1.moveDimensionToRows(dimJSON.row[i].key);
+			if (i>0)
+				DS_1.moveDimensionAfter(dimJSON.row[i].key, dimJSON.row[i-1].key);
+		}		
+	}
+	
+	if (dimJSON && dimJSON.column) {
+		// remove existing dim from column
+		var colDims = DS_1.getDimensions(Axis.COLUMNS);
+		for (var i=0; i<colDims.length; i++) {
+			if (!colDims[i].getIsMeasuresDimension())
+				DS_1.removeDimension(colDims[i].getName());
+		}
+		
+		for (var i=0; i<dimJSON.column.length; i++) {
+			DS_1.moveDimensionToColumns(dimJSON.column[i].key);
+			if (i>0)
+				DS_1.moveDimensionAfter(dimJSON.column[i].key, dimJSON.column[i-1].key);
+		}		
+	}	
+	
+	if (dimJSON.measureSelection) {
+		//debugger;
+		var measureSelectionStr = JSON.stringify(dimJSON.measureSelection);
+		// measure selection has changed
+		if (measureSelectionStr!=g_measure_selection) {
+			g_measure_selection = measureSelectionStr;		
+			FILTER_ACTION.APPLY_MEASURE_FILTER();
+		}
+	}
+}
+catch(ex) {
+	debugger;
+}]]></bi:value>
+					</bi:property>
+					<bi:property name="INPUT_PARAMETERS" type="ORDEREDLIST">
+						<bi:property name="INPUT_PARAMETER" index="0">
+							<bi:property name="NAME" value="configJSON"/>
+							<bi:property name="PARAMETER_TYPE" value="String"/>
+						</bi:property>
+					</bi:property>
+				</bi:property>
+				<bi:property name="FUNCTION" index="1">
+					<bi:property name="NAME" value="TOGGLE_NAVPANEL"/>
+					<bi:property name="FUNCTION_BODY">
+						<bi:value><![CDATA[if (g_NavPanelOpen) {
+	PANEL_NAV.setWidth(40);
+	PANEL_NAV.setVisible(false);
+	//NAVPANEL_CLOSED.setVisible(true);
+	PANEL_TABLE.setLeftMargin(40);
+	NAVPANEL_BUTTON.setLeftMargin(5);
+	NAVPANEL_BUTTON.setIcon("sap-icon://open-command-field");	
+}
+else {
+	PANEL_NAV.setWidth(350);
+	//NAVPANEL_CLOSED.setVisible(false);
+	PANEL_NAV.setVisible(true);
+	PANEL_TABLE.setLeftMargin(354);	
+	NAVPANEL_BUTTON.setLeftMargin(315);
+	NAVPANEL_BUTTON.setIcon("sap-icon://close-command-field");	
+}
+g_NavPanelOpen = !g_NavPanelOpen;]]></bi:value>
+					</bi:property>
+				</bi:property>
+				<bi:property name="FUNCTION" index="2">
+					<bi:property name="NAME" value="SET_CURRENCY_CODE"/>
+					<bi:property name="FUNCTION_DESC" value="Set Display Currency"/>
+					<bi:property name="FUNCTION_BODY">
+						<bi:value><![CDATA[var variables = DS_1.getVariables();
+variables.forEach(function(element, index) {
+	if (element.inputEnabled) {
+		var dim = DS_1.getDimensionByName(element.dimensionName);
+		if (dim!=null && dim.getDimensionType()=="Currency") {
+			DS_1.setVariableValue(element, currencycode);
+		}
+	}
+});
+]]></bi:value>
+					</bi:property>
+					<bi:property name="INPUT_PARAMETERS" type="ORDEREDLIST">
+						<bi:property name="INPUT_PARAMETER" index="0">
+							<bi:property name="NAME" value="currencycode"/>
+							<bi:property name="PARAMETER_TYPE" value="String"/>
+						</bi:property>
+					</bi:property>
+				</bi:property>
+			</bi:property>
+		</bi:component>
+	</bi:component>
+</bi:biapp>

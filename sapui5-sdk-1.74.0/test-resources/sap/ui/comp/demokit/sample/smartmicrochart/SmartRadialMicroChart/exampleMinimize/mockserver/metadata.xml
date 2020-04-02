@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+	xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+	xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+	xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:Reference Uri="https://mydomain.com/catalogService/ui/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI" />
+	</edmx:Reference>
+	<edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml">
+		<edmx:Include Alias="MEASURES" Namespace="Org.OData.Measures.V1" />
+	</edmx:Reference>
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="BmcNamespace" xml:lang="en" sap:schema-version="0" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="ProductType" sap:label="Product Sales Data" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="Product" />
+				</Key>
+				<Property Name="Product" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Product ID" />
+				<Property Name="StorageCount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="Unit" />
+				<Property Name="StorageCapacity" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="Unit" />
+				<Property Name="StorageCriticalValue" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="Unit" />
+				<Property Name="StorageErrorValue" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="Unit" />
+				<Property Name="Unit" Type="Edm.String" />
+				<Property Name="ChartTitle" Type="Edm.String" />
+				<Property Name="ChartDescription" Type="Edm.String" />
+			</EntityType>
+			<EntityContainer Name="BmcNamespace_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+				<EntitySet Name="Products" EntityType="BmcNamespace.ProductType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1" />
+			</EntityContainer>
+
+			<Annotations Target="BmcNamespace.ProductType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="UI.Chart" Qualifier="DonutChartQualifier">
+					<Record>
+						<PropertyValue EnumMember="UI.ChartType/Donut" Property="ChartType" />
+						<PropertyValue Property="Title" Path="ChartTitle" />
+						<PropertyValue Property="Description" Path="ChartDescription" />
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>StorageCount</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="UI.ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="StorageCount" />
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#DonutChartDataPoint" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="DonutChartDataPoint">
+					<Record>
+						<PropertyValue Path="StorageCount" Property="Value" />
+						<PropertyValue Path="StorageCapacity" Property="TargetValue" />
+						<PropertyValue Property="CriticalityCalculation">
+							<Record>
+								<PropertyValue Property="ImprovementDirection" EnumMember="UI.ImprovementDirectionType/Minimize" />
+								<PropertyValue Path="StorageErrorValue" Property="DeviationRangeHighValue" />
+								<PropertyValue Path="StorageCriticalValue" Property="ToleranceRangeHighValue" />
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="BmcNamespace.ProductType/StorageCount">
+				<Annotation Term="MEASURES.ISOCurrency" Path="Unit"></Annotation>
+			</Annotations>
+			<atom:link rel="self" href="https://mydomain.com/myService/$metadata" xmlns:atom="http://www.w3.org/2005/Atom" />
+			<atom:link rel="latest-version" href="https://mydomain.com/myService/$metadata" xmlns:atom="http://www.w3.org/2005/Atom" />
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

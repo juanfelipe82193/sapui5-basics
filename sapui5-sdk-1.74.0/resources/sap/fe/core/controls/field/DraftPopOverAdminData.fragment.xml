@@ -1,0 +1,33 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+	template:require="{
+		CORE: 'sap/fe/core/AnnotationHelper'
+	}"
+    xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1">
+    <Popover binding="{path : 'DraftAdministrativeData'}" title="{= !%{draftInfo>/bIsActive} ? ${sap.fe.i18n>DRAFTINFO_DRAFT_OBJECT} : (%{draftInfo>/bHasDraft} ? (%{InProcessByUser} ? ${sap.fe.i18n>DRAFTINFO_LOCKED_OBJECT} : ${sap.fe.i18n>DRAFTINFO_UNSAVED_OBJECT}) : ${sap.fe.i18n>DRAFTINFO_FLAGGED_OBJECT}) }"
+        showHeader="true"
+        contentWidth="15.625rem"
+        verticalScrolling="false"
+        class="sapUiContentPadding">
+        <endButton>
+            <Button icon="sap-icon://decline" press=".editFlow.closeDraftAdminPopover" />
+        </endButton>
+        <VBox class="sapUiContentPadding">
+            <!-- For No draft info scenario -->
+            <VBox visible="{= !%{draftInfo>/bIsActive} &amp;&amp; !%{LastChangeDateTime}}">
+                <Text text="{= ${sap.fe.i18n>DRAFTINFO_POPOVER_NO_DATA_TEXT} }"></Text>
+            </VBox>
+            <!-- For Draft Scenario just disply last chaged time -->
+            <VBox visible="{= !%{draftInfo>/bIsActive} &amp;&amp; %{LastChangeDateTime}}">
+                <Text text="{parts:[ {path: 'sap.fe.i18n>DRAFTINFO_LAST_CHANGE_TEXT'}, {path: 'LastChangeDateTime'}] }"></Text>
+            </VBox>
+            <!-- For Unnsaved Chages/ Locked, disply both the user info and last changed time -->
+            <VBox visible="{= %{draftInfo>/bHasDraft} &amp;&amp; %{draftInfo>/bIsActive} &amp;&amp; %{LastChangeDateTime} }">
+                <Text text="{path: 'entitySet>$Type', formatter: 'CORE.getBindingForDraftAdminBlockInPopover'}"></Text>
+                <Text class="sapUiSmallMarginTop"
+                    text="{parts:[ {path: 'sap.fe.i18n>DRAFTINFO_LAST_CHANGE_TEXT'}, {path: 'LastChangeDateTime'}] }"></Text>
+            </VBox>
+        </VBox>
+    </Popover>
+</core:FragmentDefinition>

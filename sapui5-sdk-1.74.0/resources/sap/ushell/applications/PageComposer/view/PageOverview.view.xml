@@ -1,0 +1,174 @@
+<mvc:View
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    height="100%"
+    controllerName="sap.ushell.applications.PageComposer.controller.PageOverview">
+    <Page id="pageOverviewPage">
+        <customHeader>
+            <Bar id="titlebar">
+                <contentLeft>
+                    <Title id="title" text="{i18n>PageOverview.Title}" class="sapUiMediumMarginBegin">
+                        <customData>
+                            <core:CustomData key="help-id" value="FLPPage-manage-PageOverview-Header" writeToDom="true" />
+                        </customData>
+                    </Title>
+                </contentLeft>
+            </Bar>
+        </customHeader>
+        <content>
+            <Table
+                class="sapUiMediumMarginBeginEnd sapUiTinyMarginTopBottom sapUiForceWidthAuto"
+                id="table"
+                ariaLabelledBy="title"
+                busy="{/busy}"
+                items="{
+                    path: '/pages',
+                    key: 'id',
+                    sorter: {
+                        path : 'content/modifiedOn',
+                        descending: 'true'
+                    }
+                }"
+                itemPress=".onItemPress"
+                selectionChange=".onSelectionChange"
+                updateFinished=".onTableUpdate"
+                mode="SingleSelectLeft"
+                sticky="ColumnHeaders"
+                noDataText="{i18n>Message.NoPages}">
+                <headerToolbar>
+                    <OverflowToolbar design="Solid" id="overflowToolbar">
+                        <ToolbarSpacer id="toolbarSpacer"/>
+                        <SearchField
+                            id="searchField"
+                            showRefreshButton="false"
+                            tooltip="{i18n>Tooltip.Search}"
+                            search=".onSearch"
+                            width="auto">
+                        </SearchField>
+                        <Button
+                            id="addButton"
+                            text="{i18n>Button.Create}"
+                            type="Transparent"
+                            visible="{SupportedOperationModel>/createSupported}"
+                            press=".onAdd">
+                            <customData>
+                                <core:CustomData key="help-id" value="FLPPage-manage-PageOverview-Button-Create" writeToDom="true" />
+                            </customData>
+                        </Button>
+                        <Button
+                            id="copyButton"
+                            text="{i18n>Button.Copy}"
+                            type="Transparent"
+                            enabled="{buttonStates>/isDeleteAndCopyEnabled}"
+                            visible="{SupportedOperationModel>/copySupported}"
+                            press=".onCopy">
+                            <customData>
+                                <core:CustomData key="help-id" value="LaunchpadPage-compose-PageOverview-Button-Copy" writeToDom="true" />
+                            </customData>
+                        </Button>
+                        <Button
+                            id="deleteButton"
+                            text="{i18n>Button.Delete}"
+                            type="Transparent"
+                            enabled="{buttonStates>/isDeleteAndCopyEnabled}"
+                            visible="{SupportedOperationModel>/deleteSupported}"
+                            press=".onDelete">
+                            <customData>
+                                <core:CustomData key="help-id" value="FLPPage-manage-PageOverview-Button-Delete" writeToDom="true" />
+                            </customData>
+                        </Button>
+                        <Button
+                            id="sortButton"
+                            tooltip="{i18n>Tooltip.SortSettingsButton}"
+                            icon="sap-icon://sort"
+                            type="Transparent"
+                            press=".showViewSettingsDialog('sort')" />
+                        <Button
+                            id="filterButton"
+                            tooltip="{i18n>Tooltip.FilterSettingsButton}"
+                            icon="sap-icon://filter"
+                            type="Transparent"
+                            press=".showViewSettingsDialog('filter')" />
+                        <Button
+                            id="groupButton"
+                            tooltip="{i18n>Tooltip.GroupSettingsButton}"
+                            icon="sap-icon://group-2"
+                            type="Transparent"
+                            press=".showViewSettingsDialog('group')" />
+                    </OverflowToolbar>
+                </headerToolbar>
+                <infoToolbar>
+                    <OverflowToolbar id="infoFilterBar" visible="false">
+                        <Text id="infoFilterLabel" />
+                    </OverflowToolbar>
+                </infoToolbar>
+                <columns>
+                    <Column id="columnPageId">
+                        <ObjectIdentifier title="{i18n>Column.PageID}" text="{i18n>Column.PageDescription}" />
+                    </Column>
+                    <Column id="columnPageTitle">
+                        <Text id="columnTextPageTitle" text="{i18n>Column.PageTitle}" />
+                    </Column>
+                    <Column id="columnPageAssignmentStatus" width="12%">
+                        <Text id="columnTextPageAssignmentStatus" text="{i18n>Column.PageAssignmentStatus}" />
+                    </Column>
+                    <Column id="columnPageTransport" width="12%" visible="{/transportSupported}">
+                        <ObjectIdentifier title="{i18n>Column.PagePackage}" text="{i18n>Column.PageWorkbenchRequest}" />
+                    </Column>
+                    <Column id="columnPageCreated" width="12%">
+                        <ObjectIdentifier title="{i18n>Column.PageCreatedBy}" text="{i18n>Column.PageCreatedOn}" />
+                    </Column>
+                    <Column id="columnPageChanged" width="12%">
+                        <ObjectIdentifier title="{i18n>Column.PageChangedBy}" text="{i18n>Column.PageChangedOn}" />
+                    </Column>
+                    <Column id="columnEnd" width="4%" hAlign="End" />
+                </columns>
+                <items>
+                    <ColumnListItem id="columnListItemPage" type="Navigation">
+                        <cells>
+                            <ObjectIdentifier id="objectIdentifierPageId" title="{content/id}" text="{content/description}" />
+                        </cells>
+                        <cells>
+                            <Text id="cellTextPageTitle" text="{content/title}" />
+                        </cells>
+                        <cells>
+                            <ObjectStatus press="onErrorMessageClicked" text="{=${content/editAllowed} ? ${i18n>Message.StatusAssigned} : ${i18n>Message.NotAssigned} }" active="true" state="{=${content/editAllowed}? 'Success' : 'Warning'}" />
+                        </cells>
+                        <cells>
+                            <ObjectIdentifier id="cellTextPageTransport" title="{metadata/devclass}" text="{metadata/transportId}" />
+                        </cells>
+                        <cells>
+                            <ObjectIdentifier
+                                id="cellTextPageCreated"
+                                title="{content/createdByFullname}"
+                                text="{
+                                    path: 'content/createdOn',
+                                    type: 'sap.ui.model.type.Date',
+                                    formatOptions: { style: 'medium' }
+                                }" />
+                        </cells>
+                        <cells>
+                            <ObjectIdentifier
+                                id="cellTextPageChanged"
+                                title="{content/modifiedByFullname}"
+                                text="{
+                                    path: 'content/modifiedOn',
+                                    type: 'sap.ui.model.type.Date',
+                                    formatOptions: { style: 'medium' }
+                                }" />
+                        </cells>
+                        <cells>
+                            <Button id="cellButtonPageEdit"
+                                    press=".onEdit"
+                                    icon="sap-icon://edit"
+                                    tooltip="{i18n>Button.Edit}"
+                                    enabled= "{content/editAllowed}"
+                                    type="Transparent" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+    </Page>
+</mvc:View>

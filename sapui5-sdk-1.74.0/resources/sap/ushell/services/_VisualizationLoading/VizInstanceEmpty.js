@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define(["sap/ushell/services/_VisualizationLoading/VizInstance","sap/m/GenericTile"],function(V,G){"use strict";var v=V.extend("sap.ushell.ui.launchpad.VizInstanceEmpty",{metadata:{properties:{target:{type:"string"}}},renderer:V.getMetadata().getRenderer()});v.prototype.load=function(){var g=new G({state:this.getState()});this.setInnerControl(g);return Promise.resolve(g);};v.prototype._getInnerControlPromise=function(){return Promise.resolve({});};return v;});

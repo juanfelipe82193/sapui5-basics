@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="AIS_EXISTING_RDS_SRV" xml:lang="en" sap:schema-version="1"
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="I_AIS_BusinessPartner_AType" sap:label="Business Partner CORE Entity" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="BusinessPartnerID"/>
+                </Key>
+                <Property Name="BusinessPartnerID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Business Partner ID"/>
+                <Property Name="CreationUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+                <Property Name="LastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp"/>
+                <Property Name="LastChangedUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+                <Property Name="BusinessPartnerRole" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Bus. Part. Role"/>
+                <Property Name="MailAddress" Type="Edm.String" MaxLength="255" sap:label="E-Mail"/>
+                <Property Name="PhoneNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Phone No."/>
+                <Property Name="FaxNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Phone No."/>
+                <Property Name="CompanyName" Type="Edm.String" MaxLength="80" sap:label="Company"/>
+                <Property Name="LegalForm" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Legal Form"/>
+                <Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" sap:label="Currency Code" sap:semantics="currency-code"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp"/>
+                <NavigationProperty Name="to_BusinessPartnerContacts" Relationship="AIS_EXISTING_RDS_SRV.assoc_2C5FD72C6E56AD5A32EB98F721588C1B" FromRole="FromRole_assoc_2C5FD72C6E56AD5A32EB98F721588C1B" ToRole="ToRole_assoc_2C5FD72C6E56AD5A32EB98F721588C1B"/>
+            </EntityType>
+            <EntityType Name="I_AIS_SO_Confirmation_StatusType" sap:label="Sales Order Confirmation Status" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Status"/>
+                </Key>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="Status_Text" sap:label="Dom. lower value"/>
+                <Property Name="Status_Text" Type="Edm.String" MaxLength="60" sap:label="Short Descript." sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="I_AIS_SO_Delivery_StatusType" sap:label="Sales Order Delivery Status" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Status"/>
+                </Key>
+                <Property Name="Status_Text" Type="Edm.String" MaxLength="60" sap:label="Short Descript." sap:creatable="false" sap:updatable="false"/>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="Status_Text" sap:label="Dom. lower value"/>
+            </EntityType>
+            <EntityType Name="I_AIS_SO_Lifecycle_StatusType" sap:label="Sales Order Lifecycle Status" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Status"/>
+                </Key>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="Status_Text" sap:label="Dom. lower value"/>
+                <Property Name="Status_Text" Type="Edm.String" MaxLength="60" sap:label="Short Descript." sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="I_AIS_BusPartnerContact_AType" sap:label="Business Partner Contact CORE Entity" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="BusinessPartnerID"/>
+                    <PropertyRef Name="ContactID"/>
+                </Key>
+                <Property Name="BusinessPartnerID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Business Partner ID"/>
+                <Property Name="ContactID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Business Partner ID"/>
+                <Property Name="Title" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Title"/>
+                <Property Name="FirstName" Type="Edm.String" MaxLength="40" sap:label="First Name"/>
+                <Property Name="MiddleName" Type="Edm.String" MaxLength="40" sap:label="Middle Name"/>
+                <Property Name="LastName" Type="Edm.String" MaxLength="40" sap:label="Last Name"/>
+                <Property Name="NickName" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Nickname"/>
+                <Property Name="LoginName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+                <Property Name="Initials" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Initials"/>
+                <Property Name="Sex" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Gender"/>
+                <Property Name="PhoneNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Phone No."/>
+                <Property Name="FaxNumber" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Phone No."/>
+                <Property Name="MailAddress" Type="Edm.String" MaxLength="255" sap:label="E-Mail"/>
+                <Property Name="Language" Type="Edm.String" MaxLength="2" sap:label="Language Key"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp"/>
+                <Property Name="CreationUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+                <Property Name="LastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp"/>
+                <Property Name="LastChangedUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+            </EntityType>
+            <EntityType Name="I_AIS_Unit_Of_MeasureType" sap:label="Unit of Measure" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="UnitOfMeasure"/>
+                </Key>
+                <Property Name="UnitOfMeasure" Type="Edm.String" Nullable="false" MaxLength="3" sap:text="UnitOfMeasure_Text" sap:label="Int.Measurement Unit" sap:semantics="unit-of-measure"/>
+                <Property Name="UnitOfMeasure_Text" Type="Edm.String" MaxLength="10" sap:label="Measuremt unit text" sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="I_AIS_CurrencyType" sap:label="Currency" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Currency"/>
+                </Key>
+                <Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="5" sap:text="Currency_Text" sap:label="Currency" sap:semantics="currency-code"/>
+                <Property Name="Currency_Text" Type="Edm.String" MaxLength="40" sap:label="Long Text" sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="I_AIS_E_SalesOrderItemSL_AType" sap:label="Sales Order Item Schedule Line CORE Entity" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="SalesOrderID"/>
+                    <PropertyRef Name="SalesOrderItemID"/>
+                    <PropertyRef Name="DeliveryDate"/>
+                </Key>
+                <Property Name="SalesOrderID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Order ID" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="SalesOrderItemID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Item Position" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="DeliveryDate" Type="Edm.DateTimeOffset" Nullable="false" Precision="7" sap:label="Delivery Time"/>
+                <Property Name="Quantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="QuantityUnitCode" sap:label="Quantity"/>
+                <Property Name="QuantityUnitCode" Type="Edm.String" MaxLength="3" sap:text="to_QuantityUnit/UnitOfMeasure_Text" sap:label="Unit of Measure" sap:value-list="standard" sap:semantics="unit-of-measure"/>
+                <NavigationProperty Name="to_QuantityUnit" Relationship="AIS_EXISTING_RDS_SRV.assoc_93D1C41679E44890734807D4D660AC15" FromRole="FromRole_assoc_93D1C41679E44890734807D4D660AC15" ToRole="ToRole_assoc_93D1C41679E44890734807D4D660AC15"/>
+                <NavigationProperty Name="to_SalesOrder" Relationship="AIS_EXISTING_RDS_SRV.assoc_1ECB31F536C8E7D7891E0264F8302C56" FromRole="FromRole_assoc_1ECB31F536C8E7D7891E0264F8302C56" ToRole="ToRole_assoc_1ECB31F536C8E7D7891E0264F8302C56"/>
+                <NavigationProperty Name="to_SalesOrderItem" Relationship="AIS_EXISTING_RDS_SRV.assoc_9562DC5CFCAE96ADBAD58C8B303F16D8" FromRole="FromRole_assoc_9562DC5CFCAE96ADBAD58C8B303F16D8" ToRole="ToRole_assoc_9562DC5CFCAE96ADBAD58C8B303F16D8"/>
+            </EntityType>
+            <EntityType Name="I_AIS_E_SalesOrderItem_AType" sap:label="Sales Order Item CORE Entity" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="SalesOrderID"/>
+                    <PropertyRef Name="SalesOrderItemID"/>
+                </Key>
+                <Property Name="Calculate_gross_amount_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Copy_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SalesOrderID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Order ID" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="SalesOrderItemID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Item Position"/>
+                <Property Name="ProductID" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Product ID"/>
+                <Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" sap:text="to_Currency/Currency_Text" sap:label="Currency Code" sap:value-list="standard" sap:semantics="currency-code"/>
+                <Property Name="GrossAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Gross Amount"/>
+                <Property Name="NetAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Net Amount"/>
+                <Property Name="TaxAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Tax Amount"/>
+                <Property Name="AvailableToPromiseStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:text="to_AvailableToPromiseStatus/Status_Text" sap:label="ATP Status" sap:value-list="standard"/>
+                <Property Name="OpportunityItemID" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Item Position"/>
+                <NavigationProperty Name="to_AvailableToPromiseStatus" Relationship="AIS_EXISTING_RDS_SRV.assoc_C6CA887B90D9112187A3B2263F078BA4" FromRole="FromRole_assoc_C6CA887B90D9112187A3B2263F078BA4" ToRole="ToRole_assoc_C6CA887B90D9112187A3B2263F078BA4"/>
+                <NavigationProperty Name="to_Currency" Relationship="AIS_EXISTING_RDS_SRV.assoc_57DBD9551C585884FF1F3549F8B42528" FromRole="FromRole_assoc_57DBD9551C585884FF1F3549F8B42528" ToRole="ToRole_assoc_57DBD9551C585884FF1F3549F8B42528"/>
+                <NavigationProperty Name="to_Product" Relationship="AIS_EXISTING_RDS_SRV.assoc_A294AE8938706ACAB4BC86A378B8EDA0" FromRole="FromRole_assoc_A294AE8938706ACAB4BC86A378B8EDA0" ToRole="ToRole_assoc_A294AE8938706ACAB4BC86A378B8EDA0"/>
+                <NavigationProperty Name="to_SalesOrder" Relationship="AIS_EXISTING_RDS_SRV.assoc_DD5855220026F25D593D17AB02BD64F0" FromRole="FromRole_assoc_DD5855220026F25D593D17AB02BD64F0" ToRole="ToRole_assoc_DD5855220026F25D593D17AB02BD64F0"/>
+                <NavigationProperty Name="to_ScheduleLine" Relationship="AIS_EXISTING_RDS_SRV.assoc_97507B4D656D9FEE72C58957BB59993C" FromRole="FromRole_assoc_97507B4D656D9FEE72C58957BB59993C" ToRole="ToRole_assoc_97507B4D656D9FEE72C58957BB59993C"/>
+            </EntityType>
+            <EntityType Name="I_AIS_E_SalesOrder_AType" sap:label="Sales Order CORE Entity" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="SalesOrderID"/>
+                </Key>
+                <Property Name="Calculate_gross_amount_ac" Type="Edm.Boolean" sap:label="Dyn. Action Control" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SalesOrderID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Order ID" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="BusinessPartnerID" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Business Partner ID"/>
+                <Property Name="CurrencyCode" Type="Edm.String" Nullable="false" MaxLength="5" sap:text="to_Currency/Currency_Text" sap:label="Currency Code" sap:value-list="standard" sap:semantics="currency-code"/>
+                <Property Name="GrossAmount" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Gross Amount"/>
+                <Property Name="NetAmount" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Net Amount"/>
+                <Property Name="TaxAmount" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unit="CurrencyCode" sap:label="Tax Amount"/>
+                <Property Name="LifecycleStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:text="to_LifecycleStatus/Status_Text" sap:label="Lifecycle Status" sap:value-list="standard"/>
+                <Property Name="BillingStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:text="to_BillingStatus/Status_Text" sap:label="Confirmation Status" sap:value-list="standard"/>
+                <Property Name="DeliveryStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:text="to_DeliveryStatus/Status_Text" sap:label="Ordering Status" sap:value-list="standard"/>
+                <Property Name="OpportunityID" Type="Edm.String" MaxLength="35" sap:display-format="UpperCase" sap:label="Opportunity ID"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CreationUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="LastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="LastChangedUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name" sap:creatable="false" sap:updatable="false"/>
+                <NavigationProperty Name="to_BillingStatus" Relationship="AIS_EXISTING_RDS_SRV.assoc_49AC22089C030C5E342810BB390F4D4B" FromRole="FromRole_assoc_49AC22089C030C5E342810BB390F4D4B" ToRole="ToRole_assoc_49AC22089C030C5E342810BB390F4D4B"/>
+                <NavigationProperty Name="to_BusinessPartner" Relationship="AIS_EXISTING_RDS_SRV.assoc_DF9B13F02BAB2CA19DBB8DB6E3C1894C" FromRole="FromRole_assoc_DF9B13F02BAB2CA19DBB8DB6E3C1894C" ToRole="ToRole_assoc_DF9B13F02BAB2CA19DBB8DB6E3C1894C"/>
+                <NavigationProperty Name="to_Currency" Relationship="AIS_EXISTING_RDS_SRV.assoc_4FF46EA4BE56012C9199CE70379839F3" FromRole="FromRole_assoc_4FF46EA4BE56012C9199CE70379839F3" ToRole="ToRole_assoc_4FF46EA4BE56012C9199CE70379839F3"/>
+                <NavigationProperty Name="to_DeliveryStatus" Relationship="AIS_EXISTING_RDS_SRV.assoc_2DA37B43600195FEA154846EEE7CEE65" FromRole="FromRole_assoc_2DA37B43600195FEA154846EEE7CEE65" ToRole="ToRole_assoc_2DA37B43600195FEA154846EEE7CEE65"/>
+                <NavigationProperty Name="to_Item" Relationship="AIS_EXISTING_RDS_SRV.assoc_4E52B978546D3D000631758E7E5BEAB7" FromRole="FromRole_assoc_4E52B978546D3D000631758E7E5BEAB7" ToRole="ToRole_assoc_4E52B978546D3D000631758E7E5BEAB7"/>
+                <NavigationProperty Name="to_LifecycleStatus" Relationship="AIS_EXISTING_RDS_SRV.assoc_443EE8974F11E780BFABDBBAA6744605" FromRole="FromRole_assoc_443EE8974F11E780BFABDBBAA6744605" ToRole="ToRole_assoc_443EE8974F11E780BFABDBBAA6744605"/>
+            </EntityType>
+            <EntityType Name="I_AIS_ProductType" sap:label="Product" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ProductID"/>
+                </Key>
+                <Property Name="ProductID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="ProductID_Text" sap:label="Product ID"/>
+                <Property Name="ProductID_Text" Type="Edm.String" MaxLength="255" sap:label="Description" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="TypeCode" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Type Code"/>
+                <Property Name="Category" Type="Edm.String" MaxLength="40" sap:label="Category"/>
+                <Property Name="TaxTarifCode" Type="Edm.Byte" sap:label="Tax Tariff Code"/>
+                <Property Name="MeasureUnit" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:semantics="unit-of-measure"/>
+                <Property Name="WeightMeasure" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Weight"/>
+                <Property Name="WeightUnit" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:semantics="unit-of-measure"/>
+                <Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" sap:label="Currency Code" sap:semantics="currency-code"/>
+                <Property Name="Price" Type="Edm.Decimal" Precision="16" Scale="3" sap:label="Price"/>
+                <Property Name="PictureURL" Type="Edm.String" MaxLength="255" sap:display-format="UpperCase" sap:label="Image"/>
+                <Property Name="Width" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Width"/>
+                <Property Name="Depth" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Depth"/>
+                <Property Name="Height" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Height"/>
+                <Property Name="DimensionUnit" Type="Edm.String" MaxLength="3" sap:label="Dimension Unit" sap:semantics="unit-of-measure"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp"/>
+                <Property Name="CreationUserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+                <Property Name="LastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp"/>
+                <Property Name="LastChangedUnserName" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+                <NavigationProperty Name="to_ProductTexts" Relationship="AIS_EXISTING_RDS_SRV.assoc_EBB9AF9AA17CD12A573D04770391173C" FromRole="FromRole_assoc_EBB9AF9AA17CD12A573D04770391173C" ToRole="ToRole_assoc_EBB9AF9AA17CD12A573D04770391173C"/>
+            </EntityType>
+            <EntityType Name="I_AIS_ProductText_AType" sap:label="Product Decription" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ProductID"/>
+                    <PropertyRef Name="Language"/>
+                </Key>
+                <Property Name="ProductID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Product ID"/>
+                <Property Name="Language" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key"/>
+                <Property Name="Description" Type="Edm.String" MaxLength="255" sap:label="Description"/>
+            </EntityType>
+            <EntityType Name="I_AIS_SOI_Atp_StatusType" sap:label="Sales Order Item ATP Status" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Status"/>
+                </Key>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="Status_Text" sap:label="Dom. lower value"/>
+                <Property Name="Status_Text" Type="Edm.String" MaxLength="60" sap:label="Short Descript." sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <Association Name="assoc_93D1C41679E44890734807D4D660AC15" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItemSL_AType" Multiplicity="1" Role="FromRole_assoc_93D1C41679E44890734807D4D660AC15"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_Unit_Of_MeasureType" Multiplicity="0..1" Role="ToRole_assoc_93D1C41679E44890734807D4D660AC15"/>
+            </Association>
+            <Association Name="assoc_1ECB31F536C8E7D7891E0264F8302C56" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItemSL_AType" Multiplicity="1" Role="FromRole_assoc_1ECB31F536C8E7D7891E0264F8302C56"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType" Multiplicity="1" Role="ToRole_assoc_1ECB31F536C8E7D7891E0264F8302C56"/>
+            </Association>
+            <Association Name="assoc_9562DC5CFCAE96ADBAD58C8B303F16D8" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItemSL_AType" Multiplicity="1" Role="FromRole_assoc_9562DC5CFCAE96ADBAD58C8B303F16D8"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType" Multiplicity="1" Role="ToRole_assoc_9562DC5CFCAE96ADBAD58C8B303F16D8"/>
+            </Association>
+            <Association Name="assoc_EBB9AF9AA17CD12A573D04770391173C" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_ProductType" Multiplicity="1" Role="FromRole_assoc_EBB9AF9AA17CD12A573D04770391173C"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_ProductText_AType" Multiplicity="*" Role="ToRole_assoc_EBB9AF9AA17CD12A573D04770391173C"/>
+            </Association>
+            <Association Name="assoc_C6CA887B90D9112187A3B2263F078BA4" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType" Multiplicity="1" Role="FromRole_assoc_C6CA887B90D9112187A3B2263F078BA4"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_SOI_Atp_StatusType" Multiplicity="0..1" Role="ToRole_assoc_C6CA887B90D9112187A3B2263F078BA4"/>
+            </Association>
+            <Association Name="assoc_57DBD9551C585884FF1F3549F8B42528" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType" Multiplicity="1" Role="FromRole_assoc_57DBD9551C585884FF1F3549F8B42528"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_CurrencyType" Multiplicity="0..1" Role="ToRole_assoc_57DBD9551C585884FF1F3549F8B42528"/>
+            </Association>
+            <Association Name="assoc_A294AE8938706ACAB4BC86A378B8EDA0" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType" Multiplicity="1" Role="FromRole_assoc_A294AE8938706ACAB4BC86A378B8EDA0"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_ProductType" Multiplicity="0..1" Role="ToRole_assoc_A294AE8938706ACAB4BC86A378B8EDA0"/>
+            </Association>
+            <Association Name="assoc_DD5855220026F25D593D17AB02BD64F0" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType" Multiplicity="1" Role="FromRole_assoc_DD5855220026F25D593D17AB02BD64F0"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType" Multiplicity="0..1" Role="ToRole_assoc_DD5855220026F25D593D17AB02BD64F0"/>
+            </Association>
+            <Association Name="assoc_97507B4D656D9FEE72C58957BB59993C" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType" Multiplicity="1" Role="FromRole_assoc_97507B4D656D9FEE72C58957BB59993C"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItemSL_AType" Multiplicity="*" Role="ToRole_assoc_97507B4D656D9FEE72C58957BB59993C"/>
+            </Association>
+            <Association Name="assoc_49AC22089C030C5E342810BB390F4D4B" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType" Multiplicity="1" Role="FromRole_assoc_49AC22089C030C5E342810BB390F4D4B"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_SO_Confirmation_StatusType" Multiplicity="0..1" Role="ToRole_assoc_49AC22089C030C5E342810BB390F4D4B"/>
+            </Association>
+            <Association Name="assoc_DF9B13F02BAB2CA19DBB8DB6E3C1894C" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType" Multiplicity="1" Role="FromRole_assoc_DF9B13F02BAB2CA19DBB8DB6E3C1894C"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_BusinessPartner_AType" Multiplicity="0..1" Role="ToRole_assoc_DF9B13F02BAB2CA19DBB8DB6E3C1894C"/>
+            </Association>
+            <Association Name="assoc_4FF46EA4BE56012C9199CE70379839F3" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType" Multiplicity="1" Role="FromRole_assoc_4FF46EA4BE56012C9199CE70379839F3"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_CurrencyType" Multiplicity="0..1" Role="ToRole_assoc_4FF46EA4BE56012C9199CE70379839F3"/>
+            </Association>
+            <Association Name="assoc_2DA37B43600195FEA154846EEE7CEE65" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType" Multiplicity="1" Role="FromRole_assoc_2DA37B43600195FEA154846EEE7CEE65"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_SO_Delivery_StatusType" Multiplicity="0..1" Role="ToRole_assoc_2DA37B43600195FEA154846EEE7CEE65"/>
+            </Association>
+            <Association Name="assoc_4E52B978546D3D000631758E7E5BEAB7" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType" Multiplicity="1" Role="FromRole_assoc_4E52B978546D3D000631758E7E5BEAB7"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType" Multiplicity="*" Role="ToRole_assoc_4E52B978546D3D000631758E7E5BEAB7"/>
+            </Association>
+            <Association Name="assoc_443EE8974F11E780BFABDBBAA6744605" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType" Multiplicity="1" Role="FromRole_assoc_443EE8974F11E780BFABDBBAA6744605"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_SO_Lifecycle_StatusType" Multiplicity="0..1" Role="ToRole_assoc_443EE8974F11E780BFABDBBAA6744605"/>
+            </Association>
+            <Association Name="assoc_2C5FD72C6E56AD5A32EB98F721588C1B" sap:content-version="1">
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_BusinessPartner_AType" Multiplicity="1" Role="FromRole_assoc_2C5FD72C6E56AD5A32EB98F721588C1B"/>
+                <End Type="AIS_EXISTING_RDS_SRV.I_AIS_BusPartnerContact_AType" Multiplicity="0..1" Role="ToRole_assoc_2C5FD72C6E56AD5A32EB98F721588C1B"/>
+            </Association>
+            <EntityContainer Name="AIS_EXISTING_RDS_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="I_AIS_BusinessPartner_A" EntityType="AIS_EXISTING_RDS_SRV.I_AIS_BusinessPartner_AType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIS_SO_Confirmation_Status" EntityType="AIS_EXISTING_RDS_SRV.I_AIS_SO_Confirmation_StatusType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIS_SO_Delivery_Status" EntityType="AIS_EXISTING_RDS_SRV.I_AIS_SO_Delivery_StatusType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIS_SO_Lifecycle_Status" EntityType="AIS_EXISTING_RDS_SRV.I_AIS_SO_Lifecycle_StatusType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIS_BusPartnerContact_A" EntityType="AIS_EXISTING_RDS_SRV.I_AIS_BusPartnerContact_AType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="I_AIS_Unit_Of_Measure" EntityType="AIS_EXISTING_RDS_SRV.I_AIS_Unit_Of_MeasureType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIS_Currency" EntityType="AIS_EXISTING_RDS_SRV.I_AIS_CurrencyType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIS_E_SalesOrderItemSL_A" EntityType="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItemSL_AType" sap:content-version="1"/>
+                <EntitySet Name="I_AIS_E_SalesOrderItem_A" EntityType="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIS_E_SalesOrder_A" EntityType="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIS_Product" EntityType="AIS_EXISTING_RDS_SRV.I_AIS_ProductType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIS_ProductText_A" EntityType="AIS_EXISTING_RDS_SRV.I_AIS_ProductText_AType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_AIS_SOI_Atp_Status" EntityType="AIS_EXISTING_RDS_SRV.I_AIS_SOI_Atp_StatusType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <AssociationSet Name="assoc_2C5FD72C6E56AD5A32EB98F721588C1B" Association="AIS_EXISTING_RDS_SRV.assoc_2C5FD72C6E56AD5A32EB98F721588C1B" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_BusinessPartner_A" Role="FromRole_assoc_2C5FD72C6E56AD5A32EB98F721588C1B"/>
+                    <End EntitySet="I_AIS_BusPartnerContact_A" Role="ToRole_assoc_2C5FD72C6E56AD5A32EB98F721588C1B"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_93D1C41679E44890734807D4D660AC15" Association="AIS_EXISTING_RDS_SRV.assoc_93D1C41679E44890734807D4D660AC15" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrderItemSL_A" Role="FromRole_assoc_93D1C41679E44890734807D4D660AC15"/>
+                    <End EntitySet="I_AIS_Unit_Of_Measure" Role="ToRole_assoc_93D1C41679E44890734807D4D660AC15"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_9562DC5CFCAE96ADBAD58C8B303F16D8" Association="AIS_EXISTING_RDS_SRV.assoc_9562DC5CFCAE96ADBAD58C8B303F16D8" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrderItemSL_A" Role="FromRole_assoc_9562DC5CFCAE96ADBAD58C8B303F16D8"/>
+                    <End EntitySet="I_AIS_E_SalesOrderItem_A" Role="ToRole_assoc_9562DC5CFCAE96ADBAD58C8B303F16D8"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_49AC22089C030C5E342810BB390F4D4B" Association="AIS_EXISTING_RDS_SRV.assoc_49AC22089C030C5E342810BB390F4D4B" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrder_A" Role="FromRole_assoc_49AC22089C030C5E342810BB390F4D4B"/>
+                    <End EntitySet="I_AIS_SO_Confirmation_Status" Role="ToRole_assoc_49AC22089C030C5E342810BB390F4D4B"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_C6CA887B90D9112187A3B2263F078BA4" Association="AIS_EXISTING_RDS_SRV.assoc_C6CA887B90D9112187A3B2263F078BA4" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrderItem_A" Role="FromRole_assoc_C6CA887B90D9112187A3B2263F078BA4"/>
+                    <End EntitySet="I_AIS_SOI_Atp_Status" Role="ToRole_assoc_C6CA887B90D9112187A3B2263F078BA4"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_DF9B13F02BAB2CA19DBB8DB6E3C1894C" Association="AIS_EXISTING_RDS_SRV.assoc_DF9B13F02BAB2CA19DBB8DB6E3C1894C" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrder_A" Role="FromRole_assoc_DF9B13F02BAB2CA19DBB8DB6E3C1894C"/>
+                    <End EntitySet="I_AIS_BusinessPartner_A" Role="ToRole_assoc_DF9B13F02BAB2CA19DBB8DB6E3C1894C"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_DD5855220026F25D593D17AB02BD64F0" Association="AIS_EXISTING_RDS_SRV.assoc_DD5855220026F25D593D17AB02BD64F0" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrderItem_A" Role="FromRole_assoc_DD5855220026F25D593D17AB02BD64F0"/>
+                    <End EntitySet="I_AIS_E_SalesOrder_A" Role="ToRole_assoc_DD5855220026F25D593D17AB02BD64F0"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_443EE8974F11E780BFABDBBAA6744605" Association="AIS_EXISTING_RDS_SRV.assoc_443EE8974F11E780BFABDBBAA6744605" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrder_A" Role="FromRole_assoc_443EE8974F11E780BFABDBBAA6744605"/>
+                    <End EntitySet="I_AIS_SO_Lifecycle_Status" Role="ToRole_assoc_443EE8974F11E780BFABDBBAA6744605"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_57DBD9551C585884FF1F3549F8B42528" Association="AIS_EXISTING_RDS_SRV.assoc_57DBD9551C585884FF1F3549F8B42528" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrderItem_A" Role="FromRole_assoc_57DBD9551C585884FF1F3549F8B42528"/>
+                    <End EntitySet="I_AIS_Currency" Role="ToRole_assoc_57DBD9551C585884FF1F3549F8B42528"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_1ECB31F536C8E7D7891E0264F8302C56" Association="AIS_EXISTING_RDS_SRV.assoc_1ECB31F536C8E7D7891E0264F8302C56" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrderItemSL_A" Role="FromRole_assoc_1ECB31F536C8E7D7891E0264F8302C56"/>
+                    <End EntitySet="I_AIS_E_SalesOrder_A" Role="ToRole_assoc_1ECB31F536C8E7D7891E0264F8302C56"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_2DA37B43600195FEA154846EEE7CEE65" Association="AIS_EXISTING_RDS_SRV.assoc_2DA37B43600195FEA154846EEE7CEE65" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrder_A" Role="FromRole_assoc_2DA37B43600195FEA154846EEE7CEE65"/>
+                    <End EntitySet="I_AIS_SO_Delivery_Status" Role="ToRole_assoc_2DA37B43600195FEA154846EEE7CEE65"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_EBB9AF9AA17CD12A573D04770391173C" Association="AIS_EXISTING_RDS_SRV.assoc_EBB9AF9AA17CD12A573D04770391173C" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_Product" Role="FromRole_assoc_EBB9AF9AA17CD12A573D04770391173C"/>
+                    <End EntitySet="I_AIS_ProductText_A" Role="ToRole_assoc_EBB9AF9AA17CD12A573D04770391173C"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_4E52B978546D3D000631758E7E5BEAB7" Association="AIS_EXISTING_RDS_SRV.assoc_4E52B978546D3D000631758E7E5BEAB7" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrder_A" Role="FromRole_assoc_4E52B978546D3D000631758E7E5BEAB7"/>
+                    <End EntitySet="I_AIS_E_SalesOrderItem_A" Role="ToRole_assoc_4E52B978546D3D000631758E7E5BEAB7"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_4FF46EA4BE56012C9199CE70379839F3" Association="AIS_EXISTING_RDS_SRV.assoc_4FF46EA4BE56012C9199CE70379839F3" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrder_A" Role="FromRole_assoc_4FF46EA4BE56012C9199CE70379839F3"/>
+                    <End EntitySet="I_AIS_Currency" Role="ToRole_assoc_4FF46EA4BE56012C9199CE70379839F3"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_A294AE8938706ACAB4BC86A378B8EDA0" Association="AIS_EXISTING_RDS_SRV.assoc_A294AE8938706ACAB4BC86A378B8EDA0" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrderItem_A" Role="FromRole_assoc_A294AE8938706ACAB4BC86A378B8EDA0"/>
+                    <End EntitySet="I_AIS_Product" Role="ToRole_assoc_A294AE8938706ACAB4BC86A378B8EDA0"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_97507B4D656D9FEE72C58957BB59993C" Association="AIS_EXISTING_RDS_SRV.assoc_97507B4D656D9FEE72C58957BB59993C" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="I_AIS_E_SalesOrderItem_A" Role="FromRole_assoc_97507B4D656D9FEE72C58957BB59993C"/>
+                    <End EntitySet="I_AIS_E_SalesOrderItemSL_A" Role="ToRole_assoc_97507B4D656D9FEE72C58957BB59993C"/>
+                </AssociationSet>
+                <FunctionImport Name="I_AIS_E_SalesOrderCalculate_gross_amount" ReturnType="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType" EntitySet="I_AIS_E_SalesOrderItem_A" m:HttpMethod="POST" sap:action-for="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType" sap:applicable-path="Calculate_gross_amount_ac">
+                    <Parameter Name="SalesOrderID" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="SalesOrderItemID" Type="Edm.String" Mode="In" MaxLength="10"/>
+                </FunctionImport>
+                <FunctionImport Name="I_AIS_E_SalesOrderItem_ACopy" ReturnType="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType" EntitySet="I_AIS_E_SalesOrderItem_A" m:HttpMethod="POST" sap:action-for="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType" sap:applicable-path="Copy_ac">
+                    <Parameter Name="SalesOrderID" Type="Edm.String" Mode="In" MaxLength="10"/>
+                    <Parameter Name="SalesOrderItemID" Type="Edm.String" Mode="In" MaxLength="10"/>
+                </FunctionImport>
+                <FunctionImport Name="I_AIS_E_SalesOrde1Calculate_gross_amount" ReturnType="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType" EntitySet="I_AIS_E_SalesOrder_A" m:HttpMethod="POST" sap:action-for="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType" sap:applicable-path="Calculate_gross_amount_ac">
+                    <Parameter Name="SalesOrderID" Type="Edm.String" Mode="In" MaxLength="10"/>
+                </FunctionImport>
+                <FunctionImport Name="I_AIS_E_SalesOrder_ACopy" ReturnType="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType" EntitySet="I_AIS_E_SalesOrder_A" m:HttpMethod="POST" sap:action-for="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType">
+                    <Parameter Name="SALESORDERID" Type="Edm.String" Mode="In" MaxLength="10"/>
+                </FunctionImport>
+            </EntityContainer>
+            <Annotations Target="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType/ProductID">
+            	<Annotation Term="com.sap.vocabularies.Common.v1.SemanticObject" String="EPMProduct"/>
+            </Annotations>
+            <Annotations Target="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItemSL_AType/QuantityUnitCode"
+                xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Unit of Measure"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIS_Unit_Of_Measure"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="QuantityUnitCode"/>
+                                    <PropertyValue Property="ValueListProperty" String="UnitOfMeasure"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="UnitOfMeasure_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType/CurrencyCode"
+                xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Currency"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIS_Currency"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="CurrencyCode"/>
+                                    <PropertyValue Property="ValueListProperty" String="Currency"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Currency_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrderItem_AType/AvailableToPromiseStatus"
+                xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Sales Order Item ATP Status"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIS_SOI_Atp_Status"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="AvailableToPromiseStatus"/>
+                                    <PropertyValue Property="ValueListProperty" String="Status"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Status_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType/CurrencyCode"
+                xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Currency"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIS_Currency"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="CurrencyCode"/>
+                                    <PropertyValue Property="ValueListProperty" String="Currency"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Currency_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType/LifecycleStatus"
+                xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Sales Order Lifecycle Status"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIS_SO_Lifecycle_Status"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="LifecycleStatus"/>
+                                    <PropertyValue Property="ValueListProperty" String="Status"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Status_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType/BillingStatus"
+                xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Sales Order Confirmation Status"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIS_SO_Confirmation_Status"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="BillingStatus"/>
+                                    <PropertyValue Property="ValueListProperty" String="Status"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Status_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="AIS_EXISTING_RDS_SRV.I_AIS_E_SalesOrder_AType/DeliveryStatus"
+                xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Sales Order Delivery Status"/>
+                        <PropertyValue Property="CollectionPath" String="I_AIS_SO_Delivery_Status"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="DeliveryStatus"/>
+                                    <PropertyValue Property="ValueListProperty" String="Status"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Status_Text"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <atom:link rel="self" href="./sap/AIS_EXISTING_RDS_SRV/$metadata"
+                xmlns:atom="http://www.w3.org/2005/Atom"/>
+                <atom:link rel="latest-version" href="./sap/AIS_EXISTING_RDS_SRV/$metadata"
+                    xmlns:atom="http://www.w3.org/2005/Atom"/>
+                </Schema>
+            </edmx:DataServices>
+        </edmx:Edmx>

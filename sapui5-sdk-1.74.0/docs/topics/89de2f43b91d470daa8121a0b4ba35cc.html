@@ -1,0 +1,189 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Navigation</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The navigation flow of the Master-Detail app considers both the Master and Detail pages, and is therefore slightly more complex than a typical full-screen scenario."><meta name="description" content="The navigation flow of the Master-Detail app considers both the Master and Detail pages, and is therefore slightly more complex than a typical full-screen scenario."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"a92e0aa0d121436885a96e420b26b945.html","previousTopicHref":"8ed9339f3a99418e82a02f0fb4b5d6b9.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio89de2f43b91d470daa8121a0b4ba35cc"><h1 class="title topictitle1" hidden>Navigation</h1><div class="body conbody"><p class="shortdesc" hidden>The navigation flow of the Master-Detail app considers both the <span class="ph uicontrol">Master</span> and <span class="ph uicontrol">Detail</span> pages, and is
+therefore slightly more complex than a typical full-screen scenario.</p>
+<p class="p">With an empty hash in the URL, only the master view is shown initially. When the user enters the app with an object id in the hash, both views
+are loaded at the same time, and methods in the controller logic make sure that the pages are in sync. Additional <span class="ph uicontrol">not
+found</span> pages display a message to the user in case of any navigation errors that occur for the master and the detail page.</p>
+<div class="fig fignone" id="loio89de2f43b91d470daa8121a0b4ba35cc__fig_xyz_nkh_bt"><div class="figbody">
+
+<img class="inline  " id="loio89de2f43b91d470daa8121a0b4ba35cc__image_shs_rkh_bt" src="loioec746bc8018543fda1fae5230367dfc5_LowRes.png">
+</div><span class="figcap">Navigation Flow of the Master-Detail App</span></div>
+<p class="p">The two main views <span class="ph uicontrol">Master</span> and <span class="ph uicontrol">Object</span> each have a route and two targets configured. When the route
+matches the URL, both targets are displayed and the corresponding views are created. The target master puts the created view in the
+<span class="keyword apiname">beginColumnPages</span> aggregation of the <span class="keyword apiname">sap.f.FlexibleColumnLayout</span> control. All other targets put their
+created views in the <span class="keyword apiname">midColumnPages</span> aggregation. For more information, see <a class="xref" href="../../#/topic/3d18f20bd2294228acb6910d8e8a5fb5.html" title="SAPUI5 offers hash-based navigation, which allows you to build single-page apps where the navigation is done by changing the hash. In this way the browser does not have to reload the page; instead there is a callback to which the app and especially the affected view can react. A hash string is parsed and matched against patterns which will then inform the handlers." target="_top">Routing and Navigation</a>.</p>
+<p class="p">Here is a sample implementation for navigating from the <span class="ph uicontrol">Master</span> to the <span class="ph uicontrol">Object</span> page. The
+below<span class="keyword apiname"> _showDetail</span> method is called by the <span class="keyword apiname">selectionChange</span> event handler of the
+<span class="keyword apiname">sap.m.List</span> control. We need to change the layout parameter of the <span class="keyword apiname">sap.f.FlexibleColumnLayout</span> to
+<span class="keyword apiname">TwoColumnsMidExpanded</span> and navigate to the <span class="keyword apiname">object</span> route. Then, we extract the current ID of the object
+pressed by using its binding context. We supply this parameter to the mandatory <span class="keyword apiname">objectId</span> parameter and pass it to the
+<span class="keyword apiname">navTo</span> function, as described <span class="ph">in the <a class="xref" href="../../#/api/sap.ui.core.routing.Router/methods/navTo" target="_top" alt="#/api/sap.ui.core.routing.Router/methods/navTo" title="#/api/sap.ui.core.routing.Router/methods/navTo">sap.ui.core.routing.Routing#navTo</a> section</span> of the <span class="ph uicontrol">API Reference</span> in the Demo Kit and shown
+here:</p>
+<pre class="pre codeblock prettyprint lang-js">...
+/**
+  * Shows the selected item on the detail page
+  * On phones an additional history entry is created
+  * @param {sap.m.ObjectListItem} oItem selected Item
+  * @private
+  */
+_showDetail : function (oItem) {
+      var bReplace = !Device.system.phone;
+      // set the layout property of FCL control to show two columns
+      this.getModel(&quot;appView&quot;).setProperty(&quot;/layout&quot;, &quot;TwoColumnsMidExpanded&quot;);
+      this.getRouter().navTo(&quot;object&quot;, {
+         objectId : oItem.getBindingContext().getProperty(&quot;ObjectID&quot;)
+      }, bReplace);
+},
+...</pre>
+<p class="p">After calling <samp class="ph codeph">navTo</samp>, the hash of the browser is updated, and you get an event on the <samp class="ph codeph">DetailController</samp> when
+the route <span class="keyword apiname">object</span> matches the current hash. In the <span class="keyword apiname">_onObjectMatched</span> handler that we register in the
+<span class="keyword apiname">init</span> method of the controller, we extract the <span class="keyword apiname">objectID</span> from the event arguments and create a valid model
+path with the help of the <span class="keyword apiname">createKey</span> method of our OData model. We then bind the data to the view:</p>
+<pre class="pre codeblock prettyprint lang-js">...
+/**
+  * Binds the view to the object path and expands the aggregated line items.
+  * @function
+  * @param {sap.ui.base.Event} oEvent pattern match event in route &apos;object&apos;
+  * @private
+  */
+<span class="ph emphasis emphasis">_onObjectMatched : function (oEvent) {</span>
+
+      var sObjectId =  oEvent.getParameter(&quot;arguments&quot;).objectId;
+<span class="ph emphasis emphasis">      this.getModel(&quot;appView&quot;).setProperty(&quot;/layout&quot;, &quot;TwoColumnsMidExpanded&quot;);
+      this.getModel().metadataLoaded().then( function() {
+</span>
+        var sObjectPath = this.getModel().createKey(&quot;Objects&quot;, {
+          ObjectID :  sObjectId
+<span class="ph emphasis emphasis">        });
+        this._bindView(&quot;/&quot; + sObjectPath);
+      }.bind(this));
+},</span>
+...</pre>
+<div class="section"><section class="section" type="notFound (similar to an HTTP 404 &quot;not found&quot; status code)"><h2 class="section_title" style="font-size: 1.15em;">notFound (similar to an HTTP 404 &quot;not found&quot; status code)</h2>
+
+<p class="p">The <span class="ph uicontrol">not found</span> pages are implemented using <span class="ph"> an <a class="xref" href="../../#/entity/sap.m.MessagePage" target="_top" alt="#/entity/sap.m.MessagePage" title="#/entity/sap.m.MessagePage">sap.m.MessagePage</a></span>. They display an error message according to the SAP Fiori UX specifications. There are different &quot;not
+found&quot; cases that each have a separate target and a <span class="ph uicontrol">notFound</span> view.</p>
+<p class="p">If you have the following URL, no route will match: <span class="ph filepath">index.html/#/thisIsInvalid</span>. This means that the
+<span class="ph uicontrol">notFound</span> view will be displayed, as the target <span class="ph uicontrol">notFound</span> is defined in the bypassed section.</p>
+<div class="p">The code sample below shows the relevant parts of the configuration. In addition, we set the layout property for the
+<span class="keyword apiname">sap.f.FlexibleColumnLayout</span> to <span class="keyword apiname">OneColumn</span> in the controller of the <span class="ph uicontrol">notFound</span> page
+so that only a single column is displayed in this case. For a full implementation of a <span class="ph uicontrol">not found</span> page, see <a class="xref" href="../../#/topic/e047e0596e8a4a1db50f4a53c11f4276.html" title="Sometimes it is important to display an indication that the requested resource was not found. To give you an example: If a user tries to access an invalid pattern which does not match any of the configured routes, the user is notified that something went wrong. You might also know this as a &#x201C;404&#x201D; or Not Found Page from traditional web pages. In this step, we will implement a feature that detects invalid hashes and visualizes this in a nice way." target="_top">Step 3: Catch Invalid Hashes</a>.<pre class="pre codeblock prettyprint lang-js">&quot;routing&quot;: {
+    &quot;config&quot;: {
+    &#x2026;
+    &quot;bypassed&quot;: {
+    &quot;target&quot;: &quot;notFound&quot;
+    }
+    }
+    &#x2026;
+    &quot;targets&quot;: {
+    &#x2026;
+    &quot;notFound&quot;: {
+      &quot;viewName&quot;: &quot;NotFound&quot;,
+      &quot;viewId&quot;: &quot;notFound&quot;
+    }
+
+}</pre></div>
+</section></div>
+<div class="section"><section class="section" type="detailObjectNotFound"><h2 class="section_title" style="font-size: 1.15em;">detailObjectNotFound</h2>
+
+<p class="p">If the object route matches &#x2013; an ID is passed (for example <samp class="ph codeph">#/Objects/1337</samp>) but the back end does not contain an object with the ID
+<samp class="ph codeph">1337</samp>, then you need to display the <span class="ph uicontrol">detailObjectNotFound</span> page. This is achieved by listening to the &#x201C;change&#x201D;
+event of a binding. Inside this, you check if there is no data and tell the router to display the <span class="ph uicontrol">detailObjectNotFound</span> target, as
+shown in the sample code below:</p>
+<pre class="pre codeblock prettyprint lang-js">// inside of a controller
+this.getView().bindElement({
+    path: &quot;/Objects/1337&quot;,
+    change: function () {
+      // there is no data
+      if (!this.getView().getElementBinding().getBoundContext()) {
+          this.getRouter().getTargets().display(&quot;detailObjectNotFound
+&quot;);
+      return;
+				}
+      // code handling the case if there is data in the backend
+      &#x2026;
+};
+});</pre>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

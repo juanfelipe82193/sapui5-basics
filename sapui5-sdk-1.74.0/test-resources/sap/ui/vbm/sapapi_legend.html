@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<script src="../../../../resources/sap-ui-core.js" id="sap-ui-bootstrap" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+	<!-- add sap.ui.table,sap.ui.ux3 and/or other libraries to 'data-sap-ui-libs' if required -->
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#margin {
+			margin-right: 50px;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+		// creation of visual business...........................//
+		sap.ui.localResources("vbitestapp");
+
+		var oVBI1 = new sap.ui.vbm.VBI('vbiWrap2', {
+			width: "100%",
+			height: 620
+		});
+		oVBI1.placeAt("content");
+
+		// load the json and set the default text area text
+		var dat = $.getJSON("media/vblegend/main.json", function(dat) {
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array) {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(dat);
+		});
+
+		function onBtnChange() {
+			var dat = $.getJSON("media/vblegend/newlegend.json", function(dat) {
+				oVBI1.load(dat);
+			});
+
+		};
+
+		function onBtnLoad() {
+			var dat = $.getJSON("media/vblegend/main.json", function(dat) {
+							var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array) {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+				oVBI1.load(dat);
+			});
+
+		};
+
+		function onBtnDestroy() {
+			var leg = document.getElementById('vbiWrap2-LEGEND');
+			leg.remove();
+		};
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: Testing Legend</h1>
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test the legend.</p>
+		<br>
+		<h3> To test: </h3>
+		<ol>
+			<li>Check that on initial load you can see a map with a legend.</li>
+			<img src="img/legend1.jpg" alt="text for Thumbnail" style="width:450px;height:380px;">
+			<li> Click on "Load Legend" button and check that the result is the same as the initial load.</li>
+			<li> Click on "Change Legend" button and check that the legend has a new format.</li>
+			<img src="img/legend2.jpg" alt="text for Thumbnail" style="width:450px;height:380px;">
+			<li> Click on "Destroy" and check that the legend control is removed.<i>It should not be visible</i> </li>
+	</div>
+	<div id="description2">
+		<ol>
+			<br>
+			<button id="btnLoad" onClick="onBtnLoad()">Load Legend</button>
+			<button id="btnChange" onClick="onBtnChange()">Change Legend</button>
+			<button id="btnDestroy" onClick="onBtnDestroy()">Destroy</button>
+			<br>
+			<br>
+			<div id="content" style="margin-right: 50px;"></div>
+
+	</div>
+</body>
+
+</html>

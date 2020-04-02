@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta charset="UTF-8" />
+		<title>UI5 CVOM HTML5 VizFrame</title>
+		<meta name="keywords" content="Control Table" />
+		<link rel="stylesheet" type="text/css"
+		href="../../../resources/sap/viz/ui5/controls/css/controls.css"/>
+		
+		<script id="sap-ui-bootstrap" src="../../../resources/sap-ui-core.js"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-libs="sap.ui.commons, sap.ui.ux3, sap.m,sap.viz"></script>
+
+		<script id='horizontal_VizContainerSimpleExample'>
+var initOptions = {
+"vizType":'timeseries_waterfall',
+"uiConfig": {
+"applicationSet": "fiori"
+}};
+var vizframe = new sap.viz.ui5.controls.VizFrame(initOptions);
+var model = new sap.ui.model.json.JSONModel(
+{
+    "businessData": [{
+        "Date": new Date(2016, 0, 1).getTime(),
+        "Cost": 380.1,
+        "Profit1": 641.46
+    }, {
+        "Date": new Date(2016, 0, 2).getTime(),
+        "Cost": 570.53,
+        "Profit1": 730.68
+    }, {
+        "Date": new Date(2016, 0, 3).getTime(),
+        "Cost": -720.3,
+        "Profit1": -385.46
+    }, {
+        "Date": new Date(2016, 0, 4).getTime(),
+        "Cost": -645.3,
+        "Profit1": 722.46
+    }, {
+        "Date": new Date(2016, 0, 5).getTime(),
+        "Cost": 567.8,
+        "Profit1": -469.98
+    }, {
+        "Date": new Date(2016, 0, 6).getTime(),
+        "Cost": 480.1,
+        "Profit1": 728.38
+    }, {
+        "Date": new Date(2016, 0, 7).getTime(),
+        "Cost": -280,
+        "Profit1": 128.74
+    }, {
+        "Date": new Date(2016, 0, 8).getTime(),
+        "Cost": 470.3,
+        "Profit1": -963.08
+    }, {
+        "Date": new Date(2016, 0, 9).getTime(),
+        "Cost": 330.37,
+        "Profit1": -812.61
+    }, {
+        "Date": new Date(2016, 0, 10).getTime(),
+        "Cost": 545.63,
+        "Profit1": 258.29
+    }]
+}
+);
+var dataset = new sap.viz.ui5.data.FlattenedDataset(
+{
+    "dimensions": [{
+        "name": "Date",
+        "value": "{Date}",
+        "dataType": "date"
+    }],
+    "measures": [{
+        "name": "Cost",
+        "value": "{Cost}"
+    }, {
+        "name": "Profit1",
+        "value": "{Profit1}"
+    }],
+    "data": {
+        "path": "/businessData"
+    }
+});
+vizframe.setModel(model);
+vizframe.setDataset(dataset);
+var feeds =[
+	new sap.viz.ui5.controls.common.feeds.FeedItem({"uid":"timeAxis","type":"Dimension","values":["Date"]})
+	,
+	new sap.viz.ui5.controls.common.feeds.FeedItem({"uid":"valueAxis","type":"Measure","values":["Profit1", "Cost"]})
+	]
+feeds.forEach(function(feedItem) {
+vizframe.addFeed(feedItem);
+var popOver = new sap.viz.ui5.controls.Popover({});
+popOver.connect(vizframe.getVizUid());
+//var oTooltip = new sap.viz.ui5.controls.VizTooltip({});
+//oTooltip.connect(vizframe.getVizUid());
+})
+vizframe.setVizProperties({
+    plotArea: {
+        startValue: 100,
+        dataLabel: {
+            recaptitle:'End of period'
+        }
+    },
+});
+vizframe.setWidth('1000px');
+vizframe.setHeight('600px');
+vizframe.placeAt("content");
+		</script>
+	</head>
+	<body class="sapUiBody">
+		<h2>Introduction</h2>
+
+		<div id="content" style="width: 1000px; height: 600px"></div>
+	</body>
+</html>

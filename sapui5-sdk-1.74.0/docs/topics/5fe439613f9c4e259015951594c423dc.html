@@ -1,0 +1,189 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Enabling Actions in Object Page Header</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="You can enable generic actions in your object header."><meta name="description" content="You can enable generic actions in your object header."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"92970546061b4da79a4bb8b21dd64dc9.html","previousTopicHref":"0b73cbbeda344d88b5d0f8bea4d4498e.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio5fe439613f9c4e259015951594c423dc"><h1 class="title topictitle1" hidden>Enabling Actions in Object Page Header</h1><div class="body conbody"><p class="shortdesc" hidden>You can enable generic actions in your object header.</p>
+<p class="p">All data fields with <samp class="ph codeph">com.sap.vocabularies.UI.v1.DataFieldForAction</samp> are
+interpreted as actions. The system renders a button within the header displaying the
+text of the data field label.</p>
+<p class="p">Data fields for actions that you annotate with high importance are displayed to the left of the
+<span class="ph uicontrol">Edit</span>/<span class="ph uicontrol">Delete</span> buttons, and those without
+high importance are displayed to the right. In addition to the importance, you need to
+specify the action for the data field and implement the action handling in the OData
+service (DPC: <samp class="ph codeph">execute_action</samp>), as shown below for the
+<span class="ph uicontrol">Copy</span> button. See the code samples below for information on
+where to place the data fields for actions.</p>
+<div class="p">
+<div class="fig fignone" id="loio5fe439613f9c4e259015951594c423dc__fig_a1d_clm_rt"><div class="figbody">
+
+<img class="inline  " id="loio5fe439613f9c4e259015951594c423dc__image_vby_spv_y1b" src="loio37cb250ba10348478be80e25fdeb2a9f_LowRes.png">
+</div><span class="figcap">Object Page: Actions Defined for the EntitySet</span></div>
+</div>
+<div class="p">Annotations for the <span class="ph uicontrol">Copy</span>
+button:<pre class="pre codeblock prettyprint">&lt;Annotation Term=&quot;UI.Identification&quot;&gt;
+      &lt;Collection&gt;
+            &lt;Record Type=&quot;UI.DataFieldForAction&quot;&gt;
+                  &lt;PropertyValue Property=&quot;Label&quot; String=&quot;Copy&quot; /&gt;
+                  &lt;PropertyValue Property=&quot;Action&quot;
+                        String=&quot;STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductCopy&quot; /&gt;
+                  &lt;Annotation Term=&quot;UI.Importance&quot; EnumMember=&quot;UI.ImportanceType/High&quot; /&gt;
+            &lt;/Record&gt;
+...
+      &lt;/Collection&gt;
+&lt;/Annotation&gt;
+</pre></div>
+<div class="section"><section class="section" type="Edit and Delete Buttons"><h2 class="section_title" style="font-size: 1.15em;">Edit and Delete Buttons</h2>
+
+<div class="p">The <span class="ph uicontrol">Edit</span> and <span class="ph uicontrol">Delete</span> buttons are
+displayed as shown above, if the following conditions are met:<ul class="ul" id="loio5fe439613f9c4e259015951594c423dc__ul_qh5_jbp_1v">
+<li class="li">
+<p class="p"><span class="ph uicontrol">Edit</span> button: <samp class="ph codeph">sap:updatable</samp> is not
+set to <samp class="ph codeph">false</samp></p>
+</li>
+<li class="li"><span class="ph uicontrol">Delete</span> button: <samp class="ph codeph">sap:deletable</samp> is not
+set to <samp class="ph codeph">false</samp></li>
+</ul></div>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">If you want to specify conditions for deletion or updates (using the
+<samp class="ph codeph">deletable-path</samp> or <samp class="ph codeph">updatable path</samp>
+annotation), you need to ensure that you have not made the
+<samp class="ph codeph">sap:deletable</samp> or <samp class="ph codeph">sap:updatable</samp> setting in
+your annotations.</p></aside>
+</section></div>
+<div class="section"><section class="section" type="Show or Hide Edit and Delete Buttons (Using updatable-path and deletable-path Annotations)"><h2 class="section_title" style="font-size: 1.15em;">Show or Hide Edit and Delete Buttons (Using updatable-path and deletable-path Annotations)</h2>
+
+<p class="p">You can choose to display or hide the <span class="ph uicontrol">Delete</span> or
+<span class="ph uicontrol">Edit</span> button on the object page based on certain
+conditions in your back-end system. For example, you may wish to disable editing or
+deletion for a sales order that has already been paid. </p>
+<p class="p">Within your annotation, you set the <samp class="ph codeph">deletable-path</samp> (for the
+<span class="ph uicontrol">Delete</span> button) or <samp class="ph codeph">updatable-path</samp> (for
+the <span class="ph uicontrol">Edit</span> button) to point to a particular property of an
+object (entity) in the back-end system that is either <samp class="ph codeph">true</samp> or
+<samp class="ph codeph">false</samp>. If the value of this property is <samp class="ph codeph">true</samp>,
+the <span class="ph uicontrol">Delete</span> or <span class="ph uicontrol">Edit</span> button is
+displayed; if it is <samp class="ph codeph">false</samp>, it is hidden. </p>
+<div class="p">
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<div class="p">
+<ul class="ul" id="loio5fe439613f9c4e259015951594c423dc__ul_cw1_nty_ww">
+<li class="li">
+<p class="p">This is done in conjunction with the <samp class="ph codeph">deletable
+path</samp> annotation for the list report.</p>
+</li>
+<li class="li">
+<p class="p">If you want to specify conditions for deletion or updates (using
+the <samp class="ph codeph">deletable-path</samp> or
+<samp class="ph codeph">updatable-path</samp> annotation), you need to
+ensure that you have not made the <samp class="ph codeph">sap:deletable</samp>
+or <samp class="ph codeph">sap:updatable</samp> setting in your
+annotations.</p>
+</li>
+</ul>
+</div></aside>
+</div>
+</section></div>
+<div class="section"><section class="section" type="Code Samples"><h2 class="section_title" style="font-size: 1.15em;">Code Samples</h2><div class="sectiondiv subsection">
+<p class="p subsectiontitle">deletable-path</p>
+<p class="p">The code sample below shows you how to set up your annotation to display or hide the
+<span class="ph uicontrol">Delete</span> button, based on the value of the
+<samp class="ph codeph">Delete_mc</samp> property in the back-end system.</p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;Annotations Target=&quot;STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_Product&quot;&gt;
+    &lt;Annotation Term=&quot; Org.OData.Capabilities.V1.DeleteRestrictions&quot;&gt;
+        &lt;Record&gt;
+            &lt;PropertyValue Property=&quot;Deletable&quot; Path=&quot;Delete_mc&quot;/&gt;
+        &lt;/Record&gt;
+    &lt;/Annotation&gt;
+&lt;/Annotations&gt;</pre>
+</div><div class="sectiondiv subsection">
+<p class="p subsectiontitle">updatable-path</p>
+<div class="p">The code sample below shows you how to set up your annotation to display or hide the
+<span class="ph uicontrol">Edit</span> button, based on the value of the
+<samp class="ph codeph">Updatable_mc</samp> property in the back-end
+system.<pre class="pre codeblock prettyprint lang-xml">&lt;Annotations Target=&quot;STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_Product&quot;&gt;
+    &lt;Annotation Term=&quot;Org.OData.Capabilities.V1.UpdateRestrictions&quot;&gt;
+        &lt;Record&gt;
+            &lt;PropertyValue Property=&quot;Updatable&quot; Path=&quot;Updatable_mc&quot;/&gt;
+        &lt;/Record&gt;
+    &lt;/Annotation&gt;
+&lt;/Annotations&gt;</pre></div>
+</div></section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

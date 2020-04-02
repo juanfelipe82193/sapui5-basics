@@ -1,0 +1,482 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Scrollbar Tests</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="json/TESTDATA_PLAINTABLE.js"></script>
+<script type="text/javascript" src="json/TESTDATA_PLAINTABLE2.js"></script>
+<script type="text/javascript" src="json/TESTDATA_PLAINTABLE3.js"></script>
+<script type="text/javascript" src="json/TESTDATA_BIGTABLE.js"></script>
+<script type="text/javascript" src="json/TESTDATA_BIGHEADERS.js"></script>
+<script type="text/javascript" src="json/TESTDATA_ONE_COLUMN.js"></script>
+<script type="text/javascript" src="testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Scrollbar Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Rendering tests", {
+			setup : function() {
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				this.oCrosstab.setWidth("1600px");
+				this.oCrosstab.setHeight("1200px");
+				
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+
+				this.hasVScrollbar = function() {
+					return (jQuery.sap.byId(this.oCrosstab.getId() + "_vScrollDiv").length !== 0);
+				};
+
+				this.hasHScrollbar = function() {
+					return (jQuery.sap.byId(this.oCrosstab.getId() + "_hScrollDiv").length !== 0);
+				};
+
+				this.oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+				this.oDataArea = this.oCrosstab.getDataArea();
+				this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+				this.oColHeaderArea = this.oCrosstab.getColumnHeaderArea();
+				
+				this.vScrollAndCheck = function(iCol, iMaxDataRow, iMaxColHeaderRow) {
+					var oDomDataAreaCell = sap.zen.crosstab.testutils.TestUtils.getDomCellFromDataModelCell(this.oDataArea, 0, iCol);
+					var iInitialOuterWidth = oDomDataAreaCell.outerWidth();
+
+					// now scroll to end
+					this.oCrosstab.scrollVertical(iMaxDataRow);
+
+					var oLastDomDataCell = sap.zen.crosstab.testutils.TestUtils.getDomCellFromDataModelCell(this.oDataArea, iMaxDataRow, iCol);
+					var iLastDataCellWidth = oLastDomDataCell.outerWidth();
+
+					var oDomHeaderCell = sap.zen.crosstab.testutils.TestUtils.getDomCellFromDataModelCell(this.oColHeaderArea, iMaxColHeaderRow, iCol);
+					var iHeaderCellWidth = oDomHeaderCell.outerWidth();
+					
+					ok(iHeaderCellWidth === iInitialOuterWidth, "col header cell width must not jump when scrolling to the end");
+					ok(iLastDataCellWidth === iInitialOuterWidth, "data cell width must not jump when scrolling to the end");
+
+					// scrolling back
+					this.oCrosstab.scrollVertical(0);
+					
+					oDomDataAreaCell = sap.zen.crosstab.testutils.TestUtils.getDomCellFromDataModelCell(this.oDataArea, 0, iCol);
+					var iFirstDomDataCellWidth = oDomDataAreaCell.outerWidth();
+
+					oDomHeaderCell = sap.zen.crosstab.testutils.TestUtils.getDomCellFromDataModelCell(this.oColHeaderArea, iMaxColHeaderRow, iCol);
+					iHeaderCellWidth = oDomHeaderCell.outerWidth();
+					
+					ok(iHeaderCellWidth === iInitialOuterWidth, "col header cell width must not jump when scrolling to the top");
+					ok(iFirstDomDataCellWidth === iInitialOuterWidth, "data cell width must not jump when scolling to the top");
+				};
+				
+				this.hScrollAndCheck = function(iRow, iMaxDataCol, iMaxRowHeaderCol) {
+					var oDomDataAreaCell = sap.zen.crosstab.testutils.TestUtils.getDomCellFromDataModelCell(this.oDataArea, iRow, 0);
+					var iInitialOuterHeight = oDomDataAreaCell.outerHeight();
+
+					// now scroll to end
+					this.oCrosstab.scrollHorizontal(iMaxDataCol);
+
+					var oLastDomDataCell = sap.zen.crosstab.testutils.TestUtils.getDomCellFromDataModelCell(this.oDataArea, iRow, iMaxDataCol);
+					var iLastDataCellHeight = oLastDomDataCell.outerHeight();
+
+					var oDomHeaderCell = sap.zen.crosstab.testutils.TestUtils.getDomCellFromDataModelCell(this.oRowHeaderArea, iRow, iMaxRowHeaderCol);
+					var iHeaderCellHeight = oDomHeaderCell.outerHeight();
+					
+					ok(iHeaderCellHeight === iInitialOuterHeight, "row header cell height must not jump when scrolling to the end");
+					ok(iLastDataCellHeight === iInitialOuterHeight, "data cell height must not jump when scrolling to the end");
+
+					// scrolling back
+					this.oCrosstab.scrollHorizontal(0);
+					
+					oDomDataAreaCell = sap.zen.crosstab.testutils.TestUtils.getDomCellFromDataModelCell(this.oDataArea, iRow, 0);
+					var iFirstDomDataCellHeight = oDomDataAreaCell.outerHeight();
+
+					oDomHeaderCell = sap.zen.crosstab.testutils.TestUtils.getDomCellFromDataModelCell(this.oRowHeaderArea, iRow, iMaxRowHeaderCol);
+					iHeaderCellHeight = oDomHeaderCell.outerHeight();
+					
+					ok(iHeaderCellHeight === iInitialOuterHeight, "row header cell height must not jump when scrolling to the left");
+					ok(iFirstDomDataCellHeight === iInitialOuterHeight, "data cell height must not jump when scolling to the left");
+				};
+
+			},
+			
+			teardown : function() {
+				this.oCrosstab = null;
+			}
+		});
+
+		test("Check scrollbar visibility", function() {
+
+			ok(!this.hasVScrollbar(), "There should not be a vertical scrollbar");
+			ok(!this.hasHScrollbar(), "There should not be a horizontal scrollbar");
+
+			this.oCrosstab.setWidth("600px");
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+
+			ok(!this.hasVScrollbar(), "There should not be a vertical scrollbar");
+			ok(this.hasHScrollbar(), "There should be a horizontal scrollbar");
+
+			this.oCrosstab.setWidth("1200px");
+			this.oCrosstab.setHeight("250px");
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+
+			ok(this.hasVScrollbar(), "There should be a vertical scrollbar");
+			ok(!this.hasHScrollbar(), "There should not be a horizontal scrollbar");
+
+			this.oCrosstab.setWidth("600px");
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+
+			ok(this.hasVScrollbar(), "There should be a vertical scrollbar");
+			ok(this.hasHScrollbar(), "There should be a horizontal scrollbar");
+		});
+
+		test("scroll horizontally - basic test", function() {
+			//Prepare test
+			this.oTableControl = sapzen.crosstab.test.jsonTestData.bigTable.control;
+			this.oCrosstab.updateControlProperties(this.oTableControl);
+			this.oCrosstab.setWidth("600px");
+			this.oCrosstab.setHeight("250px");
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+			
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oColHeaderArea, 1, 0, 1, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 0, 0, 0, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 0, 0, 0, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDimensionHeaderArea, 0, 0, 0, 0);
+			
+			this.oCrosstab.scrollHorizontal(1);
+			
+			//These cells need to change
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oColHeaderArea, 1, 1, 1, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 0, 1, 0, 0);
+			
+			//These cells must not change
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 0, 0, 0, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDimensionHeaderArea, 0, 0, 0, 0);
+			
+			//scroll to the end
+			var iColCnt = this.oDataArea.getColCnt();
+			this.oCrosstab.scrollHorizontal(iColCnt);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oColHeaderArea, 1, iColCnt - 1, 1, 2);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 0, iColCnt - 1, 0, 2);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 0, 0, 0, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDimensionHeaderArea, 0, 0, 0, 0);
+			
+			//scroll back to the beginning
+			this.oCrosstab.scrollHorizontal(0);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oColHeaderArea, 1, 0, 1, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 0, 0, 0, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 0, 0, 0, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDimensionHeaderArea, 0, 0, 0, 0);
+		});
+
+		// vertical scrolling
+		test("scroll vertically - basic test", function() {
+			//Prepare test
+			this.oTableControl = sapzen.crosstab.test.jsonTestData.bigTable.control;
+			this.oCrosstab.updateControlProperties(this.oTableControl);
+			this.oCrosstab.setWidth("1200px");
+			this.oCrosstab.setHeight("250px");
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+
+			// small scroll step
+			this.oCrosstab.scrollVertical(1);
+			// RowHeaderArea
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 1, 1, 0, 1);
+			// DataArea
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 1, 5, 0, 5);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 3, 7, 2, 7);
+
+			// scroll to end
+			this.oCrosstab.scrollVertical(155);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 155, 1, 9, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 155, 5, 9, 5);
+
+			// scroll back to top
+			this.oCrosstab.scrollVertical(0);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 0, 1, 0, 1);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 0, 6, 0, 6);
+		});
+		
+		test(
+				"scroll horizontally - check row height with big data cell content right from the beginning",
+				function() {
+					//Prepare test: render table with big cell content visible right away
+					this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+					this.oCrosstab.updateControlProperties(this.oTableControl);
+					this.oCrosstab.setWidth("400px");
+					this.oCrosstab.setHeight("500px");
+					
+					this.oDataArea.registerRenderCellCallback(function(oCell){
+						var oCallbackResult = {};
+						oCallbackResult.renderText = oCell.getText();
+						if(oCell.getRow() === 0 && oCell.getCol() === 0){
+							oCallbackResult.additionalStyles = { "font-size" : "35px"};
+						}
+						return oCallbackResult;
+					});
+				
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					this.hScrollAndCheck(0, this.oDataArea.getColCnt() - 1, this.oRowHeaderArea.getColCnt() - 1);
+					
+					this.oDataArea.removeRenderCellCallback();
+					
+				});
+		
+		test(
+				"scroll horizontally - check row height with big data cell content scrolling into the visible area",
+				function() {
+					//Prepare test: render table with big cell content visible right away
+					this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+					this.oCrosstab.updateControlProperties(this.oTableControl);
+					this.oCrosstab.setWidth("400px");
+					this.oCrosstab.setHeight("500px");
+					
+					this.oDataArea.registerRenderCellCallback(function(oCell){
+						var oCallbackResult = {};
+						oCallbackResult.renderText = oCell.getText();
+						if(oCell.getRow() === 0 && oCell.getCol() === 3){
+							oCallbackResult.additionalStyles = { "font-size" : "35px"};
+						}
+						return oCallbackResult;
+					});
+				
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					this.hScrollAndCheck(0, this.oDataArea.getColCnt() - 1, this.oRowHeaderArea.getColCnt() - 1);
+					
+					this.oDataArea.removeRenderCellCallback();
+					
+				});
+		
+		test(
+				"scroll horizontally - check row height with big row header cell content right from the beginning",
+				function() {
+					//Prepare test: render table with big cell content visible right away
+					this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+					this.oCrosstab.updateControlProperties(this.oTableControl);
+					this.oCrosstab.setWidth("500px");
+					this.oCrosstab.setHeight("500px");
+					
+					this.oRowHeaderArea.registerRenderCellCallback(function(oCell){
+						var oCallbackResult = {};
+						oCallbackResult.renderText = oCell.getText();
+						if(oCell.getRow() === 1 && oCell.getCol() === 1){
+							oCallbackResult.additionalStyles = { "font-size" : "35px"};
+						}
+						return oCallbackResult;
+					});
+				
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					this.hScrollAndCheck(1, this.oDataArea.getColCnt() - 1, this.oRowHeaderArea.getColCnt() - 1);
+					
+					this.oRowHeaderArea.removeRenderCellCallback();
+					
+				});
+		
+		test(
+				"scroll horizontally - check row height with big row header cell content scrolling into the visible area",
+				function() {
+					//Prepare test: render table with big cell content visible right away
+					this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+					this.oCrosstab.updateControlProperties(this.oTableControl);
+					this.oCrosstab.setWidth("500px");
+					this.oCrosstab.setHeight("200px");
+					
+					this.oRowHeaderArea.registerRenderCellCallback(function(oCell){
+						var oCallbackResult = {};
+						oCallbackResult.renderText = oCell.getText();
+						if(oCell.getRow() === 11 && oCell.getCol() === 1){
+							oCallbackResult.additionalStyles = { "font-size" : "35px"};
+						}
+						return oCallbackResult;
+					});
+
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					this.oCrosstab.scrollVertical(11);
+					this.hScrollAndCheck(1, this.oDataArea.getColCnt() - 1, this.oRowHeaderArea.getColCnt() - 1);
+					
+					this.oRowHeaderArea.removeRenderCellCallback();
+					
+				});
+		
+
+		test(
+				"scroll vertically - check column widths with big data cell content right from the beginning",
+				function() {
+					//Prepare test: render table with big cell content visible right away
+					this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable2.control;
+					this.oCrosstab.updateControlProperties(this.oTableControl);
+					this.oCrosstab.setWidth("700px");
+					this.oCrosstab.setHeight("200px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					this.vScrollAndCheck(0, 11, 2);
+				});
+
+		test("scroll vertically - check column widths with big data cell content scrolling into the visible area",
+				function() {
+					//Prepare test: render table with big cell content visible right away
+					this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable2.control;
+					this.oCrosstab.updateControlProperties(this.oTableControl);
+					this.oCrosstab.setWidth("700px");
+					this.oCrosstab.setHeight("200px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					this.vScrollAndCheck(1, 11, 2);
+				});
+		
+		test("scroll vertically - check column widths with big col header cell content visible from the beginning",
+				function() {
+					//Prepare test: render table with big cell content visible right away
+					this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable3.control;
+					this.oCrosstab.updateControlProperties(this.oTableControl);
+					this.oCrosstab.setWidth("700px");
+					this.oCrosstab.setHeight("200px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					this.vScrollAndCheck(0, 11, 2);
+				});		
+		
+		test("scroll vertically - check column widths with big col header cell content scrolling into view",
+				function() {
+					//Prepare test: render table with big cell content visible right away
+					this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable3.control;
+					this.oCrosstab.updateControlProperties(this.oTableControl);
+					this.oCrosstab.setWidth("500px");
+					this.oCrosstab.setHeight("150px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					this.oCrosstab.scrollHorizontal(4);
+					
+					this.vScrollAndCheck(3, 11, 2);
+				});
+		
+		test("scroll horizontally - scroll and resize",
+				function() {
+					//Prepare test: render table with big cell content visible right away
+					this.oTableControl = sapzen.crosstab.test.jsonTestData.bigHeaders.control;
+					this.oCrosstab.updateControlProperties(this.oTableControl);
+					this.oCrosstab.setWidth("1000px");
+					this.oCrosstab.setHeight("500px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					this.oCrosstab.scrollHorizontal(4);
+					
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oColHeaderArea, 4, 4, 4, 0);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 0, 4, 0, 0);
+					
+					this.oCrosstab.setWidth("1100px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oColHeaderArea, 4, 4, 4, 0);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 0, 4, 0, 0);
+					
+					this.oCrosstab.setWidth("800px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oColHeaderArea, 4, 4, 4, 0);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 0, 4, 0, 0);
+					
+					
+				});
+		
+		test("scroll vertically - scroll and resize",
+				function() {
+					//Prepare test: render table with big cell content visible right away
+					this.oTableControl = sapzen.crosstab.test.jsonTestData.bigHeaders.control;
+					this.oCrosstab.updateControlProperties(this.oTableControl);
+					this.oCrosstab.setWidth("1000px");
+					this.oCrosstab.setHeight("500px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					this.oCrosstab.scrollVertical(5);
+					
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 5, 4, 0, 4);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 5, 0, 0, 0);
+					
+					this.oCrosstab.setHeight("600px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 5, 4, 0, 4);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 5, 0, 0, 0);
+					
+					this.oCrosstab.setHeight("400px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 5, 4, 0, 4);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 5, 0, 0, 0);
+					
+					
+				});
+		
+ 		test("scroll horizontally - scroll and resize big enough that no scrollbars are necessary",
+				function() {
+					this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+					this.oCrosstab.updateControlProperties(this.oTableControl);
+					this.oCrosstab.setWidth("400px");
+					this.oCrosstab.setHeight("400px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					this.oCrosstab.scrollHorizontal(1);
+					
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oColHeaderArea, 2, 1, 2, 0);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 0, 1, 0, 0);
+					
+					this.oCrosstab.setWidth("1000px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oColHeaderArea, 2, 0, 2, 0);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 0, 0, 0, 0);
+				}); 
+ 		
+ 		test("scroll vertically - scroll and resize big enough that no scrollbars are necessary",
+				function() {
+					this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+					this.oCrosstab.updateControlProperties(this.oTableControl);
+					this.oCrosstab.setWidth("400px");
+					this.oCrosstab.setHeight("200px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					this.oCrosstab.scrollVertical(1);
+					
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 1, 1, 0, 1);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 1, 0, 0, 0);
+					
+					this.oCrosstab.setHeight("1000px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 0, 1, 0, 1);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 0, 0, 0, 0);
+				}); 
+ 		
+ 		test("scroll table with only one column",
+				function() {
+					this.oTableControl = sapzen.crosstab.test.jsonTestData.TESTDATA_ONE_COLUMN.control;
+					this.oCrosstab.updateControlProperties(this.oTableControl);
+					this.oCrosstab.setWidth("411px");
+					this.oCrosstab.setHeight("283px");
+					sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+					
+					this.oCrosstab.scrollHorizontal(1);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oColHeaderArea, 0, 0, 0, 0);
+
+				}); 
+				
+	</script>
+
+</body>
+
+</html>

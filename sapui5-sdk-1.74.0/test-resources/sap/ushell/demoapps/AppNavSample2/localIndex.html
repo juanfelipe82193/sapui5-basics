@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Bootstrap the unified shell in sandbox mode
+
+     Path references are specified relative to this HTML page to enable different
+     deployment (local, demokit) options. They have to be adopted for own application index pages, usually the path is
+     then "test-resources/sap/ushell/bootstrap/sandbox.js".
+
+     The sandbox platform is restricted to development or demo use cases and must NOT be used for productive scenarios. -->
+<script src="../../bootstrap/sandbox.js" id="sap-ushell-bootstrap"></script>
+
+<!--  Bootstrap the UI5 core library -->
+<script src="../../../../../resources/sap-ui-core.js" id="sap-ui-bootstrap"
+  data-sap-ui-libs="sap.m" data-sap-ui-theme="sap_bluecrystal"
+  data-sap-ui-xx-bindingSyntax="complex"
+  data-sap-ui-resourceroots='{"sap.ushell.demo.AppNavSample2": "./"}'>
+</script>
+
+<script>
+sap.ui.getCore().attachInit(function() {
+  /* *StartupParameters* (2) 
+  * fill startup url parameters into component (for standalone testing) 
+  */ 
+
+  function extractComponentData(sUrl) {
+      var iIndex = sUrl.indexOf("?");
+      var oComponentData = {}; 
+      if (iIndex >= 0) {
+        // pass GET parameters of URL via component data
+        var sParams = sUrl.slice(iIndex); 
+        var oStartupParameters = sParams ? jQuery.sap.getUriParameters(sParams).mParams : {}; 
+        oComponentData = { startupParameters: oStartupParameters };
+        sUrl = sUrl.slice(0, iIndex);
+      }
+      return oComponentData;
+  }
+
+  var oComponentData = extractComponentData(window.location.toString()); 
+
+  var oComponent = sap.ui.getCore().createComponent({
+      name: "sap.ushell.demo.AppNavSample2",
+      settings: {
+        componentData: oComponentData
+      }
+    });
+
+  new sap.m.Shell({
+      title : "Shell Navigation Sample 2",
+      showLogout : false,
+      app : new sap.ui.core.ComponentContainer({
+          component : oComponent
+      })
+  }).placeAt("content");
+});
+</script>
+</head>
+
+<!-- UI Content -->
+<body class="sapUiBody" role="application">
+	<div id="content"></div>
+</body>
+</html>

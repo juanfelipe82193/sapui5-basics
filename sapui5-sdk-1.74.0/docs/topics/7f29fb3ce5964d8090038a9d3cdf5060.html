@@ -1,0 +1,312 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Meta Model for OData V4</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Each OData V4 model offers access via getMetaModel to a corresponding metadata model sap.ui.model.odata.v4.ODataMetaModel, which is read-only and offers access to OData V4 metadata in a streamlined JSON format (see links under Related Information for more details). Only one-time bindings are supported by this model because the metadata is immutable."><meta name="description" content="Each OData V4 model offers access via getMetaModel to a corresponding metadata model sap.ui.model.odata.v4.ODataMetaModel, which is read-only and offers access to OData V4 metadata in a streamlined JSON format (see links under Related Information for more details). Only one-time bindings are supported by this model because the metadata is immutable."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"87aac894a40640f89920d7b2a414499b.html","previousTopicHref":"74142a38e3d4467c8d6a70b28764048f.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio7f29fb3ce5964d8090038a9d3cdf5060"><h1 class="title topictitle1" hidden>Meta Model for OData V4</h1><div class="body conbody"><p class="shortdesc" hidden>Each OData V4 model offers access via <samp class="ph codeph">getMetaModel</samp> to a
+corresponding metadata model <samp class="ph codeph">sap.ui.model.odata.v4.ODataMetaModel</samp>, which is
+read-only and offers access to OData V4 metadata in a streamlined JSON format (see links
+under Related Information for more details). Only one-time bindings are supported by this
+model because the metadata is immutable.</p>
+<div class="section"><section class="section" type="Synchronous vs. Asynchronous Access"><h2 class="section_title" style="font-size: 1.15em;">Synchronous vs. Asynchronous Access</h2>
+
+<p class="p">Access to metadata is basically asynchronous (e.g. <samp class="ph codeph">requestObject</samp>) to
+allow for dynamic loading of metadata. There is also a corresponding method for
+synchronous access (e.g. <samp class="ph codeph">getObject</samp>) which returns
+<samp class="ph codeph">undefined</samp> if metadata is not yet available. It should only be
+used in situations where metadata has already been loaded asynchronously before.
+Loading happens individually for each document, i.e. each $metadata document is
+loaded and processed as a whole and is available thereafter. Includes and references
+to other $metadata documents are not supported, only the service root&apos;s initial
+$metadata document can be used.</p>
+</section></div>
+<div class="section"><section class="section" type="Path Syntax"><h2 class="section_title" style="font-size: 1.15em;">Path Syntax</h2>
+
+<p class="p">The <samp class="ph codeph">requestObject</samp> API documentation in the Demo Kit explains how
+metadata is accessed and the supported path syntax in great detail. The basic idea
+is that every path described in the specification <a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html" target="_blank" alt="http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html" title="http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html">OData Version 4.0 Part 3: Common Schema Definition Language,
+14.2.1 Attribute Target<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a> is a valid absolute path within the metadata
+model if a leading slash is added; for example <samp class="ph codeph">&quot;/&quot;</samp> +
+<samp class="ph codeph">&quot;MySchema.MyEntityContainer/MyEntitySet/MyComplexProperty/MyNavigationProperty&quot;</samp>.
+<span class="ph">For more
+information, see the <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/requestObject" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/requestObject" title="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/requestObject">requestObject</a> API documentation in
+the Demo Kit.</span></p>
+</section></div>
+<div class="section"><section class="section" type="Annotations"><h2 class="section_title" style="font-size: 1.15em;">Annotations</h2>
+
+<p class="p">The main API for both programmatic access from JavaScript and declarative access from
+XML templating is <span class="keyword apiname">sap.ui.model.odata.v4.ODataMetaModel#getObject</span>.
+It works together with
+<span class="keyword apiname">sap.ui.model.odata.v4.ODataMetaModel#resolve</span> (for
+<samp class="ph codeph">&lt;template:with&gt;</samp>) and
+<span class="keyword apiname">sap.ui.model.odata.v4.ODataMetaModel#bindList</span> (for
+<samp class="ph codeph">&lt;template:repeat&gt;</samp>) in order to provide convenient access
+to annotations, inline as well as external targeting.</p>
+<p class="p">The OData meta model knows how to follow &quot;14.2.1 Attribute Target&quot; described in
+specification &quot;<a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html" target="_blank" alt="http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html" title="http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html">OData Version 4.0 Part 3: Common Schema Definition
+Language<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a>&quot; as well as &quot;14.5.2 Expression edm:AnnotationPath&quot;, &quot;14.5.11
+Expression edm:NavigationPropertyPath&quot;, &quot;14.5.12 Expression edm:Path&quot;, and &quot;14.5.13
+Expression edm:PropertyPath&quot;.</p>
+<p class="p"><a class="xref" href="../../#/topic/5ee619fc1370463ea674ee04b65ed83b.html" title="The XML templating concept enables you to use an XML view as a template. This template is transformed by an XML preprocessor on the source level, the XML DOM, at runtime just before an SAPUI5 control tree is created from the XML source." target="_top">XML Templating</a> still works the same as for V2,
+with some slight changes as outlined below:</p>
+<ul class="ul" id="loio7f29fb3ce5964d8090038a9d3cdf5060__ul_gj3_pcs_xv">
+<li class="li">
+<p class="p">Metadata paths need to refer to the V4 metadata JSON structure.</p>
+</li>
+<li class="li">
+<p class="p">Note the difference between
+<samp class="ph codeph">&quot;/TEAMS@Org.OData.Capabilities.V1.TopSupported&quot;</samp> and
+<samp class="ph codeph">&quot;/TEAMS/@com.sap.vocabularies.Common.v1.Deletable&quot;</samp>
+(look closely at the slash!), see <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataMetaModel%23requestObject" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataMetaModel%23requestObject" title="#/api/sap.ui.model.odata.v4.ODataMetaModel%23requestObject">ODataMetaModel.requestObject</a></span>.</p>
+</li>
+<li class="li">
+<p class="p">Use <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.AnnotationHelper" target="_top" alt="#/api/sap.ui.model.odata.v4.AnnotationHelper" title="#/api/sap.ui.model.odata.v4.AnnotationHelper"><samp class="ph codeph">sap.ui.model.odata.v4.AnnotationHelper</samp></a></span>
+instead of <samp class="ph codeph">sap.ui.model.odata.AnnotationHelper</samp>. The ability
+to follow a path has been built into the V4 OData meta model itself. See
+<samp class="ph codeph">field&gt;Value/$Path@com.sap.vocabularies.Common.v1.Label</samp>
+in the code example below. Instead of
+<samp class="ph codeph">sap.ui.model.odata.AnnotationHelper.format</samp>, you can use
+<samp class="ph codeph">sap.ui.model.odata.v4.AnnotationHelper.value</samp> or
+<samp class="ph codeph">sap.ui.model.odata.v4.AnnotationHelper.format</samp>. You can
+use both as a computed annotation.</p>
+</li>
+<li class="li">
+<p class="p">Computed annotations start with &quot;@@&quot;, for example <samp class="ph codeph">&lt;Text
+text=&quot;{meta&gt;Value/@@sap.ui.model.odata.v4.AnnotationHelper.value}&quot;
+/&gt;</samp>. Their name without the &quot;@@&quot; prefix refers to a function
+in the global namespace which computes an annotation value from the metadata
+addressed by the preceding path. For more information, see <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/requestObject" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/requestObject" title="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/requestObject">ODataMetaModel.requestObject</a></span>
+.</p>
+</li>
+<li class="li">
+<p class="p">Ensure that the view is loaded asynchronously. In this case, there is no
+longer a need to preload metadata, because the template processor waits for
+every binding to be resolved before proceeding.</p>
+</li>
+<li class="li">
+<div class="p">Use a double hash (&apos;##&apos;) or single hash (&apos;#&apos;) separator to branch from the
+OData V4 model into metadata, see <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel%23createBindingContext" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel%23createBindingContext" title="#/api/sap.ui.model.odata.v4.ODataModel%23createBindingContext">createBindingContext</a></span>
+.<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">The single hash separator is deprecated since 1.52</p></aside><aside class="note remember" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Remember</strong></div>
+<p class="p">An appropriate URI encoding is necessary for the data path (before
+the separator), but neither for the separator itself nor for the
+metadata path that follows it.</p></aside>
+</div>
+<p class="p">Example: <samp class="ph codeph">&lt;template:with
+path=&quot;/Products(&apos;A%2FB%26C&apos;)/Name#@com.sap.vocabularies.Common.v1.Label&quot;
+var=&quot;label&quot;&gt; or &lt;template:with path=&quot;data&gt;/Products#/&quot;
+var=&quot;productEntityType&quot;&gt;</samp>, etc.</p>
+</li>
+</ul>
+<p class="p"><span class="ph emphasis emphasis">Example of an OData V4 XML template:</span></p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+        template:require=&quot;{AnnotationHelper : &apos;sap/ui/model/odata/v4/AnnotationHelper&apos;}&quot;
+        xmlns=&quot;sap.m&quot;
+        xmlns:template=&quot;http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1&quot;&gt;
+    &lt;template:alias name=&quot;format&quot; value=&quot;AnnotationHelper.format&quot;&gt;
+    &lt;template:alias name=&quot;value&quot; value=&quot;AnnotationHelper.value&quot;&gt;
+        &lt;template:with path=&quot;meta&gt;/BusinessPartnerList/&quot; var=&quot;entityType&quot;&gt;
+          &lt;template:with path=&quot;entityType&gt;@com.sap.vocabularies.UI.v1.LineItem&quot; var=&quot;lineItem&quot;&gt;
+            &lt;Table headerText=&quot;Business Partners&quot;
+              items=&quot;{path : &apos;/BusinessPartnerList&apos;, length : 5}&quot;&gt;
+              &lt;columns&gt;
+                &lt;template:repeat list=&quot;{lineItem&gt;}&quot; var=&quot;field&quot;&gt;
+                  &lt;Column&gt;
+                    &lt;template:if test=&quot;{field&gt;Label}&quot;&gt;
+                      &lt;template:then&gt;
+                        &lt;Label design=&quot;{:= ${field&gt;@com.sap.vocabularies.UI.v1.Importance/$EnumMember}
+                          === &apos;com.sap.vocabularies.UI.v1.ImportanceType/High&apos; ? &apos;Bold&apos; : &apos;Standard&apos;}&quot;
+                          text=&quot;{field&gt;Label}&quot;/&gt;
+                      &lt;/template:then&gt;
+                      &lt;template:else&gt;
+                        &lt;Text text=&quot;{field&gt;Value/$Path@com.sap.vocabularies.Common.v1.Label}&quot;/&gt;
+                      &lt;/template:else&gt;
+                    &lt;/template:if&gt;
+                  &lt;/Column&gt;
+                &lt;/template:repeat&gt;
+              &lt;/columns&gt;
+              &lt;items&gt;
+                &lt;ColumnListItem&gt;
+                  &lt;cells&gt;
+                    &lt;template:repeat list=&quot;{lineItem&gt;}&quot; var=&quot;field&quot;&gt;
+                      &lt;template:with path=&quot;field&gt;Value/$Path&quot; var=&quot;target&quot;&gt;
+                        &lt;template:if test=&quot;{= ${target&gt;@@AnnotationHelper.getValueListType} === &apos;Standard&apos; }&quot;&gt;
+                            &lt;template:then&gt;
+                                &lt;Input value=&quot;{path : &apos;field&gt;Value/@@value&apos;}&quot; showValueHelp=&quot;true&quot;, valueHelpRequest=&quot;.onValueHelp&quot;}&quot; /&gt;
+                            &lt;/template:then&gt;
+                            &lt;template:elseif test=&quot;{= ${target&gt;@@AnnotationHelper.getValueListType} === &apos;Fixed&apos; }&quot;&gt;
+                                &lt;ComboBox value=&quot;{path : &apos;field&gt;Value/@@value&apos;}&quot; loadItems=&quot;.onLoadItems&quot; showValueHelp=&quot;true&quot; /&gt;
+                            &lt;/template:elseif&gt;
+                            &lt;template:elseif test=&quot;{target&gt;@com.sap.vocabularies.Common.v1.Text}&quot;&gt;
+                                &lt;!-- Note: TextFirst, TextLast, TextSeparate, TextOnly --&gt;
+                                &lt;template:if test=&quot;{= ${target&gt;@com.sap.vocabularies.Common.v1.Text@com.sap.vocabularies.UI.v1.TextArrangement/$EnumMember}
+                                    === &apos;com.sap.vocabularies.UI.v1.TextArrangementType/TextLast&apos; }&quot;&gt;
+                                    &lt;!-- Text: &quot;A descriptive text for values of the annotated property.
+                                        Value MUST be a dynamic expression when used as metadata annotation.&quot; --&gt;
+                                    &lt;Text text=&quot;{field&gt;Value/@@value} {target&gt;@com.sap.vocabularies.Common.v1.Text/@@value}&quot; /&gt;
+                                &lt;/template:if&gt;
+                            &lt;/template:elseif&gt;
+                            &lt;template:else&gt;
+                                &lt;Text text=&quot;{field&gt;Value/@@format}&quot; /&gt;
+                            &lt;/template:else&gt;
+                        &lt;/template:if&gt;
+                      &lt;/template:with&gt;
+                    &lt;/template:repeat&gt;
+                  &lt;/cells&gt;
+                &lt;/ColumnListItem&gt;
+              &lt;/items&gt;
+            &lt;/Table&gt;
+          &lt;/template:with&gt;
+        &lt;/template:with&gt;
+    &lt;/template:alias&gt;
+    &lt;/template:alias&gt;
+&lt;/mvc:View&gt;</pre>
+</section></div>
+<div class="section" id="loio7f29fb3ce5964d8090038a9d3cdf5060__section_ixq_yzv_tz"><section class="section" type="AnnotationHelper"><h2 class="section_title" style="font-size: 1.15em;">AnnotationHelper</h2>
+
+<div class="p">The module <samp class="ph codeph">sap/ui/model/odata/v4/AnnotationHelper</samp> delivers the
+following computed annotations; require it as shown in the example above:<ul class="ul" id="loio7f29fb3ce5964d8090038a9d3cdf5060__ul_lkx_21w_tz">
+<li class="li">
+<p class="p"><span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.value" target="_top" alt="#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.value" title="#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.value"><samp class="ph codeph">value</samp></a></span> helps to convert annotations into
+corresponding expression bindings or similar. The resulting binding does
+<span class="ph emphasis emphasis">not</span> contain type and constraint information;
+both are detected automatically. For examples, see <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.value" target="_top" alt="#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.value" title="#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.value">sap.ui.model.odata.v4.AnnotationHelper.value</a>.</span></p>
+</li>
+<li class="li">
+<p class="p"><span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.format" target="_top" alt="#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.format" title="#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.format"><samp class="ph codeph">format</samp></a></span>
+helps to convert annotations into corresponding expression bindings, or
+similar. Compared to <samp class="ph codeph">value</samp>, <samp class="ph codeph">format</samp>
+adds type and constraints information to the resulting binding. This is
+useful, for example, if the XML of the view is cached.</p>
+<p class="p">If you use <samp class="ph codeph">format</samp> with a path containing a single &quot;$AnnotationPath&quot; or
+&quot;$Path&quot; segment, the value corresponding to that segment is considered
+as a data binding path prefix whenever a dynamic &quot;14.5.12 Expression
+edm:Path&quot; or &quot;14.5.13 Expression edm:PropertyPath&quot; is turned into a data
+binding.</p>
+<p class="p">For examples, see <span class="ph"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.format" target="_top" alt="#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.format" title="#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.format"><samp class="ph codeph">format</samp></a>.</span></p>
+<p class="p">If <samp class="ph codeph">format</samp> finds a <samp class="ph codeph">Org.OData.Measures.V1.ISOCurrency</samp> or a
+<samp class="ph codeph">Org.OData.Measures.V1.Unit</samp> annotation at a
+property, a composite binding with a
+<samp class="ph codeph">sap.ui.model.odata.type.Currency</samp> or a
+<samp class="ph codeph">sap.ui.model.odata.type.Unit</samp> type is generated. For
+more information, see <a class="xref" href="../../#/topic/4d1b9d44941f483f9b7f579873d38685.html" target="_top">Currencies and Units</a>.</p>
+</li>
+<li class="li">
+<p class="p"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.label" target="_top" alt="#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.label" title="#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.label"><samp class="ph codeph">label</samp></a> -
+Returns the value for the label of a
+<samp class="ph codeph">com.sap.vocabularies.UI.v1.DataFieldAbstract</samp> from
+the meta model.</p>
+</li>
+<li class="li">
+<p class="p"><a class="xref" href="../../#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.getValueListType" target="_top" alt="#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.getValueListType" title="#/api/sap.ui.model.odata.v4.AnnotationHelper/methods/sap.ui.model.odata.v4.AnnotationHelper.getValueListType"><samp class="ph codeph">getValueListType</samp></a> - Determines which type of
+value list exists for the property. The function returns a value from
+the enumeration <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ValueListType" target="_top" alt="#/api/sap.ui.model.odata.v4.ValueListType" title="#/api/sap.ui.model.odata.v4.ValueListType"><samp class="ph codeph">sap.ui.model.odata.v4.ValueListType</samp></a>. It
+can be called directly on a property: </p>
+<pre class="pre codeblock prettyprint lang-xml">
+&lt;template:with path=&quot;/BusinessPartnerList/Role&quot; var=&quot;property&quot;&gt;
+    &lt;template:if test=&quot;{= ${property&gt;@@AnnotationHelper.getValueListType} === &apos;Fixed&apos;}&quot;&gt;
+        ...
+    &lt;/template:if&gt;
+&lt;/template:with&gt;</pre>
+</li>
+</ul></div>
+<div class="p">Alternatively it can be called on an annotation holding an <samp class="ph codeph"><a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752658" target="_blank" alt="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752658" title="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752658">edm:Path<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></samp> to a property when it is called in
+the context of an entity type. This is typically the case when iterating over a
+<samp class="ph codeph">com.sap.vocabularies.UI.v1.LineItem</samp> annotation of an entity
+type and asking for value help on the data fields. See the example regarding
+<samp class="ph codeph">LineItem</samp> of <samp class="ph codeph">BusinessPartnerList</samp> (the relevant
+parts are repeated
+here):<pre class="pre codeblock prettyprint lang-xml">
+&lt;template:with path=&quot;meta&gt;/BusinessPartnerList/&quot; var=&quot;entityType&quot;&gt;
+  &lt;template:with path=&quot;entityType&gt;@com.sap.vocabularies.UI.v1.LineItem&quot; var=&quot;lineItem&quot;&gt;
+...    
+            &lt;template:repeat list=&quot;{lineItem&gt;}&quot; var=&quot;field&quot;&gt;
+              &lt;template:with path=&quot;field&gt;Value/$Path&quot; var=&quot;target&quot;&gt;
+                &lt;template:if test=&quot;{= ${target&gt;@@AnnotationHelper.getValueListType} === &apos;Standard&apos; }&quot;&gt;
+...</pre></div>
+<p class="p">The first <samp class="ph codeph">&lt;template:with&gt;</samp> defines <samp class="ph codeph">entityType</samp>
+to be the type of the set <samp class="ph codeph">BusinessPartnerList</samp>. The
+<samp class="ph codeph">&lt;template:repeat&gt;</samp> iterates over its annotation<samp class="ph codeph">
+com.sap.vocabularies.UI.v1.LineItem</samp> (a collection of records with type
+<samp class="ph codeph">com.sap.vocabularies.UI.v1.DataField</samp>). The record&apos;s property
+<samp class="ph codeph">Value</samp> is assumed to be an <samp class="ph codeph">edm:Path</samp> pointing to
+a property of the entity type. For this path the value list type is determined.</p>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/87aac894a40640f89920d7b2a414499b.html" title="The OData V4 model provides access to metadata in a streamlined JSON format which is described in the section below." target="_top">OData V4 Metadata JSON Format</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/sap.ui.model.odata.v4.ODataModel.getMetadata" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/sap.ui.model.odata.v4.ODataModel.getMetadata" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/sap.ui.model.odata.v4.ODataModel.getMetadata">getMetaModel</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataMetaModel" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataMetaModel" title="#/api/sap.ui.model.odata.v4.ODataMetaModel">sap.ui.model.odata.v4.ODataMetaModel</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/requestObject" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/requestObject" title="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/requestObject">requestObject</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/getObject" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/getObject" title="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/getObject">sap.ui.model.odata.v4.ODataMetaModel#getObject</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/bindList" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/bindList" title="#/api/sap.ui.model.odata.v4.ODataMetaModel/methods/bindList">sap.ui.model.odata.v4.ODataMetaModel#bindList</a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.ODataMetadata/methods/loaded" target="_top" alt="#/api/sap.ui.model.odata.ODataMetadata/methods/loaded" title="#/api/sap.ui.model.odata.ODataMetadata/methods/loaded">sap.ui.model.odata.ODataMetaModel#loaded</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

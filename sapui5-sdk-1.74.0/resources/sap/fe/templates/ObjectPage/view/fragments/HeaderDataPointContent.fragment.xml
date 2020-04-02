@@ -1,0 +1,33 @@
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+						xmlns="sap.m"
+						xmlns:core="sap.ui.core"
+						xmlns:u="sap.ui.unified"
+						xmlns:mdcBase="sap.ui.mdc.base"
+						template:require="{
+							MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+							OP: 'sap/fe/templates/ObjectPage/AnnotationHelper',
+							FIELD: 'sap/fe/macros/field/FieldHelper'
+						}">
+
+
+	<Title text="{dataPoint>Title@@.MODEL.value}" class="sapUiTinyMarginBottom"
+		   visible="{= ${dataPoint>@@.FIELD.isNotAlwaysHidden} }"/>
+	<template:with path="dataPoint>Value" var="property">
+			<template:if test="{property>$Path@Org.OData.Measures.V1.ISOCurrency}">
+				<template:then>
+					<ObjectNumber
+						state="None"
+						number="{= ${property>@@.MODEL.format} }" 
+						visible="{= ${dataPoint>@@.FIELD.getHiddenPathExpression}}"/>
+				</template:then>
+			<template:else>
+			<ObjectNumber
+				state="{path: 'dataPoint>', formatter: 'OP.buildExpressionForCriticality'}"
+				number="{= ${property>$Path@com.sap.vocabularies.Common.v1.Text} ? ${property>$Path@com.sap.vocabularies.Common.v1.Text@@.MODEL.value} : (OP.getBindingWithoutMeasure(${property>@@MODEL.format}) || '{' + ${dataPoint>@sapui.name} + '}') }"
+				unit="{= ${property>$Path@Org.OData.Measures.V1.Unit} ? ${property>$Path@Org.OData.Measures.V1.Unit@@.MODEL.value} : undefined }" 
+				visible="{= ${dataPoint>@@.FIELD.getHiddenPathExpression}}"/>
+			</template:else>
+		</template:if>
+	</template:with>
+
+</core:FragmentDefinition>

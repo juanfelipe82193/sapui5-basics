@@ -1,0 +1,197 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Adding Dynamic Side Content to Object Page Sections</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Sometimes it might be necessary to add additional information that is not available with annotations to object page sections or subsections."><meta name="description" content="Sometimes it might be necessary to add additional information that is not available with annotations to object page sections or subsections."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"ce8d468269814077bc4b132572979b66.html","previousTopicHref":"a357047be956436ebb1dfebf1aa29af2.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio8e01a463d3984bfa8b23c2270d40e38c"><h1 class="title topictitle1" hidden>Adding Dynamic Side Content to Object Page Sections</h1><div class="body conbody"><p class="shortdesc" hidden>Sometimes it might be necessary to add additional information that is not available
+with annotations to object page sections or subsections.</p>
+<p class="p">You can use extension points to add additional content to sections in the following
+places:</p>
+<ul class="ul" id="loio8e01a463d3984bfa8b23c2270d40e38c__ul_jpn_shw_vcb">
+<li class="li">
+<p class="p"><samp class="ph codeph">BeforeMainContent</samp>: The extension is added before a sections&apos; main
+content.</p>
+</li>
+<li class="li">
+<p class="p"><samp class="ph codeph">AfterMainContent</samp>: The extension is added after the section&apos;s main
+content.</p>
+</li>
+</ul>
+<p class="p">Main content refers to the information that comes from the annotations.</p>
+<aside class="note caution" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Caution</strong></div>
+<p>Use app extensions with caution and only if you
+cannot produce the required behavior by other means, such as manifest settings or
+annotations. To correctly integrate your app extension coding with SAP Fiori elements,
+use only the extensionAPI of SAP Fiori elements. For more information, see <a class="xref" href="../../#/topic/bd2994b69ef542998becbc69ab093f7e.html" title="This API consists of several elements that are described below. It can be used for the analytical list page, list report, and object page." target="_top">Using the ExtensionAPI</a>. </p><p class="p">After you&apos;ve created an app
+extension, its display (for example, control placing, CSS) and system behavior (for
+example, model and binding usage, busy handling) of the app extension lies within
+the application&apos;s responsibility. SAP Fiori elements provides support only for the
+official extensionAPI functions. Don&apos;t access or manipulate SAP Fiori elements&apos;
+internal coding.</p></aside>
+<p class="p">Enter the extension information in the manifest.json of your application in the following
+format:
+<samp class="ph codeph">&lt;Different_Scenario&gt;|&lt;EntitySet_Name&gt;|&lt;Annotation_Information_of_Subsection&gt;</samp></p>
+<p class="p">Specify the extension facet in the form of the annotation information of the subsection where
+side content needs to be placed. In addition, specify the entity set name, as the same
+annotation may exist for various entity sets. You also need to define the
+<samp class="ph codeph">className</samp>, <samp class="ph codeph">viewName</samp>, <samp class="ph codeph">type</samp>, and
+the optional parameter <samp class="ph codeph">equalSplit</samp>.</p>
+<p class="p">To enable the equal split mode, (50:50 percent for main content vs. side content), add the
+<samp class="ph codeph">&quot;equalSplit&#x201D;: true</samp> setting to the manifest.</p>
+<p class="p">If <samp class="ph codeph">&#x201C;equalSplit&#x201D;</samp> is set to <samp class="ph codeph">false</samp> or is not defined, the
+percentage of main content and side content depends on the device on which the app is
+running. </p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">&quot;extends&quot;: {
+   &quot;extensions&quot;: {
+         &quot;sap.ui.viewExtensions&quot;: {
+                 &quot;sap.suite.ui.generic.template.ObjectPage.view.Details&quot;: {
+                           &quot;AfterMainContent|STTA_C_MP_Product|GeneralInformationForm&quot;:{
+               &quot;className&quot;: &quot;sap.ui.core.Fragment&quot;,
+               &quot;fragmentName&quot;: &quot;STTA_MP.ext.fragments.SideContentExtension&quot;,
+               &quot;type&quot;: &quot;XML&quot;,
+		&quot;equalSplit&quot;: true
+               },
+&quot;BeforeMainContent|STTA_C_MP_Product|to_ProductSalesData::com.sap.vocabularies.UI.v1.Chart&quot;:{
+              &quot;className&quot;: &quot;sap.ui.core.Fragment&quot;,
+              &quot;fragmentName&quot;: &quot;STTA_MP.ext.fragments.SideContentExtension&quot;,
+              &quot;type&quot;: &quot;XML&quot;
+               }
+                        }
+           }
+     }
+}
+</pre></aside>
+<p class="p">You can specify either a view or a fragment contained in the section. You do not need to use
+the object page (uxap) tags, <samp class="ph codeph">ObjectPageSection</samp>,
+<samp class="ph codeph">subSections</samp>, or <samp class="ph codeph">ObjectPageSubSection</samp>. These
+definitions are already part of the template for the object page view. </p>
+<p class="p">After you have added side content, the system displays a button in the subsection toolbar to
+show or hide the side content. The default texts for this button are <span class="ph uicontrol">Show
+Details</span> or <span class="ph uicontrol">Hide Details</span>. If you want to provide a
+custom text, specify it by adding the key value pair of the custom label to the
+i18n.properties file of the specific entity set of object page. The key uniquely defines
+the subsection for whose side content button you provide the custom text. The structure
+of the key is as follows:</p>
+<aside class="note" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Note</strong></div>
+<p class="p">In the annotation information of the subsection, replace all separators (-- , :: etc) with a
+| (vertical bar) while forming the key.</p></aside>
+<ul class="ul" id="loio8e01a463d3984bfa8b23c2270d40e38c__ul_dhw_ftb_wcb">
+<li class="li">
+<p class="p">Show the side content button</p>
+<p class="p"><samp class="ph codeph">ShowSideContent|&lt;EntitySet&gt;|&lt;Annotation Info of the
+Subsection&gt;</samp></p>
+<p class="p">Example:
+<samp class="ph codeph">ShowSideContent|STTA_C_MP_Product|to_ProductSalesData|com.sap.vocabularies.UI.v1.Chart</samp></p>
+<p class="p">
+<samp class="ph codeph">ShowSideContent|STTA_C_MP_Product|GeneralInformationForm</samp></p>
+</li>
+<li class="li">
+<p class="p">Hide the side content button</p>
+<p class="p"><samp class="ph codeph">HideSideContent|&lt;EntitySet&gt;|&lt;Annotation Info of the
+Subsection&gt;</samp></p>
+<p class="p">Example:
+<samp class="ph codeph">HideSideContent|STTA_C_MP_Product|to_ProductSalesData|com.sap.vocabularies.UI.v1.Chart</samp></p>
+<p class="p"><samp class="ph codeph"> HideSideContent|STTA_C_MP_Product|GeneralInformationForm</samp></p>
+</li>
+</ul>
+<p class="p"></p>
+<div class="fig fignone" id="loio8e01a463d3984bfa8b23c2270d40e38c__fig_u1h_2yj_wcb"><div class="figbody">
+
+<img class="inline  " id="loio8e01a463d3984bfa8b23c2270d40e38c__image_vc4_fyj_wcb" src="loio9cb9e88c2ed9457a816543b0027c9b6e_LowRes.jpg">
+</div><span class="figcap">Side Content Added to the Object Page</span></div>
+<aside class="note" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Note</strong></div>
+<ul class="ul" id="loio8e01a463d3984bfa8b23c2270d40e38c__ul_m2k_xtb_wcb">
+<li class="li">
+<p class="p">Use dynamic side content for small previews. Do not consider it as an extension of the main
+panel&apos;s content.</p>
+</li>
+<li class="li">
+<p class="p">Do not use tables in the side content panel.</p>
+</li>
+<li class="li">
+<p class="p">Avoid any content that may introduce a horizontal scroll bar.</p>
+</li>
+<li class="li">
+<p class="p">For better content visualization of the dynamic side content, use the 50% screen display of
+the dynamic side content.</p>
+</li>
+</ul></aside>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

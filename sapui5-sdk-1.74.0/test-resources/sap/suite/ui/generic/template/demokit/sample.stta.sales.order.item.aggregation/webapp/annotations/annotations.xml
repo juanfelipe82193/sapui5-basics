@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+	<edmx:Reference Uri="/sap/bc/ui5_ui5/ui2/ushell/resources/sap/ushell/components/factsheet/vocabularies/UI.xml">
+		<edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/sap/STTA_SALES_ORDER_ITEM_AGGR_SRV/$metadata">
+		<edmx:Include Alias="STTA_SALES_ORDER_ITEM_AGGR_SRV" Namespace="STTA_SALES_ORDER_ITEM_AGGR_SRV"/>
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="SOITMAGGR.STTA_SALES_ORDER_ITEM_AGGR_SRV">
+			<!--===============================================================================
+                Entity Type from chosen collection 
+                ================================================================================-->
+			<Annotations Target="STTA_SALES_ORDER_ITEM_AGGR_SRV.STTA_C_SO_ItemAggrType">
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.CollectionFacet">
+							<PropertyValue Property="ID" String="GeneralInformation"/>
+							<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+							<PropertyValue Property="Facets">
+								<Collection>
+									<Record Type="UI.ReferenceFacet">
+										<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+										<PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+									</Record>
+								</Collection>
+							</PropertyValue>
+						</Record>
+					</Collection>
+				</Annotation>
+
+				<!--
+				<Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+				-->
+
+			</Annotations>
+			<!--===============================================================================
+                Entity Type from chosen navigation property
+                ================================================================================-->
+			<Annotations Target="">
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.CollectionFacet">
+							<PropertyValue Property="ID" String="GeneralInformation"/>
+							<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+							<PropertyValue Property="Facets">
+								<Collection>
+									<Record Type="UI.ReferenceFacet">
+										<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+										<PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+									</Record>
+								</Collection>
+							</PropertyValue>
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+
+<!-- copied from stta.sales.order.item.aggr -->
+<Annotations Target="STTA_SALES_ORDER_ITEM_AGGR_SRV.STTA_C_SO_ItemAggrType">
+			 	<Annotation Term="UI.SelectionPresentationVariant" Qualifier="Expensive">
+					<Record>
+						<PropertyValue Property="Text" String="Expensive">
+						</PropertyValue>
+						<PropertyValue Property="SelectionVariant">
+							<Record>
+								<PropertyValue Property="Text" String="Cheap">
+								</PropertyValue>
+						
+								<PropertyValue Property="SelectOptions">
+									<Collection>
+										<Record Type="UI.SelectOptionType">
+											<PropertyValue Property="PropertyName"
+												PropertyPath="ProductCategory" />
+											<PropertyValue Property="Ranges">
+												<Collection>
+													<Record Type="UI.SelectionRangeType">
+														<PropertyValue Property="Option"
+															EnumMember="UI.SelectionRangeOptionType/EQ" />
+														<PropertyValue Property="Low" String="Notebooks" />
+													</Record>
+												</Collection>
+											</PropertyValue>
+										</Record>
+									</Collection>
+								</PropertyValue>
+							</Record>
+						</PropertyValue>
+						<PropertyValue Property="PresentationVariant">
+							<Record>
+								<PropertyValue Property="Visualizations">
+									<Collection>
+										<AnnotationPath>@UI.LineItem#Expensive</AnnotationPath>
+									</Collection>
+								</PropertyValue>
+								<PropertyValue Property="SortOrder">
+									<Collection>
+										<Record>
+											<PropertyValue Property="Property"
+												PropertyPath="ProductCategory" />
+											<PropertyValue Property="Descending" Bool="false" />
+										</Record>
+									</Collection>
+								</PropertyValue>
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.PresentationVariant" Qualifier="CheapPV">
+					<Record>
+						<PropertyValue Property="Visualizations">
+							<Collection>
+								<AnnotationPath>@UI.LineItem#Reduced</AnnotationPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="GroupBy">
+							<Collection>
+								<PropertyPath>ProductId</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="InitialExpansionLevel" Int="1"/>
+						<PropertyValue Property="SortOrder">
+							<Collection>
+								<Record>
+									<PropertyValue Property="Property"
+										PropertyPath="ProductCategory" />
+									<PropertyValue Property="Descending" Bool="false" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.SelectionPresentationVariant" Qualifier="Cheap">
+					<Record>
+						<PropertyValue Property="Text" String="Cheap">
+						</PropertyValue>
+						<PropertyValue Property="SelectionVariant">
+							<Record>
+								<PropertyValue Property="Text" String="Cheap">
+								</PropertyValue>
+								<PropertyValue Property="SelectOptions">
+									<Collection>
+										<Record Type="UI.SelectOptionType">
+											<PropertyValue Property="PropertyName"
+												PropertyPath="ProductCategory" />
+											<PropertyValue Property="Ranges">
+												<Collection>
+													<Record Type="UI.SelectionRangeType">
+														<PropertyValue Property="Option"
+															EnumMember="UI.SelectionRangeOptionType/EQ" />
+														<PropertyValue Property="Low" String="Notebooks" />
+													</Record>
+												</Collection>
+											</PropertyValue>
+										</Record>
+									</Collection>
+								</PropertyValue>
+							</Record>
+						</PropertyValue>
+						<PropertyValue Property="PresentationVariant" Path="@UI.PresentationVariant#CheapPV"/>
+					</Record>
+				</Annotation>
+
+			<Annotation Term="UI.LineItem" Qualifier="Expensive">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Sales Order Id" />
+							<PropertyValue Property="Value" Path="SalesOrderId"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ProductId"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Category"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Currency Code" />
+							<PropertyValue Property="Value" Path="CurrencyCode" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="NetAmount"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="TaxAmount"/>
+						</Record>
+					</Collection>
+				</Annotation>
+
+			<Annotation Term="UI.LineItem" Qualifier="Reduced">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="SalesOrderId"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ProductId"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ProductCategory"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="NetAmount"/>
+						</Record>
+					</Collection>
+				</Annotation>
+
+
+			<Annotation Term="UI.SelectionPresentationVariant" Qualifier="Chart1">
+					<Record>
+						<PropertyValue Property="Text" String="Chart1">
+						</PropertyValue>
+						<PropertyValue Property="SelectionVariant">
+							<Record>
+								<PropertyValue Property="Text" String="Notebooks">
+								</PropertyValue>
+								<PropertyValue Property="SelectOptions">
+									<Collection>
+										<Record Type="UI.SelectOptionType">
+											<PropertyValue Property="PropertyName"
+												PropertyPath="ProductCategory" />
+											<PropertyValue Property="Ranges">
+												<Collection>
+													<Record Type="UI.SelectionRangeType">
+														<PropertyValue Property="Option"
+															EnumMember="UI.SelectionRangeOptionType/EQ" />
+														<PropertyValue Property="Low" String="Notebooks" />
+													</Record>
+												</Collection>
+											</PropertyValue>
+										</Record>
+									</Collection>
+								</PropertyValue>
+							</Record>
+						</PropertyValue>
+						<PropertyValue Property="PresentationVariant">
+							<Record>
+								<PropertyValue Property="Visualizations">
+									<Collection>
+										<AnnotationPath>@UI.Chart#Chart1</AnnotationPath>
+									</Collection>
+								</PropertyValue>
+								<PropertyValue Property="SortOrder">
+									<Collection>
+										<Record>
+											<PropertyValue Property="Property"
+												PropertyPath="ProductCategory" />
+											<PropertyValue Property="Descending" Bool="false" />
+										</Record>
+									</Collection>
+								</PropertyValue>
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+
+
+				<Annotation Term="UI.Chart" Qualifier="Chart1">
+					<Record Type="UI.ChartDefinitionType">
+						<PropertyValue Property="Title" String="Revenue by Customer"/>
+						<PropertyValue Property="Description" String="Net Revenue by Customer"/>
+						<PropertyValue Property="ChartType" EnumMember="UI.ChartType/Column"/>
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>ProductCategory</PropertyPath>
+								
+							</Collection>
+						</PropertyValue>
+					
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>NetAmount</PropertyPath>
+							</Collection>
+						</PropertyValue>
+					
+					</Record>
+				</Annotation>
+
+					<Annotation Term="UI.PresentationVariant" Qualifier="Chart2">
+				<Record>
+					<PropertyValue Property="Text" String="Chart2"/>
+					<PropertyValue Property="SortOrder">
+						<Collection>
+							<Record Type="Common.SortOrderType">
+								<PropertyValue Property="Property" PropertyPath="NetAmount"/>
+								<PropertyValue Property="Descending" Bool="true"/>
+							</Record>
+						</Collection>
+					</PropertyValue>
+					<PropertyValue Property="Visualizations">
+						<Collection>
+							<AnnotationPath>@UI.Chart#Chart2</AnnotationPath>
+						</Collection>
+					</PropertyValue>
+				</Record>
+			</Annotation> 
+
+				<Annotation Term="UI.Chart" Qualifier="Chart2">
+					<Record Type="UI.ChartDefinitionType">
+						<PropertyValue Property="Title" String="Revenue by Customer"/>
+						<PropertyValue Property="Description" String="Net Revenue by Customer"/>
+						<PropertyValue Property="ChartType" EnumMember="UI.ChartType/Column"/>
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>ProductCategory</PropertyPath>
+								
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>TaxAmount</PropertyPath>
+								<PropertyPath>NetAmount</PropertyPath>
+							</Collection>
+						</PropertyValue>
+					<PropertyValue Property="Actions">
+						<Collection>
+						<!-- Actions are not defined in the metadata showing errors in the console > deactivated
+							<Record Type="UI.DataFieldForAction">
+								<PropertyValue Property="Action" String="ZFAR_CUSTOMER_LINE_ITEMS2_SRV.ZFAR_CUSTOMER_LINE_ITEMS2_SRV_Entities/Create"/>
+								<PropertyValue Property="Label" String="Action 1"/>
+							</Record>
+							<Record Type="UI.DataFieldForAction">
+								<PropertyValue Property="Action" String="ZFAR_CUSTOMER_LINE_ITEMS2_SRV.ZFAR_CUSTOMER_LINE_ITEMS2_SRV_Entities/Copy"/>
+								<PropertyValue Property="Label" String="Action 3 (M)"/>
+								<Annotation Term="com.sap.vocabularies.UI.v1.Importance" EnumMember="com.sap.vocabularies.UI.v1.ImportanceType/Medium"/>
+							</Record>
+						-->
+							<Record Type="UI.DataFieldForIntentBasedNavigation">
+								<PropertyValue Property="SemanticObject" String="Customer"/>
+								<PropertyValue Property="Action" String="postPayment2"/>
+								<PropertyValue Property="Label" String="SO Navigation (M)"/>
+								<Annotation Term="com.sap.vocabularies.UI.v1.Importance" EnumMember="com.sap.vocabularies.UI.v1.ImportanceType/Medium"/>
+							</Record>
+						</Collection>
+					</PropertyValue>
+					</Record>
+				</Annotation>
+
+				<Annotation Term="UI.LineItem" Qualifier="All">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Sales Order Id" />
+							<PropertyValue Property="Value" Path="SalesOrderId"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="ProductId"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Category"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Currency Code" />
+							<PropertyValue Property="Value" Path="CurrencyCode" />
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="NetAmount"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="TaxAmount"/>
+						</Record>
+					</Collection>
+				</Annotation>
+
+			 	<Annotation Term="UI.SelectionPresentationVariant" Qualifier="All">
+					<Record>
+						<PropertyValue Property="Text" String="All">
+						</PropertyValue>
+
+						<PropertyValue Property="PresentationVariant">
+							<Record>
+								<PropertyValue Property="Visualizations">
+									<Collection>
+										<AnnotationPath>@UI.LineItem#All</AnnotationPath>
+									</Collection>
+								</PropertyValue>
+								<PropertyValue Property="SortOrder">
+									<Collection>
+										<Record>
+											<PropertyValue Property="Property"
+												PropertyPath="ProductCategory" />
+											<PropertyValue Property="Descending" Bool="false" />
+										</Record>
+									</Collection>
+								</PropertyValue>
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+
+			</Annotations>
+			
+			<!-- Reference facet for Object Page table -->
+			<Annotations Target="STTA_SALES_ORDER_ITEM_AGGR_SRV.STTA_C_SO_ItemAggrType">
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Schedule Line"/>
+							<PropertyValue Property="Target" AnnotationPath="to_ScheduleLine/@UI.LineItem"/>
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+			
+			<Annotations Target="STTA_SALES_ORDER_ITEM_AGGR_SRV.STTA_C_SO_SalesOrderSL_NDType">
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="SalesOrderID"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="SalesOrderItemID"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="DeliveryDate"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Quantity"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="QuantityUnitCode"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="CreationDateTime"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="CreationUserName"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="LastChangedDateTime"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="LastChangedUserName"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+
+			<!-- annotation for smartLink on the popover for Chart -->
+			<Annotations Target="STTA_SALES_ORDER_ITEM_AGGR_SRV.STTA_C_SO_ItemAggrType/ProductCategory">
+				<Annotation Term="com.sap.vocabularies.Common.v1.SemanticObject" String="EPMProduct"/>
+			
+			</Annotations>
+
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

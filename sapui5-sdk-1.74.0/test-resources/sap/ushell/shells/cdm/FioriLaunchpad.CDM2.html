@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2009-2017 SAP SE, All Rights Reserved -->
+
+<!-- Local CDM test page
+    The configuration in this page should allow demos for the CDM platform in a local test
+    environment or on a isolated test page (e.g. SAPUI5 dist-layer on SCP), i.e without
+    a revese proxy installation.
+
+    TODO: move dynamic tiles which require authentication for PAGE_BUILDER_PERS to the fioriCdmOnAbap.html
+    and use here some public services.
+
+    Platform-specific configuration which require server round trips for a specifiuc platform
+    should be done in separate files, e.g. fioriCdmOnAbap.html for the CDM@ABAP / ABAP Runtime Agent
+    platform
+-->
+<html class="sapUShellFullHeight">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <!-- hardcoded min theme. Needs to be replaced by dynamic solution later -->
+        <link rel="stylesheet" href="./../../../../../resources/sap/ui/core/themes/sap_belize_plus/library.css" id="sap-ui-theme-sap.ui.core"/>
+        <link rel="stylesheet" href="./../../../../../resources/sap/m/themes/sap_belize_plus/library.css" id="sap-ui-theme-sap.m"/>
+        <!-- Runtime Agent platform-independent default settings -->
+        <meta name="sap.ushellConfig.crossPlatformDefaults" content='{
+            "services": {
+                "PluginManager": {
+                    "config": {
+                        "loadPluginsFromSite": true
+                    }
+                },
+                "Container": {
+                    "adapter": {
+                        "config": {
+                            "systemProperties": {
+                            },
+                            "userProfile": {
+                                "metadata": {
+                                    "editablePropterties": [
+                                        "accessibility",
+                                        "contentDensity",
+                                        "theme"
+                                    ],
+                                    "ranges": {
+                                        "theme": {
+                                            "sap_belize": {
+                                                "displayName": "SAP Belize",
+                                                "themeRoot": ""
+                                            },
+                                            "sap_belize_plus":  {
+                                                "displayName": "SAP Belize Plus",
+                                                "themeRoot": ""
+                                            },
+                                            "sap_belize_hcb": {
+                                                "displayName": "SAP Belize HCB",
+                                                "themeRoot": ""
+                                            },
+                                            "sap_belize_hcw": {
+                                                "displayName": "SAP Belize HCW",
+                                                "themeRoot": ""
+                                            }
+                                        }
+                                    }
+                                },
+                                "defaults": {
+                                    "email": "john.doe@sap.com",
+                                    "firstName": "John",
+                                    "lastName": "Doe",
+                                    "fullName": "John Doe",
+                                    "id": "DOEJ",
+                                    "language": "EN",
+                                    "languageBcp47": "en",
+                                    "sapDateFormat": "1",
+                                    "tislcal": [],
+                                    "numberFormat": "",
+                                    "rtl": false,
+                                    "sapTimeFormat": "0",
+                                    "timeZone": "CET"
+                                }
+                            },
+                            "userProfilePersonalization": {
+                                "sapDateFormat": "1",
+                                "theme": "sap_belize_plus",
+                                "sapTimeFormat": "0",
+                                "timeZone": "CET",
+                                "contentDensity": "cozy"
+                            }
+                        }
+                    }
+                },
+                "CommonDataModel": {
+                    "adapter": {
+                        "config": {
+                            "ignoreSiteDataPersonalization": true,
+                            "siteDataUrl": "../../cdmSiteData/CommonDataModelAdapterData.json",
+                            "allowSiteSourceFromURLParameter": true
+                        }
+                    }
+                },
+                "Ui5ComponentLoader": {
+                    "config": {
+                        "amendedLoading": true
+                    }
+                }
+            }
+        }' />
+
+        <!-- Runtime Agent platform-specific default settings -->
+        <!--
+            TODO this config should NOT be hard-coded, but should be added
+            during packaging time, as
+            (A) the settings may be different on every Runtime Agent platform (e.g. RAG@ABAP) and
+            (B) the performance will be better compared to resolving it at
+            runtime.
+        -->
+        <meta name="sap.ushellConfig.platformSpecificDefaults" content='{
+            "services": {
+                "Container": {
+                    "adapter": {
+                        "config": {
+                            "systemProperties": {
+                                "logoutUrl": "/sap/public/bc/icf/logoff"
+                            }
+                        }
+                    }
+                },
+                "SupportTicket": {
+                    "config": {
+                        "enabled": true
+                    },
+                    "adapter": {
+                        "module": "sap.ushell.adapters.local.SupportTicketAdapter"
+                    }
+                },
+                "EndUserFeedback": {
+                    "config": {
+                        "enabled": true
+                    },
+                    "adapter": {
+                        "module": "sap.ushell.adapters.local.EndUserFeedbackAdapter"
+                    }
+                }
+            }
+        }' />
+
+        <title>Fiori Launchpad CDM local</title>
+        <script id="sap-ui-bootstrap" src="../../../../../resources/sap/ushell/bootstrap/cdm.js"></script>
+        <style>
+            #canvas>.sapMShellBG.sapUiGlobalBackgroundImage {
+                display: none;
+            }
+
+            #canvas>.sapMShellBG.sapUiGlobalBackgroundImage:only-child {
+                display: block;
+            }
+        </style>
+    </head>
+
+    <body class="sapUiBody" role="application">
+        <div id="canvas">
+            <div class="sapMShellBG sapUiGlobalBackgroundImage" style="position:absolute; width:100%; height:100%">
+                <div style="position: absolute; left: 50%; top:50%; transform: translate(-50%, -50%)">
+                    If you can read this we are too slow!
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>

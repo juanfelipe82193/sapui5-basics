@@ -1,0 +1,1033 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+	<edmx:Reference
+		Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/bc/ui5_ui5/ui2/ushell/resources/sap/ushell/components/factsheet/vocabularies/UI.xml">
+		<edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Capabilities.V1.xml">
+		<edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+	</edmx:Reference>
+	<edmx:Reference
+		Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+		<edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml">
+		<edmx:Include Alias="Measures" Namespace="Org.OData.Measures.V1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="/sap/opu/odata/sap/STTA_PROD_MAN/$metadata">
+		<edmx:Include Alias="STTA_PROD_MAN" Namespace="STTA_PROD_MAN"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs02/vocabularies/Org.OData.Aggregation.V1.xml">
+		<edmx:Include Alias="Aggregation" Namespace="Org.OData.Aggregation.V1"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/vocabularies/Org.OData.Core.V1.xml">
+		<edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm">
+			<Annotations Target="STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_Product">
+				<Annotation Term="com.sap.vocabularies.Common.v1.FilterExpressionRestriction">
+					<Collection>
+						<Record>
+							<PropertyValue Property="Property" PropertyPath="Supplier"/>
+							<PropertyValue Property="AllowedExpressions" EnumMember="com.sap.vocabularies.Common.v1.FilterExpressionType/SingleInterval"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<!-- Updatable-path using test data -->
+				<Annotation Term="Capabilities.UpdateRestrictions">
+					<Record>
+						<PropertyValue Property="Updatable" Path="Update_mc"/>
+					</Record>
+				</Annotation>
+				<!-- Deletable-path using test data -->
+				<Annotation Term="Capabilities.DeleteRestrictions">
+					<Record>
+						<PropertyValue Property="Deletable" Path="Delete_mc"/>
+					</Record>
+				</Annotation>
+				<!-- Creatable-path for ProductText using test data-->
+				<Annotation Term="Capabilities.InsertRestrictions">
+					<Record>
+						<PropertyValue Property="NonInsertableNavigationProperties">
+							<Collection>
+								<If>
+									<Not>
+										<Path>Delete_mc</Path>
+									</Not>
+									<NavigationPropertyPath>to_ProductText</NavigationPropertyPath>
+								</If>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+            <Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductSalesPriceType">
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PriceDay" />
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="TargetPrice" />
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="DiscountPriceTarget" />
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+			<!--===============================================================================
+				Entity Type from chosen collection ================================================================================ -->
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductType">
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.CollectionFacet">
+							<PropertyValue Property="ID" String="GeneralInformation"/>
+							<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+							<PropertyValue Property="Facets">
+								<Collection>
+									<Record Type="UI.CollectionFacet">
+										<PropertyValue Property="ID" String="GeneralInformationForm"/>
+										<PropertyValue Property="Label" String="{@i18n>@ProductInfoFacetLabel}"/>
+										<PropertyValue Property="Facets">
+											<Collection>
+												<Record Type="UI.ReferenceFacet">
+													<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFieldGroupLabel}"/>
+													<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#GeneralInformation"/>
+												</Record>
+												<Record Type="UI.ReferenceFacet">
+													<PropertyValue Property="Label" String="{@i18n>@TechnicalData}"/>
+													<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#TechnicalData"/>
+												</Record>
+												<Record Type="UI.ReferenceFacet">
+													<PropertyValue Property="Label" String="{@i18n>@ProductCategory}"/>
+													<PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+													<Annotation Term="UI.PartOfPreview" Bool="false"/>
+												</Record>
+											</Collection>
+										</PropertyValue>
+									</Record>
+									<Record Type="UI.CollectionFacet">
+										<PropertyValue Property="ID" String="SalesRevenue"/>
+										<PropertyValue Property="Label" String="{@i18n>@SalesRevenue}"/>
+										<PropertyValue Property="Facets">
+											<Collection>
+												<Record Type="UI.ReferenceFacet">
+													<PropertyValue Property="Label" String="{@i18n>@SalesRevenue}"/>
+													<PropertyValue Property="Target" AnnotationPath="to_ProductSalesData/@UI.LineItem"/>
+												</Record>
+											</Collection>
+										</PropertyValue>
+									</Record>
+								</Collection>
+							</PropertyValue>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="TechnicalData">
+					<Record>
+						<PropertyValue Property="Data">
+							<Collection>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="Width"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="Depth"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="ProductBaseUnit"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="Weight"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="Supplier"/>
+									<PropertyValue Property="Value" Path="Supplier"/>
+									<!-- <PropertyValue Property="SemanticObject" String="EPMSalesOrder"/> -->
+									<PropertyValue Property="Action" String="display_sttabupa"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Label" String="Technical Data"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="GeneralInformation">
+					<Record>
+						<PropertyValue Property="Data">
+							<Collection>
+								<!-- <Record Type="UI.DataFieldForAction">
+									<PropertyValue Property="Label" String="Copy"/>
+									<PropertyValue Property="Action" String="STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductCopy"/>
+									<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+									<Annotation Term="UI.Hidden" Bool="true"/>
+								</Record> -->
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="Product"/>
+									<PropertyValue Property="Value" Path="ProductForEdit"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="Sub-Category"/>
+									
+									
+									<PropertyValue Property="Value" Path="ProductCategory"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="MainProductCategory"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="Price"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="Supplier [SmLiQv]"/>
+									<PropertyValue Property="Value" Path="Supplier"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="to_StockAvailability/Quantity"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+								</Record>
+								<Record Type="UI.DataFieldForAnnotation">
+									<PropertyValue Property="Label" String="Contact [ContactQV]"/>
+									<PropertyValue Property="Target" AnnotationPath="to_Supplier/@Communication.Contact"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Label" String="Product Information"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.HeaderFacets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFieldGroupLabel}"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#GeneralInformationForHeader"/>
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="{@i18n>@ProductCategory}"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+						</Record>
+				
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Target" AnnotationPath="to_ProductSalesPrice/@UI.Chart#SalesPriceAreaChart"/>
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Target" AnnotationPath="to_ProductSalesRevenue/@UI.Chart#MonthlySalesRevenueBulletChart"/>
+						</Record>
+						<!-- HeaderProgressIndicator -->
+
+					
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="WeightUnit">
+					<Record>
+						<PropertyValue Property="Value" Path="WeightUnit"/>
+						<PropertyValue Property="Title" String="Weight Unit [SmLiQv]"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="GeneralInformationForHeader">
+					<Record>
+						<PropertyValue Property="Data">
+							<Collection>
+
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="Weight"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="WeightUnit [SmLiQv]"/>
+									<PropertyValue Property="Value" Path="WeightUnit"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="Supplier [ContactQV]"/>
+									<PropertyValue Property="Target" AnnotationPath="to_Supplier/@Communication.Contact"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFieldGroupLabel}"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<!-- Copy with new Supplier currently not implemented in RefApps backend
+						<Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Copy with new Supplier"/>
+							<PropertyValue Property="Action" String="STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductCopywithparams"/>
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+						</Record>
+						-->
+
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Product"/>
+							<PropertyValue Property="Value" Path="ProductForEdit"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Category"/>
+							<PropertyValue Property="Value" Path="ProductCategory"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+					
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Supplier [SmLiQv]"/>
+							<PropertyValue Property="Value" Path="Supplier"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+
+						<!-- <Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="to_Supplier/CompanyName" />
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+						</Record>-->
+						<!--<Record Type="UI.DataFieldForAnnotation">-->
+						<!--	<PropertyValue Property="Label" String="Supplier [ContactQV]"/>-->
+						<!--	<PropertyValue Property="Target" AnnotationPath="to_Supplier/@Communication.Contact"/>-->
+						<!--	<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>-->
+						<!--</Record>-->
+
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Label" String="Rating"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#Rating"/>
+						</Record>
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Label" String="Progress"/>
+							<PropertyValue Property="Criticality" Path="to_StockAvailability/Quantity"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#Progress"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Aggregated Cost Value"/>
+							<PropertyValue Property="Value" Path="Price"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<!-- <Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Copy"/>
+							<PropertyValue Property="IconUrl" String="sap-icon://copy"/>
+							<PropertyValue Property="Action" String="STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductCopy"/>
+							<PropertyValue Property="Inline" Bool="true"/>
+							<PropertyValue Property="Determining" Bool="true"/>
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+						</Record> -->
+
+
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Label" String="Sales"/>
+							<PropertyValue Property="Target" AnnotationPath="to_ProductSalesPrice/@UI.Chart#SalesPriceAreaChart"/>
+						</Record>
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Label" String="Revenue"/>
+							<PropertyValue Property="Target" AnnotationPath="to_ProductSalesRevenue/@UI.Chart#GrossSalesRevenueBulletChart"/>
+						</Record>
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Label" String="Radial Revenue"/>
+							<PropertyValue Property="Target" AnnotationPath="to_ProductSalesRevenue/@UI.Chart#GrossSalesRevenueRadialChart"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.Identification">
+					<Collection>
+						<!-- <Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Copy"/>
+							<PropertyValue Property="Action" String="STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductCopy"/>
+							<PropertyValue Property="Determining" Bool="true"/>
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record> -->
+						<!--
+						<Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="CWP" />
+							<PropertyValue Property="Action"
+								String="STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductCopywithparams" />
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High" />
+						</Record>
+-->
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Price"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Sub-Category [SmLiQv]"/>
+							<PropertyValue Property="Value" Path="ProductCategory"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.Common.v1.SideEffects" Qualifier="SupplierChanged">
+					<Record>
+						<PropertyValue Property="SourceProperties">
+							<Collection>
+								<PropertyPath>Supplier</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="TargetEntities">
+							<Collection>
+								<NavigationPropertyPath>to_Supplier</NavigationPropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="EffectTypes" EnumMember="ValueChange"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="com.sap.vocabularies.Common.v1.SideEffects" Qualifier="Global">
+					<Record>
+						<PropertyValue Property="TargetEntities">
+							<Collection>
+								<NavigationPropertyPath></NavigationPropertyPath>
+								<NavigationPropertyPath>to_Supplier</NavigationPropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="EffectTypes" EnumMember="ValueChange"/>
+					</Record>
+				</Annotation>
+				<!-- needed for QuickViewFacets annotation for ProductType Currency-->
+<!-- 				<Annotation Term="com.sap.vocabularies.Common.v1.SemanticKey">
+					<Collection>
+						<PropertyPath>ProductForEdit</PropertyPath>
+					</Collection>
+				</Annotation> -->
+				<Annotation Term="com.sap.vocabularies.UI.v1.TextArrangement" EnumMember="com.sap.vocabularies.UI.v1.TextArrangementType/TextLast"/>
+			</Annotations>
+			<!-- to be replaced by CDS - start -->
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductActivation">
+				<Annotation Term="com.sap.vocabularies.Common.v1.IsActionCritical"/>
+			</Annotations>
+			<!-- to be replaced by CDS - end -->
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_StockAvailabilityType">
+				<Annotation Term="UI.DataPoint" Qualifier="StockLevel">
+					<Record>
+						<PropertyValue Property="Criticality" Path="StockAvailability"/>
+						<PropertyValue Property="Value" Path="StockAvailability_Text"/>
+						<PropertyValue Property="Title" String="Availability"/>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<!-- QuickViewFacets annotation for ProductType Currency -->
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductType/Currency">
+				<Annotation Term="Common.SemanticObject" String="EPMProduct"/>
+			</Annotations>
+			<!-- Semantic Object for WeightUnit-->
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductType/WeightUnit">
+				<Annotation Term="Common.SemanticObject" String="EPMProduct"/>
+			</Annotations>
+			<Annotations Target="STTA_PROD_MAN.SEPMRA_I_WeightUnitType">
+				<Annotation Term="UI.QuickViewFacets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Label: Field Group 1"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#WeightUnitQuickViewPOC_FieldGroup_1"/>
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Label: Field Group 2"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#WeightUnitQuickViewPOC_FieldGroup_2"/>
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Label: Contact 1"/>
+							<PropertyValue Property="Target" AnnotationPath="@Communication.Contact#WeightUnitContact1"/>
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Label: Contact 2"/>
+							<PropertyValue Property="Target" AnnotationPath="@Communication.Contact#WeightUnitContact2"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="WeightUnitQuickViewPOC_FieldGroup_1">
+					<Record>
+						<PropertyValue Property="Data">
+							<Collection>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="UnitOfMeasure_Text"/>
+									<PropertyValue Property="Value" Path="UnitOfMeasure_Text"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="WeightUnitQuickViewPOC_FieldGroup_2">
+					<Record>
+						<PropertyValue Property="Data">
+							<Collection>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="UnitOfMeasure"/>
+									<PropertyValue Property="Value" Path="UnitOfMeasure"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="Communication.Contact" Qualifier="WeightUnitContact1">
+					<Record>
+						<PropertyValue Property="fn" Path="UnitOfMeasure"/>
+						<PropertyValue Property="role" Path="UnitOfMeasure_Text"/>
+						<PropertyValue Property="photo" String="sap-icon://compare"/>
+						<PropertyValue Property="title" Path="UnitOfMeasure"/>
+						<PropertyValue Property="tel">
+							<Collection>
+								<Record>
+									<PropertyValue Property="type" EnumMember="Communication.PhoneType/fax"/>
+									<PropertyValue Property="uri" Path="UnitOfMeasure"/>
+								</Record>
+								<Record>
+									<PropertyValue Property="type" EnumMember="Communication.PhoneType/preferred Communication.PhoneType/work"/>
+									<PropertyValue Property="uri" Path="UnitOfMeasure_Text"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="email">
+							<Collection>
+								<Record>
+									<PropertyValue Property="type" EnumMember="Communication.ContactInformationType/work"/>
+									<PropertyValue Property="address" Path="UnitOfMeasureISOCode"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="Communication.Contact" Qualifier="WeightUnitContact2">
+					<Record>
+						<PropertyValue Property="fn" Path="UnitOfMeasure"/>
+						<PropertyValue Property="role" Path="UnitOfMeasureISOCode"/>
+						<PropertyValue Property="photo" String="sap-icon://business-card"/>
+						<PropertyValue Property="email">
+							<Collection>
+								<Record>
+									<PropertyValue Property="type" EnumMember="Communication.ContactInformationType/work"/>
+									<PropertyValue Property="address" Path="UnitOfMeasure_Text"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<!-- Semantic Object for ProductForEdit-->
+<!-- 			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductType/ProductForEdit">
+				<Annotation Term="Common.SemanticObject" String="EPMProduct"/>
+			</Annotations> -->
+			<!-- QuickViewFacets annotation for ProductCategory-->
+<!-- 			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductType/ProductCategory">
+				<Annotation Term="Common.SemanticObject" String="EPMProduct"/>
+				<Annotation Term="com.sap.vocabularies.Common.v1.Text" Path="to_ProductCategory/MainProductCategory"/>
+			</Annotations> -->
+			<!-- check TextArrangement definition for property directly - has prio 1
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_PROD_MAN.STTA_C_MP_ProductType/ProductCategory">
+				<Annotation Term="com.sap.vocabularies.UI.v1.TextArrangement" EnumMember="com.sap.vocabularies.UI.v1.TextArrangementType/TextLast" />
+			</Annotations>  -->
+			<!-- check TextArrangement definition under property/text - has prio 2
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_PROD_MAN.STTA_C_MP_ProductType/ProductCategory">
+				<Annotation Term="com.sap.vocabularies.Common.v1.Text" Path="MainProductCategory">
+					<Annotation Term="com.sap.vocabularies.UI.v1.TextArrangement" EnumMember="com.sap.vocabularies.UI.v1.TextArrangementType/TextOnly" />
+				</Annotation>
+			</Annotations>	-->
+			<!-- check TextArrangement definition for entity type - has prio 3-->
+			<Annotations Target="STTA_PROD_MAN.SEPMRA_I_ProductCategoryType">
+				<Annotation Term="UI.QuickViewFacets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="FieldGroup in QV"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#ProductCategoryQuickViewPOC_FieldGroup_1"/>
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="DataPoint in QV"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#Product"/>
+							<Annotation Term="UI.Hidden" Bool="false"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="Product">
+					<Record>
+						<PropertyValue Property="Value" Path="ProductCategory"/>
+						<PropertyValue Property="Title" String="Price"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="ProductCategoryQuickViewPOC_FieldGroup_1">
+					<Record>
+						<PropertyValue Property="Data">
+							<Collection>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="Product Category"/>
+									<PropertyValue Property="Criticality" String="1"/>
+									<PropertyValue Property="Value" Path="ProductCategory"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="to_MainCategory / Main Product Category"/>
+									<PropertyValue Property="Value" Path="to_MainCategory/MainProductCategory"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<!-- QuickViewFacets annotation for Supplier
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductType/Supplier">
+				<Annotation Term="Common.SemanticObject" String="EPMProduct"/>
+			</Annotations>
+            <Annotations Target="STTA_PROD_MAN.STTA_C_MP_SupplierType/EmailAddress" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                  <Annotation Term="com.sap.vocabularies.Communication.v1.IsEmailAddress" Bool="true"/>
+            </Annotations>
+            <Annotations Target="STTA_PROD_MAN.STTA_C_MP_SupplierType/URL" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                  <Annotation Term="Org.OData.Core.V1.IsURL" Bool="true"/>
+            </Annotations>
+            <Annotations Target="STTA_PROD_MAN.STTA_C_MP_SupplierType/PhoneNumber" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                  <Annotation Term="com.sap.vocabularies.Communication.v1.IsPhoneNumber" Bool="true"/>
+            </Annotations>
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_SupplierType">
+				<Annotation Term="UI.HeaderInfo">
+					<Record>
+						<PropertyValue Property="TypeName" String="Supplier"/>
+						<PropertyValue Property="TypeNamePlural" String="Suppliers"/>
+						<PropertyValue Property="ImageUrl" String="sap-icon://person-placeholder"/>
+						<PropertyValue Property="TypeImageUrl" String="sap-icon://customer-and-supplier"/>
+						<PropertyValue Property="Title">
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="CompanyName"/>
+							</Record>
+						</PropertyValue>
+						<PropertyValue Property="Description">
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="Supplier"/>
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.QuickViewFacets">
+					<Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Label: Field Group 1" />
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#SupplierQuickViewPOC_FieldGroup_1" />
+                        </Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Main Contact Person" />
+							<PropertyValue Property="Target" AnnotationPath="@Communication.Contact#KeyAccount"/>
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Label: Field Group 2" />
+							<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#SupplierQuickViewPOC_FieldGroup_2" />
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="Communication.Contact" Qualifier="KeyAccount">
+					<Record>
+						<PropertyValue Property="fn" Path="to_PrimaryContactPerson/FullName"/>
+						<PropertyValue Property="role" Path="to_PrimaryContactPerson/PreferredLanguage"/>
+						<PropertyValue Property="photo" String="sap-icon://account"/>
+						<PropertyValue Property="tel">
+							<Collection>
+								<Record>
+									<PropertyValue Property="type" EnumMember="Communication.PhoneType/fax"/>
+									<PropertyValue Property="uri" Path="FaxNumber"/>
+								</Record>
+								<Record>
+									<PropertyValue Property="type" EnumMember="Communication.PhoneType/preferred Communication.PhoneType/work"/>
+									<PropertyValue Property="uri" Path="PhoneNumber"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="email">
+							<Collection>
+								<Record>
+									<PropertyValue Property="type" EnumMember="Communication.ContactInformationType/work"/>
+									<PropertyValue Property="address" Path="EmailAddress"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="SupplierQuickViewPOC_FieldGroup_1">
+					<Record>
+						<PropertyValue Property="Data">
+							<Collection>
+								<Record Type="UI.DataFieldWithIntentBasedNavigation">
+									<PropertyValue Property="Label" String="Supplier [with IBN]" />
+									<PropertyValue Property="Value" Path="Supplier" />
+									<PropertyValue Property="SemanticObject" String="EPMProduct" />
+									<PropertyValue Property="Action" String="manage" />
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="Supplier" />
+									<PropertyValue Property="Value" Path="Supplier"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="Company Name" />
+									<PropertyValue Property="Value" Path="CompanyName"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="to_Address / FormattedAddress" />
+									<PropertyValue Property="Value" Path="to_Address/FormattedAddress"/>
+								</Record>
+								<Record Type="UI.DataFieldWithUrl">
+									<PropertyValue Property="Label" String="URL [DataFieldWithUrl]" />
+									<PropertyValue Property="Value" Path="URL"/>
+									<PropertyValue Property="Url" Path="URL"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="SupplierQuickViewPOC_FieldGroup_2">
+					<Record>
+						<PropertyValue Property="Data">
+							<Collection>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="URL [DataField]" />
+									<PropertyValue Property="Value" Path="URL"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="to_Address / AddressValidityStartDate" />
+									<PropertyValue Property="Value" Path="to_Address/AddressValidityStartDate"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>-->
+			<!-- QuickViewFacets annotation for ProductSalesDataType Currency-->
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductSalesDataType/Currency">
+				<Annotation Term="Common.SemanticObject" String="EPMProduct"/>
+				<Annotation Term="com.sap.vocabularies.Common.v1.Text" Path="to_Currency/Currency_Text"/>
+				<Annotation Term="com.sap.vocabularies.UI.v1.TextArrangement" EnumMember="com.sap.vocabularies.UI.v1.TextArrangementType/TextLast"/>
+			</Annotations>
+			<Annotations Target="STTA_PROD_MAN.I_CurrencyType">
+				<Annotation Term="UI.HeaderInfo">
+					<Record>
+						<PropertyValue Property="TypeName" String="Currency"/>
+						<PropertyValue Property="TypeNamePlural" String="Currencies"/>
+						<PropertyValue Property="ImageUrl" String="sap-icon://lead"/>
+						<PropertyValue Property="Title">
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="Currency"/>
+							</Record>
+						</PropertyValue>
+						<PropertyValue Property="Description">
+							<Record Type="UI.DataField">
+								<PropertyValue Property="Value" Path="Currency_Text"/>
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.QuickViewFacets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Label: Field Group 1"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#CurrencyQuickViewPOC_FieldGroup_1"/>
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="Label: Field Group 2"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#CurrencyQuickViewPOC_FieldGroup_2"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="CurrencyQuickViewPOC_FieldGroup_1">
+					<Record>
+						<PropertyValue Property="Data">
+							<Collection>
+								<Record Type="UI.DataFieldWithIntentBasedNavigation">
+									<PropertyValue Property="Label" String="CurrencyISOCode [with IBN]"/>
+									<PropertyValue Property="Value" Path="CurrencyISOCode"/>
+									<PropertyValue Property="SemanticObject" String="EPMProduct"/>
+									<PropertyValue Property="Action" String="manage"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="Decimals"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="Alternative Currency Key"/>
+									<PropertyValue Property="Value" Path="AlternativeCurrencyKey"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="CurrencyQuickViewPOC_FieldGroup_2">
+					<Record>
+						<PropertyValue Property="Data">
+							<Collection>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="Currency"/>
+								</Record>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Label" String="Currency Text"/>
+									<PropertyValue Property="Value" Path="Currency_Text"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<!--===============================================================================
+				Entity Type from chosen navigation property
+			================================================================================ -->
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductTextType">
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.CollectionFacet">
+							<PropertyValue Property="ID" String="GeneralInformation"/>
+							<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+							<PropertyValue Property="Facets">
+								<Collection>
+									<Record Type="UI.ReferenceFacet">
+										<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFieldGroupLabel}"/>
+										<PropertyValue AnnotationPath="@UI.Identification" Property="Target"/>
+									</Record>
+								</Collection>
+							</PropertyValue>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="Rating1">
+					<Record>
+						<PropertyValue Property="Value" Decimal="3"/>
+						<PropertyValue Property="TargetValue" Decimal="5"/>
+						<PropertyValue Property="Visualization" EnumMember="UI.VisualizationType/Rating"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="Progress">
+					<Record>
+						<PropertyValue Property="Value" Path="to_ProductSalesRevenue/BulletChartRevenue"/>
+						<PropertyValue Property="TargetValue" Decimal="100"/>
+						<PropertyValue Property="Visualization" EnumMember="UI.VisualizationType/Progress"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.FieldGroup" Qualifier="PlainText">
+					<Record>
+						<PropertyValue Property="Data">
+							<Collection>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="Description"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Language"/>
+							<PropertyValue Property="Value" Path="LanguageForEdit"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Name"/>
+							<PropertyValue Property="Value" Path="Name"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Description"/>
+							<PropertyValue Property="Value" Path="Description"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+						</Record>
+						<!-- <Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="Copy Text"/>
+							<PropertyValue Property="IconUrl" String="sap-icon://copy"/>
+							<PropertyValue Property="Action" String="STTA_PROD_MAN.STTA_PROD_MAN_Entities/STTA_C_MP_ProductCopyText"/>
+							<PropertyValue Property="Inline" Bool="true"/>
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+						</Record> -->
+						<Record Type="UI.DataFieldForIntentBasedNavigation">
+							<PropertyValue Property="Label" String="Manage Product Texts (ST)"/>
+							<PropertyValue Property="SemanticObject" String="EPMProduct"/>
+							<PropertyValue Property="Action" String="manage_st"/>
+							<PropertyValue Property="Inline" Bool="true"/>
+						</Record>
+						<Record Type="UI.DataFieldWithIntentBasedNavigation">
+							<PropertyValue Property="Label" String="Name [with IBN]"/>
+							<PropertyValue Property="Value" Path="Name"/>
+							<PropertyValue Property="SemanticObject" String="EPMProduct"/>
+							<PropertyValue Property="Action" String="manage_stta"/>
+						</Record>
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Label" String="Sales"/>
+							<PropertyValue Property="Target" AnnotationPath="to_ProductSalesPrice/@UI.Chart#SalesPriceAreaChart"/>
+						</Record>
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Label" String="Revenue"/>
+							<PropertyValue Property="Target" AnnotationPath="to_ProductSalesRevenue/@UI.Chart#GrossSalesRevenueBulletChart"/>
+						</Record>
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Label" String="Radial Revenue"/>
+							<PropertyValue Property="Target" AnnotationPath="to_ProductSalesRevenue/@UI.Chart#GrossSalesRevenueRadialChart"/>
+						</Record>
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Label" String="Rating"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#Rating1"/>
+						</Record>
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Label" String="Progress1"/>
+							<PropertyValue Property="Criticality" Path="to_StockAvailability/Quantity"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#Progress"/>
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductSalesDataType">
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.CollectionFacet">
+							<PropertyValue Property="ID" String="GeneralInformation12"/>
+							<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+							<PropertyValue Property="Facets">
+								<Collection>
+									<Record Type="UI.ReferenceFacet">
+										<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFieldGroupLabel}"/>
+										<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#TechnicalData"/>
+									</Record>
+								</Collection>
+							</PropertyValue>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Regions"/>
+							<PropertyValue Property="Value" Path="Product"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Revenue"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Quantity"/>
+							<PropertyValue Property="Value" Path="Quantity"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="Delivery Date"/>
+							<PropertyValue Property="Value" Path="DeliveryDateTime"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Label" String="Rating"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#Rating1"/>
+						</Record>
+
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.HeaderFacets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#Rating1"/>
+
+						</Record>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#Progress"/>
+							<PropertyValue Property="Label" String="{@i18n>@GeneralInfoFacetLabel}"/>
+						</Record>
+					</Collection>
+				</Annotation>
+
+				<Annotation Term="UI.FieldGroup" Qualifier="TechnicalData">
+					<Record>
+						<PropertyValue Property="Data">
+							<Collection>
+								<Record Type="UI.DataField">
+									<PropertyValue Property="Value" Path="Product"/>
+									<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+								</Record>
+
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Label" String="Technical Data"/>
+					</Record>
+				</Annotation>
+
+				<Annotation Term="UI.DataPoint" Qualifier="Rating1">
+					<Record>
+						<PropertyValue Property="Value" Decimal="3"/>
+						<PropertyValue Property="TargetValue" Decimal="5"/>
+						<PropertyValue Property="Visualization" EnumMember="UI.VisualizationType/Rating"/>
+
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="Progress1">
+					<Record>
+						<PropertyValue Property="Value" Decimal="97"/>
+						<PropertyValue Property="TargetValue" Decimal="100"/>
+						<PropertyValue Property="Visualization" EnumMember="UI.VisualizationType/Progress"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="Progress">
+					<Record>
+						<PropertyValue Property="Value" Decimal="97"/>
+						<PropertyValue Property="TargetValue" Decimal="100"/>
+						<PropertyValue Property="Visualization" EnumMember="UI.VisualizationType/Progress"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="Common.SemanticObject" String="EPMProduct"/>
+			</Annotations>
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductType/ProductPictureURL">
+				<Annotation Term="UI.IsImageURL"/>
+				<Annotation Term="Common.Text" String="{Product}"/>
+			</Annotations>
+			<!-- MICRO CHART -->
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_PROD_MAN.STTA_C_MP_ProductSalesPriceType/AreaChartPrice">
+				<Annotation Term="Measures.ISOCurrency" Path="Currency"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="STTA_PROD_MAN.STTA_C_MP_ProductSalesRevenueType/BulletChartRevenue">
+				<Annotation Term="Measures.ISOCurrency" Path="Currency"/>
+			</Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm"
+				Target="STTA_PROD_MAN.STTA_C_MP_ProductSalesRevenueType/BulletChartMonthRevenue">
+				<Annotation Term="Measures.ISOCurrency" Path="Currency"/>
+			</Annotations>
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductSalesRevenueType">
+				<Annotation Term="UI.Chart" Qualifier="GrossSalesRevenueRadialChart">
+					<Record Type="UI.ChartDefinitionType">
+						<PropertyValue Property="Title" String="Gross Sales Revenue"/>
+						<PropertyValue Property="Description" String="With navigation and criticality"/>
+						<PropertyValue Property="ChartType" EnumMember="UI.ChartType/Donut"/>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>BulletChartRevenue</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="UI.ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="BulletChartRevenue"/>
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1"/>
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#BulletChartRevenue"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<!-- MICRO CHART -->
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductTextType/Description">
+				<Annotation Term="UI.MultiLineText"/>
+			</Annotations>
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_ProductRatingType">
+				<!--aggregated rating -->
+				<Annotation Term="UI.DataPoint" Qualifier="AverageRating">
+					<Record>
+						<PropertyValue Property="Title" String="{@i18n>@ProductAverageRating}"/>
+						<PropertyValue Property="Value" Path="AverageRating"/>
+						<PropertyValue Property="TargetValue" Path="MaxRating"/>
+						<PropertyValue Property="Visualization" EnumMember="UI.VisualizationType/Rating"/>
+						<PropertyValue Property="SampleSize" Path="ReviewCount"/>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<!-- Footer for Progress Indicator -->
+			<Annotations Target="STTA_PROD_MAN.STTA_C_MP_StockAvailabilityType/Quantity">
+				<Annotation Term="Measures.Unit" String="PCS"/>
+				<Annotation Term="Common.Label" String="2016"/>
+			</Annotations>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

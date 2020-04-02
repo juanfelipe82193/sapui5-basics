@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>ObjectPageSubSection</name>
+    <derived/>
+    <documentation>Second-level information container of an {@link sap.uxap.ObjectPageLayout}.
+
+An &lt;code&gt;ObjectPageSubSection&lt;/code&gt; may only be used within sections in the
+&lt;code&gt;ObjectPageLayout&lt;/code&gt;. Subsections are used to display primary information in
+the &lt;code&gt;blocks&lt;/code&gt; aggregation (always visible) and not-so-important information in
+the &lt;code&gt;moreBlocks&lt;/code&gt; aggregation. The content in the &lt;code&gt;moreBlocks&lt;/code&gt;
+aggregation is initially hidden, but may be accessed with a "See more" (...) button.
+
+As of version 1.61, applications can enable auto-expand of the subsections to fit the sections container
+by adding the &lt;code&gt;sapUxAPObjectPageSubSectionFitContainer&lt;/code&gt; class to the subsection. This is useful in
+situations where the sub-section contains a control that has “100%” height, for example,
+&lt;code&gt;sap.ui.table.Table&lt;/code&gt; with &lt;code&gt;visibleRowCountMode&lt;/code&gt; set to &lt;code&gt;Auto&lt;/code&gt;.
+
+&lt;b&gt;Note:&lt;/b&gt; This control is intended to be used only as part of the &lt;code&gt;ObjectPageLayout&lt;/code&gt;.</documentation>
+    <since>1.26</since>
+    <baseType>sap.uxap/ObjectPageSectionBase</baseType>
+    <properties>
+        <property name="mode" type="sap.uxap/ObjectPageSubSectionMode" defaultValue="Collapsed" group="Appearance">
+            <documentation>A mode property that will be passed to the controls in the blocks and moreBlocks aggregations. Only relevant if these aggregations use Object page blocks.</documentation>
+        </property>
+        <property name="titleUppercase" type="sap.ui.core/boolean" defaultValue="false" group="Appearance">
+            <documentation>Determines whether the Subsection title is displayed in upper case.</documentation>
+        </property>
+    </properties>
+    <aggregations default="blocks">
+        <aggregation name="_grid" type="sap.ui.core/Control" cardinality="0..1" visibility="hidden">
+            <documentation>Internal grid aggregation</documentation>
+        </aggregation>
+        <aggregation name="blocks" type="sap.ui.core/Control" cardinality="0..n">
+            <documentation>Controls to be displayed in the subsection
+
+&lt;b&gt;Note:&lt;/b&gt; The SAP Fiori Design guidelines require that the
+&lt;code&gt;ObjectPageHeader&lt;/code&gt;'s content and the &lt;code&gt;ObjectPage&lt;/code&gt;'s subsection content
+are aligned vertically. When using {@link sap.ui.layout.form.Form},
+{@link sap.m.Panel}, {@link sap.m.Table} and {@link sap.m.List} in the subsection
+content area of &lt;code&gt;ObjectPage&lt;/code&gt;, if the content is not already aligned, you need to adjust their left
+text offset to achieve the vertical alignment.  To do this, apply the
+&lt;code&gt;sapUxAPObjectPageSubSectionAlignContent&lt;/code&gt;
+CSS class to them and set their &lt;code&gt;width&lt;/code&gt; property to &lt;code&gt;auto&lt;/code&gt;
+(if not set by default).
+
+Don't use the &lt;code&gt;sapUxAPObjectPageSubSectionAlignContent&lt;/code&gt; CSS class in the following cases:
+&lt;ul&gt;
+&lt;li&gt;In combination with &lt;code&gt;ResponsiveLayout&lt;/code&gt;, because &lt;code&gt;ResponsiveLayout&lt;/code&gt; applies custom paddings.
+To align items with &lt;code&gt;sapUxAPObjectPageSubSectionAlignContent&lt;/code&gt;, use &lt;code&gt;ColumnLayout&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;If there are multiple controls in the same &lt;code&gt;ObjectPageSubSection&lt;/code&gt;, because the CSS class
+interferes with their alignment.&lt;/li&gt;
+&lt;/ul&gt;
+Example:
+
+&lt;pre&gt;
+&lt;code&gt; &amp;lt;Panel class="sapUxAPObjectPageSubSectionAlignContent" width="auto"&amp;gt;&amp;lt;/Panel&amp;gt; &lt;/code&gt;
+&lt;/pre&gt;</documentation>
+        </aggregation>
+        <aggregation name="moreBlocks" type="sap.ui.core/Control" cardinality="0..n">
+            <documentation>Additional controls to display when the Show more / See all / (...) button is pressed</documentation>
+        </aggregation>
+        <aggregation name="actions" type="sap.ui.core/Control" cardinality="0..n">
+            <documentation>Actions available for this subsection.
+
+Although this aggregation accepts type &lt;code&gt;sap.ui.core.Control&lt;/code&gt;,
+it is strongly recommended to use only simple controls, such as buttons, so that
+the layout of the app is preserved.
+
+&lt;b&gt;Note:&lt;/b&gt; Keep in mind that the controls set in the &lt;code&gt;actions&lt;/code&gt; aggregation
+of &lt;code&gt;ObjectPageSubSection&lt;/code&gt; do NOT have overflow behavior. If the
+available space is not enough, the controls will be displayed on more lines.</documentation>
+        </aggregation>
+    </aggregations>
+</control>

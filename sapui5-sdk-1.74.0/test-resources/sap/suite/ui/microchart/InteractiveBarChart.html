@@ -1,0 +1,399 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.suite.ui.microchart.InteractiveBarChart</title>
+
+<base href="../../../../../">
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout, sap.m, sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize"
+	src="resources/sap-ui-core.js">
+</script>
+
+<script type="text/javascript">
+	jQuery.sap.initMobile();
+
+	var buildIBC = function (sSize) {
+		var sWidth = sSize.width;
+		var sHeight = sSize.height;
+
+		var oBarTmpl = new sap.suite.ui.microchart.InteractiveBarChartBar({
+			label: "{label}",
+			value: "{value}",
+			displayedValue: "{displayedValue}",
+			selected: "{selected}",
+			color: "{color}",
+			tooltip: "{bartooltip}"
+		});
+
+		var oIBCTmpl = new sap.suite.ui.microchart.InteractiveBarChart({
+			min: "{/min}",
+			max: "{/max}",
+			selectionEnabled: "{/selectionEnabled}",
+			displayedBars: "{/displayedBars}",
+			labelWidth: "{/labelWidth}",
+			bars: {
+				path: "/bars",
+				template: oBarTmpl
+			},
+			selectionChanged: fnSelectionChanged,
+			tooltip: "{/tooltip}",
+			press: fnPress
+		}).addStyleClass("sapUiTinyMargin");
+
+		return new sap.m.FlexBox({
+			items: [oIBCTmpl],
+			alignItems: "Start",
+			layoutData : new sap.ui.layout.ResponsiveFlowLayoutData({
+				minWidth : 500
+			}),
+			height: sHeight,
+			width: sWidth
+		});
+	}
+
+	var fnSelectionChanged = function (oEvent) {
+		sap.m.MessageToast.show("The selected bar is: " + oEvent.getParameter("bar").getId());
+	};
+
+	var fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The chart is pressed.");
+	};
+
+	var oBCFormLabel = new sap.m.Label({
+		text: "Responsive controls in FlexBox",
+		labelFor: "barchart-responsive-layout",
+		width: "100%",
+		textAlign: "Center",
+		design: "Bold"
+	});
+
+	var oResponsiveLayout = new sap.ui.layout.ResponsiveFlowLayout("responsive-form", {
+		content:[
+			buildIBC({width: "380px", height: "200px"}),
+			buildIBC({width: "320px", height: "180px"}),
+			buildIBC({width: "200px", height: "100px"})
+		]
+	});
+
+	var oIBCData = {
+			min: null,
+			max: null,
+			displayedBars: 3,
+			labelWidth: "40%",
+			selectionEnabled: true,
+			bars: [
+				{ label: "Afghanistan", value: -10, displayedValue: "-10%", color: sap.m.ValueColor.Critical, selected: false },
+				{ label: "Albania", value: 50, displayedValue: "50%", color: sap.m.ValueColor.Neutral, selected: true },
+				{ label: "Algeria", value: 100, displayedValue: "100%", color: sap.m.ValueColor.Good, selected: false },
+				{ label: "Andorra", value: -40, displayedValue: "-40%", color: sap.m.ValueColor.Neutral, selected: false },
+				{ label: "Angola", value: -35, displayedValue: "-35%", color: sap.m.ValueColor.Neutral, selected: false }
+			],
+			colors: Object.keys(sap.m.ValueColor),
+			press: fnPress
+		};
+
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData(oIBCData);
+	sap.ui.getCore().setModel(oModel);
+
+//****************** Input Form ****************************************************************
+
+	var oDisplayedBarsLbl = new sap.m.Label({
+		text: "Displayed Bars",
+		labelFor: "displayedBars"
+	});
+
+	var oDisplayedBarsInput = new sap.m.Input("displayedBars", {
+		width: "10rem",
+		value: "{/displayedBars}",
+		change : function(oEvent) {
+			var sEnteredText = oEvent.getParameter("newValue");
+			oIBCData.displayedBars = parseInt(sEnteredText);
+			oModel.checkUpdate();
+		}
+	});
+
+	var oLabelWidthLbl = new sap.m.Label({
+		text: "Label Width (%)",
+		labelFor: "labelWidth"
+	});
+
+	var oLabelWidthInput = new sap.m.Input("labelWidth", {
+		width: "10rem",
+		value: "{/labelWidth}",
+		change : function(oEvent) {
+			var sEnteredText = oEvent.getParameter("newValue");
+			oIBCData.labelWidth = sEnteredText;
+			oModel.checkUpdate();
+		}
+	});
+
+	var oSelectionEnabledLbl = new sap.m.Label({
+		text: "Selection Enabled",
+		labelFor: "selectionEnabled"
+	});
+
+	var oSelectionEnabledSwitch = new sap.m.Switch({
+		id: "selectionEnabled",
+		state: true,
+		name: "Selection Enabled",
+		change: function(oEvent) {
+			var bState = oEvent.getParameter("state");
+			oIBCData.selectionEnabled = bState;
+			oModel.checkUpdate();
+		}
+	});
+
+	var oMinLbl = new sap.m.Label({
+		text: "Min. Scale",
+		labelFor: "min"
+	});
+
+	var oMinInput = new sap.m.Input("min", {
+		width: "10rem",
+		value: "{/min}",
+		change : function(oEvent) {
+			var sEnteredText = oEvent.getParameter("newValue");
+			oIBCData.min = jQuery.isNumeric(parseFloat(sEnteredText)) ? parseFloat(sEnteredText) : null;
+			oModel.checkUpdate();
+		}
+	});
+
+	var oMaxLbl = new sap.m.Label({
+		text: "Max. Scale",
+		labelFor: "max"
+	});
+
+	var oMaxInput = new sap.m.Input("max", {
+		width: "10rem",
+		value: "{/max}",
+		change : function(oEvent) {
+			var sEnteredText = oEvent.getParameter("newValue");
+			oIBCData.max = jQuery.isNumeric(parseFloat(sEnteredText)) ? parseFloat(sEnteredText) : null;
+			oModel.checkUpdate();
+		}
+	});
+
+	var oCompactLbl = new sap.m.Label({
+		text: "Compact Mode",
+		labelFor: "compactMode"
+	});
+
+	var oCompactSwitch = new sap.m.Switch({
+		id: "compactMode",
+		state: false,
+		name: "Compact Mode",
+		change: function(oEvent) {
+			var bState = oEvent.getParameter("state");
+			oIBCData.compact = bState;
+			oModel.checkUpdate();
+
+			if (bState) {
+				jQuery(".sapSuiteIBC").each(function() {
+					var oControl = sap.ui.getCore().byId(jQuery(this).data("sap-ui"));
+					if (oControl) {
+						oControl.addStyleClass("sapUiSizeCompact");
+						oControl.rerender();
+					}
+				});
+			} else {
+				jQuery(".sapSuiteIBC").each(function() {
+					var oControl = sap.ui.getCore().byId(jQuery(this).data("sap-ui"));
+					if (oControl) {
+						oControl.removeStyleClass("sapUiSizeCompact");
+						oControl.rerender();
+					}
+				});
+			}
+		}
+	});
+
+	// tooltip
+	var oTooltipLbl = new sap.m.Label({
+		text : "Tooltip",
+		labelFor : "tooltip"
+	});
+	var oTooltipInput = new sap.m.TextArea("tooltip", {
+		rows: 2,
+		width: "15rem",
+		placeholder: 'Enter tooltip (keep empty for having the internal tooltip) ...',
+		value: "{/tooltip}"
+	});
+
+	// add button
+	var oAddButtonLbl = new sap.m.Label({
+		text : "Bars",
+		labelFor : "add-button-b"
+	});
+
+	var iBarIndex = 0;
+
+	var oAddButton = new sap.m.Button("add-button-b", {
+		width: "10rem",
+		text: "Add Bar",
+		press: function(oEvent) {
+			iBarIndex = 0;
+			oIBCData.bars.push( { value: 0, displayedValue: "0%" } );
+			oModel.checkUpdate();
+		}
+	});
+
+	var oSimpleInputForm = new sap.ui.layout.form.SimpleForm("controls-ibc", {
+		maxContainerCols: 5,
+		editable: true,
+		content: [
+			oDisplayedBarsLbl, oDisplayedBarsInput,
+			oLabelWidthLbl, oLabelWidthInput,
+			oSelectionEnabledLbl, oSelectionEnabledSwitch,
+			oCompactLbl, oCompactSwitch,
+			oMinLbl, oMinInput, oMaxLbl, oMaxInput,
+			oTooltipLbl, oTooltipInput,
+			oAddButtonLbl, oAddButton
+		]
+	});
+
+
+//******************* Bar Form ********************************************************
+
+	function fnFormFactory(sId, oContext) {
+		var oBarRemoveBtn = new sap.m.Button(sId + "-ibc-remove-button", {
+			width: "10rem",
+			text: "Remove Bar",
+			press: function(oEvent) {
+				oIBCData.bars.splice(this._index, 1)
+				iBarIndex = 0;
+				oModel.checkUpdate();
+			}
+		});
+		oBarRemoveBtn._index = iBarIndex;
+
+		var oBarLabelInput = new sap.m.Input(sId + "-bar-label", {
+			width: "10rem",
+			placeholder: "Enter label ...",
+			value: "{label}"
+		});
+		oBarLabelInput._index = iBarIndex;
+
+		var oBarValueInput = new sap.m.Input(sId + "-bar-value", {
+			width: "10rem",
+			placeholder: "Enter value ...",
+			value: { path: "value", type: new sap.ui.model.type.Float({groupingEnabled: false})},
+			change: function(oEvent) {
+				oIBCData.bars[this._index].value = parseFloat(oEvent.getParameter("value"));
+				oModel.checkUpdate();
+			}
+		});
+		oBarValueInput._index = iBarIndex;
+
+		var oBarDisplayedValueInput = new sap.m.Input(sId + "-bar-displayed-value", {
+			width: "10rem",
+			placeholder: "Enter value ...",
+			value: "{displayedValue}"
+		});
+		oBarDisplayedValueInput._index = iBarIndex;
+
+		var oBSelectedSwitch = new sap.m.Switch({
+			id: sId + "-bar-selected",
+			state: "{selected}",
+			change: function(oEvent) {
+				oIBCData.bars[this._index].selected = oEvent.getParameter("state");
+				oModel.checkUpdate();
+			}
+		});
+		oBSelectedSwitch._index = iBarIndex;
+
+		// tooltip
+		var oBarTooltipLbl = new sap.m.Label({
+			text : "Tooltip",
+			labelFor : sId + "bartooltip"
+		});
+		var oBarTooltipInput = new sap.m.TextArea(sId + "bartooltip", {
+			rows: 2,
+			width: "10rem",
+			placeholder: 'Enter tooltip ...',
+			value: "{bartooltip}"
+		});
+		oBarTooltipInput._index = iBarIndex;
+
+		var oColorSelect = new sap.m.Select(sId + "-bar-color", {
+			width: "10rem",
+			items: {
+				path : "/colors",
+				template: new sap.ui.core.Item({
+					key: "{}",
+					text: "{}"
+				})
+			},
+			selectedKey: "{color}"
+		});
+
+		var oBarVBox = new sap.m.VBox(sId + "-bar-box", {
+			items: [
+				oBarRemoveBtn,
+				new sap.m.Label({ text: "Label", labelFor: sId + "-bar-label" }),
+				oBarLabelInput,
+				new sap.m.Label({ text: "Value", labelFor: sId + "-bar-value" }),
+				oBarValueInput,
+				new sap.m.Label({ text: "Displayed value", labelFor: sId + "-bar-displayed-value" }),
+				oBarDisplayedValueInput,
+				new sap.m.Label({ text: "Color", labelFor: sId + "-bar-color" }),
+				oColorSelect,
+				oBarTooltipLbl, oBarTooltipInput,
+				new sap.m.Label({ text: "Selected", labelFor: sId + "-bar-selected" }),
+				oBSelectedSwitch
+			],
+			layoutData: new sap.ui.layout.ResponsiveFlowLayoutData({ minWidth: 170 })
+		}).addStyleClass("sapUiSmallMarginBeginEnd");
+
+		iBarIndex++;
+		return oBarVBox;
+	};
+
+	var oBarBoxLayout = new sap.ui.layout.ResponsiveFlowLayout("bar-box-form", {
+		content: {
+			path: "/bars",
+			factory: fnFormFactory
+		}
+	});
+
+	var oSettingsLabel = new sap.m.Label({
+		text: "Settings",
+		labelFor: "barchart-setting-form",
+		width: "100%",
+		textAlign: "Center",
+		design: "Bold"
+	});
+
+	var oPage = new sap.m.Page("vbox-ibc", {
+		showHeader : false,
+		content: [
+			oBCFormLabel,
+			oResponsiveLayout,
+			oSettingsLabel,
+			oSimpleInputForm,
+			oBarBoxLayout
+		]
+	});
+
+	var oApp = new sap.m.App({
+		pages : [
+			oPage
+		]
+	}).placeAt("content");
+
+	//set the contrast class for belize plus
+	if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+		oApp.addStyleClass("sapContrastPlus");
+	}
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+	<div id="content"></div>
+</body>
+</html>

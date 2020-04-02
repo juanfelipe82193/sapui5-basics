@@ -1,0 +1,78 @@
+<core:View xmlns:core="sap.ui.core"
+		   xmlns:smartForm="sap.ui.comp.smartform" xmlns:smartMultiInput="sap.ui.comp.smartmultiinput"
+		   xmlns:html="http://www.w3.org/1999/xhtml" xmlns:smartTable="sap.ui.comp.smarttable"
+		   xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+		   xmlns:f="sap.ui.layout.form"
+		   controllerName="sap.ui.comp.sample.smartmultiinput.withBinding.SmartMultiInput" class="sapUiSizeCompact"
+		   xmlns="sap.m">
+
+	<smartForm:SmartForm id="idSmartForm" editable="true"
+						 title="Smart Multi Input Fields Bound to Different Products" editTogglable="true">
+		<smartForm:layout>
+			<smartForm:Layout emptySpanM="3" emptySpanL="3"/>
+		</smartForm:layout>
+		<smartForm:Group>
+			<smartForm:GroupElement>
+				<smartMultiInput:SmartMultiInput id="idSmartMultiInput1" textLabel="Categories/CategoryId for /Products('1') - Two-Way Binding"/>
+			</smartForm:GroupElement>
+			<smartForm:GroupElement>
+				<smartMultiInput:SmartMultiInput id="idSmartMultiInput2" textLabel="Categories/CategoryId for /Products('2') - One-Way Binding"/>
+			</smartForm:GroupElement>
+			<smartForm:GroupElement>
+				<smartMultiInput:SmartMultiInput id="idSmartMultiInput3" textLabel="Categories/CategoryId for /Products('3') - One-Time Binding"/>
+			</smartForm:GroupElement>
+
+
+			<smartForm:GroupElement>
+				<smartMultiInput:SmartMultiInput id="idSmartMultiInput4" textLabel="Categories/Price for /Products('1')" value="{to_Categories/Price}"/>
+			</smartForm:GroupElement>
+			<smartForm:GroupElement>
+				<smartMultiInput:SmartMultiInput id="idSmartMultiInput5" textLabel="Categories/Description for /Products('1')" value="{to_Categories/Description}"/>
+			</smartForm:GroupElement>
+
+		</smartForm:Group>
+	</smartForm:SmartForm>
+
+
+	<Table inset="false"
+		   items="{
+			path: '/Categories'
+		}">
+		<headerToolbar>
+			<Toolbar>
+				<content>
+					<Title text='All Entities in the "Category" Entity Set' level="H2"/>
+				</content>
+			</Toolbar>
+		</headerToolbar>
+		<columns>
+			<Column>
+				<Text text="CategoryId" />
+			</Column>
+			<Column>
+				<Text text="ProductId" />
+			</Column>
+			<Column>
+				<Text text="Description" />
+			</Column>
+			<Column>
+				<Text text="Price" />
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem>
+				<cells>
+					<Text text="{CategoryId}" />
+					<Text text="{ProductId}" />
+					<Text text="{Description}" />
+					<Text text="{Price}" />
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+
+
+	<CheckBox text="Deferred" select="onSelect" selected="{util>/deferred}"/>
+	<Button text="Submit" press="onSubmit" enabled="{util>/deferred}"/>
+
+</core:View>

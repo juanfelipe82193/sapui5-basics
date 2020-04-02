@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="./style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+
+	<script src="../../../../../resources/sap-ui-core.js"
+		id="Script1"
+		data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm,sap.m"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-xx-bindingSyntax="complex" >
+	</script>
+
+	<script>
+	function onClick( e )	{
+		var msg = this.mAggregations.tooltip;
+		sap.m.MessageToast.show( "Click on: " + msg );
+	};
+
+	function onContextMenu( e ) {
+		var msg = this.mAggregations.tooltip;
+		sap.m.MessageToast.show( "ContextMenu on: " + msg );
+	};
+	
+	// create the geo map and create two spots and a route between
+	var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+	   width : "1024px",
+    	height: "600px",
+    	vos: [
+ 	         new sap.ui.vbm.Spots( "spots", {
+				drop: onDrop,
+	            items: [ 
+	                    spot0=new sap.ui.vbm.Spot( "spot0", { 
+	                    	position: '8.645;49.292;0', 
+	                    	tooltip: 'SAP SE', 
+	                    	dragData: 'Drag data for Spot0',
+	        	            dropTarget: [new sap.ui.vbm.DropTarget({type:'Pt1'})],
+	                    	click: onClick, 
+	                    	contextMenu: onContextMenu 
+	                    	} ),
+                 		new sap.ui.vbm.Spot( "spot2", { 
+	                    	position: '-110;37;0', 
+	                    	tooltip: 'North America', 
+	                    	dragData: 'Drag data for Spot2',
+	        	            dropTarget: [new sap.ui.vbm.DropTarget({type:'Pt2'})],
+	                    	click: onClick, 
+	                    	contextMenu: onContextMenu 
+	                    	} )
+	                    ]
+	         	}),
+		       	 new sap.ui.vbm.Routes( "routes", {
+		             dragSource: [new sap.ui.vbm.DragSource({type:'Pts0'})],
+	               	 items:  [
+	               	    route0=new sap.ui.vbm.Route("route0",{ 
+	               	    	  position: '-110;37;0; 8.645;49.292;0', 
+	               	    	  tooltip: 'This is a Route',
+	               	    	  start: "0", end: "1",
+	               	    	  color: 'rgb(250, 195, 100)',
+	                    	  dragData: 'Drag data for Route0',
+	        	              dragSource: [new sap.ui.vbm.DragSource({type:'Pts0'})],
+	               	    	  click: onClick, 
+	               	    	  contextMenu: onContextMenu, 
+		                      drop: onDrop
+		                      } )
+	               	    ]
+		       	 } )
+    	]
+	});
+
+	oVBI.placeAt("content");
+
+	function onDrop( e ) {
+		var src = e.getParameter( "oDragSource" );	// get the old route object
+		var spos = e.oSource.mProperties.position;	// new spot position
+		if(src){
+			var aRpos = src.mProperties.position.split("; ");	// old route positions
+			var rpos1 = aRpos[0];
+			var rpos2 = aRpos[1];
+			var sName = e.oSource.mAggregations.tooltip;
+			
+			// create two new routes splitting at the spot location
+			createNewRoute(rpos1, spos, sName);
+			createNewRoute(spos, rpos2, sName);
+			
+			// remove the old route
+			src.getParent().removeItem(src);
+		}
+	}
+	
+	// create a new spot at the click location, and allow a drop operation on the spot
+	function onCreateSpot() {
+		oVBI.getPositionInteractive( false, function(pos) {
+			var oSpots = sap.ui.getCore().getElementById( "spots" );
+			var nItems = oSpots.getItems().length + 1;
+			oSpots.addItem( new sap.ui.vbm.Spot( {
+            	position: pos, 
+            	tooltip: 'NewSpot ' + nItems, 
+            	dragData: 'Drag data for NewSpot',
+	            dropTarget: [new sap.ui.vbm.DropTarget({type:'Pt' + nItems})],
+	            dropTarget: [new sap.ui.vbm.DropTarget({type:'Pts0'})],
+				click: onClick, 
+				contextMenu: onContextMenu, 
+            	drop: onDrop,
+            	} ) 
+			);
+		} );
+	};
+
+	// create a new route from startPos to endPos
+	function createNewRoute(startPos, endPos, lok) {
+		var oRoutes = sap.ui.getCore().getElementById( "routes" );
+		oRoutes.addItem( new sap.ui.vbm.Route({ position: startPos + "; " + endPos, 
+												start: "0", end: "1", 
+                                                color: 'rgb(140, 211, 255)',
+                  	               	    	    click: onClick, 
+                	               	    	    contextMenu: onContextMenu, 
+                                            	tooltip: "Route splitting in " + lok
+                                       		})
+		);
+	};	
+
+	</script>
+
+	<body class="sapUiBody" >
+		  <h1>Visual Business Route drag and drop sample</h1>
+			<ul>
+				<li> This sample shows the Visual Business GeoMap Control with the possibility to create other Spot VOs and expand a route by drag and drop to a spot. </li>
+				<li> When the route gets dropped on a location it should be split into two routes (to and from new location). </li>
+			</ul>
+		 <div id="content"></div>
+		 <br />
+		 <button id="CreateSpot" onClick="onCreateSpot()">Create a Spot</button>
+	</body>
+</html>

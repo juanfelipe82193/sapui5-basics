@@ -1,0 +1,339 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.suite.ui.microchart.InteractiveDonutChart</title>
+
+<base href="../../../../../">
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout, sap.m, sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize"
+	src="resources/sap-ui-core.js">
+</script>
+
+<script type="text/javascript">
+	jQuery.sap.initMobile();
+
+	var fnBuildIDC = function (sSize) {
+		var sWidth = sSize.width;
+		var sHeight = sSize.height;
+
+		var oDonutTmpl = new sap.suite.ui.microchart.InteractiveDonutChartSegment({
+			label: "{label}",
+			value: "{value}",
+			displayedValue: "{displayedValue}",
+			selected: "{selected}",
+			color: "{color}",
+			tooltip: "{areatooltip}"
+		});
+
+		var oIDCTmpl = new sap.suite.ui.microchart.InteractiveDonutChart({
+			displayedSegments: "{/displayedSegments}",
+			selectionEnabled: "{/selectionEnabled}",
+			segments: {
+				path: "/segments",
+				template: oDonutTmpl
+			},
+			selectionChanged: fnSelectionChanged,
+			tooltip: "{/tooltip}",
+			press: fnPress
+		});
+
+		return new sap.m.FlexBox({
+			items: [oIDCTmpl],
+			alignItems: "Start",
+			layoutData : new sap.ui.layout.ResponsiveFlowLayoutData({
+				minWidth : 500
+			}),
+			height: sHeight,
+			width: sWidth
+		}).addStyleClass("sapUiTinyMargin");
+	}
+
+	var fnSelectionChanged = function (oEvent) {
+		sap.m.MessageToast.show("The number of selected segments is: " + oEvent.getParameter("selectedSegments").length + "\nThe selected segment is: " + oEvent.getParameter("segment").getId());
+	};
+
+	var fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The chart is pressed.");
+	};
+
+	var oResponsiveLayout = new sap.ui.layout.ResponsiveFlowLayout("responsive-layout", {
+		content:[
+			fnBuildIDC({width: "380px", height: "220px"}),
+			fnBuildIDC({width: "320px", height: "180px"}),
+			fnBuildIDC({width: "200px", height: "140px"})
+		]
+	});
+
+	var oIDCFormLabel = new sap.m.Label({
+		text: "Responsive controls in FlexBox",
+		labelFor: "donutchart-responsive-layout",
+		width: "100%",
+		textAlign: "Center",
+		design: "Bold"
+	});
+
+	var oIDCData = {
+		displayedSegments: 3,
+		selectionEnabled: true,
+		segments: [
+			{ label: "Phase 4 very long very long very long very long long very long very", value: 40.0, displayedValue: "40%", color: sap.m.ValueColor.Critical, selected: false },
+			{ label: "Phase 2", value: 21.5, displayedValue: "21.5%", color: sap.m.ValueColor.Neutral, selected: false },
+			{ label: "Other", value: 38.5, displayedValue: "38.5%", color: sap.m.ValueColor.Good, selected: false }
+		],
+		colors: Object.keys(sap.m.ValueColor),
+		compact: false
+	};
+
+	var oModel = new sap.ui.model.json.JSONModel();
+	oModel.setData(oIDCData);
+	sap.ui.getCore().setModel(oModel);
+
+
+//****************** Input Form ****************************************************************
+
+	var oDisplayedSegmentsLbl = new sap.m.Label({
+		text: "Displayed Segments",
+		labelFor: "displayedSegments"
+	});
+
+	var oDisplayedSegmentsInput = new sap.m.Input("displayedSegments", {
+		width: "10rem",
+		value: "{/displayedSegments}",
+		change : function(oEvent) {
+			var sEnteredText = oEvent.getParameter("newValue");
+			oIDCData.displayedSegments = parseInt(sEnteredText);
+			oModel.checkUpdate();
+		}
+	});
+
+	var oSelectionEnabledLbl = new sap.m.Label({
+		text: "Selection Enabled",
+		labelFor: "selectionEnabled"
+	});
+
+	var oSelectionEnabledSwitch = new sap.m.Switch({
+		id: "selectionEnabled",
+		state: true,
+		name: "Selection Enabled",
+		change: function(oEvent) {
+			var bState = oEvent.getParameter("state");
+			oIDCData.selectionEnabled = bState;
+			oModel.checkUpdate();
+		}
+	});
+
+	var oCompactLbl = new sap.m.Label({
+		text: "Compact Mode",
+		labelFor: "compactMode"
+	});
+
+	var oCompactSwitch = new sap.m.Switch({
+		id: "compactMode",
+		state: false,
+		name: "Compact Mode",
+		change: function(oEvent) {
+			var bState = oEvent.getParameter("state");
+			oIDCData.compact = bState;
+			oModel.checkUpdate();
+
+			if (bState) {
+				jQuery(".sapSuiteIDC").each(function() {
+					var oControl = sap.ui.getCore().byId(jQuery(this).data("sap-ui"));
+					if (oControl) {
+						oControl.addStyleClass("sapUiSizeCompact");
+						oControl.rerender();
+					}
+				});
+			} else {
+				jQuery(".sapSuiteIDC").each(function() {
+					var oControl = sap.ui.getCore().byId(jQuery(this).data("sap-ui"));
+					if (oControl) {
+						oControl.removeStyleClass("sapUiSizeCompact");
+						oControl.rerender();
+					}
+				});
+			}
+		}
+	});
+
+	// tooltip
+	var oTooltipLbl = new sap.m.Label({
+		text : "Tooltip",
+		labelFor : "tooltip"
+	});
+	var oTooltipInput = new sap.m.TextArea("tooltip", {
+		rows: 2,
+		width: "15rem",
+		placeholder: 'Enter tooltip (keep empty for having the internal tooltip) ...',
+		value: "{/tooltip}"
+	});
+
+	var iSegmentIndex = 0;
+	// add button
+		var oAddButtonLbl = new sap.m.Label({
+		text : "Segments",
+		labelFor : "add-button-s"
+	});
+	var oAddButton = new sap.m.Button("add-button-s", {
+		width: "10rem",
+		text: "Add Segment",
+		press: function(oEvent) {
+			iSegmentIndex = 0;
+			oIDCData.segments.push( { value: 0, displayedValue: "0%" } );
+			oModel.checkUpdate();
+		}
+	});
+
+	var oSimpleInputForm = new sap.ui.layout.form.SimpleForm("controls-idc", {
+		maxContainerCols: 5,
+		editable: true,
+		content: [
+			oDisplayedSegmentsLbl, oDisplayedSegmentsInput,
+			oSelectionEnabledLbl, oSelectionEnabledSwitch,
+			oCompactLbl, oCompactSwitch, oTooltipLbl, oTooltipInput,
+			oAddButtonLbl, oAddButton
+		]
+	});
+
+//******************* Segment Form ********************************************************
+
+	function fnFormFactory(sId, oContext) {
+		var oSegmentRemoveBtn = new sap.m.Button(sId + "-idc-remove-button", {
+			width: "10rem",
+			text: "Remove Segment",
+			press: function(oEvent) {
+				oIDCData.segments.splice(this._index, 1)
+				iSegmentIndex = 0;
+				oModel.checkUpdate();
+			}
+		});
+		oSegmentRemoveBtn._index = iSegmentIndex;
+
+		var oSegmentLabelInput = new sap.m.Input(sId + "-segment-label", {
+			width: "10rem",
+			placeholder: "Enter label ...",
+			value: "{label}"
+		});
+		oSegmentLabelInput._index = iSegmentIndex;
+
+		var oSegmentValueInput = new sap.m.Input(sId + "-segment-value", {
+			width: "10rem",
+			placeholder: "Enter value ...",
+			value: { path: "value", type: new sap.ui.model.type.Float({groupingEnabled: false})},
+			change: function(oEvent) {
+				oIDCData.segments[this._index].value = parseFloat(oEvent.getParameter("value"));
+				oModel.checkUpdate();
+			}
+		});
+		oSegmentValueInput._index = iSegmentIndex;
+
+		var oSegmentDisplayedValueInput = new sap.m.Input(sId + "-segment-displayed-value", {
+			width: "10rem",
+			placeholder: "Enter value ...",
+			value: "{displayedValue}"
+		});
+		oSegmentDisplayedValueInput._index = iSegmentIndex;
+
+		var oSegmentSelectedSwitch = new sap.m.Switch({
+			id: sId + "-segment-selected",
+			state: "{selected}",
+			change: function(oEvent) {
+				oIDCData.segments[this._index].selected = oEvent.getParameter("state");
+				oModel.checkUpdate();
+			}
+		});
+		oSegmentSelectedSwitch._index = iSegmentIndex;
+
+		// tooltip
+		var oAreaTooltipInput = new sap.m.TextArea(sId + "-areatooltip-input", {
+			rows: 2,
+			width: "10rem",
+			placeholder: 'Enter tooltip ...',
+			value: "{areatooltip}"
+		});
+		oAreaTooltipInput._index = iSegmentIndex;
+
+		var oColorSelect = new sap.m.Select(sId + "-bar-color", {
+			width: "10rem",
+			items: {
+				path : "/colors",
+				template: new sap.ui.core.Item({
+					key: "{}",
+					text: "{}"
+				})
+			},
+			selectedKey: "{color}"
+		});
+
+		var oSegmentVBox = new sap.m.VBox(sId + "-segment-box", {
+			height: "500px",
+			items: [
+				oSegmentRemoveBtn,
+				new sap.m.Label({ text: "Label", labelFor: sId + "-segment-label" }),
+				oSegmentLabelInput,
+				new sap.m.Label({ text: "Value", labelFor: sId + "-segment-value" }),
+				oSegmentValueInput,
+				new sap.m.Label({ text : "Displayed value", labelFor : sId + "-segment-displayed-value" }),
+				oSegmentDisplayedValueInput,
+				new sap.m.Label({ text : "Tooltip", labelFor : sId + "-areatooltip-input" }),
+				oAreaTooltipInput,
+				new sap.m.Label({ text: "Color", labelFor: sId + "-bar-color" }),
+				oColorSelect,
+				new sap.m.Label({ text : "Selected", labelFor : sId + "-segment-selected" }),
+				oSegmentSelectedSwitch
+			],
+			layoutData: new sap.ui.layout.ResponsiveFlowLayoutData({ minWidth: 170 })
+		}).addStyleClass("sapUiSmallMarginBeginEnd");
+
+		iSegmentIndex++;
+		return oSegmentVBox;
+	};
+
+	var oSegmentBoxLayout = new sap.ui.layout.ResponsiveFlowLayout("segment-box-layout", {
+		content: {
+			path: "/segments",
+			factory: fnFormFactory
+		}
+	});
+
+	var oSettingsLabel = new sap.m.Label({
+		text: "Settings",
+		labelFor: "donutchart-setting-form",
+		width: "100%",
+		textAlign: "Center",
+		design: "Bold"
+	});
+
+	var oPage = new sap.m.Page("vbox-idc", {
+		showHeader: false,
+		content: [
+			oIDCFormLabel,
+			oResponsiveLayout,
+			oSettingsLabel,
+			oSimpleInputForm,
+			oSegmentBoxLayout
+		]
+	});
+	var oApp = new sap.m.App({
+		pages: [
+			oPage
+		]
+	});
+	oApp.placeAt("content");
+
+	//set the contrast class for belize plus
+	if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+		oApp.addStyleClass("sapContrastPlus");
+	}
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+	<div id="content"></div>
+</body>
+</html>

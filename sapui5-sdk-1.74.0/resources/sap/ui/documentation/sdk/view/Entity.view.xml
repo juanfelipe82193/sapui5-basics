@@ -1,0 +1,86 @@
+<mvc:View
+		controllerName="sap.ui.documentation.sdk.controller.Entity"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:core="sap.ui.core"
+		xmlns:m="sap.m"
+		xmlns:l="sap.ui.layout"
+		xmlns="sap.uxap"
+		xmlns:html="http://www.w3.org/1999/xhtml">
+	<ObjectPageLayout
+			id="ObjectPageLayout"
+			useIconTabBar="true"
+			selectedSection="samples"
+			upperCaseAnchorBar="false"
+			busyIndicatorDelay="0">
+		<headerTitle>
+			<ObjectPageHeader
+					id="entityHeader"
+					objectTitle="{/name}">
+				<actions>
+					<ObjectPageHeaderActionButton id="entityBackToSearch" text="Back to search results" hideIcon="true" hideText="false" press="backToSearch" visible="false"/>
+					<ObjectPageHeaderActionButton
+							id="toggleFullScreenBtn"
+							visible="{device>/system/desktop}"
+							icon="sap-icon://full-screen"
+							tooltip="Show this sample in full screen mode"
+							press="onToggleFullScreen" />
+				</actions>
+			</ObjectPageHeader>
+		</headerTitle>
+
+		<headerContent>
+			<l:Grid defaultSpan="L4 M6 S12" class="sapUiNoMargin" hSpacing="0">
+				<l:VerticalLayout width="98%" id="headerColumn0"/>
+				<l:VerticalLayout width="100%" id="headerColumn1" visible="false"/>
+				<l:VerticalLayout width="100%" id="headerColumn2" visible="false"/>
+			</l:Grid>
+		</headerContent>
+
+		<sections>
+			<ObjectPageSection id="about" title="About">
+				<subSections>
+					<ObjectPageSubSection>
+
+						<l:VerticalLayout>
+							<core:HTML content="{/description}" />
+
+							<l:VerticalLayout visible="{/show/introLink}">
+								<m:Text text="{/shortDescription}"/>
+							</l:VerticalLayout>
+
+						</l:VerticalLayout>
+
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+
+			<ObjectPageSection id="samples" title="Samples ({/count/samples})" visible="{= ${/count/samples} > 0 }">
+				<subSections>
+					<ObjectPageSubSection>
+						<m:Table
+								class="myTable sapUxAPObjectPageSubSectionAlignContent"
+								width="auto"
+								id="table"
+								items="{/entity/samples}"
+								fixedLayout="false"
+								showSeparators="Inner" >
+							<m:columns>
+								<m:Column><m:Label text="Name" /></m:Column>
+								<m:Column minScreenWidth="Tablet"><m:Label text="Description" /></m:Column>
+							</m:columns>
+							<m:items>
+								<m:ColumnListItem type="Navigation" press="onNavToSample" vAlign="Middle">
+									<m:cells>
+										<m:Text text="{name}" class="entitySampleName" wrapping="false" />
+										<m:FormattedText htmlText="{= ${path: 'description'} ? ${path: 'description'} : ''}" />
+									</m:cells>
+								</m:ColumnListItem>
+							</m:items>
+						</m:Table>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+
+		</sections>
+	</ObjectPageLayout>
+</mvc:View>

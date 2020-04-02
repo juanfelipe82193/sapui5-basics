@@ -1,0 +1,85 @@
+<core:View
+	controllerName="sap.ui.demoapps.rta.fiorielements.ext.view.Default"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:smartField="sap.ui.comp.smartfield"
+	xmlns:microchart="sap.ui.comp.smartmicrochart"
+	xmlns:sap.ui.dt="sap.ui.dt"
+	>
+	<!-- /core:View>xmlns:microchart="sap.suite.ui.microchart">-->
+	<Table id="storageBinTable" class="sapUiResponsiveMargin" width="auto" growing="true" growingScrollToLoad="false" noDataText="No Data Text"
+		items="{path: 'to_StorageBin', parameters: { expand: 'to_OrganizationalUnit' }}" >
+		<headerToolbar>
+			<Toolbar sap.ui.dt:designtime="not-adaptable" id="tableHeaderBar">
+				<Title sap.ui.dt:designtime="not-adaptable" text="{i18n>xtit.storageBinOverview}"/>
+				<ToolbarSpacer sap.ui.dt:designtime="not-adaptable"/>
+				<Button
+					sap.ui.dt:designtime="not-adaptable"
+					icon="sap-icon://sort"
+					tooltip="Sort Categories"
+					press="onOpenSortDialog"
+				/>
+			</Toolbar>
+		</headerToolbar>
+		<columns>
+			<Column id="column-id">
+				<header>
+					<Label text="{/#SEPMRA_C_PD_StorageBinTPType/Bin/@sap:label}" id="id"/>
+				</header>
+			</Column>
+			<Column id="column-name">
+				<header>
+					<Label text="{/#SEPMRA_I_OrganizationalUnitType/OrganizationalUnitName/@sap:label}" id="name"/>
+				</header>
+			</Column>
+			<Column id="column-miniChart">
+				<header>
+					<Label text="{i18n|sap.suite.ui.generic.template.ObjectPage|SEPMRA_C_PD_Product>xtit.miniChartTitle}" id="miniChart"/>
+				</header>
+			</Column>
+			<Column id="column-lotsize">
+				<header>
+					<Label text="{/#SEPMRA_C_PD_StorageBinTPType/LotSizeQuantity/@sap:label}" id="lotsize"/>
+				</header>
+			</Column>
+			<Column id="column-quantity">
+				<header>
+					<Label text="{i18n|sap.suite.ui.generic.template.ObjectPage|SEPMRA_C_PD_Product>xtit.reorderedQunatity}" id="quantity"/>
+				</header>
+			</Column>
+		</columns>
+		<ColumnListItem id="stockTableTpl">
+			<cells>
+				<ObjectIdentifier
+					id="column-bin"
+					title="{Bin}"
+				/>
+				<Text
+					id="column-unitname"
+					text="{to_OrganizationalUnit/OrganizationalUnitName}"
+				/>
+				<microchart:SmartBulletMicroChart
+					id="column-microChart"
+					entitySet='SEPMRA_C_PD_StorageBinTP' chartBindingPath='to_StorageBin'
+				/>
+				<smartField:SmartField
+					id="column-lotSizeQuantity"
+					value="{parts: [ {path: 'LotSizeQuantity'}],
+								type : 'sap.ui.model.type.Quantity',
+								formatOptions: {
+									parseAsString: true,
+									showMeasure: false }
+							}"
+					wrapping="true"
+					enabled="{= ${component>/uiMode} === 'Edit' }"
+				/>
+				<smartField:SmartField
+					id="column-orderedQuantity"
+					value="{PoItmQuantity}"
+					wrapping="true"
+					enabled="false"
+				/>
+			</cells>
+		</ColumnListItem>
+	</Table>
+</core:View>

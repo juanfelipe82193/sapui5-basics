@@ -1,0 +1,230 @@
+{
+	"_version": "1.5.0",
+	"sap.app": {
+		"id": "sap.suite.ui.generic.template",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"applicationVersion": {
+			"version": "1.74.0"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"tags": {
+			"keywords": []
+		},
+		"ach": "CA-UI5-ST",
+		"resources": "resources.json",
+		"dataSources": {
+			"mainService": {
+				"uri": "/sap/opu/odata/sap/STTA_SALES_ORDER_ITEM_AGGR_SRV/",
+				"type": "OData",
+				"settings": {
+					"annotations": [
+						"STTA_SALES_ORDER_ITEM_A_ANNO_MDL",
+						"localAnnotations"
+					],
+					"localUri": "localService/metadataTableType.xml"
+				}
+			},
+			"STTA_SALES_ORDER_ITEM_A_ANNO_MDL": {
+				"uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='STTA_SALES_ORDER_ITEM_A_ANNO_MDL',Version='0001')/$value/",
+				"type": "ODataAnnotation",
+				"settings": {
+					"localUri": "localService/STTA_SALES_ORDER_ITEM_A_ANNO_MDL.xml"
+				}
+			},
+			"localAnnotations": {
+				"uri": "annotations/annotations.xml",
+				"type": "ODataAnnotation",
+				"settings": {
+					"localUri": "annotations/annotations.xml"
+				}
+			}
+		},
+		"offline": false,
+		"sourceTemplate": {
+			"id": "ui5template.smartTemplate",
+			"version": "1.40.12"
+		}
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"icon": "",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		},
+		"supportedThemes": [
+			"sap_hcb",
+			"sap_belize"
+		]
+	},
+	"sap.ui5": {
+		"resources": {
+			"js": [],
+			"css": []
+		},
+		"dependencies": {
+			"minUI5Version": "${sap.ui5.dist.version}",
+			"libs": {
+				"sap.ui.core": {},
+				"sap.m": {},
+				"sap.ui.comp": {},
+				"sap.uxap": {},
+				"sap.suite.ui.generic.template": {},
+				"sap.ui.layout": {},
+				"sap.f": {},
+				"sap.ushell": {},
+				"sap.collaboration": {}
+			},
+			"components": {}
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/i18n.properties"
+			},
+			"@i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/i18n.properties"
+			},
+			"i18n|sap.suite.ui.generic.template.ListReport|STTA_C_SO_ItemAggr": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/ListReport/STTA_C_SO_ItemAggr/i18n.properties"
+			},
+			"i18n|sap.suite.ui.generic.template.ObjectPage|STTA_C_SO_ItemAggr": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/ObjectPage/STTA_C_SO_ItemAggr/i18n.properties"
+			},
+			"": {
+				"dataSource": "mainService",
+				"settings": {
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Inline",
+					"refreshAfterChange": false
+				}
+			}
+		},
+		"extends": {
+			"extensions": {
+			  	"sap.ui.controllerExtensions": {
+					"sap.suite.ui.generic.template.ListReport.view.ListReport": {
+						"controllerName": "SOITMAGGR.ext.controller.ListReportExtension",
+						"sap.ui.generic.app": {
+							"STTA_C_SO_ItemAggr": {
+								"EntitySet": "STTA_C_SO_ItemAggr",
+								"Actions": {
+									"ShowSelected": {
+										"id" : "ShowSelected",
+										"text" : "Show Selected",
+										"press" : "onShowSelected",
+										"requiresSelection": true
+									}
+								}
+							}
+						}
+					},
+					"sap.suite.ui.generic.template.ObjectPage.view.Details": {
+						"controllerName": "SOITMAGGR.ext.controller.ObjectPageExtension",
+						"sap.ui.generic.app": {
+							"STTA_C_SO_ItemAggr": {
+								"EntitySet": "STTA_C_SO_ItemAggr",
+								"Sections": {
+									"to_ScheduleLine::com.sap.vocabularies.UI.v1.LineItem": {
+										"id" : "to_ScheduleLine::com.sap.vocabularies.UI.v1.LineItem",
+										"Actions" : {
+											"ShowSelectedCount" : {
+												"id" : "ShowSelectedCount",
+												"text" : "Show Selected Count",
+												"press" : "onShowSelectedCount"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		}
+	},
+	"sap.ui.generic.app": {
+		"pages": [
+			{
+				"entitySet": "STTA_C_SO_ItemAggr",
+				"component": {
+					"name": "sap.suite.ui.generic.template.ListReport",
+					"list": true,
+					"settings": {
+						"smartVariantManagement": false,
+						"tableSettings": {
+							"type": "TreeTable"
+						},
+						"quickVariantSelectionX": {
+							"showCounts": true,
+							"variants": {
+								"_tab1": {
+									"key": "_tab1",
+									"annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#Expensive"
+								},
+
+								"_tab2": {
+									"key": "_tab2",
+									"annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#Chart1"
+								},
+
+								"_tab3": {
+									"key": "_tab3",
+									"annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#Cheap"
+								},
+
+								"_tab4": {
+									"key": "_tab4",
+									"annotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#Chart2",
+									 "showItemNavigationOnChart": true
+								},
+
+								"_tab5": {
+									"key": "_tab5",
+									"annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#All"
+								}
+							}
+						}
+					}
+				},
+				"pages": [
+					{
+						"entitySet": "STTA_C_SO_ItemAggr",
+						"component": {
+							"name": "sap.suite.ui.generic.template.ObjectPage",
+							"settings": {
+								"tableSettings": {
+									"type": "TreeTable"
+								}
+							}
+						}
+					}
+				]
+			}
+		]
+	},
+	"sap.fiori": {
+		"registrationIds": [],
+		"archeType": "transactional"
+	},
+	"sap.platform.hcp": {
+		"uri": ""
+	}
+}

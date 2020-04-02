@@ -1,0 +1,6 @@
+/*!
+ * OpenUI5
+ * (c) Copyright 2009-2020 SAP SE or an SAP affiliate company.
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ */
+sap.ui.define(["sap/ui/base/Object","sap/base/strings/capitalize"],function(B,c){"use strict";return B.extend("sap.ui.documentation.sdk.controller.util.ConfigUtil",{constructor:function(C){this._oComponent=C;},hasMasterView:function(r){var R=this._getRouteConfig(r),i=R&&R.target.length===2;return!!i;},getMasterView:function(r){var m=this._getMasterTargetName(r),t=this._getTargetConfig(m),v=t.viewName;v="sap.ui.documentation.sdk.view."+c(v,0);return this._oComponent.getRouter().getView(v,"XML");},_getMasterTargetName:function(r){var R=this._getRouteConfig(r),i=R&&R.target.length===2,m=i&&R.target[0];return m;},_getRouteConfig:function(r){var C=this._getSapUI5ConfigEntry(),R=C.routing.routes,a=jQuery.grep(R,function(o){return o.name===r;}),o=a.length&&a[0];return o;},_getSapUI5ConfigEntry:function(){return this._oComponent.getMetadata().getManifestObject().getEntry("sap.ui5");},_getTargetConfig:function(t){return this._getSapUI5ConfigEntry().routing.targets[t];},destroy:function(){this._oComponent=null;return B.prototype.destroy.apply(this,arguments);}});});

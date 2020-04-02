@@ -1,0 +1,69 @@
+<Dialog
+    xmlns="sap.m"
+    id="copyPageDialog"
+    title="{i18n>CopyDialog.Title}"
+    beforeOpen=".onBeforeOpen"
+    afterClose=".destroy"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    core:require="{
+        formatMessage: 'sap/base/strings/formatMessage',
+        String: 'sap/ui/model/type/String',
+        CustomString: 'sap/ushell/applications/PageComposer/controller/CustomString'
+    }">
+    <content>
+        <f:SimpleForm id="copyForm" editable="true">
+            <Text id="copyMessage" text="{
+                parts: ['i18n>CopyDialog.Message', '/sourceId'],
+                formatter: 'formatMessage'
+            }" />
+            <Label id="copyPageIdLabel" text="{i18n>Label.PageID}" labelFor="copyId" />
+            <Input
+                maxLength="35"
+                required="true"
+                id="copyPageIdInput"
+                placeholder="{
+                    parts: ['i18n>Placeholder.CopyPageTitle', '/sourceId'],
+                    formatter: 'formatMessage'
+                }"
+                change=".onPageIDChange"
+                liveChange=".onPageIDLiveChange"
+                valueLiveUpdate="true"
+                value="{ path: '/targetId',
+                         type: 'CustomString'
+                       }" />
+            <Label id="copyPageDescriptionLabel" text="{i18n>Label.Description}" labelFor="copyDescriptionInput" />
+            <Input
+                maxLength="100"
+                required="true"
+                id="copyDescriptionInput"
+                placeholder="{i18n>Placeholder.Description}"
+                liveChange=".onDescriptionLiveChange"
+                valueLiveUpdate="true"
+                value="{ path: '/description', type: 'String' }" />
+            <Label id="copyTitleLabel" text="{i18n>Label.PageTitle}" labelFor="copyTitle" />
+            <Input
+                id="copyTitle"
+                required="true"
+                maxLength="100"
+                value="{ path: '/title', type: 'String' }"
+                liveChange=".onTitleLiveChange"
+                valueLiveUpdate="true"
+                valueStateText="{i18n>Message.EmptyTitle}"
+                placeholder="{i18n>Placeholder.PageTitle}"
+            />
+        </f:SimpleForm>
+        <core:ComponentContainer id="transportContainer" lifecycle="Application"/>
+    </content>
+    <beginButton>
+        <Button
+            id="copyPageSaveButton"
+            type="Emphasized"
+            text="{i18n>Button.Copy}"
+            press=".onConfirm"
+            enabled="{ path: '/validation', formatter: '.validate' }" />
+    </beginButton>
+    <endButton>
+        <Button id="copyPageCancelButton" text="{i18n>Button.Cancel}" press=".onCancel" />
+    </endButton>
+</Dialog>

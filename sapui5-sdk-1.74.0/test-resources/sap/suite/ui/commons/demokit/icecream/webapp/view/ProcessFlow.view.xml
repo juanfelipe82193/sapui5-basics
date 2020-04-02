@@ -1,0 +1,176 @@
+<mvc:View
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.suite.ui.commons"
+	xmlns:m="sap.m"
+	controllerName="sap.suite.ui.commons.demo.tutorial.controller.ProcessFlow"
+	xmlns:mc="sap.suite.ui.microchart">
+	<m:Page title="{i18n>processFlowTitle}"
+		showNavButton="true"
+		navButtonPress="onNavButtonPressed"
+		backgroundDesign="Solid">
+		<m:content>
+			<m:ObjectHeader
+				responsive="true"
+				title="{
+					parts: [
+						'i18n>processFlowChartsTitle',
+						'business>/year'
+					],
+					formatter: 'jQuery.sap.formatMessage'
+				}">
+				<m:headerContainer>
+					<m:HeaderContainer
+						scrollStep="200"
+						scrollTime="500"
+						showDividers="true"
+						class="sapUiSmallMargin">
+						<m:FlexBox
+							width="12rem"
+							height="9rem"
+							alignItems="Center"
+							justifyContent="Center"
+							direction="Column"
+							renderType="Bare">
+							<m:Title
+								text="{i18n>processFlowChartsShareOwnProduction}"
+								class="sapUiSmallMargin" />
+							<m:FlexBox width="5rem" height="5rem" renderType="Bare">
+								<mc:RadialMicroChart percentage="{business>/shareOwnProduction}" />
+							</m:FlexBox>
+						</m:FlexBox>
+						<m:FlexBox
+							width="16rem"
+							height="9rem"
+							alignItems="Center"
+							justifyContent="Center"
+							direction="Column"
+							renderType="Bare">
+							<m:Title
+								text="{
+									parts: [
+										'i18n>processFlowChartsDeliveryTimeComparison',
+										'suppliers>/timeMeasure'
+									],
+									formatter: 'jQuery.sap.formatMessage'
+								}"
+								class="sapUiSmallMargin" />
+							<m:FlexBox width="16rem" height="5rem" renderType="Bare">
+								<mc:ComparisonMicroChart
+									isResponsive="true"
+									press="press"
+									data="{suppliers>/Suppliers}">
+									<mc:data>
+										<mc:ComparisonMicroChartData
+											title="{suppliers>id}"
+											value="{suppliers>deliveryTime}"
+											displayValue="{suppliers>deliveryTime}"
+											color="{suppliers>deliveryTimeSemantics}" />
+									</mc:data>
+								</mc:ComparisonMicroChart>
+							</m:FlexBox>
+						</m:FlexBox>
+						<m:FlexBox
+							width="12rem"
+							height="9rem"
+							alignItems="Center"
+							justifyContent="Center"
+							direction="Column"
+							renderType="Bare">
+							<m:Title
+								text="{
+									parts: [
+										'i18n>processFlowChartsProductionTime',
+										'business>/timeMeasure'
+										],
+									formatter: 'jQuery.sap.formatMessage'
+								}"
+								class="sapUiSmallMargin" />
+							<m:FlexBox width="12rem" height="5rem" renderType="Bare">
+								<mc:DeltaMicroChart
+									isResponsive="true"
+									color="{business>/productionTimeComparisonCriticality}"
+									value1="{business>/expectedProductionTime}"
+									value2="{business>/currentProductionTime}"
+									title1="{i18n>processFlowChartsExpected}"
+									title2="{i18n>processFlowChartsCurrent}"
+									displayValue1="{business>/expectedProductionTime}"
+									displayValue2="{business>/currentProductionTime}"
+									deltaDisplayValue="{
+										parts: [
+											'business>/expectedProductionTime',
+											'business>/currentProductionTime'
+										],
+										formatter: '.getValuesDelta'
+									}" />
+							</m:FlexBox>
+						</m:FlexBox>
+						<m:FlexBox
+							width="12rem"
+							height="9rem"
+							alignItems="Center"
+							justifyContent="Center"
+							direction="Column"
+							renderType="Bare">
+							<m:Title
+								text="{
+									parts: [
+										'i18n>processFlowChartsFillLevel',
+										'business>/fillLevel/measure'
+									],
+									formatter: 'jQuery.sap.formatMessage'
+								}"
+								class="sapUiSmallMargin" />
+							<m:FlexBox width="12rem" height="5rem" renderType="Bare">
+								<mc:LineMicroChart
+									size="Responsive"
+									threshold="{business>/fillLevel/threshold}"
+									leftTopLabel="{business>/fillLevel/valueBegin}"
+									leftBottomLabel="{business>/fillLevel/timeBegin}"
+									rightTopLabel="{business>/fillLevel/valueEnd}"
+									rightBottomLabel="{business>/fillLevel/timeEnd}"
+									color="{business>/fillLevel/color}"
+									showPoints="true"
+									points="{
+										path: 'business>/fillLevel/timeSeries',
+										templateShareable: true
+									}">
+									<mc:LineMicroChartPoint
+										x="{business>time}"
+										y="{business>level}" />
+								</mc:LineMicroChart>
+							</m:FlexBox>
+						</m:FlexBox>
+					</m:HeaderContainer>
+				</m:headerContainer>
+			</m:ObjectHeader>
+			<m:Panel headerText="{i18n>processFlowProcessTitle}">
+				<ProcessFlow
+					id="processflow1"
+					scrollable="false"
+					nodes="{process>/Nodes}"
+					lanes="{process>/Lanes}"
+					nodePress="onNodePressed">
+					<nodes>
+						<ProcessFlowNode
+							laneId="{process>lane}"
+							nodeId="{process>id}"
+							title="{process>title}"
+							titleAbbreviation="{process>titleAbbreviation}"
+							children="{process>children}"
+							state="{process>state}"
+							stateText="{process>stateText}"
+							texts="{process>texts}"
+							focused="{process>focused}" />
+					</nodes>
+					<lanes>
+						<ProcessFlowLaneHeader
+							laneId="{process>id}"
+							iconSrc="{process>icon}"
+							text="{process>label}"
+							position="{process>position}" />
+					</lanes>
+				</ProcessFlow>
+			</m:Panel>
+		</m:content>
+	</m:Page>
+</mvc:View>

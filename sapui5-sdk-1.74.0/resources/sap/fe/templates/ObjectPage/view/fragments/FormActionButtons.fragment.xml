@@ -1,0 +1,48 @@
+<core:FragmentDefinition
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:uxap="sap.uxap"
+	template:require="{
+		COMMON: 'sap/fe/macros/CommonHelper',
+		OP: 'sap/fe/templates/ObjectPage/AnnotationHelper',
+		CORE: 'sap/fe/core/AnnotationHelper'
+	}">
+
+		<template:if test="{= ${metaPath>/currentPath}.get().indexOf('com.sap.vocabularies.UI.v1.HeaderFacets') === -1 &amp;&amp; (${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.Identification#') > -1 || ${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.FieldGroup') > -1 || ${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.StatusInfo') > -1) }">
+			<template:with path="facet>Target/$AnnotationPath" helper="OP.getDataFieldCollection" var="collection">
+				<template:repeat list="{collection>}" var="dataField">
+					<template:if test="{= !(${dataField>./@com.sap.vocabularies.UI.v1.Hidden} === true) }">
+						<template:if test="{= ${dataField>$Type} === 'com.sap.vocabularies.UI.v1.DataFieldForIntentBasedNavigation' &amp;&amp; ${dataField>Inline} !== true &amp;&amp; !(${dataField>Determining} === true) &amp;&amp; ${dataField>SemanticObject} &amp;&amp; ${dataField>Action}}">
+							<Button
+								text="{dataField>Label}"
+								press="{= '.handlers.onDataFieldForIntentBasedNavigation($controller, \'' + ${dataField>SemanticObject} + '\',\'' + ${dataField>Action} +'\', undefined , '+ ${dataField>RequiresContext} +')' }"
+								visible="{= !${localUI>/sessionOn} }"
+								type="Transparent"
+								/>
+						</template:if>
+						<template:if test="{= ${dataField>$Type} === 'com.sap.vocabularies.UI.v1.DataFieldForAction' }">
+							<template:with path="dataField>Action" helper="CORE.getActionContext" var="actionContext">
+							<template:with path="dataField>Action" helper="CORE.getPathToBoundActionOverload" var="isBound">
+							<template:if test="{= ${isBound>$IsBound} !== true || ${actionContext>@Org.OData.Core.V1.OperationAvailable} !== false }">
+								<Button
+									id="{= COMMON.getStableId(['fe', 'fab', { Facet: ${facet>} }, ${dataField>Action}.replace(RegExp('.*\\.'), '')]) }"
+									text="{dataField>Label}"
+									type="Transparent"
+									press="{= '.editFlow.onCallAction(\'' + ${dataField>Action} + '\', { contexts: ${$view>/#fe::op/}.getBindingContext(), invocationGrouping : \'' + (${dataField>InvocationGrouping/$EnumMember} === 'com.sap.vocabularies.UI.v1.OperationGroupingType/ChangeSet' ? 'ChangeSet' : 'Isolated') + '\', label: \'' + ${dataField>Label} + '\'})'}"
+									visible="{= ${dataField>./@com.sap.vocabularies.UI.v1.Hidden/$Path} ? '{= !%' + %{dataField>./@com.sap.vocabularies.UI.v1.Hidden@@MODEL.value} + '}' : 'true' }"
+									enabled="{= ${isBound>$IsBound} !== true ? 'true'
+									: ${actionContext>@Org.OData.Core.V1.OperationAvailable} === null ? '{= !${#' + ${dataField>Action} + '} ? false : true }'
+									: ${actionContext>@Org.OData.Core.V1.OperationAvailable/$Path} ? '{= $' + ${actionContext>@Org.OData.Core.V1.OperationAvailable@@MODEL.format} + '}'
+									: 'true' }"
+									/>
+							</template:if>
+							</template:with>
+							</template:with>
+						</template:if>
+					</template:if>
+				</template:repeat>
+			</template:with>
+		</template:if>
+
+</core:FragmentDefinition>

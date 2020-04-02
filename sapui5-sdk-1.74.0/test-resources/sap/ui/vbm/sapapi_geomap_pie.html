@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+		<script src="../../../../resources/sap-ui-core.js"
+			id="Script1"
+			data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.vbm"
+			data-sap-ui-theme="sap_bluecrystal"
+			data-sap-ui-xx-bindingSyntax="complex" >
+		</script>
+
+		<style type="text/css">
+			h1,
+			h2,
+			p {
+				margin: 0;
+			}
+			h4 {
+				margin: 1em 0;
+			}
+			i {
+				color: blue
+			}
+			#description1 {
+				background: white;
+				border: 1px solid #bfbfbf;
+				margin: 0.25%;
+				float: left;
+				width: 47.5%;
+				height: 700px;
+				overflow-y: auto;
+				padding-left: 1.25%;
+			}
+			#description2 {
+				background: white;
+				border: 1px solid #bfbfbf;
+				margin: 0.25%;
+				float: left;
+				width: 47.5%;
+				height: 700px;
+				overflow-y: auto;
+				padding-left: 1.25%;
+			}
+		</style>
+		<script>
+			// query for charts library, the microchart is positioned in a container vo
+			jQuery.sap.require( "sap.suite.ui.microchart.ColumnMicroChart" );
+			// have some data
+			var oData =
+			{
+				PieSeries :
+					[
+						{ "key":  "1", "value": "10",  	"tooltip": "10 Items", "color": "RGB(255,0,0)" },
+						{ "key":  "2", "value": "20", 	"tooltip": "20 Items" },
+						{ "key":  "3", "value": "30", 	"tooltip": "30 Items" },
+						{ "key":  "4", "value": "40", 	"tooltip": "40 Items", "color": "RGB(0,0,255)" }
+					]
+			};
+			// create model and set the data
+			var oModel = new sap.ui.model.json.JSONModel();
+			oModel.setData( oData );
+			// create map and bind to model
+			var oVBI = new sap.ui.vbm.GeoMap('vbi', {
+				width : "1024px",
+				height: "600px",
+				resources: [ new sap.ui.vbm.Resource({ name: "smiley", src: "demokit/media/images/smiley.png"})],
+				vos: [
+					// single instance item
+					new sap.ui.vbm.Pies("pies", {
+						// explicitly specify
+						items: [
+								new sap.ui.vbm.Pie(
+									{
+										scale: '5;5;5',
+										position: '-40;-30;0',
+										items: {
+											path : "/PieSeries",
+											template: new sap.ui.vbm.PieItem(
+												{value: '{value}', tooltip: '{tooltip}' , color: '{color}'
+											})
+										}
+									}
+								)
+							]
+						}
+					)
+				]
+			});
+			oVBI.setModel( oModel );
+			oVBI.placeAt("content");
+			oVBI.setMapConfiguration(JSON.parse(localStorage.getItem('map')));
+		</script>
+
+		<body class="sapUiBody" >
+			<h1>Visual Business GeoMap Sample</h1>
+			<div id="description1">
+			<h3> The aim: </h3>
+			<p> To test the Visual Business GeoMap Pie VO</p>
+			<br/>
+			<h3> To test: </h3>
+			<ol>
+				<li> Pie Items can have own color and click listener</i></li>
+			</ol>
+			</div>
+			<div id="description2">
+				<br/>
+				<br/>
+				<br/>
+				<div id="content"/>
+			</div>
+	</body>
+</html>

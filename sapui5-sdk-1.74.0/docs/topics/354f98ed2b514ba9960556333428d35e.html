@@ -1,0 +1,189 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 17: Fragment Callbacks</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Now that we have integrated the dialog, it&apos;s time to add some user interaction. The user will definitely want to close the dialog again at some point, so we add a button to close the dialog and assign an event handler."><meta name="description" content="Now that we have integrated the dialog, it&apos;s time to add some user interaction. The user will definitely want to close the dialog again at some point, so we add a button to close the dialog and assign an event handler."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"776f7352807e4f82b18176c8fbdc0c56.html","previousTopicHref":"4da72985139b4b83b5f1c1e0c0d2ed5a.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/4da72985139b4b83b5f1c1e0c0d2ed5a.html" title="In this step, we will take a closer look at another element which can be used to assemble views: the fragment." target="_top">Step 16: Dialogs and Fragments</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/776f7352807e4f82b18176c8fbdc0c56.html" title="Our dialog is still pretty much empty. Since SAPUI5 is shipped with a large icon font that contains more than 500 icons, we will add an icon to greet our users when the dialog is opened." target="_top">Step 18: Icons</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loio354f98ed2b514ba9960556333428d35e"><h1 class="title topictitle1" hidden>Step 17: Fragment Callbacks</h1><div class="body conbody"><p class="shortdesc" hidden>Now that we have integrated the dialog, it&apos;s time to add some user interaction. The user
+will definitely want to close the dialog again at some point, so we add a button to close
+the dialog and assign an event handler.</p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loio354f98ed2b514ba9960556333428d35e__fig_r1j_pst_mr"><div class="figbody">
+
+<img class="inline  " id="loio354f98ed2b514ba9960556333428d35e__image_gdf_jsq_xr" src="loio2a0aee6164b24340b0d34a0515c82f19_HiRes.png">
+</div><span class="figcap">The dialog now has an &quot;OK&quot; button</span></div>
+</section></div>
+<div class="section">
+<div class="section_title">Coding</div>
+<p class="p">You can view and download all files <span class="ph">at <a class="xref" href="../../#/sample/sap.m.tutorial.walkthrough.17/preview" target="_top" alt="#/sample/sap.m.tutorial.walkthrough.17/preview" title="#/sample/sap.m.tutorial.walkthrough.17/preview">Walkthrough - Step 17</a></span>.</p>
+<div class="section_title">webapp/controller/HelloPanel.controller.js</div>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.define([
+	&quot;sap/ui/core/mvc/Controller&quot;,
+	&quot;sap/m/MessageToast&quot;,
+	&quot;sap/ui/core/Fragment&quot;
+], function (Controller, MessageToast, Fragment) {
+	&quot;use strict&quot;;
+
+	return Controller.extend(&quot;sap.ui.demo.walkthrough.controller.HelloPanel&quot;, {
+
+		onShowHello : function () {
+			// read msg from i18n model
+			var oBundle = this.getView().getModel(&quot;i18n&quot;).getResourceBundle();
+			var sRecipient = this.getView().getModel().getProperty(&quot;/recipient/name&quot;);
+			var sMsg = oBundle.getText(&quot;helloMsg&quot;, [sRecipient]);
+
+			// show message
+			MessageToast.show(sMsg);
+		},
+
+		onOpenDialog : function () {
+			var oView = this.getView();
+
+			// create dialog lazily
+			if (!this.byId(&quot;helloDialog&quot;)) {
+				// load asynchronous XML fragment
+				Fragment.load({
+					id: oView.getId(),
+					name: &quot;sap.ui.demo.walkthrough.view.HelloDialog&quot;<span class="ph emphasis emphasis">,
+					controller: this</span>
+				}).then(function (oDialog) {
+					// connect dialog to the root view of this component (models, lifecycle)
+					oView.addDependent(oDialog);
+					oDialog.open();
+				});
+			} else {
+				this.byId(&quot;helloDialog&quot;).open();
+			}
+		}<span class="ph emphasis emphasis">,
+
+		onCloseDialog : function () {
+			this.byId(&quot;helloDialog&quot;).close();
+		}</span>
+	});
+
+});</pre>
+<p class="p">As previously described, fragments are pure UI reuse artifacts and do not have a controller. The third parameter of the
+<samp class="ph codeph">sap.ui.xmlfragment</samp> function is optional and allows passing in a reference to a (controller) object. For our
+dialog we reference the <samp class="ph codeph">HelloPanel</samp> controller. However, the third parameter does not necessarily have to be a
+controller but can be any object. Just don&apos;t forget the <samp class="ph codeph">this</samp> keyword.</p>
+<p class="p">The event handler function is put into the same controller file and it closes the
+dialog by accessing the internal helper function that returns the dialog.</p>
+</div>
+<div class="section"><section class="section" type="webapp/view/HelloDialog.fragment.xml"><h2 class="section_title" style="font-size: 1.15em;">webapp/view/HelloDialog.fragment.xml</h2>
+
+<pre class="pre codeblock prettyprint lang-xml">&lt;core:FragmentDefinition
+   xmlns=&quot;sap.m&quot;
+   xmlns:core=&quot;sap.ui.core&quot; &gt;
+   &lt;Dialog
+      id=&quot;helloDialog&quot;
+      title =&quot;Hello {/recipient/name}&quot;&gt;
+<span class="ph emphasis emphasis">      &lt;beginButton&gt;
+         &lt;Button
+            text=&quot;{i18n&gt;dialogCloseButtonText}&quot;
+            press=&quot;.onCloseDialog&quot;/&gt;
+      &lt;/beginButton&gt;</span>
+   &lt;/Dialog&gt;
+&lt;/core:FragmentDefinition&gt;</pre>
+<p class="p"> In the fragment definition, we add a button to the <samp class="ph codeph">beginButton</samp> aggregation of the dialog. The press handler is referring to an
+event handler called <samp class="ph codeph">.onCloseDialog</samp>, and since we passed in the reference to the <samp class="ph codeph">HelloPanel</samp>
+controller, the method will be invoked there when the button is pressed. The dialog has an aggregation named
+<samp class="ph codeph">beginButton</samp> as well as <samp class="ph codeph">endButton</samp>. Placing buttons in both of these aggregations makes sure that
+the <samp class="ph codeph">beginButton</samp> is placed before the <samp class="ph codeph">endButton</samp> on the UI. What <samp class="ph codeph">before</samp> means,
+however, depends on the text direction of the current language. We therefore use the terms <samp class="ph codeph">begin</samp> and
+<samp class="ph codeph">end</samp> as a synonym to &#x201C;left&#x201D; and &#x201C;right&quot;. In languages with left-to-right direction, the
+<samp class="ph codeph">beginButton</samp> will be rendered left, the <samp class="ph codeph">endButton</samp> on the right side of the dialog footer; in
+right-to-left mode for specific languages the order is switched. </p>
+</section></div>
+<div class="section" id="loio354f98ed2b514ba9960556333428d35e__section_d5m_ypr_r2b"><section class="section" type="webapp/i18n/i18n.properties"><h2 class="section_title" style="font-size: 1.15em;">webapp/i18n/i18n.properties</h2>
+
+<pre class="pre codeblock prettyprint lang-prefs"># App Descriptor
+appTitle=Hello World
+appDescription=A simple walkthrough app that explains the most important concepts of <span class="ph"><span class="ph pname">SAPUI5</span></span>
+
+# Hello Panel
+showHelloButtonText=Say Hello
+helloMsg=Hello {0}
+homePageTitle=Walkthrough
+helloPanelTitle=Hello World
+openDialogButtonText=Say Hello With Dialog
+<span class="ph emphasis emphasis">dialogCloseButtonText=Ok</span></pre>
+<p class="p">The text bundle is extended by the new text for the dialog&#x2019;s close button.</p>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/4da72985139b4b83b5f1c1e0c0d2ed5a.html" title="In this step, we will take a closer look at another element which can be used to assemble views: the fragment." target="_top">Step 16: Dialogs and Fragments</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/776f7352807e4f82b18176c8fbdc0c56.html" title="Our dialog is still pretty much empty. Since SAPUI5 is shipped with a large icon font that contains more than 500 icons, we will add an icon to greet our users when the dialog is opened." target="_top">Step 18: Icons</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/36a5b130076e4b4aac2c27eebf324909.html" title="Fragments are light-weight UI parts (UI sub-trees) which can be reused, defined similar to views, but do not have any controller or other behavior code involved." target="_top">Reusing UI Parts: Fragments</a></div><div><a class="link" href="../../#/topic/04129b2798c447368f4c8922c3c33cd7.html" title="SAPUI5 provides the generic function sap.ui.fragment() to instantiate fragments." target="_top">Instantiation of Fragments</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

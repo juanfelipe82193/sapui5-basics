@@ -1,0 +1,145 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Configuring Responsive Behavior of a Table</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="SAPUI5 supports column-based and row-based solutions to support flexible and clearly arranged tables."><meta name="description" content="SAPUI5 supports column-based and row-based solutions to support flexible and clearly arranged tables."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"6f778a805bc3453dbb66e246d8271839.html","previousTopicHref":"5eb6f63e0cc547d0bdc934d3652fdc9b.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio38855e06486f4910bfa6f4485f7c2bac"><h1 class="title topictitle1" hidden>Configuring Responsive Behavior of a Table</h1><div class="body conbody"><p class="shortdesc" hidden><span class="ph"><span class="ph pname">SAPUI5</span></span> supports column-based and row-based solutions to support flexible and clearly
+arranged tables.</p>
+<p class="p">One of the biggest challenges in responsive web design (RWD) is presenting tabular data. Large
+tables containing lots of columns simply don&apos;t fit on smaller screens and there is no
+easy way to reformat the table content with CSS and media queries for an acceptable
+visual display. To address this, our framework offers a column-based solution (column
+hiding) and row-based solution (pop-ins) for displaying tables responsively and both
+options are applicable at the same time. This may sound rather complicated, so let&apos;s
+look at an example.</p>
+<p class="p">Say we want to build this nice table to display on a desktop:</p>
+<p class="p"><img class="inline  " id="loio38855e06486f4910bfa6f4485f7c2bac__image_ndc_kxd_tp" src="loioa6dd36ccbabf424c9ab4dafc9d06d4ad_LowRes.png"></p>
+<p class="p">On mobile devices, we know that we won&apos;t have enough space to show all these columns, so we
+need to ask ourselves which columns are most important. Let&apos;s say:</p>
+<ul class="ul" id="loio38855e06486f4910bfa6f4485f7c2bac__ul_pcb_rtj_ln">
+<li class="li"><span class="ph uicontrol">Product</span> and <span class="ph uicontrol">Price</span> are most important. So they should never be hidden.</li>
+<li class="li"><span class="ph uicontrol">Supplier</span>, <span class="ph uicontrol">Dimensions</span> and <span class="ph uicontrol">Weight</span> are not particularly important, so we&apos;ll
+only show them as pop-ins.</li>
+</ul>
+<p class="p">If we apply these decisions we just made, our mobile devices should now look like this:</p>
+<p class="p"><img class="inline  " id="loio38855e06486f4910bfa6f4485f7c2bac__image_w4h_txd_tp" src="loioe3cdfd6815bf4536a3498cadbe3fc2c7_LowRes.png"></p>
+<div class="section"><section class="section" type="Responsive Column Control"><h2 class="section_title" style="font-size: 1.15em;">Responsive Column Control</h2>
+
+<p class="p">You can control the responsive table design using the API of <samp class="ph codeph">sap.m.Column</samp>.
+This control provides two properties to handle column hiding and pop-in.</p>
+<ol class="ol" id="loio38855e06486f4910bfa6f4485f7c2bac__ol_bdb_rtj_ln">
+<li class="li"><samp class="ph codeph">minScreenWidth</samp>: This value defines the break point for the column
+visibility. For instance: An Apple iPhone 5 device has 568px x 320px resolution
+(dip/device-width), so if we assign 400px (or 25em based on 16px), then this
+column will not be visible for portrait mode (width 320px) but will be visible
+for landscape mode (width 568px). Instead of specifying in px or em, you can
+also assign one of the predefined <samp class="ph codeph">sap.m.ScreenSize</samp> types like
+<samp class="ph codeph">Tablet</samp> (for 600px) or <samp class="ph codeph">Desktop</samp> (for 1024px). The default value
+for this property is an empty string, meaning this column will
+<span class="ph emphasis emphasis">always</span> be visible.</li>
+<li class="li"><samp class="ph codeph">demandPopin</samp>: Depending on your <samp class="ph codeph">minScreenWidth</samp>, the column
+can be hidden in different screen sizes. Setting this property to true shows
+this column as a pop-in instead of hiding it. The default value is false.</li>
+</ol>
+<p class="p">And that&apos;s it! All you need to know are these two variables for responsive tables. So if we go
+back to our original example for a minute:</p>
+<ul class="ul" id="loio38855e06486f4910bfa6f4485f7c2bac__ul_tdb_rtj_ln">
+<li class="li"><span class="ph uicontrol">Name</span> and <span class="ph uicontrol">Status</span> columns should never be
+hidden. This is the default behavior of a column, so let&apos;s just let the default
+values (<samp class="ph codeph">minScreenWidth : &quot;&quot;</samp> and <samp class="ph codeph">demandPopin:
+false</samp>) do their job.</li>
+<li class="li"><span class="ph uicontrol">Model Number</span> column should be hidden for small devices, so our break
+point is <samp class="ph codeph">minScreenWidth : &quot;Small&quot;</samp> and <samp class="ph codeph">demandPopin :
+false</samp> (default value).</li>
+<li class="li"><span class="ph uicontrol">Quantity</span>, <span class="ph uicontrol">Unit Price</span> and <span class="ph uicontrol">Final
+Price</span> columns should go into our pop-in, so our break point is
+still <samp class="ph codeph">minScreenWidth : &quot;Small&quot;</samp> but now with <samp class="ph codeph">demandPopin
+: true</samp> to show the column in a pop-in.</li>
+<li class="li">For example: On tablets and wider devices we&apos;ll have more space available, so we can show
+the <span class="ph uicontrol">Final Price</span> column, but we&apos;ll revert to a pop-in for
+smaller devices. So here our break point should be <samp class="ph codeph">minScreenWidth :
+&quot;Tablet&quot;</samp> and <samp class="ph codeph">demandPopin : true</samp>.</li>
+</ul>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">Please note that in order to have a valid table design, at least one column
+should always be visible and should <span class="ph emphasis emphasis">not</span> go to the
+pop-in.</p></aside>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

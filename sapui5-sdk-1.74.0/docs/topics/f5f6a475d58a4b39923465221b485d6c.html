@@ -1,0 +1,162 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Scrolling: Implementation Details</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="SAPUI5 embeds the open source library iScroll4 that takes care of scrolling in the application."><meta name="description" content="SAPUI5 embeds the open source library iScroll4 that takes care of scrolling in the application."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"fde40159afce478eb488ee4d0f9ebb99.html","previousTopicHref":"66029f6f5a554a4eb700676bec1460dc.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loiof5f6a475d58a4b39923465221b485d6c"><h1 class="title topictitle1" hidden>Scrolling: Implementation Details</h1><div class="body"><p class="shortdesc" hidden><span class="ph"><span class="ph pname">SAPUI5</span></span> embeds the open
+source library iScroll4 that takes care of scrolling in the application.</p>
+<p class="p">Scrolling support in mobile browsers is weak and inconsistent. Only the latest platforms
+and browsers start to support partially usable scrolling functionality. To avoid this,
+<span class="ph"><span class="ph pname">SAPUI5</span></span> supports
+iScroll4. Though the library is globally available in a <span class="ph"><span class="ph pname">SAPUI5</span></span> application,
+programmers should not call it directly. The
+<samp class="ph codeph">sap.ui.core.delegate.ScrollEnablement</samp> delegate provides all
+functionality and smooth integration of iScroll4 into the <span class="ph"><span class="ph pname">SAPUI5</span></span> library. </p>
+<p class="p"><span class="ph">For more
+information, see <a class="xref" href="../../#/api/sap.ui.core.delegate.ScrollEnablement" target="_top" alt="#/api/sap.ui.core.delegate.ScrollEnablement" title="#/api/sap.ui.core.delegate.ScrollEnablement">sap.ui.core.delegate.ScrollEnablement</a></span>
+</p>
+<div class="section" id="loiof5f6a475d58a4b39923465221b485d6c__section_N10028_N10011_N10001"><section class="section" type="Do not use nested scrolling"><h2 class="section_title" style="font-size: 1.15em;">Do not use nested scrolling</h2>
+
+<p class="p">We do not recommend to use nested levels of scrolling, for example, when a page with
+enabled vertical scrolling contains a scroll container that has vertical scrolling
+too. Such combinations may lead to behavior that is unexpected both for programmers
+and users. </p>
+</section></div>
+<div class="section" id="loiof5f6a475d58a4b39923465221b485d6c__section_N10035_N10011_N10001"><section class="section" type="Implement a custom scroll container"><h2 class="section_title" style="font-size: 1.15em;">Implement a custom scroll container</h2>
+
+<p class="p">A custom control that needs to provide a scrollable area for its content should
+implement the following steps: </p>
+<ol class="ol" id="loiof5f6a475d58a4b39923465221b485d6c__ol_wpn_5jp_2j">
+<li class="li">Instantiate a <samp class="ph codeph">sap.ui.core.delegate.ScrollEnablement</samp> delegate,
+at best in the <samp class="ph codeph">.onAfterRendering</samp> callback. </li>
+<li class="li">Implement a <samp class="ph codeph">.getScrollDelegate</samp> method that returns the current
+instance of the delegate to other controls. </li>
+<li class="li">Destroy the <samp class="ph codeph">ScrollEnablement</samp> delegate on exit. </li>
+</ol>
+<p class="p">Example: </p>
+<pre class="pre codeblock prettyprint lang-js">
+myCustomScroller.prototype.onAfterRendering = function() {
+  if(!this._oScroller){
+    jQuery.sap.require(&quot;sap.ui.core.delegate.ScrollEnablement&quot;);
+    // attach a scroller to the scrollable container DOM element
+    this._oScroller = new sap.ui.core.delegate.ScrollEnablement(this, this._scrollContainerId, {
+      horizontal: false,
+      vertical: true
+    });
+  }
+};
+
+myCustomScroller.prototype.getScrollDelegate = function() {
+  return this._oScroller;
+};
+
+myCustomScroller.prototype.exit = function() {
+  if(this._oScroller){
+    this._oScroller.destroy();
+    this._oScroller = null;
+  }
+}; </pre>
+<div class="p">
+<aside class="note" id="loiof5f6a475d58a4b39923465221b485d6c__note_N1006E_N1006B_N10035_N10011_N10001" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>The Zynga scroller that is
+included in the <span class="ph"><span class="ph pname">SAPUI5</span></span> library is
+deprecated. The configuration parameter <samp class="ph codeph">oConfig.zynga=true</samp> of
+the scrolling delegate should not be used. </p></aside>
+</div>
+</section></div>
+<div class="section" id="loiof5f6a475d58a4b39923465221b485d6c__section_N10078_N10011_N10001"><section class="section" type="Interaction with the scroll containers"><h2 class="section_title" style="font-size: 1.15em;">Interaction with the scroll containers</h2>
+
+<p class="p">There are cases, when an embedded control controls scrolling of the parent container,
+if required. These are </p>
+<ul class="ul" id="loiof5f6a475d58a4b39923465221b485d6c__ul_gqn_5jp_2j">
+<li class="li">a <samp class="ph codeph">sap.m.ScrollContainer</samp> inside a <samp class="ph codeph">sap.m.Page</samp>
+may block parent scrolling, if it scrolls in the same direction itself; </li>
+<li class="li">a <samp class="ph codeph">sap.m.TextArea</samp> control in edit mode blocks parent scrolling,
+so that the user can scroll text contents during input; </li>
+<li class="li">a <samp class="ph codeph">sap.m.GrowingList</samp> control scrolls parent container to update
+positions of visible items after the new items have been loaded from the
+server.</li>
+</ul>
+<p class="p">When using a <samp class="ph codeph">sap.m.FlexBox</samp> with <samp class="ph codeph">fitContainer:true</samp>
+or <samp class="ph codeph">sap.m.TileContainer</samp> inside a page, the
+<samp class="ph codeph">enableScrolling</samp> property of the page needs to be set to false
+for the FlexBox or TileContainer to fit the viewport. </p>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

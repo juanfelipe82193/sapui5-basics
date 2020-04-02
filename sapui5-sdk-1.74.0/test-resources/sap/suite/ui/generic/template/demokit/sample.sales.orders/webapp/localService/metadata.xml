@@ -1,0 +1,907 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"/>
+        <edmx:DataServices m:DataServiceVersion="2.0">
+            <Schema Namespace="SEPMRA_SO_MAN" xml:lang="en" sap:schema-version="1"
+                xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+                <EntityType Name="I_DraftAdministrativeDataType" sap:label="Draft Administrative Data" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="DraftUUID"/>
+                    </Key>
+                    <Property Name="CreatedByUser" Type="Edm.String" MaxLength="12" sap:label="Created by User"/>
+                    <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Created at"/>
+                    <Property Name="DraftAccessType" Type="Edm.String" MaxLength="1" sap:label="Draft Access Type"/>
+                    <Property Name="DraftEntityType" Type="Edm.String" MaxLength="30" sap:label="Draft Entity ID"/>
+                    <Property Name="DraftIsCreatedByMe" Type="Edm.Boolean" sap:label="Created by me"/>
+                    <Property Name="DraftIsKeptByUser" Type="Edm.Boolean" sap:label="Kept by User"/>
+                    <Property Name="DraftIsLastChangedByMe" Type="Edm.Boolean" sap:label="Last changed by me"/>
+                    <Property Name="DraftIsProcessedByMe" Type="Edm.Boolean" sap:label="In process by me"/>
+                    <Property Name="DraftUUID" Type="Edm.Guid" Nullable="false" sap:label="Draft (Technical ID)" sap:updatable="false"/>
+                    <Property Name="EnqueueStartDateTime" Type="Edm.Decimal" Precision="21" Scale="7" sap:label="Enqueue Start"/>
+                    <Property Name="InProcessByUser" Type="Edm.String" MaxLength="12" sap:label="In Process by User"/>
+                    <Property Name="LastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Last Change at"/>
+                    <Property Name="LastChangedByUser" Type="Edm.String" MaxLength="12" sap:label="Last Changed by User"/>
+                    <Property Name="ProcessingStartDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Processing Start"/>
+                </EntityType>
+                <EntityType Name="SEPMRA_C_SalesOrderItemType" sap:label="EPM RA: Consumption View for managed Sales Order Item" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="ActiveSalesOrder"/>
+                        <PropertyRef Name="ActiveSalesOrderItem"/>
+                        <PropertyRef Name="SalesOrderItemDraftUUID"/>
+                    </Key>
+                    <Property Name="ActiveSalesOrder" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Sales Order ID" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="ActiveSalesOrderItem" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Item Position" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="GrossAmountInTransacCurrency" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="TransactionCurrency" sap:label="Gross Amount" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="HasActiveEntity" Type="Edm.Boolean" sap:label="Has active" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="HasDraftEntity" Type="Edm.Boolean" sap:label="Has draft" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="IsActiveEntity" Type="Edm.Boolean" sap:label="Is active" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="NetAmountInTransactionCurrency" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="TransactionCurrency" sap:label="Net Amount" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="Product" Type="Edm.String" MaxLength="10" sap:label="Product ID" sap:value-list="standard"/>
+                    <Property Name="ProductAvailabilityStatus" Type="Edm.String" MaxLength="1" sap:label="ATP Status"/>
+                    <Property Name="SalesOrderDraftUUID" Type="Edm.Guid" sap:label="SO Draft UUID" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="SalesOrderItemDraftUUID" Type="Edm.Guid" Nullable="false" sap:label="Item Draft UUID" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="TaxAmountInTransactionCurrency" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="TransactionCurrency" sap:label="Tax Amount" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="TransactionCurrency" Type="Edm.String" MaxLength="5" sap:label="Currency Code" sap:creatable="false" sap:updatable="false" sap:semantics="currency-code"/>
+                    <NavigationProperty Name="DraftAdministrativeData" Relationship="SEPMRA_SO_MAN.assoc_2DDFE65A1489D593D0F32BEA30BE2DEC" FromRole="FromRole_assoc_2DDFE65A1489D593D0F32BEA30BE2DEC" ToRole="ToRole_assoc_2DDFE65A1489D593D0F32BEA30BE2DEC" sap:filterable="false"/>
+                    <NavigationProperty Name="SiblingEntity" Relationship="SEPMRA_SO_MAN.assoc_D741C0E934A28C09D9C6C4C4B36921A8" FromRole="FromRole_assoc_D741C0E934A28C09D9C6C4C4B36921A8" ToRole="ToRole_assoc_D741C0E934A28C09D9C6C4C4B36921A8" sap:filterable="false"/>
+                    <NavigationProperty Name="to_Product" Relationship="SEPMRA_SO_MAN.assoc_47F1B7C57F9295CBAA613E997EA1C709" FromRole="FromRole_assoc_47F1B7C57F9295CBAA613E997EA1C709" ToRole="ToRole_assoc_47F1B7C57F9295CBAA613E997EA1C709" sap:filterable="false"/>
+                    <NavigationProperty Name="to_SalesOrder" Relationship="SEPMRA_SO_MAN.assoc_262463A69467F8E7430E78E3BA784F22" FromRole="FromRole_assoc_262463A69467F8E7430E78E3BA784F22" ToRole="ToRole_assoc_262463A69467F8E7430E78E3BA784F22" sap:filterable="false"/>
+                    <NavigationProperty Name="to_ScheduleLine" Relationship="SEPMRA_SO_MAN.assoc_111BD444DB72873DB15848BF80E58310" FromRole="FromRole_assoc_111BD444DB72873DB15848BF80E58310" ToRole="ToRole_assoc_111BD444DB72873DB15848BF80E58310" sap:filterable="false"/>
+                </EntityType>
+                <EntityType Name="SEPMRA_C_ScheduleLineType" sap:label="EPM RA: Consumption View for managed SO Schedule Line" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="ActiveSalesOrder"/>
+                        <PropertyRef Name="ActiveSalesOrderItem"/>
+                        <PropertyRef Name="ActiveScheduleLine"/>
+                        <PropertyRef Name="ScheduleLineDraftUUID"/>
+                    </Key>
+                    <Property Name="ActiveSalesOrder" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Sales Order ID" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="ActiveSalesOrderItem" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Item Position" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="ActiveScheduleLine" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Schedule Line" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="DeliveryDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Delivery Time"/>
+                    <Property Name="HasActiveEntity" Type="Edm.Boolean" sap:label="Has active" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="HasDraftEntity" Type="Edm.Boolean" sap:label="Has draft" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="IsActiveEntity" Type="Edm.Boolean" sap:label="Is active" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="Quantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="QuantityUnit" sap:label="Quantity"/>
+                    <Property Name="QuantityUnit" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:value-list="standard" sap:semantics="unit-of-measure"/>
+                    <Property Name="SalesOrderDraftUUID" Type="Edm.Guid" sap:label="SO Draft UUID" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="SalesOrderItemDraftUUID" Type="Edm.Guid" sap:label="Item Draft UUID" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="ScheduleLineDraftUUID" Type="Edm.Guid" Nullable="false" sap:label="Schedule Line Draft" sap:creatable="false" sap:updatable="false"/>
+                    <NavigationProperty Name="DraftAdministrativeData" Relationship="SEPMRA_SO_MAN.assoc_6FD16668432D3A256A846E821781F3B2" FromRole="FromRole_assoc_6FD16668432D3A256A846E821781F3B2" ToRole="ToRole_assoc_6FD16668432D3A256A846E821781F3B2" sap:filterable="false"/>
+                    <NavigationProperty Name="SiblingEntity" Relationship="SEPMRA_SO_MAN.assoc_55CCBF9BEB46D104C74E7A470D9F34F3" FromRole="FromRole_assoc_55CCBF9BEB46D104C74E7A470D9F34F3" ToRole="ToRole_assoc_55CCBF9BEB46D104C74E7A470D9F34F3" sap:filterable="false"/>
+                    <NavigationProperty Name="to_QuantityUnit" Relationship="SEPMRA_SO_MAN.assoc_348C6BCBE3A969A95A1CC6BFCDB4931B" FromRole="FromRole_assoc_348C6BCBE3A969A95A1CC6BFCDB4931B" ToRole="ToRole_assoc_348C6BCBE3A969A95A1CC6BFCDB4931B" sap:filterable="false"/>
+                    <NavigationProperty Name="to_SalesOrder" Relationship="SEPMRA_SO_MAN.assoc_BF0BDFBFB07B39C0AD0159E8E1DE967E" FromRole="FromRole_assoc_BF0BDFBFB07B39C0AD0159E8E1DE967E" ToRole="ToRole_assoc_BF0BDFBFB07B39C0AD0159E8E1DE967E" sap:filterable="false"/>
+                    <NavigationProperty Name="to_SalesOrderItem" Relationship="SEPMRA_SO_MAN.assoc_3F66EE356E3FA84C0DAAFB8D84F31376" FromRole="FromRole_assoc_3F66EE356E3FA84C0DAAFB8D84F31376" ToRole="ToRole_assoc_3F66EE356E3FA84C0DAAFB8D84F31376" sap:filterable="false"/>
+                </EntityType>
+                <EntityType Name="SEPM_I_BusinessPartner_EType" sap:label="EPM Demo: Business Partner with External IDs" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="BusinessPartner"/>
+                    </Key>
+                    <Property Name="BusinessPartner" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Business Partner ID" sap:updatable="false"/>
+                    <Property Name="BusinessPartnerRole" Type="Edm.String" MaxLength="3" sap:label="Bus. Part. Role"/>
+                    <Property Name="CityName" Type="Edm.String" MaxLength="40" sap:label="City"/>
+                    <Property Name="CompanyName" Type="Edm.String" MaxLength="80" sap:label="Company"/>
+                    <Property Name="Country" Type="Edm.String" MaxLength="3" sap:label="Country"/>
+                    <Property Name="Currency" Type="Edm.String" MaxLength="5" sap:label="Currency Code" sap:semantics="currency-code"/>
+                    <Property Name="EmailAddress" Type="Edm.String" MaxLength="255" sap:label="E-Mail"/>
+                    <Property Name="FaxNumber" Type="Edm.String" MaxLength="30" sap:label="Phone No."/>
+                    <Property Name="HouseNumber" Type="Edm.String" MaxLength="10" sap:label="Building"/>
+                    <Property Name="LegalForm" Type="Edm.String" MaxLength="10" sap:label="Legal Form"/>
+                    <Property Name="PhoneNumber" Type="Edm.String" MaxLength="30" sap:label="Phone No."/>
+                    <Property Name="PostalCode" Type="Edm.String" MaxLength="10" sap:label="Postal Code"/>
+                    <Property Name="StreetName" Type="Edm.String" MaxLength="60" sap:label="Street"/>
+                    <Property Name="URL" Type="Edm.String" sap:label="URI"/>
+                </EntityType>
+                <EntityType Name="SEPMRA_C_SalesOrderType" sap:label="EPM RA: Consumption View for managed Sales Order" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="ActiveSalesOrder"/>
+                        <PropertyRef Name="SalesOrderDraftUUID"/>
+                    </Key>
+                    <Property Name="ActiveSalesOrder" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Sales Order ID" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Created At" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="GrossAmountInTransacCurrency" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="TransactionCurrency" sap:label="Gross Amount" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="HasActiveEntity" Type="Edm.Boolean" sap:label="Has active"/>
+                    <Property Name="HasDraftEntity" Type="Edm.Boolean" sap:label="Has draft"/>
+                    <Property Name="IsActiveEntity" Type="Edm.Boolean" sap:label="Is active"/>
+                    <Property Name="LastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Changed At" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="NetAmountInTransactionCurrency" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="TransactionCurrency" sap:label="Net Amount" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="SalesOrderBillingStatus" Type="Edm.String" MaxLength="1" sap:label="Confirmation Status" sap:value-list="standard"/>
+                    <Property Name="SalesOrderDeliveryStatus" Type="Edm.String" MaxLength="1" sap:label="Ordering Status" sap:value-list="standard"/>
+                    <Property Name="SalesOrderDraftUUID" Type="Edm.Guid" Nullable="false" sap:label="SO Draft UUID" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="SalesOrderLifeCycleStatus" Type="Edm.String" MaxLength="1" sap:label="Lifecycle Status" sap:value-list="standard"/>
+                    <Property Name="SalesOrderOverallStatus" Type="Edm.String" MaxLength="1" sap:label="Overall Status" sap:value-list="standard"/>
+                    <Property Name="SoldToParty" Type="Edm.String" MaxLength="10" sap:label="Business Partner ID" sap:value-list="standard"/>
+                    <Property Name="TaxAmountInTransactionCurrency" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="TransactionCurrency" sap:label="Tax Amount" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="TransactionCurrency" Type="Edm.String" MaxLength="5" sap:label="Currency Code" sap:value-list="standard" sap:semantics="currency-code"/>
+                    <NavigationProperty Name="DraftAdministrativeData" Relationship="SEPMRA_SO_MAN.assoc_0AA476B86972BCD5112E093FC9D8AFE0" FromRole="FromRole_assoc_0AA476B86972BCD5112E093FC9D8AFE0" ToRole="ToRole_assoc_0AA476B86972BCD5112E093FC9D8AFE0" sap:filterable="false"/>
+                    <NavigationProperty Name="SiblingEntity" Relationship="SEPMRA_SO_MAN.assoc_1BFEBB6EDCBA6649F4DC2209355CA767" FromRole="FromRole_assoc_1BFEBB6EDCBA6649F4DC2209355CA767" ToRole="ToRole_assoc_1BFEBB6EDCBA6649F4DC2209355CA767" sap:filterable="false"/>
+                    <NavigationProperty Name="to_BillingStatus" Relationship="SEPMRA_SO_MAN.assoc_C58CDAA2B6D5374363AF50F790A0D5AA" FromRole="FromRole_assoc_C58CDAA2B6D5374363AF50F790A0D5AA" ToRole="ToRole_assoc_C58CDAA2B6D5374363AF50F790A0D5AA" sap:filterable="false"/>
+                    <NavigationProperty Name="to_Currency" Relationship="SEPMRA_SO_MAN.assoc_76D8463387355A7C9D5CC7AF196AF4EE" FromRole="FromRole_assoc_76D8463387355A7C9D5CC7AF196AF4EE" ToRole="ToRole_assoc_76D8463387355A7C9D5CC7AF196AF4EE" sap:filterable="false"/>
+                    <NavigationProperty Name="to_Customer" Relationship="SEPMRA_SO_MAN.assoc_9B314F15060EA0945D861DDBDBCF65C8" FromRole="FromRole_assoc_9B314F15060EA0945D861DDBDBCF65C8" ToRole="ToRole_assoc_9B314F15060EA0945D861DDBDBCF65C8" sap:filterable="false"/>
+                    <NavigationProperty Name="to_DeliveryStatus" Relationship="SEPMRA_SO_MAN.assoc_C3C835DE47C01292E05E7A1C2DE6AD12" FromRole="FromRole_assoc_C3C835DE47C01292E05E7A1C2DE6AD12" ToRole="ToRole_assoc_C3C835DE47C01292E05E7A1C2DE6AD12" sap:filterable="false"/>
+                    <NavigationProperty Name="to_LifeCycleStatus" Relationship="SEPMRA_SO_MAN.assoc_087415B0843BD05EB8D0D6A2CCA6AD8F" FromRole="FromRole_assoc_087415B0843BD05EB8D0D6A2CCA6AD8F" ToRole="ToRole_assoc_087415B0843BD05EB8D0D6A2CCA6AD8F" sap:filterable="false"/>
+                    <NavigationProperty Name="to_OverallStatus" Relationship="SEPMRA_SO_MAN.assoc_2E4741A100BB7DDEE560DF3E5C1FA414" FromRole="FromRole_assoc_2E4741A100BB7DDEE560DF3E5C1FA414" ToRole="ToRole_assoc_2E4741A100BB7DDEE560DF3E5C1FA414" sap:filterable="false"/>
+                    <NavigationProperty Name="to_SalesOrderItem" Relationship="SEPMRA_SO_MAN.assoc_36E17A81E4E1D4C8CC7BC38BB8D4B8EE" FromRole="FromRole_assoc_36E17A81E4E1D4C8CC7BC38BB8D4B8EE" ToRole="ToRole_assoc_36E17A81E4E1D4C8CC7BC38BB8D4B8EE" sap:filterable="false"/>
+                </EntityType>
+                <EntityType Name="SEPM_I_CurrencyType" sap:label="EPM Demo: Currency" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="Currency"/>
+                    </Key>
+                    <Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="5" sap:text="Currency_Text" sap:label="Currency" sap:updatable="false" sap:semantics="currency-code"/>
+                    <Property Name="CurrencyISOCode" Type="Edm.String" MaxLength="3" sap:label="ISO code"/>
+                    <Property Name="Currency_Text" Type="Edm.String" MaxLength="15" sap:label="Short text" sap:creatable="false" sap:updatable="false"/>
+                </EntityType>
+                <EntityType Name="SEPM_I_ProductCategoryType" sap:label="EPM Demo: Product Category" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="ProductCategory"/>
+                    </Key>
+                    <Property Name="MainProductCategory" Type="Edm.String" MaxLength="40" sap:label="Main Category"/>
+                    <Property Name="ProductCategory" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Category" sap:updatable="false"/>
+                </EntityType>
+                <EntityType Name="SEPM_I_ProductTypeType" sap:label="EPM Demo: Product Type" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="ProductType"/>
+                    </Key>
+                    <Property Name="ProductType" Type="Edm.String" Nullable="false" MaxLength="2" sap:text="ProductType_Text" sap:label="Type Code" sap:updatable="false"/>
+                    <Property Name="ProductType_Text" Type="Edm.String" MaxLength="60" sap:label="Short Descript." sap:creatable="false" sap:updatable="false"/>
+                </EntityType>
+                <EntityType Name="SEPM_I_ProductValueAddedTaxType" sap:label="EPM Demo: Product Value Added Tax" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="ProductValueAddedTax"/>
+                    </Key>
+                    <Property Name="ProductValueAddedTax" Type="Edm.Byte" Nullable="false" sap:text="ProductValueAddedTax_Text" sap:label="Tax Tariff Code" sap:updatable="false"/>
+                    <Property Name="ProductValueAddedTax_Text" Type="Edm.String" MaxLength="60" sap:label="Short Descript." sap:creatable="false" sap:updatable="false"/>
+                </EntityType>
+                <EntityType Name="SEPM_I_Product_EType" sap:label="EPM Demo: Product with External IDs" sap:semantics="aggregate" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="ID"/>
+                    </Key>
+                    <Property Name="ID" Type="Edm.String" Nullable="false"/>
+                    <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:aggregation-role="dimension" sap:label="Created At"/>
+                    <Property Name="Currency" Type="Edm.String" MaxLength="5" sap:aggregation-role="dimension" sap:label="Currency Code" sap:value-list="standard" sap:semantics="currency-code"/>
+                    <Property Name="Depth" Type="Edm.Decimal" Precision="15" Scale="4" sap:aggregation-role="measure" sap:unit="DimensionUnit" sap:label="Depth"/>
+                    <Property Name="DimensionUnit" Type="Edm.String" MaxLength="3" sap:aggregation-role="dimension" sap:label="Dimension Unit" sap:value-list="standard" sap:semantics="unit-of-measure"/>
+                    <Property Name="Height" Type="Edm.Decimal" Precision="15" Scale="4" sap:aggregation-role="measure" sap:unit="DimensionUnit" sap:label="Height"/>
+                    <Property Name="LastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:aggregation-role="dimension" sap:label="Changed At"/>
+                    <Property Name="Price" Type="Edm.Decimal" Precision="15" Scale="4" sap:aggregation-role="measure" sap:unit="Currency" sap:label="Price"/>
+                    <Property Name="Product" Type="Edm.String" MaxLength="10" sap:aggregation-role="dimension" sap:text="Product_Text" sap:label="Product ID"/>
+                    <Property Name="ProductBaseUnit" Type="Edm.String" MaxLength="3" sap:aggregation-role="dimension" sap:label="Unit of Measure" sap:value-list="standard" sap:semantics="unit-of-measure"/>
+                    <Property Name="ProductCategory" Type="Edm.String" MaxLength="40" sap:aggregation-role="dimension" sap:label="Category" sap:value-list="standard"/>
+                    <Property Name="ProductPictureURL" Type="Edm.String" MaxLength="255" sap:aggregation-role="dimension" sap:label="Image"/>
+                    <Property Name="ProductType" Type="Edm.String" MaxLength="2" sap:aggregation-role="dimension" sap:label="Type Code" sap:value-list="standard"/>
+                    <Property Name="ProductValueAddedTax" Type="Edm.Byte" sap:aggregation-role="dimension" sap:label="Tax Tariff Code" sap:value-list="standard"/>
+                    <Property Name="Supplier" Type="Edm.String" MaxLength="10" sap:aggregation-role="dimension" sap:label="Business Partner ID" sap:value-list="standard"/>
+                    <Property Name="Product_Text" Type="Edm.String" MaxLength="255" sap:aggregation-role="dimension" sap:label="Name" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="Weight" Type="Edm.Decimal" Precision="15" Scale="4" sap:aggregation-role="measure" sap:unit="WeightUnit" sap:label="Weight"/>
+                    <Property Name="WeightUnit" Type="Edm.String" MaxLength="3" sap:aggregation-role="dimension" sap:label="Unit of Measure" sap:value-list="standard" sap:semantics="unit-of-measure"/>
+                    <Property Name="Width" Type="Edm.Decimal" Precision="15" Scale="4" sap:aggregation-role="measure" sap:unit="DimensionUnit" sap:label="Width"/>
+                    <NavigationProperty Name="to_Currency" Relationship="SEPMRA_SO_MAN.assoc_72054525B8230155E959338F8190177D" FromRole="FromRole_assoc_72054525B8230155E959338F8190177D" ToRole="ToRole_assoc_72054525B8230155E959338F8190177D" sap:filterable="false"/>
+                    <NavigationProperty Name="to_DimensionUnit" Relationship="SEPMRA_SO_MAN.assoc_882C8F4431DC35A73CD88D773C1A15D3" FromRole="FromRole_assoc_882C8F4431DC35A73CD88D773C1A15D3" ToRole="ToRole_assoc_882C8F4431DC35A73CD88D773C1A15D3" sap:filterable="false"/>
+                    <NavigationProperty Name="to_ProductBaseUnit" Relationship="SEPMRA_SO_MAN.assoc_6C4E5D1A1A390BDEE6E5FD3DA958D173" FromRole="FromRole_assoc_6C4E5D1A1A390BDEE6E5FD3DA958D173" ToRole="ToRole_assoc_6C4E5D1A1A390BDEE6E5FD3DA958D173" sap:filterable="false"/>
+                    <NavigationProperty Name="to_ProductCategory" Relationship="SEPMRA_SO_MAN.assoc_30B0CD76341DCEE0E07F60F1FBCCB66A" FromRole="FromRole_assoc_30B0CD76341DCEE0E07F60F1FBCCB66A" ToRole="ToRole_assoc_30B0CD76341DCEE0E07F60F1FBCCB66A" sap:filterable="false"/>
+                    <NavigationProperty Name="to_ProductType" Relationship="SEPMRA_SO_MAN.assoc_A721232BA78CB0AA140639BB7779FD22" FromRole="FromRole_assoc_A721232BA78CB0AA140639BB7779FD22" ToRole="ToRole_assoc_A721232BA78CB0AA140639BB7779FD22" sap:filterable="false"/>
+                    <NavigationProperty Name="to_ProductValueAddedTax" Relationship="SEPMRA_SO_MAN.assoc_D05E3051984B64876238AD70F8A6B864" FromRole="FromRole_assoc_D05E3051984B64876238AD70F8A6B864" ToRole="ToRole_assoc_D05E3051984B64876238AD70F8A6B864" sap:filterable="false"/>
+                    <NavigationProperty Name="to_Supplier" Relationship="SEPMRA_SO_MAN.assoc_E7BC6E2E6C1FD584FDB2DEC4D9460B9E" FromRole="FromRole_assoc_E7BC6E2E6C1FD584FDB2DEC4D9460B9E" ToRole="ToRole_assoc_E7BC6E2E6C1FD584FDB2DEC4D9460B9E" sap:filterable="false"/>
+                    <NavigationProperty Name="to_WeightUnit" Relationship="SEPMRA_SO_MAN.assoc_D93FDEE22959ED16A81098B99E5E1A49" FromRole="FromRole_assoc_D93FDEE22959ED16A81098B99E5E1A49" ToRole="ToRole_assoc_D93FDEE22959ED16A81098B99E5E1A49" sap:filterable="false"/>
+                </EntityType>
+                <EntityType Name="SEPM_I_SalesOrderBillingStatusType" sap:label="EPM Demo: Sales Order Billing Status" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="SalesOrderBillingStatus"/>
+                    </Key>
+                    <Property Name="SalesOrderBillingStatus" Type="Edm.String" Nullable="false" MaxLength="1" sap:text="SalesOrderBillingStatus_Text" sap:label="Confirmation Status" sap:updatable="false"/>
+                    <Property Name="SalesOrderBillingStatus_Text" Type="Edm.String" MaxLength="60" sap:label="Short Descript." sap:creatable="false" sap:updatable="false"/>
+                </EntityType>
+                <EntityType Name="Sepm_I_SalesOrdOverallStatusType" sap:label="EPM Demo: Sales Order Overall Status" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="SalesOrderOverallStatus"/>
+                    </Key>
+                    <Property Name="SalesOrderOverallStatus" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Overall Status" sap:updatable="false"/>
+                </EntityType>
+                <EntityType Name="SEPM_I_SlsOrdDeliveryStatusType" sap:label="EPM Demo: Sales Order Delivery Status" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="SalesOrderDeliveryStatus"/>
+                    </Key>
+                    <Property Name="SalesOrderDeliveryStatus" Type="Edm.String" Nullable="false" MaxLength="1" sap:text="SalesOrderDeliveryStatus_Text" sap:label="Ordering Status" sap:updatable="false"/>
+                    <Property Name="SalesOrderDeliveryStatus_Text" Type="Edm.String" MaxLength="60" sap:label="Short Descript." sap:creatable="false" sap:updatable="false"/>
+                </EntityType>
+                <EntityType Name="SEPM_I_SlsOrdLifeCycleStatusType" sap:label="EPM Demo: Sales Order Life Cycle Status" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="SalesOrderLifeCycleStatus"/>
+                    </Key>
+                    <Property Name="SalesOrderLifeCycleStatus" Type="Edm.String" Nullable="false" MaxLength="1" sap:text="SalesOrderLifeCycleStatus_Text" sap:label="Lifecycle Status" sap:updatable="false"/>
+                    <Property Name="SalesOrderLifeCycleStatus_Text" Type="Edm.String" MaxLength="60" sap:label="Short Descript." sap:creatable="false" sap:updatable="false"/>
+                </EntityType>
+                <EntityType Name="SEPM_I_UnitOfMeasureType" sap:label="EPM Demo: Unit of Measure" sap:content-version="1">
+                    <Key>
+                        <PropertyRef Name="UnitOfMeasure"/>
+                    </Key>
+                    <Property Name="UnitOfMeasure_Text" Type="Edm.String" MaxLength="10" sap:label="Measuremt unit text" sap:creatable="false" sap:updatable="false"/>
+                    <Property Name="UnitOfMeasure" Type="Edm.String" Nullable="false" MaxLength="3" sap:text="UnitOfMeasure_Text" sap:label="Int. meas. unit" sap:updatable="false" sap:semantics="unit-of-measure"/>
+                    <Property Name="UnitOfMeasureDimension" Type="Edm.String" MaxLength="6" sap:label="Dimension"/>
+                    <Property Name="UnitOfMeasureISOCode" Type="Edm.String" MaxLength="3" sap:label="ISO code"/>
+                </EntityType>
+                <ComplexType Name="SEPMRA_C_SalesOrderItemValidationFunctio">
+                    <Property Name="IsValid" Type="Edm.Boolean" Nullable="false" sap:label="Is valid" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                </ComplexType>
+                <ComplexType Name="SEPMRA_C_ScheduleLineValidationFunction">
+                    <Property Name="IsValid" Type="Edm.Boolean" Nullable="false" sap:label="Is valid" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                </ComplexType>
+                <ComplexType Name="SEPMRA_C_SalesOrderValidationFunction">
+                    <Property Name="IsValid" Type="Edm.Boolean" Nullable="false" sap:label="Is valid" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                </ComplexType>
+                <Association Name="assoc_72054525B8230155E959338F8190177D" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_Product_EType" Multiplicity="1" Role="FromRole_assoc_72054525B8230155E959338F8190177D"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_CurrencyType" Multiplicity="0..1" Role="ToRole_assoc_72054525B8230155E959338F8190177D"/>
+                </Association>
+                <Association Name="assoc_882C8F4431DC35A73CD88D773C1A15D3" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_Product_EType" Multiplicity="1" Role="FromRole_assoc_882C8F4431DC35A73CD88D773C1A15D3"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_UnitOfMeasureType" Multiplicity="0..1" Role="ToRole_assoc_882C8F4431DC35A73CD88D773C1A15D3"/>
+                </Association>
+                <Association Name="assoc_6C4E5D1A1A390BDEE6E5FD3DA958D173" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_Product_EType" Multiplicity="1" Role="FromRole_assoc_6C4E5D1A1A390BDEE6E5FD3DA958D173"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_UnitOfMeasureType" Multiplicity="0..1" Role="ToRole_assoc_6C4E5D1A1A390BDEE6E5FD3DA958D173"/>
+                </Association>
+                <Association Name="assoc_30B0CD76341DCEE0E07F60F1FBCCB66A" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_Product_EType" Multiplicity="1" Role="FromRole_assoc_30B0CD76341DCEE0E07F60F1FBCCB66A"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_ProductCategoryType" Multiplicity="0..1" Role="ToRole_assoc_30B0CD76341DCEE0E07F60F1FBCCB66A"/>
+                </Association>
+                <Association Name="assoc_A721232BA78CB0AA140639BB7779FD22" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_Product_EType" Multiplicity="1" Role="FromRole_assoc_A721232BA78CB0AA140639BB7779FD22"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_ProductTypeType" Multiplicity="0..1" Role="ToRole_assoc_A721232BA78CB0AA140639BB7779FD22"/>
+                </Association>
+                <Association Name="assoc_D05E3051984B64876238AD70F8A6B864" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_Product_EType" Multiplicity="1" Role="FromRole_assoc_D05E3051984B64876238AD70F8A6B864"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_ProductValueAddedTaxType" Multiplicity="0..1" Role="ToRole_assoc_D05E3051984B64876238AD70F8A6B864"/>
+                </Association>
+                <Association Name="assoc_E7BC6E2E6C1FD584FDB2DEC4D9460B9E" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_Product_EType" Multiplicity="1" Role="FromRole_assoc_E7BC6E2E6C1FD584FDB2DEC4D9460B9E"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_BusinessPartner_EType" Multiplicity="0..1" Role="ToRole_assoc_E7BC6E2E6C1FD584FDB2DEC4D9460B9E"/>
+                </Association>
+                <Association Name="assoc_D93FDEE22959ED16A81098B99E5E1A49" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_Product_EType" Multiplicity="1" Role="FromRole_assoc_D93FDEE22959ED16A81098B99E5E1A49"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_UnitOfMeasureType" Multiplicity="0..1" Role="ToRole_assoc_D93FDEE22959ED16A81098B99E5E1A49"/>
+                </Association>
+                <Association Name="assoc_2DDFE65A1489D593D0F32BEA30BE2DEC" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType" Multiplicity="1" Role="FromRole_assoc_2DDFE65A1489D593D0F32BEA30BE2DEC"/>
+                    <End Type="SEPMRA_SO_MAN.I_DraftAdministrativeDataType" Multiplicity="0..1" Role="ToRole_assoc_2DDFE65A1489D593D0F32BEA30BE2DEC"/>
+                </Association>
+                <Association Name="assoc_D741C0E934A28C09D9C6C4C4B36921A8" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType" Multiplicity="1" Role="FromRole_assoc_D741C0E934A28C09D9C6C4C4B36921A8"/>
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType" Multiplicity="0..1" Role="ToRole_assoc_D741C0E934A28C09D9C6C4C4B36921A8"/>
+                </Association>
+                <Association Name="assoc_47F1B7C57F9295CBAA613E997EA1C709" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType" Multiplicity="1" Role="FromRole_assoc_47F1B7C57F9295CBAA613E997EA1C709"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_Product_EType" Multiplicity="0..1" Role="ToRole_assoc_47F1B7C57F9295CBAA613E997EA1C709"/>
+                </Association>
+                <Association Name="assoc_262463A69467F8E7430E78E3BA784F22" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType" Multiplicity="1" Role="FromRole_assoc_262463A69467F8E7430E78E3BA784F22"/>
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" Multiplicity="*" Role="ToRole_assoc_262463A69467F8E7430E78E3BA784F22"/>
+                </Association>
+                <Association Name="assoc_111BD444DB72873DB15848BF80E58310" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType" Multiplicity="1" Role="FromRole_assoc_111BD444DB72873DB15848BF80E58310"/>
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineType" Multiplicity="*" Role="ToRole_assoc_111BD444DB72873DB15848BF80E58310"/>
+                </Association>
+                <Association Name="assoc_0AA476B86972BCD5112E093FC9D8AFE0" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" Multiplicity="1" Role="FromRole_assoc_0AA476B86972BCD5112E093FC9D8AFE0"/>
+                    <End Type="SEPMRA_SO_MAN.I_DraftAdministrativeDataType" Multiplicity="0..1" Role="ToRole_assoc_0AA476B86972BCD5112E093FC9D8AFE0"/>
+                </Association>
+                <Association Name="assoc_1BFEBB6EDCBA6649F4DC2209355CA767" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" Multiplicity="1" Role="FromRole_assoc_1BFEBB6EDCBA6649F4DC2209355CA767"/>
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" Multiplicity="0..1" Role="ToRole_assoc_1BFEBB6EDCBA6649F4DC2209355CA767"/>
+                </Association>
+                <Association Name="assoc_C58CDAA2B6D5374363AF50F790A0D5AA" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" Multiplicity="1" Role="FromRole_assoc_C58CDAA2B6D5374363AF50F790A0D5AA"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_SalesOrderBillingStatusType" Multiplicity="0..1" Role="ToRole_assoc_C58CDAA2B6D5374363AF50F790A0D5AA"/>
+                </Association>
+                <Association Name="assoc_76D8463387355A7C9D5CC7AF196AF4EE" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" Multiplicity="1" Role="FromRole_assoc_76D8463387355A7C9D5CC7AF196AF4EE"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_CurrencyType" Multiplicity="0..1" Role="ToRole_assoc_76D8463387355A7C9D5CC7AF196AF4EE"/>
+                </Association>
+                <Association Name="assoc_9B314F15060EA0945D861DDBDBCF65C8" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" Multiplicity="1" Role="FromRole_assoc_9B314F15060EA0945D861DDBDBCF65C8"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_BusinessPartner_EType" Multiplicity="0..1" Role="ToRole_assoc_9B314F15060EA0945D861DDBDBCF65C8"/>
+                </Association>
+                <Association Name="assoc_C3C835DE47C01292E05E7A1C2DE6AD12" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" Multiplicity="1" Role="FromRole_assoc_C3C835DE47C01292E05E7A1C2DE6AD12"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_SlsOrdDeliveryStatusType" Multiplicity="0..1" Role="ToRole_assoc_C3C835DE47C01292E05E7A1C2DE6AD12"/>
+                </Association>
+                <Association Name="assoc_087415B0843BD05EB8D0D6A2CCA6AD8F" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" Multiplicity="1" Role="FromRole_assoc_087415B0843BD05EB8D0D6A2CCA6AD8F"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_SlsOrdLifeCycleStatusType" Multiplicity="0..1" Role="ToRole_assoc_087415B0843BD05EB8D0D6A2CCA6AD8F"/>
+                </Association>
+                <Association Name="assoc_2E4741A100BB7DDEE560DF3E5C1FA414" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" Multiplicity="1" Role="FromRole_assoc_2E4741A100BB7DDEE560DF3E5C1FA414"/>
+                    <End Type="SEPMRA_SO_MAN.Sepm_I_SalesOrdOverallStatusType" Multiplicity="0..1" Role="ToRole_assoc_2E4741A100BB7DDEE560DF3E5C1FA414"/>
+                </Association>
+                <Association Name="assoc_36E17A81E4E1D4C8CC7BC38BB8D4B8EE" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" Multiplicity="1" Role="FromRole_assoc_36E17A81E4E1D4C8CC7BC38BB8D4B8EE"/>
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType" Multiplicity="*" Role="ToRole_assoc_36E17A81E4E1D4C8CC7BC38BB8D4B8EE"/>
+                </Association>
+                <Association Name="assoc_6FD16668432D3A256A846E821781F3B2" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineType" Multiplicity="1" Role="FromRole_assoc_6FD16668432D3A256A846E821781F3B2"/>
+                    <End Type="SEPMRA_SO_MAN.I_DraftAdministrativeDataType" Multiplicity="0..1" Role="ToRole_assoc_6FD16668432D3A256A846E821781F3B2"/>
+                </Association>
+                <Association Name="assoc_55CCBF9BEB46D104C74E7A470D9F34F3" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineType" Multiplicity="1" Role="FromRole_assoc_55CCBF9BEB46D104C74E7A470D9F34F3"/>
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineType" Multiplicity="0..1" Role="ToRole_assoc_55CCBF9BEB46D104C74E7A470D9F34F3"/>
+                </Association>
+                <Association Name="assoc_348C6BCBE3A969A95A1CC6BFCDB4931B" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineType" Multiplicity="1" Role="FromRole_assoc_348C6BCBE3A969A95A1CC6BFCDB4931B"/>
+                    <End Type="SEPMRA_SO_MAN.SEPM_I_UnitOfMeasureType" Multiplicity="0..1" Role="ToRole_assoc_348C6BCBE3A969A95A1CC6BFCDB4931B"/>
+                </Association>
+                <Association Name="assoc_BF0BDFBFB07B39C0AD0159E8E1DE967E" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineType" Multiplicity="1" Role="FromRole_assoc_BF0BDFBFB07B39C0AD0159E8E1DE967E"/>
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" Multiplicity="0..1" Role="ToRole_assoc_BF0BDFBFB07B39C0AD0159E8E1DE967E"/>
+                </Association>
+                <Association Name="assoc_3F66EE356E3FA84C0DAAFB8D84F31376" sap:content-version="1">
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineType" Multiplicity="1" Role="FromRole_assoc_3F66EE356E3FA84C0DAAFB8D84F31376"/>
+                    <End Type="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType" Multiplicity="0..1" Role="ToRole_assoc_3F66EE356E3FA84C0DAAFB8D84F31376"/>
+                </Association>
+                <EntityContainer Name="SEPMRA_SO_MAN_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                    <EntitySet Name="SEPMRA_C_SalesOrderItem" EntityType="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType" sap:creatable="false" sap:content-version="1"/>
+                    <EntitySet Name="SEPMRA_C_ScheduleLine" EntityType="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineType" sap:creatable="false" sap:content-version="1"/>
+                    <EntitySet Name="SEPM_I_BusinessPartner_E" EntityType="SEPMRA_SO_MAN.SEPM_I_BusinessPartner_EType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                    <EntitySet Name="SEPMRA_C_SalesOrder" EntityType="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" sap:content-version="1"/>
+                    <EntitySet Name="SEPM_I_Currency" EntityType="SEPMRA_SO_MAN.SEPM_I_CurrencyType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                    <EntitySet Name="SEPM_I_ProductCategory" EntityType="SEPMRA_SO_MAN.SEPM_I_ProductCategoryType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                    <EntitySet Name="SEPM_I_ProductType" EntityType="SEPMRA_SO_MAN.SEPM_I_ProductTypeType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                    <EntitySet Name="SEPM_I_ProductValueAddedTax" EntityType="SEPMRA_SO_MAN.SEPM_I_ProductValueAddedTaxType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                    <EntitySet Name="SEPM_I_Product_E" EntityType="SEPMRA_SO_MAN.SEPM_I_Product_EType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                    <EntitySet Name="SEPM_I_SalesOrderBillingStatus" EntityType="SEPMRA_SO_MAN.SEPM_I_SalesOrderBillingStatusType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                    <EntitySet Name="Sepm_I_SalesOrdOverallStatus" EntityType="SEPMRA_SO_MAN.Sepm_I_SalesOrdOverallStatusType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                    <EntitySet Name="SEPM_I_SlsOrdDeliveryStatus" EntityType="SEPMRA_SO_MAN.SEPM_I_SlsOrdDeliveryStatusType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                    <EntitySet Name="SEPM_I_SlsOrdLifeCycleStatus" EntityType="SEPMRA_SO_MAN.SEPM_I_SlsOrdLifeCycleStatusType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                    <EntitySet Name="SEPM_I_UnitOfMeasure" EntityType="SEPMRA_SO_MAN.SEPM_I_UnitOfMeasureType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                    <EntitySet Name="I_DraftAdministrativeData" EntityType="SEPMRA_SO_MAN.I_DraftAdministrativeDataType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                    <AssociationSet Name="assoc_30B0CD76341DCEE0E07F60F1FBCCB66A" Association="SEPMRA_SO_MAN.assoc_30B0CD76341DCEE0E07F60F1FBCCB66A" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPM_I_Product_E" Role="FromRole_assoc_30B0CD76341DCEE0E07F60F1FBCCB66A"/>
+                        <End EntitySet="SEPM_I_ProductCategory" Role="ToRole_assoc_30B0CD76341DCEE0E07F60F1FBCCB66A"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_087415B0843BD05EB8D0D6A2CCA6AD8F" Association="SEPMRA_SO_MAN.assoc_087415B0843BD05EB8D0D6A2CCA6AD8F" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrder" Role="FromRole_assoc_087415B0843BD05EB8D0D6A2CCA6AD8F"/>
+                        <End EntitySet="SEPM_I_SlsOrdLifeCycleStatus" Role="ToRole_assoc_087415B0843BD05EB8D0D6A2CCA6AD8F"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_55CCBF9BEB46D104C74E7A470D9F34F3" Association="SEPMRA_SO_MAN.assoc_55CCBF9BEB46D104C74E7A470D9F34F3" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_ScheduleLine" Role="FromRole_assoc_55CCBF9BEB46D104C74E7A470D9F34F3"/>
+                        <End EntitySet="SEPMRA_C_ScheduleLine" Role="ToRole_assoc_55CCBF9BEB46D104C74E7A470D9F34F3"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_3F66EE356E3FA84C0DAAFB8D84F31376" Association="SEPMRA_SO_MAN.assoc_3F66EE356E3FA84C0DAAFB8D84F31376" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_ScheduleLine" Role="FromRole_assoc_3F66EE356E3FA84C0DAAFB8D84F31376"/>
+                        <End EntitySet="SEPMRA_C_SalesOrderItem" Role="ToRole_assoc_3F66EE356E3FA84C0DAAFB8D84F31376"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_36E17A81E4E1D4C8CC7BC38BB8D4B8EE" Association="SEPMRA_SO_MAN.assoc_36E17A81E4E1D4C8CC7BC38BB8D4B8EE" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrder" Role="FromRole_assoc_36E17A81E4E1D4C8CC7BC38BB8D4B8EE"/>
+                        <End EntitySet="SEPMRA_C_SalesOrderItem" Role="ToRole_assoc_36E17A81E4E1D4C8CC7BC38BB8D4B8EE"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_E7BC6E2E6C1FD584FDB2DEC4D9460B9E" Association="SEPMRA_SO_MAN.assoc_E7BC6E2E6C1FD584FDB2DEC4D9460B9E" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPM_I_Product_E" Role="FromRole_assoc_E7BC6E2E6C1FD584FDB2DEC4D9460B9E"/>
+                        <End EntitySet="SEPM_I_BusinessPartner_E" Role="ToRole_assoc_E7BC6E2E6C1FD584FDB2DEC4D9460B9E"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_C3C835DE47C01292E05E7A1C2DE6AD12" Association="SEPMRA_SO_MAN.assoc_C3C835DE47C01292E05E7A1C2DE6AD12" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrder" Role="FromRole_assoc_C3C835DE47C01292E05E7A1C2DE6AD12"/>
+                        <End EntitySet="SEPM_I_SlsOrdDeliveryStatus" Role="ToRole_assoc_C3C835DE47C01292E05E7A1C2DE6AD12"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_6C4E5D1A1A390BDEE6E5FD3DA958D173" Association="SEPMRA_SO_MAN.assoc_6C4E5D1A1A390BDEE6E5FD3DA958D173" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPM_I_Product_E" Role="FromRole_assoc_6C4E5D1A1A390BDEE6E5FD3DA958D173"/>
+                        <End EntitySet="SEPM_I_UnitOfMeasure" Role="ToRole_assoc_6C4E5D1A1A390BDEE6E5FD3DA958D173"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_2E4741A100BB7DDEE560DF3E5C1FA414" Association="SEPMRA_SO_MAN.assoc_2E4741A100BB7DDEE560DF3E5C1FA414" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrder" Role="FromRole_assoc_2E4741A100BB7DDEE560DF3E5C1FA414"/>
+                        <End EntitySet="Sepm_I_SalesOrdOverallStatus" Role="ToRole_assoc_2E4741A100BB7DDEE560DF3E5C1FA414"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_D93FDEE22959ED16A81098B99E5E1A49" Association="SEPMRA_SO_MAN.assoc_D93FDEE22959ED16A81098B99E5E1A49" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPM_I_Product_E" Role="FromRole_assoc_D93FDEE22959ED16A81098B99E5E1A49"/>
+                        <End EntitySet="SEPM_I_UnitOfMeasure" Role="ToRole_assoc_D93FDEE22959ED16A81098B99E5E1A49"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_C58CDAA2B6D5374363AF50F790A0D5AA" Association="SEPMRA_SO_MAN.assoc_C58CDAA2B6D5374363AF50F790A0D5AA" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrder" Role="FromRole_assoc_C58CDAA2B6D5374363AF50F790A0D5AA"/>
+                        <End EntitySet="SEPM_I_SalesOrderBillingStatus" Role="ToRole_assoc_C58CDAA2B6D5374363AF50F790A0D5AA"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_9B314F15060EA0945D861DDBDBCF65C8" Association="SEPMRA_SO_MAN.assoc_9B314F15060EA0945D861DDBDBCF65C8" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrder" Role="FromRole_assoc_9B314F15060EA0945D861DDBDBCF65C8"/>
+                        <End EntitySet="SEPM_I_BusinessPartner_E" Role="ToRole_assoc_9B314F15060EA0945D861DDBDBCF65C8"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_111BD444DB72873DB15848BF80E58310" Association="SEPMRA_SO_MAN.assoc_111BD444DB72873DB15848BF80E58310" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrderItem" Role="FromRole_assoc_111BD444DB72873DB15848BF80E58310"/>
+                        <End EntitySet="SEPMRA_C_ScheduleLine" Role="ToRole_assoc_111BD444DB72873DB15848BF80E58310"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_72054525B8230155E959338F8190177D" Association="SEPMRA_SO_MAN.assoc_72054525B8230155E959338F8190177D" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPM_I_Product_E" Role="FromRole_assoc_72054525B8230155E959338F8190177D"/>
+                        <End EntitySet="SEPM_I_Currency" Role="ToRole_assoc_72054525B8230155E959338F8190177D"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_348C6BCBE3A969A95A1CC6BFCDB4931B" Association="SEPMRA_SO_MAN.assoc_348C6BCBE3A969A95A1CC6BFCDB4931B" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_ScheduleLine" Role="FromRole_assoc_348C6BCBE3A969A95A1CC6BFCDB4931B"/>
+                        <End EntitySet="SEPM_I_UnitOfMeasure" Role="ToRole_assoc_348C6BCBE3A969A95A1CC6BFCDB4931B"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_0AA476B86972BCD5112E093FC9D8AFE0" Association="SEPMRA_SO_MAN.assoc_0AA476B86972BCD5112E093FC9D8AFE0" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrder" Role="FromRole_assoc_0AA476B86972BCD5112E093FC9D8AFE0"/>
+                        <End EntitySet="I_DraftAdministrativeData" Role="ToRole_assoc_0AA476B86972BCD5112E093FC9D8AFE0"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_BF0BDFBFB07B39C0AD0159E8E1DE967E" Association="SEPMRA_SO_MAN.assoc_BF0BDFBFB07B39C0AD0159E8E1DE967E" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_ScheduleLine" Role="FromRole_assoc_BF0BDFBFB07B39C0AD0159E8E1DE967E"/>
+                        <End EntitySet="SEPMRA_C_SalesOrder" Role="ToRole_assoc_BF0BDFBFB07B39C0AD0159E8E1DE967E"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_A721232BA78CB0AA140639BB7779FD22" Association="SEPMRA_SO_MAN.assoc_A721232BA78CB0AA140639BB7779FD22" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPM_I_Product_E" Role="FromRole_assoc_A721232BA78CB0AA140639BB7779FD22"/>
+                        <End EntitySet="SEPM_I_ProductType" Role="ToRole_assoc_A721232BA78CB0AA140639BB7779FD22"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_D05E3051984B64876238AD70F8A6B864" Association="SEPMRA_SO_MAN.assoc_D05E3051984B64876238AD70F8A6B864" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPM_I_Product_E" Role="FromRole_assoc_D05E3051984B64876238AD70F8A6B864"/>
+                        <End EntitySet="SEPM_I_ProductValueAddedTax" Role="ToRole_assoc_D05E3051984B64876238AD70F8A6B864"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_262463A69467F8E7430E78E3BA784F22" Association="SEPMRA_SO_MAN.assoc_262463A69467F8E7430E78E3BA784F22" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrderItem" Role="FromRole_assoc_262463A69467F8E7430E78E3BA784F22"/>
+                        <End EntitySet="SEPMRA_C_SalesOrder" Role="ToRole_assoc_262463A69467F8E7430E78E3BA784F22"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_2DDFE65A1489D593D0F32BEA30BE2DEC" Association="SEPMRA_SO_MAN.assoc_2DDFE65A1489D593D0F32BEA30BE2DEC" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrderItem" Role="FromRole_assoc_2DDFE65A1489D593D0F32BEA30BE2DEC"/>
+                        <End EntitySet="I_DraftAdministrativeData" Role="ToRole_assoc_2DDFE65A1489D593D0F32BEA30BE2DEC"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_882C8F4431DC35A73CD88D773C1A15D3" Association="SEPMRA_SO_MAN.assoc_882C8F4431DC35A73CD88D773C1A15D3" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPM_I_Product_E" Role="FromRole_assoc_882C8F4431DC35A73CD88D773C1A15D3"/>
+                        <End EntitySet="SEPM_I_UnitOfMeasure" Role="ToRole_assoc_882C8F4431DC35A73CD88D773C1A15D3"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_6FD16668432D3A256A846E821781F3B2" Association="SEPMRA_SO_MAN.assoc_6FD16668432D3A256A846E821781F3B2" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_ScheduleLine" Role="FromRole_assoc_6FD16668432D3A256A846E821781F3B2"/>
+                        <End EntitySet="I_DraftAdministrativeData" Role="ToRole_assoc_6FD16668432D3A256A846E821781F3B2"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_D741C0E934A28C09D9C6C4C4B36921A8" Association="SEPMRA_SO_MAN.assoc_D741C0E934A28C09D9C6C4C4B36921A8" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrderItem" Role="FromRole_assoc_D741C0E934A28C09D9C6C4C4B36921A8"/>
+                        <End EntitySet="SEPMRA_C_SalesOrderItem" Role="ToRole_assoc_D741C0E934A28C09D9C6C4C4B36921A8"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_47F1B7C57F9295CBAA613E997EA1C709" Association="SEPMRA_SO_MAN.assoc_47F1B7C57F9295CBAA613E997EA1C709" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrderItem" Role="FromRole_assoc_47F1B7C57F9295CBAA613E997EA1C709"/>
+                        <End EntitySet="SEPM_I_Product_E" Role="ToRole_assoc_47F1B7C57F9295CBAA613E997EA1C709"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_76D8463387355A7C9D5CC7AF196AF4EE" Association="SEPMRA_SO_MAN.assoc_76D8463387355A7C9D5CC7AF196AF4EE" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrder" Role="FromRole_assoc_76D8463387355A7C9D5CC7AF196AF4EE"/>
+                        <End EntitySet="SEPM_I_Currency" Role="ToRole_assoc_76D8463387355A7C9D5CC7AF196AF4EE"/>
+                    </AssociationSet>
+                    <AssociationSet Name="assoc_1BFEBB6EDCBA6649F4DC2209355CA767" Association="SEPMRA_SO_MAN.assoc_1BFEBB6EDCBA6649F4DC2209355CA767" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                        <End EntitySet="SEPMRA_C_SalesOrder" Role="FromRole_assoc_1BFEBB6EDCBA6649F4DC2209355CA767"/>
+                        <End EntitySet="SEPMRA_C_SalesOrder" Role="ToRole_assoc_1BFEBB6EDCBA6649F4DC2209355CA767"/>
+                    </AssociationSet>
+                    <FunctionImport Name="SEPMRA_C_SalesOrderItemPreparation" ReturnType="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType" EntitySet="SEPMRA_C_SalesOrderItem" m:HttpMethod="POST" sap:action-for="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType">
+                        <Parameter Name="ActiveSalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                        <Parameter Name="ActiveSalesOrderItem" Type="Edm.String" Mode="In" MaxLength="10"/>
+                        <Parameter Name="SalesOrderItemDraftUUID" Type="Edm.Guid" Mode="In"/>
+                    </FunctionImport>
+                    <FunctionImport Name="SEPMRA_C_SalesOrderItemValidation" ReturnType="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemValidationFunctio" m:HttpMethod="GET" sap:action-for="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType">
+                        <Parameter Name="ActiveSalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                        <Parameter Name="ActiveSalesOrderItem" Type="Edm.String" Mode="In" MaxLength="10"/>
+                        <Parameter Name="SalesOrderItemDraftUUID" Type="Edm.Guid" Mode="In"/>
+                    </FunctionImport>
+                    <FunctionImport Name="SEPMRA_C_ScheduleLinePreparation" ReturnType="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineType" EntitySet="SEPMRA_C_ScheduleLine" m:HttpMethod="POST" sap:action-for="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineType">
+                        <Parameter Name="ActiveSalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                        <Parameter Name="ActiveSalesOrderItem" Type="Edm.String" Mode="In" MaxLength="10"/>
+                        <Parameter Name="ActiveScheduleLine" Type="Edm.String" Mode="In" MaxLength="4"/>
+                        <Parameter Name="ScheduleLineDraftUUID" Type="Edm.Guid" Mode="In"/>
+                    </FunctionImport>
+                    <FunctionImport Name="SEPMRA_C_ScheduleLineValidation" ReturnType="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineValidationFunction" m:HttpMethod="GET" sap:action-for="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineType">
+                        <Parameter Name="ActiveSalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                        <Parameter Name="ActiveSalesOrderItem" Type="Edm.String" Mode="In" MaxLength="10"/>
+                        <Parameter Name="ActiveScheduleLine" Type="Edm.String" Mode="In" MaxLength="4"/>
+                        <Parameter Name="ScheduleLineDraftUUID" Type="Edm.Guid" Mode="In"/>
+                    </FunctionImport>
+                    <FunctionImport Name="SEPMRA_C_SalesOrderActivation" ReturnType="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" EntitySet="SEPMRA_C_SalesOrder" m:HttpMethod="POST" sap:action-for="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType">
+                        <Parameter Name="ActiveSalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                        <Parameter Name="SalesOrderDraftUUID" Type="Edm.Guid" Mode="In"/>
+                    </FunctionImport>
+                    <FunctionImport Name="SEPMRA_C_SalesOrderEdit" ReturnType="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" EntitySet="SEPMRA_C_SalesOrder" m:HttpMethod="POST" sap:action-for="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType">
+                        <Parameter Name="ActiveSalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                        <Parameter Name="SalesOrderDraftUUID" Type="Edm.Guid" Mode="In"/>
+                    </FunctionImport>
+                    <FunctionImport Name="SEPMRA_C_SalesOrderPreparation" ReturnType="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType" EntitySet="SEPMRA_C_SalesOrder" m:HttpMethod="POST" sap:action-for="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType">
+                        <Parameter Name="ActiveSalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                        <Parameter Name="SalesOrderDraftUUID" Type="Edm.Guid" Mode="In"/>
+                    </FunctionImport>
+                    <FunctionImport Name="SEPMRA_C_SalesOrderValidation" ReturnType="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderValidationFunction" m:HttpMethod="GET" sap:action-for="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType">
+                        <Parameter Name="ActiveSalesOrder" Type="Edm.String" Mode="In" MaxLength="10"/>
+                        <Parameter Name="SalesOrderDraftUUID" Type="Edm.Guid" Mode="In"/>
+                    </FunctionImport>
+                </EntityContainer>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_SO_MAN_Entities/SEPMRA_C_SalesOrder"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.DraftRoot">
+                        <Record>
+                            <PropertyValue Property="ActivationAction" String="SEPMRA_SO_MAN.SEPMRA_SO_MAN_Entities/SEPMRA_C_SalesOrderActivation"/>
+                            <PropertyValue Property="EditAction" String="SEPMRA_SO_MAN.SEPMRA_SO_MAN_Entities/SEPMRA_C_SalesOrderEdit"/>
+                            <PropertyValue Property="PreparationAction" String="SEPMRA_SO_MAN.SEPMRA_SO_MAN_Entities/SEPMRA_C_SalesOrderPreparation"/>
+                            <PropertyValue Property="ValidationFunction" String="SEPMRA_SO_MAN.SEPMRA_SO_MAN_Entities/SEPMRA_C_SalesOrderValidation"/>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_SO_MAN_Entities/SEPMRA_C_ScheduleLine"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.DraftNode">
+                        <Record>
+                            <PropertyValue Property="PreparationAction" String="SEPMRA_SO_MAN.SEPMRA_SO_MAN_Entities/SEPMRA_C_ScheduleLinePreparation"/>
+                            <PropertyValue Property="ValidationFunction" String="SEPMRA_SO_MAN.SEPMRA_SO_MAN_Entities/SEPMRA_C_ScheduleLineValidation"/>
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="com.sap.vocabularies.Common.v1.DraftActivationVia">
+                        <Collection>
+                            <String>SEPMRA_SO_MAN.SEPMRA_SO_MAN_Entities/SEPMRA_C_SalesOrder</String>
+                        </Collection>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_SO_MAN_Entities/SEPMRA_C_SalesOrderItem"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.DraftNode">
+                        <Record>
+                            <PropertyValue Property="PreparationAction" String="SEPMRA_SO_MAN.SEPMRA_SO_MAN_Entities/SEPMRA_C_SalesOrderItemPreparation"/>
+                            <PropertyValue Property="ValidationFunction" String="SEPMRA_SO_MAN.SEPMRA_SO_MAN_Entities/SEPMRA_C_SalesOrderItemValidation"/>
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="com.sap.vocabularies.Common.v1.DraftActivationVia">
+                        <Collection>
+                            <String>SEPMRA_SO_MAN.SEPMRA_SO_MAN_Entities/SEPMRA_C_SalesOrder</String>
+                        </Collection>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineType/QuantityUnit"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Unit of Measure"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_UnitOfMeasure"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="QuantityUnit"/>
+                                        <PropertyValue Property="ValueListProperty" String="UnitOfMeasure"/>
+                                    </Record>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                                        <PropertyValue Property="ValueListProperty" String="UnitOfMeasure_Text"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType/SoldToParty"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Business Partner with External IDs"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_BusinessPartner_E"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="SoldToParty"/>
+                                        <PropertyValue Property="ValueListProperty" String="BusinessPartner"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType/TransactionCurrency"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Currency"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_Currency"/>
+                            <PropertyValue Property="SearchSupported" Bool="true"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="TransactionCurrency"/>
+                                        <PropertyValue Property="ValueListProperty" String="Currency"/>
+                                    </Record>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                                        <PropertyValue Property="ValueListProperty" String="Currency_Text"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType/SalesOrderOverallStatus"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Sales Order Overall Status"/>
+                            <PropertyValue Property="CollectionPath" String="Sepm_I_SalesOrdOverallStatus"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="SalesOrderOverallStatus"/>
+                                        <PropertyValue Property="ValueListProperty" String="SalesOrderOverallStatus"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType/SalesOrderLifeCycleStatus"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Sales Order Life Cycle Status"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_SlsOrdLifeCycleStatus"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="SalesOrderLifeCycleStatus"/>
+                                        <PropertyValue Property="ValueListProperty" String="SalesOrderLifeCycleStatus"/>
+                                    </Record>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                                        <PropertyValue Property="ValueListProperty" String="SalesOrderLifeCycleStatus_Text"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType/SalesOrderBillingStatus"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Sales Order Billing Status"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_SalesOrderBillingStatus"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="SalesOrderBillingStatus"/>
+                                        <PropertyValue Property="ValueListProperty" String="SalesOrderBillingStatus"/>
+                                    </Record>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                                        <PropertyValue Property="ValueListProperty" String="SalesOrderBillingStatus_Text"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType/SalesOrderDeliveryStatus"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Sales Order Delivery Status"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_SlsOrdDeliveryStatus"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="SalesOrderDeliveryStatus"/>
+                                        <PropertyValue Property="ValueListProperty" String="SalesOrderDeliveryStatus"/>
+                                    </Record>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                                        <PropertyValue Property="ValueListProperty" String="SalesOrderDeliveryStatus_Text"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType/Product"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				    <Annotation Term="com.sap.vocabularies.Common.v1.SemanticObject" String="EPMProduct"/>
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Product with External IDs"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_Product_E"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="Product"/>
+                                        <PropertyValue Property="ValueListProperty" String="Product"/>
+                                    </Record>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                                        <PropertyValue Property="ValueListProperty" String="Product_Text"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPM_I_Product_EType/ProductType"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Product Type"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_ProductType"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="ProductType"/>
+                                        <PropertyValue Property="ValueListProperty" String="ProductType"/>
+                                    </Record>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                                        <PropertyValue Property="ValueListProperty" String="ProductType_Text"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPM_I_Product_EType/ProductCategory"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Product Category"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_ProductCategory"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="ProductCategory"/>
+                                        <PropertyValue Property="ValueListProperty" String="ProductCategory"/>
+                                    </Record>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                                        <PropertyValue Property="ValueListProperty" String="ProductCategory"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPM_I_Product_EType/Currency"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Currency"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_Currency"/>
+                            <PropertyValue Property="SearchSupported" Bool="true"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="Currency"/>
+                                        <PropertyValue Property="ValueListProperty" String="Currency"/>
+                                    </Record>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                                        <PropertyValue Property="ValueListProperty" String="Currency_Text"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPM_I_Product_EType/DimensionUnit"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Unit of Measure"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_UnitOfMeasure"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="DimensionUnit"/>
+                                        <PropertyValue Property="ValueListProperty" String="UnitOfMeasure"/>
+                                    </Record>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                                        <PropertyValue Property="ValueListProperty" String="UnitOfMeasure_Text"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPM_I_Product_EType/ProductValueAddedTax"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Product Value Added Tax"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_ProductValueAddedTax"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="ProductValueAddedTax"/>
+                                        <PropertyValue Property="ValueListProperty" String="ProductValueAddedTax"/>
+                                    </Record>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                                        <PropertyValue Property="ValueListProperty" String="ProductValueAddedTax_Text"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPM_I_Product_EType/Supplier"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Business Partner with External IDs"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_BusinessPartner_E"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="Supplier"/>
+                                        <PropertyValue Property="ValueListProperty" String="BusinessPartner"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPM_I_Product_EType/ProductBaseUnit"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Unit of Measure"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_UnitOfMeasure"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="ProductBaseUnit"/>
+                                        <PropertyValue Property="ValueListProperty" String="UnitOfMeasure"/>
+                                    </Record>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                                        <PropertyValue Property="ValueListProperty" String="UnitOfMeasure_Text"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPM_I_Product_EType/WeightUnit"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+                        <Record>
+                            <PropertyValue Property="Label" String="EPM Demo: Unit of Measure"/>
+                            <PropertyValue Property="CollectionPath" String="SEPM_I_UnitOfMeasure"/>
+                            <PropertyValue Property="SearchSupported" Bool="false"/>
+                            <PropertyValue Property="Parameters">
+                                <Collection>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterInOut">
+                                        <PropertyValue Property="LocalDataProperty" PropertyPath="WeightUnit"/>
+                                        <PropertyValue Property="ValueListProperty" String="UnitOfMeasure"/>
+                                    </Record>
+                                    <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                                        <PropertyValue Property="ValueListProperty" String="UnitOfMeasure_Text"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_C_ScheduleLineType"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.SemanticKey">
+                        <Collection>
+                            <PropertyPath>ActiveSalesOrder</PropertyPath>
+                            <PropertyPath>ActiveSalesOrderItem</PropertyPath>
+                            <PropertyPath>ActiveScheduleLine</PropertyPath>
+                        </Collection>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderType"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.SemanticKey">
+                        <Collection>
+                            <PropertyPath>ActiveSalesOrder</PropertyPath>
+                        </Collection>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="SEPMRA_SO_MAN.SEPMRA_C_SalesOrderItemType"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="com.sap.vocabularies.Common.v1.SemanticKey">
+                        <Collection>
+                            <PropertyPath>ActiveSalesOrder</PropertyPath>
+                            <PropertyPath>ActiveSalesOrderItem</PropertyPath>
+                        </Collection>
+                    </Annotation>
+                </Annotations>
+                <atom:link rel="self" href="/sap/opu/odata/sap/SEPMRA_SO_MAN/$metadata"
+                    xmlns:atom="http://www.w3.org/2005/Atom"/>
+                    <atom:link rel="latest-version" href="/sap/opu/odata/sap/SEPMRA_SO_MAN/$metadata"
+                        xmlns:atom="http://www.w3.org/2005/Atom"/>
+                    </Schema>
+                </edmx:DataServices>
+            </edmx:Edmx>

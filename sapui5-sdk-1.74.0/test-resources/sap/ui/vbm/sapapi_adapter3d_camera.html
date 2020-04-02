@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="UTF-8">
+
+		<title>Testpage - Adapter3D Camera State Management</title>
+
+		<!-- This is to test internal camera save/restore state functionality only, so private objects/methods used -->
+
+		<script id="sap-ui-bootstrap"
+				data-sap-ui-libs="sap.ui.vbm, sap.ui.unified, sap.m, sap.ui.layout"
+				data-sap-ui-theme="sap_belize"
+				src="../../../../resources/sap-ui-core.js"
+		>
+		</script>
+
+		<script>
+			sap.ui.getCore().attachInit(function() {
+				sap.ui.require([
+					"sap/ui/vbm/Viewport", "sap/ui/vbm/Adapter3D",
+					"sap/ui/layout/Splitter", "sap/ui/layout/SplitterLayoutData",
+					"sap/ui/layout/form/GridLayout", "sap/ui/layout/form/FormElement",
+					"sap/ui/layout/form/GridElementData", "sap/ui/layout/form/FormContainer",
+					"sap/ui/layout/form/Form", "sap/m/Button", "sap/m/Label", "sap/m/Page", "sap/m/App"
+				], function(
+					Viewport, Adapter3D,
+					Splitter, SplitterLayoutData,
+					GridLayout, FormElement,
+					GridElementData, FormContainer,
+					Form, Button, Label, Page, App
+				) {
+					var viewport = new Viewport({
+						id: "lso-viewport",
+						height: "600px",
+						layoutData: new SplitterLayoutData({
+							size: "100%"
+						}),
+						cameraChange: function(params) {
+							var viewport = sap.ui.getCore().byId("lso-viewport");
+							var label = sap.ui.getCore().byId("pos");
+							var text = "camera " + (viewport.getCameraHistoryPos() + 1) + " of " + viewport.getCameraHistoryLength();
+							label.setText(text);
+						}
+					});
+
+					var adapter3D = new Adapter3D({
+						id: "adapter3D",
+						viewport: viewport
+					});
+
+					var oLayout = new GridLayout();
+
+					var page = new Page({
+						title: "ThreeJS Adapter3D",
+						content: [
+							new Form({
+								editable: true,
+								layout: oLayout,
+								formContainers: [
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+													new Button({
+														layoutData: new GridElementData({ hCells: "2" }),
+														text: "Home",
+														press: function() {
+															viewport.applyCameraHome(true);
+														}
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "2" }),
+														text: "<< Prev",
+														press: function() {
+															viewport.setCameraHistoryPos(viewport.getCameraHistoryPos() - 1);
+														}
+													}),
+													new Button({
+														layoutData: new GridElementData({ hCells: "2" }),
+														text: "Next >>",
+														press: function() {
+															viewport.setCameraHistoryPos(viewport.getCameraHistoryPos() + 1);
+														}
+													}),
+													new Button("pos", {
+														layoutData: new GridElementData({ hCells: "2" }),
+														text: "0 - 0",
+														enabled: false
+													})
+												]
+											})
+										]
+									}),
+									new FormContainer({
+										formElements: [
+											new FormElement({
+												fields: [
+													new Splitter({
+														layoutData: new GridElementData({ vCells: 4 }),
+														height: "600px",
+														width: "100%",
+														contentAreas: [
+															viewport
+														]
+													})
+												]
+											})
+										]
+									})
+								]
+							})
+						]
+					});
+
+					var app = new App();
+					app.addPage(page);
+					app.placeAt("body");
+
+					$.ajax({
+						url: "media/threejs/Initial.json",
+						dataType: "json",
+						success: function(data, status, xhr) {
+							try
+							{
+								adapter3D.load(JSON.stringify(data)).then(function() {
+									$.ajax({
+										url: "media/threejs/Truck_Europe.json",
+										dataType: "json",
+										success: function(data, status, xhr) {
+											try
+											{
+												adapter3D.load(JSON.stringify(data)).then(function() {
+													//context.home = viewport._controls.saveState();
+												});
+											} catch(ex) {
+												alert(ex);
+											}
+										}
+									});
+								});
+							} catch(ex) {
+								alert(ex);
+							}
+						}
+					});
+				});
+			});
+		</script>
+	</head>
+	<body id="body" class="sapUiBody">
+	</body>
+</html>

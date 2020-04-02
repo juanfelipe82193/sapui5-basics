@@ -1,0 +1,143 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Step 22: Expression Binding</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Sometimes the predefined types of SAPUI5 are not flexible enough and you want to do a simple calculation or formatting in the view - that is where expressions are really helpful. We use them to format our price according to the current number in the data model."><meta name="description" content="Sometimes the predefined types of SAPUI5 are not flexible enough and you want to do a simple calculation or formatting in the view - that is where expressions are really helpful. We use them to format our price according to the current number in the data model."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"0f8626ed7b7542ffaa44601828db20de.html","previousTopicHref":"dfe04650afc046e0802abb1a1a90d2d9.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"><div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/dfe04650afc046e0802abb1a1a90d2d9.html" title="The list of invoices is already looking nice, but what is an invoice without a price assigned? Typically prices are stored in a technical format and with a &apos;.&apos; delimiter in the data model. For example, our invoice for pineapples has the calculated price 87.2 without a currency. We are going to use the SAPUI5 data types to format the price properly, with a locale-dependent decimal separator and two digits after the separator." target="_top">Step 21: Data Types</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/0f8626ed7b7542ffaa44601828db20de.html" title="If we want to do a more complex logic for formatting properties of our data model, we can also write a custom formatting function. We will now add a localized status with a custom formatter, because the status in our data model is in a rather technical format." target="_top">Step 23: Custom Formatters</a><br></div></div></div><div class="page concept  - topic-topic concept-concept " id="loioc98d57347ba444c6945f596584d2db45"><h1 class="title topictitle1" hidden>Step 22: Expression Binding</h1><div class="body conbody"><p class="shortdesc" hidden>Sometimes the predefined types of <span class="ph"><span class="ph pname">SAPUI5</span></span> are not flexible enough
+and you want to do a simple calculation or formatting in the view - that is where
+expressions are really helpful. We use them to format our price according to the current
+number in the data model.</p>
+<div class="section"><section class="section" type="Preview"><h2 class="section_title" style="font-size: 1.15em;">Preview</h2>
+
+<div class="fig fignone" id="loioc98d57347ba444c6945f596584d2db45__fig_r1j_pst_mr"><div class="figbody">
+
+<img class="inline  " id="loioc98d57347ba444c6945f596584d2db45__image_arb_zc2_yr" src="loio2ff81a7fea204f69913e33c2545bfb39_HiRes.png">
+</div><span class="figcap">The price is now formatted according to its number</span></div>
+</section></div>
+<div class="section">
+<div class="section_title">Coding</div>
+<p class="p">You can view and download all files <span class="ph">at <a class="xref" href="../../#/sample/sap.m.tutorial.walkthrough.22/preview" target="_top" alt="#/sample/sap.m.tutorial.walkthrough.22/preview" title="#/sample/sap.m.tutorial.walkthrough.22/preview">Walkthrough - Step 22</a></span>.</p>
+<div class="section_title">webapp/view/InvoiceList.view.xml</div>
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+controllerName=&quot;sap.ui.demo.walkthrough.controller.InvoiceList&quot;
+xmlns=&quot;sap.m&quot;
+   xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+   &lt;List
+      headerText=&quot;{i18n&gt;invoiceListTitle}&quot;
+      class=&quot;sapUiResponsiveMargin&quot;
+      width=&quot;auto&quot;
+      items=&quot;{invoice&gt;/Invoices}&quot; &gt;
+      &lt;items&gt;
+         &lt;ObjectListItem
+            title=&quot;{invoice&gt;Quantity} x {invoice&gt;ProductName}&quot;
+            number=&quot;{
+		parts: [{path: &apos;invoice&gt;ExtendedPrice&apos;}, {path: &apos;view&gt;/currency&apos;}],
+		type: &apos;sap.ui.model.type.Currency&apos;,
+		formatOptions: {
+			showMeasure: false
+		}
+		}&quot;
+		numberUnit=&quot;{view&gt;/currency}&quot;
+        	<span class="ph emphasis emphasis">numberState=&quot;{= ${invoice&gt;ExtendedPrice} &gt; 50 ? &apos;Error&apos; : &apos;Success&apos; }&quot;</span>/&gt;
+      &lt;/items&gt;
+   &lt;/List&gt;
+&lt;/mvc:View&gt;</pre>
+<p class="p">We add the property <samp class="ph codeph">numberState</samp> in our declarative view and
+introduce a new binding syntax that starts with <samp class="ph codeph">=</samp> inside the
+brackets. This symbol is used to initiate a new binding syntax, it&apos;s called an
+expression and can do simple calculation logic like the ternary operator shown here. </p>
+<p class="p">The condition of the operator is a value from our data model. A model binding inside
+an expression binding has to be escaped with the <samp class="ph codeph">$</samp> sign as you can
+see in the code. We set the state to <samp class="ph codeph">&apos;Error&apos; </samp>(the number will
+appear in red) if the price is higher than 50 and to <samp class="ph codeph">&#x2018;Success&#x2019;</samp> (the
+number will appear in green) otherwise.</p>
+<p class="p">Expressions are limited to a particular set of operations that help formatting the
+data such as Math expression, comparisons, and such. You can lookup the possible
+operations in the documentation.</p>
+</div>
+<div class="section"><section class="section" type="Conventions"><h2 class="section_title" style="font-size: 1.15em;"> Conventions</h2>
+
+<ul class="ul" id="loioc98d57347ba444c6945f596584d2db45__ul_nh5_ybb_nr">
+<li class="li">
+<p class="p">Only use expression binding for trivial calculations.</p>
+</li>
+</ul>
+</section></div>
+</div><div class="related-links"> <div class="familylinks"><div class="parentlink"><br><strong>Parent topic: </strong><a class="link" href="../../#/topic/3da5f4be63264db99f2e5b04c5e853db.html" title="In this tutorial we will introduce you to all major development paradigms of SAPUI5." target="_top">Walkthrough</a><br></div><div class="previouslink"><br><strong>Previous: </strong><a class="link" href="../../#/topic/dfe04650afc046e0802abb1a1a90d2d9.html" title="The list of invoices is already looking nice, but what is an invoice without a price assigned? Typically prices are stored in a technical format and with a &apos;.&apos; delimiter in the data model. For example, our invoice for pineapples has the calculated price 87.2 without a currency. We are going to use the SAPUI5 data types to format the price properly, with a locale-dependent decimal separator and two digits after the separator." target="_top">Step 21: Data Types</a><br></div><div class="nextlink"><br><strong>Next: </strong><a class="link" href="../../#/topic/0f8626ed7b7542ffaa44601828db20de.html" title="If we want to do a more complex logic for formatting properties of our data model, we can also write a custom formatting function. We will now add a localized status with a custom formatter, because the status in our data model is in a rather technical format." target="_top">Step 23: Custom Formatters</a><br></div></div><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/daf6852a04b44d118963968a1239d2c0.html" title="Expression binding is an enhancement of the SAPUI5 binding syntax, which allows for providing expressions instead of custom formatter functions." target="_top">Expression Binding</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

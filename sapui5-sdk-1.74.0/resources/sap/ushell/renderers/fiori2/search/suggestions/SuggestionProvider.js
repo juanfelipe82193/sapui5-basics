@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define([],function(){"use strict";jQuery.sap.declare('sap.ushell.renderers.fiori2.search.suggestions.SuggestionProvider');var m=sap.ushell.renderers.fiori2.search.suggestions.SuggestionProvider=function(){this.init.apply(this,arguments);};m.prototype={init:function(p){jQuery.extend(this,p);},abortSuggestions:function(){},getSuggestions:function(){}};return m;});

@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define([],function(){"use strict";function v(E,i){return i.some(function(I){return(E.indexOf(I)>=0);});}function r(c,i){return c.filter(function(I){return(i.indexOf(I)===-1);});}function e(c,V){var R=c;if(v(c,V)){R=r(c,V);}else{jQuery.sap.log.warning("You cannot remove item: "+V+", the item does not exists.");}return R;}return{execute:e};});

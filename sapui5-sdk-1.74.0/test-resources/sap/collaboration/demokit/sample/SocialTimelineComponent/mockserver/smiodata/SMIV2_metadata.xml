@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" 
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" 
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" 
+    xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="SM_INTEGRATION_V2_SRV" xml:lang="en" sap:schema-version="0000" 
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <ComplexType Name="File">
+                <Property Name="Uploaded" Type="Edm.Boolean" Nullable="false" sap:label="Indicator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </ComplexType>
+            <ComplexType Name="CollaborationHostURL">
+                <Property Name="URL" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </ComplexType>
+            <ComplexType Name="ExternalBO">
+                <Property Name="Exid" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ObjectType" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ODataAnnotations" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ODataMetadata" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ODataLink" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </ComplexType>
+            <ComplexType Name="ExternalODataURL">
+                <Property Name="URL" Type="Edm.String" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </ComplexType>
+            <EntityContainer Name="SM_INTEGRATION_V2_SRV_Entities" m:IsDefaultEntityContainer="true">
+                <FunctionImport Name="MapInternalBOToExternalBO" ReturnType="SM_INTEGRATION_V2_SRV.ExternalBO" m:HttpMethod="GET">
+                    <Parameter Name="ApplicationContext" Type="Edm.String" Mode="In"/>
+                    <Parameter Name="ODataCollection" Type="Edm.String" Mode="In"/>
+                    <Parameter Name="ODataKeyPredicate" Type="Edm.String" Mode="In"/>
+                    <Parameter Name="ODataServicePath" Type="Edm.String" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="UploadTargetFile" ReturnType="SM_INTEGRATION_V2_SRV.File" m:HttpMethod="POST">
+                    <Parameter Name="GroupId" Type="Edm.String" Mode="In"/>
+                    <Parameter Name="FolderId" Type="Edm.String" Mode="In" Nullable="true"/>
+                    <Parameter Name="FileURL" Type="Edm.String" Mode="In"/>
+                    <Parameter Name="FileName" Type="Edm.String" Mode="In"/>
+                    <Parameter Name="FileMimeType" Type="Edm.String" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetExternalODataURL" ReturnType="SM_INTEGRATION_V2_SRV.ExternalODataURL" m:HttpMethod="GET">
+                    <Parameter Name="RelativePath" Type="Edm.String" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetCollaborationHostURL" ReturnType="SM_INTEGRATION_V2_SRV.CollaborationHostURL" m:HttpMethod="GET"/>
+            </EntityContainer>
+            <atom:link rel="self" href="/SM_INTEGRATION_V2_SRV/$metadata" 
+                xmlns:atom="http://www.w3.org/2005/Atom"/>
+                <atom:link rel="latest-version" href="/SM_INTEGRATION_V2_SRV/$metadata" 
+                    xmlns:atom="http://www.w3.org/2005/Atom"/>
+                </Schema>
+            </edmx:DataServices>
+        </edmx:Edmx>

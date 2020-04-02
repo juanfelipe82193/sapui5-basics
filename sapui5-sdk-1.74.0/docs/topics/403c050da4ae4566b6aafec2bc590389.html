@@ -1,0 +1,212 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>View Extension</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="SAPUI5 uses extension points for extending standard views with custom content. The assignment of a custom view to an extension point is done in component customizing."><meta name="description" content="SAPUI5 uses extension points for extending standard views with custom content. The assignment of a custom view to an extension point is done in component customizing."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"aa93e1c6953a41b48cd912a7331eadee.html","previousTopicHref":"8fbf4e728bd146fcb2053aeb6ca741f9.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loio403c050da4ae4566b6aafec2bc590389"><h1 class="title topictitle1" hidden>View Extension</h1><div class="body"><p class="shortdesc" hidden><span class="ph"><span class="ph pname">SAPUI5</span></span> uses extension
+points for extending standard views with custom content. The assignment of a custom view to
+an extension point is done in component customizing.</p>
+<p class="p">You can add extension points in a standard view to indicate the position within the view
+where you can insert custom content. In XML views, the
+<samp class="ph codeph">&lt;ExtensionPoint&gt;</samp> tag is used and replaced by the controls
+provided by the customer. The tag should therefore be placed in the view where also a
+control would be placed and document the types of controls that are suitable.</p>
+<p class="p">In the XML view below, for example, three extension points are defined:
+<samp class="ph codeph">extension1</samp>, <samp class="ph codeph">extension2</samp>, and
+<samp class="ph codeph">extension3</samp>. The extension name together with the view name
+identifies an extension point.</p>
+<pre class="pre codeblock prettyprint lang-js">&lt;mvc:View xmlns=&quot;sap.m&quot;  xmlns:core=&quot;sap.ui.core&quot; xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+    &lt;core:ExtensionPoint name=&quot;extension1&quot; /&gt;
+    &lt;TextView text=&quot;SAP View &apos;Sub2&apos; - this one is extended by the customer and there should be a button after this text&quot;&gt;&lt;/TextView&gt;    
+    &lt;core:ExtensionPoint name=&quot;extension2&quot; /&gt;   
+    &lt;core:ExtensionPoint name=&quot;extension3&quot; /&gt;   
+&lt;/mvc:View&gt;
+</pre>
+<p class="p">In JS views, extension points can be created within the <samp class="ph codeph">createContent</samp>
+method by using the <samp class="ph codeph">sap.ui.extensionpoint</samp> function. The following
+example shows the simplest way to initiate an extension point in a JS view.</p>
+<pre class="pre codeblock prettyprint lang-js">[...] 
+      createContent(oController){
+           return sap.ui.extensionpoint(this, &quot;extension4&quot;);
+      }
+[...]</pre>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>This example creates a view with one extension point, which can be customized to hold
+controls, but do not show any default content.</p></aside>
+<p class="p">You can add an extension point to an aggregation of another control by specifying the
+target control and, optionally, a target aggregation. The target aggregation is only
+required when you do not want to add the extension point to your target control&apos;s
+default aggregation. In the following example, an extension point is added to
+<samp class="ph codeph">VerticalLayout</samp>:</p>
+<pre class="pre codeblock prettyprint lang-js">[...] 
+      createContent(oController){
+         var oLayout = new sap.ui.layout.VerticalLayout(&quot;Layout1&quot;);
+         sap.ui.extensionpoint(this, &quot;extension4&quot;, null, oLayout, &quot;content&quot; /*not mandatory, as content is the default aggregation*/);
+      }
+[...]</pre>
+<p class="p">You can also use the JSON notation to create the surrounding control and add the
+extension point to an aggregation as follows:</p>
+<pre class="pre codeblock prettyprint lang-js">[...]
+	var oLayout = new sap.ui.layout.VerticalLayout({
+		content: [
+		          new sap.m.Button({text: &quot;I am preceding the extension point&quot;}),
+		          sap.ui.extensionpoint(this, &quot;extension4&quot;),
+		          new sap.m.Button({text: &quot;I am following the extension point&quot;})
+		         ]
+	});
+[...]
+</pre>
+<p class="p">For table-like controls with aggregations that span two dimensions, for example, rows and
+columns, extension points must be provided for both dimensions. In the
+<samp class="ph codeph">sap.m.Table</samp>, for example, one extension point needs to be provided
+in the <samp class="ph codeph">columns</samp> aggregation, another one in the provided
+<samp class="ph codeph">cells</samp> aggregation of the
+template<samp class="ph codeph">ColumnListItem</samp>.</p>
+<div class="section"><section class="section" type="Extension Points with Default Content"><h2 class="section_title" style="font-size: 1.15em;">Extension Points with Default Content</h2>
+
+<p class="p">Applications can also use extension points to provide default content, which is used
+as long as no custom content is defined and ignored when custom content is defined.
+This feature is particularly interesting for aggregations, which are filled by data
+binding: In XML views, one item is given which is used as a template. In
+applications that enable exchanging these items by custom
+<samp class="ph codeph">ListItems</samp>, the default list items can be enclosed in an
+<samp class="ph codeph">&lt;ExtensionPoint&gt;</samp> tag.</p>
+<pre class="pre codeblock prettyprint lang-js">&lt;mvc:View xmlns=&quot;sap.m&quot;  xmlns:core=&quot;sap.ui.core&quot; xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+    &lt;ListBox items=&quot;{/names}&quot;&gt;
+        &lt;core:ExtensionPoint name=&quot;extension1&quot; /&gt;
+            &lt;ListItem text=&quot;{firstName} /&gt;
+        &lt;/core:ExtensionPoint&gt;
+    &lt;/ListBox&gt;  
+&lt;/mvc:View&gt;</pre>
+<p class="p">This can be used for all multiple aggregations, not only for lists.</p>
+<p class="p">To define default content for extension points in JS views or fragments, specify the
+value of another parameter:</p>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.extensionpoint(this, &quot;extension4&quot;, fnCreateDefaultContent); // this extension point has a callback function creating default content
+</pre>
+<p class="p">The function provided as a callback needs to return a control or an array of controls
+and is only executed when no customizing for the extension is configured, or when
+customizing is disabled.</p>
+</section></div>
+<div class="section"><section class="section" type="Extension Point Implementation"><h2 class="section_title" style="font-size: 1.15em;">Extension Point Implementation</h2>
+
+<p class="p">The extension content, which will then be inserted at the position of an extension
+point, is defined in the custom application. For example, for the extension points
+that have been defined in the standard application described in the section above,
+custom content can be defined for each extension. This is shown in the example below
+together with a description of the customizing that connects the extension point in
+the delivered standard application and the extension content in the customer
+application.</p>
+<pre class="pre codeblock prettyprint lang-js">extensions: {
+        
+    &quot;sap.ui.viewExtensions&quot;: {
+        &quot;samples.components.ext.sap.Sub2&quot;: {
+            &quot;extension2&quot;: {
+                className: &quot;sap.ui.core.Fragment&quot;,
+                fragmentName: &quot;samples.components.ext.customer.CustomFrag1&quot;,
+                type: &quot;XML&quot;
+                id: &quot;stableid&quot;
+            },
+            &quot;extension3&quot;: {
+                className: &quot;sap.ui.core.mvc.View&quot;,
+                viewName: &quot;samples.components.ext.customer.CustomSubSubView1&quot;,
+                type: &quot;XML&quot;
+            }
+        },
+    .....some more content
+</pre>
+<p class="p">If you add an ID to the view extension, this ID overrules the original view ID. For
+view fragments like in the example, also IDs of nested controls are then prefixed
+with this ID.</p>
+<p class="p">Extension content in the custom application in
+<samp class="ph codeph">CustomFrag1.fragment.xml</samp> file:</p>
+<pre class="pre codeblock prettyprint lang-js">&lt;Button xmlns=&quot;sap.m&quot; text=&quot;This Button is in an Extension Fragment&quot; /&gt;
+</pre>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p>You can also add multiple root-level controls using one fragment.</p></aside>
+<p class="p">Extension content in the custom application in
+<samp class="ph codeph">CustomSubSubView1.view.xml</samp> file.</p>
+<pre class="pre codeblock prettyprint lang-js">&lt;mvc:View xmlns=&quot;sap.m&quot;  xmlns:core=&quot;sap.ui.core&quot; xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+    &lt;core:ExtensionPoint name=&quot;extension1&quot; /&gt;
+    &lt;TextView text=&quot;Customer View &apos;SubSubView1&apos; - this one extends the original SAP View &apos;Sub2&apos; - and even custom Views can be extended:&quot;&gt;&lt;/TextView&gt;   
+    &lt;core:ExtensionPoint name=&quot;extension2&quot; /&gt;   
+&lt;/mvc:View&gt;
+</pre>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

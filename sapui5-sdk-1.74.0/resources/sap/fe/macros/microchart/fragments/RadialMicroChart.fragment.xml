@@ -1,0 +1,44 @@
+<core:FragmentDefinition xmlns="sap.suite.ui.microchart"
+	xmlns:core="sap.ui.core"
+	xmlns:m="sap.m"
+	xmlns:oDataV4MicroChart="sap.fe.macros.microchart"
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1" template:require="{
+		MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+		MICROCHART: 'sap/fe/macros/microchart/MicroChartHelper',
+		ID: 'sap/fe/macros/StableIdHelper'
+	}">
+	<!-- MODEL.value is used instead MODEL.format because, MODEL.format adds type as Unit when Currency/Unit annotations exist and the control property expects decimal as type -->
+	<template:with path="chartAnnotation>Measures/0" helper="MICROCHART.getMeasureAttributeForMeasure" var="MeasureAttribute">
+		<template:with path="MeasureAttribute>DataPoint/$AnnotationPath/" var="DataPoint">
+			<template:if test="{= ${DataPoint>Value} &amp;&amp; MICROCHART.isNotAlwaysHidden('Radial', ${DataPoint>Value}, undefined, ${DataPoint>Value/$Path@com.sap.vocabularies.UI.v1.Hidden}) }">
+				<template:then>
+					<template:with path="DataPoint>Value/$Path" helper="MODEL.resolve$Path" var="Measure">
+						<oDataV4MicroChart:MicroChartContainer
+							id="{= ${this>id} ? ID.generate([${this>id}, 'mCC']) : undefined }"
+							renderLabels="{= ${this>renderLabels} !== 'false' ? true : false }"
+							chartTitle="{= ${this>title} || ${chartAnnotation>Title}}"
+							chartDescription="{= ${this>description} || ${chartAnnotation>Description}}"
+							binding="{= ('{path:\'' + ((${collection>$isCollection} || ${collection>$kind} === 'EntitySet') ? '' : ${collection>@sapui.name}) + '\' , parameters : {' + MICROCHART.getSelectParameters(${this>groupId}, '', '') + '} }') }"
+							visible="{= MICROCHART.getHiddenPathExpression(${DataPoint>Value/$Path@com.sap.vocabularies.UI.v1.Hidden}) }">
+							<RadialMicroChart total="{= ${DataPoint>TargetValue} ? ${DataPoint>TargetValue@@.MODEL.value} : undefined }"
+								fraction="{DataPoint>Value@@.MODEL.value}" percentage="{= !${DataPoint>TargetValue} ? ${{DataPoint>Value@@.MODEL.value} : undefined }"
+								valueColor="{= ${DataPoint>Criticality} || (!${DataPoint>Criticality} &amp;&amp; !${DataPoint>CriticalityCalculation}) ?
+									(${DataPoint>Criticality} ? MICROCHART.getCriticalityBinding(${DataPoint>}) : undefined ) :
+									MICROCHART.getCriticalityCalculationBinding(${DataPoint>CriticalityCalculation/ImprovementDirection/$EnumMember},
+										${DataPoint>Value@@.MODEL.value},
+										${DataPoint>CriticalityCalculation/DeviationRangeLowValue@@MODEL.format},
+										${DataPoint>CriticalityCalculation/ToleranceRangeLowValue@@MODEL.format},
+										${DataPoint>CriticalityCalculation/AcceptanceRangeLowValue@@MODEL.format},
+										${DataPoint>CriticalityCalculation/AcceptanceRangeHighValue@@MODEL.format},
+										${DataPoint>CriticalityCalculation/ToleranceRangeHighValue@@MODEL.format},
+										${DataPoint>CriticalityCalculation/DeviationRangeHighValue@@MODEL.format}) }">
+							</RadialMicroChart>
+						</oDataV4MicroChart:MicroChartContainer>
+					</template:with>
+				</template:then>
+				<template:elseif test="{= MICROCHART.logWarning('Radial', { DataPoint_Value : ${DataPoint>Value} }) }">
+				</template:elseif>
+			</template:if>
+		</template:with>
+	</template:with>
+</core:FragmentDefinition>

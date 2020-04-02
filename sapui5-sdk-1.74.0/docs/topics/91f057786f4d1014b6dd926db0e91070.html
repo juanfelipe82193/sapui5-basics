@@ -1,0 +1,216 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>List Binding (Aggregation Binding)</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="List binding (or aggregation binding) is used to automatically create child controls according to model data."><meta name="description" content="List binding (or aggregation binding) is used to automatically create child controls according to model data."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"335848ac1174435c901baaa55f6d7819.html","previousTopicHref":"91f05e8b6f4d1014b6dd926db0e91070.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio91f057786f4d1014b6dd926db0e91070"><h1 class="title topictitle1" hidden>List Binding (Aggregation Binding)</h1><div class="body conbody"><p class="shortdesc" hidden>List binding (or aggregation binding) is used to automatically create child controls
+according to model data.</p>
+<p class="p">Let&#x2019;s say we would like to display the following JSON model data in a
+<samp class="ph codeph">sap.m.List</samp>:</p>
+<pre class="pre codeblock prettyprint lang-js">{
+	companies : [
+		{
+			name : &quot;Acme Inc.&quot;,
+			city: &quot;Belmont&quot;,
+			state: &quot;NH&quot;,
+			county: &quot;Belknap&quot;,
+			revenue : &quot;123214125.34&quot;  
+		},{
+			name : &quot;Beam Hdg.&quot;,
+			city: &quot;Hancock&quot;,
+			state: &quot;NH&quot;,
+			county: &quot;Belknap&quot;
+			revenue : &quot;3235235235.23&quot;  
+		},{
+			name : &quot;Carot Ltd.&quot;,
+			city: &quot;Cheshire&quot;,
+			state: &quot;NH&quot;,
+			county: &quot;Sullivan&quot;,
+			revenue : &quot;Not Disclosed&quot;  
+		}]
+}</pre>
+<div class="section" id="loio91f057786f4d1014b6dd926db0e91070__AggregationBindingXMLViews"><section class="section" type="Declarative List Binding in XML Views"><h2 class="section_title" style="font-size: 1.15em;">Declarative List Binding in XML Views</h2>
+
+<pre class="pre codeblock prettyprint lang-xml">&lt;mvc:View
+	controllerName=&quot;sap.ui.sample.App&quot;
+	xmlns=&quot;sap.m&quot;
+	xmlns:mvc=&quot;sap.ui.core.mvc&quot;&gt;
+	&lt;List id=&#x201D;companyList&#x201D; items=&quot;{path: &apos;/companies&apos;, templateShareable:false}&quot;&gt;
+		&lt;items&gt;
+			&lt;StandardListItem
+				title=&quot;{name}&quot;
+				description=&quot;{city}&quot;
+			/&gt;
+		&lt;/items&gt;
+	&lt;/List&gt;
+&lt;/mvc:View&gt;</pre>
+<p class="p">The <samp class="ph codeph">List</samp> element has both an <samp class="ph codeph">items</samp> attribute and a
+nested <samp class="ph codeph">items</samp> element:</p>
+<ul class="ul" id="loio91f057786f4d1014b6dd926db0e91070__ul_wrw_bpf_tt">
+<li class="li">
+<p class="p">The attribute <samp class="ph codeph">items=&quot;{path: &apos;/companies&apos;, templateShareable:false}&quot;</samp> binds
+the children of our json model&#x2019;s <samp class="ph codeph">companies</samp> array to the
+list. This by itself is not enough to display the companies, instead it sets
+the parent path for the binding of all contained list items and their
+descendants. In addition you need to declare a nested element.</p>
+</li>
+<li class="li">
+<p class="p">The nested <samp class="ph codeph">items</samp> element in our case contains a
+<samp class="ph codeph">StandardListItem</samp>. This serves as a template for
+creating the individual list rows.</p>
+</li>
+</ul>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">The binding paths of <samp class="ph codeph">StandardListItem</samp> for properties
+<samp class="ph codeph">title</samp> and <samp class="ph codeph">description</samp> are relative to
+<samp class="ph codeph">companies</samp>. This means that instead of having to write the
+whole binding path <samp class="ph codeph">title={/companies/name}</samp>, you can simply
+write <samp class="ph codeph">title={name}</samp>. By omitting the slash &#x2018;/&#x2019; at the beginning,
+<samp class="ph codeph">{name}</samp> is marked as a relative binding path.</p></aside>
+<p class="p">Instead of using a <samp class="ph codeph">StandardListItem</samp> as a list row template, you can
+also use any other <samp class="ph codeph">sap.m.</samp> list item, such as:</p>
+<ul class="ul" id="loio91f057786f4d1014b6dd926db0e91070__ul_smn_gpf_tt">
+<li class="li">
+<p class="p">ActionListItem</p>
+</li>
+<li class="li">
+<p class="p">DisplayListItem</p>
+</li>
+<li class="li">
+<p class="p">CustomListItem</p>
+</li>
+<li class="li">
+<p class="p">ObjectListItem</p>
+</li>
+</ul>
+<p class="p">For more examples and details on when to use which list item control, see the various
+list items in the <a class="xref" href="../../#/controls/" target="_top" alt="#/controls/" title="#/controls/">Samples</a> in the Demo Kit.</p>
+<aside class="note" id="loio91f057786f4d1014b6dd926db0e91070__note_aggregation_binding" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">The model has a default size limit to avoid too much data being rendered on the UI. This size
+limit determines the number of entries used for the list bindings. The default
+size limit is 100 entries.</p><p class="p">This means that controls that don&apos;t support paging or don&apos;t request data in
+chunks (e.g. <samp class="ph codeph">sap.m.ComboBox</samp>) only show 100 entries even though
+the model contains more items.</p><p class="p">To change this behavior, you can set a size limit in the model by using
+<samp class="ph codeph">oModel.setSizeLimit</samp>. </p></aside>
+</section></div>
+<div class="section"><section class="section" type="List Binding in the JavaScript Code"><h2 class="section_title" style="font-size: 1.15em;">List Binding in the JavaScript Code</h2>
+
+<p class="p">You can define list binding directly in JavaScript either in the <samp class="ph codeph">settings</samp>
+object in the constructor or by calling the <samp class="ph codeph">bindAggregation</samp> method.
+List binding requires the definition of a template, which is cloned for each bound
+entry of the list. For each clone that is created, the binding context is set to the
+respective list entry, so that all bindings of the template are resolved relative to
+the entry. The aggregated elements are destroyed and recreated whenever the bound
+list in the data model is changed.</p>
+<p class="p">To bind a list, you create a template or provide a factory function, which is then passed when
+defining the list binding itself. In the <samp class="ph codeph">settings</samp> object, this
+looks as follows:</p>
+<pre class="pre codeblock prettyprint lang-js">var oItemTemplate = new sap.ui.core.ListItem({text:&quot;{name}&quot;});
+oComboBox = new sap.m.ComboBox({
+	items: {
+		path: &quot;/companies&quot;,      //no curly brackets here!
+		template: oItemTemplate
+		templateShareable: false
+	}
+});</pre>
+<p class="p">A template is not necessarily a single control as shown in the example above, but can also be
+a tree of controls. For each list entry, a deep clone of the template is created and
+added to the bound list.</p>
+<p class="p">You can also define the list binding by using the <samp class="ph codeph">bindAggregation</samp> method of a
+control:</p>
+<pre class="pre codeblock prettyprint lang-js">var oItemTemplate = new sap.ui.core.ListItem({text:&quot;{name}&quot;});
+oComboBox.bindAggregation(&quot;items&quot;, {
+path: &quot;/companies&quot;,
+template: oItemTemplate,
+templateShareable: false
+});</pre>
+<p class="p">In addition, some controls have a typed binding method for lists that are likely to be bound
+by the application:</p>
+<pre class="pre codeblock prettyprint lang-js">var oComboBox.bindItems(&quot;/companies&quot;, oItemTemplate);</pre>
+<p class="p">To remove a list binding, you can use the <samp class="ph codeph">unbindAggregation</samp> method:</p>
+<pre class="pre codeblock prettyprint lang-js">oComboBox.unbindAggregation(&quot;items&quot;);</pre>
+<p class="p">Controls with typed binding methods also provide a typed unbind:</p>
+<pre class="pre codeblock prettyprint lang-js">oComboBox.unbindItems();</pre>
+<p class="p">When a list is unbound, its aggregated controls are removed and destroyed by default. If you
+would like to keep the items in your <samp class="ph codeph">ComboBox</samp>, for example, you can
+do so by using:</p>
+<pre class="pre codeblock prettyprint lang-js">oComboBox.unbindAggregation(&quot;items&quot;, true);</pre>
+</section></div>
+</div><div class="related-links"> <br><div class="childtopics"><strong>In this section:</strong></div><ul class="ullinks"><div><strong><a class="link" href="../../#/topic/335848ac1174435c901baaa55f6d7819.html" target="_top">Using Factory Functions</a></strong><br></div><div><strong><a class="link" href="../../#/topic/ec79a5d5918f4f7f9cbc2150e66778cc.html" target="_top">Sorting, Grouping, and Filtering for List Binding</a></strong><br></div><div><strong><a class="link" href="../../#/topic/3a4a9e562988456c9be0ef883ae7da50.html" target="_top">Lifecycle of Binding Templates</a></strong><br></div><div><strong><a class="link" href="../../#/topic/7cdff73f308b4b10bdf7d83b7aba72e7.html" title="Extended change detection offers fine-grained information on the actual data changes. This can be used, for example, to only update the DOM when really necessary and avoid complete rerendering of a huge list whenever data is changed." target="_top">Extended Change Detection</a></strong><br></div></ul><div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/97830de2d7314e93b5c1ee3878a17be9.html" title="Aggregation binding (or &quot;list binding&quot;) allows a control to be bound to a list within the model data and allows relative binding to the list entries by its child controls." target="_top">Tutorial Step 12: Aggregation Binding Using Templates</a></div><div><a class="link" href="../../#/topic/e2e6f4127fe4450ab3cf1339c42ee832.html" title="You bind UI elements to data of a data source by defining a binding path to the model that represents the data source in the app." target="_top">Binding Syntax</a></div><div><a class="link" href="../../#/topic/07e4b920f5734fd78fdaa236f26236d8.html" title="Data that is presented on the UI often has to be converted so that is human readable and fits to the locale of the user. On the other hand, data entered by the user has to be parsed and validated to be understood by the data source. For this purpose, you use formatters and data types." target="_top">Formatting, Parsing, and Validating Data</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

@@ -1,0 +1,47 @@
+<Dialog
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    id="createSpaceDialog"
+    title="{i18n>CreateSpaceDialog.Title}"
+    beforeOpen=".onBeforeOpen"
+    afterClose=".destroy"
+    core:require="{
+        String: 'sap/ui/model/type/String',
+        CustomString: 'sap/ushell/applications/SpaceDesigner/controller/CustomString'
+    }">
+    <content>
+        <f:SimpleForm id="createSpaceDialogForm" editable="true">
+            <Label id="createSpaceIdLabel" text="{i18n>Label.SpaceID}" />
+            <Input
+                maxLength="35"
+                required="true"
+                id="createSpaceIdInput"
+                change=".onSpaceIDChange"
+                liveChange=".onSpaceIDLiveChange"
+                valueLiveUpdate="true"
+                value="{ path: '/id', type: 'CustomString' }" />
+            <Label id="createSpaceTitleLabel" text="{i18n>Label.Title}" />
+            <Input
+                maxLength="100"
+                required="true"
+                id="createSpaceTitleInput"
+                liveChange=".onTitleLiveChange"
+                valueLiveUpdate="true"
+                valueStateText="{i18n>Message.EmptyTitle}"
+                value="{ path: '/title', type: 'String' }" />
+        </f:SimpleForm>
+        <core:ComponentContainer id="transportContainer" lifecycle="Application"/>
+    </content>
+    <beginButton>
+        <Button
+            id="createSpaceSaveButton"
+            type="Emphasized"
+            text="{i18n>Button.Create}"
+            press=".onConfirm"
+            enabled="{ path: '/validation', formatter: '.validate' }" />
+    </beginButton>
+    <endButton>
+        <Button id="createSpaceCancelButton" text="{i18n>Button.Cancel}" press=".onCancel" />
+    </endButton>
+</Dialog>

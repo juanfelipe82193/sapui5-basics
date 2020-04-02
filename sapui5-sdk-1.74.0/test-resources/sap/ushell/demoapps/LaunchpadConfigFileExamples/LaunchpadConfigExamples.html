@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <!-- This file is at
+       /sap/bc/ui5_demokit/test-resources/sap/ushell/demoapps/LaunchpadConfigFileExamples/LaunchpadConfigExamples.html -->
+   <title>Sample unified shell configurations</title>
+   <script type="text/javascript">
+    var createConfigExampleURL = function (sURL) {
+        var sSAP_client = parseInt(document.getElementById("sap_client").value), sSearchCriteriaNoClient, sSearchCriteriaWithClient, iSearchPos, iOldClientLength;
+        sSearchCriteriaNoClient = "FioriLaunchpad.html?", sSearchCriteriaWithClient = "sap-client=", iSearchPos, aUrlChars = ["&", "#"];
+        //search inside of the URL for the sap-client parameter
+        iSearchPos = sURL.indexOf(sSearchCriteriaWithClient);
+        if (iSearchPos > 0) {
+            //if sap-client is found then search until &, # or nothing
+            var iSearchPosOfClientEnd = sURL.length;
+            aUrlChars.some (function(sValue, iIndex, aUrlChars) {
+                iSearchPosOfClientEnd = sURL.indexOf(sValue, (iSearchPos + sSearchCriteriaWithClient.length));
+                return (iSearchPosOfClientEnd > 0) ? true : false;
+            });
+            return (sURL.substring(0, iSearchPos + sSearchCriteriaWithClient.length) + sSAP_client + sURL.substr(iSearchPosOfClientEnd) );
+        }
+        else {
+            //add client parameter at the beginning after the question mark
+            iSearchPos = sURL.indexOf(sSearchCriteriaNoClient);
+            if (iSearchPos > 0) {
+                return (sURL.substring(0, iSearchPos + sSearchCriteriaNoClient.length) + "sap-client=" + sSAP_client + sURL.substr(iSearchPos + sSearchCriteriaNoClient.length));
+            } else {
+                return sURL;
+            }
+        }
+    }
+
+    var updateRelevantLinks = function () {
+        var aHREFs = document.getElementsByTagName('a');
+        for(var i = 0; i< aHREFs.length; i++) {
+            if (aHREFs[i].className === "configSampleHREF") {
+                aHREFs[i].setAttribute('href', createConfigExampleURL(aHREFs[i].href));
+            }
+        }
+    }
+   </script>
+   </head>
+    <body>
+    Demonstration page for Fiori launchpad configuration using different methods to apply these (on an ABAP system):
+    <h1> Modify Client </h1>
+      Here you can modify the client you want to start your Fiori Launchpad with:
+    <form><input id="sap_client" type="text" name="sap_client" value="120"> <input id="change_client_btn" type="button" value="<- change client"></form>
+    <script type="text/javascript">document.getElementById("change_client_btn").onclick = updateRelevantLinks; </script>
+    <br/>
+    <h1> Run Standalone </h1>
+     <a class="configSampleHREF" href="/sap/bc/ui5_ui5/ui2/ushell/shells/abap/FioriLaunchpad.html?#Shell-runStandaloneApp?sap-ushell-SAPUI5.Component=sap.ushell.demo.AppNavSample&sap-ushell-url=%252Fsap%252Fbc%252Fui5_demokit%252Ftest-resources%252Fsap%252Fushell%252Fdemoapps%252FAppNavSample%253FA%253DURL%2526A%253DTAP%2526B%253DTAP%2526AA%253DTAP">
+       Standalone start AppNavSample (with full shell)
+    </a>
+    <br/>
+    <a class="configSampleHREF" href="/sap/bc/ui5_ui5/ui2/ushell/shells/abap/FioriLaunchpad.html?sap-client=120&sap-ushell-config=headerless#Shell-runStandaloneApp?sap-ushell-SAPUI5.Component=sap.ushell.demo.AppNavSample&sap-ushell-url=%252Fsap%252Fbc%252Fui5_demokit%252Ftest-resources%252Fsap%252Fushell%252Fdemoapps%252FAppNavSample%253FA%253DURL%2526A%253DTAP%2526B%253DTAP%2526AA%253DTAP">
+      Standalone start AppNavSample (headerless)
+    </a>
+    <br/>
+    <a class="configSampleHREF" href="/sap/bc/ui5_ui5/ui2/ushell/shells/abap/FioriLaunchpad.html?sap-client=120&sap-ushell-config=embedded#Shell-runStandaloneApp?sap-ushell-SAPUI5.Component=sap.ushell.demo.AppNavSample&sap-ushell-url=%252Fsap%252Fbc%252Fui5_demokit%252Ftest-resources%252Fsap%252Fushell%252Fdemoapps%252FAppNavSample%253FA%253DURL%2526A%253DTAP%2526B%253DTAP%2526AA%253DTAP">
+      Standalone start AppNavSample (embedded)
+    </a>
+    <h1> Sample configurations </h1>
+    <a class="configSampleHREF" href="/sap/bc/ui5_ui5/ui2/ushell/shells/abap/FioriLaunchpad.html?sap-client=120&sap-ushell-config-url=cfg/sap/PersonalizationOff.json">
+      Personalization Off (cfg/sap/PersonalizationOff.json)
+    </a>
+    <br/>
+    <a class="configSampleHREF" href="/sap/bc/ui5_ui5/ui2/ushell/shells/abap/FioriLaunchpad.html?sap-client=120&sap-ushell-config-url=/sap/bc/ui5_demokit/test-resources/sap/ushell/demoapps//sap/bc/ui5_demokit/test-resources/sap/ushell/demoapps/LaunchpadConfigFileExamples/headerless.json#Shell-runStandaloneApp?sap-ushell-SAPUI5.Component=sap.ushell.demo.AppNavSample&sap-ushell-url=%252Fsap%252Fbc%252Fui5_demokit%252Ftest-resources%252Fsap%252Fushell%252Fdemoapps%252FAppNavSample%253FA%253DURL%2526A%253DTAP%2526B%253DTAP%2526AA%253DTAP">
+      Headerless via file (demokit example)
+    </a>
+    <br/>
+    <a class="configSampleHREF" href="/sap/bc/ui5_ui5/ui2/ushell/shells/abap/FioriLaunchpad.html?sap-client=120&sap-ushell-config-url=/sap/bc/ui5_demokit/test-resources/sap/ushell/demoapps/LaunchpadConfigFileExamples/PersonalizationXConfig.json#Action-toappperssample">
+      PersonalizationXAdapter (demokit example)
+    </a>
+    <br/>
+    <a class="configSampleHREF" href="/sap/bc/ui5_ui5/ui2/ushell/shells/abap/FioriLaunchpad.html?sap-client=120&sap-ushell-config-url=/sap/bc/ui5_demokit/test-resources/sap/ushell/demoapps/LaunchpadConfigFileExamples/BootstrapPluginSampleConfig.json">
+      Sample Bootstrap Plugin (demokit example)
+    </a>
+    <br/>
+    <a class="configSampleHREF" href="/sap/bc/ui2/flp/index.html?sap-client=120&sap-ushell-config-url=/sap/bc/ui5_demokit/test-resources/sap/ushell/demoapps/LaunchpadConfigFileExamples/CacheBustingSampleConfig.json">
+      Sample cache busting configuration (with overriding rule for CHIP XML files)
+    </a>
+    <br/>
+    <a class="configSampleHREF" href="/sap/bc/ui2/flp/index.html?sap-client=120&sap-ushell-config-url=/sap/bc/ui5_demokit/test-resources/sap/ushell/demoapps/LaunchpadConfigFileExamples/XhrLogonWindow.json">
+      XHR logon in window mode; this is NOT effective for the first XHR requests.
+    </a>
+    <br/>
+    <h1> Direct redirect via replace</h1>
+      <br/>
+    Link to a page which will perform a redirect via replace to add url parameters, (thus not showing up in browser history). 
+    see <a href="http://scn.sap.com/docs/DOC-55028">http://scn.sap.com/docs/DOC-55028</a>:
+    <br/>
+    <a href="ExampleDirectRedirectReplace.html">ExampleDirectRedirect.html</a>
+    </body>
+</html>

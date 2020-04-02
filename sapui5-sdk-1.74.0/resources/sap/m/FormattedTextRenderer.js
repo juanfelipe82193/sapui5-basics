@@ -1,0 +1,6 @@
+/*!
+ * OpenUI5
+ * (c) Copyright 2009-2020 SAP SE or an SAP affiliate company.
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ */
+sap.ui.define(["sap/base/Log"],function(L){"use strict";var F={};F.render=function(r,c){var w=c.getWidth(),h=c.getHeight(),C=c.getAggregation("controls"),t=c._getDisplayHtml(),R=[],n='',s=0;r.write("<div");r.writeControlData(c);r.addClass("sapMFT");if(w){r.addClass("sapMFTOverflowWidth");}if(h){r.addClass("sapMFTOverflowHeight");}r.writeClasses();if(c.getTooltip_AsString()){r.writeAttributeEscaped("title",c.getTooltip_AsString());}r.addStyle("width",w||null);r.addStyle("height",h||null);r.writeStyles();r.write(">");while(t!==''&&t!==n){n=t.replace(/(?:\%\%(\d+))/,_);}if(t!==''){r.write(t);}r.write("</div>");function _(m,i,p){var M=m.length;r.write(t.substr(0,p));s+=p;if(C[i]!==undefined){if(R[i]===undefined){r.renderControl(C[i]);R[i]=s;}else{L.error("Control with index '"+i+"' ("+m+", htmlText@"+s+") is already rendered (htmlText@"+R[i]+")!",'sap.m.FormattedText:',c.getId());}}else{r.write(m);L.error("Missing control for placeholder '"+m+"' (htmlText@"+s+")!",'sap.m.FormattedText:',c.getId());}t=t.substr(p+M);s+=M;}};return F;},true);

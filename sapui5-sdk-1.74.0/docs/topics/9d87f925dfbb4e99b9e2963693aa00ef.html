@@ -1,0 +1,276 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CSS Styling Issues</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="This section lists some of the most important rules relating to CSS styling in SAPUI5."><meta name="description" content="This section lists some of the most important rules relating to CSS styling in SAPUI5."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"966d67c8cc5046419d1b35556cd9e447.html","previousTopicHref":"030fcd14963048218488048f407f8f34.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+$('.collapsible').collapsify({"expandText":"Display Content","collapseText":"Hide Content","codeblockText":"Code Sample","codeblockCopyText":"Copy code to clipboard","codeblockSelectText":"Select code for copying to clipboard"});
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loio9d87f925dfbb4e99b9e2963693aa00ef"><h1 class="title topictitle1" hidden>CSS Styling Issues</h1><div class="body conbody"><p class="shortdesc" hidden>This section lists some of the most important rules relating to CSS styling in <span class="ph"><span class="ph pname">SAPUI5</span></span>.</p>
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> controls are styled with
+CSS, and as applications can provide their own CSS, they can adapt the styling. However,
+the deeper such adaptations are, the more likely is it that they break with future <span class="ph"><span class="ph pname">SAPUI5</span></span> updates or with
+other libraries and apps getting involved. If you follow the rules listed below, you
+will reduce
+the
+risk of this
+happening.</p>
+<div class="section collapsible" id="loio9d87f925dfbb4e99b9e2963693aa00ef__1"><section class="section collapsible" type="Don&apos;t override control class styling directly"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t override control class styling directly</h2>
+
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> does not guarantee the
+stability of style class names across versions. If the naming of style classes is
+changed in future versions, styling rules will no longer be applied to targeted
+elements. In addition, overriding control class styles directly might lead to style
+clashes when applications are run in shared runtime environments (like SAP Fiori
+launchpad).</p>
+<p class="p">Add your own namespaced classes instead.</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio9d87f925dfbb4e99b9e2963693aa00ef__table_ehh_rkk_jq" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Examples</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d313625e59">Bad Example</th>
+<th class="entry" style="vertical-align:top;" id="d313625e62">Good Example</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d313625e59 ">
+<pre class="pre codeblock prettyprint">
+.sapMInputBaseError {
+	font-weight: bold;
+}</pre>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d313625e62 "><p class="p">Add a custom CSS class to the control in those situations where you want additional
+styling:</p>
+<samp class="ph codeph">oButton.addStyleClass(&quot;poaAppError&quot;);</samp><p class="p">Then
+provide the style for this
+class:</p><pre class="pre codeblock prettyprint">
+.poaAppError {
+	font-weight: bold;
+}
+</pre></td>
+</tr>
+</tbody></table></div>
+</section></div>
+<div class="section collapsible" id="loio9d87f925dfbb4e99b9e2963693aa00ef__2"><section class="section collapsible" type="Don&apos;t style DOM element names directly"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t style DOM element names directly</h2>
+
+<p class="p">Styling DOM elements directly will lead to unpredictable results, as <span class="ph"><span class="ph pname">SAPUI5</span></span> does not
+guarantee the stability of the inner-control DOM-tree over time. In addition, this
+might lead to styling clashes when applications run in shared runtime environments
+(like <span class="ph pname">SAP Fiori launchpad</span>) or when custom HTML is added. It is better to limit
+styling changes to specifically used CSS classes.</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio9d87f925dfbb4e99b9e2963693aa00ef__table_mdl_qcq_jq" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Examples</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d313625e123">Bad Example</th>
+<th class="entry" style="vertical-align:top;" id="d313625e126">Good Example</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d313625e123 ">
+<pre class="pre codeblock prettyprint lang-html">
+div {
+	width: 120px;
+}</pre>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d313625e126 ">
+<pre class="pre codeblock prettyprint">
+.myStyleClass {
+	width: 120px;
+}</pre>
+</td>
+</tr>
+</tbody></table></div>
+</section></div>
+<div class="section collapsible" id="loio9d87f925dfbb4e99b9e2963693aa00ef__3"><section class="section collapsible" type="Don&apos;t use generated IDs in CSS selectors"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t use generated IDs in CSS selectors</h2>
+
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> applications can create
+dynamic IDs for elements. Do not use these IDs as selectors in custom CSS as they
+can change over time. It is better to add and use CSS classes instead.</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio9d87f925dfbb4e99b9e2963693aa00ef__table_lzk_5dq_jq" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Examples</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d313625e178">Bad Example</th>
+<th class="entry" style="vertical-align:top;" id="d313625e181">Good Example</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d313625e178 ">
+<pre class="pre codeblock prettyprint">
+#__view1__button0 {
+	font-weight: bold;
+}</pre>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d313625e181 ">
+<p class="p">Add a style class as described above and then define the following:</p>
+<pre class="pre codeblock prettyprint">
+.myEmphasizedButton {
+	font-weight: bold;
+}</pre>
+</td>
+</tr>
+</tbody></table></div>
+</section></div>
+<div class="section collapsible" id="loio9d87f925dfbb4e99b9e2963693aa00ef__4"><section class="section collapsible" type="Don&apos;t create selectors that are not namespaced"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t create selectors that are not namespaced</h2>
+
+<p class="p">Custom selectors and CSS classes that are not namespaced might lead to style clashes in shared
+runtime environments like <span class="ph pname">SAP Fiori launchpad</span>, or when other JavaScript libraries
+are included that might use the same CSS class names.</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio9d87f925dfbb4e99b9e2963693aa00ef__table_j2n_l2q_jq" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Examples</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d313625e236">Bad Example</th>
+<th class="entry" style="vertical-align:top;" id="d313625e239">Good Example</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d313625e236 ">
+<pre class="pre codeblock prettyprint">
+.title {
+	font-weight: bold;
+}</pre>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d313625e239 ">
+<pre class="pre codeblock prettyprint">
+.poaAppTitle {
+	font-weight: bold;
+}</pre>
+</td>
+</tr>
+</tbody></table></div>
+</section></div>
+<div class="section collapsible" id="loio9d87f925dfbb4e99b9e2963693aa00ef__5"><section class="section collapsible" type="Don&apos;t use hard-coded colors, font sizes and images if the app should be themable"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t use hard-coded colors, font sizes and images if the app should be themable</h2>
+
+<p class="p">Themability of applications relies on LESS calculations within the <span class="ph"><span class="ph pname">SAPUI5</span></span> theme CSS.
+Hard-coding colors, fonts and images in applications and custom controls means that
+these colors are not modified by theming, which leads to design issues or
+accessibility issues (for example, in the High Contrast Black (HCB) theme). You can
+use special CSS classes instead that are supplied by these LESS calculations.</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio9d87f925dfbb4e99b9e2963693aa00ef__table_twd_s2q_jq" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Examples</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d313625e293">Bad Example</th>
+<th class="entry" style="vertical-align:top;" id="d313625e296">Good Example</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d313625e293 ">
+<pre class="pre codeblock prettyprint">
+.myCustomHTML {
+	color: #FFF;
+	background-color: blue;
+}</pre>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d313625e296 ">
+<p class="p">Add the CSS classes <samp class="ph codeph">sapThemeTextInverted</samp> and
+<samp class="ph codeph">sapThemeHighlight-asBackgroundColor</samp> to your
+custom HTML element.</p>
+</td>
+</tr>
+</tbody></table></div>
+<p class="p">See also: <a class="xref" href="../../#/topic/ea08f53503da42c19afd342f4b0c9ec7.html" title="SAPUI5 provides a set of essential adjustable colors behind the generic predefined CSS rules that enable custom content to use the respective CSS classes for the required colors." target="_top">CSS Classes for Theme
+Parameters</a>.</p>
+</section></div>
+<div class="section collapsible" id="loio9d87f925dfbb4e99b9e2963693aa00ef__6"><section class="section collapsible" type="Don&apos;t use theming parameters for attributes they were not intended for"><h2 class="section_title" style="font-size: 1.15em;">Don&apos;t use theming parameters for attributes they were not intended for</h2>
+
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> applications come with a
+built-in set of parameters which are used for theme-dependent styling, mainly for
+colors. They are accessible using the
+<samp class="ph codeph">sap.ui.core.theming.Parameters.get()</samp> API (and for library
+builds using the OpenUI5 build mechanism, also in the *.less files in control
+libraries). These theme parameters have descriptive names, meaning that by looking
+at a parameter name, you can see the usage it has been defined for.</p>
+<p class="p">To ensure that you do not use combinations of theme colors which may clash after future theme
+changes, do not use background colors for fonts or vice versa, for example, and do
+not use border colors for anything else but borders.</p>
+<div class="table-wrapper tablenoborder"><table summary id="loio9d87f925dfbb4e99b9e2963693aa00ef__table_qsf_kfq_jq" class="table pgwide" width="100%" style="table-layout:auto;" frame="border" border="1" rules="all"><caption><span class="tablecap"><span class="tablecap">Examples</span></span></caption><colgroup><col width="50%"><col width="50%"></colgroup><thead class="thead" style="text-align:left;">
+<tr class="row">
+<th class="entry" style="vertical-align:top;" id="d313625e373">Bad Example</th>
+<th class="entry" style="vertical-align:top;" id="d313625e376">Good Example</th>
+</tr>
+</thead><tbody class="tbody">
+<tr class="row">
+<td class="entry" style="vertical-align:top;" headers="d313625e373 ">
+<pre class="pre codeblock prettyprint lang-js">
+var sColor = sap.ui.core.theming.Parameters.get(&quot;sapUiButtonBorderColor&quot;);
+$(oSomeDomElement).css(&quot;background-color&quot;, sColor);</pre>
+</td>
+<td class="entry" style="vertical-align:top;" headers="d313625e376 ">
+<pre class="pre codeblock prettyprint lang-js">
+var sColor = sap.ui.core.theming.Parameters.get(&quot;sapUiButtonBorderColor&quot;);
+$(oSomeDomElement).css(&quot;border-color&quot;, sColor);</pre>
+</td>
+</tr>
+</tbody></table></div>
+<p class="p">See also: <a class="xref" href="../../#/api/sap.ui.core.theming.Parameters" target="_top" alt="#/api/sap.ui.core.theming.Parameters" title="#/api/sap.ui.core.theming.Parameters">Namespace
+sap.ui.core.theming.Parameters</a>.</p>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

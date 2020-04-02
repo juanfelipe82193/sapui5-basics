@@ -1,0 +1,176 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Defining Multiple Views on a List Report With Different Entity Sets</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="You can configure your app to display data for different entity sets, for example, a sales order or a supplier."><meta name="description" content="You can configure your app to display data for different entity sets, for example, a sales order or a supplier."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"8eb695ac473b4ab0a726e4021ce35cf4.html","previousTopicHref":"37aeed74e17a42caa2cba3123f0c15fc.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loiob6b59e4a4c3548cf83ff9c3b955d3ba3"><h1 class="title topictitle1" hidden>Defining Multiple Views on a List Report With Different Entity Sets</h1><div class="body conbody"><p class="shortdesc" hidden>You can configure your app to display data for different entity sets, for example, a
+sales order or a supplier.</p>
+<p class="p"><span class="ph emphasis emphasis">Prerequisite</span>: You have completed the procedure <a class="xref" href="../../#/topic/37aeed74e17a42caa2cba3123f0c15fc.html" title="You can define multiple views of a table and display them in multiple table mode. In addition to tables, you can display charts in the views. Users can switch between views using an icon tab bar." target="_top">Defining Multiple Views on a List Report Table - Multiple Table Mode</a>.</p>
+<p class="p">To include different entity sets on the tab pages, you need to add the entity set to the
+corresponding tab in the manifest.json of your app. </p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>Implement this feature with caution, and, for example, take the following into account:</p><ul class="ul" id="loiob6b59e4a4c3548cf83ff9c3b955d3ba3__ul_syf_yv5_jdb">
+<li class="li">
+<p class="p">While this feature provides a combined view of different objects, it does not
+replace dedicated applications, each with their specific purpose.</p>
+</li>
+<li class="li">
+<p class="p">Use this feature only to search for and work on similar business objects that
+have a subset of common fields. Do not use it for random business objects.
+Changing common fields in the smart filter bar always has an effect on the
+tab that is currently open, as well as on all other tabs. While you can
+implement any entity set from a technical perspective, you should take the
+business and usability perspective into account. Moreover, as this feature
+affects performance, you should also check any changes in performance when
+adding entity sets. Note that if you don&apos;t follow these recommendations, the
+application will be responsible for usability and performance. </p>
+</li>
+<li class="li">
+<p class="p">Do not combine draft and non-draft entity sets in one list report.</p>
+</li>
+<li class="li">
+<p class="p">You cannot use flexible column layout in combination with this feature.</p>
+</li>
+<li class="li">
+<p class="p">Do not use different table types on the tab pages.</p>
+</li>
+</ul></aside>
+<p class="p">To include different entity sets in multiple views, specify an entity set for each tab in
+the<samp class="ph codeph">&quot;quickVariantSelectionX&quot;</samp> section. See lines 10 to 27 in the code
+snippet below.</p>
+<aside class="note sap-samplecodeblock samplecode" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Sample Code</strong></div>
+<pre class="pre codeblock prettyprint">
+1  &quot;sap.ui.generic.app&quot;: {
+2         &quot;pages&quot;: [{
+3             &quot;entitySet&quot;: &quot;C_RequirementTrackingPurReq&quot;,
+4             &quot;component&quot;: {
+5                 &quot;name&quot;: &quot;sap.suite.ui.generic.template.ListReport&quot;,
+6                 &quot;list&quot;: true,
+7                 &quot;settings&quot;: {
+8                     &quot;condensedTableLayout&quot;: true,
+9                     &quot;smartVariantManagement&quot;: false,
+10                    &quot;quickVariantSelectionX&quot;: {
+11                        &quot;showCounts&quot;: true,
+12                        &quot;variants&quot;: {
+13                            &quot;1&quot;: {
+14                                &quot;key&quot;: &quot;1&quot;,
+15                                &quot;entitySet&quot;: &quot;C_RequirementTrackingPurReq&quot;,
+16                                &quot;annotationPath&quot;: &quot;com.sap.vocabularies.UI.v1.SelectionVariant#VAR1&quot;
+17                            },
+18                            &quot;2&quot;: {
+19                                &quot;key&quot;: &quot;2&quot;,
+20                                &quot;entitySet&quot;: &quot;C_RequirementTrackingPurOrd&quot;,
+21                                &quot;annotationPath&quot;: &quot;com.sap.vocabularies.UI.v1.SelectionVariant#VAR5&quot;
+22                            },
+23                            &quot;3&quot;: {
+24                                &quot;key&quot;: &quot;3&quot;,
+25                                &quot;entitySet&quot;: &quot;C_RequirementTrackingPurReq&quot;,
+26                                &quot;annotationPath&quot;: &quot;com.sap.vocabularies.UI.v1.SelectionPresentationVariant#VAR6&quot;,
+27                                &quot;showItemNavigationOnChart&quot;: true
+28                            }
+29                        }
+30                    }
+31                }
+32            }
+33        }]
+34    }</pre></aside>
+<p class="p">Under <samp class="ph codeph">&quot;sap.ui.generic.app&quot;/&quot;pages&quot;</samp>, specify the leading entity set. This
+is used for the smart filter bar and for the footer. Each table or chart has its own
+entitySet which you specify under <samp class="ph codeph">&quot;quickVariantSelectionX&quot;/&quot;variants&quot;</samp>.
+If you do not specifiy an entity set under <samp class="ph codeph">&quot;/&quot;variants&quot;</samp> the leading
+entity set is used as a default.</p>
+<div class="section" id="loiob6b59e4a4c3548cf83ff9c3b955d3ba3__section_ovx_21v_jdb"><section class="section" type="System Behavior for Filters"><h2 class="section_title" style="font-size: 1.15em;">System Behavior for Filters</h2><p class="p">Filter values from
+the smart filter bar are applied to the currently visible table only if the
+corresponding properties are available in the entity type of the table or chart. If
+not, they are ignored.</p><p class="p">The same is true for the display of counts on each tab.
+For example, as you can see below, the <span class="ph uicontrol">Plant</span> field is
+displayed in each entity set. It influences the number of items displayed on each
+tab:</p><div class="fig fignone" id="loiob6b59e4a4c3548cf83ff9c3b955d3ba3__fig_gwy_1bv_jdb"><div class="figbody">
+
+<img class="inline  " id="loiob6b59e4a4c3548cf83ff9c3b955d3ba3__image_fnd_cbv_jdb" src="loio4251bb8c5d3540bd8dc11b25a3fd8813_LowRes.png">
+</div><span class="figcap">Filtering example</span></div>If you add a second filter value, for example, the <span class="ph uicontrol">Purchasing
+Group</span> field, which is found only in the entity type of the second table,
+only the count of the second tab changes. The counts of the first and third tabs don&apos;t
+change as this field is not relevant for the entity sets. The system displays a message
+to inform the user about this.<div class="fig fignone" id="loiob6b59e4a4c3548cf83ff9c3b955d3ba3__fig_fzf_mbv_jdb"><div class="figbody">
+
+<img class="inline  " id="loiob6b59e4a4c3548cf83ff9c3b955d3ba3__image_w3z_zwz_bgb" src="loio51165e41cac043b198b9ea0e102939aa_LowRes.jpg">
+</div><span class="figcap">Filtering example</span></div></section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="link" href="../../#/topic/75002b3c5ad7407dadce2f88f15f4253.html" title="You can enable internal navigation to an object page for a list report with different entity sets by using the onListNavigationExtension function." target="_top">Example: Enable Internal Navigation for a List Report to Object Pages of Different Entity Sets</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

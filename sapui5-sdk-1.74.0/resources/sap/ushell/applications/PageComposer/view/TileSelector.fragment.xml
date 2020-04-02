@@ -1,0 +1,106 @@
+<Panel
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:dnd="sap.ui.core.dnd"
+    id="tileSelector"
+    height="100%"
+    accessibleRole="Region"
+    backgroundDesign="Transparent"
+    class="sapUiNoContentPadding"
+    core:require="{formatMessage: 'sap/base/strings/formatMessage'}">
+    <customData><core:CustomData key="help-id" value="FLPPage-manage-TileSelector-Panel-TileSelector" writeToDom="true"/></customData>
+    <layoutData><FlexItemData growFactor="1" /></layoutData> <!-- workaround for fragment used inside of a flex container -->
+    <headerToolbar>
+        <OverflowToolbar id="tileSelectorToolbar" design="Transparent" height="3rem">
+            <SearchField
+                id="tileSelectorSearchField"
+                showRefreshButton="false"
+                width="auto"
+                value="{/searchText}"
+                tooltip="{i18n>Tooltip.SearchForTiles}"
+                placeholder="{i18n>Placeholder.SearchForTiles}"
+                search=".TileSelector.onSearchTiles" />
+            <ToolbarSpacer />
+            <Button
+                id="tileSelectorAddButton"
+                text="{i18n>Button.Add}"
+                type="Transparent"
+                press=".TileSelector.onAddTiles">
+                <customData><core:CustomData key="help-id" value="FLPPage-manage-TileSelector-Button-Add" writeToDom="true"/></customData>
+            </Button>
+            <OverflowToolbarButton
+                id="tileSelectorSortButton"
+                icon="sap-icon://sort"
+                text="{i18n>Button.SortCatalogs}"
+                tooltip="{i18n>Button.SortCatalogs}"
+                press=".TileSelector.onSortCatalogsToggle" />
+            <OverflowToolbarButton
+                id="tileSelectorCollapseButton"
+                icon="sap-icon://collapse-all"
+                text="{i18n>Button.CollapseCatalogs}"
+                tooltip="{i18n>Button.CollapseCatalogs}"
+                press=".TileSelector.onCollapseAllCatalogs" />
+            <OverflowToolbarButton
+                id="tileSelectorExpandButton"
+                icon="sap-icon://expand-all"
+                text="{i18n>Button.ExpandCatalogs}"
+                tooltip="{i18n>Button.ExpandCatalogs}"
+                press=".TileSelector.onExpandAllCatalogs" />
+        </OverflowToolbar>
+    </headerToolbar>
+    <content>
+        <Tree
+            id="tileSelectorList"
+            mode="MultiSelect"
+            modeAnimationOn="false"
+            noDataText="{i18n>Message.NoTiles}"
+            items="{ path: '/catalogs', key: 'vizId' }"
+            itemPress=".TileSelector.onCatalogItemPress">
+            <infoToolbar>
+                <Toolbar
+                        id="roleContextInfoToolbar"
+                        visible="{=!!${roles>/showRoleContextInfo}}"
+                        active="true"
+                        press=".onOpenContextSelector">
+                    <Label id="roleContextInfo"
+                           text="{i18n>Message.RoleContext}"/>
+                </Toolbar>
+            </infoToolbar>
+            <items>
+                <CustomTreeItem
+                    id="tileSelectorCustomTreeItem"
+                    class="sapUshellTileSelectorListItem"
+                    type="{= ${catalogTitle} ? 'Active' : 'Inactive'}"> <!-- only catalogs should fire "onCatalogItemPress" -->
+                    <HBox id="tileSelectorHbox1" alignItems="Center" width="100%" class="sapUiTinyMargin">
+                        <!-- TODO: do not display tile icon until specification is ready -->
+                        <!-- <core:Icon visible="{= !${catalogTitle}}" src="{= ${iconUrl} ? ${iconUrl} : 'sap-icon://border'}" size="1.5rem" width="1.5rem" class="sapUiSmallMarginBeginEnd" /> -->
+                        <VBox width="0" id="tileSelectorVbox1">
+                            <layoutData><FlexItemData growFactor="1" /></layoutData>
+                            <Title id="tileSelectorCatalogTitle" visible="{= !!${catalogTitle}}" text="{catalogTitle}" wrapping="true" />
+                            <Title id="tileSelectorTileTitle" visible="{= !!${title}}" text="{title}" wrapping="true" />
+                            <Text id="tileSelectorTileSubtitle" visible="{= !!${subTitle}}" text="{subTitle}" />
+                        </VBox>
+                        <Button
+                            id="tileSelectorTileButtonInfo"
+                            visible="{= !${catalogTitle}}"
+                            icon="sap-icon://hint"
+                            type="Transparent"
+                            press=".onOpenTileInfo" />
+                        <Button
+                            id="tileSelectorTileButtonAdd"
+                            visible="{= !${catalogTitle}}"
+                            text="{i18n>Button.Add}"
+                            type="Transparent"
+                            press=".TileSelector.onAddTiles" />
+                    </HBox>
+                </CustomTreeItem>
+            </items>
+            <dragDropConfig>
+                <dnd:DragInfo
+                    groupName="Section"
+                    sourceAggregation="items"
+                    dragStart=".TileSelector.onDragStart" />
+            </dragDropConfig>
+        </Tree>
+    </content>
+</Panel>

@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+	<script src="../../../../resources/sap-ui-core.js" id="Script1" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+
+		h4 {
+			margin: 1em 0;
+		}
+
+		i {
+			color: blue
+		}
+
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+	<script>
+		var bLineWidthSample = false;
+
+		function onToggleSample() {
+			var file = bLineWidthSample ? "media/vbroute/main_triangles.json" : "media/vbroute/main_triangles_linewidth.json";
+			var datToggled = $.getJSON(file, function(datToggled) {
+				var userStoredData = JSON.parse(localStorage.getItem("map"));
+				datToggled.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+				datToggled.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+				var scene = userStoredData.MapLayerStacks;
+				if (scene instanceof Array) {
+					datToggled.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+				} else {
+					datToggled.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+				}
+				oVBI1.load(datToggled);
+			});
+			bLineWidthSample = !bLineWidthSample;
+		};
+
+		// creation of visual business vos.......................//
+		sap.ui.localResources("vbitestapp");
+
+
+		//var view = sap.ui.view({id:"idVBITestView1", viewName:"vbitestapp.VBITestView", type:sap.ui.core.mvc.ViewType.JS});
+		var oVBI1 = new sap.ui.vbm.VBI('vbiWrap', {
+			width: 800,
+			height: 600
+		});
+		oVBI1.placeAt("content");
+
+		var dat = $.getJSON("media/vbroute/main_triangles.json", function(dat) {
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array) {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(dat);
+		})
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: Rendering multiple routes. </h1>
+	<div id="description1">
+		<h3> The aim: </h3>
+		<ol>
+			<li> To check that there are routes and arrows with triangles. </li>
+			<li> To check that routes can have varying widths.</li>
+		</ol>
+		<br>
+		<h3> To test: </h3>
+		<br>
+
+		<ol>
+			<li>Check that there are Routes on the GeoMap.</li>
+			<img src="img/triangle1.jpg" alt="text for Thumbnail" style="width:400px;height:280px;">
+			<li>Zoom in and out of the map, and check that some routes have triangles on their path indicating the direction of the route.</li>
+			<img src="img/triangle2.jpg" alt="text for Thumbnail" style="width:400px;height:280px;">
+			<br>
+			<i>If start/end arrows are defined and they are outside the visible area, the route shows triangles in between indicating the direction.</i>
+			<li> Check that arrows pointing in one direction have triangles pointing in that same direction.</li>
+			<img src="img/triangle3.jpg" alt="text for Thumbnail" style="width:500px;height:120px;">
+			<li> Check that bi-directional arrows have triangles pointing in both directions.</li>
+			<img src="img/triangle4.jpg" alt="text for Thumbnail" style="width:500px;height:120px;">
+			<br>
+			<li> Click the "Other sample" button. Check that you can see Routes with different widths for single directional arrows.</li>
+			<li> Click the "Other sample" button. Check that you can see Routes with different widths for bi-directional arrows.</li>
+			<img src="img/different.jpg" alt="text for Thumbnail" style="width:400px;height:280px;">
+		</ol>
+
+	</div>
+	<div id="description2">
+		<br>
+		<br>
+		<button id="btnToggleSample" onClick="onToggleSample()"> Other sample</button>
+		<br>
+		<br>
+		<div id="content"></div>
+
+
+	</div>
+</body>
+
+</html>

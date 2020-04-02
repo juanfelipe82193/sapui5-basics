@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <title>Calendar - sap.me</title>
+
+    <script src="../../../resources/sap-ui-core.js" type="text/javascript"
+            id="sap-ui-bootstrap" data-sap-ui-libs="sap.m, sap.me"
+            data-sap-ui-theme="sap_bluecrystal">
+    </script>
+
+    <script type="text/javascript">
+        //no var to ease debug from console
+        jQuery.sap.require("sap.me.Calendar");
+        jQuery.sap.require("sap.m.RadioButtonGroup");
+        jQuery.sap.require("sap.m.RadioButton");
+        calendar = new sap.me.Calendar({
+            currentDate: "2015/02/01",
+            firstDayOffset: 1
+        });
+
+        calendar.toggleDatesType(["2015/02/02"], sap.me.CalendarEventType.Type07, true);
+        calendar.toggleDatesType(["2015/02/04"], sap.me.CalendarEventType.Type04, true);
+        calendar.toggleDatesType(["2015/02/08"], sap.me.CalendarEventType.Type06, true);
+        calendar.toggleDatesType(["2015/02/12"], sap.me.CalendarEventType.Type01, true);
+		calendar.toggleDatesType(["2015/02/15"], sap.me.CalendarEventType.Type00, true);
+        calendar.toggleDatesType(["2015/02/16"], sap.me.CalendarEventType.Type10, true);
+        calendar.toggleDatesType(["2015/02/22"], sap.me.CalendarEventType.Type10, true);
+
+        var msgLabel = new sap.m.Label({width: "100%"});
+
+        calendar.attachTapOnDate(function (oEvent) {
+            msgLabel.setText("you tapped on " + oEvent.getParameters().date + " didSelected: " + oEvent.getParameters().didSelect);
+        });
+        calendar.attachChangeCurrentDate(function (oEvent) {
+            msgLabel.setText("you navigated to new date: " + oEvent.getParameters().currentDate);
+        });
+        calendar.attachChangeRange(function (oEvent) {
+            msgLabel.setText("you selected a range of dates from: " + oEvent.getParameters().fromDate + " to: " + oEvent.getParameters().toDate);
+        });
+
+        var unselectBtn = new sap.m.Button({text: "unselect all", press: function () {
+            var aDates = calendar.getSelectedDates();
+            calendar.unselectAllDates();
+            msgLabel.setText("unselected " + aDates.length + " dates");
+        }});
+        var aFormats = ["narrow", "abbreviated", "wide"];
+        var iFormat = 0;
+        var cl = new sap.me.CalendarLegend(
+                "cl",
+                {
+                    legendForType00: "non-working day",
+                    legendForType01: "sick leave",
+                    legendForType04: "open request",
+                    legendForType06: "public holiday / and very long text",
+                    legendForType07: "leave",
+                    legendForToday: "today",
+                    legendForSelected: "selected",
+                    legendForSelected00: "selected weekend",
+                    legendForNormal: "normal day",
+                    design: "Approval",
+                    expanded: false,
+                    expandable : true
+                }
+        );
+
+        var footer = new sap.m.HBox({items: [
+            new sap.m.Button("showHideMonthTitles", {
+                        text: "Month Titles",
+                        tooltip: "Show / Hide Month Titles",
+                        press: function () {
+                            calendar.setHideMonthTitles(!calendar.getHideMonthTitles());
+                        }}
+            ),
+            new sap.m.Button("week", {
+                        text: "week",
+                        tooltip: "week",
+                        press: function () {
+                            calendar.setMonthsPerRow(1);
+                            calendar.setWeeksPerRow(1);
+                            calendar.setSingleRow(true);
+                        }}
+            ),
+            new sap.m.Button("weeks", {
+                        tooltip: "2 weeks",
+                        text: "2 weeks", press: function () {
+                            calendar.setMonthsPerRow(1);
+                            calendar.setWeeksPerRow(2);
+                            calendar.setSingleRow(true);
+                        }}
+            ),
+            new sap.m.Button("month", {
+                        text: "month",
+                        tooltip: "month",
+                        press: function () {
+                            calendar.setSingleRow(false);
+                            calendar.setMonthsToDisplay(1);
+                            calendar.setWeeksPerRow(1);
+                            calendar.setMonthsPerRow(1);
+                        }}
+            ),
+            new sap.m.Button("months", {
+                        text: "2 months",
+                        tooltip: "2 months",
+                        press: function () {
+                            calendar.setSingleRow(false);
+                            calendar.setMonthsToDisplay(2);
+                            calendar.setWeeksPerRow(1);
+                            calendar.setMonthsPerRow(2);
+                        }}
+            ),
+            new sap.m.Button("year", {
+                        text: "year",
+                        tooltip: "year",
+                        press: function () {
+                            calendar.setSingleRow(false);
+                            calendar.setMonthsToDisplay(12);
+                            calendar.setWeeksPerRow(1);
+                            calendar.setMonthsPerRow(3);
+                        }}
+            ),
+            new sap.m.Switch("design", {
+                tooltip: "Design: Action / Approve",
+                customTextOff: sap.me.CalendarDesign.Action,
+                customTextOn: sap.me.CalendarDesign.Approve,
+                change: function (oEvent) {
+                    if (oEvent.getParameter("state")) {
+                        calendar.setDesign(sap.me.CalendarDesign.Action);
+                        cl.setDesign(sap.me.CalendarDesign.Action);
+                    } else {
+                        calendar.setDesign(sap.me.CalendarDesign.Approve);
+                        cl.setDesign(sap.me.CalendarDesign.Approve);
+                    }
+
+                }
+            }),
+            new sap.m.Switch("swipe", {
+                customTextOff: "swipe to select",
+                customTextOn: "swipe to navigate",
+                tooltip: "Swipe to select / swipe",
+                change: function (oEvent) {
+                    calendar.setSwipeToNavigate(oEvent.getParameter("state"))}
+            }),
+            new sap.m.Button("removeTypes", {
+                text: "Remove Types",
+                tooltip: "Remove types",
+                press: function () {
+                    calendar.removeTypesOfAllDates();
+                }}),
+            new sap.m.Button("chWidth", {
+                tooltip: "Change width to 768px",
+                text: "Change width",
+                press: function () {
+                    calendar.setWidth("768px");
+                }}),
+            new sap.m.Button("chFmt", {
+                text: "Change names",
+                tooltip: "Changes names",
+                press: function () {
+                    calendar.setDays(sap.m.getLocaleData().getDays(aFormats[iFormat]));
+                    calendar.setMonths(sap.m.getLocaleData().getMonths(aFormats[iFormat]));
+                    iFormat = (iFormat + 1) % aFormats.length;
+                }}),
+            new sap.m.Select('slctMode', {
+                tooltip: "Change selection mode",
+                items: [
+                    {key: sap.me.CalendarSelectionMode.SINGLE, text: "Single" },
+                    {key: sap.me.CalendarSelectionMode.MULTIPLE, text: "Multiple" },
+                    {key: sap.me.CalendarSelectionMode.RANGE, text: "Range" }
+                ],
+                change: function (e) {
+                    var sMode = e.getParameters().selectedItem.getKey();
+                    calendar.setSelectionMode(sMode);
+                }
+            })
+        ]
+        });
+
+        // Create a RadioButtonGroup with three colums and six items
+        var oRBG2 = new sap.m.RadioButtonGroup({
+            columns: 7,
+            buttons: [
+                new sap.m.RadioButton({ text: "Sunday", key: "0" }),
+                new sap.m.RadioButton({ text: "Monday", key: "1" }),
+                new sap.m.RadioButton({ text: "Tuesday", key: "2"}),
+                new sap.m.RadioButton({ text: "Wednesday", key: "3"}),
+                new sap.m.RadioButton({ text: "Thursday", key: "4"}),
+                new sap.m.RadioButton({ text: "Friday", key: "5"}),
+                new sap.m.RadioButton({ text: "Saturday", key: "6"})
+            ],
+            select: function (oEvent) {
+                calendar.setFirstDayOffset(oEvent.getParameter("selectedIndex"));
+            }
+        });
+
+        var app = new sap.m.App();
+        var page = new sap.m.Page({
+            headerContent: unselectBtn,
+            content: [
+                calendar,
+                cl,
+                new sap.m.Label({width: "100%", text: "Messages log"}),
+                msgLabel,
+                oRBG2,
+                footer
+            ]
+        });
+
+        // Colgate: weeks start on sunday, and show 2 months
+        calendar.setSingleRow(false);
+        calendar.setMonthsToDisplay(2);
+        calendar.setWeeksPerRow(1);
+        calendar.setMonthsPerRow(2);
+        calendar.setFirstDayOffset(0);
+
+        app.addPage(page);
+        app.placeAt('body');
+    </script>
+
+</head>
+<body id="body" class="sapUiBody">
+</body>
+</html>

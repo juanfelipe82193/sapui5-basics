@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html><head>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+	<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<title>ProcessFlow XML View</title>
+
+    <!-- UI5 Bootstrap -->
+    <script src="../../../../../resources/sap-ui-core.js"
+            type="text/javascript"
+            id="sap-ui-bootstrap"
+            data-sap-ui-libs="sap.ui.commons, sap.suite.ui.commons"
+            data-sap-ui-theme="sap_belize"></script>
+
+	<script id="view1" type="sapui5/xmlview">
+		<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:m="sap.m"
+				xmlns="sap.suite.ui.commons"
+				controllerName="my.own.controller" xmlns:html="http://www.w3.org/1999/xhtml">
+			ProcessFlow XML View Examples
+			<html:br/>
+			<m:Panel text="ProcessFlow XML View Examples"> <!--width="100px" height="100px"-->
+
+				<ProcessFlow id="pf1" zoomLevel="Two" scrollable="false">
+					<nodes>
+						<ProcessFlowNode nodeId="a1" laneId="ah1" title="Node a1" children="a2,a3"/>
+						<ProcessFlowNode nodeId="a2" laneId="ah2" title="Node a2"/>
+						<ProcessFlowNode nodeId="a3" laneId="ah2" title="Node a3"/>
+					</nodes>
+					<lanes>
+						<ProcessFlowLaneHeader laneId="ah1" iconSrc="sap-icon://order-status" text="Lane 1" position="0"/>
+						<ProcessFlowLaneHeader laneId="ah2" iconSrc="sap-icon://order-status" text="Lane 2" position="1"/>
+					</lanes>
+				</ProcessFlow>
+
+				<html:br/>
+				<ProcessFlow id="pf2" zoomLevel="Four" scrollable="false">
+					<lanes>
+						<ProcessFlowLaneHeader laneId="0" text="Lane 1" position="0"/>
+						<ProcessFlowLaneHeader laneId="1" text="Lane 2" position="1"/>
+					</lanes>
+					<nodes>
+						<ProcessFlowNode nodeId="0" laneId="0" title="Node 1" children="1,2"/>
+						<ProcessFlowNode nodeId="1" laneId="1" title="Node 2"/>
+						<ProcessFlowNode title="Node 3" nodeId="2" laneId="1"/>
+					</nodes>
+				</ProcessFlow>
+				<html:br/>
+				<ProcessFlow id="pf3" nodes="{data>/flows}" lanes="{data>/columns}" scrollable="false">
+					<lanes>
+						<ProcessFlowLaneHeader laneId="{data>id}" iconSrc="{data>icon}" text="{data>label}" position="{data>position}"/>
+					</lanes>
+					<nodes>
+						<ProcessFlowNode laneId="{data>lane}" nodeId="{data>id}" title="{data>title}" children="{data>children}"/>
+					</nodes>
+				</ProcessFlow>
+			</m:Panel>
+		</mvc:View> 
+	</script>
+
+	<script>
+		sap.ui.controller("my.own.controller", {
+		});
+
+		var oDataNodes = {
+			foo: "test test",
+			flows:
+			[
+				{id: "1",  lane: "0",  title: "title 1",  children: [10, 11, 12]},
+				{id: "10", lane: "3" , title: "title 10", children: null },
+				{id: "11", lane: "2" , title: "title 11", children: null },
+				{id: "12", lane: "1" , title: "title 12", children: [5] },
+				{id: "5",  lane: "2" , title: "title 5",  children: null },
+			],
+			columns:
+			[
+				{id: "0", icon: "sap-icon://order-status", label: "Id 0", position: 0},
+				{id: "1", icon: "sap-icon://order-status", label: "Id 1", position: 1},
+				{id: "2", icon: "sap-icon://order-status", label: "Id 2", position: 2},
+				{id: "3", icon: "sap-icon://order-status", label: "Id 3", position: 3}
+			]
+		};
+
+		// instantiate the View
+		var myView = sap.ui.xmlview({viewContent:jQuery('#view1').html()}); // accessing the HTML inside the script tag above
+
+		// create a Model and assign it to the View
+		var oModel = new sap.ui.model.json.JSONModel();
+		oModel.setData(oDataNodes);
+		myView.setModel(oModel, "data");
+
+		// put the View onto the screen
+		myView.placeAt('content');
+	</script>
+
+	</head>
+	<body class='sapUiBody'>
+		<div id='content'></div>
+	</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>UI5 Automation Testing</title>
+<link rel="stylesheet" type="text/css"
+href="http://127.0.0.1:8080/uilib-sample/resources/sap/viz/ui5/controls/css/controls.css"/>
+
+<link rel="stylesheet" type="text/css"
+href="http://127.0.0.1:8080/uilib-sample/resources/sap/viz/ui5/controls/libs/css/sap.viz.controls.css"/>
+
+<script id="sap-ui-bootstrap" src="http://127.0.0.1:8080/uilib-sample/resources/sap-ui-core.js"
+    data-sap-ui-libs="sap.ui.commons,sap.ui.ux3, sap.m, sap.viz" >
+</script>
+
+
+</head>
+<body class="sapUiBody">
+    <div id="chart1" style="position:absolute;top: 10px; left: 20px; border:2px solid #999999; width:200px; height:  400px; ">
+
+        <form name = "chart1_mode" style="color:#888888; position:absolute;top:310px;left:20px;" onchange="chart1_mode_change()">
+            <input type="radio" name="chart1_mode" value="0" checked>Light<br>
+            <input type="radio" name="chart1_mode" value="1">Dark<br>
+        </form>
+
+    </div>
+    <div id="chart2" style="position:absolute;top: 10px; left: 220px; border:2px solid #999999; width:200px; height: 400px">
+
+
+        <form name = "chart2_mode" style="color:#888888; position:absolute;top:310px;left:20px;" onchange="chart2_mode_change()">
+            <input type="radio" name="chart2_mode" value="0" >Light<br>
+            <input type="radio" name="chart2_mode" value="1" checked>Dark<br>
+        </form>
+
+
+    </div>
+    <div id="chart3"  style="position:absolute;top: 10px; left: 420px; border:2px solid #999999; width:200px; height: 400px">
+
+        <form name = "chart3_mode" style="color:#888888; position:absolute;top:310px;left:20px;" onchange="chart3_mode_change()">
+            <input type="radio" name="chart3_mode" value="0" checked>Light<br>
+            <input type="radio" name="chart3_mode" value="1" >Dark<br>
+        </form>
+
+    </div>
+    <div id="chart4" style="position:absolute;top: 10px; left: 620px; border:2px solid #999999; width:200px; height: 400px">
+
+    </div>
+
+    <form id="chart4_mode" name = "chart4_mode" style="color:#888888; position:absolute;top:320px;left:660px;" onchange="chart4_mode_change()">
+            <input type="radio" name="chart4_mode" value="0" checked>Light<br>
+            <input type="radio" name="chart4_mode" value="1">Dark<br>
+    </form>
+
+    <button type="button" style="position:absolute;top:430px; left: 350px;" onclick="createNewChart()">createNewChart</button>
+
+
+
+    <script type="text/javascript">
+
+
+    var buildChart = function(divID) {
+        var vizframe;
+            //CODE START
+        var initOptions = {
+            "vizType": "vertical_bullet",
+            "uiConfig": {
+                "applicationSet": "fiori"
+            }
+        };
+        vizframe = new sap.viz.ui5.controls.VizFrame(initOptions);
+        var model = new sap.ui.model.json.JSONModel({
+            "businessData": [{
+                "Sales_Quarter": "Q1",
+                "Sales_Month": "February",
+                "Customer Gender": 'Female',
+                "Gross Profit": 659.03,
+                "Sales Quantity": 900,
+                "Cost": 413.57,
+                "Sales Revenue": 1025.12
+            }]
+        });
+        var dataset = new sap.viz.ui5.data.FlattenedDataset({
+            "dimensions": [{
+                "name": "Sales_Quarter",
+                "value": "{Sales_Quarter}"
+            },{
+                "name": "Sales_Month",
+                "value": "{Sales_Month}"
+            },{
+                "name": "Customer Gender",
+                "value": "{Customer Gender}"
+            }],
+            "measures": [{
+                "name": "Gross Profit",
+                "value": "{Gross Profit}"
+            },
+            {
+                "name": "Sales Quantity",
+                "value": "{Sales Quantity}"
+            },
+            {
+                "name": "Cost",
+                "value": "{Cost}"
+            },
+            {
+                "name": "Cost",
+                "value": "{Cost}"
+            },
+            {
+                "name": "Sales Revenue",
+                "value": "{Sales Revenue}"
+            }],
+            "data": {
+                "path": "/businessData"
+            }
+        });
+        vizframe.setModel(model);
+        vizframe.setDataset(dataset);
+        var feeds = [new sap.viz.ui5.controls.common.feeds.FeedItem({
+            "uid": "categoryAxis",
+            "type": "Dimension",
+            "values": [ "Sales_Month","Customer Gender"]
+        }), new sap.viz.ui5.controls.common.feeds.FeedItem({
+            "uid": "actualValues",
+            "type": "Measure",
+            "values": ["Gross Profit"]
+        }), new sap.viz.ui5.controls.common.feeds.FeedItem({
+            "uid": "additionalValues",
+            "type": "Measure",
+            "values": ["Sales Quantity"]
+        }),
+        new sap.viz.ui5.controls.common.feeds.FeedItem({
+            "uid": "color",
+            "type": "Dimension",
+            "values": ["Sales_Quarter"]
+        }),
+            new sap.viz.ui5.controls.common.feeds.FeedItem({
+            "uid": "targetValues",
+            "type": "Measure",
+            "values": ["Cost"]
+        }), new sap.viz.ui5.controls.common.feeds.FeedItem({
+            "uid": "forecastValues",
+            "type": "Measure",
+            "values": ["Sales Revenue"]
+        }), ];
+        feeds.forEach(function(feedItem) {
+            vizframe.addFeed(feedItem);
+        });
+        vizframe.placeAt(divID);
+
+        vizframe.setWidth("200px");
+        vizframe.setHeight("300px");
+        var popOver = new sap.viz.ui5.controls.Popover({});
+        popOver.connect(vizframe.getVizUid());
+        return vizframe;
+    };
+    sap.ui.getCore().applyTheme('sap_belize');
+
+    var vizframe1 = buildChart("chart1");
+    vizframe1.setVizProperties({'interaction' : {'behaviorType' : null},'tooltip' : {'visible' : true}})
+
+    var vizframe2 = buildChart("chart2");
+    vizframe2.addStyleClass("sapContrast");
+	vizframe2.setVizProperties({'interaction' : {'behaviorType' : null},'tooltip' : {'visible' : true}})
+    document.getElementById("chart2").style.backgroundColor = "#000000";
+
+    var vizframe3 = buildChart("chart3");
+
+    var vizframe4;
+    var createNewChart = function() {
+        if(!vizframe4) {
+            vizframe4 = buildChart("chart4");
+        }
+
+        if(document.chart4_mode.chart4_mode.value === "1") {
+            vizframe4.addStyleClass("sapContrast");
+            document.getElementById("chart4").style.backgroundColor = "#000000";
+        }
+        else {
+            vizframe4.removeStyleClass("sapContrast");
+            document.getElementById("chart4").style.backgroundColor = "#ffffff";
+        }
+    };
+
+
+    var cHelper = function(vizframe1, chart1, mode) {
+
+        if(mode.value === "1") {
+            if(vizframe1) {
+                vizframe1.addStyleClass("sapContrast");
+            }
+            document.getElementById(chart1).style.backgroundColor = "#000000";
+        }
+        else {
+            if(vizframe1) {
+                vizframe1.removeStyleClass("sapContrast");
+            }
+            document.getElementById(chart1).style.backgroundColor = "#ffffff";
+        }
+
+    };
+
+    var chart1_mode_change = function() {
+        cHelper(vizframe1, "chart1", document.chart1_mode.chart1_mode);
+    };
+
+    var chart2_mode_change = function() {
+        cHelper(vizframe2, "chart2", document.chart2_mode.chart2_mode);
+    };
+
+    var chart3_mode_change = function() {
+        cHelper(vizframe3, "chart3", document.chart3_mode.chart3_mode);
+    };
+
+    var chart4_mode_change = function() {
+        cHelper(vizframe4, "chart4", document.chart4_mode.chart4_mode);
+    };
+
+    </script>
+
+</body>
+</html>

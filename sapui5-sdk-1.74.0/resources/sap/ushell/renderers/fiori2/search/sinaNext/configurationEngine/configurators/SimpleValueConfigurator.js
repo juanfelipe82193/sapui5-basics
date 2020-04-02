@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sinaDefine(['../../core/core','./Configurator'],function(c,C){"use strict";return C.derive({initAsync:function(){if(c.isObject(this.configuration)){this.value=this.configuration.value;this.force=this.configuration.force;return;}this.value=this.configuration;this.force=false;},isSuitable:function(o){if(c.isString(o.type)&&['string','integer','object'].indexOf(o.type)>=0){return true;}return false;},configure:function(v,a){if(this.isInitialOrForced(v)){return this.value;}return v;}});});

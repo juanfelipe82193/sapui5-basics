@@ -1,0 +1,140 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Creating a Simple Container Control</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="Example of a container control with arbitrary child controls that are rendered in a row and a colored box around each child"><meta name="description" content="Example of a container control with arbitrary child controls that are rendered in a row and a colored box around each child"><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"d5b756bf4e9a4d67961fa21e1ba12c9e.html","previousTopicHref":"9a6100ba15564561b5439b7e7ba554a9.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loio39d25641086c42aaa745028e15562ba8"><h1 class="title topictitle1" hidden>Creating a Simple Container Control</h1><div class="body"><p class="shortdesc" hidden>Example of a container control with arbitrary child controls that are rendered in a row
+and a colored box around each child</p>
+<pre class="pre codeblock prettyprint lang-js">sap.ui.core.Control.extend(&quot;ColorBoxContainer&quot;, { // call the new Control type &quot;ColorBoxContainer&quot;
+    // and let it inherit from sap.ui.core.Control
+
+    // the Control API:
+    metadata : {
+        properties : {            // setter and getter are created behind the scenes,
+            // incl. data binding and type validation
+            &quot;boxColor&quot; : &quot;string&quot;  // the color to use for the frame around each child Control
+        },
+        aggregations: {
+            content: {singularName: &quot;content&quot;} // default type is &quot;sap.ui.core.Control&quot;, multiple is &quot;true&quot;
+        }
+    },
+
+
+    // the part creating the HTML:
+    renderer : function(oRm, oControl) { // static function, so use the given &quot;oControl&quot; instance
+        // instead of &quot;this&quot; in the renderer function
+        oRm.write(&quot;&lt;div&quot;);
+        oRm.writeControlData(oControl);  // writes the Control ID and enables event handling - important!
+        oRm.writeClasses();              // there is no class to write, but this enables
+                                         // support for ColorBoxContainer.addStyleClass(...)
+        oRm.write(&quot;&gt;&quot;);
+
+        var aChildren = oControl.getContent();
+        for (var i = 0; i &lt; aChildren.length; i++) { // loop over all child Controls,
+            // render the colored box around them
+            oRm.write(&quot;&lt;div&quot;);
+            oRm.addStyle(&quot;display&quot;, &quot;inline-block&quot;);
+            oRm.addStyle(&quot;border&quot;, &quot;3px solid &quot; + oControl.getBoxColor()); // specify the border around the child
+            oRm.writeStyles();
+            oRm.write(&quot;&gt;&quot;);
+
+            oRm.renderControl(aChildren[i]);   // render the child Control
+                                               // (could even be a big Control tree, but you don&apos;t need to care)
+
+
+            oRm.write(&quot;&lt;/div&gt;&quot;); // end of the box around the respective child
+        }
+
+        oRm.write(&quot;&lt;/div&gt;&quot;); // end of the complete Control
+    }
+});</pre>
+<p class="p">As the control itself has no appearance, no additional CSS is required.</p>
+<p class="p">You can use this container control like any <span class="ph"><span class="ph pname">SAPUI5</span></span> container:</p>
+<pre class="pre codeblock prettyprint lang-js">var oButton = new sap.m.Button({text:&apos;Hello World&apos;});
+var oInput = new sap.m.Input({placeholder:&apos;edit text here&apos;});
+
+var container = new ColorBoxContainer({
+    boxColor: &quot;#ff7700&quot;,
+    content:[
+        oButton,
+        oInput
+    ]});
+container.placeAt(&apos;content&apos;);</pre>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

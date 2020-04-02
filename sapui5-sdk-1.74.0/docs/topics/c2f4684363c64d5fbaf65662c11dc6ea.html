@@ -1,0 +1,180 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Model Instantiation</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The app configures several data models that are used throughout the app to update the views or to store additional configuration options."><meta name="description" content="The app configures several data models that are used throughout the app to update the views or to store additional configuration options."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"af1db3c03fee416e91b4b08cf359a929.html","previousTopicHref":"5cb1169c748b4da58a9c981fb0b491c7.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loioc2f4684363c64d5fbaf65662c11dc6ea"><h1 class="title topictitle1" hidden>Model Instantiation</h1><div class="body conbody"><p class="shortdesc" hidden>The app configures several data models that are used throughout the app to update the
+views or to store additional configuration options.</p>
+<p class="p">The service model and the resource bundle are instantiated automatically by the app&#x2019;s component
+during startup and described in the first section. The local view models and helper
+models such as the device model are set up as JSON models and described in the second
+section.</p>
+<div class="section" id="loioc2f4684363c64d5fbaf65662c11dc6ea__section_automatic_model_instantiation"><section class="section" type="Automatic Model Instantiation"><h2 class="section_title" style="font-size: 1.15em;">Automatic Model Instantiation</h2>
+
+<p class="p">The templates instantiate the service and resource model automatically using the
+following configuration entries in the descriptor. When the component of the app is
+initialized, these models will be made available under the configured name
+throughout the app.</p>
+<div class="p">An external service is defined in the <samp class="ph codeph">dataSources</samp> section of the
+<samp class="ph codeph">sap.app</samp> namespace. In the example shown below, we configure an
+OData V2 model and the alias <samp class="ph codeph">&quot;mainService&quot;</samp> in the
+<span class="ph filepath">manifest.json</span> descriptor
+file:<pre class="pre codeblock prettyprint lang-js">
+{
+	&#x2026;
+	&quot;sap.app&quot;: {
+		&#x2026;
+		&quot;i18n&quot;: &quot;i18n/i18n.properties&quot;,
+		&#x2026;
+		&quot;dataSources&quot;: {
+			&quot;mainService&quot;: {
+				&quot;uri&quot;: &quot;/here/goes/your/serviceUrl/&quot;
+				&quot;type&quot;: &quot;OData&quot;,
+				&quot;settings&quot;: {
+					&quot;odataVersion&quot;: &quot;2.0&quot;,
+					&quot;localUri&quot;: &quot;localService/metadata.xml&quot;
+				}
+			}
+		},
+		&#x2026;
+	},
+	&#x2026;
+}</pre></div>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p>If you use the OData V4 template, you set the <samp class="ph codeph">odataVersion</samp> accordingly.</p></aside>
+<div class="p">In the models section of the <samp class="ph codeph">sap.ui5</samp> namespace we define two models that will be instantiated automatically. The resource model
+is a named model ( i18n ) and the OData model is the default model so it has no name. The OData model also receives additional URL
+parameters via the <samp class="ph codeph">metadataUrlParams</samp>. The parameters <samp class="ph codeph">sap-server</samp>, <samp class="ph codeph">sap-client</samp>, and
+<samp class="ph codeph">sap-language</samp> are passed to the service automatically by <span class="ph"><span class="ph pname">SAPUI5</span></span>, as shown in the following <span class="ph filepath">manifest.json</span> code
+snippet:<pre class="pre codeblock prettyprint lang-js">
+{
+	&#x2026;
+	&quot;sap.ui5&quot;: {
+		&#x2026;
+		&quot;models&quot;: {
+			&quot;i18n&quot;: {
+				&quot;type&quot;: &quot;sap.ui.model.resource.ResourceModel&quot;,
+				&quot;settings&quot;: {
+					&quot;bundleName&quot;: &quot;sap.ui.demo.masterdetail.i18n.i18n&quot;
+				}
+			},
+			&quot;&quot;: {
+				&quot;dataSource&quot;: &quot;mainService&quot;,
+				&quot;preload&quot;: true
+			}
+		},
+		&#x2026;
+	}
+}</pre></div>
+<aside class="note" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Note</strong></div>
+<p class="p">Before <span class="ph"><span class="ph pname">SAPUI5</span></span> version 1.30, all
+models were defined and instantiated in the component&apos;s <samp class="ph codeph">init</samp>
+method. We recommend removing all manual model creation code and switching to
+the automatic model instantiation instead. The &quot;device model&quot; however is still a
+local model that has to be instantiated manually.</p></aside>
+</section></div>
+<div class="section"><section class="section" type="Additional Models for the App"><h2 class="section_title" style="font-size: 1.15em;">Additional Models for the App</h2>
+
+<p class="p">The following models are created as local JSON models in the app and can be
+referenced by its model name where needed:</p>
+<ul class="ul" id="loioc2f4684363c64d5fbaf65662c11dc6ea__ul_oyq_kf1_bt">
+<li class="li">
+<p class="p"><span class="ph emphasis emphasis">device</span></p>
+<p class="p">The device model provides an easy access to the device API and is used to configure certain
+view settings according to the user&#x2019;s device.</p>
+</li>
+<li class="li">
+<p class="p"><span class="ph emphasis emphasis">FLP</span></p>
+<p class="p">The <span class="ph pname">FLP</span> model is a helper module to configure <span class="ph pname">SAP Fiori launchpad</span> (<span class="ph pname">FLP</span>)
+integration and is used to control the sharing options of the app.</p>
+</li>
+<li class="li">
+<p class="p"><span class="ph emphasis emphasis">worklistView</span></p>
+<p class="p">A local view model for the worklist view that stored configuration options
+that are bound to controls in the view.</p>
+</li>
+<li class="li">
+<p class="p"><span class="ph emphasis emphasis">objectView</span></p>
+<p class="p">A local view model for the object view that stored configuration options that
+are bound to controls in the view.</p>
+</li>
+</ul>
+</section></div>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

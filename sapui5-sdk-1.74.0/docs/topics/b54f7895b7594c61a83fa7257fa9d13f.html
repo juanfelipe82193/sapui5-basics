@@ -1,0 +1,403 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>OData Operations</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="The OData V4 model supports OData operations (ActionImport, FunctionImport, bound Actions and bound Functions). Unbound parameters are limited to primitive values."><meta name="description" content="The OData V4 model supports OData operations (ActionImport, FunctionImport, bound Actions and bound Functions). Unbound parameters are limited to primitive values."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"74142a38e3d4467c8d6a70b28764048f.html","previousTopicHref":"ab267a6b958e46a28f3437154b2a1b2f.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page concept  - topic-topic concept-concept " id="loiob54f7895b7594c61a83fa7257fa9d13f"><h1 class="title topictitle1" hidden>OData Operations</h1><div class="body conbody"><p class="shortdesc" hidden>The OData V4 model supports OData operations (<samp class="ph codeph">ActionImport</samp>,
+<samp class="ph codeph">FunctionImport</samp>, bound <samp class="ph codeph">Actions</samp> and bound
+<samp class="ph codeph">Functions</samp>). Unbound parameters are limited to primitive
+values.</p>
+<div class="section"><section class="section" type="Simple Function Bindings"><h2 class="section_title" style="font-size: 1.15em;">Simple Function Bindings</h2>
+
+<div class="p">You gain access to a <samp class="ph codeph">FunctionImport</samp> by binding it to a view element. If there
+are no parameters and there is no need to control the point in time when the
+function is called, you can simply bind the OData path like this:
+<pre class="pre codeblock prettyprint lang-js">&lt;Text text=&quot;{path: &apos;/GetNumberOfAvailableItems()&apos;, type: &apos;sap.ui.model.odata.type.Int16&apos;}&quot;/&gt;</pre>This
+binding path represents the function&apos;s return value. The model calls the function
+immediately when a control requests this value.</div>
+<p class="p">The type must be specified if the return value is a primitive type.</p>
+</section></div>
+<div class="section"><section class="section" type="Deferred Operation Bindings"><h2 class="section_title" style="font-size: 1.15em;">Deferred Operation Bindings</h2>
+
+<p class="p">Often it is not feasible for the operation to be called immediately, for example if
+there are parameters that the user has to enter first. In such cases, use an
+ODataContextBinding as element binding at a layout element in the view, for example
+a <samp class="ph codeph">&lt;Form&gt;</samp> or a <samp class="ph codeph">&lt;VBox&gt;</samp>
+<span class="ph">(see the
+<a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataContextBinding" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataContextBinding" title="#/api/sap.ui.model.odata.v4.ODataContextBinding">ODataContextBinding</a> API documentation
+in the Demo Kit)</span>. Mark the operation as <span class="ph emphasis emphasis">deferred</span> by inserting an
+ellipsis (&quot;...&quot;) in the brackets, for example
+<samp class="ph codeph">GetNextAvailableItem(...)</samp>. Access the return value from child
+elements using relative bindings. When used like this, the context binding is called
+an <span class="ph emphasis emphasis">operation binding</span> or more specifically, a <span class="ph emphasis emphasis">function
+binding</span> or <span class="ph emphasis emphasis">action binding</span> depending on the type
+of OData operation it is used for.</p>
+<p class="p">If the operation binding defers operation execution, you need to call its
+<samp class="ph codeph">execute</samp> method to execute the operation. See below for an
+example.</p>
+<p class="p"><span class="ph emphasis emphasis">View:</span></p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;Form id=&quot;getNextAvailableItem&quot; binding=&quot;{/GetNextAvailableItem(...)}&quot;&gt;
+    &lt;Label text=&quot;Description&quot;/&gt;
+    &lt;Text text=&quot;{Description}&quot;/&gt;
+    &lt;Button text=&quot;Call the function&quot; press=&quot;onGetNextAvailableItem&quot;/&gt;
+&lt;/Form&gt;</pre>
+<p class="p"><span class="ph emphasis emphasis">Controller:</span></p>
+<pre class="pre codeblock prettyprint lang-js">onGetNextAvailableItem : function (oEvent) {
+    this.getView().byId(&quot;getNextAvailableItem&quot;).getObjectBinding().execute();
+}</pre>
+<p class="p">In the above example, the function import is bound to a form (which has an ID that we
+need later). The text field showing a property of the result is a child of this
+form. It has a relative binding to the property <samp class="ph codeph">&quot;Description&quot;</samp>. </p>
+<p class="p">If the function returns a primitive value or a collection, the binding for the result
+must be <samp class="ph codeph">&quot;{value}&quot;</samp> as shown in the 2 examples below:</p>
+<p class="p"><span class="ph emphasis emphasis">View:</span></p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;Form id=&quot;getNumberOfAvailableItems&quot; binding=&quot;{/GetNumberOfAvailableItems(...)}&quot;&gt;
+    &lt;Label text=&quot;Number of available items:&quot;/&gt;
+    &lt;Text text=&quot;{value}&quot;/&gt;
+    &lt;Button text=&quot;Call the function&quot; press=&quot;onGetNumberOfAvailableItems&quot;/&gt;
+&lt;/Form&gt;</pre>
+<pre class="pre codeblock prettyprint">&lt;VBox id=&quot;getAvailableItems&quot; binding=&quot;{path : &apos;/GetAvailableItems(...)&apos;, parameters : {$select : &apos;ProductName&apos;, &apos;ProductId&apos;}}&quot;&gt;
+    &lt;List id=&quot;xyz&quot; items=&quot;{value}&quot;&gt;
+        &lt;items&gt;
+            &lt;ObjectListItem title=&quot;{ProductName}&quot; /&gt;
+        &lt;/items&gt;
+    &lt;/List&gt;
+&lt;/VBox&gt;</pre>
+<p class="p"><samp class="ph codeph">execute</samp> returns a promise which is resolved if the operation was
+successful and rejected with an error if this was not the case. Note that the
+promise is <span class="ph emphasis emphasis">not</span> fufilled with the action&apos;s result: Use dependent
+bindings to access the result. </p>
+<p class="p"><samp class="ph codeph">refresh</samp> is silently ignored on a deferred function binding as long
+as it has not yet been executed. Afterwards, a <samp class="ph codeph">refresh</samp> calls the
+function again.</p>
+</section></div>
+<div class="section"><section class="section" type="Action Bindings"><h2 class="section_title" style="font-size: 1.15em;">Action Bindings</h2>
+
+<p class="p">Action bindings must be deferred, otherwise the application cannot control when the
+action is executed. A deferred action binding is declared exactly like a deferred
+function binding: </p>
+<p class="p"><span class="ph emphasis emphasis">View:</span></p>
+<pre class="pre codeblock prettyprint lang-xml">&lt;Form id=&quot;Submit&quot; binding=&quot;{/Submit(...)}&quot;&gt;
+    &lt;Button text=&quot;Submit the action&quot; press=&quot;onSubmit&quot;/&gt;
+&lt;/Form&gt;</pre>
+<p class="p">You append &quot;(...)&quot; even though the action&apos;s resource URL does not contain them.
+However, they are needed to mark the binding as deferred. In
+<samp class="ph codeph">execute</samp>, the binding uses the metadata to distinguish between
+action and function and to build the correct operation resource path.</p>
+<p class="p"><samp class="ph codeph">refresh</samp> is always silently ignored on a deferred action binding to
+prevent the action from being executed accidentally (for example by calling the
+<samp class="ph codeph">refresh</samp> method on the ODataModel instance
+<samp class="ph codeph">oModel.refresh()</samp>).</p>
+</section></div>
+<div class="section"><section class="section" type="Operation Parameters"><h2 class="section_title" style="font-size: 1.15em;">Operation Parameters</h2>
+
+<p class="p">You can use the parameters of a deferred operation binding inside an XML view.</p>
+<p class="p">The parameters are addressed by the path prefix &quot;$Parameter&quot;. This can either be done by binding each parameter to the path prefix
+&quot;$Parameter&quot; (Option 1) or by having an outer binding with a &quot;$Parameter&quot; path (Option 2).</p>
+<aside class="note" aria-labelledby="note_0_title"><div class="title" id="note_0_title"><strong>Note</strong></div>
+<p class="p">The path &quot;$Parameter&quot; must not be added directly to the path of a deferred operation binding. A deferred operation binding is
+identified by an ellipsis at the end of the path.</p></aside>
+<p class="p">This is how to bind each parameter individually: </p>
+<p class="p"><span class="ph emphasis emphasis">View:</span></p>
+<aside class="note sap-example example" aria-labelledby="note_1_title"><div class="title" id="note_1_title"><strong>Example</strong></div>
+<p>Binding parameters to a dialog (Option
+1)</p><pre class="pre codeblock prettyprint lang-xml">&lt;Dialog binding=&quot;{/ChangeTeamBudgetByID(...)}&quot; id=&quot;operation1&quot; title =&quot;Change Team Budget&quot;&gt;
+    &lt;buttons&gt;
+        ...         
+    &lt;/buttons&gt;
+    &lt;form:SimpleForm&gt;
+        &lt;Label text=&quot;TeamID&quot; /&gt;
+        &lt;Input value=&quot;{$Parameter/TeamID}&quot; /&gt;
+        &lt;Label text=&quot;Budget&quot; /&gt;
+        &lt;Input value=&quot;{$Parameter/Budget}&quot; /&gt;
+    &lt;/form:SimpleForm&gt;
+&lt;/Dialog&gt;</pre></aside>
+<p class="p">Alternatively, you may bind the entire form to the <samp class="ph codeph">$Parameter</samp> context:</p>
+<p class="p"><span class="ph emphasis emphasis">View:</span></p>
+<aside class="note sap-example example" aria-labelledby="note_2_title"><div class="title" id="note_2_title"><strong>Example</strong></div>
+<p>Binding parameters to a dialog (Option
+2)</p><pre class="pre codeblock prettyprint lang-xml">&lt;Dialog binding=&quot;{/ChangeTeamBudgetByID(...)}&quot; id=&quot;operation2&quot; title=&quot;Change Team Budget&quot;&gt;
+    &lt;buttons&gt;
+        ...         
+    &lt;/buttons&gt;
+    &lt;form:SimpleForm binding=&quot;{$Parameter}&quot;&gt;
+        &lt;Label text=&quot;TeamID&quot; /&gt;
+        &lt;Input value=&quot;{TeamID}&quot; /&gt;
+        &lt;Label text=&quot;Budget&quot; /&gt;
+        &lt;Input value=&quot;{Budget}&quot; /&gt;
+    &lt;/form:SimpleForm&gt;
+&lt;/Dialog&gt;</pre></aside>
+<p class="p">In either case, the values of the parameters are set using the model binding of the control, with no need to write any application
+code.</p>
+<p class="p">Alternatively, operation parameters can be set by calling the function <samp class="ph codeph">setParameter</samp> on the operation binding, as shown in this
+example:</p>
+<p class="p"><span class="ph emphasis emphasis">Controller:</span></p>
+<pre class="pre codeblock prettyprint lang-js">onSubmit : function (oEvent) {
+    this.getView().byId(&quot;Submit&quot;).getObjectBinding().setParameter(&quot;Comment&quot;, sComment).execute();
+}</pre>
+<p class="p">The API method <samp class="ph codeph">getParameterContext</samp> can be used to access parameters in controller code, see also <a class="xref" href="../../#/topic/17b30ac2d5474078be31e695e97450cc.html" title="In the OData V4 model, bindings are used to access and modify backend data also if the data is accessed or modified in controller code." target="_top">Accessing Data in Controller Code</a></p>
+<p class="p">The example below demonstrates how a budget may be modified depending on the <samp class="ph codeph">TeamID</samp>:</p>
+<p class="p"><span class="ph emphasis emphasis">Controller:</span></p>
+<aside class="note sap-example example" aria-labelledby="note_3_title"><div class="title" id="note_3_title"><strong>Example</strong></div>
+<p>Reading parameter values using the parameter
+context</p><pre class="pre codeblock prettyprint lang-js">adaptBudgetToTeam : function (){
+    var oDialog = this.oView.byId(&quot;operation2&quot;); // the second dialog in the paragraph before
+        oParameterContext = oDialog.getObjectBinding().getParameterContext();
+ 
+ 
+    if (oParameterContext.getProperty(&quot;TeamID&apos;) === &quot;STARTUP&quot;) {
+        oParameterContext.setProperty(&quot;Budget&quot;, 555.55);
+    else {
+        oParameterContext.setProperty(&quot;Budget&quot;, 123.45);
+    }
+}</pre></aside>
+<aside class="note" aria-labelledby="note_4_title"><div class="title" id="note_4_title"><strong>Note</strong></div>
+<p class="p">The parameter context is only defined if the operation binding is resolved.</p></aside>
+</section></div>
+<div class="section"><section class="section" type="Bound Actions and Functions"><h2 class="section_title" style="font-size: 1.15em;">Bound Actions and Functions</h2>
+
+<p class="p">So far, the examples always used operations at root level, addressed via an action
+import or function import. However, it is also possible to bind an action or a
+function to another resource of the service. This can be an entity, a collection of
+entities or an entity property.</p>
+<p class="p">Bound actions or functions are controlled in the same way as unbound operations;
+append <samp class="ph codeph">(...)</samp> to the binding path for the control&apos;s property. </p>
+<p class="p">To call actions or functions bound to a single entity, entity property, or navigation
+property use a relative binding. The following sample calls the &quot;invoice created&quot;
+action on the sales order selected in the corresponding table:</p>
+<pre class="pre codeblock prettyprint lang-js">var oModel = this.getView().getModel(),
+    oTable = this.getView().byId(&quot;SalesOrders&quot;),
+    oSalesOrderContext = oTable.getSelectedItem().getBindingContext(),
+    oAction = oMoodel.bindContext(&quot;name.space.InvoiceCreated(...)&quot;, oSalesOrderContext);
+ 
+oAction.execute().then(
+    function () {
+        MessageToast.show(&quot;Invoice created for sales order &quot; + oSalesOrderContext.getProperty(&quot;SalesOrderID&quot;));
+    },
+    function (oError) {
+        MessageBox.alert(oError.message, {
+            icon : MessageBox.Icon.ERROR,
+            title : &quot;Error&quot;});
+        });
+    }
+);</pre>
+<p class="p">To call actions or functions bound to a collection specified by an OData entity set, you can
+create a context binding with an absolute path, or with a relative path for the
+operation (for example <samp class="ph codeph">name.space.DestroyOutdated(...)&quot;</samp>) and the
+header context of a list binding as parent context. The following sample shows a
+button press event handler which calls the <samp class="ph codeph">destroy outdated</samp> action
+on the <samp class="ph codeph">LeaveRequests</samp> entity set.</p>
+<pre class="pre codeblock prettyprint lang-js">var oModel = this.getView().getModel();
+ 
+oModel.bindContext(&quot;/LeaveRequests/name.space.DestroyOutdated(...)&quot;).execute();</pre>
+<p class="p">The same example with a relative binding and the header context of the list binding as
+parent context:</p>
+<pre class="pre codeblock prettyprint lang-js">var oModel = this.getView().getModel(),
+    // assume there is a table with ID &quot;leaveRequests&quot; and its items aggregation bound to &quot;/LeaveRequests&quot;
+    oListBinding = this.byId(&quot;leaveRequests&quot;).getBinding(&quot;items&quot;),
+    oHeaderContext = oListBinding.getHeaderContext();
+
+oModel.bindContext(&quot;name.space.DestroyOutdated(...)&quot;, oHeaderContext).execute(); </pre>
+<aside class="note" aria-labelledby="note_5_title"><div class="title" id="note_5_title"><strong>Note</strong></div>
+<ul class="ul" id="loiob54f7895b7594c61a83fa7257fa9d13f__ul_wqw_rcr_xv">
+<li class="li">
+<p class="p">The path of an operation binding may also start with a navigation
+property.</p>
+<p class="p">Example: The operation binding has a relative path
+<samp class="ph codeph">BP_2_PRODUCT/name.space.Change(...)</samp>. You set its
+binding context from the selected item in a table bound to
+<samp class="ph codeph">/BusinessPartners</samp>. When you call
+<samp class="ph codeph">execute</samp> on the operation binding, the &quot;change&quot;
+action is executed with the selected business partner&apos;s navigation
+property <samp class="ph codeph">BP_2_PRODUCT</samp> as binding parameter.</p>
+</li>
+<li class="li">
+<p class="p">The parent binding of a deferred operation must not be a deferred
+operation itself.</p>
+</li>
+</ul></aside>
+</section></div>
+<div class="section" id="loiob54f7895b7594c61a83fa7257fa9d13f__section_osx_m5l_gdb"><section class="section" type="Advertised Operations"><h2 class="section_title" style="font-size: 1.15em;">Advertised Operations</h2>
+
+<div class="p">According to the <a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752309" target="_blank" alt="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752309" title="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752309">OData 4.0 specification (&quot;11.5.2 Advertising Available
+Operations within a Payload&quot;)<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a> services may return available actions and
+functions bound to a particular entity as part of the entity representation within
+the payload. Data for an advertised operation within an entity is sent as property
+starting with <samp class="ph codeph">#&lt;namespace&gt;.&lt;action&gt;</samp> of that entity. If
+the entity does not advertise the operation, it does not contain this property. To
+access the advertised operation in a binding, the same format has to be used. See
+the following example:<aside class="note sap-example example" aria-labelledby="note_6_title"><div class="title" id="note_6_title"><strong>Example</strong></div>
+<p>Enable a button to trigger an action
+<span class="keyword parmname">AcSetIsOccupied</span> available on entity type of entity set
+<span class="keyword parmname">EMPLOYEES</span> depending on advertisement of this action on
+the entity <span class="keyword parmname">EMPLOYEES(&apos;1&apos;)</span></p></aside></div>
+<pre class="pre codeblock prettyprint">&lt;FlexBox binding=&quot;{/EMPLOYEES(&apos;1&apos;)}&quot;&gt;
+    &lt;Button text=&quot;Set occupied&quot; enabled=&quot;{= !!%{#com.sap.gateway.default.iwbep.tea_busi.v0001.AcSetIsOccupied} }&quot;/&gt;
+&lt;/FlexBox&gt;</pre>
+<p class="p">Here a button is enabled only if the action <span class="keyword parmname">AcSetIsOccupied</span> is
+advertised for the entity <span class="keyword parmname">EMPLOYEES(&apos;1&apos;)</span>. The
+<samp class="ph codeph">%</samp> operator is used to set the internal type to
+<samp class="ph codeph">any</samp> because the advertised action is sent as an object. The
+double negation <samp class="ph codeph">!!</samp> converts this object to a boolean value that is
+needed by the <samp class="ph codeph">enabled</samp> control property.</p>
+<p class="p">If no advertised action was returned in the payload, <samp class="ph codeph">undefined</samp> (or
+<samp class="ph codeph">null</samp> in OData 4.01 in case of advertised non-availability) is
+returned as value for the binding. This translates to false in the expression
+above.</p>
+<p class="p">If there is an additional list of non-binding parameter names to identify a specific
+overload, then they need to be given in the binding path as well, for instance:
+<samp class="ph codeph">%{#Model.RemainingVacation(Year)}</samp>.</p>
+<aside class="note" aria-labelledby="note_7_title"><div class="title" id="note_7_title"><strong>Note</strong></div>
+<p class="p">The bound action advertisement is added to $select automatically if the model
+parameter <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel/constructor" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/constructor" title="#/api/sap.ui.model.odata.v4.ODataModel/constructor"><samp class="ph codeph">autoExpandSelect</samp></a> is
+set.</p></aside>
+<div class="p">To access the metadata of an operation, the double hash (<samp class="ph codeph">##</samp>) syntax
+has to be used as is illustrated in the next example:<aside class="note sap-example example" aria-labelledby="note_8_title"><div class="title" id="note_8_title"><strong>Example</strong></div>
+<p>Binding against metadata of an
+action</p><pre class="pre codeblock prettyprint">var oContext = oModel.createBindingContext(&quot;/EMPLOYEES(&apos;1&apos;)/##com.sap.gateway.default.iwbep.tea_busi.v0001.AcSetIsOccupied&quot;);
+var oMetaModel = oContext.getModel();
+oMetaModel.requestObject(&quot;0/$ReturnType/$Type&quot;, oContext).then(alert);</pre></aside></div>
+<p class="p">Here a context is created pointing to the metadata of the action and afterwards the
+type is accessed using this context.</p>
+<p class="p">This approach can also be used with XML templating where <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataModel/methods/createBindingContext" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataModel/methods/createBindingContext" title="#/api/sap.ui.model.odata.v4.ODataModel/methods/createBindingContext"><samp class="ph codeph">createBindingContext</samp></a> is
+called internally.</p>
+</section></div>
+<div class="section" id="loiob54f7895b7594c61a83fa7257fa9d13f__section_qnb_qyv_tz"><section class="section" type="Access Operation Results"><h2 class="section_title" style="font-size: 1.15em;">Access Operation Results</h2>
+
+<p class="p">You can access the results of the operation by calling <samp class="ph codeph">getObject()</samp>
+from the bound context.</p>
+<pre class="pre codeblock prettyprint lang-js">// let oOperation be the operation&apos;s context binding
+oOperation.execute().then(function () {
+    <span class="ph emphasis emphasis">// Note: execute does not deliver the results
+</span>
+    var oResults = oOperation.getBoundContext().getObject();
+    ...
+});</pre>
+<p class="p">The promise returned by the operation binding&apos;s <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/execute" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/execute" title="#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/execute"><samp class="ph codeph">execute</samp></a> method may
+resolve with a <cite class="cite">return value context</cite> provided the conditions specified
+in <a class="xref" href="../../#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/execute" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/execute" title="#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/execute"><samp class="ph codeph">execute</samp></a> are met. The
+operation binding may be bound to an entity or a collection of entities.</p>
+<p class="p">The typical use case for <cite class="cite">return value context</cite> is when you call a bound operation
+with a context <span class="keyword parmname">C1</span> defining its binding parameter and the bound
+operation returns a <cite class="cite">different version</cite> of the entity used as binding
+parameter. <span class="keyword parmname">C1</span> is the binding context of an &quot;object page&quot;
+container displaying properties of the corresponding entity. You need to replace
+<span class="keyword parmname">C1</span> as binding context of the object page by the<cite class="cite">
+return value context</cite>. This way, the <cite class="cite">different version</cite> of the
+entity is displayed without a further read request. If the bound operation returns
+the entity used as binding parameter, the changes will automatically be copied to
+the binding parameter.</p>
+<p class="p">If the operation binding fulfills the conditions for returning a context, you can set
+the parameter <samp class="ph codeph">$$inheritExpandSelect</samp> for the binding: The request
+for the bound operation is then sent with the same <samp class="ph codeph">$expand</samp> and
+<samp class="ph codeph">$select</samp> query options used to load the operation&apos;s binding
+parameter. This way you guarantee that all fields of the object page are available
+in the operation response.</p>
+<div class="p">Sample object page to display an <span class="keyword parmname">Artist</span>
+entity<pre class="pre codeblock prettyprint">&lt;form:SimpleForm id=&quot;objectPage&quot;&gt;
+    &lt;Toolbar&gt;
+        &lt;Button text=&quot;Edit&quot; enabled=&quot;{IsActiveEntity}&quot; press=&quot;.onEdit&quot;/&gt;
+    &lt;/Toolbar&gt;
+    &lt;Label text=&quot;ID&quot;/&gt; &lt;Text text=&quot;{ArtistID}&quot;/&gt;
+    &lt;Label text=&quot;Is Active&quot;/&gt; &lt;Text text=&quot;{IsActiveEntity}&quot;/&gt;
+    &lt;Label text=&quot;Name&quot;/&gt; &lt;Input value=&quot;{Name}&quot; /&gt;
+    ...
+&lt;/form:SimpleForm&gt;</pre></div>
+<div class="p">Controller code to display the active version of <span class="keyword parmname">Artist 42</span> initially and
+switch to draft version on
+<span class="ph uicontrol">Edit</span><pre class="pre codeblock prettyprint">// display &quot;active&quot; version of artist initially
+onInit : function () {
+    var oActiveArtistContext = oModel
+        	.bindContext(&quot;/Artists(ArtistID=&apos;42&apos;,IsActiveEntity=true)&quot;)
+        	.getBoundContext();
+    this.byId(&quot;objectPage&quot;).setBindingContext(oActiveArtistContext);
+},
+ 
+// display the &quot;inactive&quot; version of the entity returned by the &quot;EditAction&quot;
+onEdit : function () {
+    var that = this;
+    oModel.bindContext(&quot;name.space.EditAction(...)&quot;, this.byId(&quot;objectPage&quot;).getBindingContext(), {$$inheritExpandSelect : true})
+        .execute()
+        .then(function (oInactiveArtistContext) {
+            that.byId(&quot;objectPage&quot;).setBindingContext(oInactiveArtistContext);
+        });
+}</pre></div>
+</section></div>
+</div><div class="related-links"> <div class="relinfo"><div class="relinfotitle ">Related Information</div><div><a class="extlink" href="http://help.sap.com/disclaimer?site=http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html" target="_blank" alt="http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html" title="http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html">OData Version 4.0 Part 1, 11.5 Operations<img src="themes/sap-default/img/3rd_link.png" class="link-external" alt="Information published on non-SAP site" title="Information published on non-SAP site" border="0"></a></div><div><a class="link" href="../../#/api/sap.ui.model.odata.v4.ODataContextBinding" target="_top" alt="#/api/sap.ui.model.odata.v4.ODataContextBinding" title="#/api/sap.ui.model.odata.v4.ODataContextBinding">ODataContextBinding</a></div></div></div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

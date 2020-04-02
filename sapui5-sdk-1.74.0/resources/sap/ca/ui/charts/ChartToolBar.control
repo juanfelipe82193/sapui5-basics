@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>charts/ChartToolBar</name>
+    <derived/>
+    <documentation>ToolBar used for displaying one chart amongst several and provide additional features:
+- 2 select boxes for selecting dimensions
+- fullscreen toggle
+- personalization icon
+- showLegend toggle</documentation>
+    <deprecation since="1.24">Sap.ca charts and the ChartToolBar have been replaced with sap.viz and vizFrame in 1.24.
+The UI5 control "sap.viz.ui5.controls.VizFrame" serves as a single point of entry for all the new charts.
+Now that 1.24 is available you are asked to use sap.viz charts and the VizFrame instead!
+This control will not be supported anymore from 1.24.</deprecation>
+    <baseType>sap.ui.core/Control</baseType>
+    <properties>
+        <property name="showPersonalization" type="sap.ui.core/boolean" defaultValue="false" group="Misc">
+            <documentation>Display or not the personalization icon into the ChartToolBar</documentation>
+        </property>
+        <property name="showFullScreen" type="sap.ui.core/boolean" defaultValue="false" group="Misc">
+            <documentation>Display or not the full screen icon into the ChartToolBar</documentation>
+        </property>
+        <property name="fullScreen" type="sap.ui.core/boolean" defaultValue="false" group="Misc">
+            <documentation>Display the chart and the toolbar in full screen or normal mode</documentation>
+        </property>
+        <property name="showLegend" type="sap.ui.core/boolean" defaultValue="true" group="Misc">
+            <documentation>Display or not the legend on the contained charts.</documentation>
+        </property>
+        <property name="chartTitle" type="sap.ui.core/string" defaultValue="" group="Misc">
+            <documentation>The string to display instead of the select boxes if there are no dimensions to display</documentation>
+        </property>
+        <property name="firstDimensionPath" type="sap.ui.core/string" defaultValue="" group="Misc">
+            <documentation>Model path to the dimensions to display into the first select box</documentation>
+        </property>
+        <property name="firstDimensionKeyPath" type="sap.ui.core/string" defaultValue="" group="Misc">
+            <documentation>Model path to the first select box items key</documentation>
+        </property>
+        <property name="firstDimensionTextPath" type="sap.ui.core/string" defaultValue="" group="Misc">
+            <documentation>Model path to the first select box items displayed text</documentation>
+        </property>
+        <property name="secondDimensionPath" type="sap.ui.core/string" defaultValue="" group="Misc">
+            <documentation>Model path to the dimensions to display into the second select box</documentation>
+        </property>
+        <property name="secondDimensionKeyPath" type="sap.ui.core/string" defaultValue="" group="Misc">
+            <documentation>Model path to the second select box items key</documentation>
+        </property>
+        <property name="secondDimensionTextPath" type="sap.ui.core/string" defaultValue="" group="Misc">
+            <documentation>Model path to the displayed select box items displayed text</documentation>
+        </property>
+    </properties>
+    <events>
+        <event name="personalizationPressed" allowPreventDefault="false">
+            <documentation>Event fired when a user clicks on the personalization icon</documentation>
+        </event>
+        <event name="firstDimensionKeySelected" allowPreventDefault="false">
+            <documentation>Event fired when a user selects an item from the first select box.
+This event is providing the item selectedKey as parameter</documentation>
+        </event>
+        <event name="secondDimensionKeySelected" allowPreventDefault="false">
+            <documentation>Event fired when a user selects an item from the second select box.
+This event is providing the item selectedKey as parameter</documentation>
+        </event>
+    </events>
+    <aggregations>
+        <aggregation name="charts" type="sap.ui.core/Control" cardinality="0..n">
+            <documentation>The charts to display. Theses charts are sap.ui.core/Control that implements the following properties:
+- showLegend: boolean
+- icon: string (expected a string such as "sap-icon://line-chart")
+
+If the inserted control is an sap.m.Table, the icon is automatically set to "sap-icon://table-chart"</documentation>
+        </aggregation>
+        <aggregation name="toolBar" type="sap.m/Bar" cardinality="0..1">
+            <documentation>The composite sap.m.Bar used for rendering select boxes and icons.</documentation>
+        </aggregation>
+    </aggregations>
+    <associations>
+        <association name="selectedChart" type="sap.ui.core/Control" cardinality="0..1">
+            <documentation>The ui5 control displayed</documentation>
+        </association>
+        <association name="firstDimensionSelect" type="sap.m/Select" cardinality="0..1">
+            <documentation>The sap.m.Select inserted into the toolBar for handling the firstDimension selection</documentation>
+        </association>
+        <association name="secondDimensionSelect" type="sap.m/Select" cardinality="0..1">
+            <documentation>The sap.m.Select inserted into the toolBar for handling the secondDimension selection</documentation>
+        </association>
+    </associations>
+</control>

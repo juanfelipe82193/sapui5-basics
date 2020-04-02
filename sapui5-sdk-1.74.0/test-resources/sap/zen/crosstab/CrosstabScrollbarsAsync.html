@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Scrollbar Async Tests</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="json/TESTDATA_PLAINTABLE.js"></script>
+<script type="text/javascript" src="testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Scrollbar Async Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+	
+		module("Crosstab Async Rendering tests", {
+			setup : function() {
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				this.oCrosstab.setWidth("1600px");
+				this.oCrosstab.setHeight("1200px");
+				
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				
+				this.oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+				this.oDataArea = this.oCrosstab.getDataArea();
+				this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+				this.oColHeaderArea = this.oCrosstab.getColumnHeaderArea();
+				
+				sap.ui.getCore().applyChanges();
+					  
+		    this.checkHScrollToEnd = function() {
+					start();
+					var iIndex = 0;
+					if (jQuery.browser.msie) {
+						iIndex = 2;
+					}
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oColHeaderArea, 2, 3, 2, iIndex);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 0, 3, 0, iIndex);
+					
+					var oHScrollbar = this.oCrosstab.getHScrollbar();
+					var bScrolledToEnd = oHScrollbar.getSteps() == oHScrollbar.getScrollPosition();
+
+					ok(bScrolledToEnd, "Horizontal scrollbar must remain at the end");	    	
+		    };
+							
+				this.checkVScrollToEnd = function() {
+					start();
+					var iDomRow = (navigator.userAgent.indexOf("Firefox") != -1) ? 8 : 7;
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 11, 1, iDomRow, 0);
+					sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 11, 0, iDomRow, 0);
+
+					var oVScrollbar = this.oCrosstab.getVScrollbar();
+					var bScrolledToEnd = oVScrollbar.getSteps() == oVScrollbar.getScrollPosition();
+	
+					ok(bScrolledToEnd, "Vertical scrollbar must be at the end");
+				};
+			},
+			
+ 			teardown : function() {
+ 				// don't clean out the crosstab instance here, otherwise the delayed test checks will not work!
+				// this.oCrosstab = null;
+			} 
+		});
+		
+		test("scroll horizontally to the end, then resize", function() {
+			//Prepare test: render table with big cell content visible right away
+			this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+			this.oCrosstab.updateControlProperties(this.oTableControl);
+			this.oCrosstab.setWidth("400px");
+			this.oCrosstab.setHeight("400px");
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+
+			this.oCrosstab.scrollHorizontal(20);
+
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oColHeaderArea, 2, 3, 2, 2);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 0, 3, 0, 2);
+
+			this.oCrosstab.setWidth("350px");
+			this.oCrosstab.setHeight("400px");
+
+			// we have to do it that way. IE does not allow to pass parameters to the function in timeout.
+			setTimeout((function(that) {
+				return function() {
+					that.checkHScrollToEnd();
+				}
+			})(this), 2000);
+		
+			stop();			
+		});
+		
+		test("scroll vertically to the end, then resize", function() {
+			//Prepare test: render table with big cell content visible right away
+  		this.oTableControl = sapzen.crosstab.test.jsonTestData.plainTable.control;
+			this.oCrosstab.updateControlProperties(this.oTableControl);
+			this.oCrosstab.setWidth("1000px");
+			this.oCrosstab.setHeight("200px");
+			sap.zen.crosstab.testutils.TestUtils.triggerCrosstabReRendering(this.oCrosstab);
+		
+			this.oCrosstab.scrollVertical(11);
+			
+			var iDomRow = (navigator.userAgent.indexOf("Firefox") != -1) ? 8 : 7;
+		
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oRowHeaderArea, 11, 1, iDomRow, 0);
+			sap.zen.crosstab.testutils.TestUtils.checkDataModelCellInDom(this.oDataArea, 11, 0, iDomRow, 0);
+	
+			this.oCrosstab.setWidth("1000px");
+			this.oCrosstab.setHeight("180px");
+		
+			
+			// we have to do it that way. IE does not allow to pass parameters to the function in timeout.
+			setTimeout((function(that) {
+				return function() {
+					that.checkVScrollToEnd();
+				}
+			})(this), 2000);
+		
+			stop();	
+		});
+				
+	</script>
+
+</body>
+
+</html>
+
+
+

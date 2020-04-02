@@ -1,0 +1,155 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Browser Events</title><link rel="icon" href="themes/sap-default/img/favicon.ico" type="image/x-icon"><link rel="shortcut icon" href="themes/sap-default/img/favicon.ico"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="abstract" content="To react to browser events, a control needs to register for the event either explicitly, or by implementing the event handler."><meta name="description" content="To react to browser events, a control needs to register for the event either explicitly, or by implementing the event handler."><meta name="content category" content="development"><meta name="target-language" content="zh-CN"><script type="text/javascript">var d4p = {"relativePath":'',"dev":false,"debug":false,"draft":false,"nextTopicHref":"9860cd2b183540f48ee054bcef44a8b5.html","previousTopicHref":"bdf3e9818cd84d37a18ee5680e97e1c1.html"}</script><link rel="stylesheet" type="text/css" media="screen, projection" href="themes/sap-default/css/style.css"><script type="text/javascript">
+      
+        d4p.cssGridPath = d4p.dev ? 'html5-themes/modules/960-Responsive-Grid/css/' : 'themes/dita-d4p-classic/css/';
+        var ADAPT_CONFIG = {
+          // Where is your CSS?
+          path: d4p.relativePath + d4p.cssGridPath,
+
+          // false = Only run once, when page first loads.
+          // true = Change on window resize and page tilt.
+          dynamic: true,
+
+          // Optional callback... myCallback(i, width)
+          callback: doc_resize,
+
+          // First range entry is the minimum.
+          // Last range entry is the maximum.
+          // Separate ranges by "to" keyword.
+          range: [
+             // small (size-0)
+            '0px    to 760px  =',
+             // medium (size-1, size-2)
+            '760px  to 980px  = ',
+            '980px  to 1270px = ',
+             // large (size-3, size-5)
+            '1270px to 1600px = ',
+            '1600px to 1940px = ',
+             // extra large (size-6)
+            '1940px to 2540px = ',
+            '2540px           = '
+          ]
+        };
+
+        function doc_resize(i, width)
+        {
+          d4p.setBodyClassfunction(i, width);
+        }
+
+
+        
+      </script><script type="text/javascript" src="toc-info.js"></script><script type="text/javascript" src="themes/sap-default/js/script.js"></script>
+		<!--[if lt IE 9]>
+			<script>
+			  var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+			    "figure,footer,header,hgroup,mark,menu,meter,nav,output," +
+			    "progress,section,time,video").split(',');
+			  for (var i = 0; i < e.length; i++) {
+			    document.createElement(e[i]);
+			  }
+			</script>
+		<![endif]-->
+        
+    <script>
+      function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+          window.onload = func;
+        } else {
+          window.onload = function() {
+            if (oldonload) {
+              oldonload();
+        }
+        func();
+       }
+     }
+     }
+      
+    addLoadEvent(function() { prettyPrint();
+if ($('#local-navigation').length) {
+        $('#local-navigation').navigation();
+    }
+
+
+});
+      
+    </script>
+     <script type="text/javascript" src="js/prettify.js"> </script><script id="search-processing" type="text/javascript" src="js/search-processing.js"> </script><script>function handleAreaClick(oArea) {window.parent.location.href = oArea.href;}</script><link type="text/css" rel="stylesheet" href="css/overrides.css"></head><body class="en-us sap-default centered navigation-default toc-injection enumeration-disabled" style="font-family: &apos;72&apos;, Arial, Helvetica, sans-serif;"><div id="d4h5-main-container" class="container_12" role="application"><ul id="page-links" class="hidden"><li><a id="skip-to-content" href="#d4h5-main-content">Skip to content</a></li><li><a id="skip-to-localnav" href="#local-navigation">Skip to navigation</a></li><li><a id="skip-to-footer" href="#footer-container">Skip to footer</a></li></ul><div id="d4h5-section-container" class="grid_12" style="padding-top: 0;"><div id="d4h5-main-content" class="grid_8 alpha omega" style="margin: 0 0.5em;"><section><div id="content-toolbar" class="toolbar hide-for-small"></div><div class="page topic  - topic-topic " id="loio91f1b3856f4d1014b6dd926db0e91070"><h1 class="title topictitle1" hidden>Browser Events</h1><div class="body"><p class="shortdesc" hidden>To react to browser events, a control needs to register for the event either explicitly,
+or by implementing the event handler.</p>
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> applications can have the following two event types:</p>
+<ul class="ul">
+<li class="li">
+<p class="p">Browser events: These events are fired by the browser; examples for browser events are
+<samp class="ph codeph">click</samp> and <samp class="ph codeph">blur</samp>.</p>
+</li>
+<li class="li">
+<p class="p">Control events: These events are fired by <span class="ph"><span class="ph pname">SAPUI5</span></span> controls. They contain more semantic
+information than browser events and relate to the control functionality. An
+example for a control event is when a browser&apos;s a <samp class="ph codeph">click</samp> event
+on an icon in a panel header that triggers a <samp class="ph codeph">maximize</samp> or
+<samp class="ph codeph">minimize</samp> event of the control.</p>
+</li>
+</ul>
+<p class="p">To register browser events explicitly for certain DOM elements, use either
+<samp class="ph codeph">jQuery.bind()</samp> or the respective browser methods, such as
+<samp class="ph codeph">addEventListener</samp> and register the event in the
+<samp class="ph codeph">onAfterRendering</samp> method of the control. This ensures that the event
+binding is repeated after the control is rerendered, meaning that new DOM elements are
+created and old DOM elements are discarded. The event binding must be removed in the
+<samp class="ph codeph">onBeforeRendering</samp> and <samp class="ph codeph">exit</samp> methods by using
+<samp class="ph codeph">jQuery.unbind()</samp> to prevent memory leaks. The <samp class="ph codeph">exit</samp>
+method is called before the control is destroyed.</p>
+<p class="p">The explicit registering for browser events enables you to handle any type of browser event and
+works exactly the same way as in web pages or jQuery-based web applications. On the
+other hand side, it requires some coding to do the binding and unbinding of the event
+handler and registering many event handlers can affect the performance.</p>
+<p class="p">Example for explicit registration of browser events:</p>
+<pre class="pre codeblock prettyprint lang-js">MyControl.prototype.onAfterRendering = function() {
+        this.$().bind(&quot;click&quot;, this.handleClick.bind(this));
+}
+
+MyControl.prototype.onBeforeRendering = function() {
+        this.$().unbind(&quot;click&quot;, this.handleClick);
+}
+
+
+MyControl.prototype.exit = function() {
+        this.$().unbind(&quot;click&quot;, this.handleClick);
+}
+
+
+MyControl.prototype.handleClick = function(oEvent) {
+        // do something...
+}</pre>
+<p class="p">Instead of explicitly registering for browser events, you can implement the event handler
+directly for certain common event types by using a naming convention for the handler
+method. <span class="ph"><span class="ph pname">SAPUI5</span></span>
+automatically registers event handlers for a list of commonly used event types on the
+root element of a complete tree of <span class="ph"><span class="ph pname">SAPUI5</span></span> controls. <span class="ph">For more
+information about these event types, see the <a class="xref" href="../../#/api/sap.ui.events" target="_top" alt="#/api/sap.ui.events" title="#/api/sap.ui.events">
+<samp class="ph codeph">sap.ui.events.ControlEvents</samp></a> in the API Reference.</span>
+If the respective event occurs at any position in the tree and the respective control
+implements the <samp class="ph codeph">on&lt;eventName&gt;</samp> method, this method is invoked as if
+it had been registered with <samp class="ph codeph">jQuery.bind()</samp>.</p>
+<p class="p">The event handler implementation requires less code, reduces the number of event handler
+registrations in the DOM and also reduces the number of event handler registrations and
+deregistrations that are executed on every rerendering action. On the other hand, this
+option is only available for specific events.</p>
+<p class="p"> Example for registering the event handler directly:</p>
+<pre class="pre codeblock prettyprint lang-js">
+MyControl.prototype.onclick = function(oEvent) {
+   // do something...
+}</pre>
+<p class="p"><span class="ph"><span class="ph pname">SAPUI5</span></span> also provides so-called
+pseudo events. Pseudo events are semantically enriched and can be handled by just
+implementing an <samp class="ph codeph">on&lt;eventName&gt;</samp> method. They
+<span class="ph emphasis emphasis">cannot</span> be used with <samp class="ph codeph">jQuery.bind()</samp>. By using
+pseudo events, you avoid additional checks for modifier keys in the event handler or for
+certain keycodes. <span class="ph">For a list of Pseudo Events, see <a class="xref" href="../../#/api/jQuery.sap.PseudoEvents" target="_top" alt="#/api/jQuery.sap.PseudoEvents" title="#/api/jQuery.sap.PseudoEvents">jQuery.sap.PseudoEvents</a></span>.</p>
+</div></div></section><div class="clear"></div>
+</div><div class="clearfix"></div></div></div><div class="clearfix"></div><div id="footer-container" class="grid_12"><footer>
+	<div id="custom-footerSpacer"></div>
+	
+</footer>
+</div></body></html>

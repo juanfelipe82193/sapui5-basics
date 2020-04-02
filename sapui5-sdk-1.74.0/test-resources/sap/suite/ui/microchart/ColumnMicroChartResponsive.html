@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.suite.ui.microchart.ColumnMicroChart</title>
+
+<base href="../../../../../">
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout, sap.m, sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize"
+	src="resources/sap-ui-core.js">
+</script>
+
+<script type="text/javascript">
+	jQuery.sap.initMobile();
+	var oData = {
+		columns : [ {
+			label : "Afghanistan",
+			value : 40,
+			color : "Error"
+		}, {
+			label : "Albania",
+			value : 50,
+			color : "Error"
+		}, {
+			label : "Algeria",
+			value : 60,
+			color : "Error"
+		}, {
+			label : "Andorra",
+			value : 40,
+			color : "Neutral"
+		}, {
+			label : "Angola",
+			value : 35,
+			color : "Neutral"
+		}, {
+			label : "Antigua and Barbuda",
+			value : 10,
+			color : "Neutral"
+		} ],
+		tooltip : "Cumulative Totals\n((AltText))\ncalculated in EURO",
+		leftTopLabel : {
+			label : "June 1",
+			color : "Good"
+		},
+		leftBottomLabel : {
+			label : "0M",
+			color : "Good"
+		},
+		rightTopLabel : {
+			label : "June 30",
+			color : "Critical"
+		},
+		rightBottomLabel : {
+			label : "80M",
+			color : "Critical"
+		}
+	};
+
+	var oModel = new sap.ui.model.json.JSONModel(oData);
+	sap.ui.getCore().setModel(oModel);
+
+	function fnChartPress(oEvent) {
+		sap.m.MessageToast.show("The chart is pressed.");
+	};
+
+	function fnBarPress(oEvent) {
+		sap.m.MessageToast.show("The " + oEvent.getSource().getLabel() + " bar is pressed.");
+	};
+
+	var oClmnDataTmpl = new sap.suite.ui.microchart.ColumnMicroChartData({
+		label : "{label}",
+		value : "{value}",
+		color : "{color}",
+		press : fnBarPress
+	});
+
+	var buildLabel = function(sName) {
+		return new sap.suite.ui.microchart.ColumnMicroChartLabel({
+			label : "{/" + sName + "/label}",
+			color : "{/" + sName + "/color}"
+		});
+	};
+
+	var oCmc = new sap.suite.ui.microchart.ColumnMicroChart("cmc", {
+		isResponsive : true,
+		columns : {
+			path : "/columns",
+			template : oClmnDataTmpl
+		},
+		press : fnChartPress,
+		tooltip : "{/tooltip}",
+		leftBottomLabel : buildLabel("leftBottomLabel"),
+		rightBottomLabel : buildLabel("rightBottomLabel"),
+		leftTopLabel : buildLabel("leftTopLabel"),
+		rightTopLabel : buildLabel("rightTopLabel")
+	});
+	oCmc.placeAt("content");
+
+	new sap.suite.ui.microchart.ColumnMicroChart("FixedCmcS", {
+		width : "{/width}",
+		height : "{/height}",
+		size : "S",
+		columns : {
+			path : "/columns",
+			template : oClmnDataTmpl
+		},
+		press : fnChartPress,
+		tooltip : "{/tooltip}",
+		leftBottomLabel : buildLabel("leftBottomLabel"),
+		rightBottomLabel : buildLabel("rightBottomLabel"),
+		leftTopLabel : buildLabel("leftTopLabel"),
+		rightTopLabel : buildLabel("rightTopLabel")
+	}).placeAt("oldExampleS");
+
+	new sap.suite.ui.microchart.ColumnMicroChart("FixedCmcM", {
+		width : "{/width}",
+		height : "{/height}",
+		size : "L",
+		columns : {
+			path : "/columns",
+			template : oClmnDataTmpl
+		},
+		press : fnChartPress,
+		tooltip : "{/tooltip}",
+		leftBottomLabel : buildLabel("leftBottomLabel"),
+		rightBottomLabel : buildLabel("rightBottomLabel"),
+		leftTopLabel : buildLabel("leftTopLabel"),
+		rightTopLabel : buildLabel("rightTopLabel")
+	}).placeAt("oldExampleM");
+
+	oSlider6 = new sap.m.Slider({
+		value : 200,
+		step : 0.0001,
+		min : 10,
+		max : 400,
+		liveChange : function(oControlEvent) {
+			var height = oControlEvent.getParameter("value");
+			jQuery("#content").css("height", height + "px");
+			oCmc.invalidate();
+		}
+	});
+
+	oSlider7 = new sap.m.Slider({
+		value : 200,
+		step : 0.0001,
+		min : 10,
+		max : 400,
+		liveChange : function(oControlEvent) {
+			var width = oControlEvent.getParameter("value");
+			jQuery("#content").css("width", width + "px");
+			oCmc.invalidate();
+		}
+	});
+
+	new sap.ui.layout.form.SimpleForm("cmc-sliders-form", {
+		maxContainerCols : 4,
+		editable : true,
+		content : [ oSlider6, oSlider7 ]
+	}).placeAt("modifiers");
+
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+	<script>
+		//set the contrast class for belize plus
+		if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+			jQuery("body").addClass("sapContrastPlus");
+		}
+	</script>
+	<div id="modifiers"></div>
+	<div id="content" style="height: 200px; width: 200px;border-color : black; border: 1px;border-style:solid;"></div>
+	<div id="oldExampleS"></div>
+	<div id="oldExampleM"></div>
+</body>
+</html>

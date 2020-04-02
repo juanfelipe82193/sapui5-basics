@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8">
+
+<title>Testpage - sap.suite.ui.microchart.DeltaMicroChart</title>
+
+<base href="../../../../../">
+
+<script id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.ui.layout, sap.m, sap.suite.ui.microchart"
+	data-sap-ui-theme="sap_belize"
+	src="resources/sap-ui-core.js">
+</script>
+
+<script type="text/javascript">
+	jQuery.sap.initMobile();
+	function _fnParseFloat(fValue) {
+    	if (!fValue || 0==fValue.length || "-"==fValue) {
+    		return undefined;
+    	} if (/[.,]$/.test(fValue)) {
+    		return sap.ui.core.format.NumberFormat.getFloatInstance().parse(fValue.slice(0, -1));
+    	} else {
+	    	return sap.ui.core.format.NumberFormat.getFloatInstance().parse(fValue);
+    	}
+    };
+
+    var fnPress = function (oEvent) {
+		sap.m.MessageToast.show("The Delta microchart is pressed.");
+	};
+
+	var oConfDMCData = {
+		sizes: {
+			M: sap.m.Size.M,
+			S: sap.m.Size.S,
+			Auto: sap.m.Size.Auto
+		},
+		value1: 20,
+		value2: 200,
+		title1: "May 2014",
+		title2: "Apr 2014",
+		displayValue1: "8833 Mio",
+		displayValue2: "8888 Mio",
+		color: sap.m.ValueColor.Good,
+		deltaDisplayValue: "5555 Mio",	§
+		tooltip: "Cumulative Totals\n((AltText))\ncalculated in EURO"
+	};
+
+	var oConfModel = new sap.ui.model.json.JSONModel();
+	oConfModel.setData(oConfDMCData);
+	sap.ui.getCore().setModel(oConfModel);
+
+	var buildChart = function(sSize) {
+		return new sap.suite.ui.microchart.DeltaMicroChart({
+			size: sSize ? "{/sizes/" + sSize +"}" : null,
+			value1: "{/value1}",
+			value2: "{/value2}",
+			title1: "{/title1}",
+			title2: "{/title2}",
+			displayValue1: "{/displayValue1}",
+			displayValue2: "{/displayValue2}",
+			deltaDisplayValue: "{/deltaDisplayValue}",
+			color: "{/color}",
+			press: fnPress,
+			isResponsive: !sSize,
+			tooltip: "{/tooltip}"
+		});
+	};
+
+	var oMediumSizeChart = buildChart(sap.m.Size.M);
+	var oSmallSizeChart = buildChart(sap.m.Size.S);
+	var oResponsiveChart = buildChart();
+
+	oResponsiveChart.placeAt("content");
+	oSmallSizeChart.placeAt("oldExampleS");
+	oMediumSizeChart.placeAt("oldExampleM");
+
+	oHeightSlider = new sap.m.Slider({
+		value : 72,
+		step : 1,
+		min : 10,
+		max : 400,
+		liveChange : function(oControlEvent) {
+			var height = oControlEvent.getParameter("value");
+			jQuery("#content").css("height", height + "px");
+			oResponsiveChart.invalidate();
+		}
+	});
+
+	oWidthSlider = new sap.m.Slider({
+		value : 168,
+		step : 1,
+		min : 10,
+		max : 400,
+		liveChange : function(oControlEvent) {
+			var width = oControlEvent.getParameter("value");
+			jQuery("#content").css("width", width + "px");
+			oResponsiveChart.invalidate();
+		}
+	});
+
+	var oCCSimpleForm = new sap.ui.layout.form.SimpleForm("controls-cc", {
+		maxContainerCols : 4,
+		editable : true,
+		content : [ oHeightSlider, oWidthSlider ]
+	});
+	oCCSimpleForm.placeAt("modifiers");
+
+</script>
+</head>
+
+<body class="sapUiBody" role="application">
+	<script>
+		//set the contrast class for belize plus
+		if (sap.ui.getCore().getConfiguration().getTheme() === "sap_belize_plus") {
+			jQuery("body").addClass("sapContrastPlus");
+		}
+	</script>
+	<div id="modifiers"></div>
+	<div id="content" style="height: 72px; width: 168px; border-color : black; border: 1px;border-style:solid;"></div>
+	<div id="oldExampleS"></div>
+	<div id="oldExampleM"></div>
+</body>
+</html>

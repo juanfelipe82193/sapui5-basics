@@ -1,0 +1,59 @@
+<core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:macro="sap.fe.macros"
+	template:require="{
+		macroLibrary: 'sap/fe/macros/macroLibrary',
+		MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+		VLH: 'sap/fe/macros/ValueListHelper'
+	}">
+	<Table id="{source>id}::Table" items="{= '{ path : \'/' + ${valueList>CollectionPath} + '\' , suspended : true }' }" width="26rem" contextualWidth="416px"  sticky="ColumnHeaders" growing="true" growingScrollToLoad="true" >
+		<columns>
+			<template:repeat list="{path: 'valueList>Parameters', startIndex: 0, length: 2}" var="parameter">
+				<template:if test="{= ${parameter>$Type} !== 'com.sap.vocabularies.Common.v1.ValueListParameterIn'}">
+					<template:with path="parameter>ValueListProperty" var="parameter" helper="VLH.getValueListProperty">
+						<template:if test="{= !(${parameter>@com.sap.vocabularies.UI.v1.Hidden} === true)}">
+							<Column>
+								<core:Fragment fragmentName="sap.fe.macros.ValueListTableColumnHeader" type="XML"/>
+							</Column>
+						</template:if>
+					</template:with>
+				</template:if>
+			</template:repeat>
+			<template:repeat list="{path: 'valueList>Parameters', startIndex: 2}" var="parameter">
+				<template:if test="{= ${parameter>$Type} !== 'com.sap.vocabularies.Common.v1.ValueListParameterIn'}">
+					<template:with path="parameter>ValueListProperty" var="parameter" helper="VLH.getValueListProperty">
+						<template:if test="{= !(${parameter>@com.sap.vocabularies.UI.v1.Hidden} === true)}">
+							<Column minScreenWidth="418px" demandPopin="true" popinDisplay="Inline">
+								<core:Fragment fragmentName="sap.fe.macros.ValueListTableColumnHeader" type="XML"/>
+							</Column>
+						</template:if>
+					</template:with>
+				</template:if>
+			</template:repeat>
+		</columns>
+		<items>
+			<ColumnListItem type="Active">
+				<cells>
+					<template:with path="valueList>" helper="VLH.getValueListCollectionEntitySet" var="entitySet">
+						<template:repeat list="{valueList>Parameters}" var="parameter">
+							<template:if test="{= ${parameter>$Type} !== 'com.sap.vocabularies.Common.v1.ValueListParameterIn'}">
+								<template:with path="parameter>ValueListProperty" var="dataField" helper="VLH.getValueListProperty">
+									<template:if test="{= !(${dataField>@com.sap.vocabularies.UI.v1.Hidden} === true)}">
+										<!-- TODO: as a workaround we pass VHTable as parent control so ignore text annotation -->
+										<macro:Field idPrefix="{source>id}::Table" editMode="Display"
+													 parentControl="VHTable"
+													 metadataContexts="
+											{ model: 'entitySet', path:'',  name: 'entitySet'},
+											{ model: 'dataField', path:'',  name: 'dataField'}
+										"></macro:Field>
+									</template:if>
+								</template:with>
+							</template:if>
+						</template:repeat>
+					</template:with>
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+</core:FragmentDefinition>

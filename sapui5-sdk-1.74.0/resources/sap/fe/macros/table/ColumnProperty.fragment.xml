@@ -1,0 +1,25 @@
+<core:FragmentDefinition
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns:mdcTable="sap.ui.mdc.table"
+	xmlns:core="sap.ui.core"
+	template:require="{
+		macroLibrary: 'sap/fe/macros/macroLibrary',
+		MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+		TABLE: 'sap/fe/macros/table/TableHelper',
+		FIELD: 'sap/fe/macros/field/FieldHelper',
+		ID: 'sap/fe/macros/StableIdHelper'
+	}"
+>
+	<!-- TODO: 1:1 navigations -->
+	<!-- for header label, fall-back to property name -->
+	<mdcTable:Column
+		id="{= ${this>id} ? ID.generate([${this>id}, 'C', ${this>navigationPropertyPath} || ${dataField>@sapui.name}]) : undefined }"
+		width="{= TABLE.getColumnWidth(${dataField>@},${dataField>$Type},${dataField>@@FIELD.fieldControl},(${collection>@com.sap.vocabularies.Common.v1.DraftRoot} || ${collection>@com.sap.vocabularies.Common.v1.DraftNode}), ${dataField>$Type}, ${dataField>$MaxLength}) }"
+		header="{= ${dataField>@@MODEL.label} || ${dataField>@com.sap.vocabularies.Common.v1.Label} || ${dataField>@sapui.name} }"
+		dataProperties="{= ${this>navigationPropertyPath} || ${dataField>@sapui.name} }"
+		hAlign="{= (['Edm.Decimal','Edm.DateTimeOffset','Edm.Date'].indexOf(${dataField>$Type}) >= 0) ? 'End' : 'Begin' }">
+
+		<core:Fragment fragmentName="sap.fe.macros.table.ColumnContent" type="XML"/>
+
+	</mdcTable:Column>
+</core:FragmentDefinition>

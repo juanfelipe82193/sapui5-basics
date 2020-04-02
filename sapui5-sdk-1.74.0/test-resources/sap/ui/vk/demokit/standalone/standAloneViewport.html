@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="UTF-8">
+
+	<title>Viewport Single file load</title>
+
+	<base href="../../../../../../">
+
+	<style>
+		.sapVizKitViewport {
+			width: 100% !important;
+		}
+	</style>
+
+	<script
+		id="sap-ui-bootstrap"
+		src="resources/sap-ui-core.js"
+		data-sap-ui-libs="sap.ui.vk, sap.m"
+		data-sap-ui-theme="sap_bluecrystal">
+	</script>
+
+	<script>
+		//Create an instance of viewport
+		var viewport = new sap.ui.vk.Viewport();
+
+		//Creates a new GraphicsCore object that takes 2 arguments as parameters
+		//Example: runtimeSettings, webGLContextAttributes
+		graphicsCore = new sap.ui.vk.dvl.GraphicsCore({}, {
+			//webGL Context Attributes:
+
+			//the drawing buffer will perform antialiasing
+			//using its choice of technique (multisample/supersample) and quality
+			antialias: true,
+
+			//the drawing buffer has an alpha channel
+			//for the purposes of performing OpenGL destination alpha operations
+			//and compositing with the page
+			alpha: true,
+
+			//the page compositor will assume that
+			//colors in the drawing buffer are not premultiplied.
+			premultipliedAlpha: false
+		});
+
+		viewport.setGraphicsCore(graphicsCore);
+
+		//new instance of module created.
+		var contentResource = new sap.ui.vk.ContentResource({
+			//specify the resource to load
+			source: "test-resources/sap/ui/vk/internal/media/nodes_boxes_with_steps.vds",
+			sourceType: "vds",
+			id: "abc123"
+		});
+
+		var mainScene;
+		//loads content resources
+		graphicsCore.loadContentResourcesAsync([contentResource], function(sourcesFailedToLoad) {
+			if (sourcesFailedToLoad) {
+				// Creates a new error-level entry in the log with the given message
+				jQuery.sap.log.error("Some of content resources cannot be loaded.");
+			} else {
+				//Builds a scene tree from the hierarchy of content resources.
+				//The content resources must be already loaded.
+				var scene = graphicsCore.buildSceneTree([contentResource]);
+
+				if (scene) {
+					mainScene = scene;
+					//Scene class provides the interface for the 3D model.
+					viewport.setScene(mainScene);
+				} else {
+					jQuery.sap.log.error("Failed to build the scene tree.");
+				}
+			}
+		});
+
+		//The 'content' property specifies what is placed on the page.
+		//A new instance of the Page control is created.
+		//A page is a basic container for an application.
+		var page = new sap.m.Page({
+			title: "Viewport",
+			content: [
+				viewport
+			]
+		});
+
+		//app is the root element of the application
+		var app = new sap.m.App();
+		app.addPage(page);
+		app.placeAt("body");
+
+	</script>
+</head>
+
+<body id="body" class="sapUiBody">
+</body>
+
+</html>

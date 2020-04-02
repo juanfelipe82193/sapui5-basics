@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+      <script src="../../../../resources/sap-ui-core.js"
+            id="Script1"
+            data-sap-ui-libs="sap.ui.vbm"
+            data-sap-ui-theme="sap_bluecrystal" >
+      </script>
+
+	   	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+
+		h4 {
+			margin: 1em 0;
+		}
+
+		i {
+			color: blue
+		}
+
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 47.5%;
+			height: 700px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+
+	</style>
+
+      <script >
+            var app = {
+	               "SAPVB": {
+		               "version": "2.0",
+		               "xmlns:VB": "VB",
+		               "Windows": {
+			               "Set": {
+				               "Window": {
+					               "id": "W1",
+					               "type": "geo",
+					               "refScene": "S1",
+				               }
+			               }
+		               },
+		               "Scenes": {
+			               "Set": {
+				               "SceneGeo": {
+					               "id": "S1",
+					               "refMapLayerStack": "lsMapQuest",
+									"VO": {
+										"id": "Spot",
+										"type": "{00100000-2012-0004-B001-64592B8DB964}",
+										"datasource": "Spots",
+										"pos.bind": "Spots.GeoPosition",
+										"scale": "1.0;1.0;1.0",
+										"fxdir": "true",
+										"fxsize": "true"
+									} ,
+                              "VisualFrame": {
+                                 "layerDepth": "4",
+                                 "maxLOD": "15",
+                                 "offsetMaxLOD": "3.5",
+                                 "minLat": "47.7",
+                                 "maxLat": "48.6",
+                                 "minLon": "10.9",
+                                 "maxLon": "12.1"
+                              }
+				               }
+			               }
+		               },
+                     "MapProviders": {
+                        "Set": {
+                           "MapProvider": {
+                           }
+                        }
+                     },
+                     "Data": {
+                         "Set": {
+                            "N":
+                               {
+                                  "name": "Spots",
+                                  "E": [
+                                     {
+                                        "A": "0",
+                                        "B": "11.45;48.15;0",
+                                        "C": "LTL000421",
+                                        "D": "0"
+                                     },
+                                     {
+                                        "A": "1",
+                                        "B": "10.9;47.7;0",
+                                        "C": "LTL000522",
+                                        "D": "0"
+                                     },
+                                     {
+                                        "A": "2",
+                                        "B": "10.9;48.6;0",
+                                        "C": "LTL000523",
+                                        "D": "0"
+                                     },
+                                     {
+                                        "A": "3",
+                                        "B": "12.1;47.7;0",
+                                        "C": "LTL000522x",
+                                        "D": "0"
+                                     },
+                                     {
+                                        "A": "4",
+                                        "B": "12.1;48.6;0",
+                                        "C": "LTL000523x",
+                                        "D": "0"
+                                     }
+                                  ]
+                               }
+
+                         }
+                      },
+
+						"DataTypes": {
+							"Set": {
+								"N": [
+									{
+										"name": "Spots",
+										"key": "Key",
+										"A": [
+											{
+												"name": "Key",
+												"alias": "A",
+												"type": "string"
+											},
+											{
+												"name": "GeoPosition",
+												"alias": "B",
+												"type": "vector"
+											},
+											{
+												"name": "Name",
+												"alias": "C",
+												"type": "string"
+											},
+											{
+												"name": "Selected",
+												"alias": "D",
+												"type": "boolean"
+											}
+										]
+									}
+								]
+							}
+						},
+                     "MapLayerStacks": {
+                        "Set": {
+                           "MapLayerStack": {
+                           }
+                        }
+                     }
+	               }
+               };
+      </script>
+      <script>
+         // creation of visual business......................................//
+         sap.ui.localResources("vbitestapp");
+
+         // with the callback it is possible to do actions before...........//
+         // and after the control is rendered...............................//
+
+         var oCallback =
+         {
+            onAfterRendering : function()
+            {
+            },
+
+            onBeforeRendering : function()
+            {
+            }
+              };
+
+         // create the visual business control...............................//
+         var oVBI1 = new sap.ui.vbm.VBI('vbiWrap',{
+	         width : 800,
+	         height: 600,
+			config : app
+         });
+
+         // subscribe to callbacks...........................................//
+         oVBI1.addDelegate( oCallback );
+
+         // place the control in the dom.....................................//
+         oVBI1.placeAt("content");
+
+		  	// load the json into the vbi control................................//
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			app.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			app.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array){
+				app.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				app.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+
+         function onBtnZoomIn()
+         {
+            oVBI1.zoomToGeoPosition( 8.643494, 49.303412, 15 );
+            document.getElementById("change_image").src="img/sapapi_VisualFrame_zoom.jpg";
+         };
+
+      </script>
+</head>
+   <body class="sapUiBody" role="application">
+      <h1> SAP UI5 Visual Business: Visual Frame around Munich </h1>
+	   <div id="description1">
+		   <h3> The aim: </h3>
+		<p> To check if the GeoMap control limits the viewing within a specific area (within a Visual Frame).
+      In this test, we will check that viewing is limited to the area around Munich. </p>
+		<br>
+		<h3> To test: </h3>
+		   <b><p style="color:red;">The expected results are shown in the image at the bottom.</p></b>
+
+      <ol>
+		 <li>Check that on intial page load, the GeoMap displays the area around Munich. </li>
+        <li>Click the "Zoom Test" button, and check that the map zooms into Waldorf.<br/>
+		<li>Check that you cannot scroll or zoom past (250m) this restricted area.
+      This means that there is a Visual Frame present. <i>The Visual Frame restricts what area is displayed on the map. </i></p></li>
+
+
+
+      </ol>
+        <figure style="float: left">
+
+          <figcaption>This is expected result &#8595</figcaption>
+          <img id="change_image" src="img/sapapi_VisualFrame.jpg" />
+        </figure>
+
+	   </div>
+
+
+	   <div id="description2">
+		   <br>
+		   <br>
+		   <button id="btnZoomIn"   onClick="onBtnZoomIn()"> Zoom Test </button>
+		   <br>
+        <figure style="float: left" id="content">
+        </figure >
+      </div>
+   </body>
+</html>

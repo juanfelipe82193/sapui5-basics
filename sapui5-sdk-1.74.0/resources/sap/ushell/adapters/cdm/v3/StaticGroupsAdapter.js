@@ -1,0 +1,2 @@
+// Copyright (c) 2009-2017 SAP SE, All Rights Reserved
+sap.ui.define(["sap/ushell/adapters/cdm/v3/AdapterBase","sap/ui/thirdparty/jquery"],function(A,q){"use strict";function S(s,p,a){A.call(this,s,p,a);}S.prototype=Object.create(A.prototype);S.prototype._addDefaultGroup=function(g,s){return g;};S.prototype._getSiteData=function(){var d=new q.Deferred();return d.resolve(this.oAdapterConfiguration.config);};return S;},true);

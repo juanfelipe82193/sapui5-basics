@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Scrollbar Tests</title>
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize"
+	data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet"
+	href="../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css"
+	media="screen" />
+<script type="text/javascript"
+	src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript"
+	src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="json/TESTDATA_SMOOTH_SCROLLING.js"></script>
+<script type="text/javascript"
+	src="json/TESTDATA_SMOOTH_SCROLLING_RIGHT_CUTOFF.js"></script>
+<script type="text/javascript"
+	src="json/TESTDATA_SMOOTH_SCROLLING_BOTTOM_CUTOFF.js"></script>
+<script type="text/javascript" src="json/TESTDATA_SMOOTH_SCROLLING_ISSUE.js"></script>
+<script type="text/javascript" src="testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Smooth Scrolling Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Smooth Scrolling tests",
+				{
+					setup: function () {
+						this.checkCutOffVisualization = function (bVertical, bHorizontal) {
+							var oVCutOffDataArea = $(".sapzencrosstab-VerticalCutOff-DataArea");
+							var oVCutOffRowHeaderArea = $(".sapzencrosstab-VerticalCutOff-RowHeaderArea");
+							if (bVertical) {
+								ok(oVCutOffDataArea.length > 0, "The vertical data area cut off must be present");
+								ok(oVCutOffDataArea.outerWidth() > 0,
+										"The vertical data area cut off must have a width > 0");
+								ok(oVCutOffDataArea.outerHeight() > 0,
+										"The vertical data area cut off must have a height > 0");
+
+								ok(oVCutOffRowHeaderArea.length > 0,
+										"The vertical row header area cut off must be present");
+								ok(oVCutOffRowHeaderArea.outerWidth() > 0,
+										"The vertical row header area cut off must have a width > 0");
+								ok(oVCutOffRowHeaderArea.outerHeight() > 0,
+										"The vertical row header area cut off must have a height > 0");
+							} else {
+								ok(oVCutOffDataArea.length === 0, "The vertical data area cut off must not be present");
+								ok(oVCutOffRowHeaderArea.length === 0,
+								"The vertical row header area cut off must not be present");
+							}
+
+							var oHCutOffDataArea = $(".sapzencrosstab-HorizontalCutOff-DataArea");
+							var oHCutOffColumnHeaderArea = $(".sapzencrosstab-HorizontalCutOff-ColumnHeaderArea");
+							if (bHorizontal) {
+								ok(oHCutOffDataArea.length > 0, "The horizontal data area cut off must be present");
+								ok(oHCutOffDataArea.outerWidth() > 0,
+										"The horizontal data area cut off must have a width > 0");
+								ok(oHCutOffDataArea.outerHeight() > 0,
+										"The horizontal data area cut off must have a height > 0");
+
+								ok(oHCutOffColumnHeaderArea.length > 0,
+										"The horizontal row header area cut off must be present");
+								ok(oHCutOffColumnHeaderArea.outerWidth() > 0,
+										"The horizontal row header area cut off must have a width > 0");
+								ok(oHCutOffColumnHeaderArea.outerHeight() > 0,
+										"The horizontal row header area cut off must have a height > 0");
+							} else {
+								ok(oHCutOffDataArea.length === 0, "The horizontal data area cut off must not be present");
+								ok(oHCutOffColumnHeaderArea.length === 0,
+								"The horizontal row header area cut off must not be present");
+							}
+
+							var oCutOffCorner = $(".sapzencrosstab-CutOffCorner");
+							if (bVertical && bHorizontal) {
+								ok(oCutOffCorner.length > 0, "The cut off corner must be present");
+								ok(oCutOffCorner.outerWidth() > 0, "The cut off corner must have a width > 0");
+								ok(oCutOffCorner.outerHeight() > 0, "The cut off corner must have a height > 0");
+							} else {
+								ok(oCutOffCorner.length === 0, "The cut off corner must not be present");
+							}
+						}
+						
+						this.updateTable = function (oJson, iWidth, iHeight){
+							this.oTableControl = oJson;
+							this.oCrosstab = new sap.zen.crosstab.Crosstab();
+							this.oCrosstab.setWidth(iWidth+"px");
+							this.oCrosstab.setHeight(iHeight+"px");
+
+							this.oCrosstab.applyControlProperties(this.oTableControl);
+							sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+							sap.ui.getCore().applyChanges();
+
+							this.oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+							this.oDataArea = this.oCrosstab.getDataArea();
+							this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+							this.oColHeaderArea = this.oCrosstab.getColumnHeaderArea();
+						}
+						
+						this.updateTable(sapzen.crosstab.test.jsonTestData.SMOOTH_SCROLLING.control, 1000, 600);
+					},
+
+					teardown: function () {
+						this.oCrosstab = null;
+					}
+				});
+
+		test("Check rendered area", function () {
+			ok(this.oDataArea.getColCnt() === this.oDataArea.getRenderColCnt(),
+					"All available data area cols should be rendered");
+			ok(this.oDimensionHeaderArea.getColCnt() === this.oDimensionHeaderArea.getRenderColCnt(),
+					"All available dimension header area cols should be rendered");
+			ok(this.oRowHeaderArea.getColCnt() === this.oRowHeaderArea.getRenderColCnt(),
+					"All available row header area cols should be rendered");
+			ok(this.oColHeaderArea.getColCnt() === this.oColHeaderArea.getRenderColCnt(),
+					"All available column header area cols should be rendered");
+
+			ok(this.oDataArea.getRowCnt() === this.oDataArea.getRenderRowCnt(),
+					"All available data area rows should be rendered");
+			ok(this.oDimensionHeaderArea.getRowCnt() === this.oDimensionHeaderArea.getRenderRowCnt(),
+					"All available dimension header area rows should be rendered");
+			ok(this.oRowHeaderArea.getRowCnt() === this.oRowHeaderArea.getRenderRowCnt(),
+					"All available row header area rows should be rendered");
+			ok(this.oColHeaderArea.getRowCnt() === this.oColHeaderArea.getRenderRowCnt(),
+					"All available column header area rows should be rendered");
+
+		});
+
+		test("Check both cut-off visualization present", function () {
+			this.checkCutOffVisualization(true, true);
+		});
+		
+		test("Check right cut-off visualization present (without scollbars)", function () {
+			this.updateTable(sapzen.crosstab.test.jsonTestData.SMOOTH_SCROLLING_RIGHT_CUTOFF.control, 1600, 1600);
+			this.checkCutOffVisualization(false, true);
+		});
+		
+		test("Check right cut-off visualization present (with scrollbars)", function () {
+			this.updateTable(sapzen.crosstab.test.jsonTestData.SMOOTH_SCROLLING_RIGHT_CUTOFF.control, 350, 150);
+			this.checkCutOffVisualization(false, true);
+		});
+		
+		test("Check bottom cut-off visualization present (without scrollbars)", function () {
+			this.updateTable(sapzen.crosstab.test.jsonTestData.SMOOTH_SCROLLING_BOTTOM_CUTOFF.control, 1600, 1600);
+			this.checkCutOffVisualization(true, false);
+		});
+		
+		test("Check bottom cut-off visualization present (with scrollbars)", function () {
+			this.updateTable(sapzen.crosstab.test.jsonTestData.SMOOTH_SCROLLING_BOTTOM_CUTOFF.control, 500, 150);
+			this.checkCutOffVisualization(true, false);
+		});
+		
+		test("Scroll 50px down", function () {
+			var iScrollDistance = 50;
+			this.oCrosstab.scrollVertical(iScrollDistance);
+			var oDomLowerLeftScrollDiv = $('#' + this.oCrosstab.getId() + "_lowerLeft_scrollDiv");
+			var oDomLowerRightScrollDiv = $('#' + this.oCrosstab.getId() + "_lowerRight_scrollDiv");
+			
+			
+			ok(oDomLowerLeftScrollDiv.scrollTop() === iScrollDistance, "ScrollTop of row header area must be "+iScrollDistance);
+			ok(oDomLowerRightScrollDiv.scrollTop() === iScrollDistance, "ScrollTop of data area must be "+iScrollDistance);
+			ok(oDomLowerRightScrollDiv.scrollLeft() === 0, "ScrollLeft of data area must be 0");
+			
+		});
+		
+		test("Scroll 50px right", function () {
+			var iScrollDistance = 50;
+			this.oCrosstab.scrollHorizontal(iScrollDistance);
+			var oDomUpperRightScrollDiv = $('#' + this.oCrosstab.getId() + "_upperRight_scrollDiv");
+			var oDomLowerRightScrollDiv = $('#' + this.oCrosstab.getId() + "_lowerRight_scrollDiv");
+			
+			
+			ok(oDomUpperRightScrollDiv.scrollLeft() === iScrollDistance, "ScrollLeft of column header area must be "+iScrollDistance);
+			ok(oDomLowerRightScrollDiv.scrollLeft() === iScrollDistance, "ScrollLeft of data area must be "+iScrollDistance);
+			ok(oDomLowerRightScrollDiv.scrollTop() === 0, "ScrollTop of data area must be 0");
+		});
+		
+		test("Scrollbar is visible and usable when there is no Data Area", function () {
+			this.updateTable(sapzen.crosstab.test.jsonTestData.smoothScrollingIssueTable.control, 500, 300);
+			
+			//See customer message 0120025231 0000377482 2013
+			var oVScrollbar = this.oCrosstab.getVScrollbar();
+			var oScrollbarContentHeight = parseInt(oVScrollbar.getContentSize());
+			var oDomRowHeaderHeight = $('#'+this.oRowHeaderArea.getId()).outerHeight();
+			ok(oScrollbarContentHeight > 0, "Scrollbar content size must be larger than 0");
+			ok(oScrollbarContentHeight === oDomRowHeaderHeight, "Scrollbar content size must be as high as the RowHeaderArea");
+		});
+	</script>
+
+</body>
+
+</html>

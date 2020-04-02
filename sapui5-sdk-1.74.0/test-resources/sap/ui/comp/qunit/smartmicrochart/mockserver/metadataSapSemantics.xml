@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+	xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+	xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+	xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:Reference
+		Uri="https://wdfn30053267a:8080/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='ER9CLNT500')/$value"
+		xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.Common.v1"
+			Alias="Common" />
+	</edmx:Reference>
+	<edmx:Reference
+		Uri="https://wdfn30053267a:8080/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='ER9CLNT500')/$value"
+		xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.UI.v1"
+			Alias="UI" />
+	</edmx:Reference>
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="AmcNamespace" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="StockPrice">
+				<Key>
+					<PropertyRef Name="Date" />
+				</Key>
+				<!-- sap:semantics is an OData V2 annotation, please ignore it if the Date property has V4 annotation Common.IsCalendarDate -->
+				<Property Name="Date" Type="Edm.String" sap:semantics="yearmonthday"/>
+				<Property Name="Price" Type="Edm.Int32"/>
+				<Property Name="PriceTarget" Type="Edm.Int32"/>
+				<Property Name="PriceDeviationLowerBound" Type="Edm.Int32"/>
+				<Property Name="PriceToleranceLowerBound" Type="Edm.Int32"/>
+				<Property Name="PriceToleranceUpperBound" Type="Edm.Int32"/>
+				<Property Name="PriceDeviationUpperBound" Type="Edm.Int32"/>
+				<Property Name="ChartTitle" Type="Edm.String"/>
+			</EntityType>
+			<EntityContainer Name="AmcNamespace_Entities"
+				m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+				<EntitySet Name="seriesSapSemantics" EntityType="AmcNamespace.StockPrice"
+					sap:content-version="1" />
+			</EntityContainer>
+			<Annotations Target="AmcNamespace.StockPrice"
+				xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="UI.Chart">
+					<Record>
+						<PropertyValue Property="ChartType"
+							EnumMember="UI.ChartType/Area" />
+						<PropertyValue Property="Title" Path="ChartTitle" />
+						<PropertyValue Property="Description" Path="Description" />
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>Date</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>Price</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="Price" />
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1" />
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#AreaChartDataPoint" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="AreaChartDataPoint">
+					<Record>
+						<PropertyValue Property="Value" Path="Price" />
+						<PropertyValue Property="TargetValue" Path="PriceTarget"/>
+						<PropertyValue Property="CriticalityCalculation">
+							<Record Type="UI.CriticalityCalculationType">
+								<PropertyValue Property="ImprovementDirection" EnumMember="UI.ImprovementDirectionType/Target" />
+								<PropertyValue Property="DeviationRangeLowValue" Path = "PriceDeviationLowerBound"/>
+								<PropertyValue Property="ToleranceRangeLowValue" Path = "PriceToleranceLowerBound"/>
+								<PropertyValue Property="ToleranceRangeHighValue" Path = "PriceToleranceUpperBound"/>
+								<PropertyValue Property="DeviationRangeHighValue" Path = "PriceDeviationUpperBound"/>
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<atom:link rel="self"
+				href="https://wdfn30053267a:8080/sap/opu/odata/sap/ZFAR_CUSTOMER_LINE_ITEMS2_SRV/$metadata"
+				xmlns:atom="http://www.w3.org/2005/Atom" />
+			<atom:link rel="latest-version"
+				href="https://wdfn30053267a:8080/sap/opu/odata/sap/ZFAR_CUSTOMER_LINE_ITEMS2_SRV/$metadata"
+				xmlns:atom="http://www.w3.org/2005/Atom" />
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

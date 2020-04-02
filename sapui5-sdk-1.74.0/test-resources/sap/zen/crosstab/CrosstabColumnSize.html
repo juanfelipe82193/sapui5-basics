@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Crosstab Column Resize Tests</title>
+<script id="sap-ui-bootstrap" type="text/javascript" src="../../../../resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.zen.crosstab">
+	
+</script>
+<link rel="stylesheet" href="../../../../resources/sap/ui/thirdparty/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="../../../../resources/sap/ui/thirdparty/qunit.js"></script>
+<script type="text/javascript" src="/aad/jasmine/qunit/qunit_xml_reporter.js"></script>
+<script type="text/javascript" src="../../../../resources/sap/ui/qunit/QUnitUtils.js"></script>
+<script type="text/javascript" src="json/TESTDATA_BIGTABLE.js"></script>
+<script type="text/javascript" src="testutils/TestUtils.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Crosstab Column Resize Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+	<div id="uiCrosstabArea" style="position: absolute"></div>
+
+	<script type="text/javascript">
+		module("Crosstab Column Resize tests", {
+			setup: function () {
+				this.oTableControl = sapzen.crosstab.test.jsonTestData.bigTable.control;
+				this.oCrosstab = new sap.zen.crosstab.Crosstab();
+				this.oCrosstab.setWidth("1200px");
+				this.oCrosstab.setHeight("500px");
+				this.oTestProxy = this.oCrosstab.getTestProxy();
+
+				this.oCrosstab.applyControlProperties(this.oTableControl);
+				sap.ui.setRoot("uiCrosstabArea", this.oCrosstab);
+				sap.ui.getCore().applyChanges();
+
+				this.oDimensionHeaderArea = this.oCrosstab.getDimensionHeaderArea();
+				this.oDataArea = this.oCrosstab.getDataArea();
+				this.oRowHeaderArea = this.oCrosstab.getRowHeaderArea();
+				this.oColHeaderArea = this.oCrosstab.getColumnHeaderArea();
+
+				this.checkExpectedColWidth = function (oCell, iControlWidth, fComparison) {
+					var oqCell = $('#' + oCell.getId());
+					var iWidth = oqCell.outerWidth();
+					ok(fComparison(iControlWidth, iWidth), "Cell with ID: " + oCell.getId()
+							+ " does not have expected width");
+				};
+			},
+
+			teardown: function () {
+			}
+		});
+
+		test("Test column expand on double click", function () {
+			var oCell = this.oColHeaderArea.getCell(2, 5);
+			var iWidth = $('#' + oCell.getId()).outerWidth();
+
+			this.oCrosstab.scrollHorizontal(5);
+			this.oCrosstab.scrollVertical(137);
+			this.oTestProxy.doubleClickColResize(2, 5);
+
+			setTimeout((function (that) {
+				return function () {
+					that.checkExpectedColWidth(oCell, iWidth, function (iWidth, iActualWidth) {
+						return iWidth < iActualWidth;
+					});
+					start();
+				}
+			})(this), 2000);
+
+			stop();
+		});
+
+		test("Test column width does not change on double click", function () {
+			var oCell = this.oColHeaderArea.getCell(2, 4);
+			var iWidth = $('#' + oCell.getId()).outerWidth();
+
+			this.oTestProxy.doubleClickColResize(2, 4);
+
+			setTimeout((function (that) {
+				return function () {
+					that.checkExpectedColWidth(oCell, iWidth, function (iWidth, iActualWidth) {
+						return iWidth === iActualWidth;
+					});
+					start();
+				}
+			})(this), 2000);
+
+			stop();
+		});
+
+		test("Test double click expands subordinate cells", function () {
+			var oCell = this.oColHeaderArea.getCell(0, 5);
+
+			this.oCrosstab.scrollHorizontal(5);
+			this.oCrosstab.scrollVertical(137);
+			this.oTestProxy.doubleClickColResize(0, 5);
+
+			var oSubordinateCell1 = this.oColHeaderArea.getCell(2, 5);
+			var iWidth1 = $('#' + oSubordinateCell1.getId()).outerWidth();
+			var oSubordinateCell2 = this.oColHeaderArea.getCell(2, 6);
+			var iWidth2 = $('#' + oSubordinateCell2.getId()).outerWidth();
+
+			setTimeout((function (that) {
+				return function () {
+					var fComparison = function (iWidth, iActualWidth) {
+						return iWidth < iActualWidth;
+					};
+					that.checkExpectedColWidth(oSubordinateCell1, iWidth1, fComparison);
+					that.checkExpectedColWidth(oSubordinateCell2, iWidth2, fComparison);
+					start();
+				}
+			})(this), 2000);
+
+			stop();
+		});
+
+		test("Test column shrink on double click", function () {
+			var oCell = this.oColHeaderArea.getCell(2, 5);
+			var iWidth = $('#' + oCell.getId()).outerWidth();
+
+			this.oCrosstab.scrollHorizontal(5);
+			this.oCrosstab.scrollVertical(137);
+			this.oTestProxy.doubleClickColResize(2, 5);
+			this.oCrosstab.scrollVertical(0);
+			this.oTestProxy.doubleClickColResize(2, 5);
+
+			setTimeout((function (that) {
+				return function () {
+					that.checkExpectedColWidth(oCell, iWidth, function (iWidth, iActualWidth) {
+						return iWidth === iActualWidth;
+					});
+					start();
+				}
+			})(this), 2000);
+
+			stop();
+		});
+	</script>
+
+</body>
+
+</html>

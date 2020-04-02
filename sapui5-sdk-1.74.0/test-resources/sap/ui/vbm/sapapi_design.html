@@ -1,0 +1,314 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="style/sapvbistyle.css" type="text/css" rel="stylesheet" />
+
+	<style type="text/css">
+		h1,
+		h2,
+		p {
+			margin: 0;
+		}
+		
+		h4 {
+			margin: 1em 0;
+		}
+		
+		i {
+			color: blue
+		}
+		
+		.col {
+			color: red;
+		}
+		
+		#description1 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 98%;
+			height: 260px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		#description2 {
+			background: white;
+			border: 1px solid #bfbfbf;
+			margin: 0.25%;
+			float: left;
+			width: 98%;
+			height: 900px;
+			overflow-y: auto;
+			padding-left: 1.25%;
+		}
+		
+		.DesignItem {
+			width: 32px;
+			height: 32px;
+			position: relative;
+			display: inline-block;
+			vertical-align: middle;
+			-moz-user-select: none;
+			-khtml-user-select: none;
+			user-select: none;
+		}
+		
+		.DesignToolbar {
+			width: 1285px;
+			height: 36px;
+			padding: 2px 2px 2px 2px;
+			vertical-align: middle;
+			border-style: none;
+			background-color: rgba(182, 182, 182, 0.45);
+			background: -moz-linear-gradient(top, rgba(182, 182, 182, 0.45), rgba(182, 182, 182, 0.45) 80%, rgba(182, 182, 182, 0));
+			/* Firefox */
+			background: -webkit-linear-gradient(top, rgba(182, 182, 182, 0.45), rgba(182, 182, 182, 0.45) 80%, rgba(182, 182, 182, 0));
+			/* Chrome, Safari */
+			background: -ms-linear-gradient(top, rgba(182, 182, 182, 0.45), rgba(182, 182, 182, 0.45) 80%, rgba(182, 182, 182, 0));
+			/* MS */
+		}
+
+	</style>
+
+
+	<script src="../../../../resources/sap-ui-core.js" id="sap-ui-bootstrap" data-sap-ui-libs="sap.ui.vbm" data-sap-ui-theme="sap_bluecrystal">
+
+
+	</script>
+	<!-- add sap.ui.table,sap.ui.ux3 and/or other libraries to 'data-sap-ui-libs' if required -->
+
+	<script>
+		// creation of visual business...................................//
+		sap.ui.localResources("vbitestapp");
+
+		var gIndex = 0;
+
+		function onSubmit(e) {
+			if (evtoutput.innerText !== undefined)
+				evtoutput.innerText = e.getParameter("data");
+			else
+			if (evtoutput.textContent !== undefined)
+				evtoutput.textContent = e.getParameter("data"); // due to ff
+		};
+
+		var oVBI1 = new sap.ui.vbm.VBI('vbiWrap1', {
+			width: 640,
+			height: 640,
+			plugin: false,
+			submit: onSubmit // set the event handler                
+		});
+		oVBI1.placeAt("vbiHTML");
+
+		var oVBI2 = new sap.ui.vbm.VBI('vbiWrap2', {
+			width: 640,
+			height: 640,
+			plugin: true,
+			submit: onSubmit // set the event handler
+		});
+		oVBI2.placeAt("vbiNATIVE");
+
+
+		// load the json for the application................................//
+		var dat = $.getJSON("media/vbdesign/design.json", function(dat) {
+			var userStoredData = JSON.parse(localStorage.getItem("map"));
+			dat.SAPVB.MapLayerStacks.Set.MapLayerStack = userStoredData.MapLayerStacks;
+			dat.SAPVB.MapProviders.Set.MapProvider = userStoredData.MapProvider;
+
+			var scene = userStoredData.MapLayerStacks;
+			if (scene instanceof Array) {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks[0].name;
+			} else {
+				dat.SAPVB.Scenes.Set.SceneGeo.refMapLayerStack = userStoredData.MapLayerStacks.name;
+			}
+			oVBI1.load(dat);
+			oVBI2.load(dat);
+		});
+
+		// get the command data.............................................//
+		var oInsertCmd = {};
+		var aCmd = ['spot', 'area', 'geocircle', 'circle', 'route', 'box', 'piechart', 'clear', 'unsubscribeevents', 'subscribeevents'];
+
+		// currently get the insert command information from files..........//
+		function GetInsertCommand(name, oInsertCmd) {
+			$.ajax({
+				url: "media/vbdesign/new_" + name + ".json",
+				dataType: "json",
+				success: function(data, textStatus, jqXHR) {
+					oInsertCmd[name] = JSON.stringify(data, null, '  ');
+				}
+			});
+		};
+
+		// collect the insert commands......................................//
+		for (var nJ = 0; nJ < aCmd.length; ++nJ)
+			GetInsertCommand(aCmd[nJ], oInsertCmd);
+
+		// get the create template..........................................//
+		var createtemplate = null;
+		$.getJSON("media/vbdesign/create_template.json", function(dat) {
+			createtemplate = JSON.stringify(dat, null, '  ');
+		});
+
+	</script>
+</head>
+
+<body class="sapUiBody">
+	<h1>Visual Business UI5: This sample should show some design mode capabilities.</h1>
+	<div id="description1">
+		<h3> The aim: </h3>
+		<p> To test design mode capabilities.</p>
+		<br>
+		<h3> To test: </h3>
+		<p style="color:red"> Note: This cannot be tested on touch devices</p>
+		<ol>
+			<li> Drag the symbols and drop them on the map. <i> Refer to the list below.</i></li>
+			<li> Add visual objects to the map and use the bin icon to remove all objects on the map.</li>
+			<li> After adding objects check that you can enlarge/move the visual objects using the red point located in the center of the object.</li>
+			<li> Click on the icon "Unsubscrive Events". Create and click on visual objects. Check that the textfield (bottom) does not include any content.<i> The text area 'Event' will only contain content if you have clicked on 'Subscribe' and the visual object has events. <br>
+					  If you have unsubscribed you should see an empty text area. </i></li>
+			<li> Click on the icon "Subscribe Events". Create and click on visual objects. Check that the textfield (bottom) includes content</li>
+
+		</ol>
+
+	</div>
+	<div id="description2">
+		<br>
+		<div class="DesignToolbar" id="Toolbar" draggable="false">
+			<div class="DesignItem" title="Spot" id="spot" draggable="true">
+				<img src="media/vbdesign/spot.png" />
+			</div>
+			<div class="DesignItem" title="Area" id="area" draggable="true">
+				<img src="media/vbdesign/area.png" />
+			</div>
+			<div class="DesignItem" title="Circle with Meter Radius" id="geocircle" draggable="true">
+				<img src="media/vbdesign/geocircle.png" />
+			</div>
+			<div class="DesignItem" title="Circle with Pixel Radius" id="circle" draggable="true">
+				<img src="media/vbdesign/circle.png" />
+			</div>
+			<div class="DesignItem" title="Route" id="route" draggable="true">
+				<img src="media/vbdesign/route.png" />
+			</div>
+			<div class="DesignItem" title="Box" id="box" draggable="true">
+				<img src="media/vbdesign/box.png" />
+			</div>
+			<div class="DesignItem" title="Pie Chart" id="piechart" draggable="true">
+				<img src="media/vbdesign/pie.png" />
+			</div>
+			<div class="DesignItem" title="Clear Map" id="clear" draggable="true">
+				<img src="media/vbdesign/clear.png" />
+			</div>
+			<div class="DesignItem" title="Unsubscribe Events" id="unsubscribeevents" draggable="true">
+				<img src="media/vbdesign/unsubscribeevents.png" />
+			</div>
+			<div class="DesignItem" title="Subscribe Events" id="subscribeevents" draggable="true">
+				<img src="media/vbdesign/subscribeevents.png" />
+			</div>
+		</div>
+
+		<table>
+			<tr>
+				<td>
+					<div id="content"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h2>HTML5</h2>
+				</td>
+				<td>
+					<h2>NATIVE</h2>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div id="vbiHTML"></div>
+				</td>
+				<td>
+					<div id="vbiNATIVE"></div>
+				</td>
+				<td>
+					<ol>
+						<li><i> Spot : </i> Click and drag the spot icon onto the desired area on the map.</li>
+						<li><i> Area : </i>Click on the area icon and click one or more areas on the map to draw the area. To complete and fill in the area double click.</li>
+						<li><i> Circle  with Meter Radius : </i>Click on the icon and then click on the map.</li>
+						<li><i>Circle with Pixel Radius:</i> Click on the icon and then click on the map.</li>
+						<li><i> Route: </i>Click on the route icon and click one or more areas on the map. Double click to complete route.</li>
+						<li><i>Box :</i> Click on the box icon and click on the map.</li>
+						<li><i>Pie : </i>Click on the pie icon and click on the map.</li>
+					</ol>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="img/choices.jpg" alt="text for Thumbnail" style="width:400px;height:180px;">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<h6>Event:</h6>
+					<br>
+					<textarea style="width: 100%; box-sizing: border-box" id="evtoutput" rows="8"></textarea>
+				</td>
+			</tr>
+
+		</table>
+
+		<script>
+			//..................................................................//
+			// do some drag and drop code.......................................//
+
+			// for getting this running in IE we apply the select impl..........//
+
+			function selectstart(e) {
+				if (e.target.dragDrop)
+					e.target.dragDrop();
+				e.preventDefault();
+				return true;
+			};
+
+			function dragstart(e) {
+				// try to load the json that is requested for this action........//
+				var id = e.target.id;
+				if (id == "")
+					id = e.target.parentElement.id;
+
+				// get the insertcommand from the ajax loaded object.............//
+				// replace the key attribute.....................................//
+				if (oInsertCmd[id])
+					e.dataTransfer.setData("text", oInsertCmd[id].replace(/{KEY}/g, VBI.MathLib.CreateGUID()));
+				else
+					e.dataTransfer.setData('text', "unknown");
+
+				e.dataTransfer.effectAllowed = 'move';
+				return true;
+			};
+
+			// design item click handling.......................................//
+			function clickitem(e) {
+				// try to load the json that is requested for this action........//
+				var id = e.target.id;
+				if (id == "")
+					id = e.target.parentElement.id;
+
+				// get the insertcommand for creating the object.................//
+				// push the insert command into the placeholder..................//
+				if (createtemplate && oInsertCmd[id]) {
+					var tmp = createtemplate.replace("\"PLACEHOLDER\"", oInsertCmd[id].replace(/{KEY}/g, VBI.MathLib.CreateGUID()));
+					oVBI1.load(tmp);
+					oVBI2.load(tmp);
+				}
+			};
+
+			// apply selectstart and dragstart functionality and dragstart......//
+			for (var nJ = 0; nJ < Toolbar.childNodes.length; nJ++) {
+				Toolbar.childNodes[nJ].onselectstart = selectstart;
+				Toolbar.childNodes[nJ].ondragstart = dragstart;
+				Toolbar.childNodes[nJ].onclick = clickitem;
+			}
+
+		</script>
+	</div>
+</body>
+
+</html>
